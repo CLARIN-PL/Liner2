@@ -3,6 +3,7 @@ package liner2.chunker;
 import java.util.HashSet;
 
 import liner2.structure.Chunk;
+import liner2.structure.Chunking;
 import liner2.structure.Sentence;
 
 public abstract class Chunker {
@@ -13,7 +14,7 @@ public abstract class Chunker {
 	 * @param sentence
 	 * @return
 	 */
-	public abstract HashSet<Chunk> chunkSentence(Sentence sentence);
+	public abstract Chunking chunkSentence(Sentence sentence);
 	
 	/**
 	 * Zwolnienie zasobów wykorzystywanych przez chunker, 
