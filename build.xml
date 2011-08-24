@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+
+<project name="LiNER - LingPipe Named Entity Recognition" default="compile" basedir=".">
+
+	<path id="classpath.standard">
+  		<pathelement location="production/lib/commons-cli-1.2.jar"/>
+  		<pathelement location="production/lib/lingpipe-3.8.2.jar"/>
+  		<pathelement location="production/lib/CRFPP.jar"/>
+	</path>
+
+	<target name="clean">
+  		<delete dir="build"/>
+                
+                <delete includeemptydirs="true">
+                    <fileset dir="production" includes="**/*" defaultexcludes="false"/>
+                </delete>
+
+                <delete dir="models/">
+                    <include name="**/crf/*.tar.gz"/>
+                </delete>
+                
+	</target>
+
+	<target name="compile" depends="clean">
+		<mkdir dir="bin/lib"/>
+		<copy file="lib/commons-cli-1.2.jar" todir="production/lib"/>
+		<!-- <copy file="lib/libCRFPP.so" todir="production/lib"/>
+		<copy file="lib/CRFPP.jar" todir="production/lib"/> -->
+		<delete dir="build/classes"/>
+		<mkdir dir="build/classes"/>
+		<manifest file="MANIFEST.MF">
+    		<attribute name="Built-By" value="${user.name}"/>
+    		<attribute name="Main-Class" value="liner2.Main"/>
+			<attribute name="Class-Path" value="./lib/commons-cli-1.2.jar"/>
+				<!-- ./lib/CRFPP.jar"/> -->			
+   		</manifest>	
+		<javac optimize="on" debug="yes" debuglevel="source,lines,vars" destdir="build/classes">
+    		<compilerarg value="-Xlint:all"/>
+    		<classpath refid="classpath.standard"/>
+    		<src path="src/"/>
+  		</javac>
+	</target>
+
+	<target name="jar" depends="compile">
+  		<jar destfile="liner2.jar" manifest="MANIFEST.MF">
+    		<fileset dir="build/classes" includes="**/*.class"/>
+  		</jar>
+                
+		<copy file="liner2.jar" todir="production"/>
+		<delete file="MANIFEST.MF"/>
+    
+		<!--
+        <copy todir="production/external/">
+          <fileset dir="./external" />
+        </copy>
+        -->
+        
+		<!--
+        <copy todir="production/configs/">
+          <fileset dir="./configs" />
+        </copy>
+        -->
+        
+        <!-- <mkdir dir="production/models/crf"/>-->
+	</target>
+
+	<target name="crfpp" depends="clean">
+		<exec executable="make" dir="external/crfpp/java"/>		
+		<copy file="external/crfpp/java/CRFPP.jar" todir="lib"/>
+		<copy file="external/crfpp/java/libCRFPP.so" todir="lib"/>
+	</target>
+
+	<target name="crfpp-install" depends="clean">
+		<echo message=">>> CRFPP --- cofigure"/>
+		<exec executable="./configure" dir="external/crfpp"/>		
+		<echo message=">>> CRFPP --- make"/>
+		<exec executable="make" dir="external/crfpp"/>		
+		<echo message=">>> CRFPP --- make install"/>
+		<exec executable="make" dir="external/crfpp">
+			<arg value="install"/>
+		</exec>
+		<echo message=">>> CRFPP --- make clean"/>
+		<exec executable="make" dir="external/crfpp">
+			<arg value="clean"/>
+		</exec>
+	</target>
+
+</project>
