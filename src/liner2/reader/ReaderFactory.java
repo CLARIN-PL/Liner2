@@ -1,5 +1,8 @@
 package liner2.reader;
 
+import liner2.reader.CclStreamReader;
+import liner2.reader.IobStreamReader;
+
 import liner2.LinerOptions;
 
 public class ReaderFactory {
@@ -16,11 +19,15 @@ public class ReaderFactory {
 	
 	/**
 	 * TODO
-	 * @param options
 	 * @return
 	 */
 	public StreamReader getStreamReader(LinerOptions options){
-		return null;
+		if (options.inputFormat.equals("ccl"))
+			return new CclStreamReader(options.inputFile);
+		else if (options.inputFormat.equals("iob"))
+			return new IobStreamReader(options.inputFile);
+		else		
+			return null;
 	}
 	
 }

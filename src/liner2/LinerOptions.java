@@ -57,12 +57,15 @@ public class LinerOptions {
 	private static final String OPTION_COMMON = "common";
 	private static final String OPTION_DICT_UNAMBIGUOUS = "dictUnambiguous";
 	private static final String OPTION_FEATURE = "feature";
+	private static final String OPTION_FILE = "f";
 	private static final String OPTION_FILTER = "filter";
 	private static final String OPTION_HEURISTICS = "heuristics";
+	private static final String OPTION_INPUT_FORMAT = "i";
 	private static final String OPTION_NERD = "nerd";
 	private static final String OPTION_OUTPUT_FORMAT = "o";
 	private static final String OPTION_PYTHON = "python";
 	private static final String OPTION_SILENT = "silent";
+	private static final String OPTION_TARGET = "t";
 	private static final String OPTION_WEIGHTS = "weights";
 	
 	
@@ -85,7 +88,10 @@ public class LinerOptions {
 	public String arg2 = null;
 	public String arg3 = null;
 	public String nerd = null;
-	public String outputFormat = "xces";
+	public String inputFile = "";
+	public String outputFile = "";
+	public String inputFormat = "ccl";
+	public String outputFormat = "ccl";
 	public String python = "python";
 	public ArrayList<Integer> folds = new ArrayList<Integer>();
 	public ArrayList<String> chunkersDescription = new ArrayList<String>();
@@ -219,6 +225,11 @@ public class LinerOptions {
 			}
 		}
 		
+		if (line.hasOption(OPTION_FILE)){
+			this.inputFile = line.getOptionValue(OPTION_FILE);
+			configDesc.append( String.format(PARAM_PRINT, OPTION_FILE, this.inputFile + "\n" ) );
+		}
+		
 		if (line.hasOption(OPTION_FILTER)){
 			configDesc.append( String.format(LinerOptions.PARAM_PRINT, line.getOptionValue(OPTION_FILTER), true) + "\n");
 			this.parseFilter(line.getOptionValue(OPTION_FILTER));
@@ -270,6 +281,11 @@ public class LinerOptions {
 //			HeuristicChunker.chunker = new HeuristicChunker();
 			configDesc.append( String.format(LinerOptions.PARAM_PRINT, LinerOptions.OPTION_HEURISTICS, true) + "\n");
 		}
+		
+		if ( line.hasOption(OPTION_INPUT_FORMAT) ){
+			this.inputFormat = line.getOptionValue(OPTION_INPUT_FORMAT);
+			configDesc.append( String.format(PARAM_PRINT, OPTION_INPUT_FORMAT, this.inputFormat + "\n" ) );
+		}
 
 		if (line.hasOption("summaryTypesOrder"))
 		{
@@ -295,6 +311,11 @@ public class LinerOptions {
 		if ( line.hasOption(LinerOptions.OPTION_SILENT)){
 			this.silent = true;
 			configDesc.append( String.format(LinerOptions.PARAM_PRINT, LinerOptions.OPTION_SILENT, true) + "\n" );			
+		}
+		
+		if (line.hasOption(OPTION_TARGET)){
+			this.outputFile = line.getOptionValue(OPTION_TARGET);
+			configDesc.append( String.format(PARAM_PRINT, OPTION_TARGET, this.outputFile + "\n" ) );
 		}
 
 		if ( line.hasOption(LinerOptions.OPTION_WEIGHTS) ){
@@ -364,6 +385,9 @@ public class LinerOptions {
     	options.addOption(OptionBuilder.withArgName("description").hasArg()
 				.withDescription("feature name recognized by NERD (name or name:dictionary_file)")
 				.create(OPTION_FEATURE));
+		options.addOption(OptionBuilder.withArgName("filename").hasArg()
+			.withDescription("read input from file")
+			.create(OPTION_FILE));
     	options.addOption(OptionBuilder.withArgName("filters").hasArg()
 				.withDescription("filters to apply")
 				.create("filter"));
@@ -384,18 +408,24 @@ public class LinerOptions {
     	options.addOption(OptionBuilder
 				.withArgName("filename").hasArg().withDescription("name of file with configuration")
 				.create("ini"));
+		options.addOption(OptionBuilder.withArgName("format").hasArg()
+			.withDescription("input format (iob or ccl)")
+			.create(OPTION_INPUT_FORMAT));
     	options.addOption(OptionBuilder.withArgName("filename").hasArg()
 				.withDescription("path to location of nerd.py")
 				.create(OPTION_NERD));
     	options.addOption(OptionBuilder.withArgName("filename").hasArg()
 				.withDescription("path to location of python interpreter")
 				.create(OPTION_PYTHON));
-    	options.addOption(OptionBuilder.withArgName("filename").hasArg()
-				.withDescription("save output to file")
-				.create("output"));
+//		options.addOption(OptionBuilder.withArgName("filename").hasArg()
+//			.withDescription("save output to file")
+//				.create("output"));
 		options.addOption(OptionBuilder.withArgName("format").hasArg()
-				.withDescription("output format for pipe mode (xces or ccl)")
+				.withDescription("output format (iob or ccl)")
 				.create(OPTION_OUTPUT_FORMAT));
+		options.addOption(OptionBuilder.withArgName("filename").hasArg()
+			.withDescription("save output to file")
+			.create(OPTION_TARGET));
     	options.addOption(new Option("silent", false, "does not print any additional text in batch mode"));
     	options.addOption(new Option("verbose", false, "print brief information about processing"));
     	options.addOption(new Option("verboseDetails", false, "print detailed information about processing"));

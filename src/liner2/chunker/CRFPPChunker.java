@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 
 import liner2.structure.Chunking;
 import liner2.structure.Sentence;
+import liner2.structure.ParagraphSet;
 
 import org.chasen.crfpp.Tagger;
 
@@ -101,12 +102,12 @@ public class CRFPPChunker extends Chunker
 	
 	            
     @Override
-	public void train(ArrayList<Sentence> sentences) {
-		this.prepareTrainingData(sentences);
+	public void train(ParagraphSet paragraphSet) {
+		this.prepareTrainingData(paragraphSet);
 		this.compileTagger();
     }
 
-    private void prepareTrainingData(ArrayList<Sentence> sentences) {
+    private void prepareTrainingData(ParagraphSet paragraphSet) {
 //      public void handle(String[] toks, String[] whitespaces, String[] tags) {
     	// Utwórz tymczasowy plik do zapisu danych treningowych
     	if ( this.trainingFileWriter == null ){

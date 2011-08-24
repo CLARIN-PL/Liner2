@@ -37,7 +37,7 @@ public class ChunkerFactoryItemCRFPPTrain extends ChunkerFactoryItem {
 
             Main.log("--> Training on file=" + iob_filename);            
             StreamReader reader = ReaderFactory.get().getStreamReader(LinerOptions.get());
-            ((TrainableChunkerInterface)chunker).train(reader.readAllSentences());
+            ((TrainableChunkerInterface)chunker).train(reader.readParagraphSet());
                         
             return chunker;		
 		}

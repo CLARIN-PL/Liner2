@@ -10,7 +10,7 @@ import java.util.HashSet;
  *
  */
 public class Sentence {
-
+	
 	/* Indeks nazw atrybutów */
 	AttributeIndex attributesIndex = null;
 	
@@ -20,4 +20,13 @@ public class Sentence {
 	/* Zbiór anotacji */
 	HashSet<Chunk> chunks = new HashSet<Chunk>();
 	
+	public Sentence()	{}
+	
+	public void addToken(Token token) {
+		tokens.add(token);
+	}
+	
+	public ArrayList<Token> getTokens() {
+		return tokens;
+	}
 }

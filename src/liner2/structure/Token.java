@@ -10,10 +10,10 @@ import java.util.ArrayList;
 public class Token {
 
 	/* Uporządkowana lista atrybutów */
-	ArrayList<String> attributes = null;
+	ArrayList<String> attributes = new ArrayList<String>();
 	
 	/* Lista analiz morfologicznych, jeżeli dostępna. */
-	ArrayList<Tag> tags = null;
+	ArrayList<Tag> tags = new ArrayList<Tag>();
 	
 	/* Oznaczenie, czy między bieżącym a następnym tokenem był biały znak. */
 	boolean noSpaceAfter = false; 
@@ -35,6 +35,21 @@ public class Token {
 	 * @return
 	 */
 	public String getFirstValue(){
-		throw new Error("Not implemented");		
+		return attributes.get(0);		
+	}
+	
+	public void addTag(Tag tag) {
+		tags.add(tag);
+	}
+	
+	public ArrayList<Tag> getTags() {
+		return tags;
+	}
+	
+	public void setAttributeValue(int index, String value) {
+		if (index < attributes.size())
+			attributes.set(index, value);
+		else if (index == attributes.size())
+			attributes.add(value);
 	}
 }
