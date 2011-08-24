@@ -16,6 +16,10 @@ public class Paragraph {
 		sentences.add(sentence);
 	}
 	
+	public String getId() {
+		return id;
+	}
+	
 	public ArrayList<Sentence> getSentences() {
 		return sentences;
 	}
