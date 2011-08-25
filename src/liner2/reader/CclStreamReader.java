@@ -140,6 +140,7 @@ public class CclStreamReader extends StreamReader {
 		}
 		
 		// przekonwertuj kod xml akapitu w obiekt DOM
+		paragraphText = paragraphText.replace("&", "&amp;");
 		Document paragraphDoc = paragraphToDOM(paragraphText);
 		Paragraph paragraph = new Paragraph(paragraphId);
 		

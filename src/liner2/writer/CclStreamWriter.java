@@ -127,6 +127,7 @@ public class CclStreamWriter extends StreamWriter {
 		xmlw.writeStartElement(TAG_TOKEN);
 		xmlw.writeCharacters("\n");
 		xmlw.writeStartElement(TAG_ORTH);
+		//xmlw.writeCharacters(token.getFirstValue().replace("&", "&amp;"));
 		xmlw.writeCharacters(token.getFirstValue());
 		xmlw.writeEndElement();
 		xmlw.writeCharacters("\n");
@@ -162,6 +163,7 @@ public class CclStreamWriter extends StreamWriter {
 	private void writeTag(Tag tag) throws XMLStreamException {
 		xmlw.writeStartElement(TAG_TAG);
 		xmlw.writeStartElement(TAG_BASE);
+		//xmlw.writeCharacters(tag.getBase().replace("&", "&amp;"));
 		xmlw.writeCharacters(tag.getBase());
 		xmlw.writeEndElement();
 		xmlw.writeStartElement(TAG_CTAG);

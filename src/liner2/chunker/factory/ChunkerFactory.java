@@ -1,6 +1,7 @@
 package liner2.chunker.factory;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import liner2.Main;
 import liner2.chunker.Chunker;
@@ -59,6 +60,29 @@ public class ChunkerFactory {
 				
 		return null;
 	}
+	
+	/**
+	 * Creates a hash of chunkers according to the description
+	 * @param description
+	 * @return
+	 * @throws Exception 
+	 */
+	public Hashtable<String, Chunker> createChunkers(ArrayList<String> descriptions)
+		throws Exception {
+		Hashtable<String, Chunker> chunkers = new Hashtable<String, Chunker>();
+		for (String desc : descriptions) {
+			int pos = desc.indexOf(':');
+			if (pos == -1)
+				throw new Exception("Invalid chunker name.");
+			String chunkerName = desc.substring(0, pos);
+			String chunkerDesc = desc.substring(pos+1);
+			Chunker chunker = this.createChunker(chunkerDesc);
+			if (chunker != null)
+				chunkers.put(chunkerName, chunker);
+		}
+		return chunkers;
+	}
+	
 	
 	/**
 	 * Validate a chunker description.

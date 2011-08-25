@@ -236,6 +236,12 @@ public class LinerOptions {
 		this.verbose = line.hasOption("verbose");
 		this.verboseDetails = line.hasOption("verboseDetails");
 		
+		// read chunker descriptions
+		if (line.hasOption("chunker")) {
+			for (String cd : line.getOptionValues(OPTION_CHUNKER))
+				this.chunkersDescription.add(cd);
+		}
+		
 		// Arguments
 		if (line.getArgs().length > 1 && line.getArgs()[1].length() > 0 ){
 			this.arg1 = line.getArgs()[1];
@@ -260,19 +266,19 @@ public class LinerOptions {
 	 */
 	private void processParameters() throws Exception {
 
-/*		// Parameters
-		if ( line.hasOption(LinerOptions.OPTION_CHUNKER)){
+		// Parameters
+/*		if ( line.hasOption(LinerOptions.OPTION_CHUNKER)){
 			String[] values = line.getOptionValues(LinerOptions.OPTION_CHUNKER);
-			for (String chunkerDescription : values){
+			//for (String chunkerDescription : values){
 //				if (!ChunkerFactory.get().parse(chunkerDescription))
 //					throw new Exception(String.format("Unknown chunker description '%s'", chunkerDescription));
 //				else
 //					this.chunkersDescription.add(chunkerDescription);
-				configDesc.append( String.format(PARAM_PRINT, OPTION_CHUNKER, chunkerDescription) + "\n" );
-			}
+				//configDesc.append( String.format(PARAM_PRINT, OPTION_CHUNKER, chunkerDescription) + "\n" );
+			//}
 		}
 
-		if ( line.hasOption(OPTION_COMMON) ){
+/*		if ( line.hasOption(OPTION_COMMON) ){
 			this.common = new TreeSet<String>();
 			for (String filename : line.getOptionValues(OPTION_COMMON)){
 //				this.common.addAll( DictionaryManager.loadList(filename) );

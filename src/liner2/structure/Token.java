@@ -25,7 +25,7 @@ public class Token {
 	 * @return
 	 */
 	public String getAttributeValue(int index){
-		throw new Error("Not implemented");
+		return attributes.get(index);
 	}
 	
 	/**

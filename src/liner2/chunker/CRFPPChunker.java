@@ -121,6 +121,16 @@ public class CRFPPChunker extends Chunker
 			}			
     	}
     	
+    	/*for (Paragraph paragraph : paragraphSet.getParagraphs())
+    		for (Sentence sentence : paragraph.getSentences()) {
+    			for (Token token : sentence.getTokens()) {
+    				String oStr = "";
+    				//for (
+    				//TODO
+    			}
+    			this.trainingFileWriter.write("\n");
+    		}*/
+    	
 //        for (int i = 0; i < toks.length; i++) {
 //            String oStr = ""; // orth
 //            for ( int j=0; j<RegexLineTagParser.currentSentenceFeatures.get(i).length; j++)            

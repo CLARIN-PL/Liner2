@@ -1,7 +1,10 @@
 package liner2.action;
 
+import java.util.Hashtable;
+
 import liner2.LinerOptions;
 import liner2.Main;
+import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
 
 /**
@@ -16,12 +19,14 @@ public class ActionTrain extends Action{
 	 */
 	public void run() throws Exception{
 
-        for (String chunkerDescription : LinerOptions.get().chunkersDescription){
+        Hashtable<String, Chunker> chunkers = ChunkerFactory.get()
+        	.createChunkers(LinerOptions.get().chunkersDescription);
+        /*for (String chunkerDescription : LinerOptions.get().chunkersDescription){
         	Main.log(chunkerDescription);
-        	ChunkerFactory.get().createChunker(chunkerDescription);
+        	//ChunkerFactory.get().createChunker(chunkerDescription);
         	Main.log("TRAINED");
         	Main.log("");
-        }
+        }*/
         
 	}
 		
