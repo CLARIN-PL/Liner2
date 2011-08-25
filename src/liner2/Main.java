@@ -2,6 +2,7 @@ package liner2;
 
 import liner2.action.Action;
 import liner2.action.ActionConvert;
+import liner2.action.ActionTrain;
 //import liner2.action.ActionBatch;
 //import liner2.action.ActionDict;
 //import liner2.action.ActionDictStats;
@@ -54,9 +55,9 @@ public class Main {
 	    	else if (mode.equals("convert") ) {
 	            action = new ActionConvert();
 	        } 
-//            else if (mode.equals("train") ) {
-//	            action = new ActionTrain();
-//	        }
+            else if (mode.equals("train") ) {
+	            action = new ActionTrain();
+	        }
 	
 			LinerOptions.get().printConfigurationDescription();
 	
