@@ -1,6 +1,8 @@
 package liner2.writer;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Hashtable;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -11,6 +13,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.stream.XMLStreamException;
 
+import liner2.structure.Chunk;
 import liner2.structure.Paragraph;
 import liner2.structure.Sentence;
 import liner2.structure.Tag;
@@ -18,15 +21,18 @@ import liner2.structure.Token;
 
 public class CclStreamWriter extends StreamWriter {
 
-	public final String TAG_BASE 			= "base";
-	public final String TAG_CTAG			= "ctag";
-	public final String TAG_ID 				= "id";
-	public final String TAG_ORTH			= "orth";
-	public final String TAG_PARAGRAPH 		= "chunk";
-	public final String TAG_PARAGRAPH_SET 	= "chunkList";
-	public final String TAG_SENTENCE		= "sentence";
-	public final String TAG_TAG				= "lex";
-	public final String TAG_TOKEN 			= "tok";
+	private final String TAG_ANN			= "ann";
+	private final String TAG_BASE 			= "base";
+	private final String TAG_CHAN			= "chan";
+	private final String TAG_CTAG			= "ctag";
+	private final String TAG_ID				= "id";
+	private final String TAG_NS				= "ns";
+	private final String TAG_ORTH			= "orth";
+	private final String TAG_PARAGRAPH 		= "chunk";
+	private final String TAG_PARAGRAPH_SET 	= "chunkList";
+	private final String TAG_SENTENCE		= "sentence";
+	private final String TAG_TAG			= "lex";
+	private final String TAG_TOKEN 			= "tok";
 
 	private XMLStreamWriter xmlw;
 	private boolean open = false;
@@ -81,6 +87,7 @@ public class CclStreamWriter extends StreamWriter {
 			if (!open)
 				open();
 			xmlw.writeStartElement(TAG_PARAGRAPH);
+			xmlw.writeAttribute(TAG_ID, paragraph.getId());
 			xmlw.writeCharacters("\n");
 			for (Sentence sentence : paragraph.getSentences())
 				writeSentence(sentence);
@@ -94,13 +101,29 @@ public class CclStreamWriter extends StreamWriter {
 	private void writeSentence(Sentence sentence) throws XMLStreamException {
 		xmlw.writeStartElement(TAG_SENTENCE);
 		xmlw.writeCharacters("\n");
-		for (Token token : sentence.getTokens())
-			writeToken(token);
+		
+		// prepare annotation channels
+		HashSet<Chunk> chunks = sentence.getChunks();	
+		Hashtable<String, Integer> numChannels = new Hashtable<String, Integer>();
+		Hashtable<Chunk, Integer> channels = new Hashtable<Chunk, Integer>();
+		for (Chunk chunk : chunks) {
+			if (numChannels.containsKey(chunk.getType()))
+				numChannels.put(chunk.getType(),
+					numChannels.get(chunk.getType()) + 1);
+			else
+				numChannels.put(chunk.getType(), new Integer(1));
+			channels.put(chunk, numChannels.get(chunk.getType()));
+		}
+		
+		ArrayList<Token> tokens = sentence.getTokens();
+		for (int i = 0; i < tokens.size(); i++)
+			writeToken(i, tokens.get(i), chunks, channels);
 		xmlw.writeEndElement();
 		xmlw.writeCharacters("\n");
 	}
 	
-	private void writeToken(Token token) throws XMLStreamException {
+	private void writeToken(int idx, Token token, HashSet<Chunk> chunks, Hashtable<Chunk, Integer> channels)
+		throws XMLStreamException {
 		xmlw.writeStartElement(TAG_TOKEN);
 		xmlw.writeCharacters("\n");
 		xmlw.writeStartElement(TAG_ORTH);
@@ -109,6 +132,29 @@ public class CclStreamWriter extends StreamWriter {
 		xmlw.writeCharacters("\n");
 		for (Tag tag : token.getTags())
 			writeTag(tag);
+		
+		Hashtable<String, Integer> strChannels = new Hashtable<String, Integer>();
+		for (Chunk chunk : chunks) {
+			if ((chunk.getBegin() <= idx) &&
+				(chunk.getEnd() >= idx))
+				strChannels.put(chunk.getType(), channels.get(chunk));
+		}
+		for (Chunk chunk : chunks)
+			if (!strChannels.containsKey(chunk.getType()))
+				strChannels.put(chunk.getType(), new Integer(0));
+		
+		for (String channel : strChannels.keySet()) {
+			xmlw.writeStartElement(TAG_ANN);
+			xmlw.writeAttribute(TAG_CHAN, channel.toLowerCase());
+			xmlw.writeCharacters("" + strChannels.get(channel));
+			xmlw.writeEndElement();
+			xmlw.writeCharacters("\n");
+		}
+		
+		if (token.getNoSpaceAfter()) {
+			xmlw.writeEmptyElement(TAG_NS);
+			xmlw.writeCharacters("\n");
+		}
 		xmlw.writeEndElement();
 		xmlw.writeCharacters("\n");
 	}

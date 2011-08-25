@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.ByteArrayInputStream;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.xml.stream.XMLInputFactory;
@@ -20,9 +21,11 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException; 
 import org.w3c.dom.Document;
 import org.w3c.dom.DOMException;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 
+import liner2.structure.Chunk;
 import liner2.structure.Paragraph;
 import liner2.structure.Sentence;
 import liner2.structure.Tag;
@@ -30,14 +33,17 @@ import liner2.structure.Token;
 
 public class CclStreamReader extends StreamReader {
 	
-	public final String TAG_BASE 		= "base";
-	public final String TAG_CTAG		= "ctag";
-	public final String TAG_ID 			= "id";
-	public final String TAG_ORTH		= "orth";
-	public final String TAG_PARAGRAPH 	= "chunk";
-	public final String TAG_SENTENCE	= "sentence";
-	public final String TAG_TAG			= "lex";
-	public final String TAG_TOKEN 		= "tok";
+	private final String TAG_ANN		= "ann";
+	private final String TAG_BASE 		= "base";
+	private final String TAG_CHAN		= "chan";
+	private final String TAG_CTAG		= "ctag";
+	private final String TAG_ID 		= "id";
+	private final String TAG_ORTH		= "orth";
+	private final String TAG_NS			= "ns";
+	private final String TAG_PARAGRAPH 	= "chunk";
+	private final String TAG_SENTENCE	= "sentence";
+	private final String TAG_TAG		= "lex";
+	private final String TAG_TOKEN 		= "tok";
 	
 	private XMLStreamReader xmlr;
 	
@@ -96,6 +102,7 @@ public class CclStreamReader extends StreamReader {
 						continue;
 					paragraphId = xmlr.getAttributeValue(null, TAG_ID);
 					outsideParagraph = false;
+					paragraphText = "<" + xmlr.getName() + ">";
 				}
 				else {
 					if (eventType != XMLStreamConstants.END_ELEMENT) {
@@ -117,6 +124,7 @@ public class CclStreamReader extends StreamReader {
 						paragraphText += "</" + xmlr.getName() + ">";
 						continue;
 					}
+					paragraphText += "</" + xmlr.getName() + ">";
 					outsideParagraph = true;
 					break;
 				}
@@ -151,10 +159,13 @@ public class CclStreamReader extends StreamReader {
 		try {
 			// disable validation
 			factory.setValidating(false);
+			factory.setExpandEntityReferences(false);
 			factory.setFeature("http://xml.org/sax/features/namespaces", false);
 			factory.setFeature("http://xml.org/sax/features/validation", false);
 			factory.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
 			factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+			factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+			factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
 			
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			document = builder.parse(new ByteArrayInputStream(	
@@ -192,16 +203,28 @@ public class CclStreamReader extends StreamReader {
 	private Sentence getSentenceFromNode(Node sentenceNode) {
 		Sentence sentence = new Sentence();
 		NodeList sentenceChildNodes = sentenceNode.getChildNodes();
+		int idx = 0;
+		Hashtable<String, Chunk> annotations = new Hashtable<String, Chunk>();
 		for (int i = 0; i < sentenceChildNodes.getLength(); i++) {
 			Node n = sentenceChildNodes.item(i);
 			if ((n.getNodeType() == Node.ELEMENT_NODE) &&
-				(n.getNodeName().equals(TAG_TOKEN)))
-				sentence.addToken(getTokenFromNode(n));
+				(n.getNodeName().equals(TAG_TOKEN))) {
+				Token token = getTokenFromNode(idx, n, annotations, sentence);
+				sentence.addToken(token);
+				idx++;
+			}
 		}
+		
+		// process annotations
+		for (Chunk chunk : annotations.values()) {
+			//System.out.println("["+chunk.getBegin()+","+chunk.getEnd()+","+chunk.getType()+"]");
+			sentence.addChunk(chunk);
+		}
+		//System.out.println("\n");
 		return sentence;
 	}
 	
-	private Token getTokenFromNode(Node tokenNode) {
+	private Token getTokenFromNode(int idx, Node tokenNode, Hashtable<String, Chunk> annotations, Sentence sentence) {
 		Token token = new Token();
 		NodeList tokenChildNodes = tokenNode.getChildNodes();
 		for (int i = 0; i < tokenChildNodes.getLength(); i++) {
@@ -212,6 +235,21 @@ public class CclStreamReader extends StreamReader {
 				}
 				else if (n.getNodeName().equals(TAG_TAG))
 					token.addTag(getTagFromNode(n));
+				else if (n.getNodeName().equals(TAG_NS)) {
+					token.setNoSpaceAfter(true);
+				}
+				else if (n.getNodeName().equals(TAG_ANN)) {
+					String ann = getAnnotationFromNode(n);
+					if (ann != null) {
+						if (annotations.containsKey(ann))
+							annotations.get(ann).setEnd(idx);
+						else {
+							//System.out.println("ann : " + ann);
+							String type = ann.substring(0, ann.lastIndexOf('#')).toUpperCase();
+							annotations.put(ann, new Chunk(idx, idx, type, sentence));
+						}
+					}
+				}
 			}
 		}
 		return token;
@@ -233,6 +271,16 @@ public class CclStreamReader extends StreamReader {
 			}
 		}
 		return new Tag(base, ctag, disamb);
+	}
+	
+	private String getAnnotationFromNode(Node annNode) {
+		NamedNodeMap attributes = annNode.getAttributes();
+		String chanName = attributes.getNamedItem(TAG_CHAN).getNodeValue();
+		String chanNumber = getTextFromNode(annNode).trim();
+		if (chanNumber.equals("0"))
+			return null;
+		else
+			return chanName + "#" + chanNumber;
 	}
 	
 	private String getTextFromNode(Node textNode) {

@@ -26,6 +26,8 @@ public class ActionConvert extends Action {
 			.getStreamReader(LinerOptions.get());
 		ParagraphSet ps = reader.readParagraphSet();
 		
+		System.out.println("Czytanie zakończone.");
+		
 		StreamWriter writer = WriterFactory.get()
 			.getStreamWriter(LinerOptions.get());
 		writer.writeParagraphSet(ps);

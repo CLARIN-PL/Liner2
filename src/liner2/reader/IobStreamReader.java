@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import liner2.structure.Chunk;
 import liner2.structure.Paragraph;
 import liner2.structure.Sentence;
 import liner2.structure.Tag;
@@ -50,6 +51,7 @@ public class IobStreamReader extends StreamReader {
 		Paragraph paragraph = new Paragraph(nextParagraphId);
 		nextParagraphId = null;
 		Sentence currentSentence = new Sentence();
+		Chunk currentChunk = null;
 		while (true) {
 			String line = null;
 			try {
@@ -73,8 +75,22 @@ public class IobStreamReader extends StreamReader {
 					nextParagraphId = words[2];
 					return paragraph;
 				}
-				else
+				else {
 					currentSentence.addToken(createToken(words));
+					if (words.length > 3) {
+						if (words[3].startsWith("B")) {
+							int idx = currentSentence.getTokenNumber()-1;
+							currentChunk = new Chunk(idx, idx, words[3].substring(2), currentSentence);
+							currentSentence.addChunk(currentChunk);
+						}
+						else if (words[3].startsWith("I")) {
+							if (currentChunk != null) {
+								int idx = currentSentence.getTokenNumber()-1;
+								currentChunk.setEnd(idx);
+							}
+						}
+					}
+				}
 			}
 		}
 	}
@@ -88,7 +104,6 @@ public class IobStreamReader extends StreamReader {
 					return;
 				}
 				line = ir.readLine();
-				System.out.println(line);
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}

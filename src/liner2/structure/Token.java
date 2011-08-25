@@ -38,6 +38,10 @@ public class Token {
 		return attributes.get(0);		
 	}
 	
+	public boolean getNoSpaceAfter() {
+		return this.noSpaceAfter;
+	}
+	
 	public void addTag(Tag tag) {
 		tags.add(tag);
 	}
@@ -51,5 +55,9 @@ public class Token {
 			attributes.set(index, value);
 		else if (index == attributes.size())
 			attributes.add(value);
+	}
+	
+	public void setNoSpaceAfter(boolean noSpaceAfter) {
+		this.noSpaceAfter = noSpaceAfter;
 	}
 }
