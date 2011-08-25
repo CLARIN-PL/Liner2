@@ -11,6 +11,8 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.TreeSet;
 
+import liner2.chunker.factory.ChunkerFactory;
+
 //import liner.chunker.HeuristicChunker;
 //import liner.chunker.factory.ChunkerFactory;
 //import liner.filter.Filter;
@@ -66,10 +68,8 @@ public class LinerOptions {
 	
 	private static final String LOCAL_INI = "local.ini";
 	
-	public static final String OPTION_ADD_DICT = "addDict";
 	public static final String OPTION_CHUNKER = "chunker";
 	public static final String OPTION_COMMON = "common";
-	public static final String OPTION_DICT_UNAMBIGUOUS = "dictUnambiguous";
 	public static final String OPTION_FEATURE = "feature";
 	public static final String OPTION_FILTER = "filter";
 	public static final String OPTION_HEURISTICS = "heuristics";
@@ -83,7 +83,6 @@ public class LinerOptions {
 	public static final String OPTION_SILENT = "silent";
 	public static final String OPTION_VERBOSE = "verbose";
 	public static final String OPTION_VERBOSE_DETAILS = "verboseDetails";
-	public static final String OPTION_WEIGHTS = "weights";
 	
 	
 	// List of argument read from cmd
@@ -449,7 +448,6 @@ public class LinerOptions {
 	
 	private Options makeOptions(){
     	Options options = new Options();    	
-    	options.addOption(new Option(LinerOptions.OPTION_ADD_DICT, false, "add chunks present in dictionaries"));
 
     	options.addOption(OptionBuilder.withArgName("description").hasArg()
 				.withDescription("load chunker from chunker factory")
@@ -472,11 +470,6 @@ public class LinerOptions {
     	options.addOption(OptionBuilder.withArgName("file name").hasArg()
 				.withDescription("name of file with a list of gazetteers. File line format: TYPE:location")
 				.create("gazef"));
-    	options.addOption(new Option("dictNested",false, "recognize nested names"));
-    	options.addOption(new Option(LinerOptions.OPTION_DICT_UNAMBIGUOUS, false, "use only unambiguous names"));    	
-    	options.addOption(OptionBuilder.withArgName("types").hasArg()
-				.withDescription("order of types in the summary table (comma speparated)")
-				.create("summaryTypesOrder"));
     	options.addOption(OptionBuilder
 				.withArgName("filename").hasArg().withDescription("name of file with configuration")
 				.create(OPTION_INI));
@@ -492,9 +485,6 @@ public class LinerOptions {
     	options.addOption(OptionBuilder.withArgName("filename").hasArg()
 				.withDescription("path to location of python interpreter")
 				.create(OPTION_PYTHON));
-//		options.addOption(OptionBuilder.withArgName("filename").hasArg()
-//			.withDescription("save output to file")
-//				.create("output"));
 		options.addOption(OptionBuilder.withArgName("filename").hasArg()
 			.withDescription("save output to file")
 			.create(OPTION_OUTPUT_FILE));
@@ -504,9 +494,6 @@ public class LinerOptions {
     	options.addOption(new Option(OPTION_SILENT, false, "does not print any additional text in batch mode"));
     	options.addOption(new Option(OPTION_VERBOSE, false, "print brief information about processing"));
     	options.addOption(new Option(OPTION_VERBOSE_DETAILS, false, "print detailed information about processing"));
-    	options.addOption(OptionBuilder.withArgName("values").hasArg()
-				.withDescription("chunker weights for ensemble")
-				.create(LinerOptions.OPTION_WEIGHTS));
     	return options;		
 	}
 	
@@ -515,8 +502,12 @@ public class LinerOptions {
      * @param options
      */
     public void printHelp(){
-    	System.out.println("* A tool for named entity recognition based on LinePipe and CRF.");
-    	System.out.println("* created by Michał Marcińczuk in 2010--2011 and Maciej Janicki in 2011");
+    	System.out.println("--------------------------------------------------*");
+    	System.out.println("* A tool for Named Entity Recognition for Polish. *");
+    	System.out.println("*     Authors: Michał Marcińczuk (2010–2011)      *");
+    	System.out.println("*              Maciej Janicki (2011)              *");
+    	System.out.println("* Institution: Wrocław University of Technology.  *");
+    	System.out.println("--------------------------------------------------*");
     	System.out.println();
 		new HelpFormatter().printHelp("java -jar liner.jar <mode> [options]", options);
 		System.out.println();
@@ -531,11 +522,11 @@ public class LinerOptions {
     	System.out.println("  pipe                - read xces data from standard input and annotate it");
     	System.out.println("  tag <text>          - tag `text` using chunker specified by `--chuner` parameters");
     	System.out.println("");
-    	System.out.println("Filters:");
-    	this.printFilters();
+    	//System.out.println("Filters:");
+    	//this.printFilters();
     	System.out.println("");
     	System.out.println("Chunker factory (patterns for `-chunker` parameter):");
-//    	System.out.println(ChunkerFactory.get().getDescription());
+    	System.out.println(ChunkerFactory.get().getDescription());
     }	
 
 	public void printConfigurationDescription(){
