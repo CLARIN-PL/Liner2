@@ -22,10 +22,12 @@ public class ReaderFactory {
 	 * @return
 	 */
 	public StreamReader getStreamReader(LinerOptions options){
-		if (options.inputFormat.equals("ccl"))
-			return new CclStreamReader(options.inputFile);
-		else if (options.inputFormat.equals("iob"))
-			return new IobStreamReader(options.inputFile);
+		String inputFormat = options.getOption(options.OPTION_INPUT_FORMAT);
+		String inputFile = options.getOption(options.OPTION_INPUT_FILE);
+		if (inputFormat.equals("ccl"))
+			return new CclStreamReader(inputFile);
+		else if (inputFormat.equals("iob"))
+			return new IobStreamReader(inputFile);
 		else		
 			return null;
 	}

@@ -22,8 +22,6 @@ public class ActionConvert extends Action {
 		// -f (--file) plik wejściowy, jeżeli brak to czyta z stdin
 		// -t (--target) plik wyjściowy, jeżeli brak, to na stdout
 		
-		//System.out.println("Konwersja z "+LinerOptions.get().inputFormat+" do "+LinerOptions.get().outputFormat);
-		
 		StreamReader reader = ReaderFactory.get()
 			.getStreamReader(LinerOptions.get());
 		ParagraphSet ps = reader.readParagraphSet();

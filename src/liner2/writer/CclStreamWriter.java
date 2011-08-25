@@ -33,7 +33,7 @@ public class CclStreamWriter extends StreamWriter {
 	
 	public CclStreamWriter(String filename) {
 		OutputStream os = System.out;
-		if (!filename.isEmpty()) {
+		if ((filename != null) && (!filename.isEmpty())) {
 			try {
 				os = new FileOutputStream(filename);
 			} catch (IOException ex) {

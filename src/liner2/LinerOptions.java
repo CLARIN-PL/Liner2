@@ -2,9 +2,13 @@ package liner2;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Properties;
 import java.util.TreeSet;
 
 //import liner.chunker.HeuristicChunker;
@@ -48,25 +52,38 @@ public class LinerOptions {
 	public static LinerOptions get(){
 		return linerOptions;
 	}
+	
+	/**
+	 * Get property value
+	 */
+	public static String getOption(String option) {
+		return linerOptions.getProperties().getProperty(option);
+	}
         
 	private Options options = null;
 	private String configurationDescription = "";
+	private Properties properties;
 	
-	private static final String OPTION_ADD_DICT = "addDict";
-	private static final String OPTION_CHUNKER = "chunker";
-	private static final String OPTION_COMMON = "common";
-	private static final String OPTION_DICT_UNAMBIGUOUS = "dictUnambiguous";
-	private static final String OPTION_FEATURE = "feature";
-	private static final String OPTION_FILE = "f";
-	private static final String OPTION_FILTER = "filter";
-	private static final String OPTION_HEURISTICS = "heuristics";
-	private static final String OPTION_INPUT_FORMAT = "i";
-	private static final String OPTION_NERD = "nerd";
-	private static final String OPTION_OUTPUT_FORMAT = "o";
-	private static final String OPTION_PYTHON = "python";
-	private static final String OPTION_SILENT = "silent";
-	private static final String OPTION_TARGET = "t";
-	private static final String OPTION_WEIGHTS = "weights";
+	private static final String LOCAL_INI = "local.ini";
+	
+	public static final String OPTION_ADD_DICT = "addDict";
+	public static final String OPTION_CHUNKER = "chunker";
+	public static final String OPTION_COMMON = "common";
+	public static final String OPTION_DICT_UNAMBIGUOUS = "dictUnambiguous";
+	public static final String OPTION_FEATURE = "feature";
+	public static final String OPTION_FILTER = "filter";
+	public static final String OPTION_HEURISTICS = "heuristics";
+	public static final String OPTION_INI = "ini";
+	public static final String OPTION_INPUT_FILE = "f";
+	public static final String OPTION_INPUT_FORMAT = "i";
+	public static final String OPTION_NERD = "nerd";
+	public static final String OPTION_OUTPUT_FILE = "t";
+	public static final String OPTION_OUTPUT_FORMAT = "o";
+	public static final String OPTION_PYTHON = "python";
+	public static final String OPTION_SILENT = "silent";
+	public static final String OPTION_VERBOSE = "verbose";
+	public static final String OPTION_VERBOSE_DETAILS = "verboseDetails";
+	public static final String OPTION_WEIGHTS = "weights";
 	
 	
 	// List of argument read from cmd
@@ -87,12 +104,12 @@ public class LinerOptions {
 	public String arg1 = null;
 	public String arg2 = null;
 	public String arg3 = null;
-	public String nerd = null;
-	public String inputFile = "";
-	public String outputFile = "";
-	public String inputFormat = "ccl";
-	public String outputFormat = "ccl";
-	public String python = "python";
+//	public String nerd = null;		// replaced with e.g. getOption(OPTION_NERD)
+//	public String inputFile = "";
+//	public String outputFile = "";
+//	public String inputFormat = "ccl";
+//	public String outputFormat = "ccl";
+//	public String python = "python";
 	public ArrayList<Integer> folds = new ArrayList<Integer>();
 	public ArrayList<String> chunkersDescription = new ArrayList<String>();
 	public TreeSet<String> common = new TreeSet<String>();
@@ -102,6 +119,7 @@ public class LinerOptions {
 	 */
 	public LinerOptions(){
 		this.options = makeOptions();
+		this.properties = new Properties();
 	}
 	
 	/**
@@ -112,65 +130,113 @@ public class LinerOptions {
 		return this.options;
 	}
 	
+	public Properties getProperties() {
+		return this.properties;
+	}
+	
 	/**
 	 * 
 	 * @param args
 	 * @throws Exception
 	 */
 	public void parse(String[] args) throws Exception{
-    	// Parse parameters passed by command line
-		CommandLine line = new GnuParser().parse(options, args);
 		
 		// Use to gather confugiration description
 		StringBuilder configDesc = new StringBuilder();
+		
+		// Try to load configuration from local.ini
+    	if (new File(LOCAL_INI).exists()) {
+    		try {
+    			this.parseFromIni(LOCAL_INI, configDesc);
+    		} catch (Exception ex) {
+    			ex.printStackTrace();
+    		}
+    	}
+	
+    	// Parse parameters passed by command line
+		CommandLine line = new GnuParser().parse(options, args);
 
     	if (this.mode == null && line.getArgs().length == 0)
     		throw new ParseException("mode not set");
     	
     	this.mode = line.getArgs()[0];
     	configDesc.append("> Mode: " + this.mode + "\n");
-				
-		this.verbose = line.hasOption("verbose");
-		this.verboseDetails = line.hasOption("verboseDetails");
 
     	this.parseParameters(line, configDesc);
     	
     	// If the ini parameter is set then load configuration form a file
-    	if (line.hasOption("ini")){
-    		String ini = line.getOptionValue("ini");
-    		File iniFile = new File(ini); 
-            BufferedReader br = new BufferedReader(new FileReader(iniFile));
-            
-            StringBuffer sb = new StringBuffer();
-            String eachLine = br.readLine();
-            
-            while(eachLine != null) {
-            	if ( !eachLine.trim().startsWith("#") )
-            		sb.append(eachLine + " ");
-                eachLine = br.readLine();
-            }
-
-            // Insert fixed paths
-            String parameters = sb.toString().trim();
-            parameters = parameters.replace("{INI_PATH}", iniFile.getParentFile().getAbsolutePath());
-            
-        	line = new GnuParser().parse(makeOptions(), parameters.split(" "));        		
-            configDesc.append("> Load parameters from a ini file: " + ini + "\n");
-
-            this.parseParameters(line, configDesc);
-    	}		
-    	
-    	
-		this.configurationDescription = configDesc.toString();    	
+    	if (properties.containsKey("ini")){
+    		String ini = properties.getProperty("ini");
+    		try {
+    			this.parseFromIni(ini, configDesc);
+    		} catch (Exception ex) {
+    			ex.printStackTrace();
+    		}
+    	}
+    	    	
+		this.configurationDescription = configDesc.toString();
+		this.processParameters();   	
 	}
     
+    /**
+     * Read configuration from an ini file.
+     * @param filename
+     */
+    private void parseFromIni(String filename, StringBuilder configDesc)
+    	throws IOException, FileNotFoundException, ParseException {
+    	File iniFile = new File(filename); 
+        BufferedReader br = new BufferedReader(new FileReader(iniFile));
+            
+        StringBuffer sb = new StringBuffer();
+        String eachLine = br.readLine().trim();
+            
+        while(eachLine != null) {
+        	if ((!eachLine.startsWith("#")) &&
+        		(!eachLine.isEmpty()))
+        		sb.append(eachLine + " ");
+           	eachLine = br.readLine();
+		}
+
+        // Insert fixed paths
+        String parameters = sb.toString().trim();
+        String iniPath = "./";
+        if (iniFile.getParentFile() != null)
+        	iniPath = iniFile.getParentFile().getAbsolutePath();
+        parameters = parameters.replace("{INI_PATH}", iniPath);
+            
+      	CommandLine line = new GnuParser().parse(makeOptions(), parameters.split(" "));        		
+        configDesc.append("> Load parameters from a ini file: " + filename + "\n");
+
+        this.parseParameters(line, configDesc);
+    }
+	
 	/**
-	 * 
+	 * Adds options from a given CommandLine to own properties.
 	 * @param line
 	 * @throws Exception 
 	 */
-	private void parseParameters(CommandLine line, StringBuilder configDesc) throws Exception{
-
+	private void parseParameters(CommandLine line, StringBuilder configDesc) {
+		
+		// Copy parameters passed by command line to properties
+		Iterator i_options = line.iterator();
+		while (i_options.hasNext()) {
+			Option o = (Option)i_options.next();
+			if (o.getValue() == null)	// don't take boolean parameters
+				continue;
+			if (o.getLongOpt() == null) {
+				this.properties.setProperty(o.getOpt(), o.getValue());
+				configDesc.append( String.format(PARAM_PRINT, o.getOpt(), o.getValue() + "\n" ) );
+			}
+			else {
+				this.properties.setProperty(o.getLongOpt(), o.getValue());
+				configDesc.append( String.format(PARAM_PRINT, o.getLongOpt(), o.getValue() + "\n" ) );
+			}
+		}
+		
+		// sets boolean fields		
+		this.verbose = line.hasOption("verbose");
+		this.verboseDetails = line.hasOption("verboseDetails");
+		
 		// Arguments
 		if (line.getArgs().length > 1 && line.getArgs()[1].length() > 0 ){
 			this.arg1 = line.getArgs()[1];
@@ -186,8 +252,16 @@ public class LinerOptions {
 			this.arg3 = line.getArgs()[3];
 			configDesc.append( String.format(PARAM_PRINT, "Argument 3", this.arg3) + "\n" );
 		}
-		
-		// Parameters
+	}
+	
+	/*
+	 * Tutaj dodatkowe przetwarzanie parametrów, korzystając z pola
+	 * properties.
+	 * configDesc jest już zrobione i nie występuje w tej metodzie!
+	 */
+	private void processParameters() throws Exception {
+
+/*		// Parameters
 		if ( line.hasOption(LinerOptions.OPTION_CHUNKER)){
 			String[] values = line.getOptionValues(LinerOptions.OPTION_CHUNKER);
 			for (String chunkerDescription : values){
@@ -326,6 +400,7 @@ public class LinerOptions {
 
 		// Instructions after parsing arguments and paramenters
 //		LinerOptions.get().dm.getEntries().remove("COMMON");		
+*/
 	}
 	
 	/**
@@ -385,9 +460,6 @@ public class LinerOptions {
     	options.addOption(OptionBuilder.withArgName("description").hasArg()
 				.withDescription("feature name recognized by NERD (name or name:dictionary_file)")
 				.create(OPTION_FEATURE));
-		options.addOption(OptionBuilder.withArgName("filename").hasArg()
-			.withDescription("read input from file")
-			.create(OPTION_FILE));
     	options.addOption(OptionBuilder.withArgName("filters").hasArg()
 				.withDescription("filters to apply")
 				.create("filter"));
@@ -407,7 +479,10 @@ public class LinerOptions {
 				.create("summaryTypesOrder"));
     	options.addOption(OptionBuilder
 				.withArgName("filename").hasArg().withDescription("name of file with configuration")
-				.create("ini"));
+				.create(OPTION_INI));
+		options.addOption(OptionBuilder.withArgName("filename").hasArg()
+			.withDescription("read input from file")
+			.create(OPTION_INPUT_FILE));
 		options.addOption(OptionBuilder.withArgName("format").hasArg()
 			.withDescription("input format (iob or ccl)")
 			.create(OPTION_INPUT_FORMAT));
@@ -420,15 +495,15 @@ public class LinerOptions {
 //		options.addOption(OptionBuilder.withArgName("filename").hasArg()
 //			.withDescription("save output to file")
 //				.create("output"));
+		options.addOption(OptionBuilder.withArgName("filename").hasArg()
+			.withDescription("save output to file")
+			.create(OPTION_OUTPUT_FILE));
 		options.addOption(OptionBuilder.withArgName("format").hasArg()
 				.withDescription("output format (iob or ccl)")
 				.create(OPTION_OUTPUT_FORMAT));
-		options.addOption(OptionBuilder.withArgName("filename").hasArg()
-			.withDescription("save output to file")
-			.create(OPTION_TARGET));
-    	options.addOption(new Option("silent", false, "does not print any additional text in batch mode"));
-    	options.addOption(new Option("verbose", false, "print brief information about processing"));
-    	options.addOption(new Option("verboseDetails", false, "print detailed information about processing"));
+    	options.addOption(new Option(OPTION_SILENT, false, "does not print any additional text in batch mode"));
+    	options.addOption(new Option(OPTION_VERBOSE, false, "print brief information about processing"));
+    	options.addOption(new Option(OPTION_VERBOSE_DETAILS, false, "print detailed information about processing"));
     	options.addOption(OptionBuilder.withArgName("values").hasArg()
 				.withDescription("chunker weights for ensemble")
 				.create(LinerOptions.OPTION_WEIGHTS));

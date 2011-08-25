@@ -16,7 +16,7 @@ public class IobStreamReader extends StreamReader {
 	private String nextParagraphId = null;
 	
 	public IobStreamReader(String filename){
-		if (!filename.isEmpty()) {
+		if ((filename != null) && (!filename.isEmpty())) {
 			try {
 				this.ir = new BufferedReader(
 					new FileReader(filename));

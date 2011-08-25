@@ -18,7 +18,7 @@ public class IobStreamWriter extends StreamWriter {
 	private boolean open = false;
 
 	public IobStreamWriter(String filename) {
-		if (!filename.isEmpty()) {
+		if ((filename != null) && (!filename.isEmpty())) {
 			try {
 				this.ow = new BufferedWriter(
 					new FileWriter(filename));

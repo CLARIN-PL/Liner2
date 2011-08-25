@@ -22,10 +22,12 @@ public class WriterFactory {
 	 * @return
 	 */
 	public StreamWriter getStreamWriter(LinerOptions options){
-		if (options.outputFormat.equals("ccl"))
-			return new CclStreamWriter(options.outputFile);
-		else if (options.outputFormat.equals("iob"))
-			return new IobStreamWriter(options.outputFile);
+		String outputFormat = options.getOption(options.OPTION_OUTPUT_FORMAT);
+		String outputFile = options.getOption(options.OPTION_OUTPUT_FILE);
+		if (outputFormat.equals("ccl"))
+			return new CclStreamWriter(outputFile);
+		else if (outputFormat.equals("iob"))
+			return new IobStreamWriter(outputFile);
 		else		
 			return null;
 	}

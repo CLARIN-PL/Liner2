@@ -43,7 +43,7 @@ public class CclStreamReader extends StreamReader {
 	
 	public CclStreamReader(String filename){
 		InputStream is = System.in;
-		if (!filename.isEmpty()) {
+		if ((filename != null) && (!filename.isEmpty())) {
 			try {
 				is = new FileInputStream(filename);
 			} catch (IOException ex) {
