@@ -64,6 +64,15 @@
         <!-- <mkdir dir="production/models/crf"/>-->
 	</target>
 
+	<!-- Instalacja modułu. Umożliwia uruchomienie modułu z dowolnej lokalizacji. --> 	
+	<target name="install" depends="clean">
+		<echo file="/usr/local/bin/liner2">#!/bin/bash
+/home/czuk/nlp/eclipse/workspace_liner2/liner2/liner2.sh $@
+		</echo>
+		<chmod file="/usr/local/bin/liner2" perm="ugo+x"/>
+		<echo message="Now you can run `liner2 parameters` in any location."/>
+	</target>
+		
 	<target name="crfpp-jar" depends="clean">
 		<exec executable="make" dir="external/crfpp/java"/>		
 		<copy file="external/crfpp/java/CRFPP.jar" todir="lib"/>
