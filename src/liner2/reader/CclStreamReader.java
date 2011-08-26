@@ -220,13 +220,6 @@ public class CclStreamReader extends StreamReader {
 		// process annotations
 		for (Chunk chunk : annotations.values())
 			sentence.addChunk(chunk);
-			
-		// initialize attributes index
-		AttributeIndex attributeIndex = new AttributeIndex();
-		attributeIndex.addAttribute("orth");
-		attributeIndex.addAttribute("base");
-		attributeIndex.addAttribute("ctag");
-		sentence.setAttributeIndex(attributeIndex);
 		
 		return sentence;
 	}

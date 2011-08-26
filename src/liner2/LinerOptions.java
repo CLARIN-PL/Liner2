@@ -71,6 +71,7 @@ public class LinerOptions {
 	
 	public static final String OPTION_CHUNKER = "chunker";
 	public static final String OPTION_COMMON = "common";
+	public static final String OPTION_CORPUS = "corpus";
 	public static final String OPTION_FEATURE = "feature";
 	public static final String OPTION_FILTER = "filter";
 	public static final String OPTION_HEURISTICS = "heuristics";
@@ -237,6 +238,13 @@ public class LinerOptions {
 		// sets boolean fields		
 		this.verbose = line.hasOption(OPTION_VERBOSE);
 		this.verboseDetails = line.hasOption(OPTION_VERBOSE_DETAILS);
+		
+		// read corpus descriptions
+		if (line.hasOption(OPTION_CORPUS)) {
+			for (String cd : line.getOptionValues(OPTION_CORPUS)) {
+				// TODO
+			}
+		}
 		
 		// read chunker descriptions
 		if (line.hasOption(OPTION_CHUNKER)) {

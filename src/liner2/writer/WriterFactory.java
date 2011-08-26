@@ -21,9 +21,9 @@ public class WriterFactory {
 	 * TODO
 	 * @return
 	 */
-	public StreamWriter getStreamWriter(LinerOptions options){
-		String outputFormat = options.getOption(options.OPTION_OUTPUT_FORMAT);
-		String outputFile = options.getOption(options.OPTION_OUTPUT_FILE);
+	public StreamWriter getStreamWriter(String outputFile, String outputFormat){
+//		String outputFormat = options.getOption(options.OPTION_OUTPUT_FORMAT);
+//		String outputFile = options.getOption(options.OPTION_OUTPUT_FILE);
 		if (outputFormat.equals("ccl"))
 			return new CclStreamWriter(outputFile);
 		else if (outputFormat.equals("iob"))

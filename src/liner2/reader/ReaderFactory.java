@@ -21,9 +21,9 @@ public class ReaderFactory {
 	 * TODO
 	 * @return
 	 */
-	public StreamReader getStreamReader(LinerOptions options){
-		String inputFormat = options.getOption(options.OPTION_INPUT_FORMAT);
-		String inputFile = options.getOption(options.OPTION_INPUT_FILE);
+	public StreamReader getStreamReader(String inputFile, String inputFormat){
+		//String inputFormat = options.getOption(options.OPTION_INPUT_FORMAT);
+		//String inputFile = options.getOption(options.OPTION_INPUT_FILE);
 		if (inputFormat.equals("ccl"))
 			return new CclStreamReader(inputFile);
 		else if (inputFormat.equals("iob"))

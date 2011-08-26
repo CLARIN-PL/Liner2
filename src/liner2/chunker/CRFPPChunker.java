@@ -124,8 +124,6 @@ public class CRFPPChunker extends Chunker
 			}			
     	}
     	
-    	//System.out.println("Paragraphs: " + paragraphSet.getParagraphs().size());
-    	
     	for (Paragraph paragraph : paragraphSet.getParagraphs())
     		for (Sentence sentence : paragraph.getSentences()) {
     			int numAttrs = sentence.getAttributeIndexLength();

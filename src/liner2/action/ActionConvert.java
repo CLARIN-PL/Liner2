@@ -17,19 +17,19 @@ public class ActionConvert extends Action {
 		// TODO Auto-generated method stub
 		// Wczytuje wskazany dokument, a następnie zapisuje go pod wskazaną nazwą.
 		// Parametry:
-		// -i format wejściowy: iob, xces
+		// -i format wejściowy: iob, ccl
 		// -o format wyjściowy: iob, ccl
 		// -f (--file) plik wejściowy, jeżeli brak to czyta z stdin
 		// -t (--target) plik wyjściowy, jeżeli brak, to na stdout
 		
-		StreamReader reader = ReaderFactory.get()
-			.getStreamReader(LinerOptions.get());
+		StreamReader reader = ReaderFactory.get().getStreamReader(
+			LinerOptions.get().getOption(LinerOptions.OPTION_INPUT_FILE),
+			LinerOptions.get().getOption(LinerOptions.OPTION_INPUT_FORMAT));
 		ParagraphSet ps = reader.readParagraphSet();
 		
-		System.out.println("Czytanie zakończone.");
-		
-		StreamWriter writer = WriterFactory.get()
-			.getStreamWriter(LinerOptions.get());
+		StreamWriter writer = WriterFactory.get().getStreamWriter(
+			LinerOptions.get().getOption(LinerOptions.OPTION_OUTPUT_FILE),
+			LinerOptions.get().getOption(LinerOptions.OPTION_OUTPUT_FORMAT));
 		writer.writeParagraphSet(ps);
 	}
 

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Paragraph {
 
 	private String id = null;
+	private AttributeIndex attributeIndex = null;
 	
 	private ArrayList<Sentence> sentences = new ArrayList<Sentence>(); 
 	
@@ -14,13 +15,25 @@ public class Paragraph {
 	
 	public void addSentence(Sentence sentence) {
 		sentences.add(sentence);
+		if (sentence.getAttributeIndex() == null)
+			sentence.setAttributeIndex(this.attributeIndex);
+	}
+	
+	public AttributeIndex getAttributeIndex() {
+		return this.attributeIndex;
 	}
 	
 	public String getId() {
-		return id;
+		return this.id;
 	}
 	
 	public ArrayList<Sentence> getSentences() {
-		return sentences;
+		return this.sentences;
+	}
+	
+	public void setAttributeIndex(AttributeIndex attributeIndex) {
+		this.attributeIndex = attributeIndex;
+		for (Sentence s : this.sentences)
+			s.setAttributeIndex(attributeIndex);
 	}
 }

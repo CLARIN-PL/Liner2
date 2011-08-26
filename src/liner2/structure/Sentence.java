@@ -53,7 +53,11 @@ public class Sentence {
 	}
 	
 	public int getAttributeIndexLength() {
-		return attributeIndex.getLength();
+		return this.attributeIndex.getLength();
+	}
+	
+	public AttributeIndex getAttributeIndex() {
+		return this.attributeIndex;
 	}
 	
 	/*

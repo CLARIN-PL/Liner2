@@ -2,6 +2,7 @@ package liner2.reader;
 
 import java.util.ArrayList;
 
+import liner2.structure.AttributeIndex;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 
@@ -21,6 +22,14 @@ public abstract class StreamReader {
 	 */
 	public ParagraphSet readParagraphSet(){
 		ParagraphSet paragraphSet = new ParagraphSet();
+					
+		// initialize attributes index
+		AttributeIndex attributeIndex = new AttributeIndex();
+		attributeIndex.addAttribute("orth");
+		attributeIndex.addAttribute("base");
+		attributeIndex.addAttribute("ctag");
+		paragraphSet.setAttributeIndex(attributeIndex);
+		
 		Paragraph p = null;
 		while (true) {
 			p = readParagraph();
