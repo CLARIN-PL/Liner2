@@ -5,4 +5,4 @@
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 
 # Run liner2
-java -jar $DIR/liner2.jar $@
+java -Djava.library.path=./lib -jar $DIR/liner2.jar $@

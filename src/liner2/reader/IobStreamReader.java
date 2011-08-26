@@ -49,14 +49,22 @@ public class IobStreamReader extends StreamReader {
 		if (nextParagraphId == null)
 			return null;
 			
+		// initialize attributes index
+		AttributeIndex attributeIndex = new AttributeIndex();
+		attributeIndex.addAttribute("orth");
+		attributeIndex.addAttribute("base");
+		attributeIndex.addAttribute("ctag");
+			
 		Paragraph paragraph = new Paragraph(nextParagraphId);
 		nextParagraphId = null;
 		Sentence currentSentence = new Sentence();
 		Chunk currentChunk = null;
+
 		while (true) {
 			String line = null;
 			try {
 				if (!ir.ready()) {
+					currentSentence.setAttributeIndex(attributeIndex);
 					paragraph.addSentence(currentSentence);
 					return paragraph;
 				}		
@@ -66,13 +74,7 @@ public class IobStreamReader extends StreamReader {
 			}
 			
 			if (line.trim().isEmpty()) {
-				// initialize attributes index
-				AttributeIndex attributeIndex = new AttributeIndex();
-				attributeIndex.addAttribute("orth");
-				attributeIndex.addAttribute("base");
-				attributeIndex.addAttribute("ctag");
 				currentSentence.setAttributeIndex(attributeIndex);
-				
 				paragraph.addSentence(currentSentence);
 				currentSentence = new Sentence();
 			}

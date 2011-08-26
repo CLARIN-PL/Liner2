@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 import liner2.structure.Chunk;
 import liner2.structure.Chunking;
+import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
 
 public abstract class Chunker {
@@ -15,6 +16,8 @@ public abstract class Chunker {
 	 * @return
 	 */
 	public abstract Chunking chunkSentence(Sentence sentence);
+	
+	public abstract void train(ParagraphSet paragraphSet);
 	
 	/**
 	 * Zwolnienie zasobów wykorzystywanych przez chunker, 

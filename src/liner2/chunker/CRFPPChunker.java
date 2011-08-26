@@ -124,6 +124,8 @@ public class CRFPPChunker extends Chunker
 			}			
     	}
     	
+    	//System.out.println("Paragraphs: " + paragraphSet.getParagraphs().size());
+    	
     	for (Paragraph paragraph : paragraphSet.getParagraphs())
     		for (Sentence sentence : paragraph.getSentences()) {
     			int numAttrs = sentence.getAttributeIndexLength();
@@ -146,6 +148,8 @@ public class CRFPPChunker extends Chunker
     			}
     			this.trainingFileWriter.write("\n");
     		}
+    		
+    	this.trainingFileWriter.flush();
     		
 //        for (int i = 0; i < toks.length; i++) {
 //            String oStr = ""; // orth
