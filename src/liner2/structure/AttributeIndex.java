@@ -26,6 +26,18 @@ public class AttributeIndex {
 	}
 	
 	/**
+	 * Porównuje z innym obiektem tej klasy.
+	 */
+	public boolean equals(AttributeIndex ai) {
+		if (this.indexes.size() != ai.getLength())
+			return false;
+		for (int i = 0; i < this.indexes.size(); i++)
+			if (ai.getIndex(this.indexes.get(i)) != i)
+				return false;
+		return true;
+	}
+	
+	/**
 	 * Zwraca numer porządkowy atrybutu o danej nazwie.
 	 * @param name
 	 * @return

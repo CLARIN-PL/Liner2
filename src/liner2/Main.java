@@ -9,7 +9,7 @@ import liner2.action.ActionTrain;
 //import liner2.action.ActionEval;
 //import liner2.action.ActionEvalCV;
 import liner2.action.ActionNull;
-//import liner2.action.ActionPipe;
+import liner2.action.ActionPipe;
 //import liner2.action.ActionTag;
 //import liner2.action.ActionTrain;
 
@@ -42,8 +42,6 @@ public class Main {
 //	            action = new ActionDict();
 //	        } else if (mode.equals("batch")) {
 //	            action = new ActionBatch();
-//	        } else if (mode.equals("pipe")) {
-//	            action = new ActionPipe();
 //	        } else if (mode.equals("dicts")) {
 //	            action = new ActionDictStats();
 //	        } else if (mode.equals("tag") ) {
@@ -54,8 +52,9 @@ public class Main {
 	        } 
 	    	else if (mode.equals("convert") ) {
 	            action = new ActionConvert();
-	        } 
-            else if (mode.equals("train") ) {
+	        } else if (mode.equals("pipe")) {
+	            action = new ActionPipe();
+            } else if (mode.equals("train") ) {
 	            action = new ActionTrain();
 	        }
 	

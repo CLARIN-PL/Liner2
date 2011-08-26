@@ -12,6 +12,7 @@ import java.util.Properties;
 import java.util.TreeSet;
 
 import liner2.chunker.factory.ChunkerFactory;
+import liner2.tools.CorpusFactory;
 import liner2.tools.TemplateFactory;
 
 //import liner.chunker.HeuristicChunker;
@@ -251,6 +252,18 @@ public class LinerOptions {
 				this.chunkersDescription.add(cd);
 		}
 		
+		// read corpus descriptions
+		if (line.hasOption(OPTION_CORPUS)) {
+			for (String cd : line.getOptionValues(OPTION_CORPUS)) {
+				try {
+					CorpusFactory.get().parse(cd);
+				}
+				catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+		
 		// read template descriptions
 		if (line.hasOption(OPTION_TEMPLATE)) {
 			for (String td : line.getOptionValues(OPTION_TEMPLATE)) {
@@ -481,6 +494,9 @@ public class LinerOptions {
     	options.addOption(OptionBuilder.withArgName("filename").hasArg()
 				.withDescription("loads a list of common words from a file")
 				.create("common"));
+		options.addOption(OptionBuilder.withArgName("description").hasArg()
+				.withDescription("load a specified file as a corpus")
+				.create(OPTION_CORPUS));
     	options.addOption(OptionBuilder.withArgName("description").hasArg()
 				.withDescription("feature name recognized by NERD (name or name:dictionary_file)")
 				.create(OPTION_FEATURE));

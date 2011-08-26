@@ -28,12 +28,11 @@ public class ActionTrain extends Action{
 	 */
 	public void run() throws Exception{
 
-        StreamReader reader = ReaderFactory.get()
-			.getStreamReader(LinerOptions.get());
-		ParagraphSet ps = reader.readParagraphSet();
+        /*StreamReader reader = ReaderFactory.get().getStreamReader(
+        	LinerOptions.get().getOption(LinerOptions.OPTION_INPUT_FILE),
+        	LinerOptions.get().getOption(LinerOptions.OPTION_INPUT_FORMAT));
+		ParagraphSet ps = reader.readParagraphSet();*/
 		
-		System.out.println("Paragraphs: " + ps.getParagraphs().size());
-        
         /*for (String chunkerDescription : LinerOptions.get().chunkersDescription){
         	Main.log(chunkerDescription);
         	//ChunkerFactory.get().createChunker(chunkerDescription);
