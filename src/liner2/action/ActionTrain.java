@@ -28,19 +28,12 @@ public class ActionTrain extends Action{
 	 */
 	public void run() throws Exception{
 
-//		StreamReader reader = ReaderFactory.get()
-//			.getStreamReader(LinerOptions.get());
-//		ParagraphSet ps = reader.readParagraphSet();
-
-		ParagraphSet ps = new ParagraphSet();
+        StreamReader reader = ReaderFactory.get()
+			.getStreamReader(LinerOptions.get());
+		ParagraphSet ps = reader.readParagraphSet();
 		
-<<<<<<< .merge_file_LGFkGS
-        Hashtable<String, Chunker> chunkers = ChunkerFactory.get()
-        	.createChunkers(LinerOptions.get().chunkersDescription);
-=======
 		System.out.println("Paragraphs: " + ps.getParagraphs().size());
         
->>>>>>> .merge_file_Lkj9RS
         /*for (String chunkerDescription : LinerOptions.get().chunkersDescription){
         	Main.log(chunkerDescription);
         	//ChunkerFactory.get().createChunker(chunkerDescription);

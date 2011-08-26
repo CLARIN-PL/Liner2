@@ -245,13 +245,6 @@ public class LinerOptions {
 		if (line.hasOption(OPTION_VERBOSE_DETAILS))
 			this.verboseDetails = true;
 		
-		// read corpus descriptions
-		if (line.hasOption(OPTION_CORPUS)) {
-			for (String cd : line.getOptionValues(OPTION_CORPUS)) {
-				// TODO
-			}
-		}
-		
 		// read chunker descriptions
 		if (line.hasOption(OPTION_CHUNKER)) {
 			for (String cd : line.getOptionValues(OPTION_CHUNKER))
