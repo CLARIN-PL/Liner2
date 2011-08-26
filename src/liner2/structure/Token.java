@@ -44,6 +44,10 @@ public class Token {
 	
 	public void addTag(Tag tag) {
 		tags.add(tag);
+		if (attributes.size() < 3) {
+			this.setAttributeValue(1, tag.getBase());
+			this.setAttributeValue(2, tag.getCtag());
+		}
 	}
 	
 	public ArrayList<Tag> getTags() {

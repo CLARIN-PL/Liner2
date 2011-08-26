@@ -25,6 +25,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 
+import liner2.structure.AttributeIndex;
 import liner2.structure.Chunk;
 import liner2.structure.Paragraph;
 import liner2.structure.Sentence;
@@ -217,11 +218,16 @@ public class CclStreamReader extends StreamReader {
 		}
 		
 		// process annotations
-		for (Chunk chunk : annotations.values()) {
-			//System.out.println("["+chunk.getBegin()+","+chunk.getEnd()+","+chunk.getType()+"]");
+		for (Chunk chunk : annotations.values())
 			sentence.addChunk(chunk);
-		}
-		//System.out.println("\n");
+			
+		// initialize attributes index
+		AttributeIndex attributeIndex = new AttributeIndex();
+		attributeIndex.addAttribute("orth");
+		attributeIndex.addAttribute("base");
+		attributeIndex.addAttribute("ctag");
+		sentence.setAttributeIndex(attributeIndex);
+		
 		return sentence;
 	}
 	
@@ -245,7 +251,6 @@ public class CclStreamReader extends StreamReader {
 						if (annotations.containsKey(ann))
 							annotations.get(ann).setEnd(idx);
 						else {
-							//System.out.println("ann : " + ann);
 							String type = ann.substring(0, ann.lastIndexOf('#')).toUpperCase();
 							annotations.put(ann, new Chunk(idx, idx, type, sentence));
 						}

@@ -21,7 +21,8 @@ public class AttributeIndex {
 	 * @return
 	 */
 	public int addAttribute(String name){
-		throw new Error("Not implemented");
+		indexes.add(name);
+		return indexes.size()-1;
 	}
 	
 	/**
@@ -30,7 +31,11 @@ public class AttributeIndex {
 	 * @return
 	 */
 	public int getIndex(String name){
-		throw new Error("Not implemented");
+		return indexes.indexOf(name);
+	}
+	
+	public int getLength() {
+		return indexes.size();
 	}
 	
 	public String getAttributeValue(Token token, String attributeName){

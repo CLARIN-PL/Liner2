@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import liner2.structure.AttributeIndex;
 import liner2.structure.Chunk;
 import liner2.structure.Paragraph;
 import liner2.structure.Sentence;
@@ -65,6 +66,13 @@ public class IobStreamReader extends StreamReader {
 			}
 			
 			if (line.trim().isEmpty()) {
+				// initialize attributes index
+				AttributeIndex attributeIndex = new AttributeIndex();
+				attributeIndex.addAttribute("orth");
+				attributeIndex.addAttribute("base");
+				attributeIndex.addAttribute("ctag");
+				currentSentence.setAttributeIndex(attributeIndex);
+				
 				paragraph.addSentence(currentSentence);
 				currentSentence = new Sentence();
 			}

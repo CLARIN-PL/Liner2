@@ -13,7 +13,7 @@ import java.util.HashSet;
 public class Sentence {
 	
 	/* Indeks nazw atrybutów */
-	AttributeIndex attributesIndex = null;
+	AttributeIndex attributeIndex = null;
 	
 	/* Sekwenale cja tokenów wchodzących w skład zdania */
 	ArrayList<Token> tokens = new ArrayList<Token>();
@@ -52,6 +52,10 @@ public class Sentence {
 		return this.chunks;
 	}
 	
+	public int getAttributeIndexLength() {
+		return attributeIndex.getLength();
+	}
+	
 	/*
 	 * Zwraca ilość tokenów.
 	 */
@@ -61,5 +65,9 @@ public class Sentence {
 	
 	public ArrayList<Token> getTokens() {
 		return tokens;
+	}
+	
+	public void setAttributeIndex(AttributeIndex attributeIndex) {
+		this.attributeIndex = attributeIndex;
 	}
 }

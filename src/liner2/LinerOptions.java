@@ -12,6 +12,7 @@ import java.util.Properties;
 import java.util.TreeSet;
 
 import liner2.chunker.factory.ChunkerFactory;
+import liner2.tools.TemplateFactory;
 
 //import liner.chunker.HeuristicChunker;
 //import liner.chunker.factory.ChunkerFactory;

@@ -12,8 +12,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import liner2.structure.Chunking;
-import liner2.structure.Sentence;
+import liner2.structure.Chunk;
+import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
+import liner2.structure.Sentence;
+import liner2.structure.Token;
 
 import org.chasen.crfpp.Tagger;
 
@@ -121,16 +124,29 @@ public class CRFPPChunker extends Chunker
 			}			
     	}
     	
-    	/*for (Paragraph paragraph : paragraphSet.getParagraphs())
+    	for (Paragraph paragraph : paragraphSet.getParagraphs())
     		for (Sentence sentence : paragraph.getSentences()) {
-    			for (Token token : sentence.getTokens()) {
+    			int numAttrs = sentence.getAttributeIndexLength();
+    			ArrayList<Token> tokens = sentence.getTokens();
+    			for (int i = 0; i < tokens.size(); i++) {
     				String oStr = "";
-    				//for (
-    				//TODO
+    				for (int j = 0; j < numAttrs; j++)
+    					oStr += " " + tokens.get(i).getAttributeValue(j);
+    				Chunk chunk = sentence.getChunkAt(i);
+    				if (chunk == null)
+    					oStr += " O";
+    				else {
+    					if (chunk.getBegin() == i)
+    						oStr += " B-";
+    					else
+    						oStr += " I-";
+    					oStr += chunk.getType();
+    				}
+    				this.trainingFileWriter.write(oStr.trim() + "\n");
     			}
     			this.trainingFileWriter.write("\n");
-    		}*/
-    	
+    		}
+    		
 //        for (int i = 0; i < toks.length; i++) {
 //            String oStr = ""; // orth
 //            for ( int j=0; j<RegexLineTagParser.currentSentenceFeatures.get(i).length; j++)            
