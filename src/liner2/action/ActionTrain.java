@@ -1,11 +1,14 @@
 package liner2.action;
 
 import java.util.Hashtable;
+import java.util.Set;
 
 import liner2.LinerOptions;
 import liner2.Main;
 import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
+import liner2.tools.TemplateFactory;
+import liner2.structure.AttributeIndex;
 
 /**
  * Train chunkers.
@@ -28,6 +31,13 @@ public class ActionTrain extends Action{
         	Main.log("");
         }*/
         
+        AttributeIndex attributeIndex = new AttributeIndex();
+        attributeIndex.addAttribute("orth");
+        attributeIndex.addAttribute("base");
+        attributeIndex.addAttribute("ctag");
+        
+        for (Object templateName : TemplateFactory.get().getTemplateNames())
+        	TemplateFactory.get().store(""+templateName, "workdir/"+templateName+".tpl", attributeIndex);
 	}
 		
 }

@@ -82,6 +82,7 @@ public class LinerOptions {
 	public static final String OPTION_OUTPUT_FORMAT = "o";
 	public static final String OPTION_PYTHON = "python";
 	public static final String OPTION_SILENT = "silent";
+	public static final String OPTION_TEMPLATE = "template";
 	public static final String OPTION_VERBOSE = "verbose";
 	public static final String OPTION_VERBOSE_DETAILS = "verboseDetails";
 	
@@ -234,13 +235,24 @@ public class LinerOptions {
 		}
 		
 		// sets boolean fields		
-		this.verbose = line.hasOption("verbose");
-		this.verboseDetails = line.hasOption("verboseDetails");
+		this.verbose = line.hasOption(OPTION_VERBOSE);
+		this.verboseDetails = line.hasOption(OPTION_VERBOSE_DETAILS);
 		
 		// read chunker descriptions
-		if (line.hasOption("chunker")) {
+		if (line.hasOption(OPTION_CHUNKER)) {
 			for (String cd : line.getOptionValues(OPTION_CHUNKER))
 				this.chunkersDescription.add(cd);
+		}
+		
+		// read template descriptions
+		if (line.hasOption(OPTION_TEMPLATE)) {
+			for (String td : line.getOptionValues(OPTION_TEMPLATE)) {
+				try {
+					TemplateFactory.get().parse(td);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
 		}
 		
 		// Arguments
@@ -498,6 +510,9 @@ public class LinerOptions {
 		options.addOption(OptionBuilder.withArgName("format").hasArg()
 				.withDescription("output format (iob or ccl)")
 				.create(OPTION_OUTPUT_FORMAT));
+		options.addOption(OptionBuilder.withArgName("description").hasArg()
+				.withDescription("define feature template")
+				.create(OPTION_TEMPLATE));
     	options.addOption(new Option(OPTION_SILENT, false, "does not print any additional text in batch mode"));
     	options.addOption(new Option(OPTION_VERBOSE, false, "print brief information about processing"));
     	options.addOption(new Option(OPTION_VERBOSE_DETAILS, false, "print detailed information about processing"));
