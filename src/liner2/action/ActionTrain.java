@@ -34,8 +34,13 @@ public class ActionTrain extends Action{
 
 		ParagraphSet ps = new ParagraphSet();
 		
+<<<<<<< .merge_file_LGFkGS
         Hashtable<String, Chunker> chunkers = ChunkerFactory.get()
         	.createChunkers(LinerOptions.get().chunkersDescription);
+=======
+		System.out.println("Paragraphs: " + ps.getParagraphs().size());
+        
+>>>>>>> .merge_file_Lkj9RS
         /*for (String chunkerDescription : LinerOptions.get().chunkersDescription){
         	Main.log(chunkerDescription);
         	//ChunkerFactory.get().createChunker(chunkerDescription);
@@ -50,9 +55,13 @@ public class ActionTrain extends Action{
         
         for (Object templateName : TemplateFactory.get().getTemplateNames())
         	TemplateFactory.get().store(""+templateName, templateName+".tpl", attributeIndex);
-        
-        for (Chunker chunker : chunkers.values())
-        	chunker.train(ps);
+
+        ChunkerFactory.get().createChunkers(LinerOptions.get().chunkersDescription);
+
+//        for (Chunker chunker : chunkers.values()){
+//        	System.out.println(chunker);
+//        	chunker.train(ps);
+//        }
 	}
 		
 }

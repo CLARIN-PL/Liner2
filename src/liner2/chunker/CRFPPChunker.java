@@ -110,8 +110,12 @@ public class CRFPPChunker extends Chunker
 		this.compileTagger();
     }
 
+    /**
+     * 
+     * @param paragraphSet
+     */
     private void prepareTrainingData(ParagraphSet paragraphSet) {
-//      public void handle(String[] toks, String[] whitespaces, String[] tags) {
+
     	// Utwórz tymczasowy plik do zapisu danych treningowych
     	if ( this.trainingFileWriter == null ){
     		try {
@@ -149,14 +153,6 @@ public class CRFPPChunker extends Chunker
     		
     	this.trainingFileWriter.flush();
     		
-//        for (int i = 0; i < toks.length; i++) {
-//            String oStr = ""; // orth
-//            for ( int j=0; j<RegexLineTagParser.currentSentenceFeatures.get(i).length; j++)            
-//            	oStr += " " + RegexLineTagParser.currentSentenceFeatures.get(i)[j];
-//            oStr += " " + tags[i];
-//            this.trainingFileWriter.write(oStr.trim() + "\n");
-//        }        
-//        this.trainingFileWriter.write("\n");    	
     }
     
     /**
@@ -172,8 +168,6 @@ public class CRFPPChunker extends Chunker
     	cmd.file_model = this.model_filename;
     	cmd.file_iob = this.trainingFile.getAbsolutePath();
     	cmd.threads = this.threads;
-    	
-    	System.out.println();
     	
         try {
 			Process p = Runtime.getRuntime().exec(cmd.get_crf_learn());

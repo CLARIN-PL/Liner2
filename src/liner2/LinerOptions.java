@@ -124,6 +124,10 @@ public class LinerOptions {
 		this.properties = new Properties();
 	}
 	
+	public static boolean isOption(String name){
+		return LinerOptions.get().getProperties().contains(OPTION_VERBOSE);
+	}
+	
 	/**
 	 * 
 	 * @return
@@ -220,7 +224,7 @@ public class LinerOptions {
 	private void parseParameters(CommandLine line, StringBuilder configDesc) {
 		
 		// Copy parameters passed by command line to properties
-		Iterator i_options = line.iterator();
+		Iterator<?> i_options = line.iterator();
 		while (i_options.hasNext()) {
 			Option o = (Option)i_options.next();
 			if (o.getValue() == null)	// don't take boolean parameters
@@ -235,9 +239,11 @@ public class LinerOptions {
 			}
 		}
 		
-		// sets boolean fields		
-		this.verbose = line.hasOption(OPTION_VERBOSE);
-		this.verboseDetails = line.hasOption(OPTION_VERBOSE_DETAILS);
+		// sets boolean fields
+		if (line.hasOption(OPTION_VERBOSE))
+			this.verbose = true;
+		if (line.hasOption(OPTION_VERBOSE_DETAILS))
+			this.verboseDetails = true;
 		
 		// read corpus descriptions
 		if (line.hasOption(OPTION_CORPUS)) {

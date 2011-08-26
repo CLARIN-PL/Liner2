@@ -24,7 +24,7 @@ public class ChunkerFactoryItemCRFPPTrain extends ChunkerFactoryItem {
             Main.log("--> CRFPP Chunker train");
 
             int threads = Integer.parseInt(matcherCRFPP.group(1));
-            String template_filename = matcherCRFPP.group(2);
+            String template_filename = matcherCRFPP.group(2) + ".tpl";
             String iob_filename = matcherCRFPP.group(3);
             
             String model_filename = "crf_model.bin";
