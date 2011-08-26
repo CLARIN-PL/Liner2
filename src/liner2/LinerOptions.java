@@ -85,6 +85,7 @@ public class LinerOptions {
 	public static final String OPTION_PYTHON = "python";
 	public static final String OPTION_SILENT = "silent";
 	public static final String OPTION_TEMPLATE = "template";
+	public static final String OPTION_USE = "use";
 	public static final String OPTION_VERBOSE = "verbose";
 	public static final String OPTION_VERBOSE_DETAILS = "verboseDetails";
 	
@@ -530,6 +531,9 @@ public class LinerOptions {
 		options.addOption(OptionBuilder.withArgName("filename").hasArg()
 			.withDescription("save output to file")
 			.create(OPTION_OUTPUT_FILE));
+		options.addOption(OptionBuilder.withArgName("chunkers").hasArg()
+			.withDescription("specify chunkers to use")
+			.create(OPTION_USE));
 		options.addOption(OptionBuilder.withArgName("format").hasArg()
 				.withDescription("output format (iob or ccl)")
 				.create(OPTION_OUTPUT_FORMAT));
