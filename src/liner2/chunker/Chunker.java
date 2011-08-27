@@ -17,6 +17,11 @@ public abstract class Chunker {
 	 */
 	public abstract Chunking chunkSentence(Sentence sentence);
 	
+	public void chunkSentenceInPlace(Sentence sentence){
+		Chunking chunking = this.chunkSentence(sentence);
+		sentence.setChunking(chunking);
+	}
+	
 	public abstract void train(ParagraphSet paragraphSet);
 	
 	/**

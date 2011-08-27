@@ -1,7 +1,5 @@
 package liner2.action;
 
-import java.util.Hashtable;
-
 import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
 
@@ -19,7 +17,7 @@ import liner2.LinerOptions;
 
 /**
  * Chunking in pipe mode.
- * @author Maciej Janicki
+ * @author Maciej Janicki, Michał Marcińczuk
  *
  */
 public class ActionPipe extends Action{
@@ -30,24 +28,28 @@ public class ActionPipe extends Action{
 	public void run() throws Exception{
         
         StreamReader reader = ReaderFactory.get().getStreamReader(
-			LinerOptions.get().getOption(LinerOptions.OPTION_INPUT_FILE),
-			LinerOptions.get().getOption(LinerOptions.OPTION_INPUT_FORMAT));
+			LinerOptions.getOption(LinerOptions.OPTION_INPUT_FILE),
+			LinerOptions.getOption(LinerOptions.OPTION_INPUT_FORMAT));
 		ParagraphSet ps = reader.readParagraphSet();
-        
-        Hashtable<String, Chunker> chunkers = ChunkerFactory.get().createChunkers(LinerOptions.get().chunkersDescription);
+        	
+		if ( !LinerOptions.isOption(LinerOptions.OPTION_USE) ){
+			throw new Error("Parameter --use <chunker_pipe_desription> not set");
+		}
+		
+		/* Create all defined chunkers. */
+		ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescription);
+		
+		Chunker chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
 
-		for (Paragraph p : ps.getParagraphs())
+		for (Paragraph p : ps.getParagraphs()){
 			for (Sentence s : p.getSentences()) {
-				for (Chunker chunker : chunkers.values()) {
-					// TODO zmienić wynik Chunker.chunkSentence() z Chunking na void
-					// zapisywać ochunkowanie razem ze zdaniem w obiekcie Sentence
-//					chunker.chunkSentence(s);
-				}
+				chunker.chunkSentenceInPlace(s);
 			}
+		}
 			
 		StreamWriter writer = WriterFactory.get().getStreamWriter(
-			LinerOptions.get().getOption(LinerOptions.OPTION_OUTPUT_FILE),
-			LinerOptions.get().getOption(LinerOptions.OPTION_OUTPUT_FORMAT));
+			LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FILE),
+			LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FORMAT));
 		writer.writeParagraphSet(ps);
 	}
 		

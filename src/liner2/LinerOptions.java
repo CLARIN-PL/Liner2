@@ -101,8 +101,6 @@ public class LinerOptions {
 	public boolean silent = false;
 
 //	public ArrayList<Filter> filters = new ArrayList<Filter>();
-	public ArrayList<Double> weights = new ArrayList<Double>();
-	public ArrayList<String> summaryTypesOrder = new ArrayList<String>();
 	public ArrayList<String> features = new ArrayList<String>();
 //	public DictionaryManager dm = new DictionaryManager();
 	public String arg1 = null;
@@ -111,8 +109,6 @@ public class LinerOptions {
 //	public String nerd = null;		// replaced with e.g. getOption(OPTION_NERD)
 //	public String inputFile = "";
 //	public String outputFile = "";
-//	public String inputFormat = "ccl";
-//	public String outputFormat = "ccl";
 //	public String python = "python";
 	public ArrayList<Integer> folds = new ArrayList<Integer>();
 	public ArrayList<String> chunkersDescription = new ArrayList<String>();
@@ -124,10 +120,14 @@ public class LinerOptions {
 	public LinerOptions(){
 		this.options = makeOptions();
 		this.properties = new Properties();
+		
+		/* Ustawienie domyślnych parametrów. */
+		this.properties.setProperty(LinerOptions.OPTION_OUTPUT_FORMAT, "ccl");
+		this.properties.setProperty(LinerOptions.OPTION_INPUT_FORMAT, "ccl");
 	}
 	
 	public static boolean isOption(String name){
-		return LinerOptions.get().getProperties().contains(OPTION_VERBOSE);
+		return LinerOptions.get().getProperties().containsKey(name);
 	}
 	
 	/**
@@ -183,15 +183,15 @@ public class LinerOptions {
     	}
     	    	
 		this.configurationDescription = configDesc.toString();
-		this.processParameters();   	
 	}
     
     /**
      * Read configuration from an ini file.
      * @param filename
+     * @throws Exception 
      */
     private void parseFromIni(String filename, StringBuilder configDesc)
-    	throws IOException, FileNotFoundException, ParseException {
+    	throws Exception {
     	File iniFile = new File(filename); 
         BufferedReader br = new BufferedReader(new FileReader(iniFile));
             
@@ -222,8 +222,9 @@ public class LinerOptions {
 	 * Adds options from a given CommandLine to own properties.
 	 * @param line
 	 * @throws Exception 
+	 * @throws Exception 
 	 */
-	private void parseParameters(CommandLine line, StringBuilder configDesc) {
+	private void parseParameters(CommandLine line, StringBuilder configDesc) throws Exception {
 		
 		// Copy parameters passed by command line to properties
 		Iterator<?> i_options = line.iterator();
@@ -292,156 +293,7 @@ public class LinerOptions {
 			configDesc.append( String.format(PARAM_PRINT, "Argument 3", this.arg3) + "\n" );
 		}
 	}
-	
-	/*
-	 * Tutaj dodatkowe przetwarzanie parametrów, korzystając z pola
-	 * properties.
-	 * configDesc jest już zrobione i nie występuje w tej metodzie!
-	 */
-	private void processParameters() throws Exception {
-
-		// Parameters
-/*		if ( line.hasOption(LinerOptions.OPTION_CHUNKER)){
-			String[] values = line.getOptionValues(LinerOptions.OPTION_CHUNKER);
-			//for (String chunkerDescription : values){
-//				if (!ChunkerFactory.get().parse(chunkerDescription))
-//					throw new Exception(String.format("Unknown chunker description '%s'", chunkerDescription));
-//				else
-//					this.chunkersDescription.add(chunkerDescription);
-				//configDesc.append( String.format(PARAM_PRINT, OPTION_CHUNKER, chunkerDescription) + "\n" );
-			//}
-		}
-
-/*		if ( line.hasOption(OPTION_COMMON) ){
-			this.common = new TreeSet<String>();
-			for (String filename : line.getOptionValues(OPTION_COMMON)){
-//				this.common.addAll( DictionaryManager.loadList(filename) );
-				configDesc.append( String.format(PARAM_PRINT, OPTION_COMMON, filename) + "\n" );
-			}
-		}
-
-		if (line.hasOption("dictNested"))
-		{
-			configDesc.append( String.format(PARAM_PRINT, "dictNested", true) + "\n" );
-			this.nested = true;
-		}
-
-		if (line.hasOption(OPTION_DICT_UNAMBIGUOUS)){
-//			LinerOptions.get().dm.removeAmbiguous();
-			configDesc.append( String.format(PARAM_PRINT, OPTION_DICT_UNAMBIGUOUS, true) + "\n" );
-		}
 		
-		if (line.hasOption(OPTION_FEATURE)){
-			for ( String feature : line.getOptionValues(OPTION_FEATURE) ){
-				this.features.add(feature);
-				configDesc.append( String.format(PARAM_PRINT, OPTION_FEATURE, feature) + "\n" );
-			}
-		}
-		
-		if (line.hasOption(OPTION_FILE)){
-			this.inputFile = line.getOptionValue(OPTION_FILE);
-			configDesc.append( String.format(PARAM_PRINT, OPTION_FILE, this.inputFile + "\n" ) );
-		}
-		
-		if (line.hasOption(OPTION_FILTER)){
-			configDesc.append( String.format(LinerOptions.PARAM_PRINT, line.getOptionValue(OPTION_FILTER), true) + "\n");
-			this.parseFilter(line.getOptionValue(OPTION_FILTER));
-		}
-
-		if (line.hasOption("fold")){
-			configDesc.append( String.format(LinerOptions.PARAM_PRINT, "fold", line.getOptionValue("fold")) + "\n" );
-			for (String part : line.getOptionValue("fold").split(","))
-			{
-				if (part.contains("-"))
-				{
-					String[] span = part.split("-");
-					int a = Integer.parseInt(span[0]);
-					int b = Integer.parseInt(span[1]);
-					for ( ; a<=b ; a++ )
-						this.folds.add(a);
-				}
-				else
-					this.folds.add(Integer.parseInt(part));
-			}
-		}else{
-			if (this.folds.size() == 0)
-				for (int i=1; i<=10; i++)
-					this.folds.add(i);
-		}
-
-		if ( line.hasOption("gazef"))
-		{
-            BufferedReader br = new BufferedReader(new FileReader(line.getOptionValue("gazef")));			
-            String dictline = null;
-            while ( (dictline=br.readLine()) != null ){
-            	if (dictline.contains(":") && !dictline.startsWith("#")) {
-	            	String[] parts = dictline.trim().split(":");
-//            		this.dm.load(parts[0], parts[1]);
-            	}
-            }
-            br.close();
-		}
-		
-		if (line.hasOption("gaze")){
-			for (String option : line.getOptionValues("gaze")){
-				String[] parts = option.split(":");
-//        		this.dm.load(parts[0], parts[1]);
-			}
-		}
-		    	
-		if ( line.hasOption(LinerOptions.OPTION_HEURISTICS) ){
-			this.useHeuristics = true;		
-//			HeuristicChunker.chunker = new HeuristicChunker();
-			configDesc.append( String.format(LinerOptions.PARAM_PRINT, LinerOptions.OPTION_HEURISTICS, true) + "\n");
-		}
-		
-		if ( line.hasOption(OPTION_INPUT_FORMAT) ){
-			this.inputFormat = line.getOptionValue(OPTION_INPUT_FORMAT);
-			configDesc.append( String.format(PARAM_PRINT, OPTION_INPUT_FORMAT, this.inputFormat + "\n" ) );
-		}
-
-		if (line.hasOption("summaryTypesOrder"))
-		{
-			this.summaryTypesOrder.addAll(Arrays.asList(line.getOptionValue("summaryTypesOrder").toString().split(",")));
-			configDesc.append( String.format(LinerOptions.PARAM_PRINT, "summaryTypesOrder", line.getOptionValue("summaryTypesOrder")) + "\n" );
-		}
-
-		if ( line.hasOption(OPTION_NERD) ){
-			this.nerd = line.getOptionValue(OPTION_NERD);
-			configDesc.append( String.format(PARAM_PRINT, OPTION_NERD, this.nerd + "\n" ) );
-		}
-		
-		if ( line.hasOption(OPTION_OUTPUT_FORMAT) ){
-			this.outputFormat = line.getOptionValue(OPTION_OUTPUT_FORMAT);
-			configDesc.append( String.format(PARAM_PRINT, OPTION_OUTPUT_FORMAT, this.outputFormat + "\n" ) );
-		}
-
-		if ( line.hasOption(OPTION_PYTHON) ){
-			this.python = line.getOptionValue(OPTION_PYTHON);
-			configDesc.append( String.format(PARAM_PRINT, OPTION_PYTHON, this.nerd + "\n" ) );
-		}
-
-		if ( line.hasOption(LinerOptions.OPTION_SILENT)){
-			this.silent = true;
-			configDesc.append( String.format(LinerOptions.PARAM_PRINT, LinerOptions.OPTION_SILENT, true) + "\n" );			
-		}
-		
-		if (line.hasOption(OPTION_TARGET)){
-			this.outputFile = line.getOptionValue(OPTION_TARGET);
-			configDesc.append( String.format(PARAM_PRINT, OPTION_TARGET, this.outputFile + "\n" ) );
-		}
-
-		if ( line.hasOption(LinerOptions.OPTION_WEIGHTS) ){
-			for ( String part : line.getOptionValue(LinerOptions.OPTION_WEIGHTS).split(","))
-				this.weights.add(Double.parseDouble(part));
-			configDesc.append( String.format(LinerOptions.PARAM_PRINT, LinerOptions.OPTION_WEIGHTS, line.getOptionValue(LinerOptions.OPTION_WEIGHTS)) + "\n");
-		}
-
-		// Instructions after parsing arguments and paramenters
-//		LinerOptions.get().dm.getEntries().remove("COMMON");		
-*/
-	}
-	
 	/**
 	 * 
 	 * @param filter
@@ -561,21 +413,21 @@ public class LinerOptions {
 		new HelpFormatter().printHelp("java -jar liner.jar <mode> [options]", options);
 		System.out.println();
     	System.out.println("Modes:");
-    	System.out.println("  batch <arg1>        - ner batch moge");
-    	System.out.println("                        <arg1> -- name of file with ner model");
+    	//System.out.println("  batch <arg1>        - ner batch moge");
+    	//System.out.println("                        <arg1> -- name of file with ner model");
     	System.out.println("  convert             - convert text from one format to another");
     	System.out.println("                        Parameteres: -i, -o, -f, -t");
-    	System.out.println("  dicts <arg1>        - print dictionary statistics");
-    	System.out.println("  eval <arg1> <arg2>  - train on arg1 file and test on arg2 file");
-    	System.out.println("  evalcv <arg1>       - perform 10-fold cross validation");
+    	//System.out.println("  dicts <arg1>        - print dictionary statistics");
+    	//System.out.println("  eval <arg1> <arg2>  - train on arg1 file and test on arg2 file");
+    	//System.out.println("  evalcv <arg1>       - perform 10-fold cross validation");
     	System.out.println("  pipe                - read xces data from standard input and annotate it");
-    	System.out.println("  tag <text>          - tag `text` using chunker specified by `--chuner` parameters");
+    	//System.out.println("  tag <text>          - tag `text` using chunker specified by `--chuner` parameters");
     	System.out.println("");
     	//System.out.println("Filters:");
     	//this.printFilters();
     	System.out.println("");
     	System.out.println("Chunker factory (patterns for `-chunker` parameter):");
-    	System.out.println(ChunkerFactory.get().getDescription());
+    	System.out.println(ChunkerFactory.getDescription());
     }	
 
 	public void printConfigurationDescription(){
@@ -587,7 +439,7 @@ public class LinerOptions {
 	 */
 	public void printFilters(){
 		Main.log(">> Filters:");
-		int i=1;
+//		int i=1;
 //		for (Filter filter : this.filters)
 //			Main.log("  "+(i++)+") "+filter.getDescription());
 	}

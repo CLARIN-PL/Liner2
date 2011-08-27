@@ -74,4 +74,9 @@ public class Sentence {
 	public void setAttributeIndex(AttributeIndex attributeIndex) {
 		this.attributeIndex = attributeIndex;
 	}
+
+	public void setChunking(Chunking chunking) {
+		// TODO Auto-generated method stub
+		
+	}
 }

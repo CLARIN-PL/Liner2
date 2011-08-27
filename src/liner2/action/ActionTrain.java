@@ -48,7 +48,7 @@ public class ActionTrain extends Action{
         for (Object templateName : TemplateFactory.get().getTemplateNames())
         	TemplateFactory.get().store(""+templateName, templateName+".tpl", attributeIndex);
 
-        ChunkerFactory.get().createChunkers(LinerOptions.get().chunkersDescription);
+        ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescription);
 
 //        for (Chunker chunker : chunkers.values()){
 //        	System.out.println(chunker);

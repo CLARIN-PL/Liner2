@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="LiNER - LingPipe Named Entity Recognition" default="compile" basedir=".">
+<project name="Liner2 -- a module for named entity recognition for Polish" default="compile" basedir=".">
 
 	<path id="classpath.standard">
   		<pathelement location="production/lib/commons-cli-1.2.jar"/>
