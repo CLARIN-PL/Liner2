@@ -3,15 +3,9 @@ package liner2;
 import liner2.action.Action;
 import liner2.action.ActionConvert;
 import liner2.action.ActionTrain;
-//import liner2.action.ActionBatch;
-//import liner2.action.ActionDict;
-//import liner2.action.ActionDictStats;
-//import liner2.action.ActionEval;
-//import liner2.action.ActionEvalCV;
 import liner2.action.ActionNull;
 import liner2.action.ActionPipe;
-//import liner2.action.ActionTag;
-//import liner2.action.ActionTrain;
+import liner2.reader.FeatureGenerator;
 
 public class Main {
     
@@ -19,77 +13,82 @@ public class Main {
      * Here the story begins.
      */
     public static void main(String[] args) throws Exception {
-    	
+
+    	Action action = null;
+
     	try{
-            LinerOptions.get().parse(args);
+            LinerOptions.get().parse(args);            
+	    	String mode = LinerOptions.get().mode;
+	    	action = Main.getAction(mode);	    	
+	    	if (action == null){
+	            throw new Exception(String.format("Mode '%s' not recognized", mode));
+	    	}
+	    	else{	    	
+	    		action.run();
+	    	}
     	}
     	catch(Exception ex){
-            LinerOptions.get().printHelp();
-            System.out.println(ex.getMessage());
+            LinerOptions.get().printHelp();                        
+            System.out.println(">> " + ex.getMessage());
             return;
     	}
-    	
-    	try{
-	    	Action action = null;
-	    	String mode = LinerOptions.get().mode;
-	
-	    	// Create action object if recognized    	
-//	    	if (mode.equals("eval")) {
-//	          action = new ActionEval();
-//	        } else if (mode.equals("evalcv")) {
-//	            action = new ActionEvalCV();
-//	        } else if (mode.equals("dict")) {
-//	            action = new ActionDict();
-//	        } else if (mode.equals("batch")) {
-//	            action = new ActionBatch();
-//	        } else if (mode.equals("dicts")) {
-//	            action = new ActionDictStats();
-//	        } else if (mode.equals("tag") ) {
-//	            action = new ActionTag();
-//	        } else 
-	    	if (mode.equals("null") ) {
-	            action = new ActionNull();
-	        } 
-	    	else if (mode.equals("convert") ) {
-	            action = new ActionConvert();
-	        } else if (mode.equals("pipe")) {
-	            action = new ActionPipe();
-            } else if (mode.equals("train") ) {
-	            action = new ActionTrain();
-	        }
-	
-			LinerOptions.get().printConfigurationDescription();
-	
-	    	// If the action object was created then pass the arguments and execute it
-	    	if (action == null){
-	            System.out.println("Mode '" + mode + "' not found!");
-	    	}else{    		
-	            action.run();
-	    	}
-	    	
-	    	// Finish feature generator if it was initialized
-//	    	if (RegexLineTagParser.featureGenerator != null)
-//	    		RegexLineTagParser.featureGenerator.finish();
-	    }
-    	catch(Exception ex){
-//	    	if (RegexLineTagParser.featureGenerator != null)
-//	    		RegexLineTagParser.featureGenerator.finish();
-    		
-	    	throw ex;
+    	finally{
+    		FeatureGenerator.close();
     	}
     }
-        
+    
+    /**
+     * Messages are print to std.out only with -verbose parameter.
+     * @param text
+     */
     public static void log(String text){
     	Main.log(text, false);
     }
     
+    /**
+     * Messages are print to std.out only with -verbose or -verboseDetails parameter.
+     * @param text
+     * @param details
+     */
     public static void log(String text, boolean details){
     	if (LinerOptions.get().verboseDetails || (!details && LinerOptions.get().verbose) )
     		System.out.println(text);
     }
     
-    public static void print(String text){
-    	System.out.println(text);
-    }
+    /**
+     * Create Action object according to given name.
+     * @param mode
+     * @return
+     */
+    private static Action getAction(String mode){
+    	Action action = null;
+    	
+    	// Create action object if recognized    	
+//    	if (mode.equals("eval")) {
+//          action = new ActionEval();
+//        } else if (mode.equals("evalcv")) {
+//            action = new ActionEvalCV();
+//        } else if (mode.equals("dict")) {
+//            action = new ActionDict();
+//        } else if (mode.equals("batch")) {
+//            action = new ActionBatch();
+//        } else if (mode.equals("dicts")) {
+//            action = new ActionDictStats();
+//        } else if (mode.equals("tag") ) {
+//            action = new ActionTag();
+//        } else 
+    	if (mode.equals("null") ) {
+            action = new ActionNull();
+        } else if (mode.equals("convert") ) {
+            action = new ActionConvert();
+        } else if (mode.equals("pipe")) {
+            action = new ActionPipe();
+        } else if (mode.equals("train") ) {
+            action = new ActionTrain();
+        }
 
+		LinerOptions.get().printConfigurationDescription();
+
+    	return action;
+    }
 }

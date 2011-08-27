@@ -10,15 +10,21 @@
 
 	<target name="clean">
   		<delete dir="build"/>
-                
-                <delete includeemptydirs="true">
-                    <fileset dir="production" includes="**/*" defaultexcludes="false"/>
-                </delete>
+		
+		<delete includeemptydirs="true">
+        	<fileset dir="production" includes="**/*" defaultexcludes="false"/>
+        </delete>
 
-                <delete dir="models/">
-                    <include name="**/crf/*.tar.gz"/>
-                </delete>
-                
+        <delete dir="models/">
+        	<include name="**/crf/*.tar.gz"/>
+        </delete>
+
+        <delete dir=".">
+            <include name="crf_iob.txt"/>
+            <include name="*.tpl"/>
+            <include name="liner2.jar"/>
+        </delete>
+
 	</target>
 
 	<target name="compile" depends="clean">
