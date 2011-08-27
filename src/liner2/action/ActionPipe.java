@@ -12,6 +12,7 @@ import liner2.writer.WriterFactory;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
+import liner2.tools.ParameterException;
 
 import liner2.LinerOptions;
 
@@ -33,7 +34,7 @@ public class ActionPipe extends Action{
 		ParagraphSet ps = reader.readParagraphSet();
         	
 		if ( !LinerOptions.isOption(LinerOptions.OPTION_USE) ){
-			throw new Error("Parameter --use <chunker_pipe_desription> not set");
+			throw new ParameterException("Parameter --use <chunker_pipe_desription> not set");
 		}
 		
 		/* Create all defined chunkers. */

@@ -2,6 +2,7 @@ package liner2;
 
 import liner2.action.Action;
 import liner2.action.ActionConvert;
+import liner2.action.ActionEval;
 import liner2.action.ActionTrain;
 import liner2.action.ActionNull;
 import liner2.action.ActionPipe;
@@ -73,9 +74,8 @@ public class Main {
     private static Action getAction(String mode){
     	Action action = null;
     	
-    	// Create action object if recognized    	
-//    	if (mode.equals("eval")) {
-//          action = new ActionEval();
+    	if (mode.equals("eval")) {
+          action = new ActionEval();
 //        } else if (mode.equals("evalcv")) {
 //            action = new ActionEvalCV();
 //        } else if (mode.equals("dict")) {
@@ -87,7 +87,7 @@ public class Main {
 //        } else if (mode.equals("tag") ) {
 //            action = new ActionTag();
 //        } else 
-    	if (mode.equals("null") ) {
+    	} else if (mode.equals("null") ) {
             action = new ActionNull();
         } else if (mode.equals("convert") ) {
             action = new ActionConvert();
