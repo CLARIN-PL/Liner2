@@ -6,6 +6,7 @@ import liner2.action.ActionTrain;
 import liner2.action.ActionNull;
 import liner2.action.ActionPipe;
 import liner2.reader.FeatureGenerator;
+import liner2.tools.ParameterException;
 
 public class Main {
     
@@ -21,16 +22,19 @@ public class Main {
 	    	String mode = LinerOptions.get().mode;
 	    	action = Main.getAction(mode);	    	
 	    	if (action == null){
-	            throw new Exception(String.format("Mode '%s' not recognized", mode));
+	            throw new ParameterException(String.format("Mode '%s' not recognized", mode));
 	    	}
 	    	else{	    	
 	    		action.run();
 	    	}
     	}
+    	catch(ParameterException ex){
+            LinerOptions.get().printHelp();
+            System.out.println(">> " + ex.getMessage() );            
+    	}
     	catch(Exception ex){
-            LinerOptions.get().printHelp();                        
+            ex.printStackTrace();
             System.out.println(">> " + ex.getMessage());
-            return;
     	}
     	finally{
     		FeatureGenerator.close();

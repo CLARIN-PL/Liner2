@@ -13,6 +13,7 @@ import java.util.TreeSet;
 
 import liner2.chunker.factory.ChunkerFactory;
 import liner2.tools.CorpusFactory;
+import liner2.tools.ParameterException;
 import liner2.tools.TemplateFactory;
 
 //import liner.chunker.HeuristicChunker;
@@ -165,7 +166,7 @@ public class LinerOptions {
 		CommandLine line = new GnuParser().parse(options, args);
 
     	if (this.mode == null && line.getArgs().length == 0)
-    		throw new ParseException("mode not set");
+    		throw new ParameterException("mode not set");
     	
     	this.mode = line.getArgs()[0];
     	configDesc.append("> Mode: " + this.mode + "\n");
@@ -257,23 +258,14 @@ public class LinerOptions {
 		// read corpus descriptions
 		if (line.hasOption(OPTION_CORPUS)) {
 			for (String cd : line.getOptionValues(OPTION_CORPUS)) {
-				try {
-					CorpusFactory.get().parse(cd);
-				}
-				catch (Exception ex) {
-					ex.printStackTrace();
-				}
+				CorpusFactory.get().parse(cd);
 			}
 		}
 		
 		// read template descriptions
 		if (line.hasOption(OPTION_TEMPLATE)) {
 			for (String td : line.getOptionValues(OPTION_TEMPLATE)) {
-				try {
-					TemplateFactory.get().parse(td);
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
+				TemplateFactory.get().parse(td);
 			}
 		}
 		
@@ -299,7 +291,7 @@ public class LinerOptions {
 	 * @param filter
 	 * @throws Exception
 	 */
-	public void parseFilter(String filter) throws Exception{
+	public void parseFilter(String filter) throws ParameterException{
 		String filters[] = filter.split(",");
 		for (String f : filters){
 			boolean found = false;
@@ -333,7 +325,7 @@ public class LinerOptions {
 //				this.filters.add(new FilterCutRoadPrefix());
 			
 			if (!found)
-				throw new UnrecognizedOptionException("Unknown filter '"+f+"'");
+				throw new ParameterException("Unknown filter '"+f+"'");
 		}
 	}
 	

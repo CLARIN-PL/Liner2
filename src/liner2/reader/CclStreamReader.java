@@ -77,7 +77,7 @@ public class CclStreamReader extends StreamReader {
 	}	
 		
 	@Override
-	public Paragraph readParagraph() {
+	protected Paragraph readRawParagraph() {
 		
 		/*
 		 * Przy wczytywaniu z CCL-a do indeksu nazw trafią 3 pola:

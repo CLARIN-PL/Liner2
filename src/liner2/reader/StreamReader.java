@@ -1,7 +1,5 @@
 package liner2.reader;
 
-import java.util.ArrayList;
-
 import liner2.structure.AttributeIndex;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
@@ -13,8 +11,15 @@ import liner2.structure.ParagraphSet;
  */
 public abstract class StreamReader {
 
-	public abstract Paragraph readParagraph();
+	protected abstract Paragraph readRawParagraph();
+		
 	public abstract void close();
+	
+	public Paragraph readParagraph(){
+		Paragraph p = this.readRawParagraph();
+		FeatureGenerator.generateFeatures(p);
+		return p;
+	}
 	
 	/**
 	 * TODO
@@ -39,6 +44,7 @@ public abstract class StreamReader {
 				break;
 		}
 		close();
+						
 		return paragraphSet; 
 	}
 }

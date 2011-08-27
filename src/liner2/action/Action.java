@@ -1,14 +1,5 @@
 package liner2.action;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-//import liner2.ChunkingEvaluation;
-import liner2.LinerOptions;
-import liner2.Main;
-
-//import com.aliasi.classify.PrecisionRecallEvaluation;
-
 public abstract class Action {
 
 	abstract public void run() throws Exception;

@@ -43,7 +43,7 @@ public class IobStreamReader extends StreamReader {
 	}
 
 	@Override
-	public Paragraph readParagraph() {
+	protected Paragraph readRawParagraph() {
 		if (nextParagraphId == null)
 			readParagraphHeader();
 		if (nextParagraphId == null)
