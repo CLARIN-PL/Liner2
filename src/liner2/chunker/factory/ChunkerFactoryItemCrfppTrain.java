@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import liner2.LinerOptions;
 import liner2.Main;
 
-import liner2.chunker.CRFPPChunker;
+import liner2.chunker.CrfppChunker;
 import liner2.chunker.Chunker;
 import liner2.chunker.TrainableChunkerInterface;
 
@@ -14,9 +14,9 @@ import liner2.reader.StreamReader;
 
 import liner2.tools.CorpusFactory;
 
-public class ChunkerFactoryItemCRFPPTrain extends ChunkerFactoryItem {
+public class ChunkerFactoryItemCrfppTrain extends ChunkerFactoryItem {
 
-	public ChunkerFactoryItemCRFPPTrain() {
+	public ChunkerFactoryItemCrfppTrain() {
 		super("crfpp-train:p=([1-6]):template=(.*):(ccl|iob|data)=(.*?)(:model=(.*))?");
 	}
 
@@ -36,7 +36,7 @@ public class ChunkerFactoryItemCRFPPTrain extends ChunkerFactoryItem {
             if ( matcherCRFPP.group(5) != null )
             	model_filename = matcherCRFPP.group(6);
 
-            CRFPPChunker chunker = new CRFPPChunker(threads);
+            CrfppChunker chunker = new CrfppChunker(threads);
             chunker.setTemplateFilename(template_filename);
             chunker.setModelFilename(model_filename);
 

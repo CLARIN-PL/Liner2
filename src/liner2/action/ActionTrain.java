@@ -6,7 +6,7 @@ import java.util.Set;
 import liner2.LinerOptions;
 import liner2.Main;
 import liner2.chunker.Chunker;
-import liner2.chunker.CRFPPChunker;
+import liner2.chunker.CrfppChunker;
 import liner2.chunker.factory.ChunkerFactory;
 import liner2.tools.TemplateFactory;
 

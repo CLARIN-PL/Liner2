@@ -21,7 +21,7 @@ import liner2.structure.Token;
 
 import org.chasen.crfpp.Tagger;
 
-public class CRFPPChunker extends Chunker 
+public class CrfppChunker extends Chunker 
 	implements TrainableChunkerInterface, DeserializableChunkerInterface, SerializableChunkerInterface {
 	
 	private File trainingFile = null;
@@ -33,7 +33,7 @@ public class CRFPPChunker extends Chunker
 	private int threads = 1;
 
 	
-    public CRFPPChunker(int threads) {
+    public CrfppChunker(int threads) {
 		this.threads = threads;
     }
 

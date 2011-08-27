@@ -3,13 +3,13 @@ package liner2.chunker.factory;
 import java.util.regex.Matcher;
 
 import liner2.Main;
-import liner2.chunker.CRFPPChunker;
+import liner2.chunker.CrfppChunker;
 import liner2.chunker.Chunker;
 
 
-public class ChunkerFactoryItemCRFPPLoad extends ChunkerFactoryItem {
+public class ChunkerFactoryItemCrfppLoad extends ChunkerFactoryItem {
 
-	public ChunkerFactoryItemCRFPPLoad() {
+	public ChunkerFactoryItemCrfppLoad() {
 		super("crfpp-load:(.*)");
 	}
 
@@ -20,7 +20,7 @@ public class ChunkerFactoryItemCRFPPLoad extends ChunkerFactoryItem {
 			String model_filename = matcherCRFPPload.group(1); 
             Main.log("--> CRFPP Chunker deserialize from " + model_filename);
             
-            CRFPPChunker chunker = new CRFPPChunker(1);
+            CrfppChunker chunker = new CrfppChunker(1);
             chunker.deserialize(model_filename);
 
             return chunker;		
