@@ -22,8 +22,6 @@ public abstract class Chunker {
 		sentence.setChunking(chunking);
 	}
 	
-	public abstract void train(ParagraphSet paragraphSet);
-	
 	/**
 	 * Zwolnienie zasobów wykorzystywanych przez chunker, 
 	 * np. zamknięcie zewnętrznych procesów i połączeń.

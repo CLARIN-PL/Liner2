@@ -2,11 +2,8 @@ package liner2;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.TreeSet;
@@ -16,31 +13,21 @@ import liner2.tools.CorpusFactory;
 import liner2.tools.ParameterException;
 import liner2.tools.TemplateFactory;
 
-//import liner.chunker.HeuristicChunker;
-//import liner.chunker.factory.ChunkerFactory;
-//import liner.filter.Filter;
-//import liner.filter.FilterBeforeSie;
-//import liner.filter.FilterCutRoadPrefix;
-//import liner.filter.FilterExtendToWord;
-//import liner.filter.FilterFirstNotLower;
-//import liner.filter.FilterHasAlphanumeric;
-//import liner.filter.FilterHasVowel;
-//import liner.filter.FilterLength;
-//import liner.filter.FilterNoDot;
-//import liner.filter.FilterNoHyphen;
-//import liner.filter.FilterNoSymbol;
-//import liner.filter.FilterNoUnderline;
-//import liner.filter.FilterPatternULU;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.UnrecognizedOptionException;
 
+/**
+ * This class handles module parameters. The parameters are read from
+ * console and from ini files.
+ * 
+ * @author Michał Marcińczuk
+ * @author Maciej Janicki
+ *
+ */
 public class LinerOptions {
 
 	/**

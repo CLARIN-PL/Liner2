@@ -8,6 +8,12 @@ import liner2.action.ActionPipe;
 import liner2.reader.FeatureGenerator;
 import liner2.tools.ParameterException;
 
+/**
+ * Run the module. 
+ * 
+ * @author Michał Marcińczuk
+ * @author Maciej Janicki
+ */
 public class Main {
     
     /**
