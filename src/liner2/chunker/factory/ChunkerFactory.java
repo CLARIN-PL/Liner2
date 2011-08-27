@@ -81,6 +81,9 @@ public class ChunkerFactory {
 			Chunker chunker = ChunkerFactory.createChunker(chunkerDesc);
 			if (chunker != null)
 				ChunkerFactory.get().chunkers.put(chunkerName, chunker);
+			else
+				throw new Error(String.format("Chunker description '%s' not recognized", 
+						chunkerDesc));
 		}
 	}
 	

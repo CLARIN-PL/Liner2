@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Set;
 
+import liner2.Main;
 import liner2.structure.AttributeIndex;
 
 public class TemplateFactory {
@@ -29,7 +30,7 @@ public class TemplateFactory {
 	}
 	
 	public void parse(String description) throws Exception {
-		System.out.println("TemplateFactory.parse("+description+")");
+		Main.log("TemplateFactory.parse("+description+")");
 		int pos = description.indexOf(":");
 		if (pos == -1)
 			throw new Exception("Invalid template description: "+description);

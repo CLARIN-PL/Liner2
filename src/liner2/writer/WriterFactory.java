@@ -3,8 +3,6 @@ package liner2.writer;
 import liner2.writer.CclStreamWriter;
 import liner2.writer.IobStreamWriter;
 
-import liner2.LinerOptions;
-
 public class WriterFactory {
 
 	private static final WriterFactory factory = new WriterFactory();

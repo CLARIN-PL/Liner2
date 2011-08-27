@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import liner2.Main;
 import liner2.structure.Chunking;
 import liner2.structure.Chunk;
 import liner2.structure.Paragraph;
@@ -175,7 +176,7 @@ public class CRFPPChunker extends Chunker
             BufferedReader error = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 			String line = null;
             while ((line = input.readLine()) != null) {
-                System.out.println(line);
+                Main.log(line);
             }
             
             boolean wasError = false;

@@ -2,6 +2,8 @@ package liner2.tools;
 
 import java.util.Hashtable;
 
+import liner2.Main;
+
 public class Template {
 	Hashtable<String, String[]> features = new Hashtable<String, String[]>();
 	
@@ -15,7 +17,8 @@ public class Template {
 			throw new Exception("Duplicate feature definition in template description: "+description);
 		else
 			this.features.put(featureName, windowDesc);
-		System.out.println("Added feature "+featureName+" with description "+windowDesc);
+		
+		Main.log("Added feature "+featureName+" with description "+windowDesc);
 	}
 	
 	public Hashtable<String, String[]> getFeatures() {
