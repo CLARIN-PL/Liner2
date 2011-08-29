@@ -44,7 +44,15 @@ public class ActionPipe extends Action{
 
 		for (Paragraph p : ps.getParagraphs()){
 			for (Sentence s : p.getSentences()) {
+<<<<<<< Updated upstream
 				chunker.chunkSentenceInPlace(s);
+=======
+				for (Chunker chunker : chunkers.values()) {
+					// TODO zmienić wynik Chunker.chunkSentence() z Chunking na void
+					// zapisywać ochunkowanie razem ze zdaniem w obiekcie Sentence
+					chunker.chunkSentence(s);
+				}
+>>>>>>> Stashed changes
 			}
 		}
 			
