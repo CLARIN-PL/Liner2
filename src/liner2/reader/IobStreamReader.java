@@ -52,8 +52,10 @@ public class IobStreamReader extends StreamReader {
 			String line = null;
 			try {
 				if (!ir.ready()) {
-					currentSentence.setAttributeIndex(attributeIndex);
-					paragraph.addSentence(currentSentence);
+					if (currentSentence.getTokenNumber() > 0) {
+						currentSentence.setAttributeIndex(attributeIndex);
+						paragraph.addSentence(currentSentence);
+					}
 					return paragraph;
 				}		
 				line = ir.readLine();
@@ -62,9 +64,11 @@ public class IobStreamReader extends StreamReader {
 			}
 			
 			if (line.trim().isEmpty()) {
-				currentSentence.setAttributeIndex(attributeIndex);
-				paragraph.addSentence(currentSentence);
-				currentSentence = new Sentence();
+				if (currentSentence.getTokenNumber() > 0) {
+					currentSentence.setAttributeIndex(attributeIndex);
+					paragraph.addSentence(currentSentence);
+					currentSentence = new Sentence();
+				}
 			}
 			else {
 				String[] words = line.trim().split(" ");

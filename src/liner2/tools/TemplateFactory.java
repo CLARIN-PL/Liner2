@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Set;
 
@@ -62,7 +63,9 @@ public class TemplateFactory {
 		pw.write("# Unigram\n");
 		Template template = this.templates.get(templateName);
 		Hashtable<String, String[]> features = template.getFeatures();
-		for (String featureName : features.keySet()) {
+		Enumeration<String> e = features.keys();
+		while (e.hasMoreElements()) {
+			String featureName = e.nextElement();
 			pw.write("# " + featureName + "\n");
 			String featureId = Integer.toString(attributeIndex.getIndex(featureName));
 			String featureIdFixed = featureId;
