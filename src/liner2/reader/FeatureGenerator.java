@@ -155,7 +155,7 @@ public class FeatureGenerator {
 	}
 	
 	public static void close() throws IOException{
-		if (initialized) {
+		if (FeatureGenerator.initialized) {
 			FeatureGenerator.output.write("@EOF\n");
 			FeatureGenerator.output.flush();
 		}
