@@ -18,14 +18,18 @@ import liner2.structure.Sentence;
  */
 public class UnionChunker extends Chunker {
 
+	private ArrayList<Chunker> chunkers;
+
 	public UnionChunker(ArrayList<Chunker> chunkers){
-		
+		this.chunkers = chunkers;
 	}
 		
 	@Override
 	public Chunking chunkSentence(Sentence sentence) {
-		// TODO Auto-generated method stub
-		return null;
+		Chunking chunking = new Chunking(sentence);
+		for (Chunker chunker : this.chunkers)
+			chunking.union(chunker.chunkSentence(sentence));
+		return chunking;
 	}
 	
 }

@@ -34,12 +34,28 @@ public class Chunk {
 		this.sentence = sentence;
 	}
 	
+	public boolean equals(Chunk chunk) {
+		if (this.begin != chunk.getBegin())
+			return false;
+		else if (this.end != chunk.getEnd())
+			return false;
+		else if (this.sentence != chunk.getSentence())
+			return false;
+		else if (this.type != chunk.getType())
+			return false;
+		return true;
+	}
+	
 	public int getBegin() {
 		return this.begin;
 	}
 	
 	public int getEnd() {
 		return this.end;
+	}
+	
+	public Sentence getSentence() {
+		return this.sentence;
 	}
 	
 	public String getType() {

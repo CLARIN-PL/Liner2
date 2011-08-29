@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 
-import liner2.Main;
+import liner2.chunker.ensemble.MajorityVotingChunker;
+import liner2.chunker.ensemble.UnionChunker;
 import liner2.chunker.Chunker;
+import liner2.Main;
 
 public class ChunkerFactory {
 
@@ -110,13 +112,35 @@ public class ChunkerFactory {
 	 * @param description
 	 * @return
 	 */
-	public static Chunker getChunkerPipe(String description){
-		/**
-		 * TODO
-		 * teraz zakładamy, że opis chunkera składa się tylko z pojedynczej nazwy chunkera.
-		 */
-		if ( ChunkerFactory.get().chunkers.containsKey(description))
-			return ChunkerFactory.get().chunkers.get(description);
+	public static Chunker getChunkerPipe(String description) {
+		return ChunkerFactory.get().getChunkerUnionPipe(description.split("+"));
+	}
+	
+	private Chunker getChunkerUnionPipe(String[] descriptions) {
+		if (descriptions.length == 1)
+			return getChunkerVotingPipe(descriptions[0].split("*"));
+		else {
+			ArrayList<Chunker> chunkers = new ArrayList<Chunker>();
+			for (int i = 0; i < descriptions.length; i++)
+				chunkers.add(getChunkerVotingPipe(descriptions[i].split("*")));
+			return new UnionChunker(chunkers);
+		}
+	}
+	
+	private Chunker getChunkerVotingPipe(String[] descriptions) {
+		if (descriptions.length == 1)
+			return getAtomChunkerPipe(descriptions[0]);
+		else {
+			ArrayList<Chunker> chunkers = new ArrayList<Chunker>();
+			for (int i = 0; i < descriptions.length; i++)
+				chunkers.add(getAtomChunkerPipe(descriptions[i]));
+			return new MajorityVotingChunker(chunkers);
+		}
+	}
+	
+	private Chunker getAtomChunkerPipe(String description) {
+		if (chunkers.containsKey(description))
+			return chunkers.get(description);
 		else
 			throw new Error(String.format("Chunker '%s' not defined", description));
 	}

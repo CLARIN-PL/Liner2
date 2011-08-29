@@ -38,7 +38,7 @@ public class Chunking {
 			HashSet<Chunk> foreignChunks = foreignChunking.chunkSet();
 			Iterator<Chunk> i_fc = foreignChunks.iterator();
 			while (i_fc.hasNext())
-				this.chunks.add(i_fc.next());
+				addChunk(i_fc.next());
 		}
 	}
 }
