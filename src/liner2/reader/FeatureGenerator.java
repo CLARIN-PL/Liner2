@@ -72,7 +72,7 @@ public class FeatureGenerator {
 		for (String feature : LinerOptions.get().features) {
 			String featureName = feature;
 			if (featureName.equals("syn"))
-				featureOthers += "--generalization syn:::syn";
+				featureOthers += " --generalization syn:::syn ";
 			
 			Matcher m1 = regexFeatureDictionary.matcher(feature);
 			if (m1.find()) {
@@ -82,7 +82,7 @@ public class FeatureGenerator {
 			
 			Matcher m2 = regexFeatureGeneralisation.matcher(feature);
 			if (m2.find())
-				featureOthers += "--generalization hyp:" + m2.group(1) + ":full:" + feature;
+				featureOthers += " --generalization hyp:" + m2.group(1) + ":full:" + feature + " ";
 				
 			featureNames += (featureNames.length() > 0 ? "," : "") + featureName;
 		}
