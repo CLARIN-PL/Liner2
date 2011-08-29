@@ -37,6 +37,12 @@ public class AttributeIndex {
 		return true;
 	}
 	
+	public void update(ArrayList<String> features) {
+		indexes = new ArrayList<String>();
+		for (String feature : features)
+			addAttribute(feature);
+	}
+	
 	/**
 	 * Zwraca numer porządkowy atrybutu o danej nazwie.
 	 * @param name

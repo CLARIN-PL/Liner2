@@ -9,6 +9,7 @@ import java.util.Properties;
 import java.util.TreeSet;
 
 import liner2.chunker.factory.ChunkerFactory;
+import liner2.reader.FeatureGenerator;
 import liner2.tools.CorpusFactory;
 import liner2.tools.ParameterException;
 import liner2.tools.TemplateFactory;
@@ -254,6 +255,18 @@ public class LinerOptions {
 				CorpusFactory.get().parse(cd);
 			}
 		}
+		
+		// read feature definitions
+		if (line.hasOption(OPTION_FEATURE)) {
+			for (String feature : line.getOptionValues(OPTION_FEATURE))
+				this.features.add(feature);
+			FeatureGenerator.initialize();
+		}
+		
+		if (line.hasOption(OPTION_PYTHON))
+			this.properties.setProperty(OPTION_PYTHON, line.getOptionValue(OPTION_PYTHON));
+		else
+			this.properties.setProperty(OPTION_PYTHON, "python");
 		
 		// read template descriptions
 		if (line.hasOption(OPTION_TEMPLATE)) {

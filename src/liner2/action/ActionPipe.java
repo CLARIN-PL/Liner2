@@ -42,16 +42,9 @@ public class ActionPipe extends Action{
 		
 		Chunker chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
 
-		for (Paragraph p : ps.getParagraphs()){
-			for (Sentence s : p.getSentences()) {
+		for (Paragraph p : ps.getParagraphs())
+			for (Sentence s : p.getSentences())
 				chunker.chunkSentenceInPlace(s);
-				//for (Chunker chunker : chunkers.values()) {
-					// TODO zmienić wynik Chunker.chunkSentence() z Chunking na void
-					// zapisywać ochunkowanie razem ze zdaniem w obiekcie Sentence
-					//chunker.chunkSentence(s);
-				//}
-			}
-		}
 			
 		StreamWriter writer = WriterFactory.get().getStreamWriter(
 			LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FILE),

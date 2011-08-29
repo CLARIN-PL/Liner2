@@ -70,10 +70,14 @@ public class IobStreamWriter extends StreamWriter {
 	
 	private void writeToken(int idx, Token token, Sentence sentence) 
 		throws IOException {
-		String line = token.getFirstValue();
-		ArrayList<Tag> tags = token.getTags();
-		Tag firstTag = tags.get(0);
-		line += " " + firstTag.getBase() + " " + firstTag.getCtag();
+//		String line = token.getFirstValue();
+//		ArrayList<Tag> tags = token.getTags();
+//		Tag firstTag = tags.get(0);
+//		line += " " + firstTag.getBase() + " " + firstTag.getCtag();
+		String line = "";
+		for (int i = 0; i < token.getNumAttributes(); i++)
+			line += (line.length() > 0 ? " " : "") + token.getAttributeValue(i);
+		
 		Chunk chunk = sentence.getChunkAt(idx);
 		if (chunk == null)
 			line += " O";

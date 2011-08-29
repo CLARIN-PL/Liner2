@@ -14,10 +14,16 @@ public abstract class StreamReader {
 	protected abstract Paragraph readRawParagraph();
 		
 	public abstract void close();
-	
+		
 	public Paragraph readParagraph(){
 		Paragraph p = this.readRawParagraph();
-		FeatureGenerator.generateFeatures(p);
+		if (p == null)
+			return null;
+		try {
+			FeatureGenerator.generateFeatures(p);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 		return p;
 	}
 	

@@ -28,6 +28,10 @@ public class Token {
 		return attributes.get(index);
 	}
 	
+	public int getNumAttributes() {
+		return attributes.size();
+	}
+	
 	/**
 	 * TODO
 	 * Funkcja pomocnicza zwraca wartość pierwszego atrybutu.

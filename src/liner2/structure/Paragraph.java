@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Paragraph {
 
 	private String id = null;
-	private AttributeIndex attributeIndex = null;
+	private AttributeIndex attributeIndex = new AttributeIndex();
 	
 	private ArrayList<Sentence> sentences = new ArrayList<Sentence>(); 
 	

@@ -58,6 +58,7 @@ public class CclStreamReader extends StreamReader {
 	
 	@Override
 	public void close() {
+		
 		try {
 			xmlr.close();
 		}
