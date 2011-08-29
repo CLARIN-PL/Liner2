@@ -46,9 +46,10 @@ public abstract class StreamReader {
 		Paragraph p = null;
 		while (true) {
 			p = readRawParagraph();
-			if (p != null)
+			if (p != null){
+				p.setAttributeIndex(attributeIndex);
 				paragraphSet.addParagraph(p);
-			else
+			}else
 				break;
 		}
 		if (FeatureGenerator.isInitialized()) {
