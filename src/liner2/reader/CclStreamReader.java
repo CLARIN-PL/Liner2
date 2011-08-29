@@ -2,7 +2,6 @@ package liner2.reader;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.FileInputStream;
 import java.io.ByteArrayInputStream;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -48,16 +47,7 @@ public class CclStreamReader extends StreamReader {
 	
 	private XMLStreamReader xmlr;
 	
-	public CclStreamReader(String filename){
-		InputStream is = System.in;
-		if ((filename != null) && (!filename.isEmpty())) {
-			try {
-				is = new FileInputStream(filename);
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
-		
+	public CclStreamReader(InputStream is) {
 		XMLInputFactory xmlif = XMLInputFactory.newFactory();
 		try {
 			this.xmlr = xmlif.createXMLStreamReader(is);

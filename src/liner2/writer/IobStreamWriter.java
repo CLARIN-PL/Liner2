@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import liner2.structure.Chunk;
 import liner2.structure.Paragraph;
@@ -18,20 +18,8 @@ public class IobStreamWriter extends StreamWriter {
 	private BufferedWriter ow;
 	private boolean open = false;
 
-	public IobStreamWriter(String filename) {
-		if ((filename != null) && (!filename.isEmpty())) {
-			try {
-				this.ow = new BufferedWriter(
-					new FileWriter(filename));
-			} catch (IOException ex) {
-				ex.printStackTrace();
-				ow = new BufferedWriter(
-					new OutputStreamWriter(System.out));
-			}
-		}
-		else
-			this.ow = new BufferedWriter(
-				new OutputStreamWriter(System.out));
+	public IobStreamWriter(OutputStream os) {
+		this.ow = new BufferedWriter(new OutputStreamWriter(os));
 	}
 
 	public void open() {

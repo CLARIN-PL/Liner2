@@ -2,7 +2,7 @@ package liner2.reader;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.FileReader;
+import java.io.InputStream;
 import java.io.IOException;
 
 import liner2.structure.AttributeIndex;
@@ -17,20 +17,8 @@ public class IobStreamReader extends StreamReader {
 	private BufferedReader ir;
 	private String nextParagraphId = null;
 	
-	public IobStreamReader(String filename){
-		if ((filename != null) && (!filename.isEmpty())) {
-			try {
-				this.ir = new BufferedReader(
-					new FileReader(filename));
-			} catch (IOException ex) {
-				ex.printStackTrace();
-				ir = new BufferedReader(
-					new InputStreamReader(System.in));
-			}
-		}
-		else
-			this.ir = new BufferedReader(
-				new InputStreamReader(System.in));
+	public IobStreamReader(InputStream is) {
+		this.ir = new BufferedReader(new InputStreamReader(is));
 	}
 
 	@Override

@@ -37,16 +37,7 @@ public class CclStreamWriter extends StreamWriter {
 	private XMLStreamWriter xmlw;
 	private boolean open = false;
 	
-	public CclStreamWriter(String filename) {
-		OutputStream os = System.out;
-		if ((filename != null) && (!filename.isEmpty())) {
-			try {
-				os = new FileOutputStream(filename);
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
-		
+	public CclStreamWriter(OutputStream os) {
 		XMLOutputFactory xmlof = XMLOutputFactory.newFactory();
 		try {
 			this.xmlw = xmlof.createXMLStreamWriter(os);
