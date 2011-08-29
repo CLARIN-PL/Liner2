@@ -28,10 +28,10 @@ public class ActionTrain extends Action{
 	 */
 	public void run() throws Exception{
 
-        /*StreamReader reader = ReaderFactory.get().getStreamReader(
+        StreamReader reader = ReaderFactory.get().getStreamReader(
         	LinerOptions.get().getOption(LinerOptions.OPTION_INPUT_FILE),
         	LinerOptions.get().getOption(LinerOptions.OPTION_INPUT_FORMAT));
-		ParagraphSet ps = reader.readParagraphSet();*/
+		ParagraphSet ps = reader.readParagraphSet();
 		
         /*for (String chunkerDescription : LinerOptions.get().chunkersDescription){
         	Main.log(chunkerDescription);
@@ -40,13 +40,14 @@ public class ActionTrain extends Action{
         	Main.log("");
         }*/
         
-        AttributeIndex attributeIndex = new AttributeIndex();
-        attributeIndex.addAttribute("orth");
-        attributeIndex.addAttribute("base");
-        attributeIndex.addAttribute("ctag");
+ //       AttributeIndex attributeIndex = new AttributeIndex();
+ //       attributeIndex.addAttribute("orth");
+ //       attributeIndex.addAttribute("base");
+ //       attributeIndex.addAttribute("ctag");
         
         for (Object templateName : TemplateFactory.get().getTemplateNames())
-        	TemplateFactory.get().store(""+templateName, templateName+".tpl", attributeIndex);
+        	TemplateFactory.get().store(""+templateName, templateName+".tpl",
+        		ps.getAttributeIndex());
 
         ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescription);
 
