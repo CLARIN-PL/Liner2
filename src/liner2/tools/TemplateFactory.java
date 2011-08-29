@@ -63,9 +63,9 @@ public class TemplateFactory {
 		pw.write("# Unigram\n");
 		Template template = this.templates.get(templateName);
 		Hashtable<String, String[]> features = template.getFeatures();
-		Enumeration<String> e = features.keys();
-		while (e.hasMoreElements()) {
-			String featureName = e.nextElement();
+		for (String featureName : template.getFeatureNames()) {
+			//String featureName = e.nextElement();
+			System.out.println(templateName + ": " + featureName);
 			pw.write("# " + featureName + "\n");
 			String featureId = Integer.toString(attributeIndex.getIndex(featureName));
 			String featureIdFixed = featureId;
