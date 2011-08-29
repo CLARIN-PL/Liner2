@@ -167,16 +167,6 @@ public class LinerOptions {
 
     	this.parseParameters(line, configDesc);
     	
-    	// If the ini parameter is set then load configuration form a file
-    	if (properties.containsKey("ini")){
-    		String ini = properties.getProperty("ini");
-    		try {
-    			this.parseFromIni(ini, configDesc);
-    		} catch (Exception ex) {
-    			ex.printStackTrace();
-    		}
-    	}
-    	    	
 		this.configurationDescription = configDesc.toString();
 	}
     
@@ -227,7 +217,11 @@ public class LinerOptions {
 			Option o = (Option)i_options.next();
 			if (o.getValue() == null)	// don't take boolean parameters
 				continue;
-			if (o.getLongOpt() == null) {
+			if ( o.getOpt().equals("ini") ){
+				configDesc.append( String.format(PARAM_PRINT, o.getOpt(), o.getValue() + "\n" ) );
+    			this.parseFromIni(o.getValue(), configDesc);
+			}				
+			else if (o.getLongOpt() == null) {
 				this.properties.setProperty(o.getOpt(), o.getValue());
 				configDesc.append( String.format(PARAM_PRINT, o.getOpt(), o.getValue() + "\n" ) );
 			}

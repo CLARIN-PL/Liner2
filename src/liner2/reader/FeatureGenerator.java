@@ -68,7 +68,6 @@ public class FeatureGenerator {
 		String[] envp=new String[1];
 		envp[0]="PATH=" + path_nerd;
 		String cmd = path_python + " " + path_to_nerd + " --batch";
-		System.out.println("cmd : " + cmd);
 		FeatureGenerator.p = Runtime.getRuntime().exec(cmd, envp);
 		
 		// wygeneruj konfigurację
@@ -128,6 +127,7 @@ public class FeatureGenerator {
 	 * @param sentence
 	 */
 	public static void generateFeatures(Sentence sentence, boolean updateIndex) throws Exception {
+		
 		if (!FeatureGenerator.initialized)
 			throw new Exception("generateFeatures: FeatureGenerator not initialized.");
 		

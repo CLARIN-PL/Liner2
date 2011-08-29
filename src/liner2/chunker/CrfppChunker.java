@@ -18,6 +18,7 @@ import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
+import liner2.tools.TemplateFactory;
 
 import org.chasen.crfpp.Tagger;
 
@@ -106,12 +107,13 @@ public class CrfppChunker extends Chunker
 	
 	            
     @Override
-	public void train(ParagraphSet paragraphSet) {
+	public void train(ParagraphSet paragraphSet) throws Exception {
 		this.prepareTrainingData(paragraphSet);
+		this.prepareTemplates(paragraphSet);
 		this.compileTagger();
     }
 
-    /**
+	/**
      * 
      * @param paragraphSet
      */
@@ -155,6 +157,17 @@ public class CrfppChunker extends Chunker
     	this.trainingFileWriter.flush();
     		
     }
+
+    /**
+     * 
+     * @param paragraphSet
+     * @throws Exception 
+     */
+    private void prepareTemplates(ParagraphSet paragraphSet) throws Exception {
+        for (Object templateName : TemplateFactory.get().getTemplateNames())
+        	TemplateFactory.get().store(""+templateName, templateName+".tpl",
+        		paragraphSet.getAttributeIndex());
+	}
     
     /**
      * Kompilacja chunkera.
