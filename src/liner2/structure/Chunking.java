@@ -1,6 +1,7 @@
 package liner2.structure;
 
 import java.util.HashSet;
+import java.util.Iterator;
 
 
 /**
@@ -9,25 +10,35 @@ import java.util.HashSet;
  */
 public class Chunking {
 
+	HashSet<Chunk> chunks = new HashSet<Chunk>();
+	Sentence sentence = null;
+
 	public Chunking(Sentence sentence){
-		
+		this.sentence = sentence;
 	}
 	
 	public void addChunk(Chunk chunk){
-		
+		this.chunks.add(chunk);
 	}
 	
 	public HashSet<Chunk> chunkSet(){
-		return null;
+		return chunks;
 	}
 
 	public Sentence getSentence() {
-		// TODO Auto-generated method stub
-		return null;
+		return sentence;
 	}
 
 	public boolean contains(Chunk chunk) {
-		// TODO Auto-generated method stub
-		return false;
+		return this.chunks.contains(chunk);
+	}
+	
+	public void union(Chunking foreignChunking) {
+		if (foreignChunking.getSentence() == this.sentence) {
+			HashSet<Chunk> foreignChunks = foreignChunking.chunkSet();
+			Iterator<Chunk> i_fc = foreignChunks.iterator();
+			while (i_fc.hasNext())
+				this.chunks.add(i_fc.next());
+		}
 	}
 }

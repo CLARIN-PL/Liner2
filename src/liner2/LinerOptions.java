@@ -63,6 +63,7 @@ public class LinerOptions {
 	public static final String OPTION_CORPUS = "corpus";
 	public static final String OPTION_FEATURE = "feature";
 	public static final String OPTION_FILTER = "filter";
+	public static final String OPTION_HELP = "help";
 	public static final String OPTION_HEURISTICS = "heuristics";
 	public static final String OPTION_INI = "ini";
 	public static final String OPTION_INPUT_FILE = "f";
@@ -151,6 +152,11 @@ public class LinerOptions {
 	
     	// Parse parameters passed by command line
 		CommandLine line = new GnuParser().parse(options, args);
+		
+		if (line.hasOption(OPTION_HELP)) {
+			printHelp();
+			System.exit(0);
+		}
 
     	if (this.mode == null && line.getArgs().length == 0)
     		throw new ParameterException("mode not set");
@@ -344,6 +350,8 @@ public class LinerOptions {
     	options.addOption(OptionBuilder.withArgName("file name").hasArg()
 				.withDescription("name of file with a list of gazetteers. File line format: TYPE:location")
 				.create("gazef"));
+		options.addOption(OptionBuilder.withLongOpt(OPTION_HELP).withDescription("print this help")
+				.create(OPTION_HELP));
     	options.addOption(OptionBuilder
 				.withArgName("filename").hasArg().withDescription("name of file with configuration")
 				.create(OPTION_INI));

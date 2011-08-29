@@ -15,7 +15,7 @@ public class Sentence {
 	/* Indeks nazw atrybutów */
 	AttributeIndex attributeIndex = null;
 	
-	/* Sekwenale cja tokenów wchodzących w skład zdania */
+	/* Sekwencja tokenów wchodzących w skład zdania */
 	ArrayList<Token> tokens = new ArrayList<Token>();
 	
 	/* Zbiór anotacji */
@@ -33,6 +33,7 @@ public class Sentence {
 	
 	/*
 	 * Zwraca chunk dla podanego indeksu tokenu.
+	 * TODO zmienić parametr na token?
 	 */
 	public Chunk getChunkAt(int idx) {
 		Chunk returning = null;
@@ -76,7 +77,6 @@ public class Sentence {
 	}
 
 	public void setChunking(Chunking chunking) {
-		// TODO Auto-generated method stub
-		
+		this.chunks = chunking.chunkSet();
 	}
 }
