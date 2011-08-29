@@ -20,7 +20,7 @@ public abstract class StreamReader {
 		if (p == null)
 			return null;
 		try {
-			FeatureGenerator.generateFeatures(p);
+			FeatureGenerator.generateFeatures(p, true);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -43,11 +43,16 @@ public abstract class StreamReader {
 		
 		Paragraph p = null;
 		while (true) {
-			p = readParagraph();
+			p = readRawParagraph();
 			if (p != null)
 				paragraphSet.addParagraph(p);
 			else
 				break;
+		}
+		try {
+			FeatureGenerator.generateFeatures(paragraphSet);
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 		close();
 						

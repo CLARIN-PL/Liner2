@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import java.util.ArrayList;
 
 import liner2.structure.Paragraph;
+import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
 
@@ -95,16 +96,25 @@ public class FeatureGenerator {
 		FeatureGenerator.initialized = true;
 	}
 
-	/**
-	 * TODO
-	 * Funkcja generuje cechy i wstawia je do tablic cech tokenów.  
-	 * @param sentence
-	 */
-	public static void generateFeatures(Paragraph p) throws Exception {
+	public static void generateFeatures(ParagraphSet ps) throws Exception {
 		if (!FeatureGenerator.initialized)
 			throw new Exception("generateFeatures: FeatureGenerator not initialized.");
 		
-		p.getAttributeIndex().update(LinerOptions.get().features);
+		ps.getAttributeIndex().update(LinerOptions.get().features);
+		for (Paragraph p : ps.getParagraphs())
+			FeatureGenerator.generateFeatures(p, false);
+	}
+	
+	/**
+	 * Funkcja generuje cechy i wstawia je do tablic cech tokenów.  
+	 * @param p
+	 */
+	public static void generateFeatures(Paragraph p, boolean updateIndex) throws Exception {
+		if (!FeatureGenerator.initialized)
+			throw new Exception("generateFeatures: FeatureGenerator not initialized.");
+		
+		if (updateIndex)
+			p.getAttributeIndex().update(LinerOptions.get().features);
 		for (Sentence s : p.getSentences())
 			FeatureGenerator.generateFeatures(s, false);
 	}
@@ -137,7 +147,6 @@ public class FeatureGenerator {
 		
 		for (Token token : sentence.getTokens()) {
 			String line = FeatureGenerator.input.readLine().trim();
-			System.out.println(line); 		// DEBUG
 			line = line.substring(0, line.length() - 2);
 			String[] featureValues = line.split(" ");
 			for (int i = 0; i < featureValues.length; i++)
