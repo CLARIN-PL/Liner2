@@ -50,7 +50,10 @@ public class IobStreamWriter extends StreamWriter {
 		try {
 			if (!open)
 				open();
-			String header = "-DOCSTART FILE "+paragraph.getId();
+			String paragraphId = paragraph.getId();
+			if (paragraphId == null)
+				paragraphId = "";
+			String header = "-DOCSTART FILE "+ paragraphId;
 			ow.write(header, 0, header.length());
 			ow.newLine();
 			for (Sentence sentence : paragraph.getSentences())

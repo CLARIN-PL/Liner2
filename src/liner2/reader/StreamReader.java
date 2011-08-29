@@ -19,10 +19,12 @@ public abstract class StreamReader {
 		Paragraph p = this.readRawParagraph();
 		if (p == null)
 			return null;
-		try {
-			FeatureGenerator.generateFeatures(p, true);
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		if (FeatureGenerator.isInitialized()) {
+			try {
+				FeatureGenerator.generateFeatures(p, true);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 		return p;
 	}
@@ -49,10 +51,12 @@ public abstract class StreamReader {
 			else
 				break;
 		}
-		try {
-			FeatureGenerator.generateFeatures(paragraphSet);
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		if (FeatureGenerator.isInitialized()) {
+			try {
+				FeatureGenerator.generateFeatures(paragraphSet);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 		close();
 						

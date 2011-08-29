@@ -78,7 +78,8 @@ public class CclStreamWriter extends StreamWriter {
 			if (!open)
 				open();
 			xmlw.writeStartElement(TAG_PARAGRAPH);
-			xmlw.writeAttribute(TAG_ID, paragraph.getId());
+			if (paragraph.getId() != null)
+				xmlw.writeAttribute(TAG_ID, paragraph.getId());
 			xmlw.writeCharacters("\n");
 			for (Sentence sentence : paragraph.getSentences())
 				writeSentence(sentence);

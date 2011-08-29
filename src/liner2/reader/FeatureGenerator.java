@@ -42,6 +42,10 @@ public class FeatureGenerator {
 		
 	}
 	
+	public static boolean isInitialized() {
+		return initialized;
+	}
+	
 	/**
 	 * Funkcja inicjalizuje generator.
 	 * @param features

@@ -35,7 +35,7 @@ public class ReaderFactory {
 	}
 	
 	private InputStream getInputStream(String inputFile) throws Exception {
-		if (inputFile.isEmpty())
+		if ((inputFile == null) || (inputFile.isEmpty()))
 			return System.in;
 		else {
 			try {

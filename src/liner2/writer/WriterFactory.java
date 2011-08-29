@@ -33,7 +33,7 @@ public class WriterFactory {
 	}
 	
 	private OutputStream getOutputStream(String outputFile) throws Exception {
-		if (outputFile.isEmpty())
+		if ((outputFile == null) || (outputFile.isEmpty()))
 			return System.out;
 		else {
 			try {
