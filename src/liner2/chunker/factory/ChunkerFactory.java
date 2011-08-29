@@ -113,16 +113,16 @@ public class ChunkerFactory {
 	 * @return
 	 */
 	public static Chunker getChunkerPipe(String description) {
-		return ChunkerFactory.get().getChunkerUnionPipe(description.split("+"));
+		return ChunkerFactory.get().getChunkerUnionPipe(description.split("\\+"));
 	}
 	
 	private Chunker getChunkerUnionPipe(String[] descriptions) {
 		if (descriptions.length == 1)
-			return getChunkerVotingPipe(descriptions[0].split("*"));
+			return getChunkerVotingPipe(descriptions[0].split("\\*"));
 		else {
 			ArrayList<Chunker> chunkers = new ArrayList<Chunker>();
 			for (int i = 0; i < descriptions.length; i++)
-				chunkers.add(getChunkerVotingPipe(descriptions[i].split("*")));
+				chunkers.add(getChunkerVotingPipe(descriptions[i].split("\\*")));
 			return new UnionChunker(chunkers);
 		}
 	}
