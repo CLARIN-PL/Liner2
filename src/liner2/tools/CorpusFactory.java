@@ -40,12 +40,16 @@ public class CorpusFactory {
 	   @return Corpus specified by queryString.
 	 */
 	
-	public ParagraphSet query(String queryString) {
+	public ParagraphSet query(String queryString) throws ParameterException {
 		String[] names = queryString.split(",");
 		ParagraphSet paragraphSet = corpora.get(names[0]);
+		if (paragraphSet == null)
+			throw new ParameterException(String.format("Undefined corpus name: '%s'", names[0]));
 		AttributeIndex attributeIndex = paragraphSet.getAttributeIndex();
 		for (int i = 1; i < names.length; i++) {
 			ParagraphSet next = corpora.get(names[i]);
+			if (next == null)
+				throw new ParameterException(String.format("Undefined corpus name: '%s'", names[i]));
 			if (next.getAttributeIndex().equals(attributeIndex))
 				for (Paragraph p : next.getParagraphs())
 					paragraphSet.addParagraph(p);

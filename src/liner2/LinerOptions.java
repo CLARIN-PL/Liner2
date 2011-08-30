@@ -237,6 +237,13 @@ public class LinerOptions {
 		if (line.hasOption(OPTION_VERBOSE_DETAILS))
 			this.verboseDetails = true;
 		
+		// read feature definitions and initialize feature generator
+		if (line.hasOption(OPTION_FEATURE)) {
+			for (String feature : line.getOptionValues(OPTION_FEATURE))
+				this.features.add(feature);
+			FeatureGenerator.initialize();
+		}
+		
 		// read chunker descriptions
 		if (line.hasOption(OPTION_CHUNKER)) {
 			for (String cd : line.getOptionValues(OPTION_CHUNKER))
@@ -248,13 +255,6 @@ public class LinerOptions {
 			for (String cd : line.getOptionValues(OPTION_CORPUS)) {
 				CorpusFactory.get().parse(cd);
 			}
-		}
-		
-		// read feature definitions
-		if (line.hasOption(OPTION_FEATURE)) {
-			for (String feature : line.getOptionValues(OPTION_FEATURE))
-				this.features.add(feature);
-			FeatureGenerator.initialize();
 		}
 		
 		if (line.hasOption(OPTION_PYTHON))
