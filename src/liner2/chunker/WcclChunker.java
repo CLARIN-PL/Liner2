@@ -18,6 +18,8 @@ import liner2.structure.Sentence;
 import liner2.writer.StreamWriter;
 import liner2.writer.WriterFactory;
 
+import liner2.Main;
+
 /*
  * @author Maciej Janicki
  */
@@ -35,7 +37,7 @@ public class WcclChunker extends Chunker {
 	@Override
 	public Chunking chunkSentence(Sentence sentence) {
 		Chunking chunking = new Chunking(sentence);
-		String cmd = "wccl-rules -q -i ccl -I - " + this.wcclFile;
+		String cmd = "wccl-rules -q -t nkjp -i ccl -I - " + this.wcclFile;
 		Process p = null;
 		
 		try {
@@ -44,7 +46,7 @@ public class WcclChunker extends Chunker {
 			ex.printStackTrace();
 		}
 		
-		InputStream err = p.getErrorStream();
+		BufferedReader err = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 		InputStream in = p.getInputStream();
 		OutputStream out = p.getOutputStream();
 		
@@ -54,10 +56,14 @@ public class WcclChunker extends Chunker {
 		paragraphSet.addParagraph(paragraph);
 		
 		try {
-			StreamReader reader = ReaderFactory.get().getStreamReader(in, "ccl");
 			StreamWriter writer = WriterFactory.get().getStreamWriter(out, "ccl");
 			writer.writeParagraphSet(paragraphSet);
 			writer.close();
+			StreamReader reader = ReaderFactory.get().getStreamReader(in, "ccl");
+			while (!reader.paragraphReady())
+				while (err.ready())
+					// TODO rzucić wyjątek?
+					Main.log("WCCL error: " + err.readLine()); 
 			paragraph = reader.readParagraph();
 			reader.close();
 		} catch (Exception ex) {

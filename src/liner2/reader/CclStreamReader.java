@@ -34,29 +34,32 @@ import liner2.structure.Token;
 
 public class CclStreamReader extends StreamReader {
 	
-	private final String TAG_ANN		= "ann";
-	private final String TAG_BASE 		= "base";
-	private final String TAG_CHAN		= "chan";
-	private final String TAG_CTAG		= "ctag";
-	private final String TAG_ID 		= "id";
-	private final String TAG_ORTH		= "orth";
-	private final String TAG_NS			= "ns";
-	private final String TAG_PARAGRAPH 	= "chunk";
-	private final String TAG_SENTENCE	= "sentence";
-	private final String TAG_TAG		= "lex";
-	private final String TAG_TOKEN 		= "tok";
+	private final String TAG_ANN			= "ann";
+	private final String TAG_BASE 			= "base";
+	private final String TAG_CHAN			= "chan";
+	private final String TAG_CTAG			= "ctag";
+	private final String TAG_ID 			= "id";
+	private final String TAG_ORTH			= "orth";
+	private final String TAG_NS				= "ns";
+	private final String TAG_PARAGRAPH 		= "chunk";
+	private final String TAG_PARAGRAPH_SET	= "chunkSet";
+	private final String TAG_SENTENCE		= "sentence";
+	private final String TAG_TAG			= "lex";
+	private final String TAG_TOKEN 			= "tok";
 	
 	private XMLStreamReader xmlr;
-	private InputStream is;
+	private BufferedInputStream is;
+	private String nextParagraphId = null;
+	private boolean nextParagraph = false;
 	
 	public CclStreamReader(InputStream is) {
-		this.is = is;
+		this.is = new BufferedInputStream(is);
 		XMLInputFactory xmlif = XMLInputFactory.newFactory();
 		try {
-			this.xmlr = xmlif.createXMLStreamReader(new BufferedInputStream(is));
+			this.xmlr = xmlif.createXMLStreamReader(is);
 		} catch (XMLStreamException ex) {
 			ex.printStackTrace();
-		}
+		} 
 	}
 	
 	@Override
@@ -72,6 +75,62 @@ public class CclStreamReader extends StreamReader {
 		}
 	}	
 		
+	/*@Override
+	public boolean ready() {
+		try {
+			return this.xmlr.hasNext();
+		} catch (XMLStreamException ex) {
+			ex.printStackTrace();
+			return false;
+		}
+	}
+	
+	@Override
+	public void skipHeader() {
+		int eventType = xmlr.getEventType();
+		if (eventType != XMLStreamConstants.START_DOCUMENT)
+			return;
+		// skip beginning tags
+		try {
+			while (xmlr.hasNext()) {
+				if (eventType != XMLStreamConstants.START_ELEMENT) {
+					eventType = xmlr.next();
+					continue;
+				}
+				if (!xmlr.getName().getLocalPart().equals(TAG_PARAGRAPH_SET)) {
+					eventType = xmlr.next();
+					continue;
+				}
+				break;
+			}
+		} catch (XMLStreamException ex) {
+			ex.printStackTrace();
+		}
+	}*/
+	
+	@Override
+	public boolean paragraphReady() {
+		if (this.nextParagraph)
+			return true;
+		try {
+			int eventType = xmlr.getEventType();
+			while (xmlr.hasNext()) {
+				eventType = xmlr.next();
+				if (eventType != XMLStreamConstants.START_ELEMENT)
+					continue;
+				if (!xmlr.getName().getLocalPart().equals(TAG_PARAGRAPH)) 
+					continue;
+				this.nextParagraph = true;
+				this.nextParagraphId = xmlr.getAttributeValue(null, TAG_ID);
+				return true;
+			}
+			return false;
+		} catch (XMLStreamException ex) {
+			ex.printStackTrace();
+			return false;
+		}
+	}
+	
 	@Override
 	protected Paragraph readRawParagraph() {
 		
@@ -90,51 +149,90 @@ public class CclStreamReader extends StreamReader {
 		
 		// wczytaj kod xml następnego akapitu
 		try {
+			if (!paragraphReady())
+				return null;
+
+			paragraphText = "<" + TAG_PARAGRAPH + ">";
+			paragraphId = this.nextParagraphId;
+			this.nextParagraph = false;
+			this.nextParagraphId = null;
+			
 			while (xmlr.hasNext()) {
 				eventType = xmlr.next();
-				if (outsideParagraph) {
-					if (eventType != XMLStreamConstants.START_ELEMENT)
-						continue;
-					if (!xmlr.getName().getLocalPart().equals(TAG_PARAGRAPH)) 
-						continue;
-					paragraphId = xmlr.getAttributeValue(null, TAG_ID);
-					outsideParagraph = false;
-					paragraphText = "<" + xmlr.getName() + ">";
+				if (eventType != XMLStreamConstants.END_ELEMENT) {
+					if (eventType == XMLStreamConstants.START_ELEMENT) {
+						paragraphText += "<" + xmlr.getName();
+						for (int i = 0; i < xmlr.getAttributeCount(); i++) {
+							paragraphText += " " + xmlr.getAttributeName(i);
+							paragraphText += "=\"" + xmlr.getAttributeValue(i) + "\"";
+						}
+						paragraphText += ">";
+					}
+					else if ((eventType == XMLStreamConstants.CHARACTERS) || 
+						(eventType == XMLStreamConstants.SPACE)) {
+						paragraphText += xmlr.getText();
+					}
+					continue;
 				}
-				else {
-					if (eventType != XMLStreamConstants.END_ELEMENT) {
-						if (eventType == XMLStreamConstants.START_ELEMENT) {
-							paragraphText += "<" + xmlr.getName();
-							for (int i = 0; i < xmlr.getAttributeCount(); i++) {
-								paragraphText += " " + xmlr.getAttributeName(i);
-								paragraphText += "=\"" + xmlr.getAttributeValue(i) + "\"";
-							}
-							paragraphText += ">";
-						}
-						else if ((eventType == XMLStreamConstants.CHARACTERS) || 
-							(eventType == XMLStreamConstants.SPACE)) {
-							paragraphText += xmlr.getText();
-						}
-						continue;
-					}
-					if (!xmlr.getName().getLocalPart().equals(TAG_PARAGRAPH)) {
-						paragraphText += "</" + xmlr.getName() + ">";
-						continue;
-					}
+				if (!xmlr.getName().getLocalPart().equals(TAG_PARAGRAPH)) {
 					paragraphText += "</" + xmlr.getName() + ">";
-					outsideParagraph = true;
-					break;
+					continue;
 				}
+				paragraphText += "</" + xmlr.getName() + ">";
+				break;
 			}
 		} catch (XMLStreamException ex) {
 			ex.printStackTrace();
 			return null;
 		}
 		
+		
+//		try {
+//			while (xmlr.hasNext()) {
+//				eventType = xmlr.next();
+//				if (outsideParagraph) {
+//					if (eventType != XMLStreamConstants.START_ELEMENT)
+//						continue;
+//					if (!xmlr.getName().getLocalPart().equals(TAG_PARAGRAPH)) 
+//						continue;
+//					paragraphId = xmlr.getAttributeValue(null, TAG_ID);
+//					outsideParagraph = false;
+//					paragraphText = "<" + xmlr.getName() + ">";
+//				}
+//				else {
+//					if (eventType != XMLStreamConstants.END_ELEMENT) {
+//						if (eventType == XMLStreamConstants.START_ELEMENT) {
+//							paragraphText += "<" + xmlr.getName();
+//							for (int i = 0; i < xmlr.getAttributeCount(); i++) {
+//								paragraphText += " " + xmlr.getAttributeName(i);
+//								paragraphText += "=\"" + xmlr.getAttributeValue(i) + "\"";
+//							}
+//							paragraphText += ">";
+//						}
+//						else if ((eventType == XMLStreamConstants.CHARACTERS) || 
+//							(eventType == XMLStreamConstants.SPACE)) {
+//							paragraphText += xmlr.getText();
+//						}
+//						continue;
+//					}
+//					if (!xmlr.getName().getLocalPart().equals(TAG_PARAGRAPH)) {
+//						paragraphText += "</" + xmlr.getName() + ">";
+//						continue;
+//					}
+//					paragraphText += "</" + xmlr.getName() + ">";
+//					outsideParagraph = true;
+//					break;
+//				}
+//			}
+//		} catch (XMLStreamException ex) {
+//			ex.printStackTrace();
+//			return null;
+//		}
+		
 		// jeśli nie wczytano żadnego akapitu
-		if (paragraphText.equals("")) {
+		if (paragraphText.equals(""))
 			return null;
-		}
+		
 		
 		// przekonwertuj kod xml akapitu w obiekt DOM
 		paragraphText = paragraphText.replace("&", "&amp;");

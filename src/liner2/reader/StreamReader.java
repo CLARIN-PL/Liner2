@@ -12,21 +12,34 @@ import liner2.structure.ParagraphSet;
 public abstract class StreamReader {
 
 	protected abstract Paragraph readRawParagraph();
-		
 	public abstract void close();
+	public abstract boolean paragraphReady();
 		
 	public Paragraph readParagraph(){
-		Paragraph p = this.readRawParagraph();
-		if (p == null)
-			return null;
-		if (FeatureGenerator.isInitialized()) {
-			try {
-				FeatureGenerator.generateFeatures(p, true);
-			} catch (Exception ex) {
-				ex.printStackTrace();
+//		Paragraph p = this.readRawParagraph();
+//		if (p == null)
+//			return null;
+//		if (FeatureGenerator.isInitialized()) {
+//			try {
+//				FeatureGenerator.generateFeatures(p, true);
+//			} catch (Exception ex) {
+//				ex.printStackTrace();
+//			}
+//		}
+//		return p;
+		if (paragraphReady()) {
+			Paragraph p = this.readRawParagraph();
+			if (FeatureGenerator.isInitialized()) {
+				try {
+					FeatureGenerator.generateFeatures(p, true);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			}
-		}
-		return p;
+			return p;
+		} 
+		else
+			return null;
 	}
 	
 	/**
@@ -42,23 +55,26 @@ public abstract class StreamReader {
 		attributeIndex.addAttribute("base");
 		attributeIndex.addAttribute("ctag");
 		paragraphSet.setAttributeIndex(attributeIndex);
+
+		while (paragraphReady())
+			paragraphSet.addParagraph(readParagraph());
 		
-		Paragraph p = null;
-		while (true) {
-			p = readRawParagraph();
-			if (p != null){
-				p.setAttributeIndex(attributeIndex);
-				paragraphSet.addParagraph(p);
-			}else
-				break;
-		}
-		if (FeatureGenerator.isInitialized()) {
-			try {
-				FeatureGenerator.generateFeatures(paragraphSet);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
+//		Paragraph p = null;
+//		while (true) {
+//			p = readRawParagraph();
+//			if (p != null){
+//				p.setAttributeIndex(attributeIndex);
+//				paragraphSet.addParagraph(p);
+//			}else
+//				break;
+//		}
+//		if (FeatureGenerator.isInitialized()) {
+//			try {
+//				FeatureGenerator.generateFeatures(paragraphSet);
+//			} catch (Exception ex) {
+//				ex.printStackTrace();
+//			}
+//		}
 		close();
 						
 		return paragraphSet; 

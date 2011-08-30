@@ -16,6 +16,7 @@ public class IobStreamReader extends StreamReader {
 	
 	private BufferedReader ir;
 	private String nextParagraphId = null;
+	private boolean nextParagraph = false;
 	
 	public IobStreamReader(InputStream is) {
 		this.ir = new BufferedReader(new InputStreamReader(is));
@@ -31,10 +32,43 @@ public class IobStreamReader extends StreamReader {
 	}
 
 	@Override
+	public boolean paragraphReady() {
+		if (this.nextParagraph)
+			return true;
+		while (true) {
+			String line = null;
+			try {
+				if (!ir.ready()) {
+					this.nextParagraphId = null;
+					this.nextParagraph = false;
+					return false;
+				}
+				line = ir.readLine();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+			
+			String[] words = line.trim().split(" ");
+			if (words.length < 2)
+				continue;
+			if ((words[0].equals("-DOCSTART")) &&
+				(words[1].equals("FILE"))) {
+				if (words.length >= 3)
+					this.nextParagraphId = words[2];
+				this.nextParagraph = true;
+				return true;
+			}
+		}
+	}
+
+	@Override
 	protected Paragraph readRawParagraph() {
-		if (nextParagraphId == null)
-			readParagraphHeader();
-		if (nextParagraphId == null)
+//		if (nextParagraphId == null)
+//			readParagraphHeader();
+//		if (nextParagraphId == null)
+//			return null;
+
+		if (!paragraphReady())
 			return null;
 			
 		// initialize attributes index
@@ -44,7 +78,8 @@ public class IobStreamReader extends StreamReader {
 		attributeIndex.addAttribute("ctag");
 			
 		Paragraph paragraph = new Paragraph(nextParagraphId);
-		nextParagraphId = null;
+		this.nextParagraphId = null;
+		this.nextParagraph = false;
 		Sentence currentSentence = new Sentence();
 		Chunk currentChunk = null;
 
@@ -74,7 +109,9 @@ public class IobStreamReader extends StreamReader {
 				String[] words = line.trim().split(" ");
 				if ((words[0].equals("-DOCSTART")) &&
 					(words[1].equals("FILE"))) {
-					nextParagraphId = words[2];
+					if (words.length >= 3)
+						this.nextParagraphId = words[2];
+					this.nextParagraph = true;
 					return paragraph;
 				}
 				else {
