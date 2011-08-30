@@ -1,9 +1,15 @@
 package liner2.chunker;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import liner2.reader.ReaderFactory;
+import liner2.reader.StreamReader;
+
+import liner2.structure.Chunk;
 import liner2.structure.Chunking;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
@@ -29,8 +35,7 @@ public class WcclChunker extends Chunker {
 	@Override
 	public Chunking chunkSentence(Sentence sentence) {
 		Chunking chunking = new Chunking(sentence);
-		String cmd = "wccl-rules -i ccl -I - " + this.wcclFile;
-		
+		String cmd = "wccl-rules -q -i ccl -I - " + this.wcclFile;
 		Process p = null;
 		
 		try {
@@ -43,23 +48,25 @@ public class WcclChunker extends Chunker {
 		InputStream in = p.getInputStream();
 		OutputStream out = p.getOutputStream();
 		
-		// TODO
-		// Sentence > ccl > wccl-rules > ccl > Sentence > extract chunking
-		
 		ParagraphSet paragraphSet = new ParagraphSet();
 		Paragraph paragraph = new Paragraph(null);
 		paragraph.addSentence(sentence);
 		paragraphSet.addParagraph(paragraph);
 		
 		try {
-			StreamWriter writer = WriterFactory.get().getStreamWriter(null, "ccl");
+			StreamReader reader = ReaderFactory.get().getStreamReader(in, "ccl");
+			StreamWriter writer = WriterFactory.get().getStreamWriter(out, "ccl");
 			writer.writeParagraphSet(paragraphSet);
 			writer.close();
+			paragraph = reader.readParagraph();
+			reader.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		
-		// odczytaj wynik z wccl-a
+		Sentence resultSentence = paragraph.getSentences().get(0);
+		for (Chunk chunk : resultSentence.getChunks())
+			chunking.addChunk(chunk);
 		
 		return chunking;
 	}	

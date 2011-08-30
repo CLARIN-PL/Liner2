@@ -32,7 +32,7 @@ public class ActionPipe extends Action{
 			LinerOptions.getOption(LinerOptions.OPTION_INPUT_FILE),
 			LinerOptions.getOption(LinerOptions.OPTION_INPUT_FORMAT));
 		ParagraphSet ps = reader.readParagraphSet();
-        	
+		
 		if ( !LinerOptions.isOption(LinerOptions.OPTION_USE) ){
 			throw new ParameterException("Parameter --use <chunker_pipe_desription> not set");
 		}

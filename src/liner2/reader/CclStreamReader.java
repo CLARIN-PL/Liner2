@@ -1,5 +1,6 @@
 package liner2.reader;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
@@ -46,11 +47,13 @@ public class CclStreamReader extends StreamReader {
 	private final String TAG_TOKEN 		= "tok";
 	
 	private XMLStreamReader xmlr;
+	private InputStream is;
 	
 	public CclStreamReader(InputStream is) {
+		this.is = is;
 		XMLInputFactory xmlif = XMLInputFactory.newFactory();
 		try {
-			this.xmlr = xmlif.createXMLStreamReader(is);
+			this.xmlr = xmlif.createXMLStreamReader(new BufferedInputStream(is));
 		} catch (XMLStreamException ex) {
 			ex.printStackTrace();
 		}
@@ -61,8 +64,10 @@ public class CclStreamReader extends StreamReader {
 		
 		try {
 			xmlr.close();
-		}
-		catch (XMLStreamException ex) {
+			is.close();
+		} catch (XMLStreamException ex) {
+			ex.printStackTrace();
+		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
 	}	

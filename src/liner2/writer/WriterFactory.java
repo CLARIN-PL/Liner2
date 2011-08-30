@@ -24,10 +24,14 @@ public class WriterFactory {
 	 * @return
 	 */
 	public StreamWriter getStreamWriter(String outputFile, String outputFormat) throws Exception {
+		return getStreamWriter(getOutputStream(outputFile), outputFormat);
+	}
+	
+	public StreamWriter getStreamWriter(OutputStream out, String outputFormat) throws Exception {
 		if (outputFormat.equals("ccl"))
-			return new CclStreamWriter(getOutputStream(outputFile));
+			return new CclStreamWriter(out);
 		else if (outputFormat.equals("iob"))
-			return new IobStreamWriter(getOutputStream(outputFile));
+			return new IobStreamWriter(out);
 		else		
 			throw new Exception("Output format " + outputFormat + " not recognized.");
 	}

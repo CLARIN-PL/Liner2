@@ -27,6 +27,11 @@ public class Sentence {
 		chunks.add(chunk);
 	}
 	
+	public void addChunking(Chunking chunking) {
+		for (Chunk chunk : chunking.chunkSet())
+			addChunk(chunk);
+	}
+	
 	public void addToken(Token token) {
 		tokens.add(token);
 	}

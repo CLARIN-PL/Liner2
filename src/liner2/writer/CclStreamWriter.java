@@ -35,9 +35,11 @@ public class CclStreamWriter extends StreamWriter {
 	private final String TAG_TOKEN 			= "tok";
 
 	private XMLStreamWriter xmlw;
+	private OutputStream os;
 	private boolean open = false;
 	
 	public CclStreamWriter(OutputStream os) {
+		this.os = os;
 		XMLOutputFactory xmlof = XMLOutputFactory.newFactory();
 		try {
 			this.xmlw = xmlof.createXMLStreamWriter(os);
@@ -54,8 +56,7 @@ public class CclStreamWriter extends StreamWriter {
 			xmlw.writeCharacters("\n");
 			xmlw.writeStartElement(TAG_PARAGRAPH_SET);
 			xmlw.writeCharacters("\n");
-		}
-		catch (XMLStreamException ex) {
+		} catch (XMLStreamException ex) {
 			ex.printStackTrace();
 		}
 		open = true;
@@ -66,8 +67,10 @@ public class CclStreamWriter extends StreamWriter {
 		try {
 			xmlw.writeEndDocument();
 			xmlw.close();
-		}
-		catch (XMLStreamException ex) {
+			os.close();
+		} catch (XMLStreamException ex) {
+			ex.printStackTrace();
+		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
 	}
@@ -85,6 +88,7 @@ public class CclStreamWriter extends StreamWriter {
 				writeSentence(sentence);
 			xmlw.writeEndElement();
 			xmlw.writeCharacters("\n");
+			xmlw.flush();
 		} catch (XMLStreamException ex) {
 			ex.printStackTrace();
 		}

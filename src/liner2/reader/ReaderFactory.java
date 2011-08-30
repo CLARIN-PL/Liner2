@@ -26,10 +26,14 @@ public class ReaderFactory {
 	 * @return
 	 */
 	public StreamReader getStreamReader(String inputFile, String inputFormat) throws Exception {
+		return getStreamReader(getInputStream(inputFile), inputFormat);
+	}
+	
+	public StreamReader getStreamReader(InputStream in, String inputFormat) throws Exception {
 		if (inputFormat.equals("ccl"))
-			return new CclStreamReader(getInputStream(inputFile));
+			return new CclStreamReader(in);
 		else if (inputFormat.equals("iob"))
-			return new IobStreamReader(getInputStream(inputFile));
+			return new IobStreamReader(in);
 		else
 			throw new Exception("Input format " + inputFormat + " not recognized.");
 	}
