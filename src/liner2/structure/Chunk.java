@@ -39,9 +39,9 @@ public class Chunk {
 			return false;
 		else if (this.end != chunk.getEnd())
 			return false;
-		else if (this.sentence != chunk.getSentence())
-			return false;
-		else if (this.type != chunk.getType())
+//		else if (this.sentence != chunk.getSentence())
+//			return false;
+		else if (!this.type.equals(chunk.getType()))
 			return false;
 		return true;
 	}

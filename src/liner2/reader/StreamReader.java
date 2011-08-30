@@ -57,7 +57,7 @@ public abstract class StreamReader {
 		paragraphSet.setAttributeIndex(attributeIndex);
 
 		while (paragraphReady())
-			paragraphSet.addParagraph(readParagraph());
+			paragraphSet.addParagraph(readRawParagraph());
 		
 //		Paragraph p = null;
 //		while (true) {
@@ -68,13 +68,13 @@ public abstract class StreamReader {
 //			}else
 //				break;
 //		}
-//		if (FeatureGenerator.isInitialized()) {
-//			try {
-//				FeatureGenerator.generateFeatures(paragraphSet);
-//			} catch (Exception ex) {
-//				ex.printStackTrace();
-//			}
-//		}
+		if (FeatureGenerator.isInitialized()) {
+			try {
+				FeatureGenerator.generateFeatures(paragraphSet);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
 		close();
 						
 		return paragraphSet; 
