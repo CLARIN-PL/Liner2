@@ -52,6 +52,16 @@ public class CrfppChunker extends Chunker
 	}
 	
 	private void sendDataToTagger(Sentence sentence){
+		tagger.clear();
+		int numAttrs = sentence.getAttributeIndexLength();
+		for (Token token : sentence.getTokens()) {
+			String oStr = "";
+			for (int i = 0; i < numAttrs; i++)
+				oStr += " " + token.getAttributeValue(i);
+			tagger.add(oStr.trim());
+		}
+		tagger.parse();
+		
 //      String[] tokens = cSeq.toString().split("\\s");
 		//
 //		        if ( tokens.length != RegexLineTagParser.currentSentenceFeatures.size() ){
@@ -78,29 +88,27 @@ public class CrfppChunker extends Chunker
 	
 	private Chunking readTaggerOutput(Sentence sentence){
         Chunking chunking = new Chunking(sentence);
-//        String line = "";
-//        String type = null;
-//        int from = 0;
-//
-//        for (int i = 0; i < tagger.size(); ++i) {     
-//            Matcher m = p.matcher(tagger.y2(i));
-//                                  
-//            if ( type != null && ( !m.matches() || m.group(1).equals("B") ) ){
-//            	chunking.add(ChunkFactory.createChunk(from, line.length(), type));
-//            	type = null;
-//            	from = 0;
-//            }
-//            
-//            if ( m.matches() && m.group(1).toString().equals("B") ){
-//            	from = line.length()==0 ? 0 : line.length()+1;
-//            	type = m.group(2);
-//            }
-//            
-//            line += (line.length()>0 ? " " : "" ) +  tagger.x(i, 0);
-//        }    
-//
-//        if ( type != null)
-//        	chunking.add(ChunkFactory.createChunk(from, line.length(), type));
+        String line = "";
+        String type = null;
+        int from = 0;
+
+        for (int i = 0; i < tagger.size(); ++i) {
+            Matcher m = p.matcher(tagger.y2(i));
+                                  
+            if ( type != null && ( !m.matches() || m.group(1).equals("B") ) ){
+            	chunking.addChunk(new Chunk(from, i-1, type, sentence));
+            	type = null;
+            	from = 0;
+            }
+            
+            if ( m.matches() && m.group(1).toString().equals("B") ){
+            	from = i;
+            	type = m.group(2);
+            }
+        }    
+
+        if (type != null)
+        	chunking.addChunk(new Chunk(from, (int)tagger.size()-1, type, sentence));
 
         return chunking;
     }
