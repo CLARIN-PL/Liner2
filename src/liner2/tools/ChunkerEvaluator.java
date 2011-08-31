@@ -198,19 +198,22 @@ public class ChunkerEvaluator {
 	 * 
 	 */
 	public void printResults(){
-		System.out.println("Annotation TP FP FN Precision Recall F$_1$");
+		System.out.println("Annotation           &   TP &   FP &   FN &"
+			+ " Precision & Recall & F$_1$  \\\\");
 		System.out.println("\\hline");
 		for (String key : this.keys) {
 			int tp = this.truePositives.containsKey(key) ? this.truePositives.get(key) : 0;
 			int fp = this.falsePositives.containsKey(key) ? this.falsePositives.get(key) : 0;
 			int fn = this.falseNegatives.containsKey(key) ? this.falseNegatives.get(key) : 0;
 			
-			System.out.println(String.format("%s %d %d %d %2.2f %2.2f %2.2f", key, tp, fp, fn,
+			System.out.println(String.format("%-20s & %4d & %4d & %4d &"
+				+ "    %5.2f%% & %5.2f%% & %5.2f%% \\\\", key, tp, fp, fn,
 				this.precision.get(key), this.recall.get(key), this.fMeasure.get(key)));
 		}
 		System.out.println("\\hline");
-		System.out.println(String.format("*TOTAL* %d %d %d %2.2f %2.2f %2.2f",
-			this.globalTruePositives, this.globalFalsePositives, this.globalFalseNegatives,
+		System.out.println(String.format("*TOTAL*              & %4d & %4d & %4d &"
+			+ "    %5.2f%% & %5.2f%% & %5.2f%%", this.globalTruePositives,
+			this.globalFalsePositives, this.globalFalseNegatives,
 			this.globalPrecision, this.globalRecall, this.globalFMeasure));
 	}
 	
