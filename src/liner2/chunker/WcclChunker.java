@@ -60,10 +60,12 @@ public class WcclChunker extends Chunker {
 			writer.writeParagraphSet(paragraphSet);
 			writer.close();
 			StreamReader reader = ReaderFactory.get().getStreamReader(in, "ccl");
-			while (!reader.paragraphReady())
+			if (err.ready()) {
 				while (err.ready())
 					// TODO rzucić wyjątek?
 					Main.log("WCCL error: " + err.readLine()); 
+				return null;
+			}
 			paragraph = reader.readParagraph();
 			reader.close();
 		} catch (Exception ex) {

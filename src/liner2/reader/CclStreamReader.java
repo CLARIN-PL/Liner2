@@ -75,39 +75,6 @@ public class CclStreamReader extends StreamReader {
 		}
 	}	
 		
-	/*@Override
-	public boolean ready() {
-		try {
-			return this.xmlr.hasNext();
-		} catch (XMLStreamException ex) {
-			ex.printStackTrace();
-			return false;
-		}
-	}
-	
-	@Override
-	public void skipHeader() {
-		int eventType = xmlr.getEventType();
-		if (eventType != XMLStreamConstants.START_DOCUMENT)
-			return;
-		// skip beginning tags
-		try {
-			while (xmlr.hasNext()) {
-				if (eventType != XMLStreamConstants.START_ELEMENT) {
-					eventType = xmlr.next();
-					continue;
-				}
-				if (!xmlr.getName().getLocalPart().equals(TAG_PARAGRAPH_SET)) {
-					eventType = xmlr.next();
-					continue;
-				}
-				break;
-			}
-		} catch (XMLStreamException ex) {
-			ex.printStackTrace();
-		}
-	}*/
-	
 	@Override
 	public boolean paragraphReady() {
 		if (this.nextParagraph)

@@ -4,6 +4,8 @@ import liner2.structure.AttributeIndex;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 
+import liner2.Main;
+
 /**
  * Abstrakcyjna klasa do strumieniowego wczytywania danych.
  * @author czuk

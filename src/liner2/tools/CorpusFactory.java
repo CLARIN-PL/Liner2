@@ -26,7 +26,7 @@ public class CorpusFactory {
 		if (desc.length != 3)
 			throw new Exception("Invalid corpus description: " + description);
 		if (corpora.containsKey(desc[0]))
-			throw new Exception("Duplicate orpus definition: " + desc[0]);
+			throw new Exception("Duplicate corpus definition: " + desc[0]);
 		StreamReader reader = ReaderFactory.get().getStreamReader(desc[2], desc[1]);
 		if (reader == null)
 			throw new Exception("Error while parsing corpus description: " + description);
