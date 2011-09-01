@@ -37,7 +37,7 @@ public class WcclChunker extends Chunker {
 	@Override
 	public Chunking chunkSentence(Sentence sentence) {
 		Chunking chunking = new Chunking(sentence);
-		String cmd = "wccl-rules -q -i ccl -I - " + this.wcclFile;
+		String cmd = "wccl-rules -t nkjp -q -i ccl -I - " + this.wcclFile;
 		Process p = null;
 		
 		try {

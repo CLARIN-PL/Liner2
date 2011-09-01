@@ -92,6 +92,7 @@ public class LinerOptions {
 
 //	public ArrayList<Filter> filters = new ArrayList<Filter>();
 	public ArrayList<String> features = new ArrayList<String>();
+	public ArrayList<String> featureNames = new ArrayList<String>();
 //	public DictionaryManager dm = new DictionaryManager();
 	public String arg1 = null;
 	public String arg2 = null;
@@ -192,9 +193,11 @@ public class LinerOptions {
 
         // Insert fixed paths
         String parameters = sb.toString().trim();
-        String iniPath = "./";
-        if (iniFile.getParentFile() != null)
-        	iniPath = iniFile.getParentFile().getAbsolutePath();
+        // TODO ścieżka bezwzględna do pliku
+//        String iniPath = "./";
+//        if (iniFile.getParentFile() != null)
+//        	iniPath = iniFile.getParentFile().getAbsolutePath();
+		String iniPath = iniFile.getAbsoluteFile().getParentFile().getAbsolutePath();
         parameters = parameters.replace("{INI_PATH}", iniPath);
             
       	CommandLine line = new GnuParser().parse(makeOptions(), parameters.split(" "));        		
@@ -239,8 +242,11 @@ public class LinerOptions {
 		
 		// read feature definitions and initialize feature generator
 		if (line.hasOption(OPTION_FEATURE)) {
-			for (String feature : line.getOptionValues(OPTION_FEATURE))
+			for (String feature : line.getOptionValues(OPTION_FEATURE)) {
 				this.features.add(feature);
+				int pos = feature.indexOf(":");
+				this.featureNames.add((pos > -1) ? feature.substring(0, pos) : feature);
+			}
 			FeatureGenerator.initialize();
 		}
 		

@@ -3,6 +3,7 @@ package liner2;
 import liner2.action.Action;
 import liner2.action.ActionConvert;
 import liner2.action.ActionEval;
+import liner2.action.ActionEvalCV;
 import liner2.action.ActionTrain;
 import liner2.action.ActionNull;
 import liner2.action.ActionPipe;
@@ -76,8 +77,8 @@ public class Main {
     	
     	if (mode.equals("eval")) {
           action = new ActionEval();
-//        } else if (mode.equals("evalcv")) {
-//            action = new ActionEvalCV();
+        } else if (mode.equals("evalcv")) {
+            action = new ActionEvalCV();
 //        } else if (mode.equals("dict")) {
 //            action = new ActionDict();
 //        } else if (mode.equals("batch")) {

@@ -80,7 +80,7 @@ public class FeatureGenerator {
 			
 			Matcher m1 = regexFeatureDictionary.matcher(feature);
 			if (m1.find()) {
-				featureOthers += "-g" + feature;
+				featureOthers += " -g" + feature;
 				featureName = m1.group(1);
 			}
 			
@@ -103,7 +103,7 @@ public class FeatureGenerator {
 		if (!FeatureGenerator.initialized)
 			throw new Exception("generateFeatures: FeatureGenerator not initialized.");
 		
-		ps.getAttributeIndex().update(LinerOptions.get().features);
+		ps.getAttributeIndex().update(LinerOptions.get().featureNames);
 		for (Paragraph p : ps.getParagraphs())
 			FeatureGenerator.generateFeatures(p, false);
 	}
@@ -117,7 +117,7 @@ public class FeatureGenerator {
 			throw new Exception("generateFeatures: FeatureGenerator not initialized.");
 		
 		if (updateIndex)
-			p.getAttributeIndex().update(LinerOptions.get().features);
+			p.getAttributeIndex().update(LinerOptions.get().featureNames);
 		for (Sentence s : p.getSentences())
 			FeatureGenerator.generateFeatures(s, false);
 	}
@@ -132,7 +132,7 @@ public class FeatureGenerator {
 			throw new Exception("generateFeatures: FeatureGenerator not initialized.");
 		
 		if (updateIndex)
-			sentence.getAttributeIndex().update(LinerOptions.get().features);
+			sentence.getAttributeIndex().update(LinerOptions.get().featureNames);
 		
 		FeatureGenerator.writeline("@FEATURES");
 		FeatureGenerator.writeline(FeatureGenerator.configuration);
@@ -147,6 +147,9 @@ public class FeatureGenerator {
 		FeatureGenerator.writeline("@EOC");				
 		FeatureGenerator.output.flush();
 		
+//		while (!FeatureGenerator.input.ready())
+//			if (FeatureGenerator.error.ready())
+//				System.out.println(FeatureGenerator.error.readLine());
 		FeatureGenerator.input.readLine();
 		
 		for (Token token : sentence.getTokens()) {

@@ -64,8 +64,6 @@ public class TemplateFactory {
 		Template template = this.templates.get(templateName);
 		Hashtable<String, String[]> features = template.getFeatures();
 		for (String featureName : template.getFeatureNames()) {
-			//String featureName = e.nextElement();
-			System.out.println(templateName + ": " + featureName);
 			pw.write("# " + featureName + "\n");
 			String featureId = Integer.toString(attributeIndex.getIndex(featureName));
 			String featureIdFixed = featureId;
