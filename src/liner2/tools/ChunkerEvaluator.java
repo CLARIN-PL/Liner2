@@ -208,13 +208,13 @@ public class ChunkerEvaluator {
 			
 			System.out.println(String.format("%-20s & %4d & %4d & %4d &"
 				+ "    %5.2f%% & %5.2f%% & %5.2f%% \\\\", key, tp, fp, fn,
-				this.precision.get(key), this.recall.get(key), this.fMeasure.get(key)));
+				this.precision.get(key)*100, this.recall.get(key)*100, this.fMeasure.get(key)*100));
 		}
 		System.out.println("\\hline");
 		System.out.println(String.format("*TOTAL*              & %4d & %4d & %4d &"
 			+ "    %5.2f%% & %5.2f%% & %5.2f%%", this.globalTruePositives,
 			this.globalFalsePositives, this.globalFalseNegatives,
-			this.globalPrecision, this.globalRecall, this.globalFMeasure));
+			this.globalPrecision*100, this.globalRecall*100, this.globalFMeasure*100));
 	}
 	
 	/**
