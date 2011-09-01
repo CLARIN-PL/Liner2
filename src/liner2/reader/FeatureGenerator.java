@@ -144,7 +144,7 @@ public class FeatureGenerator {
 			FeatureGenerator.writeline(line);
 		}
 
-		FeatureGenerator.writeline("@EOC");				
+		FeatureGenerator.writeline("@EOC");	
 		FeatureGenerator.output.flush();
 		
 //		while (!FeatureGenerator.input.ready())
@@ -174,6 +174,7 @@ public class FeatureGenerator {
 		if (FeatureGenerator.initialized) {
 			FeatureGenerator.output.write("@EOF\n");
 			FeatureGenerator.output.flush();
+			FeatureGenerator.initialized = false;
 		}
 	}
 	

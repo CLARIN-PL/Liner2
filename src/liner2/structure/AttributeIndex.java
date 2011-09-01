@@ -52,6 +52,10 @@ public class AttributeIndex {
 		return indexes.indexOf(name);
 	}
 	
+	public String getName(int index){
+		return indexes.get(index);
+	}
+	
 	public int getLength() {
 		return indexes.size();
 	}

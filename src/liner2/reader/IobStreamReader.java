@@ -107,13 +107,23 @@ public class IobStreamReader extends StreamReader {
 			}
 			else {
 				String[] words = line.trim().split(" ");
-				if ((words[0].equals("-DOCSTART")) &&
-					(words[1].equals("FILE"))) {
-					if (words.length >= 3)
-						this.nextParagraphId = words[2];
-					this.nextParagraph = true;
-					return paragraph;
+				if (words[0].equals("-DOCSTART")) {
+					if (words[1].equals("FILE")) {
+						if (words.length >= 3)
+							this.nextParagraphId = words[2];
+						this.nextParagraph = true;
+						return paragraph;
+					}
+					else
+						continue;
 				}
+//				if ((words[0].equals("-DOCSTART")) &&
+//					(words[1].equals("FILE"))) {
+//					if (words.length >= 3)
+//						this.nextParagraphId = words[2];
+//					this.nextParagraph = true;
+//					return paragraph;
+//				}
 				else {
 					currentSentence.addToken(createToken(words));
 					if (words.length > 3) {

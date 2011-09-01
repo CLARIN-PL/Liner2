@@ -103,6 +103,10 @@ public class ChunkerFactory {
 		return false;
 	}
 	
+	public static void reset() {
+		ChunkerFactory.get().chunkers = new HashMap<String, Chunker>();
+	}
+	
 	/**
 	 * Create chunker pipe according to given description. The chunker names
 	 * must be provided in the list of chunker description passed to the

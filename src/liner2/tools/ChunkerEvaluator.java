@@ -9,6 +9,9 @@ import liner2.structure.Chunk;
 import liner2.structure.Chunking;
 import liner2.structure.Paragraph;
 import liner2.structure.Sentence;
+import liner2.structure.Token;
+
+import liner2.Main;
 
 /**
  * TODO
@@ -49,6 +52,8 @@ public class ChunkerEvaluator {
 	private int globalFalsePositives = 0;
 	private int globalFalseNegatives = 0;
 	
+	private int sentenceNum = 0;
+	
 	private HashSet<String> keys = new HashSet<String>();
 	private Chunker chunker = null;
 	
@@ -66,6 +71,10 @@ public class ChunkerEvaluator {
 	public void evaluate(Paragraph paragraph) {
 	
 		for (Sentence sentence : paragraph.getSentences()) {
+			// tylko na potrzeby wyświetlania szczegółów
+			HashSet<Chunk> myTruePositives = new HashSet<Chunk>();
+			this.sentenceNum++;
+		
 			// każdy HashSet w dwóch kopiach - jedna do iterowania, druga do modyfikacji
 			HashSet<Chunk> trueChunkSet = sentence.getChunks();
 			HashSet<Chunk> trueChunkSetIter = new HashSet<Chunk>(trueChunkSet);
@@ -88,7 +97,8 @@ public class ChunkerEvaluator {
 						this.truePositives.put(testedChunk.getType(), 
 							this.truePositives.get(testedChunk.getType()) + 1);
 						this.globalTruePositives += 1;
-						// usuń z danych
+						// oznacz jako TruePositive
+						myTruePositives.add(testedChunk);
 						trueChunkSet.remove(trueChunk);
 						testedChunkSet.remove(testedChunk);
 					}
@@ -122,6 +132,8 @@ public class ChunkerEvaluator {
 					this.falseNegatives.get(trueChunk.getType()) + 1);
 				this.globalFalseNegatives += 1;
 			}
+			
+			printSentenceResults(sentence, myTruePositives, testedChunkSet, trueChunkSet);
 		}
 		
 		recalculateStats();
@@ -182,8 +194,11 @@ public class ChunkerEvaluator {
 		return fMeasure.get(type);
 	}
 	
+	public void setChunker(Chunker chunker){
+		this.chunker = chunker;
+	}
+	
 	/**
-	 * TODO
 	 * Drukuje wynik w formacie:
 	 * 
 	 * Annotation        &   TP &   FP &   FN & Precision &   Recall &  F$_1$ \\
@@ -199,7 +214,7 @@ public class ChunkerEvaluator {
 	 */
 	public void printResults(){
 		System.out.println("Annotation           &   TP &   FP &   FN &"
-			+ " Precision & Recall & F$_1$  \\\\");
+			+ " Precision & Recall  & F$_1$   \\\\");
 		System.out.println("\\hline");
 		for (String key : this.keys) {
 			int tp = this.truePositives.containsKey(key) ? this.truePositives.get(key) : 0;
@@ -207,12 +222,12 @@ public class ChunkerEvaluator {
 			int fn = this.falseNegatives.containsKey(key) ? this.falseNegatives.get(key) : 0;
 			
 			System.out.println(String.format("%-20s & %4d & %4d & %4d &"
-				+ "    %5.2f%% & %5.2f%% & %5.2f%% \\\\", key, tp, fp, fn,
+				+ "   %6.2f%% & %6.2f%% & %6.2f%% \\\\", key, tp, fp, fn,
 				this.precision.get(key)*100, this.recall.get(key)*100, this.fMeasure.get(key)*100));
 		}
 		System.out.println("\\hline");
 		System.out.println(String.format("*TOTAL*              & %4d & %4d & %4d &"
-			+ "    %5.2f%% & %5.2f%% & %5.2f%%", this.globalTruePositives,
+			+ "   %6.2f%% & %6.2f%% & %6.2f%%", this.globalTruePositives,
 			this.globalFalsePositives, this.globalFalseNegatives,
 			this.globalPrecision*100, this.globalRecall*100, this.globalFMeasure*100));
 	}
@@ -245,12 +260,73 @@ public class ChunkerEvaluator {
 			this.globalFMeasure = 0;
 		}
 		else {
-			this.globalPrecision = this.globalTruePositives / 
+			this.globalPrecision = (float)this.globalTruePositives / 
 				(this.globalTruePositives + this.globalFalsePositives);
-			this.globalRecall = this.globalTruePositives / 
+			this.globalRecall = (float)this.globalTruePositives / 
 				(this.globalTruePositives + this.globalFalseNegatives);
-			this.globalFMeasure = 2 * this.globalTruePositives / 
+			this.globalFMeasure = 2 * (float)this.globalTruePositives / 
 				(2 * this.globalTruePositives + this.globalFalsePositives + this.globalFalseNegatives);
 		}
+	}
+	
+	private void printSentenceResults(Sentence sentence, HashSet<Chunk> truePositives, 
+		HashSet<Chunk> falsePositives, HashSet<Chunk> falseNegatives) {
+		
+		Main.log("Sentence #" + this.sentenceNum);
+		Main.log("");
+		StringBuilder tokenOrths = new StringBuilder();
+		StringBuilder tokenNums = new StringBuilder();
+		int idx = 0;
+		for (Token token : sentence.getTokens()) {
+			idx++;
+			String tokenOrth = token.getFirstValue();
+			String tokenNum = ""+idx;
+			while (tokenOrth.length() < tokenNum.length())
+				tokenOrth += " ";
+			while (tokenNum.length() < tokenOrth.length())
+				tokenNum += "_";
+			tokenOrths.append(tokenOrth + " ");
+			tokenNums.append(tokenNum + " ");
+		}
+		Main.log("Text  : " + tokenOrths.toString().trim());
+		Main.log("Tokens: " + tokenNums.toString().trim());
+		Main.log("");
+		Main.log("Chunks:");
+		
+		for (Chunk chunk : truePositives) {
+			Main.log(String.format("  TruePositive %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
+				chunk.getEnd()+1, printChunk(chunk)));
+		}
+		for (Chunk chunk : falsePositives) {
+			Main.log(String.format("  FalsePositive %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
+				chunk.getEnd()+1, printChunk(chunk)));
+		}
+		for (Chunk chunk : falseNegatives) {
+			Main.log(String.format("  FalseNegative %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
+				chunk.getEnd()+1, printChunk(chunk)));
+		}
+		
+		Main.log("");
+		Main.log("Features:", true);
+		StringBuilder featuresHeader = new StringBuilder("  ");
+		for (int i = 0; i < sentence.getAttributeIndex().getLength(); i++)
+			featuresHeader.append(String.format("[%d]_%s ", i+1, sentence.getAttributeIndex().getName(i)));
+		Main.log(featuresHeader.toString(), true);
+		
+		for (Token token : sentence.getTokens()) {
+			StringBuilder tokenFeatures = new StringBuilder("  ");
+			for (int i = 0; i < token.getNumAttributes(); i++)
+				tokenFeatures.append(String.format("[%d]_%s ", i+1, token.getAttributeValue(i)));
+			Main.log(tokenFeatures.toString(), true);
+		}
+		Main.log("", true);
+	}
+	
+	private String printChunk(Chunk chunk) {
+		ArrayList<Token> tokens = chunk.getSentence().getTokens();
+		StringBuilder result = new StringBuilder();
+		for (int i = chunk.getBegin(); i <= chunk.getEnd(); i++)
+			result.append(tokens.get(i).getFirstValue() + " ");
+		return result.toString().trim();
 	}
 }
