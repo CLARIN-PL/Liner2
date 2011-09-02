@@ -25,6 +25,8 @@ public class ChunkerFactory {
 //		this.items.add(new ChunkerFactoryItemNLTKLoad());
 		this.items.add(new ChunkerFactoryItemCrfppTrain());
 		this.items.add(new ChunkerFactoryItemCrfppLoad());
+		this.items.add(new ChunkerFactoryItemDictCompile());
+		this.items.add(new ChunkerFactoryItemDictLoad());
 //		this.items.add(new ChunkerFactoryItemRescore());
 		this.items.add(new ChunkerFactoryItemWccl());
 	}
