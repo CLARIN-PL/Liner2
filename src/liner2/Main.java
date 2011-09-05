@@ -1,6 +1,7 @@
 package liner2;
 
 import liner2.action.Action;
+import liner2.action.ActionBatch;
 import liner2.action.ActionConvert;
 import liner2.action.ActionEval;
 import liner2.action.ActionEvalCV;
@@ -81,8 +82,8 @@ public class Main {
             action = new ActionEvalCV();
 //        } else if (mode.equals("dict")) {
 //            action = new ActionDict();
-//        } else if (mode.equals("batch")) {
-//            action = new ActionBatch();
+        } else if (mode.equals("batch")) {
+            action = new ActionBatch();
 //        } else if (mode.equals("dicts")) {
 //            action = new ActionDictStats();
 //        } else if (mode.equals("tag") ) {
