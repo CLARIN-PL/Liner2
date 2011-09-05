@@ -52,6 +52,10 @@ public class LinerOptions {
 	public static String getOption(String option) {
 		return linerOptions.getProperties().getProperty(option);
 	}
+	
+	public static void requireOption(String option) throws ParameterException {
+		// TODO not implemented yet
+	}
         
 	private Options options = null;
 	private String configurationDescription = "";
