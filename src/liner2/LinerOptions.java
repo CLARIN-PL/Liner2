@@ -167,6 +167,9 @@ public class LinerOptions {
     	configDesc.append("> Mode: " + this.mode + "\n");
 
     	this.parseParameters(line, configDesc);
+    	    	
+		if (this.features.size() > 0)
+			FeatureGenerator.initialize();
     	
 		this.configurationDescription = configDesc.toString();
 	}
@@ -247,7 +250,6 @@ public class LinerOptions {
 				int pos = feature.indexOf(":");
 				this.featureNames.add((pos > -1) ? feature.substring(0, pos) : feature);
 			}
-			FeatureGenerator.initialize();
 		}
 		
 		// read chunker descriptions
@@ -418,9 +420,14 @@ public class LinerOptions {
     	System.out.println("  convert             - convert text from one format to another");
     	System.out.println("                        Parameteres: -i, -o, -f, -t");
     	//System.out.println("  dicts <arg1>        - print dictionary statistics");
-    	//System.out.println("  eval <arg1> <arg2>  - train on arg1 file and test on arg2 file");
-    	//System.out.println("  evalcv <arg1>       - perform 10-fold cross validation");
-    	System.out.println("  pipe                - read xces data from standard input and annotate it");
+    	System.out.println("  eval                - evaluate chunker on given input");
+    	System.out.println("                        Parameters: -i, -f, -nerd");
+    	System.out.println("  evalcv              - perform 10-fold cross validation");
+    	System.out.println("                        Parameters: -i, -f, -nerd");
+    	System.out.println("  pipe                - annotate data");
+    	System.out.println("                        Parameters: -i, (-f), -o, (-t), (-nerd)");
+    	System.out.println("  train               - train CRFPP chunker");
+    	System.out.println("                        Parameters: -nerd");
     	//System.out.println("  tag <text>          - tag `text` using chunker specified by `--chuner` parameters");
     	System.out.println("");
     	//System.out.println("Filters:");

@@ -25,6 +25,7 @@ public class CclStreamWriter extends StreamWriter {
 	private final String TAG_BASE 			= "base";
 	private final String TAG_CHAN			= "chan";
 	private final String TAG_CTAG			= "ctag";
+	private final String TAG_DISAMB			= "disamb";
 	private final String TAG_ID				= "id";
 	private final String TAG_NS				= "ns";
 	private final String TAG_ORTH			= "orth";
@@ -158,6 +159,8 @@ public class CclStreamWriter extends StreamWriter {
 	
 	private void writeTag(Tag tag) throws XMLStreamException {
 		xmlw.writeStartElement(TAG_TAG);
+		if (tag.getDisamb())
+			xmlw.writeAttribute(TAG_DISAMB, "1");
 		xmlw.writeStartElement(TAG_BASE);
 		//xmlw.writeCharacters(tag.getBase().replace("&", "&amp;"));
 		xmlw.writeCharacters(tag.getBase());

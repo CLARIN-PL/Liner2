@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -38,6 +39,7 @@ public class CclStreamReader extends StreamReader {
 	private final String TAG_BASE 			= "base";
 	private final String TAG_CHAN			= "chan";
 	private final String TAG_CTAG			= "ctag";
+	private final String TAG_DISAMB			= "disamb";
 	private final String TAG_ID 			= "id";
 	private final String TAG_ORTH			= "orth";
 	private final String TAG_NS				= "ns";
@@ -152,49 +154,6 @@ public class CclStreamReader extends StreamReader {
 			ex.printStackTrace();
 			return null;
 		}
-		
-		
-//		try {
-//			while (xmlr.hasNext()) {
-//				eventType = xmlr.next();
-//				if (outsideParagraph) {
-//					if (eventType != XMLStreamConstants.START_ELEMENT)
-//						continue;
-//					if (!xmlr.getName().getLocalPart().equals(TAG_PARAGRAPH)) 
-//						continue;
-//					paragraphId = xmlr.getAttributeValue(null, TAG_ID);
-//					outsideParagraph = false;
-//					paragraphText = "<" + xmlr.getName() + ">";
-//				}
-//				else {
-//					if (eventType != XMLStreamConstants.END_ELEMENT) {
-//						if (eventType == XMLStreamConstants.START_ELEMENT) {
-//							paragraphText += "<" + xmlr.getName();
-//							for (int i = 0; i < xmlr.getAttributeCount(); i++) {
-//								paragraphText += " " + xmlr.getAttributeName(i);
-//								paragraphText += "=\"" + xmlr.getAttributeValue(i) + "\"";
-//							}
-//							paragraphText += ">";
-//						}
-//						else if ((eventType == XMLStreamConstants.CHARACTERS) || 
-//							(eventType == XMLStreamConstants.SPACE)) {
-//							paragraphText += xmlr.getText();
-//						}
-//						continue;
-//					}
-//					if (!xmlr.getName().getLocalPart().equals(TAG_PARAGRAPH)) {
-//						paragraphText += "</" + xmlr.getName() + ">";
-//						continue;
-//					}
-//					paragraphText += "</" + xmlr.getName() + ">";
-//					outsideParagraph = true;
-//					break;
-//				}
-//			}
-//		} catch (XMLStreamException ex) {
-//			ex.printStackTrace();
-//			return null;
-//		}
 		
 		// jeśli nie wczytano żadnego akapitu
 		if (paragraphText.equals(""))
@@ -312,6 +271,17 @@ public class CclStreamReader extends StreamReader {
 				}
 			}
 		}
+		ArrayList<Tag> tags = token.getTags();
+		for (Tag tag : tags) {
+			if (tag.getDisamb()) {
+				token.setAttributeValue(1, tag.getBase());
+				token.setAttributeValue(2, tag.getCtag());
+				return token;
+			}
+		}
+		// if disamb not found
+		token.setAttributeValue(1, tags.get(0).getBase());
+		token.setAttributeValue(2, tags.get(0).getCtag());
 		return token;
 	}
 	
@@ -319,6 +289,14 @@ public class CclStreamReader extends StreamReader {
 		String base = null;
 		String ctag = null;
 		boolean disamb = false;
+		
+		// retrieve disamb
+		NamedNodeMap attributes = tagNode.getAttributes();
+		if (attributes != null) {
+			Node disambNode = attributes.getNamedItem(TAG_DISAMB);
+			if ((disambNode != null) && (disambNode.getNodeValue().equals("1")))
+				disamb = true;
+		}
 		
 		NodeList tagChildNodes = tagNode.getChildNodes();
 		for (int i = 0; i < tagChildNodes.getLength(); i++) {
