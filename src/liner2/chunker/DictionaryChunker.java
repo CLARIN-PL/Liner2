@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.HashMap;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import liner2.structure.Chunk;
 import liner2.structure.Chunking;
 import liner2.structure.Sentence;
@@ -28,8 +31,6 @@ import liner2.Main;
 public class DictionaryChunker extends Chunker 
 	implements DeserializableChunkerInterface, SerializableChunkerInterface {
 	
-//	private String modelFilename = null;
-//	private static final long serialVersionUID = 472384;
 	private HashMap<String, String> dictionary = null;
 	
 	public DictionaryChunker()	{
@@ -74,7 +75,6 @@ public class DictionaryChunker extends Chunker
 					for (int j = i; j < i + n; j++)
 						marked[j] = true;
 				}
-				//System.out.println(nGram);
 			}
 		
 		return chunking;
@@ -96,16 +96,19 @@ public class DictionaryChunker extends Chunker
 			
 			BufferedReader dictReader = new BufferedReader(new FileReader(dictFile));
 			line = dictReader.readLine();
+			Pattern pattern = Pattern.compile("\\d+");
 			int added = 0, amb = 0, com = 0;
 			while (line != null) {
 				String[] content = line.split("\t");
+				Matcher m = pattern.matcher(content[1]);
 				//System.out.println(""+i);
 				if (content.length >= 2) {
 					if ((commons.contains(content[1])) || (commons.contains(content[1].toLowerCase())))
-					//if (binarySearch(content[1], this.commons) != -1)
 						com++;
 					else if (ambigous.contains(content[1]))
 						amb++;
+					else if (m.matches())
+						com++;
 					else if (this.dictionary.containsKey(content[1])) {
 						this.dictionary.remove(content[1]);
 						ambigous.add(content[1]);
@@ -113,7 +116,6 @@ public class DictionaryChunker extends Chunker
 						added -= 1;
 					}
 					else {
-//						System.out.println("Adding: " + content[0] + " : " + content[1]);
 						this.dictionary.put(content[1], content[0]);
 						added++;
 					}
@@ -128,27 +130,6 @@ public class DictionaryChunker extends Chunker
 			ex.printStackTrace();
 		}
 	}
-	
-//	private int binarySearch(String what, ArrayList<String> where) {
-//		int start = 0;
-//		int end = where.size()-1;
-//		while (start <= end) {
-//			System.out.println(""+start+" - " + end);
-//			int middle = (start + end) / 2;
-//			int compare = what.compareTo(where.get(middle));
-//			if (compare < 0)
-//				end = middle - 1;
-//			else if (compare > 0)
-//				start = middle + 1;
-//			else
-//				return middle;
-//		}
-//		return -1;
-//	}
-//	
-//	public void setModelFilename(String filename) {
-//		this.modelFilename = filename;
-//	}
 	
     /**
      * Wczytuje chunker z modelu binarnego.
@@ -170,7 +151,6 @@ public class DictionaryChunker extends Chunker
 
 	@Override
 	public void serialize(String filename) {
-		// TODO Auto-generated method stub
 		try {
 			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename));
 			out.writeObject(this.dictionary);
