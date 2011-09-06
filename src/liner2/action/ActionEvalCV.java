@@ -27,8 +27,12 @@ public class ActionEvalCV extends Action{
 	/**
 	 * 
 	 */
-	public void run() throws Exception
-	{
+	public void run() throws Exception {
+	
+		if ( !LinerOptions.isOption(LinerOptions.OPTION_USE) ){
+			throw new ParameterException("Parameter --use <chunker_pipe_desription> not set");
+		}
+	
 		ChunkerEvaluator eval = new ChunkerEvaluator(null);
 		
 		for (int i = 1; ; i++) {

@@ -24,6 +24,10 @@ public class ActionConvert extends Action {
 		
 //		LinerOptions.requireOption(OPTION_INPUT_FILE);
 		
+		if ( !LinerOptions.isOption(LinerOptions.OPTION_USE) ){
+			throw new ParameterException("Parameter --use <chunker_pipe_desription> not set");
+		}
+				
 		StreamReader reader = ReaderFactory.get().getStreamReader(
 			LinerOptions.getOption(LinerOptions.OPTION_INPUT_FILE),
 			LinerOptions.getOption(LinerOptions.OPTION_INPUT_FORMAT));

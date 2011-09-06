@@ -27,15 +27,15 @@ public class ActionPipe extends Action{
 	 * Module entry function.
 	 */
 	public void run() throws Exception{
-        
+	
+        if ( !LinerOptions.isOption(LinerOptions.OPTION_USE) ){
+			throw new ParameterException("Parameter --use <chunker_pipe_desription> not set");
+		}
+		
         StreamReader reader = ReaderFactory.get().getStreamReader(
 			LinerOptions.getOption(LinerOptions.OPTION_INPUT_FILE),
 			LinerOptions.getOption(LinerOptions.OPTION_INPUT_FORMAT));
 		ParagraphSet ps = reader.readParagraphSet();
-		
-		if ( !LinerOptions.isOption(LinerOptions.OPTION_USE) ){
-			throw new ParameterException("Parameter --use <chunker_pipe_desription> not set");
-		}
 		
 		/* Create all defined chunkers. */
 		ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescription);
