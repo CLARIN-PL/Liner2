@@ -11,6 +11,7 @@ import liner2.structure.Paragraph;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
 
+import liner2.LinerOptions;
 import liner2.Main;
 
 /**
@@ -79,7 +80,10 @@ public class ChunkerEvaluator {
 			HashSet<Chunk> trueChunkSet = sentence.getChunks();
 			HashSet<Chunk> trueChunkSetIter = new HashSet<Chunk>(trueChunkSet);
 			sentence.setChunking(new Chunking(sentence));
-			HashSet<Chunk> testedChunkSet = this.chunker.chunkSentence(sentence).chunkSet();
+			Chunking chunking = this.chunker.chunkSentence(sentence);
+			chunking.filter(LinerOptions.get().filters);
+			HashSet<Chunk> testedChunkSet = chunking.chunkSet();
+//			HashSet<Chunk> testedChunkSet = this.chunker.chunkSentence(sentence).chunkSet();
 			HashSet<Chunk> testedChunkSetIter = new HashSet<Chunk>(testedChunkSet);
 			
 			// usuń z danych wszystkie poprawne chunki

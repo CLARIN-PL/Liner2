@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.TreeSet;
 
+import liner2.filter.*;
 import liner2.chunker.factory.ChunkerFactory;
 import liner2.reader.FeatureGenerator;
 import liner2.tools.CorpusFactory;
@@ -94,7 +95,7 @@ public class LinerOptions {
 	public boolean verboseDetails = false;
 	public boolean silent = false;
 
-//	public ArrayList<Filter> filters = new ArrayList<Filter>();
+	public ArrayList<Filter> filters = new ArrayList<Filter>();
 	public ArrayList<String> features = new ArrayList<String>();
 	public ArrayList<String> featureNames = new ArrayList<String>();
 //	public DictionaryManager dm = new DictionaryManager();
@@ -269,6 +270,10 @@ public class LinerOptions {
 			}
 		}
 		
+		// filters
+		if (line.hasOption(OPTION_FILTER))
+			parseFilter(line.getOptionValue(OPTION_FILTER));
+		
 		if (line.hasOption(OPTION_PYTHON))
 			this.properties.setProperty(OPTION_PYTHON, line.getOptionValue(OPTION_PYTHON));
 		else
@@ -307,34 +312,58 @@ public class LinerOptions {
 		String filters[] = filter.split(",");
 		for (String f : filters){
 			boolean found = false;
-//			if ( found |= (f.equals("uppercase") || f.equals("all")) )
-//				this.filters.add(new FilterUppercase());
+			if (f.equals("uppercase") || f.equals("all")) {
+				this.filters.add(new FilterUppercase());
+				found = true;
+			}
 //			if ( found |= (f.equals("trim") || f.equals("all")) )
 //				this.filters.add(new FilterTrim());
-//			if ( found |= (f.equals("firstnotlower") || f.equals("all")) )
-//				this.filters.add(new FilterFirstNotLower());
-//			if ( found |= (f.equals("hasvowel") || f.equals("all")) )
-//				this.filters.add(new FilterHasVowel());
-//			if ( found |= (f.equals("nosymbol") || f.equals("all")) )
-//				this.filters.add(new FilterNoSymbol());
-//			if ( found |= (f.equals("beforesie") || f.equals("all")) )
-//				this.filters.add(new FilterBeforeSie());
-//			if ( found |= (f.equals("nounderline") || f.equals("all")) )
-//				this.filters.add(new FilterNoUnderline());
-//			if ( found |= (f.equals("nodot") || f.equals("all")) )
-//				this.filters.add(new FilterNoDot());
-//			if ( found |= (f.equals("nohyphen") || f.equals("all")) )
-//				this.filters.add(new FilterNoHyphen());
-//			if ( found |= (f.equals("patternulu") || f.equals("all")) )
-//				this.filters.add(new FilterPatternULU());
-//			if ( found |= (f.equals("length") || f.equals("all")) )
-//				this.filters.add(new FilterLength());
-//			if ( found |= (f.equals("hasalphanumeric") || f.equals("all")) )
-//				this.filters.add(new FilterHasAlphanumeric());
+			if (f.equals("firstnotlower") || f.equals("all")) {
+				this.filters.add(new FilterFirstNotLower());
+				found = true;
+			}
+			if (f.equals("hasvowel") || f.equals("all")) {
+				this.filters.add(new FilterHasVowel());
+				found = true;
+			}
+			if (f.equals("nosymbol") || f.equals("all")) {
+				this.filters.add(new FilterNoSymbol());
+				found = true;
+			}
+			if (f.equals("beforesie") || f.equals("all")) {
+				this.filters.add(new FilterBeforeSie());
+				found = true;
+			}
+			if (f.equals("nounderline") || f.equals("all")) {
+				this.filters.add(new FilterNoUnderline());
+				found = true;
+			}
+			if (f.equals("nodot") || f.equals("all")) {
+				this.filters.add(new FilterNoDot());
+				found = true;
+			}
+			if (f.equals("nohyphen") || f.equals("all")) {
+				this.filters.add(new FilterNoHyphen());
+				found = true;
+			}
+			if (f.equals("patternulu") || f.equals("all")) {
+				this.filters.add(new FilterPatternULU());
+				found = true;
+			}
+			if (f.equals("length") || f.equals("all")) {
+				this.filters.add(new FilterLength());
+				found = true;
+			}
+			if (f.equals("hasalphanumeric") || f.equals("all")) {
+				this.filters.add(new FilterHasAlphanumeric());
+				found = true;
+			}
 //			if ( found |= (f.equals("extendtoword") || f.equals("all")) )
 //				this.filters.add(new FilterExtendToWord());
-//			if ( found |= (f.equals("cutroadprefix") || f.equals("all")) )
-//				this.filters.add(new FilterCutRoadPrefix());
+			if (f.equals("cutroadprefix") || f.equals("all")) {
+				this.filters.add(new FilterCutRoadPrefix());
+				found = true;
+			}
 			
 			if (!found)
 				throw new ParameterException("Unknown filter '"+f+"'");
