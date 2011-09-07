@@ -8,6 +8,7 @@ import liner2.reader.ReaderFactory;
 import liner2.writer.StreamWriter;
 import liner2.writer.WriterFactory;
 
+import liner2.tools.ParameterException;
 import liner2.LinerOptions;
 
 public class ActionConvert extends Action {

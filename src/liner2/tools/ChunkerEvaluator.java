@@ -57,6 +57,7 @@ public class ChunkerEvaluator {
 	
 	private HashSet<String> keys = new HashSet<String>();
 	private Chunker chunker = null;
+	private boolean quiet = false;		// print sentence results?
 	
 	/**
 	 * TODO
@@ -137,7 +138,8 @@ public class ChunkerEvaluator {
 				this.globalFalseNegatives += 1;
 			}
 			
-			printSentenceResults(sentence, myTruePositives, testedChunkSet, trueChunkSet);
+			if (!this.quiet)
+				printSentenceResults(sentence, myTruePositives, testedChunkSet, trueChunkSet);
 		}
 		
 		recalculateStats();
@@ -160,6 +162,10 @@ public class ChunkerEvaluator {
 	 */
 	public float getPrecision(String type){
 		return precision.get(type);
+	}
+	
+	public boolean getQuiet() {
+		return this.quiet;
 	}
 
 	/**
@@ -202,6 +208,10 @@ public class ChunkerEvaluator {
 		this.chunker = chunker;
 	}
 	
+	public void setQuiet(boolean quiet) {
+		this.quiet = quiet;
+	}
+	
 	/**
 	 * Drukuje wynik w formacie:
 	 * 
@@ -234,6 +244,53 @@ public class ChunkerEvaluator {
 			+ "   %6.2f%% & %6.2f%% & %6.2f%%", this.globalTruePositives,
 			this.globalFalsePositives, this.globalFalseNegatives,
 			this.globalPrecision*100, this.globalRecall*100, this.globalFMeasure*100));
+	}
+	
+	/**
+	 * TODO
+	 * Dołącza do danych zawartość innego obiektu ChunkerEvaluator.
+	 */	
+	public void join(ChunkerEvaluator foreign) {
+			
+		for (String foreignKey : foreign.keys) {
+			
+			if (!this.keys.contains(foreignKey))
+				this.keys.add(foreignKey);
+						
+			if (foreign.chunksTruePositives.containsKey(foreignKey)) {
+				if (!this.chunksTruePositives.containsKey(foreignKey)) {
+					this.chunksTruePositives.put(foreignKey, new ArrayList<Chunk>());
+					this.truePositives.put(foreignKey, new Integer(0));
+				}
+				for (Chunk chunk : foreign.chunksTruePositives.get(foreignKey))
+					this.chunksTruePositives.get(foreignKey).add(chunk);
+				this.truePositives.put(foreignKey, this.truePositives.get(foreignKey) +
+					foreign.truePositives.get(foreignKey));
+			}
+			
+			if (foreign.chunksFalsePositives.containsKey(foreignKey)) {
+				if (!this.chunksFalsePositives.containsKey(foreignKey)) {
+					this.chunksFalsePositives.put(foreignKey, new ArrayList<Chunk>());
+					this.falsePositives.put(foreignKey, new Integer(0));
+				}
+				for (Chunk chunk : foreign.chunksFalsePositives.get(foreignKey))
+					this.chunksFalsePositives.get(foreignKey).add(chunk);
+				this.falsePositives.put(foreignKey, this.falsePositives.get(foreignKey) +
+					foreign.falsePositives.get(foreignKey));
+			}
+			
+			if (foreign.chunksFalseNegatives.containsKey(foreignKey)) {
+				if (!this.chunksFalseNegatives.containsKey(foreignKey)) {
+					this.chunksFalseNegatives.put(foreignKey, new ArrayList<Chunk>());
+					this.falseNegatives.put(foreignKey, new Integer(0));
+				}
+				for (Chunk chunk : foreign.chunksFalseNegatives.get(foreignKey))
+					this.chunksFalseNegatives.get(foreignKey).add(chunk);
+				this.falseNegatives.put(foreignKey, this.falseNegatives.get(foreignKey) +
+					foreign.falseNegatives.get(foreignKey));
+			}
+		}
+		this.recalculateStats();
 	}
 	
 	/**

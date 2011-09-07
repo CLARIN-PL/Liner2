@@ -13,7 +13,7 @@ import liner2.reader.StreamReader;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.tools.ChunkerEvaluator;
-//import liner2.tools.ParameterException;
+import liner2.tools.ParameterException;
 
 /**
  * Perform cross-validation on a specified corpus.
@@ -33,9 +33,10 @@ public class ActionEvalCV extends Action{
 			throw new ParameterException("Parameter --use <chunker_pipe_desription> not set");
 		}
 	
-		ChunkerEvaluator eval = new ChunkerEvaluator(null);
+		ChunkerEvaluator globalEval = new ChunkerEvaluator(null);
+//		globalEval.setQuiet(true);
 		
-		for (int i = 1; ; i++) {
+		for (int i = 1; ; i++) {			
 			String trainFile = LinerOptions.getOption(LinerOptions.OPTION_INPUT_FILE) + ".fold-" + i + ".train";
 			String testFile = LinerOptions.getOption(LinerOptions.OPTION_INPUT_FILE) + ".fold-" + i + ".test";
 			if ((! (new File(trainFile).exists())) || (! (new File(testFile).exists())))
@@ -55,17 +56,19 @@ public class ActionEvalCV extends Action{
     			LinerOptions.getOption(LinerOptions.OPTION_INPUT_FORMAT));
     		ParagraphSet ps = reader.readParagraphSet();
 			
-//			ChunkerEvaluator eval = new ChunkerEvaluator(chunker);
-			eval.setChunker(chunker);
+			ChunkerEvaluator localEval = new ChunkerEvaluator(chunker);
+//			eval.setChunker(chunker);
 			for (Paragraph p : ps.getParagraphs()){
-				eval.evaluate(p);
+				localEval.evaluate(p);
 			}
 			
-//			System.out.println("========== FOLD " + i + " ==========");	
-//			eval.printResults();
-//			System.out.println("");
+			System.out.println("========== FOLD " + i + " ==========");	
+			localEval.printResults();
+			System.out.println("");
+			
+			globalEval.join(localEval);
 		}
 		
-		eval.printResults();
+		globalEval.printResults();
 	}
 }
