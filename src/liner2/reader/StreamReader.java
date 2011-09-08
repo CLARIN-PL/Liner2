@@ -31,6 +31,14 @@ public abstract class StreamReader {
 //		return p;
 		if (paragraphReady()) {
 			Paragraph p = this.readRawParagraph();
+			
+			// initialize attributes index
+			AttributeIndex attributeIndex = new AttributeIndex();
+			attributeIndex.addAttribute("orth");
+			attributeIndex.addAttribute("base");
+			attributeIndex.addAttribute("ctag");
+			p.setAttributeIndex(attributeIndex);
+			
 			if (FeatureGenerator.isInitialized()) {
 				try {
 					FeatureGenerator.generateFeatures(p, true);
