@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import liner2.reader.ReaderFactory;
 import liner2.reader.StreamReader;
 
+import liner2.structure.AttributeIndex;
 import liner2.structure.Chunk;
 import liner2.structure.Chunking;
 import liner2.structure.Paragraph;
@@ -37,7 +38,7 @@ public class WcclChunker extends Chunker {
 	@Override
 	public Chunking chunkSentence(Sentence sentence) {
 		Chunking chunking = new Chunking(sentence);
-		String cmd = "wccl-rules -t nkjp -q -i ccl -I - " + this.wcclFile;
+		String cmd = "wccl-rules -q -i ccl -I - " + this.wcclFile;
 		Process p = null;
 		
 		try {
@@ -50,10 +51,13 @@ public class WcclChunker extends Chunker {
 		InputStream in = p.getInputStream();
 		OutputStream out = p.getOutputStream();
 		
+		// zapamiętaj AttributeIndex, żeby nie stracić go przy addSentence()
+		AttributeIndex ai = sentence.getAttributeIndex();
 		ParagraphSet paragraphSet = new ParagraphSet();
 		Paragraph paragraph = new Paragraph(null);
 		paragraph.addSentence(sentence);
 		paragraphSet.addParagraph(paragraph);
+		paragraphSet.setAttributeIndex(ai);
 		
 		try {
 			StreamWriter writer = WriterFactory.get().getStreamWriter(out, "ccl");
