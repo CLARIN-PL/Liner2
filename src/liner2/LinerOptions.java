@@ -21,6 +21,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
+import org.apache.commons.cli.UnrecognizedOptionException;
 
 /**
  * This class handles module parameters. The parameters are read from
@@ -167,6 +168,10 @@ public class LinerOptions {
 
     	if (this.mode == null && line.getArgs().length == 0)
     		throw new ParameterException("mode not set");
+    	
+    	if ( line.getArgs().length == 0){
+    		throw new UnrecognizedOptionException("Mode name not given");
+    	}
     	
     	this.mode = line.getArgs()[0];
     	configDesc.append("> Mode: " + this.mode + "\n");

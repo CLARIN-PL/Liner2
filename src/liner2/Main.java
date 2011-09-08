@@ -1,5 +1,7 @@
 package liner2;
 
+import org.apache.commons.cli.UnrecognizedOptionException;
+
 import liner2.action.Action;
 import liner2.action.ActionBatch;
 import liner2.action.ActionConvert;
@@ -37,6 +39,10 @@ public class Main {
 	    		action.run();
 	    	}
     	}
+    	catch (UnrecognizedOptionException ex) {
+            LinerOptions.get().printHelp();
+            System.out.println(">> " + ex.getMessage() );            
+		}
     	catch(ParameterException ex){
             LinerOptions.get().printHelp();
             System.out.println(">> " + ex.getMessage() );            
