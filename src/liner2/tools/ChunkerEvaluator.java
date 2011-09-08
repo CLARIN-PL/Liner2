@@ -290,6 +290,10 @@ public class ChunkerEvaluator {
 					foreign.falseNegatives.get(foreignKey));
 			}
 		}
+		
+		this.globalTruePositives += foreign.globalTruePositives;
+		this.globalFalsePositives += foreign.globalFalsePositives;
+		this.globalFalseNegatives += foreign.globalFalseNegatives;
 		this.recalculateStats();
 	}
 	
