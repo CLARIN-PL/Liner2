@@ -28,13 +28,13 @@ public class ActionBatch extends Action{
 	 * Module entry function.
 	 */
 	public void run() throws Exception {
-
-		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-		String cSeq = "";
         
         if ( !LinerOptions.isOption(LinerOptions.OPTION_USE) ){
 			throw new ParameterException("Parameter --use <chunker_pipe_desription> not set");
 		}
+
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		String cSeq = "";
 		
 		ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescription);		
 		Chunker chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));

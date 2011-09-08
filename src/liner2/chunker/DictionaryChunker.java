@@ -7,11 +7,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.HashMap;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import liner2.structure.Chunk;
 import liner2.structure.Chunking;
@@ -28,9 +30,8 @@ import liner2.Main;
 public class DictionaryChunker extends Chunker 
 	implements DeserializableChunkerInterface, SerializableChunkerInterface {
 	
-//	private String modelFilename = null;
-//	private static final long serialVersionUID = 472384;
 	private HashMap<String, String> dictionary = null;
+	private HashSet<String> commons = null;
 	
 	public DictionaryChunker()	{
 
@@ -43,7 +44,8 @@ public class DictionaryChunker extends Chunker
 		
 		// pobierz zapis wszystkich tokenów
 		ArrayList<String> tokenOrths = new ArrayList<String>();
-		for (Token token : sentence.getTokens())
+		ArrayList<Token> tokens = sentence.getTokens();
+		for (Token token : tokens)
 			tokenOrths.add(token.getFirstValue());
 			
 		// pomocnicza tablica, które tokeny należą już do jakiegoś chunka
@@ -53,7 +55,7 @@ public class DictionaryChunker extends Chunker
 			
 		// nie sprawdzać pozycji, które są już ochunkowane!
 		// iteruj po wszystkich n-gramach w zdaniu
-		for (int n = sentence.getTokenNumber(); n > 0; n--)
+		for (int n = sentence.getTokenNumber(); n > 0; n--) {
 			// po wszystkich pozycjach startowych
 			for (int i = 0; i < sentence.getTokenNumber() - n + 1; i++) {
 				boolean isMarked = false;
@@ -70,12 +72,19 @@ public class DictionaryChunker extends Chunker
 					continue;
 				String nGramFinal = nGram.toString().trim();
 				if (this.dictionary.containsKey(nGramFinal)) {
-					chunking.addChunk(new Chunk(i, i + n - 1, this.dictionary.get(nGramFinal).toUpperCase(), sentence));
+					// odrzuć, jeśli base jest nazwą pospolitą
+					if ((n == 1) && (this.commons.contains(sentence.getAttributeIndex()
+						.getAttributeValue(tokens.get(i), "base")))) {
+						continue;
+					}
+					
+					chunking.addChunk(new Chunk(i, i + n - 1, 	
+						this.dictionary.get(nGramFinal).toUpperCase(), sentence));
 					for (int j = i; j < i + n; j++)
 						marked[j] = true;
 				}
-				//System.out.println(nGram);
 			}
+		}
 		
 		return chunking;
 	}
@@ -83,29 +92,32 @@ public class DictionaryChunker extends Chunker
 	public void loadDictionary(String dictFile, String commonsFile) {
 		try {
 			BufferedReader commonsReader = new BufferedReader(new FileReader(commonsFile));
-			HashSet<String> commons = new HashSet<String>();
 			HashSet<String> ambigous = new HashSet<String>();
 			this.dictionary = new HashMap<String, String>();
+			this.commons = new HashSet<String>();
 			
 			String line = commonsReader.readLine();
 			while (line != null) {
-				commons.add(line);
+				this.commons.add(line.trim());
 				line = commonsReader.readLine();
 			}
 			commonsReader.close();
 			
 			BufferedReader dictReader = new BufferedReader(new FileReader(dictFile));
 			line = dictReader.readLine();
+			Pattern pattern = Pattern.compile("\\d+");
 			int added = 0, amb = 0, com = 0;
 			while (line != null) {
 				String[] content = line.split("\t");
+				Matcher m = pattern.matcher(content[1]);
 				//System.out.println(""+i);
 				if (content.length >= 2) {
 					if ((commons.contains(content[1])) || (commons.contains(content[1].toLowerCase())))
-					//if (binarySearch(content[1], this.commons) != -1)
 						com++;
 					else if (ambigous.contains(content[1]))
 						amb++;
+					else if (m.matches())
+						com++;
 					else if (this.dictionary.containsKey(content[1])) {
 						this.dictionary.remove(content[1]);
 						ambigous.add(content[1]);
@@ -113,7 +125,6 @@ public class DictionaryChunker extends Chunker
 						added -= 1;
 					}
 					else {
-//						System.out.println("Adding: " + content[0] + " : " + content[1]);
 						this.dictionary.put(content[1], content[0]);
 						added++;
 					}
@@ -129,27 +140,6 @@ public class DictionaryChunker extends Chunker
 		}
 	}
 	
-//	private int binarySearch(String what, ArrayList<String> where) {
-//		int start = 0;
-//		int end = where.size()-1;
-//		while (start <= end) {
-//			System.out.println(""+start+" - " + end);
-//			int middle = (start + end) / 2;
-//			int compare = what.compareTo(where.get(middle));
-//			if (compare < 0)
-//				end = middle - 1;
-//			else if (compare > 0)
-//				start = middle + 1;
-//			else
-//				return middle;
-//		}
-//		return -1;
-//	}
-//	
-//	public void setModelFilename(String filename) {
-//		this.modelFilename = filename;
-//	}
-	
     /**
      * Wczytuje chunker z modelu binarnego.
      * @param model_filename
@@ -160,6 +150,7 @@ public class DictionaryChunker extends Chunker
     	try {
     		ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename));
    			this.dictionary = (HashMap<String, String>)in.readObject();
+   			this.commons = (HashSet<String>)in.readObject();
     		in.close();
     	} catch (ClassNotFoundException ex) {
     		ex.printStackTrace();
@@ -170,10 +161,10 @@ public class DictionaryChunker extends Chunker
 
 	@Override
 	public void serialize(String filename) {
-		// TODO Auto-generated method stub
 		try {
 			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename));
 			out.writeObject(this.dictionary);
+			out.writeObject(this.commons);
 			out.close();
 		} catch (IOException ex) {
 			ex.printStackTrace();
