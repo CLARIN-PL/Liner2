@@ -358,28 +358,29 @@ public class ChunkerEvaluator {
 		Main.log("");
 		Main.log("Chunks:");
 		
-		for (Chunk chunk : truePositives) {
+		for (Chunk chunk : sortChunks(truePositives)) {
 			Main.log(String.format("  TruePositive %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk)));
 		}
-		for (Chunk chunk : falsePositives) {
+		for (Chunk chunk : sortChunks(falsePositives)) {
 			Main.log(String.format("  FalsePositive %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk)));
 		}
-		for (Chunk chunk : falseNegatives) {
+		for (Chunk chunk : sortChunks(falseNegatives)) {
 			Main.log(String.format("  FalseNegative %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk)));
 		}
 		
 		Main.log("");
 		Main.log("Features:", true);
-		StringBuilder featuresHeader = new StringBuilder("  ");
+		StringBuilder featuresHeader = new StringBuilder("       ");
 		for (int i = 0; i < sentence.getAttributeIndex().getLength(); i++)
 			featuresHeader.append(String.format("[%d]_%s ", i+1, sentence.getAttributeIndex().getName(i)));
 		Main.log(featuresHeader.toString(), true);
 		
+		idx = 0;
 		for (Token token : sentence.getTokens()) {
-			StringBuilder tokenFeatures = new StringBuilder("  ");
+			StringBuilder tokenFeatures = new StringBuilder(String.format("  %3d) ", ++idx));
 			for (int i = 0; i < token.getNumAttributes(); i++)
 				tokenFeatures.append(String.format("[%d]_%s ", i+1, token.getAttributeValue(i)));
 			Main.log(tokenFeatures.toString(), true);
@@ -393,5 +394,23 @@ public class ChunkerEvaluator {
 		for (int i = chunk.getBegin(); i <= chunk.getEnd(); i++)
 			result.append(tokens.get(i).getFirstValue() + " ");
 		return result.toString().trim();
+	}
+	
+	private Chunk[] sortChunks(HashSet<Chunk> chunkSet) {
+		int size = chunkSet.size();
+		Chunk[] sorted = new Chunk[size];
+		int idx = 0;
+	    for (Chunk c : chunkSet)
+	    	sorted[idx++] = c;
+	    for (int i = 0; i < size; i++)
+	    	for (int j = i+1; j < size; j++)
+	    		if ((sorted[i].getBegin() > sorted[j].getBegin()) ||
+	    			((sorted[i].getBegin() == sorted[j].getBegin()) &&
+	    			(sorted[i].getEnd() > sorted[j].getEnd()))) {
+	    			Chunk aux = sorted[i];
+	    			sorted[i] = sorted[j];
+	    			sorted[j] = aux;
+	    		}
+		return sorted;
 	}
 }
