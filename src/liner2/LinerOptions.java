@@ -355,10 +355,10 @@ public class LinerOptions {
 				this.filters.add(new FilterPatternULU());
 				found = true;
 			}
-			if (f.equals("length") || f.equals("all")) {
-				this.filters.add(new FilterLength());
-				found = true;
-			}
+//			if (f.equals("length") || f.equals("all")) {
+//				this.filters.add(new FilterLength());
+//				found = true;
+//			}
 			if (f.equals("hasalphanumeric") || f.equals("all")) {
 				this.filters.add(new FilterHasAlphanumeric());
 				found = true;
