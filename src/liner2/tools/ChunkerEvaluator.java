@@ -15,7 +15,6 @@ import liner2.LinerOptions;
 import liner2.Main;
 
 /**
- * TODO
  * 
  * Klasa służąca do oceny skuteczności chunkera. 
  * 
@@ -60,7 +59,6 @@ public class ChunkerEvaluator {
 	private boolean quiet = false;		// print sentence results?
 	
 	/**
-	 * TODO
 	 * @param chunker
 	 */
 	public ChunkerEvaluator(Chunker chunker) {
@@ -139,14 +137,14 @@ public class ChunkerEvaluator {
 			}
 			
 			if (!this.quiet)
-				printSentenceResults(sentence, myTruePositives, testedChunkSet, trueChunkSet);
+				printSentenceResults(sentence, paragraph.getId(),
+					myTruePositives, testedChunkSet, trueChunkSet);
 		}
 		
 		recalculateStats();
 	}
 	
 	/**
-	 * TODO
 	 * Precyzja dla wszystkich typów anotacji. = TP/(TP+FP)
 	 * @return
 	 */
@@ -155,7 +153,6 @@ public class ChunkerEvaluator {
 	}
 
 	/**
-	 * TODO
 	 * Precyzja dla wskazanego typu anotacji. = TP/(TP+FN)
 	 * @param type
 	 * @return
@@ -169,7 +166,6 @@ public class ChunkerEvaluator {
 	}
 
 	/**
-	 * TODO 
 	 * Kompletność dla wszystkich typów anotacji. 
 	 */
 	public float getRecall(){
@@ -177,7 +173,6 @@ public class ChunkerEvaluator {
 	}
 
 	/**
-	 * TODO 
 	 * Kompletność dla wskazanego typu anotacji. 
 	 * @param type
 	 */
@@ -186,7 +181,6 @@ public class ChunkerEvaluator {
 	}
 
 	/**
-	 * TODO
 	 * Średnia harmoniczna dla wszystkich typów anotacji. 
 	 * @return
 	 */
@@ -195,7 +189,6 @@ public class ChunkerEvaluator {
 	}
 	
 	/**
-	 * TODO
 	 * Średnia harmoniczna dla wskazanego typu anotacji.
 	 * @param type
 	 * @return
@@ -247,7 +240,6 @@ public class ChunkerEvaluator {
 	}
 	
 	/**
-	 * TODO
 	 * Dołącza do danych zawartość innego obiektu ChunkerEvaluator.
 	 */	
 	public void join(ChunkerEvaluator foreign) {
@@ -334,10 +326,14 @@ public class ChunkerEvaluator {
 		}
 	}
 	
-	private void printSentenceResults(Sentence sentence, HashSet<Chunk> truePositives, 
-		HashSet<Chunk> falsePositives, HashSet<Chunk> falseNegatives) {
+	private void printSentenceResults(Sentence sentence, String paragraphId, 
+		HashSet<Chunk> truePositives, HashSet<Chunk> falsePositives, 
+		HashSet<Chunk> falseNegatives) {
 		
-		Main.log("Sentence #" + this.sentenceNum);
+		String sentenceHeader = "Sentence #" + this.sentenceNum;
+		if (paragraphId != null)
+			sentenceHeader += " from " + paragraphId;
+		Main.log(sentenceHeader);
 		Main.log("");
 		StringBuilder tokenOrths = new StringBuilder();
 		StringBuilder tokenNums = new StringBuilder();

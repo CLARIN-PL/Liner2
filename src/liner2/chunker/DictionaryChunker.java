@@ -53,35 +53,81 @@ public class DictionaryChunker extends Chunker
 		for (int i = 0; i < sentence.getTokenNumber(); i++)
 			marked[i] = false;
 			
+		// STARY KOD - nieoptymalny, ale działa - zostawiam na wszelki wypadek
 		// nie sprawdzać pozycji, które są już ochunkowane!
 		// iteruj po wszystkich n-gramach w zdaniu
-		for (int n = sentence.getTokenNumber(); n > 0; n--) {
-			// po wszystkich pozycjach startowych
-			for (int i = 0; i < sentence.getTokenNumber() - n + 1; i++) {
-				boolean isMarked = false;
-				StringBuilder nGram = new StringBuilder();
-				// po wszystkich słowach należących do n-gramu
-				for (int j = i; j < i + n; j++) {
-					if (marked[j]) {
-						isMarked = true;
-						break;
-					}
-					nGram.append(" " + tokenOrths.get(j));
-				}
-				if (isMarked)
+//		for (int n = sentence.getTokenNumber(); n > 0; n--) {
+//			// po wszystkich pozycjach startowych
+//			for (int i = 0; i < sentence.getTokenNumber() - n + 1; i++) {
+//				boolean isMarked = false;
+//				StringBuilder nGram = new StringBuilder();
+//				// po wszystkich słowach należących do n-gramu
+//				for (int j = i; j < i + n; j++) {
+//					if (marked[j]) {
+//						isMarked = true;
+//						break;
+//					}
+//					nGram.append(" " + tokenOrths.get(j));
+//				}
+//				if (isMarked)
+//					continue;
+//				String nGramFinal = nGram.toString().trim();
+//				if (this.dictionary.containsKey(nGramFinal)) {
+//					// odrzuć, jeśli base jest nazwą pospolitą
+//					if ((n == 1) && (this.commons.contains(sentence.getAttributeIndex()
+//						.getAttributeValue(tokens.get(i), "base")))) {
+//						continue;
+//					}
+//					
+//					chunking.addChunk(new Chunk(i, i + n - 1, 	
+//						this.dictionary.get(nGramFinal).toUpperCase(), sentence));
+//					for (int j = i; j < i + n; j++)
+//						marked[j] = true;
+//				}
+//			}
+//		}
+		
+		int sentenceLength = sentence.getTokenNumber();
+		
+		// [długość] -> początek => n-gram
+		ArrayList<HashMap<Integer, String>> nGrams = 
+			new ArrayList<HashMap<Integer, String>>();
+		
+		// wygeneruj unigramy
+		nGrams.add(new HashMap<Integer, String>());		
+		for (int i = 0; i < sentenceLength; i++)
+			nGrams.get(0).put(new Integer(i), tokens.get(i).getFirstValue());
+		// wygeneruj n-gramy
+		for (int n = 1; n < sentenceLength; n++) {
+			nGrams.add(new HashMap<Integer, String>());
+			for (int j = 0; j < sentenceLength - n; j++)
+				nGrams.get(n).put(new Integer(j), 
+					nGrams.get(n-1).get(j) + " " + tokens.get(j+n).getFirstValue());
+		}
+		
+		// chunkuj (poczynając od najdłuższych n-gramów)
+		for (int n = sentenceLength - 1; n >= 0; n--) {
+			for (int i = 0; i < sentenceLength - n; i++) {
+				int idx = new Integer(i);
+				// jeśli danego n-gramu nie ma w tablicy, to kontynuuj
+				if (nGrams.get(n).get(idx) == null)
 					continue;
-				String nGramFinal = nGram.toString().trim();
-				if (this.dictionary.containsKey(nGramFinal)) {
+				// jeśli znaleziono w słowniku
+				if (this.dictionary.containsKey(nGrams.get(n).get(idx))) {
 					// odrzuć, jeśli base jest nazwą pospolitą
-					if ((n == 1) && (this.commons.contains(sentence.getAttributeIndex()
+					if ((n == 0) && (this.commons.contains(sentence.getAttributeIndex()
 						.getAttributeValue(tokens.get(i), "base")))) {
 						continue;
 					}
 					
-					chunking.addChunk(new Chunk(i, i + n - 1, 	
-						this.dictionary.get(nGramFinal).toUpperCase(), sentence));
-					for (int j = i; j < i + n; j++)
-						marked[j] = true;
+					// dodaj chunk
+					chunking.addChunk(new Chunk(i, i + n, 	
+						this.dictionary.get(nGrams.get(n).get(idx)).toUpperCase(), sentence));
+					// usuń z tablicy wszystkie krótsze n-gramy, które zahaczają o to miejsce
+					// j - dł. odrzucanego n-gramu - 1, k - pozycja startowa
+					for (int j = n; j >= 0; j--)
+						for (int k = i-j; k <= i+n; k++)
+							nGrams.get(j).remove(new Integer(k));
 				}
 			}
 		}
@@ -109,7 +155,6 @@ public class DictionaryChunker extends Chunker
 			int added = 0, amb = 0, com = 0;
 			while (line != null) {
 				String[] content = line.split("\t");
-				//System.out.println(""+i);
 				if (content.length >= 2) {
 			    	Matcher m = pattern.matcher(content[1]);
 					if ((commons.contains(content[1])) || (commons.contains(content[1].toLowerCase())))
@@ -126,6 +171,8 @@ public class DictionaryChunker extends Chunker
 						added -= 1;
 					}
 					else {
+						content[1] = content[1].replaceAll("\\.", " \\. ").replaceAll("\\-", " \\- ")
+							.replaceAll("\\'", " \\' ").replaceAll("\\\"", " \\\" ").replaceAll(" +", " ");
 						this.dictionary.put(content[1], content[0]);
 						added++;
 					}
