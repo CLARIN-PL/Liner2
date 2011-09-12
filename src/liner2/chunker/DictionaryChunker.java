@@ -32,9 +32,10 @@ public class DictionaryChunker extends Chunker
 	
 	private HashMap<String, String> dictionary = null;
 	private HashSet<String> commons = null;
+	private ArrayList<String> types = null;
 	
-	public DictionaryChunker()	{
-
+	public DictionaryChunker(ArrayList<String> types) {
+		this.types = types;
 	}
 	
 	@Override
@@ -109,20 +110,30 @@ public class DictionaryChunker extends Chunker
 		for (int n = sentenceLength - 1; n >= 0; n--) {
 			for (int i = 0; i < sentenceLength - n; i++) {
 				int idx = new Integer(i);
+				
 				// jeśli danego n-gramu nie ma w tablicy, to kontynuuj
 				if (nGrams.get(n).get(idx) == null)
 					continue;
+				
 				// jeśli znaleziono w słowniku
 				if (this.dictionary.containsKey(nGrams.get(n).get(idx))) {
+					
 					// odrzuć, jeśli base jest nazwą pospolitą
 					if ((n == 0) && (this.commons.contains(sentence.getAttributeIndex()
 						.getAttributeValue(tokens.get(i), "base")))) {
 						continue;
 					}
 					
+					String chunkType = this.dictionary.get(nGrams.get(n).get(idx));
+					
+					// odrzuć, jeśli ten typ nie ma być brany pod uwagę
+					if ((this.types != null) && (!this.types.contains(chunkType)))
+						continue;
+					
 					// dodaj chunk
 					chunking.addChunk(new Chunk(i, i + n, 	
 						this.dictionary.get(nGrams.get(n).get(idx)).toUpperCase(), sentence));
+					
 					// usuń z tablicy wszystkie krótsze n-gramy, które zahaczają o to miejsce
 					// j - dł. odrzucanego n-gramu - 1, k - pozycja startowa
 					for (int j = n; j >= 0; j--)
@@ -172,7 +183,8 @@ public class DictionaryChunker extends Chunker
 					}
 					else {
 						content[1] = content[1].replaceAll("\\.", " \\. ").replaceAll("\\-", " \\- ")
-							.replaceAll("\\'", " \\' ").replaceAll("\\\"", " \\\" ").replaceAll(" +", " ");
+							.replaceAll("\\'", " \\' ").replaceAll("\\\"", " \\\" ")
+							.replaceAll(" +", " ").trim();
 						this.dictionary.put(content[1], content[0]);
 						added++;
 					}
