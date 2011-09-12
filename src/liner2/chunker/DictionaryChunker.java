@@ -109,16 +109,17 @@ public class DictionaryChunker extends Chunker
 			int added = 0, amb = 0, com = 0;
 			while (line != null) {
 				String[] content = line.split("\t");
-				Matcher m = pattern.matcher(content[1]);
 				//System.out.println(""+i);
 				if (content.length >= 2) {
+			    	Matcher m = pattern.matcher(content[1]);
 					if ((commons.contains(content[1])) || (commons.contains(content[1].toLowerCase())))
 						com++;
 					else if (ambigous.contains(content[1]))
 						amb++;
 					else if (m.matches())
 						com++;
-					else if (this.dictionary.containsKey(content[1])) {
+					else if ((this.dictionary.containsKey(content[1])) && 
+							(!this.dictionary.get(content[1]).equals(content[0]))){
 						this.dictionary.remove(content[1]);
 						ambigous.add(content[1]);
 						amb += 2;
