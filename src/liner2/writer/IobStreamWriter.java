@@ -7,6 +7,7 @@ import java.io.OutputStreamWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import liner2.structure.AttributeIndex;
 import liner2.structure.Chunk;
 import liner2.structure.Paragraph;
 import liner2.structure.Sentence;
@@ -16,24 +17,27 @@ import liner2.structure.Token;
 public class IobStreamWriter extends StreamWriter {
 
 	private BufferedWriter ow;
-	private boolean open = false;
+	private boolean init = false;
 
 	public IobStreamWriter(OutputStream os) {
 		this.ow = new BufferedWriter(new OutputStreamWriter(os));
 	}
 
-	public void open() {
-		if (open)
+	protected void init(AttributeIndex attributeIndex) {
+		if (this.init)
 			return;
 		try {
-			String line = "-DOCSTART CONFIG FEATURES orth base ctag";
+//			String line = "-DOCSTART CONFIG FEATURES orth base ctag";
+			String line = "-DOCSTART CONFIG FEATURES";
+			for (int i = 0; i < attributeIndex.getLength(); i++)
+				line += " " + attributeIndex.getName(i);
 			ow.write(line, 0, line.length());
 			ow.newLine();
 		}
 		catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		open = true;
+		this.init = true;
 	}
 
 	@Override
@@ -48,8 +52,8 @@ public class IobStreamWriter extends StreamWriter {
 	@Override
 	public void writeParagraph(Paragraph paragraph) {
 		try {
-			if (!open)
-				open();
+			if (!init)
+				init(paragraph.getAttributeIndex());
 			String paragraphId = paragraph.getId();
 			if (paragraphId == null)
 				paragraphId = "";
@@ -78,7 +82,8 @@ public class IobStreamWriter extends StreamWriter {
 //		Tag firstTag = tags.get(0);
 //		line += " " + firstTag.getBase() + " " + firstTag.getCtag();
 		String line = "";
-		for (int i = 0; i < token.getNumAttributes(); i++)
+//		for (int i = 0; i < token.getNumAttributes(); i++)
+		for (int i = 0; i < sentence.getAttributeIndex().getLength(); i++)
 			line += (line.length() > 0 ? " " : "") + token.getAttributeValue(i);
 		
 		Chunk chunk = sentence.getChunkAt(idx);

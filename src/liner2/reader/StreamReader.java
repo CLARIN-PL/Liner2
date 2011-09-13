@@ -13,6 +13,7 @@ import liner2.Main;
  */
 public abstract class StreamReader {
 
+	protected abstract AttributeIndex getAttributeIndex();
 	protected abstract Paragraph readRawParagraph();
 	public abstract void close();
 	public abstract boolean paragraphReady();
@@ -33,11 +34,11 @@ public abstract class StreamReader {
 			Paragraph p = this.readRawParagraph();
 			
 			// initialize attributes index
-			AttributeIndex attributeIndex = new AttributeIndex();
-			attributeIndex.addAttribute("orth");
-			attributeIndex.addAttribute("base");
-			attributeIndex.addAttribute("ctag");
-			p.setAttributeIndex(attributeIndex);
+//			AttributeIndex attributeIndex = new AttributeIndex();
+//			attributeIndex.addAttribute("orth");
+//			attributeIndex.addAttribute("base");
+//			attributeIndex.addAttribute("ctag");
+//			p.setAttributeIndex(this.getAttributeIndex());
 			
 			if (FeatureGenerator.isInitialized()) {
 				try {
@@ -60,14 +61,15 @@ public abstract class StreamReader {
 		ParagraphSet paragraphSet = new ParagraphSet();
 					
 		// initialize attributes index
-		AttributeIndex attributeIndex = new AttributeIndex();
-		attributeIndex.addAttribute("orth");
-		attributeIndex.addAttribute("base");
-		attributeIndex.addAttribute("ctag");
-		paragraphSet.setAttributeIndex(attributeIndex);
+//		AttributeIndex attributeIndex = new AttributeIndex();
+//		attributeIndex.addAttribute("orth");
+//		attributeIndex.addAttribute("base");
+//		attributeIndex.addAttribute("ctag");
+//		paragraphSet.setAttributeIndex(attributeIndex);
 
 		while (paragraphReady())
 			paragraphSet.addParagraph(readRawParagraph());
+		paragraphSet.setAttributeIndex(this.getAttributeIndex());
 		
 //		Paragraph p = null;
 //		while (true) {

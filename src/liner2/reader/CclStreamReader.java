@@ -51,6 +51,7 @@ public class CclStreamReader extends StreamReader {
 	
 	private XMLStreamReader xmlr;
 	private BufferedInputStream is;
+	private AttributeIndex attributeIndex;
 	private String nextParagraphId = null;
 	private boolean nextParagraph = false;
 	
@@ -62,11 +63,19 @@ public class CclStreamReader extends StreamReader {
 		} catch (XMLStreamException ex) {
 			ex.printStackTrace();
 		} 
+		this.attributeIndex = new AttributeIndex();
+		this.attributeIndex.addAttribute("orth");
+		this.attributeIndex.addAttribute("base");
+		this.attributeIndex.addAttribute("ctag");
+	}
+	
+	@Override
+	public AttributeIndex getAttributeIndex() {
+		return this.attributeIndex;
 	}
 	
 	@Override
 	public void close() {
-		
 		try {
 			xmlr.close();
 			is.close();
@@ -171,6 +180,7 @@ public class CclStreamReader extends StreamReader {
 			paragraph.addSentence(getSentenceFromNode(sentences.item(i)));
 		}
 		
+		paragraph.setAttributeIndex(this.attributeIndex);
 		return paragraph;
 	}
 	

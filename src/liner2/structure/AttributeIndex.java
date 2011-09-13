@@ -61,7 +61,11 @@ public class AttributeIndex {
 	}
 	
 	public String getAttributeValue(Token token, String attributeName){
-		return token.getAttributeValue(this.getIndex(attributeName));
+		int idx = this.getIndex(attributeName);
+		if (idx != -1)
+			return token.getAttributeValue(idx);
+		else
+			return null;
 	}
 	
 }
