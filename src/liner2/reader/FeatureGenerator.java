@@ -158,6 +158,7 @@ public class FeatureGenerator {
 			String[] featureValues = line.split(" ");
 			for (int i = 0; i < featureValues.length; i++)
 				token.setAttributeValue(i, featureValues[i]);
+			
 		}
 
 //		String error = null;
@@ -168,6 +169,73 @@ public class FeatureGenerator {
 		FeatureGenerator.input.readLine();
 		FeatureGenerator.input.readLine();
 		FeatureGenerator.input.readLine();
+
+		if (sentence.getAttributeIndex().getIndex("agr1") > -1){
+			int cas = sentence.getAttributeIndex().getIndex("case");
+			int nmb = sentence.getAttributeIndex().getIndex("number");
+			int gnd = sentence.getAttributeIndex().getIndex("gender");
+			int agr1 = sentence.getAttributeIndex().getIndex("agr1");
+			int agr2 = sentence.getAttributeIndex().getIndex("agr2");
+			int agr3 = sentence.getAttributeIndex().getIndex("agr3");
+			int agr4 = sentence.getAttributeIndex().getIndex("agr4");
+			int agr5 = sentence.getAttributeIndex().getIndex("agr5");
+			
+			for (int i=0; i<sentence.getTokenNumber(); i++){
+				
+				String agr1_value = "NULL";
+				String agr2_value = "NULL";
+				String agr3_value = "NULL";
+				String agr4_value = "NULL";
+				String agr5_value = "NULL";
+				
+				if ( i>0 ){
+					agr1_value = FeatureGenerator.agree3attributes(cas, nmb, gnd, 
+							sentence.getTokens().get(i), sentence.getTokens().get(i-1));						
+				}
+				
+				if ( i + 1 < sentence.getTokenNumber() ){
+					agr2_value = FeatureGenerator.agree3attributes(cas, nmb, gnd, 
+							sentence.getTokens().get(i), sentence.getTokens().get(i+1));						
+				}
+
+				if ( i>1 ){
+					agr3_value = FeatureGenerator.agree3attributes(cas, nmb, gnd, 
+							sentence.getTokens().get(i), sentence.getTokens().get(i-2));						
+				}
+
+				if ( i>0 && i + 1 < sentence.getTokenNumber() ){
+					agr4_value = FeatureGenerator.agree3attributes(cas, nmb, gnd, 
+							sentence.getTokens().get(i-1), sentence.getTokens().get(i+1));						
+				}
+
+				if ( i + 2 < sentence.getTokenNumber() ){
+					agr5_value = FeatureGenerator.agree3attributes(cas, nmb, gnd, 
+							sentence.getTokens().get(i), sentence.getTokens().get(i+2));						
+				}
+
+				//System.out.println(agr1_value);
+				sentence.getTokens().get(i).setAttributeValue(agr1, agr1_value);
+				sentence.getTokens().get(i).setAttributeValue(agr2, agr2_value);
+				sentence.getTokens().get(i).setAttributeValue(agr3, agr3_value);
+				sentence.getTokens().get(i).setAttributeValue(agr4, agr4_value);
+				sentence.getTokens().get(i).setAttributeValue(agr5, agr5_value);
+
+			}
+		}
+	}
+	
+	private static String agree3attributes(int a1, int a2, int a3, Token t1, Token t2){
+
+//		if ( t1.getAttributeValue(a1).equals("null") || t2.getAttributeValue(a1).equals("null")
+//				|| t1.getAttributeValue(a2).equals("null") || t2.getAttributeValue(a2).equals("null")
+//				|| t1.getAttributeValue(a3).equals("null") || t2.getAttributeValue(a3).equals("null"))
+//			return "NULL";
+		if ( t1.getAttributeValue(a1).equals(t2.getAttributeValue(a1))
+				&& t1.getAttributeValue(a2).equals(t2.getAttributeValue(a2)) 
+				&& t1.getAttributeValue(a3).equals(t2.getAttributeValue(a3)) )
+			return "1";
+		else
+			return "0";
 	}
 	
 	public static void close() throws IOException{
