@@ -50,9 +50,9 @@ public class DictionaryChunker extends Chunker
 			tokenOrths.add(token.getFirstValue());
 			
 		// pomocnicza tablica, które tokeny należą już do jakiegoś chunka
-		boolean[] marked = new boolean [sentence.getTokenNumber()];
-		for (int i = 0; i < sentence.getTokenNumber(); i++)
-			marked[i] = false;
+//		boolean[] marked = new boolean [sentence.getTokenNumber()];
+//		for (int i = 0; i < sentence.getTokenNumber(); i++)
+//			marked[i] = false;
 			
 		// STARY KOD - nieoptymalny, ale działa - zostawiam na wszelki wypadek
 		// nie sprawdzać pozycji, które są już ochunkowane!

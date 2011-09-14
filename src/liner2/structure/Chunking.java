@@ -49,8 +49,17 @@ public class Chunking {
 		if (foreignChunking.getSentence() == this.sentence) {
 			HashSet<Chunk> foreignChunks = foreignChunking.chunkSet();
 			Iterator<Chunk> i_fc = foreignChunks.iterator();
-			while (i_fc.hasNext())
-				addChunk(i_fc.next());
+			while (i_fc.hasNext()) {
+				Chunk foreignChunk = i_fc.next();
+				boolean found = false;
+				for (Chunk chunk : this.chunks)
+					if (chunk.equals(foreignChunk)) {
+						found = true;
+						break;
+					}
+				if (!found)
+					addChunk(foreignChunk);
+			}
 		}
 	}
 }
