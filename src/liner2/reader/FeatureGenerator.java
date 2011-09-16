@@ -18,6 +18,13 @@ import liner2.structure.Token;
 
 import liner2.LinerOptions;
 
+/**
+ * Klasa do generowania cech dla słów.
+ * 
+ * @author Michał Marcińczuk
+ * @author Maciej Janicki
+ *
+ */
 public class FeatureGenerator {
 
 	//private static ArrayList<String> features = null;
@@ -147,9 +154,6 @@ public class FeatureGenerator {
 		FeatureGenerator.writeline("@EOC");	
 		FeatureGenerator.output.flush();
 		
-//		while (!FeatureGenerator.input.ready())
-//			if (FeatureGenerator.error.ready())
-//				System.out.println(FeatureGenerator.error.readLine());
 		FeatureGenerator.input.readLine();
 		
 		for (Token token : sentence.getTokens()) {
@@ -176,17 +180,11 @@ public class FeatureGenerator {
 			int gnd = sentence.getAttributeIndex().getIndex("gender");
 			int agr1 = sentence.getAttributeIndex().getIndex("agr1");
 			int agr2 = sentence.getAttributeIndex().getIndex("agr2");
-			int agr3 = sentence.getAttributeIndex().getIndex("agr3");
-			int agr4 = sentence.getAttributeIndex().getIndex("agr4");
-			int agr5 = sentence.getAttributeIndex().getIndex("agr5");
 			
 			for (int i=0; i<sentence.getTokenNumber(); i++){
 				
 				String agr1_value = "NULL";
 				String agr2_value = "NULL";
-				String agr3_value = "NULL";
-				String agr4_value = "NULL";
-				String agr5_value = "NULL";
 				
 				if ( i>0 ){
 					agr1_value = FeatureGenerator.agree3attributes(cas, nmb, gnd, 
@@ -198,39 +196,19 @@ public class FeatureGenerator {
 							sentence.getTokens().get(i), sentence.getTokens().get(i+1));						
 				}
 
-				if ( i>1 ){
-					agr3_value = FeatureGenerator.agree3attributes(cas, nmb, gnd, 
-							sentence.getTokens().get(i), sentence.getTokens().get(i-2));						
-				}
-
-				if ( i>0 && i + 1 < sentence.getTokenNumber() ){
-					agr4_value = FeatureGenerator.agree3attributes(cas, nmb, gnd, 
-							sentence.getTokens().get(i-1), sentence.getTokens().get(i+1));						
-				}
-
-				if ( i + 2 < sentence.getTokenNumber() ){
-					agr5_value = FeatureGenerator.agree3attributes(cas, nmb, gnd, 
-							sentence.getTokens().get(i), sentence.getTokens().get(i+2));						
-				}
-
-				//System.out.println(agr1_value);
 				sentence.getTokens().get(i).setAttributeValue(agr1, agr1_value);
 				sentence.getTokens().get(i).setAttributeValue(agr2, agr2_value);
-				sentence.getTokens().get(i).setAttributeValue(agr3, agr3_value);
-				sentence.getTokens().get(i).setAttributeValue(agr4, agr4_value);
-				sentence.getTokens().get(i).setAttributeValue(agr5, agr5_value);
-
 			}
 		}
 	}
 	
 	private static String agree3attributes(int a1, int a2, int a3, Token t1, Token t2){
 
-//		if ( t1.getAttributeValue(a1).equals("null") || t2.getAttributeValue(a1).equals("null")
-//				|| t1.getAttributeValue(a2).equals("null") || t2.getAttributeValue(a2).equals("null")
-//				|| t1.getAttributeValue(a3).equals("null") || t2.getAttributeValue(a3).equals("null"))
-//			return "NULL";
-		if ( t1.getAttributeValue(a1).equals(t2.getAttributeValue(a1))
+		if ( t1.getAttributeValue(a1).equals("null") || t2.getAttributeValue(a1).equals("null")
+				|| t1.getAttributeValue(a2).equals("null") || t2.getAttributeValue(a2).equals("null")
+				|| t1.getAttributeValue(a3).equals("null") || t2.getAttributeValue(a3).equals("null"))
+			return "NULL";
+		else if ( t1.getAttributeValue(a1).equals(t2.getAttributeValue(a1))
 				&& t1.getAttributeValue(a2).equals(t2.getAttributeValue(a2)) 
 				&& t1.getAttributeValue(a3).equals(t2.getAttributeValue(a3)) )
 			return "1";
@@ -246,74 +224,9 @@ public class FeatureGenerator {
 		}
 	}
 	
-	
-	/*** Stare funkcje ***/
-	
-	/*private FeatureGenerator(String python_path, String path_nerd, String configuration) throws IOException{
 		
-		if ( path_nerd == null ){
-			throw new Error("Path to NERD not set. Provide --nerd parameter");
-		}
-		
-		String path_to_nerd = path_nerd + "/nerd.py"; 
-		if ( !(new File(path_to_nerd).exists()) ){
-			throw new Error("Incorrect path to NERD: " + path_to_nerd);
-		}
-		
-		String[] envp=new String[1];
-		envp[0]="PATH=" + path_nerd;
-		String cmd = python_path + " " + path_to_nerd + " --batch";
-		this.p = Runtime.getRuntime().exec(cmd, envp);
-		this.configuration = configuration;
-		
-		this.input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-		this.output = new BufferedWriter(new OutputStreamWriter(p.getOutputStream()));
-		this.error = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-	}*/
-	
-/*	public ArrayList<String[]> expand(ArrayList<String[]> tokens) throws IOException{
-		
-		this.writeline("@FEATURES");
-		this.writeline(this.configuration);
-		this.writeline("-DOCSTART CONFIG FEATURES orth base ctag");
-		
-		for(String[] token : tokens){
-			String line = String.format("%s %s %s O", token[0], token[1], token[2]);
-			this.writeline(line);
-		}
-		this.writeline("@EOC");				
-		this.output.flush();
-		
-		this.input.readLine();
-		
-		ArrayList<String[]> featuresExtended = new ArrayList<String[]>();
-	
-//		String error = null;
-//		while ( (error = this.error.readLine()) != null)
-//			System.out.println("!!: " + error);
-				
-		for (int i=0; i<tokens.size(); i++){
-			String line = this.input.readLine().trim();
-			line = line.substring(0, line.length()-2);
-			//System.err.println(line);
-			featuresExtended.add(line.split(" "));
-		}*/
-		/* XXX */
-/*		this.input.readLine();
-		this.input.readLine();
-		this.input.readLine();
-					
-		return featuresExtended;
-	}*/
-	
-//	public void close() throws IOException{
-//		this.output.write("@EOF\n");
-//		this.output.flush();
-//	}
-	
 	private static void writeline(String line) throws IOException{
 		FeatureGenerator.output.write(line + "\n");
 	}
 
-	
 }
