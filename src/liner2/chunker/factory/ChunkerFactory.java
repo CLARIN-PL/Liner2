@@ -18,7 +18,7 @@ public class ChunkerFactory {
 	private HashMap<String, Chunker> chunkers = new HashMap<String, Chunker>(); 
 	
 	private ChunkerFactory(){
-//		this.items.add(new ChunkerFactoryItemHeuristics());
+		this.items.add(new ChunkerFactoryItemHeuristic());
 //		this.items.add(new ChunkerFactoryItemGazetteers());
 //		this.items.add(new ChunkerFactoryItemLingpipeTrain());
 //		this.items.add(new ChunkerFactoryItemNLTKTrain());
