@@ -23,6 +23,10 @@ public class Chunking {
 		this.chunks.add(chunk);
 	}
 	
+	public void removeChunk(Chunk chunk) {
+		this.chunks.remove(chunk);
+	}
+	
 	public HashSet<Chunk> chunkSet(){
 		return chunks;
 	}
@@ -56,6 +60,19 @@ public class Chunking {
 					if (chunk.equals(foreignChunk)) {
 						found = true;
 						break;
+					}
+					else if (chunk.getType().equals(foreignChunk.getType())) {
+						int cb = chunk.getBegin();
+						int ce = chunk.getEnd();
+						int fb = foreignChunk.getBegin();
+						int fe = foreignChunk.getEnd();
+						if ((cb <= fb) && (ce >= fe)) {
+							found = true;
+							break;
+						}
+						else if ((cb >= fb) && (ce <= fe)) {
+							removeChunk(chunk);
+						}
 					}
 				if (!found)
 					addChunk(foreignChunk);
