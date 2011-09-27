@@ -56,6 +56,7 @@ public class Chunking {
 			while (i_fc.hasNext()) {
 				Chunk foreignChunk = i_fc.next();
 				boolean found = false;
+				HashSet<Chunk> chunksToRemove = new HashSet<Chunk>();
 				for (Chunk chunk : this.chunks)
 					if (chunk.equals(foreignChunk)) {
 						found = true;
@@ -71,9 +72,11 @@ public class Chunking {
 							break;
 						}
 						else if ((cb >= fb) && (ce <= fe)) {
-							removeChunk(chunk);
+							chunksToRemove.add(chunk);
 						}
 					}
+				for (Chunk chunkToRemove : chunksToRemove)
+					removeChunk(chunkToRemove);
 				if (!found)
 					addChunk(foreignChunk);
 			}
