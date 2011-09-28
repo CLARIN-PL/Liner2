@@ -1,16 +1,23 @@
 package liner2.action;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
 
 import liner2.reader.FeatureGenerator;
+import liner2.reader.ReaderFactory;
+import liner2.reader.StreamReader;
 
 import liner2.structure.AttributeIndex;
 import liner2.structure.Chunk;
 import liner2.structure.Chunking;
+import liner2.structure.Paragraph;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
 
@@ -36,14 +43,30 @@ public class ActionBatch extends Action{
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		String cSeq = "";
 		
+		String maca = LinerOptions.getOption(LinerOptions.OPTION_MACA);
+		String wmbt = LinerOptions.getOption(LinerOptions.OPTION_WMBT);
+//		if (maca != null) System.out.println("maca: " + maca);
+//		if (wmbt != null) System.out.println("wmbt: " + wmbt);
+		
+		if (!LinerOptions.get().silent){
+			System.out.println("# Loading, please wait...");
+        }
+		
 		ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescription);		
 		Chunker chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
 		
 		if (!LinerOptions.get().silent){
 			System.out.println("# Enter a sentence and press Enter.");
-			System.out.println("#   Tokens should be seperated with double spaces.");
-			System.out.println("#   Token attributes should be seperated with a single space.");
-			System.out.println("#   Example: Ala ala subst:sg:nom:f  ma mieć fin:sg:ter:imperf  kota kot subst:sg:nom:f");			
+			if (maca == null) {
+				System.out.println("#   Tokens should be seperated with double spaces.");
+				System.out.println("#   Token attributes should be seperated with a single space.");
+				System.out.println("#   Example: Ala ala subst:sg:nom:f  ma mieć fin:sg:ter:imperf  kota kot subst:sg:acc:m1");			
+			}
+//			else {
+//				System.out.println("#   Using maca morphological analyzer with path: " + maca);
+//				if (wmbt != null)
+//					System.out.println("#   Using WMBT tagger with path: " + wmbt);
+//			}
 			System.out.println("# To disable the additional outputs rerun with `-silent` option.");
 			System.out.println("# To finish enter 'EOF'.");
         }
@@ -58,29 +81,11 @@ public class ActionBatch extends Action{
 			// If the text is not EndOfFile then process it
 			if (!cSeq.equals("EOF")) {
 
-				Sentence sentence = new Sentence();
-				AttributeIndex ai = new AttributeIndex();
-				ai.addAttribute("orth");
-				ai.addAttribute("base");
-				ai.addAttribute("ctag");
-				sentence.setAttributeIndex(ai);
-
-				String[] tokens = cSeq.trim().split("  ");
-				for (String tokenStr : tokens) {
-					Token token = new Token();
-					String[] tokenAttrs = tokenStr.split(" ");
-					for (int i = 0; i < tokenAttrs.length; i++)
-						token.setAttributeValue(i, tokenAttrs[i]);
-					sentence.addToken(token);
-				}
-				
-				if (FeatureGenerator.isInitialized()) {
-					try {
-						FeatureGenerator.generateFeatures(sentence, true);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
+				Sentence sentence;
+				if (maca == null)
+					sentence = analyzePlain(cSeq);
+				else
+					sentence = analyze(cSeq, maca, wmbt);
 				
 				Chunking chunking = chunker.chunkSentence(sentence);
 				String response = "";
@@ -92,5 +97,89 @@ public class ActionBatch extends Action{
 				System.out.println(response);
 			}
 		} while (!cSeq.equals("EOF"));
+	}
+	
+	private Sentence analyzePlain(String cSeq) {
+		Sentence sentence = new Sentence();
+		AttributeIndex ai = new AttributeIndex();
+		ai.addAttribute("orth");
+		ai.addAttribute("base");
+		ai.addAttribute("ctag");
+		sentence.setAttributeIndex(ai);
+
+		String[] tokens = cSeq.trim().split("  ");
+		for (String tokenStr : tokens) {
+			Token token = new Token();
+			String[] tokenAttrs = tokenStr.split(" ");
+			for (int i = 0; i < tokenAttrs.length; i++)
+				token.setAttributeValue(i, tokenAttrs[i]);
+			sentence.addToken(token);
+		}
+				
+		if (FeatureGenerator.isInitialized()) {
+			try {
+				FeatureGenerator.generateFeatures(sentence, true);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		return sentence;
+	}
+	
+	private Sentence analyze(String cSeq, String maca, String wmbt) {
+		// prepare command
+		String cmd = maca.equals("-") ? "" : maca;
+		if (!maca.equals("-") && (!maca.endsWith("/")))
+			cmd += "/";
+		cmd += "maca-analyse -qs morfeusz-nkjp -o ccl";
+		if (wmbt != null) {
+			if (!wmbt.endsWith("/"))
+				wmbt += "/";
+			cmd += " | " + wmbt + "wmbt/wmbt.py";
+			cmd += " -d " + wmbt + "model_nkjp10 -i ccl -o ccl";
+			cmd += " " + wmbt + "config/nkjp-k11.ini -";
+		}
+//		System.out.println(cmd);
+		
+		Process p = null;
+		try {
+			p = Runtime.getRuntime().exec(cmd);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		
+		InputStream in = p.getInputStream();
+		OutputStream out = p.getOutputStream();
+		BufferedReader err = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+		
+		try {
+			OutputStreamWriter writer = new OutputStreamWriter(out);
+			writer.write(cSeq, 0, cSeq.length());
+			writer.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		
+		try {
+//			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+//			String line = reader.readLine();
+//			while (!reader.ready())
+//				if (err.ready())
+//					System.out.println(err.readLine());
+//			while (line == null)
+//				line = reader.readLine();
+//			while (line != null) {
+//				System.out.println(line);
+//				line = reader.readLine();
+//			}
+//			return null;
+			StreamReader reader = ReaderFactory.get().getStreamReader(in, "ccl");
+			Paragraph paragraph = reader.readParagraph();
+			Sentence sentence = paragraph.getSentences().get(0);
+			return sentence;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
 	}
 }

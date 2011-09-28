@@ -75,6 +75,7 @@ public class LinerOptions {
 	public static final String OPTION_INI = "ini";
 	public static final String OPTION_INPUT_FILE = "f";
 	public static final String OPTION_INPUT_FORMAT = "i";
+	public static final String OPTION_MACA = "maca";
 	public static final String OPTION_NERD = "nerd";
 	public static final String OPTION_OUTPUT_FILE = "t";
 	public static final String OPTION_OUTPUT_FORMAT = "o";
@@ -84,6 +85,7 @@ public class LinerOptions {
 	public static final String OPTION_USE = "use";
 	public static final String OPTION_VERBOSE = "verbose";
 	public static final String OPTION_VERBOSE_DETAILS = "verboseDetails";
+	public static final String OPTION_WMBT = "wmbt";
 	
 	
 	// List of argument read from cmd
@@ -414,6 +416,9 @@ public class LinerOptions {
 		options.addOption(OptionBuilder.withArgName("format").hasArg()
 			.withDescription("input format (iob or ccl)")
 			.create(OPTION_INPUT_FORMAT));
+		options.addOption(OptionBuilder.withArgName("description").hasArg()
+				.withDescription("path to maca (for batch mode)")
+				.create(OPTION_MACA));
     	options.addOption(OptionBuilder.withArgName("filename").hasArg()
 				.withDescription("path to location of nerd.py")
 				.create(OPTION_NERD));
@@ -432,6 +437,9 @@ public class LinerOptions {
 		options.addOption(OptionBuilder.withArgName("description").hasArg()
 				.withDescription("define feature template")
 				.create(OPTION_TEMPLATE));
+		options.addOption(OptionBuilder.withArgName("description").hasArg()
+				.withDescription("path to WMBT (for batch mode)")
+				.create(OPTION_WMBT));
     	options.addOption(new Option(OPTION_SILENT, false, "does not print any additional text in batch mode"));
     	options.addOption(new Option(OPTION_VERBOSE, false, "print brief information about processing"));
     	options.addOption(new Option(OPTION_VERBOSE_DETAILS, false, "print detailed information about processing"));
