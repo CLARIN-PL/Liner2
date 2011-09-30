@@ -130,8 +130,11 @@ public class ActionBatch extends Action{
 	private Sentence analyze(String cSeq, String maca, String wmbt) {
 		// prepare maca command
 		String maca_cmd = maca.equals("-") ? "" : maca;
-		if (!maca.equals("-") && (!maca.endsWith("/")))
-			maca_cmd += "/";
+		if (!maca.equals("-")) {
+			if (!maca.endsWith("/"))
+				maca_cmd += "/";
+			maca_cmd += "bin/maca-analyse/";
+		}
 		maca_cmd += "maca-analyse -qs morfeusz-nkjp -o ccl";
 		
 		// execute maca
