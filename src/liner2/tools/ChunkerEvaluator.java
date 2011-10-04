@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import liner2.chunker.Chunker;
+import liner2.reader.FeatureGenerator;
 import liner2.structure.Chunk;
 import liner2.structure.Chunking;
 import liner2.structure.Paragraph;
@@ -58,6 +59,10 @@ public class ChunkerEvaluator {
 	private Chunker chunker = null;
 	private boolean quiet = false;		// print sentence results?
 	
+	public long tokensTime = 0;	
+	private long chunkerTime = 0;
+	private long tokensProcessed = 0;
+	
 	/**
 	 * @param chunker
 	 */
@@ -79,7 +84,12 @@ public class ChunkerEvaluator {
 			HashSet<Chunk> trueChunkSet = sentence.getChunks();
 			HashSet<Chunk> trueChunkSetIter = new HashSet<Chunk>(trueChunkSet);
 			sentence.setChunking(new Chunking(sentence));
+			long chunkingStart = System.nanoTime();
 			Chunking chunking = this.chunker.chunkSentence(sentence);
+			long chunkingEnd = System.nanoTime();
+			this.chunkerTime += chunkingEnd - chunkingStart;
+			this.tokensTime += chunkingEnd - chunkingStart;
+			this.tokensProcessed += sentence.getTokenNumber();
 			chunking.filter(LinerOptions.get().filters);
 			HashSet<Chunk> testedChunkSet = chunking.chunkSet();
 //			HashSet<Chunk> testedChunkSet = this.chunker.chunkSentence(sentence).chunkSet();
@@ -237,6 +247,18 @@ public class ChunkerEvaluator {
 			+ "   %6.2f%% & %6.2f%% & %6.2f%%", this.globalTruePositives,
 			this.globalFalsePositives, this.globalFalseNegatives,
 			this.globalPrecision*100, this.globalRecall*100, this.globalFMeasure*100));
+		
+		if (LinerOptions.get().mode.equals("eval")) {
+			System.out.println("");
+			double chunkerTimeSeconds = (double)this.chunkerTime / 1000000000;
+			double tokensTimeSeconds = (double)this.tokensTime / 1000000000;
+			double nerdTimeSeconds = (double)FeatureGenerator.getTime() / 1000000000;
+			System.out.println(String.format("Processing time: %.4f s", tokensTimeSeconds));
+			System.out.println(String.format("NERD time: %.4f s", nerdTimeSeconds));
+			System.out.println("Tokens processed: " + this.tokensProcessed);
+			System.out.println(String.format("Tokens per second: %.4f", 
+				this.tokensProcessed / tokensTimeSeconds));
+		}
 	}
 	
 	/**

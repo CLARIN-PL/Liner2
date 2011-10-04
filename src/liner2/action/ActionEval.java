@@ -3,6 +3,7 @@ package liner2.action;
 import liner2.LinerOptions;
 import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
+import liner2.reader.FeatureGenerator;
 import liner2.reader.ReaderFactory;
 import liner2.reader.StreamReader;
 import liner2.structure.Paragraph;
@@ -21,8 +22,9 @@ public class ActionEval extends Action{
 	/**
 	 * 
 	 */
-	public void run() throws Exception {
 		
+	public void run() throws Exception {
+		long timeTotalStart = System.nanoTime();
 		if ( !LinerOptions.isOption(LinerOptions.OPTION_USE) ){
 			throw new ParameterException("Parameter --use <chunker_pipe_desription> not set");
 		}
@@ -37,15 +39,21 @@ public class ActionEval extends Action{
     	}
     		
     	/* Create all defined chunkers. */
+    	long chunkerInitStart = System.nanoTime();
     	ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescription);
-    		
     	Chunker chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
+    	long chunkerInitEnd = System.nanoTime();
     		
     	ChunkerEvaluator eval = new ChunkerEvaluator(chunker);
+//    	eval.chunkerTime = chunkerInitEnd - chunkerInitStart;
 		for (Paragraph p : ps.getParagraphs()){
 			eval.evaluate(p);
 		}
-			
+		
+		long timeTotal = System.nanoTime() - timeTotalStart;
+		eval.tokensTime = timeTotal - chunkerInitEnd + chunkerInitStart - FeatureGenerator.initTime;
+		double timeTotalSeconds = (double)timeTotal / 1000000000;
 		eval.printResults();
+		System.out.println(String.format("Liner2 total time: %.4f s", timeTotalSeconds));
 	}
 }

@@ -1,6 +1,7 @@
 package liner2.action;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -127,59 +128,80 @@ public class ActionBatch extends Action{
 	}
 	
 	private Sentence analyze(String cSeq, String maca, String wmbt) {
-		// prepare command
-		String cmd = maca.equals("-") ? "" : maca;
-		if (!maca.equals("-") && (!maca.endsWith("/")))
-			cmd += "/";
-		cmd += "maca-analyse -qs morfeusz-nkjp -o ccl";
+		// prepare maca command
+		String maca_cmd = maca.equals("-") ? "" : maca;
+		if (!maca.equals("-")) {
+			if (!maca.endsWith("/"))
+				maca_cmd += "/";
+			maca_cmd += "bin/maca-analyse/";
+		}
+		maca_cmd += "maca-analyse -qs morfeusz-nkjp -o ccl";
+		
+		// execute maca
+		Process maca_p = null;
+		try {
+			maca_p = Runtime.getRuntime().exec(maca_cmd);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		
+		InputStream maca_in = maca_p.getInputStream();
+		OutputStream maca_out = maca_p.getOutputStream();
+		BufferedWriter maca_writer = new BufferedWriter(
+			new OutputStreamWriter(maca_out));
+		
+		// if using wmbt, then combine maca with wmbt
 		if (wmbt != null) {
+			// prepare wmbt command
 			if (!wmbt.endsWith("/"))
 				wmbt += "/";
-			cmd += " | " + wmbt + "wmbt/wmbt.py";
-			cmd += " -d " + wmbt + "model_nkjp10 -i ccl -o ccl";
-			cmd += " " + wmbt + "config/nkjp-k11.ini -";
+			String wmbt_cmd = wmbt + "wmbt/wmbt.py";
+			wmbt_cmd += " -d " + wmbt + "model_nkjp10 -i ccl -o ccl";
+			wmbt_cmd += " " + wmbt + "config/nkjp-k11.ini -";
+			
+			Process wmbt_p = null;
+			try {
+				wmbt_p = Runtime.getRuntime().exec(wmbt_cmd);
+				InputStream wmbt_in = wmbt_p.getInputStream();
+				OutputStream wmbt_out = wmbt_p.getOutputStream();
+				
+				BufferedReader maca_reader = new BufferedReader(
+					new InputStreamReader(maca_in));
+				BufferedWriter wmbt_writer = new BufferedWriter(
+					new OutputStreamWriter(wmbt_out));
+					
+				maca_writer.write(cSeq, 0, cSeq.length());
+				maca_writer.close();
+				
+				String line = null;
+				while ((line = maca_reader.readLine()) != null)
+					wmbt_writer.write(line, 0, line.length());
+				wmbt_writer.close(); 
+				
+				StreamReader reader = ReaderFactory.get().getStreamReader(wmbt_in, "ccl");
+				Paragraph paragraph = reader.readParagraph();
+				Sentence sentence = paragraph.getSentences().get(0);
+				return sentence;
+				
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return null;
+			}		
 		}
-//		System.out.println(cmd);
 		
-		Process p = null;
-		try {
-			p = Runtime.getRuntime().exec(cmd);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-		
-		InputStream in = p.getInputStream();
-		OutputStream out = p.getOutputStream();
-		BufferedReader err = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-		
-		try {
-			OutputStreamWriter writer = new OutputStreamWriter(out);
-			writer.write(cSeq, 0, cSeq.length());
-			writer.close();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-		
-		try {
-//			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-//			String line = reader.readLine();
-//			while (!reader.ready())
-//				if (err.ready())
-//					System.out.println(err.readLine());
-//			while (line == null)
-//				line = reader.readLine();
-//			while (line != null) {
-//				System.out.println(line);
-//				line = reader.readLine();
-//			}
-//			return null;
-			StreamReader reader = ReaderFactory.get().getStreamReader(in, "ccl");
-			Paragraph paragraph = reader.readParagraph();
-			Sentence sentence = paragraph.getSentences().get(0);
-			return sentence;
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			return null;
+		else {
+			try {
+				maca_writer.write(cSeq, 0, cSeq.length());
+				maca_writer.close();
+				
+				StreamReader reader = ReaderFactory.get().getStreamReader(maca_in, "ccl");
+				Paragraph paragraph = reader.readParagraph();
+				Sentence sentence = paragraph.getSentences().get(0);
+				return sentence;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return null;
+			}
 		}
 	}
 }

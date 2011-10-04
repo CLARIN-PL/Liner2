@@ -41,6 +41,8 @@ public class FeatureGenerator {
 	
 	//private static FeatureGenerator generator = null;
 	private static boolean initialized = false;
+	public static long initTime = 0;
+	private static long time = 0;
 		
 	/**
 	 * Prywatny konstruktor, aby zagwarantować singleton.
@@ -62,6 +64,8 @@ public class FeatureGenerator {
 		
 		if (FeatureGenerator.initialized)
 			return;
+		
+		long timeInitStart = System.nanoTime();
 		
 		//FeatureGenerator.features = features;
 		FeatureGenerator.path_python = LinerOptions.getOption(LinerOptions.OPTION_PYTHON);
@@ -104,6 +108,8 @@ public class FeatureGenerator {
 		FeatureGenerator.error = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 		
 		FeatureGenerator.initialized = true;
+		
+		FeatureGenerator.time += System.nanoTime() - timeInitStart;
 	}
 
 	public static void generateFeatures(ParagraphSet ps) throws Exception {
@@ -137,6 +143,8 @@ public class FeatureGenerator {
 		
 		if (!FeatureGenerator.initialized)
 			throw new Exception("generateFeatures: FeatureGenerator not initialized.");
+		
+		long timeGenerateStart = System.nanoTime();
 		
 		if (updateIndex)
 			sentence.getAttributeIndex().update(LinerOptions.get().featureNames);
@@ -200,6 +208,11 @@ public class FeatureGenerator {
 				sentence.getTokens().get(i).setAttributeValue(agr2, agr2_value);
 			}
 		}
+		
+		FeatureGenerator.time += System.nanoTime() - timeGenerateStart;
+		// przy pierwszym zdaniu
+		if (FeatureGenerator.initTime == 0)
+			FeatureGenerator.initTime = FeatureGenerator.time;
 	}
 	
 	private static String agree3attributes(int a1, int a2, int a3, Token t1, Token t2){
@@ -222,6 +235,10 @@ public class FeatureGenerator {
 			FeatureGenerator.output.flush();
 			FeatureGenerator.initialized = false;
 		}
+	}
+	
+	public static long getTime() {
+		return FeatureGenerator.time;
 	}
 	
 		
