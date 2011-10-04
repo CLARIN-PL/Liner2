@@ -111,6 +111,7 @@ public class LinerOptions {
 //	public String python = "python";
 	public ArrayList<Integer> folds = new ArrayList<Integer>();
 	public ArrayList<String> chunkersDescription = new ArrayList<String>();
+	public ArrayList<String> corpusDescriptions = new ArrayList<String>();
 	public TreeSet<String> common = new TreeSet<String>();
 	
 	/**
@@ -182,6 +183,9 @@ public class LinerOptions {
     	    	
 		if (this.features.size() > 0)
 			FeatureGenerator.initialize();
+		
+		for (String cd : this.corpusDescriptions)
+			CorpusFactory.get().parse(cd);
     	
 		this.configurationDescription = configDesc.toString();
 	}
@@ -273,7 +277,7 @@ public class LinerOptions {
 		// read corpus descriptions
 		if (line.hasOption(OPTION_CORPUS)) {
 			for (String cd : line.getOptionValues(OPTION_CORPUS)) {
-				CorpusFactory.get().parse(cd);
+				this.corpusDescriptions.add(cd);
 			}
 		}
 		
