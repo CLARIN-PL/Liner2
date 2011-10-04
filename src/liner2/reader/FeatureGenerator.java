@@ -164,6 +164,10 @@ public class FeatureGenerator {
 		
 		FeatureGenerator.input.readLine();
 		
+//		String error = null;
+//		while ( (error = FeatureGenerator.error.readLine()) != null)
+//			System.out.println("!!: " + error);
+		
 		for (Token token : sentence.getTokens()) {
 			String line = FeatureGenerator.input.readLine().trim();
 			line = line.substring(0, line.length() - 2);

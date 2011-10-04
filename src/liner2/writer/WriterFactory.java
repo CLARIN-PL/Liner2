@@ -28,7 +28,9 @@ public class WriterFactory {
 	}
 	
 	public StreamWriter getStreamWriter(OutputStream out, String outputFormat) throws Exception {
-		if (outputFormat.equals("ccl"))
+		if (outputFormat.equals("arff"))
+			return new ArffStreamWriter(out);
+		else if (outputFormat.equals("ccl"))
 			return new CclStreamWriter(out);
 		else if (outputFormat.equals("iob"))
 			return new IobStreamWriter(out);

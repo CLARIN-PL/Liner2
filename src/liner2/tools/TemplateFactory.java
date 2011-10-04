@@ -22,6 +22,10 @@ public class TemplateFactory {
 		return templateFactory;
 	}
 	
+	public Template getTemplate(String templateName) {
+		return this.templates.get(templateName);
+	}
+	
 	public Hashtable<String, Template> getTemplates() {
 		return this.templates;
 	}
@@ -45,8 +49,7 @@ public class TemplateFactory {
 			template.addFeature(featureDesc);
 			this.templates.put(templateName, template);
 		}
-	}	
-	
+	}
 	
 	public void store(String templateName, String filename, AttributeIndex attributeIndex) throws Exception {
 		if (!this.templates.containsKey(templateName))

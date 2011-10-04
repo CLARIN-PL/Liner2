@@ -18,6 +18,10 @@ public class Token {
 	/* Oznaczenie, czy między bieżącym a następnym tokenem był biały znak. */
 	boolean noSpaceAfter = false; 
 	
+	public void clearAttributes() {
+		this.attributes = new ArrayList<String>();
+	}
+	
 	/**
 	 * TODO
 	 * Zwraca wartość atrybutu o podany indeksie.
