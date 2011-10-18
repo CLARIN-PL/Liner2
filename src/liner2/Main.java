@@ -2,14 +2,14 @@ package liner2;
 
 import org.apache.commons.cli.UnrecognizedOptionException;
 
-import liner2.action.Action;
-import liner2.action.ActionBatch;
-import liner2.action.ActionConvert;
-import liner2.action.ActionEval;
-import liner2.action.ActionEvalCV;
-import liner2.action.ActionTrain;
-import liner2.action.ActionNull;
-import liner2.action.ActionPipe;
+import liner2.action.*;
+// import liner2.action.ActionBatch;
+// import liner2.action.ActionConvert;
+// import liner2.action.ActionEval;
+// import liner2.action.ActionEvalCV;
+// import liner2.action.ActionTrain;
+// import liner2.action.ActionNull;
+// import liner2.action.ActionPipe;
 import liner2.reader.FeatureGenerator;
 import liner2.tools.ParameterException;
 
@@ -99,6 +99,8 @@ public class Main {
             action = new ActionNull();
         } else if (mode.equals("convert") ) {
             action = new ActionConvert();
+        } else if (mode.equals("daemon") ) {
+            action = new ActionDaemon();
         } else if (mode.equals("pipe")) {
             action = new ActionPipe();
         } else if (mode.equals("train") ) {

@@ -68,6 +68,11 @@ public class LinerOptions {
 	public static final String OPTION_CHUNKER = "chunker";
 	public static final String OPTION_COMMON = "common";
 	public static final String OPTION_CORPUS = "corpus";
+	public static final String OPTION_DB_HOST = "db_host";
+	public static final String OPTION_DB_NAME = "db_name";
+	public static final String OPTION_DB_PASSWORD = "db_pass";
+	public static final String OPTION_DB_PORT = "db_port";
+	public static final String OPTION_DB_USER = "db_user";
 	public static final String OPTION_FEATURE = "feature";
 	public static final String OPTION_FILTER = "filter";
 	public static final String OPTION_HELP = "help";
@@ -79,6 +84,7 @@ public class LinerOptions {
 	public static final String OPTION_NERD = "nerd";
 	public static final String OPTION_OUTPUT_FILE = "t";
 	public static final String OPTION_OUTPUT_FORMAT = "o";
+	public static final String OPTION_PORT = "p";
 	public static final String OPTION_PYTHON = "python";
 	public static final String OPTION_SILENT = "silent";
 	public static final String OPTION_TEMPLATE = "template";
@@ -394,6 +400,21 @@ public class LinerOptions {
 		options.addOption(OptionBuilder.withArgName("description").hasArg()
 				.withDescription("load a specified file as a corpus")
 				.create(OPTION_CORPUS));
+		options.addOption(OptionBuilder.withArgName("name").hasArg()
+				.withDescription("database host name (daemon mode)")
+				.create(OPTION_DB_HOST));
+		options.addOption(OptionBuilder.withArgName("name").hasArg()
+				.withDescription("database name (daemon mode)")
+				.create(OPTION_DB_NAME));
+		options.addOption(OptionBuilder.withArgName("password").hasArg()
+				.withDescription("database password (daemon mode)")
+				.create(OPTION_DB_PASSWORD));
+		options.addOption(OptionBuilder.withArgName("number").hasArg()
+				.withDescription("database port number (daemon mode)")
+				.create(OPTION_DB_PORT));
+		options.addOption(OptionBuilder.withArgName("username").hasArg()
+				.withDescription("database user name (daemon mode)")
+				.create(OPTION_DB_USER));
     	options.addOption(OptionBuilder.withArgName("description").hasArg()
 				.withDescription("feature name recognized by NERD (name or name:dictionary_file)")
 				.create(OPTION_FEATURE));
@@ -426,7 +447,10 @@ public class LinerOptions {
     	options.addOption(OptionBuilder.withArgName("filename").hasArg()
 				.withDescription("path to location of nerd.py")
 				.create(OPTION_NERD));
-    	options.addOption(OptionBuilder.withArgName("filename").hasArg()
+    	options.addOption(OptionBuilder.withArgName("number").hasArg()
+				.withDescription("port to listen on (daemon mode)")
+				.create(OPTION_PORT));
+	options.addOption(OptionBuilder.withArgName("filename").hasArg()
 				.withDescription("path to location of python interpreter")
 				.create(OPTION_PYTHON));
 		options.addOption(OptionBuilder.withArgName("filename").hasArg()
@@ -469,6 +493,8 @@ public class LinerOptions {
     	System.out.println("                        Parameters: -feature, -chunker, -nerd");
     	System.out.println("  convert             - convert text from one format to another");
     	System.out.println("                        Parameteres: -i, -o, -f, -t");
+       	System.out.println("  daemon              - Listen and process requests from a given database");
+    	System.out.println("                        Parameteres: -p, -db_*, -feature, -chunker, -nerd, -use");
     	//System.out.println("  dicts <arg1>        - print dictionary statistics");
     	System.out.println("  eval                - evaluate chunker on given input");
     	System.out.println("                        Parameters: -i, -f, -feature, -chunker, -nerd");
