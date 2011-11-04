@@ -42,6 +42,7 @@ public class ActionEval extends Action{
     	long chunkerInitStart = System.nanoTime();
     	ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescription);
     	Chunker chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
+		chunker.prepare(ps);
     	long chunkerInitEnd = System.nanoTime();
     		
     	ChunkerEvaluator eval = new ChunkerEvaluator(chunker);

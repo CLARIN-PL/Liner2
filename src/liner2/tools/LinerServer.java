@@ -17,25 +17,17 @@ import java.sql.Statement;
 import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
 
-// import liner2.reader.FeatureGenerator;
 import liner2.reader.ReaderFactory;
 import liner2.reader.StreamReader;
 import liner2.writer.StreamWriter;
 import liner2.writer.WriterFactory;
 
-// import liner2.structure.AttributeIndex;
-// import liner2.structure.Chunk;
-// import liner2.structure.Chunking;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
-// import liner2.structure.Token;
 
-// import liner2.tools.ParameterException;
 import liner2.LinerOptions;
 import liner2.Main;
-
-//import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  * Server class for liner2 WebService.
@@ -86,10 +78,6 @@ public class LinerServer extends Thread {
 		while (!serverSocket.isClosed()) {
 			Socket accepted;
 			try {
-				Main.log("Sleeping...", true);
-				accepted = this.serverSocket.accept();
-				accepted.close();
-				Main.log("Woken up!", true);
 				int reqid = searchForRequests();
 				while (reqid > -1) {
 					Main.log("Processing request with id: " + reqid, false);
@@ -97,6 +85,10 @@ public class LinerServer extends Thread {
 					Main.log("Request processing completed: " + reqid, false);
 					reqid = searchForRequests();
 				}
+				Main.log("Sleeping...", true);
+				accepted = this.serverSocket.accept();
+				accepted.close();
+				Main.log("Woken up!", true);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -179,9 +171,9 @@ public class LinerServer extends Thread {
 			rawText = resultSet.getString("text");
 		else
 			return;
-				
 		ByteArrayInputStream ins = new ByteArrayInputStream(rawText.getBytes());
 		StreamReader reader = ReaderFactory.get().getStreamReader(ins, input_format);
+				
 		ByteArrayOutputStream ous = new ByteArrayOutputStream();
 		StreamWriter writer = WriterFactory.get().getStreamWriter(ous, output_format);
 		

@@ -18,6 +18,7 @@ public class ChunkerFactory {
 	private HashMap<String, Chunker> chunkers = new HashMap<String, Chunker>(); 
 	
 	private ChunkerFactory(){
+		this.items.add(new ChunkerFactoryItemAdu());
 		this.items.add(new ChunkerFactoryItemHeuristic());
 //		this.items.add(new ChunkerFactoryItemGazetteers());
 //		this.items.add(new ChunkerFactoryItemLingpipeTrain());
@@ -39,6 +40,10 @@ public class ChunkerFactory {
 		if ( ChunkerFactory.factory == null )
 			ChunkerFactory.factory = new ChunkerFactory();
 		return ChunkerFactory.factory;
+	}
+
+	public static Chunker getChunkerByName(String name) {
+		return ChunkerFactory.get().chunkers.get(name);
 	}
 	
 	/**

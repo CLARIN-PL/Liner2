@@ -31,4 +31,11 @@ public abstract class Chunker {
 	public void close(){
 		
 	}
+	
+	/**
+	 * Przygotowanie do klasyfikacji danego tekstu. Tą metodę przeciążają klasyfikatory,
+	 * które wymagają podania całego tekstu przed rozpoczęciem pracy, np. dwuprzebiegowe.
+	 */
+	public void prepare(ParagraphSet ps) {
+	}
 }
