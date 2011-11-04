@@ -42,52 +42,7 @@ public class DictionaryChunker extends Chunker
 	public Chunking chunkSentence(Sentence sentence) {
 		//System.out.println("chunkSentence");
 		Chunking chunking = new Chunking(sentence);
-		
-		// pobierz zapis wszystkich tokenów
-		ArrayList<String> tokenOrths = new ArrayList<String>();
 		ArrayList<Token> tokens = sentence.getTokens();
-		for (Token token : tokens)
-			tokenOrths.add(token.getFirstValue());
-			
-		// pomocnicza tablica, które tokeny należą już do jakiegoś chunka
-//		boolean[] marked = new boolean [sentence.getTokenNumber()];
-//		for (int i = 0; i < sentence.getTokenNumber(); i++)
-//			marked[i] = false;
-			
-		// STARY KOD - nieoptymalny, ale działa - zostawiam na wszelki wypadek
-		// nie sprawdzać pozycji, które są już ochunkowane!
-		// iteruj po wszystkich n-gramach w zdaniu
-//		for (int n = sentence.getTokenNumber(); n > 0; n--) {
-//			// po wszystkich pozycjach startowych
-//			for (int i = 0; i < sentence.getTokenNumber() - n + 1; i++) {
-//				boolean isMarked = false;
-//				StringBuilder nGram = new StringBuilder();
-//				// po wszystkich słowach należących do n-gramu
-//				for (int j = i; j < i + n; j++) {
-//					if (marked[j]) {
-//						isMarked = true;
-//						break;
-//					}
-//					nGram.append(" " + tokenOrths.get(j));
-//				}
-//				if (isMarked)
-//					continue;
-//				String nGramFinal = nGram.toString().trim();
-//				if (this.dictionary.containsKey(nGramFinal)) {
-//					// odrzuć, jeśli base jest nazwą pospolitą
-//					if ((n == 1) && (this.commons.contains(sentence.getAttributeIndex()
-//						.getAttributeValue(tokens.get(i), "base")))) {
-//						continue;
-//					}
-//					
-//					chunking.addChunk(new Chunk(i, i + n - 1, 	
-//						this.dictionary.get(nGramFinal).toUpperCase(), sentence));
-//					for (int j = i; j < i + n; j++)
-//						marked[j] = true;
-//				}
-//			}
-//		}
-		
 		int sentenceLength = sentence.getTokenNumber();
 		
 		// [długość] -> początek => n-gram
