@@ -4,6 +4,8 @@ import liner2.structure.AttributeIndex;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 
+import liner2.tools.DataFormatException;
+
 import liner2.Main;
 
 /**
@@ -14,31 +16,13 @@ import liner2.Main;
 public abstract class StreamReader {
 
 	protected abstract AttributeIndex getAttributeIndex();
-	protected abstract Paragraph readRawParagraph();
-	public abstract void close();
-	public abstract boolean paragraphReady();
+	protected abstract Paragraph readRawParagraph() throws DataFormatException;
+	public abstract void close() throws DataFormatException;
+	public abstract boolean paragraphReady() throws DataFormatException;
 		
-	public Paragraph readParagraph(){
-//		Paragraph p = this.readRawParagraph();
-//		if (p == null)
-//			return null;
-//		if (FeatureGenerator.isInitialized()) {
-//			try {
-//				FeatureGenerator.generateFeatures(p, true);
-//			} catch (Exception ex) {
-//				ex.printStackTrace();
-//			}
-//		}
-//		return p;
+	public Paragraph readParagraph() throws DataFormatException {
 		if (paragraphReady()) {
 			Paragraph p = this.readRawParagraph();
-			
-			// initialize attributes index
-//			AttributeIndex attributeIndex = new AttributeIndex();
-//			attributeIndex.addAttribute("orth");
-//			attributeIndex.addAttribute("base");
-//			attributeIndex.addAttribute("ctag");
-//			p.setAttributeIndex(this.getAttributeIndex());
 			
 			if (FeatureGenerator.isInitialized()) {
 				try {
@@ -57,29 +41,13 @@ public abstract class StreamReader {
 	 * TODO
 	 * @return
 	 */
-	public ParagraphSet readParagraphSet(){
+	public ParagraphSet readParagraphSet() throws DataFormatException {
 		ParagraphSet paragraphSet = new ParagraphSet();
 					
-		// initialize attributes index
-//		AttributeIndex attributeIndex = new AttributeIndex();
-//		attributeIndex.addAttribute("orth");
-//		attributeIndex.addAttribute("base");
-//		attributeIndex.addAttribute("ctag");
-//		paragraphSet.setAttributeIndex(attributeIndex);
-
 		while (paragraphReady())
 			paragraphSet.addParagraph(readRawParagraph());
 		paragraphSet.setAttributeIndex(this.getAttributeIndex());
 		
-//		Paragraph p = null;
-//		while (true) {
-//			p = readRawParagraph();
-//			if (p != null){
-//				p.setAttributeIndex(attributeIndex);
-//				paragraphSet.addParagraph(p);
-//			}else
-//				break;
-//		}
 		if (FeatureGenerator.isInitialized()) {
 			try {
 				FeatureGenerator.generateFeatures(paragraphSet);

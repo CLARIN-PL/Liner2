@@ -159,41 +159,51 @@ public class LinerServer extends Thread {
 			rawText = resultSet.getString("text");
 		else
 			return;
-		ByteArrayInputStream ins = new ByteArrayInputStream(rawText.getBytes());
-		StreamReader reader = ReaderFactory.get().getStreamReader(ins, input_format);
-				
-		ByteArrayOutputStream ous = new ByteArrayOutputStream();
-		StreamWriter writer = WriterFactory.get().getStreamWriter(ous, output_format);
 		
-		// process text
-		ParagraphSet ps = reader.readParagraphSet();
-		for (Paragraph p : ps.getParagraphs())
-			for (Sentence s : p.getSentences())
-				this.chunker.chunkSentenceInPlace(s);
-		writer.writeParagraphSet(ps);
+		try {
+			ByteArrayInputStream ins = new ByteArrayInputStream(rawText.getBytes());
+			StreamReader reader = ReaderFactory.get().getStreamReader(ins, input_format);
+					
+			ByteArrayOutputStream ous = new ByteArrayOutputStream();
+			StreamWriter writer = WriterFactory.get().getStreamWriter(ous, output_format);
 
-		// calculate stats
-		int numTokens = 0, numSentences = 0, numParagraphs = 0, numChunks = 0;
-		for (Paragraph p : ps.getParagraphs()) {
-			numParagraphs++;
-			for (Sentence s : p.getSentences()) {
-				numSentences++;
-				numTokens += s.getTokenNumber();
-				numChunks += s.getChunks().size();
+			// process text
+			ParagraphSet ps = reader.readParagraphSet();
+			for (Paragraph p : ps.getParagraphs())
+				for (Sentence s : p.getSentences())
+					this.chunker.chunkSentenceInPlace(s);
+			writer.writeParagraphSet(ps);
+
+			// calculate stats
+			int numTokens = 0, numSentences = 0, numParagraphs = 0, numChunks = 0;
+			for (Paragraph p : ps.getParagraphs()) {
+				numParagraphs++;
+					for (Sentence s : p.getSentences()) {
+						numSentences++;
+					numTokens += s.getTokenNumber();
+					numChunks += s.getChunks().size();
+				}
 			}
-		}
 		
-		// write results to the database
-		rawText = ous.toString();
-		PreparedStatement preparedStatement = this.db_connection.prepareStatement(
-			"CALL submit_result(?, ?, ?, ?, ?, ?);");
-		preparedStatement.setInt(1, requestId);
-		preparedStatement.setString(2, rawText);
-		preparedStatement.setInt(3, numTokens);
-		preparedStatement.setInt(4, numSentences);
-		preparedStatement.setInt(5, numParagraphs);
-		preparedStatement.setInt(6, numChunks);
-		preparedStatement.executeUpdate();
+			// write results to the database
+			rawText = ous.toString();
+			PreparedStatement preparedStatement = this.db_connection.prepareStatement(
+				"CALL submit_result(?, ?, ?, ?, ?, ?);");
+			preparedStatement.setInt(1, requestId);
+			preparedStatement.setString(2, rawText);
+			preparedStatement.setInt(3, numTokens);
+			preparedStatement.setInt(4, numSentences);
+			preparedStatement.setInt(5, numParagraphs);
+			preparedStatement.setInt(6, numChunks);
+			preparedStatement.executeUpdate();
+		} catch (DataFormatException ex) {
+			Main.log("Caught exception! " + ex.getMessage());
+			PreparedStatement preparedStatement = this.db_connection.prepareStatement(
+				"CALL submit_error(?, ?);");
+			preparedStatement.setInt(1, requestId);
+			preparedStatement.setString(2, ex.getMessage());
+			preparedStatement.executeUpdate();
+		}
     }
     
     private int searchForRequests() throws SQLException {

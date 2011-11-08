@@ -12,6 +12,8 @@ import liner2.structure.Sentence;
 import liner2.structure.Tag;
 import liner2.structure.Token;
 
+import liner2.tools.DataFormatException;
+
 public class IobStreamReader extends StreamReader {
 	
 	private BufferedReader ir;
@@ -50,16 +52,16 @@ public class IobStreamReader extends StreamReader {
 	}
 	
 	@Override
-	public void close() {
+	public void close() throws DataFormatException {
 		try {
 			ir.close();
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			throw new DataFormatException("Failed to close input stream.");
 		}
 	}
 
 	@Override
-	public boolean paragraphReady() {
+	public boolean paragraphReady() throws DataFormatException {
 		if (!this.init)
 			init();
 		if (this.nextParagraph)
@@ -96,20 +98,9 @@ public class IobStreamReader extends StreamReader {
 	}
 
 	@Override
-	protected Paragraph readRawParagraph() {
-//		if (nextParagraphId == null)
-//			readParagraphHeader();
-//		if (nextParagraphId == null)
-//			return null;
-
+	protected Paragraph readRawParagraph() throws DataFormatException {
 		if (!paragraphReady())
 			return null;
-			
-		// initialize attributes index
-//		AttributeIndex attributeIndex = new AttributeIndex();
-//		attributeIndex.addAttribute("orth");
-//		attributeIndex.addAttribute("base");
-//		attributeIndex.addAttribute("ctag");
 			
 		Paragraph paragraph = new Paragraph(nextParagraphId);
 		paragraph.setAttributeIndex(this.attributeIndex);
@@ -122,20 +113,17 @@ public class IobStreamReader extends StreamReader {
 			String line = null;
 			try {
 				if (!ir.ready()) {
-					if (currentSentence.getTokenNumber() > 0) {
-//						currentSentence.setAttributeIndex(this.attributeIndex);
+					if (currentSentence.getTokenNumber() > 0)
 						paragraph.addSentence(currentSentence);
-					}
 					return paragraph;
 				}		
 				line = ir.readLine();
 			} catch (IOException ex) {
-				ex.printStackTrace();
+				throw new DataFormatException("I/O error while reading paragraph.");
 			}
 			
 			if (line.trim().isEmpty()) {
 				if (currentSentence.getTokenNumber() > 0) {
-//					currentSentence.setAttributeIndex(this.attributeIndex);
 					paragraph.addSentence(currentSentence);
 					currentSentence = new Sentence();
 				}
@@ -152,19 +140,12 @@ public class IobStreamReader extends StreamReader {
 					else
 						continue;
 				}
-//				if ((words[0].equals("-DOCSTART")) &&
-//					(words[1].equals("FILE"))) {
-//					if (words.length >= 3)
-//						this.nextParagraphId = words[2];
-//					this.nextParagraph = true;
-//					return paragraph;
-//				}
 				else {
 					// add token
 					try {
 						currentSentence.addToken(createToken(words));
 					} catch (Exception ex) {
-						ex.printStackTrace();
+						throw new DataFormatException("Error while reading token: " + ex.getMessage());
 					}
 					
 					// add or update chunk if I/B tag present
@@ -181,46 +162,10 @@ public class IobStreamReader extends StreamReader {
 							currentChunk.setEnd(idx);
 						}
 					}
-//					currentSentence.addToken(createToken(words));
-//					if (words.length > 3) {
-//						if (words[3].startsWith("B")) {
-//							int idx = currentSentence.getTokenNumber()-1;
-//							currentChunk = new Chunk(idx, idx, words[3].substring(2), currentSentence);
-//							currentSentence.addChunk(currentChunk);
-//						}
-//						else if (words[3].startsWith("I")) {
-//							if (currentChunk != null) {
-//								int idx = currentSentence.getTokenNumber()-1;
-//								currentChunk.setEnd(idx);
-//							}
-//						}
-//					}
 				}
 			}
 		}
 	}
-	
-//	private void readParagraphHeader() {
-//		while (true) {
-//			String line = null;
-//			try {
-//				if (!ir.ready()) {
-//					nextParagraphId = null;
-//					return;
-//				}
-//				line = ir.readLine();
-//			} catch (IOException ex) {
-//				ex.printStackTrace();
-//			}
-//			
-//			String[] words = line.trim().split(" ");
-//			if ((words[0].equals("-DOCSTART")) &&
-//				(words[1].equals("FILE"))) {
-//				nextParagraphId = words[2];
-//				return;
-//			}
-//		}
-//	}
 	
 	private Token createToken(String[] words) throws Exception {
 		Token token = new Token();
@@ -233,8 +178,6 @@ public class IobStreamReader extends StreamReader {
 			String ctag = this.attributeIndex.getAttributeValue(token, "ctag");
 			token.addTag(new Tag(base, ctag, false));
 		}
-//		token.setAttributeValue(0, words[0]);
-//		token.addTag(new Tag(words[1], words[2], false));
 		return token;
 	}
 }
