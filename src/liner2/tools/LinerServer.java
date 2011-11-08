@@ -36,63 +36,60 @@ import liner2.Main;
  */
 public class LinerServer extends Thread {
 	ShutdownThread shutdownThread = new ShutdownThread(this);
+	String db_host, db_port, db_user, db_pass, db_name;
 	Connection db_connection;
 	Chunker chunker;
 	String myId;
 	ServerSocket serverSocket;
 	int port = 0;
+
+	public LinerServer() {
+		this.db_host = LinerOptions.getOption(LinerOptions.OPTION_DB_HOST);
+		this.db_port = LinerOptions.getOption(LinerOptions.OPTION_DB_PORT);
+		this.db_user = LinerOptions.getOption(LinerOptions.OPTION_DB_USER);
+		this.db_pass = LinerOptions.getOption(LinerOptions.OPTION_DB_PASSWORD);
+		this.db_name = LinerOptions.getOption(LinerOptions.OPTION_DB_NAME);
+	}
 	
 	@Override
     public void run() {
-    	try {
-    		ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescription);
-    		this.chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
-    	} catch (Exception ex) {
-    		ex.printStackTrace();
-    	}
+		try {
+		ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescription);
+		this.chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
     
     	Runtime.getRuntime().addShutdownHook(this.shutdownThread);
     	this.port = Integer.parseInt(LinerOptions.getOption(LinerOptions.OPTION_PORT));
     
-    	// connect to the database
-    	String db_host = LinerOptions.getOption(LinerOptions.OPTION_DB_HOST);
-    	String db_port = LinerOptions.getOption(LinerOptions.OPTION_DB_PORT);
-    	String db_user = LinerOptions.getOption(LinerOptions.OPTION_DB_USER);
-    	String db_pass = LinerOptions.getOption(LinerOptions.OPTION_DB_PASSWORD);
-    	String db_name = LinerOptions.getOption(LinerOptions.OPTION_DB_NAME);
-    	Main.log("Connecting to database... ", false);
-    	try {
-    		connect(db_host, db_port, db_user, db_pass, db_name);
-    	} catch (Exception ex) {
-    		ex.printStackTrace();
-    	}
-    	Main.log("Done.", true);
+    	// register daemon
+		connect();
+		this.myId = InetAddress.getLocalHost().getHostName() + ":" + this.port;
+		Main.log("My ID: " + this.myId, true);
+		Main.log("Registering daemon...", false);
+		Statement statement = this.db_connection.createStatement();
+		statement.executeQuery(String.format("CALL register_daemon(\"%s\")", this.myId));
+		disconnect();
+
     	
 		Main.log("Listening on port: " + port, false);
-		try {
-			this.serverSocket = new ServerSocket(this.port);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		this.serverSocket = new ServerSocket(this.port);
 				
 		while (!serverSocket.isClosed()) {
 			Socket accepted;
-			try {
-				int reqid = searchForRequests();
-				while (reqid > -1) {
-					Main.log("Processing request with id: " + reqid, false);
-					processRequest(reqid);
-					Main.log("Request processing completed: " + reqid, false);
-					reqid = searchForRequests();
-				}
-				Main.log("Sleeping...", true);
-				accepted = this.serverSocket.accept();
-				accepted.close();
-				Main.log("Woken up!", true);
-			} catch (Exception ex) {
-				ex.printStackTrace();
+			connect();
+			int reqid = searchForRequests();
+			while (reqid > -1) {
+				Main.log("Processing request with id: " + reqid, false);
+				processRequest(reqid);
+				Main.log("Request processing completed: " + reqid, false);
+				reqid = searchForRequests();
 			}
+			Main.log("Sleeping...", true);
+			disconnect();
+			accepted = this.serverSocket.accept();
+			accepted.close();
+			Main.log("Woken up!", true);
 		}
+		} catch (Exception ex) { ex.printStackTrace(); }
     }
     
     public void shutdown() {
@@ -113,42 +110,33 @@ public class LinerServer extends Thread {
 			}
 		}
 		
-		if (this.db_connection != null) {
-			try {
-				// remove my ID from the database
-				Main.log("Unregistering daemon...", false);
-				Statement statement = this.db_connection.createStatement();
-				statement.executeQuery(String.format("CALL unregister_daemon(\"%s\")",
-					this.myId));
-				// close database connection
-				Main.log("Closing database connection...", false);
-				this.db_connection.close();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
+		try {
+			if (this.db_connection.isClosed())
+				connect();
+			// remove my ID from the database
+			Main.log("Unregistering daemon...", false);
+			Statement statement = this.db_connection.createStatement();
+			statement.executeQuery(String.format("CALL unregister_daemon(\"%s\")",
+				this.myId));
+			// close database connection
+			disconnect();
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 		Main.log("Done.", true);
     }
 
-    public void connect(String host, String port, String user, String pass, String name)
-    	throws SQLException, ClassNotFoundException {
+    public void connect() throws SQLException, ClassNotFoundException {
     	Class.forName("com.mysql.jdbc.Driver");
-		String addr = "jdbc:mysql://" + host + "/" + name + "?user=" + user + "&password=" + pass +
+		String addr = "jdbc:mysql://" + this.db_host + "/" + this.db_name + 
+			"?user=" + this.db_user + "&password=" + this.db_pass +
 			"&useUnicode=true&characterEncoding=UTF-8";
 		this.db_connection = DriverManager.getConnection(addr);
-		try {
-			this.myId = InetAddress.getLocalHost().getHostName() + ":" + this.port;
-			Main.log("My ID: " + this.myId, true);
-			
-			// write my id to the database
-			Main.log("Registering daemon...", false);
-			Statement statement = this.db_connection.createStatement();
-			statement.executeQuery(String.format("CALL register_daemon(\"%s\")", this.myId));
-		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
     }
+
+	public void disconnect() throws SQLException {
+		this.db_connection.close();
+	}
     
     private void processRequest(int requestId) throws SQLException, Exception {
     	Statement statement = this.db_connection.createStatement();
@@ -183,12 +171,28 @@ public class LinerServer extends Thread {
 			for (Sentence s : p.getSentences())
 				this.chunker.chunkSentenceInPlace(s);
 		writer.writeParagraphSet(ps);
+
+		// calculate stats
+		int numTokens = 0, numSentences = 0, numParagraphs = 0, numChunks = 0;
+		for (Paragraph p : ps.getParagraphs()) {
+			numParagraphs++;
+			for (Sentence s : p.getSentences()) {
+				numSentences++;
+				numTokens += s.getTokenNumber();
+				numChunks += s.getChunks().size();
+			}
+		}
 		
 		// write results to the database
 		rawText = ous.toString();
-		PreparedStatement preparedStatement = this.db_connection.prepareStatement("CALL submit_result(?, ?);");
+		PreparedStatement preparedStatement = this.db_connection.prepareStatement(
+			"CALL submit_result(?, ?, ?, ?, ?, ?);");
 		preparedStatement.setInt(1, requestId);
 		preparedStatement.setString(2, rawText);
+		preparedStatement.setInt(3, numTokens);
+		preparedStatement.setInt(4, numSentences);
+		preparedStatement.setInt(5, numParagraphs);
+		preparedStatement.setInt(6, numChunks);
 		preparedStatement.executeUpdate();
     }
     
