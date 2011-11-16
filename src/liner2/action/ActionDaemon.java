@@ -1,6 +1,6 @@
 package liner2.action;
 
-import liner2.tools.LinerServer;
+import liner2.daemon.LinerDaemon;
 import liner2.LinerOptions;
 import liner2.Main;
 
@@ -12,7 +12,7 @@ import liner2.Main;
 public class ActionDaemon extends Action{
 	public void run() {
 		try {
-			new LinerServer().run();
+			new LinerDaemon().run();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

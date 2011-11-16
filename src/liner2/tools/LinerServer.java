@@ -17,6 +17,8 @@ import java.sql.Statement;
 import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
 
+import liner2.daemon.WorkingThread;
+
 import liner2.reader.ReaderFactory;
 import liner2.reader.StreamReader;
 import liner2.writer.StreamWriter;
@@ -35,13 +37,14 @@ import liner2.Main;
  *
  */
 public class LinerServer extends Thread {
-	ShutdownThread shutdownThread = new ShutdownThread(this);
 	String db_host, db_port, db_user, db_pass, db_name;
 	Connection db_connection;
 	Chunker chunker;
 	String myId;
 	ServerSocket serverSocket;
 	int port = 0;
+	boolean working;
+	WorkingThread workingThread = null;
 
 	public LinerServer() {
 		this.db_host = LinerOptions.getOption(LinerOptions.OPTION_DB_HOST);
@@ -57,7 +60,8 @@ public class LinerServer extends Thread {
 		ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescription);
 		this.chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
     
-    	Runtime.getRuntime().addShutdownHook(this.shutdownThread);
+    	Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() { shutdown(); }});
     	this.port = Integer.parseInt(LinerOptions.getOption(LinerOptions.OPTION_PORT));
     
     	// register daemon
@@ -72,28 +76,50 @@ public class LinerServer extends Thread {
     	
 		Main.log("Listening on port: " + port, false);
 		this.serverSocket = new ServerSocket(this.port);
+		this.working = false;
 				
 		while (!serverSocket.isClosed()) {
-			Socket accepted;
-			connect();
-			int reqid = searchForRequests();
-			while (reqid > -1) {
-				Main.log("Processing request with id: " + reqid, false);
-				processRequest(reqid);
-				Main.log("Request processing completed: " + reqid, false);
-				reqid = searchForRequests();
-			}
 			Main.log("Sleeping...", true);
-			disconnect();
-			accepted = this.serverSocket.accept();
+			Socket accepted = this.serverSocket.accept();
 			accepted.close();
-			Main.log("Woken up!", true);
+			Main.log("Received PING!", true);
+
+			// if not working -- start work in a new thread
+			if (!this.working) {
+				//this.workingThread = new WorkingThread();
+				//this.workingThread.run();
+			}
 		}
 		} catch (Exception ex) { ex.printStackTrace(); }
     }
     
-    public void shutdown() {
+	private void work() {
+		try {
+		this.working = true;
+		connect();
+		Statement statement = this.db_connection.createStatement();
+		statement.executeQuery(String.format("CALL daemon_not_ready(\"%s\");", this.myId));			
+
+		int reqid = searchForRequests();
+		while (reqid > -1) {
+			Main.log("Processing request with id: " + reqid, false);
+			processRequest(reqid);
+			Main.log("Request processing completed: " + reqid, false);
+			reqid = searchForRequests();
+		}
+			
+		statement = this.db_connection.createStatement();
+		statement.executeQuery("UNLOCK TABLES;");
+		statement.executeQuery(String.format("CALL daemon_ready(\"%s\");", this.myId));			
+			
+		disconnect();
+		this.working = false;
+		} catch (Exception ex) { ex.printStackTrace(); }
+	}
+
+    private void shutdown() {
     	try {
+			this.workingThread.interrupt();
     		this.interrupt();
     	} catch (Exception ex) {
     		ex.printStackTrace();
@@ -116,6 +142,7 @@ public class LinerServer extends Thread {
 			// remove my ID from the database
 			Main.log("Unregistering daemon...", false);
 			Statement statement = this.db_connection.createStatement();
+			statement.executeQuery("UNLOCK TABLES;");
 			statement.executeQuery(String.format("CALL unregister_daemon(\"%s\")",
 				this.myId));
 			// close database connection
@@ -126,7 +153,7 @@ public class LinerServer extends Thread {
 		Main.log("Done.", true);
     }
 
-    public void connect() throws SQLException, ClassNotFoundException {
+    private void connect() throws SQLException, ClassNotFoundException {
     	Class.forName("com.mysql.jdbc.Driver");
 		String addr = "jdbc:mysql://" + this.db_host + "/" + this.db_name + 
 			"?user=" + this.db_user + "&password=" + this.db_pass +
@@ -134,13 +161,14 @@ public class LinerServer extends Thread {
 		this.db_connection = DriverManager.getConnection(addr);
     }
 
-	public void disconnect() throws SQLException {
+	private void disconnect() throws SQLException {
 		this.db_connection.close();
 	}
     
     private void processRequest(int requestId) throws SQLException, Exception {
     	Statement statement = this.db_connection.createStatement();
 		statement.executeQuery(String.format("CALL start_processing(%d);", requestId));
+		statement.executeQuery("UNLOCK TABLES;");
 		
 		ResultSet resultSet = statement.executeQuery(String.format(
 			"SELECT input_format, output_format FROM liner2_requests WHERE request_id = %d",
@@ -196,7 +224,7 @@ public class LinerServer extends Thread {
 			preparedStatement.setInt(5, numParagraphs);
 			preparedStatement.setInt(6, numChunks);
 			preparedStatement.executeUpdate();
-		} catch (DataFormatException ex) {
+		} catch (Exception ex) {
 			Main.log("Caught exception! " + ex.getMessage());
 			PreparedStatement preparedStatement = this.db_connection.prepareStatement(
 				"CALL submit_error(?, ?);");
@@ -208,23 +236,17 @@ public class LinerServer extends Thread {
     
     private int searchForRequests() throws SQLException {
     	Statement statement = this.db_connection.createStatement();
+		
+		long t1 = System.nanoTime();
+		statement.executeQuery("LOCK TABLES liner2_requests AS write_liner2_requests WRITE, "
+			+ "liner2_requests AS read_liner2_requests READ;");
+		float waiting_time = (float)(System.nanoTime() - t1) / 1000000000;
+		Main.log(String.format("Locked tables; waiting time: %.2f", waiting_time), false);
     	ResultSet resultSet = statement.executeQuery(
-    		"SELECT request_id FROM liner2_requests WHERE state =\'QUEUED\' LIMIT 1");
+    		"SELECT request_id FROM liner2_requests AS read_liner2_requests WHERE state =\'QUEUED\' LIMIT 1");
     	if (resultSet.next())
     		return resultSet.getInt("request_id");
     	else
     		return -1;
     }
-	
-	class ShutdownThread extends Thread {
-		LinerServer linerServer;
-	
-		public ShutdownThread(LinerServer linerServer) {
-			this.linerServer = linerServer;
-		}
-	
-		public void run() {
-			this.linerServer.shutdown();
-		}
-	}
 }	
