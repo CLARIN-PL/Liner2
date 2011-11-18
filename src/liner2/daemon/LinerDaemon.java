@@ -98,12 +98,28 @@ public class LinerDaemon extends Thread {
 	}
 
 	public void sleep() {
+		try {
+			this.db.connect();
+			this.db.daemonReady(this.myId);
+			this.db.disconnect();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
 		Main.log("Sleeping...", false);
 		this.working = false;
 		this.workingThread = null;
 	}
 
 	public void work() {
+		try {
+			this.db.connect();
+			this.db.daemonNotReady(this.myId);
+			this.db.disconnect();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
 		Main.log("Woke up and working.", false);
 		this.working = true;
 		this.workingThread = new WorkingThread(this, this.chunker, this.db_addr);

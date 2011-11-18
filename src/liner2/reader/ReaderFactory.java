@@ -34,6 +34,8 @@ public class ReaderFactory {
 			return new CclStreamReader(in);
 		else if (inputFormat.equals("iob"))
 			return new IobStreamReader(in);
+		else if (inputFormat.equals("plain"))
+			return new PlainTextStreamReader(in);
 		else
 			throw new Exception("Input format " + inputFormat + " not recognized.");
 	}

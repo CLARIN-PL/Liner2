@@ -15,6 +15,8 @@ import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
 
+import liner2.Main;
+
 public class WorkingThread extends Thread {
 	LinerDaemon daemon;
 	Chunker chunker;
@@ -32,6 +34,7 @@ public class WorkingThread extends Thread {
 
 		try {
 			this.db.connect();
+			Main.log("Searching for work...", true);
 			request = db.getNextRequest();
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -51,6 +54,7 @@ public class WorkingThread extends Thread {
 			}
 			
 			try {
+				Main.log("Searching for work...", true);
 				request = db.getNextRequest();
 			} catch (SQLException ex) {
 				ex.printStackTrace();
@@ -72,6 +76,8 @@ public class WorkingThread extends Thread {
 	//}
 
 	private void processRequest(Request request) throws Exception {
+		Main.log("Processing request with id: " + request.getId(), false);		
+
 		ByteArrayInputStream ins = new ByteArrayInputStream(request.getText().getBytes());
 		StreamReader reader = ReaderFactory.get().getStreamReader(ins, request.getInputFormat());
 					
@@ -96,6 +102,8 @@ public class WorkingThread extends Thread {
 		// save results
 		request.setStats(numTokens, numSentences, numParagraphs, numChunks);
 		request.setText(ous.toString());
+
+		Main.log("Request processing completed: " + request.getId(), false);
 	}
 }
 

@@ -37,17 +37,23 @@ public class Database {
 	}
 	
 	public void registerDaemon(String id) throws SQLException {
-		// if (!this.connected)
-		//	connect();
 		Statement statement = this.connection.createStatement();
 		statement.executeQuery(String.format("CALL register_daemon(\"%s\");", id));
 	}
 
 	public void unregisterDaemon(String id) throws SQLException {
-		// if (!this.connected)
-		//	connect();
 		Statement statement = this.connection.createStatement();
 		statement.executeQuery(String.format("CALL unregister_daemon(\"%s\");", id));
+	}
+
+	public void daemonNotReady(String id) throws SQLException {
+		Statement statement = this.connection.createStatement();
+		statement.executeQuery(String.format("CALL daemon_not_ready(\"%s\");", id));
+	}
+
+	public void daemonReady(String id) throws SQLException {
+		Statement statement = this.connection.createStatement();
+		statement.executeQuery(String.format("CALL daemon_ready(\"%s\");", id));
 	}
 
 	public Request getNextRequest() throws SQLException {
