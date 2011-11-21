@@ -1,5 +1,7 @@
 package liner2.structure;
 
+import java.util.ArrayList;
+
 /**
  * Klasa reprezentuje anotację jako ciągłą sekwencję tokenów w zdaniu.
  * @author czuk
@@ -63,12 +65,19 @@ public class Chunk {
 	}
 	
 	/**
-	 * TODO
-	 * Zwraca treść chunku, jako konkatenaję wartości pierwszych atryutów.
+	 * Zwraca treść chunku, jako konkatenację wartości pierwszych atrybutów.
 	 * @return
 	 */
 	public String getText(){
-		throw new Error("Not implemented");
+		ArrayList<Token> tokens = this.sentence.getTokens();
+		StringBuilder text = new StringBuilder();
+		for (int i = this.begin; i <= this.end; i++) {
+			Token token = tokens.get(i);
+			text.append(token.getFirstValue());
+			if ((!token.getNoSpaceAfter()) && (i < this.end))
+				text.append(" ");
+		}
+		return text.toString();
 	}
 	
 	public void setEnd(int end) {

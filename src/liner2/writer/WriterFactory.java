@@ -34,6 +34,8 @@ public class WriterFactory {
 			return new CclStreamWriter(out);
 		else if (outputFormat.equals("iob"))
 			return new IobStreamWriter(out);
+		else if (outputFormat.equals("tuples"))
+			return new TuplesStreamWriter(out);
 		else		
 			throw new Exception("Output format " + outputFormat + " not recognized.");
 	}
