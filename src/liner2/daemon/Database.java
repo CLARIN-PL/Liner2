@@ -36,27 +36,34 @@ public class Database {
 		this.connection.close();
 	}
 	
-	public void registerDaemon(String id) throws SQLException {
+	public int registerDaemon(String address) throws SQLException {
 		Statement statement = this.connection.createStatement();
-		statement.executeQuery(String.format("CALL register_daemon(\"%s\");", id));
+		ResultSet resultSet = statement.executeQuery(String.format("CALL register_daemon(\"%s\");", address));
+		if (resultSet.next())
+			return resultSet.getInt("LAST_INSERT_ID()");
+		else
+			return -1;
 	}
 
-	public void unregisterDaemon(String id) throws SQLException {
+	public void unregisterDaemon(int id) throws SQLException {
 		Statement statement = this.connection.createStatement();
-		statement.executeQuery(String.format("CALL unregister_daemon(\"%s\");", id));
+		statement.executeQuery(String.format("CALL unregister_daemon(%d);", id));
 	}
 
-	public void daemonNotReady(String id) throws SQLException {
+	public void daemonNotReady(int id) throws SQLException {
 		Statement statement = this.connection.createStatement();
-		statement.executeQuery(String.format("CALL daemon_not_ready(\"%s\");", id));
+		statement.executeQuery("LOCK TABLES liner2_daemons AS read_liner2_daemons READ, " +
+			"liner2_daemons WRITE;");
+		statement.executeQuery(String.format("CALL daemon_not_ready(%d);", id));
+		statement.executeQuery("UNLOCK TABLES;");
 	}
 
-	public void daemonReady(String id) throws SQLException {
+	public void daemonReady(int id) throws SQLException {
 		Statement statement = this.connection.createStatement();
-		statement.executeQuery(String.format("CALL daemon_ready(\"%s\");", id));
+		statement.executeQuery(String.format("CALL daemon_ready(%d);", id));
 	}
 
-	public Request getNextRequest() throws SQLException {
+	public Request getNextRequest(int daemonId) throws SQLException {
 		Statement statement = this.connection.createStatement();
 		statement.executeQuery("LOCK TABLES liner2_requests AS write_liner2_requests WRITE, "
 			+ "liner2_requests AS read_liner2_requests READ;");
@@ -68,7 +75,7 @@ public class Database {
     	else
     		return null;
 
-		statement.executeQuery(String.format("CALL start_processing(%d);", requestId));
+		statement.executeQuery(String.format("CALL start_processing(%d, %d);", requestId, daemonId));
 		statement.executeQuery("UNLOCK TABLES;");
 		
 		// TODO niepotrzebnie kolejne zapytanie

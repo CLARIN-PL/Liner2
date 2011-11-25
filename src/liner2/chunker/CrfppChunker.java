@@ -46,7 +46,7 @@ public class CrfppChunker extends Chunker
      */
 
 	@Override
-	public Chunking chunkSentence(Sentence sentence){
+	public synchronized Chunking chunkSentence(Sentence sentence){
 		this.sendDataToTagger(sentence);
 		return this.readTaggerOutput(sentence);
 	}
