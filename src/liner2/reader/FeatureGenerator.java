@@ -59,7 +59,7 @@ public class FeatureGenerator {
 	 * Funkcja inicjalizuje generator.
 	 * @param features
 	 */
-	public static void initialize() throws IOException {
+	public synchronized static void initialize() throws IOException {
 		//this.generator = new FeatureGenerator(features, path_python, path_nerd);
 		
 		if (FeatureGenerator.initialized)
@@ -139,7 +139,7 @@ public class FeatureGenerator {
 	 * Funkcja generuje cechy i wstawia je do tablic cech tokenów.  
 	 * @param sentence
 	 */
-	public static void generateFeatures(Sentence sentence, boolean updateIndex) throws Exception {
+	public synchronized static void generateFeatures(Sentence sentence, boolean updateIndex) throws Exception {
 		
 		if (!FeatureGenerator.initialized)
 			throw new Exception("generateFeatures: FeatureGenerator not initialized.");

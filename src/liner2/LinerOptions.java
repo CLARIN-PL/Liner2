@@ -73,6 +73,7 @@ public class LinerOptions {
 	public static final String OPTION_DB_PASSWORD = "db_pass";
 	public static final String OPTION_DB_PORT = "db_port";
 	public static final String OPTION_DB_USER = "db_user";
+	public static final String OPTION_DB_URI = "db_uri";
 	public static final String OPTION_FEATURE = "feature";
 	public static final String OPTION_FILTER = "filter";
 	public static final String OPTION_HELP = "help";
@@ -81,6 +82,7 @@ public class LinerOptions {
 	public static final String OPTION_INPUT_FILE = "f";
 	public static final String OPTION_INPUT_FORMAT = "i";
 	public static final String OPTION_MACA = "maca";
+	public static final String OPTION_MAX_THREADS = "max_threads";
 	public static final String OPTION_NERD = "nerd";
 	public static final String OPTION_OUTPUT_FILE = "t";
 	public static final String OPTION_OUTPUT_FORMAT = "o";
@@ -412,6 +414,9 @@ public class LinerOptions {
 		options.addOption(OptionBuilder.withArgName("number").hasArg()
 				.withDescription("database port number (daemon mode)")
 				.create(OPTION_DB_PORT));
+		options.addOption(OptionBuilder.withArgName("address").hasArg()
+				.withDescription("database URI address (daemon mode)")
+				.create(OPTION_DB_URI));
 		options.addOption(OptionBuilder.withArgName("username").hasArg()
 				.withDescription("database user name (daemon mode)")
 				.create(OPTION_DB_USER));
@@ -439,11 +444,14 @@ public class LinerOptions {
 			.withDescription("read input from file")
 			.create(OPTION_INPUT_FILE));
 		options.addOption(OptionBuilder.withArgName("format").hasArg()
-			.withDescription("input format (iob or ccl)")
+			.withDescription("input format [iob,ccl,plain]")
 			.create(OPTION_INPUT_FORMAT));
 		options.addOption(OptionBuilder.withArgName("description").hasArg()
 				.withDescription("path to maca (for batch mode)")
 				.create(OPTION_MACA));
+		options.addOption(OptionBuilder.withArgName("number").hasArg()
+				.withDescription("maximum number of processing threads (daemon mode)")
+				.create(OPTION_MAX_THREADS));
     	options.addOption(OptionBuilder.withArgName("filename").hasArg()
 				.withDescription("path to location of nerd.py")
 				.create(OPTION_NERD));
@@ -460,7 +468,7 @@ public class LinerOptions {
 			.withDescription("specify chunkers to use")
 			.create(OPTION_USE));
 		options.addOption(OptionBuilder.withArgName("format").hasArg()
-				.withDescription("output format (iob or ccl)")
+				.withDescription("output format [iob,ccl,tuples]")
 				.create(OPTION_OUTPUT_FORMAT));
 		options.addOption(OptionBuilder.withArgName("description").hasArg()
 				.withDescription("define feature template")

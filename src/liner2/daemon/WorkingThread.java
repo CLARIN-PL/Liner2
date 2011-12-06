@@ -35,7 +35,7 @@ public class WorkingThread extends Thread {
 		try {
 			this.db.connect();
 			Main.log("Searching for work...", true);
-			request = db.getNextRequest();
+			request = db.getNextRequest(this.daemon.getDaemonId());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -46,6 +46,8 @@ public class WorkingThread extends Thread {
 				this.db.submitResult(request);
 			} catch (Exception ex) {
 				try {
+					ex.printStackTrace();
+					//Main.log("Error: " + ex.getMessage(), false);
 					this.db.submitError(request.getId(), ex.getMessage());
 				} catch (SQLException sqlex) {
 					sqlex.printStackTrace();
@@ -55,7 +57,7 @@ public class WorkingThread extends Thread {
 			
 			try {
 				Main.log("Searching for work...", true);
-				request = db.getNextRequest();
+				request = db.getNextRequest(this.daemon.getDaemonId());
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 				request = null;
@@ -67,7 +69,7 @@ public class WorkingThread extends Thread {
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
-		daemon.sleep();
+		daemon.finishWorkingThread(this);
 	}
 
 	//TODO porzucić żądanie w przypadku przerwania wątku
