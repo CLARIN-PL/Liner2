@@ -155,7 +155,9 @@ public class LinerDaemon extends Thread {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		startWorkingThread(); // może na początku maksymalną ilość wątków?
+
+		for (int i = 0; i < this.maxThreads; i++) 
+			startWorkingThread();
 				
 		while (!serverSocket.isClosed()) {
 			try {
@@ -207,9 +209,6 @@ public class LinerDaemon extends Thread {
 			}
 		}
 		
-		//Main.log("Sleeping...", false);
-		//this.working = false;
-		//this.workingThread = null;
 		this.numWorkingThreads--;
 		this.workingThreads.remove(callingThread);
 		if (this.numWorkingThreads == 0)
@@ -227,10 +226,6 @@ public class LinerDaemon extends Thread {
 			}
 		}
 
-		//Main.log("Woke up and working.", false);
-		//this.working = true;
-		//this.workingThread = new WorkingThread(this, this.chunker, this.db_addr);
-		//this.workingThread.start();
 		if (this.numWorkingThreads == 0)
 			Main.log("Woke up!", false);
 		this.numWorkingThreads++;

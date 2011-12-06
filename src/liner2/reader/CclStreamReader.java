@@ -149,7 +149,7 @@ public class CclStreamReader extends StreamReader {
 					}
 					else if ((eventType == XMLStreamConstants.CHARACTERS) || 
 						(eventType == XMLStreamConstants.SPACE)) {
-						paragraphText += xmlr.getText();
+						paragraphText += escapeXml(xmlr.getText());
 					}
 					continue;
 				}
@@ -170,7 +170,7 @@ public class CclStreamReader extends StreamReader {
 		
 		
 		// przekonwertuj kod xml akapitu w obiekt DOM
-		paragraphText = paragraphText.replace("&", "&amp;");
+		//paragraphText = paragraphText.replace("&", "&amp;");
 		Document paragraphDoc = paragraphToDOM(paragraphText);
 		Paragraph paragraph = new Paragraph(paragraphId);
 		
@@ -324,6 +324,14 @@ public class CclStreamReader extends StreamReader {
 		}
 		return text;
 	}
-
+	
+	private String escapeXml(String text) {
+		text = text.replace("\"", "&quot;");
+		text = text.replace("&", "&amp;");
+		text = text.replace("\'", "&apos;");
+		text = text.replace("<", "&lt;");
+		text = text.replace(">", "&gt;");
+		return text;
+	}
 }
 
