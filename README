@@ -1,0 +1,20 @@
+COMPILING
+
+To compile liner2, type the following commands:
+
+ant crfpp-compile
+cd external/crfpp/java
+make
+cd ../../..
+ant crfpp-jar
+ant jar
+
+If "make" command in "external/crfpp/java/" directory is unable to find file "jni.h", change line 6 of external/crfpp/java/Makefile to:
+
+INCLUDE=/path/to/file
+
+Where /path/to/file is the path to "jni.h" ("include" directory of Java JDK).
+
+RUNNING
+
+To run, use the liner2.sh script.
