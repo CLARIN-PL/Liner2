@@ -32,7 +32,7 @@ import liner2.Main;
 public class LinerDaemon extends Thread {
 	private static final int DEFAULT_MAX_THREADS = 1;
 
-	String db_addr, myAddr;
+	String db_addr, myAddr, ip;
 	int port, myId = -1;
 	Database db;
 	Chunker chunker;
@@ -90,7 +90,10 @@ public class LinerDaemon extends Thread {
 		//	"&useUnicode=true&characterEncoding=UTF-8";
 		this.db = new Database(this.db_addr);
 
-		// setup port number
+		// setup ip address and port number
+		this.ip = LinerOptions.getOption(LinerOptions.OPTION_IP);
+		if (this.ip == null)
+			throw new ParameterException("Daemon mode: -ip (IP address) option is obligatory!");
 		String optPort = LinerOptions.getOption(LinerOptions.OPTION_PORT);
 		if (optPort == null)
 			throw new ParameterException("Daemon mode: -p (port) option is obligatory!");
@@ -130,11 +133,12 @@ public class LinerDaemon extends Thread {
 			public void run() { shutdown(); }});
     
     	// register daemon
-		try {
-			this.myAddr = InetAddress.getLocalHost().getHostName() + ":" + this.port;
-		} catch (UnknownHostException ex) {
-			ex.printStackTrace();
-		}
+		this.myAddr = this.ip + ":" + this.port;
+//		try {
+//			this.myAddr = InetAddress.getLocalHost().getHostName() + ":" + this.port;
+//		} catch (UnknownHostException ex) {
+//			ex.printStackTrace();
+//		}
 		Main.log("My address: " + this.myAddr, true);
 		Main.log("Registering daemon...", false);
 		try {

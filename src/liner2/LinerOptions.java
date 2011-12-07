@@ -81,6 +81,7 @@ public class LinerOptions {
 	public static final String OPTION_INI = "ini";
 	public static final String OPTION_INPUT_FILE = "f";
 	public static final String OPTION_INPUT_FORMAT = "i";
+	public static final String OPTION_IP = "ip";
 	public static final String OPTION_MACA = "maca";
 	public static final String OPTION_MAX_THREADS = "max_threads";
 	public static final String OPTION_NERD = "nerd";
@@ -446,6 +447,9 @@ public class LinerOptions {
 		options.addOption(OptionBuilder.withArgName("format").hasArg()
 			.withDescription("input format [iob,ccl,plain]")
 			.create(OPTION_INPUT_FORMAT));
+		options.addOption(OptionBuilder.withArgName("address").hasArg()
+			.withDescription("IP address for daemon")
+			.create(OPTION_IP));
 		options.addOption(OptionBuilder.withArgName("description").hasArg()
 				.withDescription("path to maca (for batch mode)")
 				.create(OPTION_MACA));
