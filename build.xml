@@ -7,7 +7,6 @@
   		<pathelement location="production/lib/lingpipe-3.8.2.jar"/>
   		<pathelement location="production/lib/CRFPP.jar"/>
   		<pathelement location="production/lib/mysql-connector-java-5.1.10.jar"/>
-  		<pathelement location="production/lib/commons-daemon-1.0.2.jar"/>
 	</path>
 
 	<target name="clean">
@@ -35,7 +34,6 @@
 		<copy file="lib/libCRFPP.so" todir="production/lib"/>
 		<copy file="lib/CRFPP.jar" todir="production/lib"/>
 		<copy file="lib/mysql-connector-java-5.1.10.jar" todir="production/lib"/>
-		<copy file="lib/commons-daemon-1.0.2.jar" todir="production/lib"/>
 		<delete dir="build/classes"/>
 		<mkdir dir="build/classes"/>
 		<manifest file="MANIFEST.MF">
