@@ -150,12 +150,13 @@ public class CclStreamWriter extends StreamWriter {
 			xmlw.writeCharacters("\n");
 		}
 		
+		xmlw.writeEndElement();
+		xmlw.writeCharacters("\n");
+
 		if (token.getNoSpaceAfter()) {
 			xmlw.writeEmptyElement(TAG_NS);
 			xmlw.writeCharacters("\n");
 		}
-		xmlw.writeEndElement();
-		xmlw.writeCharacters("\n");
 	}
 	
 	private void writeTag(Tag tag) throws XMLStreamException {
