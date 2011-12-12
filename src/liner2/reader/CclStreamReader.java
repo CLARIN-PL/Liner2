@@ -150,6 +150,7 @@ public class CclStreamReader extends StreamReader {
 					else if ((eventType == XMLStreamConstants.CHARACTERS) || 
 						(eventType == XMLStreamConstants.SPACE)) {
 						paragraphText += escapeXml(xmlr.getText());
+						//paragraphText += xmlr.getText();
 					}
 					continue;
 				}
@@ -220,13 +221,19 @@ public class CclStreamReader extends StreamReader {
 		NodeList sentenceChildNodes = sentenceNode.getChildNodes();
 		int idx = 0;
 		Hashtable<String, Chunk> annotations = new Hashtable<String, Chunk>();
+		Token currentToken = null;
+
 		for (int i = 0; i < sentenceChildNodes.getLength(); i++) {
 			Node n = sentenceChildNodes.item(i);
-			if ((n.getNodeType() == Node.ELEMENT_NODE) &&
-				(n.getNodeName().equals(TAG_TOKEN))) {
-				Token token = getTokenFromNode(idx, n, annotations, sentence);
-				sentence.addToken(token);
-				idx++;
+			if (n.getNodeType() == Node.ELEMENT_NODE) {
+				if (n.getNodeName().equals(TAG_TOKEN)) {
+					currentToken = getTokenFromNode(idx, n, annotations, sentence);
+					sentence.addToken(currentToken);
+					idx++;
+				}
+				else if (n.getNodeName().equals(TAG_NS))
+					if (currentToken != null)
+						currentToken.setNoSpaceAfter(true);
 			}
 		}
 		
@@ -248,9 +255,6 @@ public class CclStreamReader extends StreamReader {
 				}
 				else if (n.getNodeName().equals(TAG_TAG))
 					token.addTag(getTagFromNode(n));
-				else if (n.getNodeName().equals(TAG_NS)) {
-					token.setNoSpaceAfter(true);
-				}
 				else if (n.getNodeName().equals(TAG_ANN)) {
 					String ann = getAnnotationFromNode(n);
 					if (ann != null) {
@@ -320,17 +324,26 @@ public class CclStreamReader extends StreamReader {
 		for (int i = 0; i < textChildNodes.getLength(); i++) {
 			Node n = textChildNodes.item(i);
 			if (n.getNodeType() == Node.TEXT_NODE)
-				text += n.getNodeValue();
+				text += unescapeXml(n.getNodeValue());
 		}
 		return text;
 	}
 	
 	private String escapeXml(String text) {
-		text = text.replace("\"", "&quot;");
 		text = text.replace("&", "&amp;");
+		text = text.replace("\"", "&quot;");
 		text = text.replace("\'", "&apos;");
 		text = text.replace("<", "&lt;");
 		text = text.replace(">", "&gt;");
+		return text;
+	}
+
+	private String unescapeXml(String text) {
+		text = text.replace("&quot;", "\"");
+		text = text.replace("&apos;", "\'");
+		text = text.replace("&lt;", "<");
+		text = text.replace("&gt;", ">");
+		text = text.replace("&amp;", "&");
 		return text;
 	}
 }

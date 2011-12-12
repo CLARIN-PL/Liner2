@@ -125,7 +125,8 @@ public class CclStreamWriter extends StreamWriter {
 		xmlw.writeCharacters("\n");
 		xmlw.writeStartElement(TAG_ORTH);
 		//xmlw.writeCharacters(token.getFirstValue().replace("&", "&amp;"));
-		xmlw.writeCharacters(token.getFirstValue());
+		//xmlw.writeCharacters(escapeXml(token.getFirstValue()));
+		writeText(token.getFirstValue());
 		xmlw.writeEndElement();
 		xmlw.writeCharacters("\n");
 		for (Tag tag : token.getTags())
@@ -163,13 +164,36 @@ public class CclStreamWriter extends StreamWriter {
 			xmlw.writeAttribute(TAG_DISAMB, "1");
 		xmlw.writeStartElement(TAG_BASE);
 		//xmlw.writeCharacters(tag.getBase().replace("&", "&amp;"));
-		xmlw.writeCharacters(tag.getBase());
+		//xmlw.writeCharacters(escapeXml(tag.getBase()));
+		writeText(tag.getBase());
 		xmlw.writeEndElement();
 		xmlw.writeStartElement(TAG_CTAG);
-		xmlw.writeCharacters(tag.getCtag());
+		//xmlw.writeCharacters(tag.getCtag());
+		writeText(tag.getCtag());
 		xmlw.writeEndElement();
 		xmlw.writeEndElement();
 		xmlw.writeCharacters("\n");
 	}
 
+	private String escapeXml(String text) {
+		//text = text.replace("&", "&amp;");
+		text = text.replace("\"", "&quot;");
+		text = text.replace("\'", "&apos;");
+		text = text.replace("<", "&lt;");
+		text = text.replace(">", "&gt;");
+		return text;
+	}
+
+	private void writeText(String text) throws XMLStreamException {
+		if (text.equals("\""))
+			xmlw.writeEntityRef("quot");
+		else if (text.equals("\'"))
+			xmlw.writeEntityRef("apos");
+		else if (text.equals("<"))
+			xmlw.writeEntityRef("lt");
+		else if (text.equals(">"))
+			xmlw.writeEntityRef("gt");
+		else 
+			xmlw.writeCharacters(text);
+	}
 }
