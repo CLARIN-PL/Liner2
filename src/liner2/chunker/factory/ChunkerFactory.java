@@ -20,15 +20,12 @@ public class ChunkerFactory {
 	private ChunkerFactory(){
 		this.items.add(new ChunkerFactoryItemAdu());
 		this.items.add(new ChunkerFactoryItemHeuristic());
-//		this.items.add(new ChunkerFactoryItemGazetteers());
-//		this.items.add(new ChunkerFactoryItemLingpipeTrain());
-//		this.items.add(new ChunkerFactoryItemNLTKTrain());
-//		this.items.add(new ChunkerFactoryItemNLTKLoad());
 		this.items.add(new ChunkerFactoryItemCrfppTrain());
 		this.items.add(new ChunkerFactoryItemCrfppLoad());
 		this.items.add(new ChunkerFactoryItemDictCompile());
 		this.items.add(new ChunkerFactoryItemDictLoad());
-//		this.items.add(new ChunkerFactoryItemRescore());
+		this.items.add(new ChunkerFactoryItemDictFullCompile());
+		this.items.add(new ChunkerFactoryItemDictFullLoad());
 		this.items.add(new ChunkerFactoryItemWccl());
 	}
 	
