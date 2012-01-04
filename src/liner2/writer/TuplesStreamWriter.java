@@ -18,6 +18,7 @@ import liner2.structure.Token;
  */
 public class TuplesStreamWriter extends StreamWriter {
 	private BufferedWriter ow;
+	private int sentenceOffset = 0;
 	
 	public TuplesStreamWriter(OutputStream os) {
 		this.ow = new BufferedWriter(new OutputStreamWriter(os));
@@ -41,16 +42,20 @@ public class TuplesStreamWriter extends StreamWriter {
 	private void writeSentence(Sentence sentence) {
 		try {
 			for (Chunk c : sentence.getChunks()) 
-				writeChunk(c, sentence); 
+				writeChunk(c, sentence);			
 			this.ow.newLine();
+			
+			for (Token t : sentence.getTokens())
+				this.sentenceOffset += t.getFirstValue().length();
+			
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
 	}
 
 	private void writeChunk(Chunk c, Sentence s) throws IOException {
-		int begin = 0;
-		int end = 0;
+		int begin = this.sentenceOffset;
+		int end = this.sentenceOffset;
 		ArrayList<Token> tokens = s.getTokens();
 		for (int i = 0; i < c.getBegin(); i++)
 			begin += tokens.get(i).getFirstValue().length();
