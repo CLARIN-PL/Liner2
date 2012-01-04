@@ -6,6 +6,7 @@ import java.io.OutputStream;
 
 import liner2.writer.CclStreamWriter;
 import liner2.writer.IobStreamWriter;
+import liner2.writer.TokensStreamWriter;
 
 public class WriterFactory {
 
@@ -36,6 +37,8 @@ public class WriterFactory {
 			return new IobStreamWriter(out);
 		else if (outputFormat.equals("tuples"))
 			return new TuplesStreamWriter(out);
+		else if (outputFormat.equals("tokens"))
+			return new TokensStreamWriter(out);
 		else		
 			throw new Exception("Output format " + outputFormat + " not recognized.");
 	}

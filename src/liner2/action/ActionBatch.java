@@ -15,10 +15,14 @@ import liner2.reader.FeatureGenerator;
 import liner2.reader.ReaderFactory;
 import liner2.reader.StreamReader;
 
+import liner2.writer.StreamWriter;
+import liner2.writer.WriterFactory;
+
 import liner2.structure.AttributeIndex;
 import liner2.structure.Chunk;
 import liner2.structure.Chunking;
 import liner2.structure.Paragraph;
+import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
 
@@ -51,11 +55,11 @@ public class ActionBatch extends Action{
 		
 		if (!LinerOptions.get().silent){
 			System.out.println("# Loading, please wait...");
-        }
-		
+ 	}
 		ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescription);		
 		Chunker chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
 		
+	
 		if (!LinerOptions.get().silent){
 			System.out.println("# Enter a sentence and press Enter.");
 			if (maca == null) {
@@ -68,8 +72,8 @@ public class ActionBatch extends Action{
 //				if (wmbt != null)
 //					System.out.println("#   Using WMBT tagger with path: " + wmbt);
 //			}
-			System.out.println("# To disable the additional outputs rerun with `-silent` option.");
-			System.out.println("# To finish enter 'EOF'.");
+			//System.out.println("# To disable the additional outputs rerun with `-silent` option.");
+			//System.out.println("# To finish enter 'EOF'.");
         }
 		
 		do {
@@ -87,15 +91,27 @@ public class ActionBatch extends Action{
 					sentence = analyzePlain(cSeq);
 				else
 					sentence = analyze(cSeq, maca, wmbt);
-				
-				Chunking chunking = chunker.chunkSentence(sentence);
+
+				chunker.chunkSentenceInPlace(sentence);
+				Paragraph p =new Paragraph("");
+				p.addSentence(sentence);
+				ParagraphSet ps= new ParagraphSet();
+				ps.addParagraph(p);
+
+				StreamWriter writer = WriterFactory.get().getStreamWriter(
+					LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FILE),
+					LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FORMAT));
+				writer.writeParagraphSet(ps);
+
+/*				Chunking chunking = chunker.chunkSentence(sentence);
 				String response = "";
 				for (Chunk chunk : chunking.chunkSet())
 					response += String.format("[%d,%d,%s]", chunk.getBegin()+1, chunk.getEnd()+1,
 						chunk.getType());
 				if (response.isEmpty())
 					response = "NONE";
-				System.out.println(response);
+				System.out.println(response);*/
+
 			}
 		} while (!cSeq.equals("EOF"));
 	}

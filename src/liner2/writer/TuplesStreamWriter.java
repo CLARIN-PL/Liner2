@@ -26,7 +26,7 @@ public class TuplesStreamWriter extends StreamWriter {
 	@Override
 	public void close() {
 		try {
-			this.ow.close();
+			this.ow.flush();//close();
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
