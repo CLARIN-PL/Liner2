@@ -267,6 +267,8 @@ public class LinerOptions {
 			this.verbose = true;
 		if (line.hasOption(OPTION_VERBOSE_DETAILS))
 			this.verboseDetails = true;
+		if (line.hasOption(OPTION_SILENT))
+			this.silent = true;
 		
 		// read feature definitions and initialize feature generator
 		if (line.hasOption(OPTION_FEATURE)) {
