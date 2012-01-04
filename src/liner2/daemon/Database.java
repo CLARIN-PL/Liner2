@@ -13,7 +13,7 @@ import java.sql.Statement;
  * TODO: table names as constants
  */
 public class Database {
-	String addr;
+  String addr;
 	boolean connected;
 	Connection connection;
 

@@ -149,7 +149,7 @@ public class ActionBatch extends Action{
 		if (!maca.equals("-")) {
 			if (!maca.endsWith("/"))
 				maca_cmd += "/";
-			maca_cmd += "bin/maca-analyse/";
+			//maca_cmd += "bin/maca-analyse/";
 		}
 		maca_cmd += "maca-analyse -qs morfeusz-nkjp -o ccl";
 		
