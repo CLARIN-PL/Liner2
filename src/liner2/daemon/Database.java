@@ -13,7 +13,7 @@ import java.sql.Statement;
  * TODO: table names as constants
  */
 public class Database {
-	String addr;
+  String addr;
 	boolean connected;
 	Connection connection;
 
@@ -50,6 +50,16 @@ public class Database {
 		statement.executeQuery(String.format("CALL unregister_daemon(%d);", id));
 	}
 
+	public boolean checkRegistered(int id) throws SQLException {
+		Statement statement = this.connection.createStatement();
+		ResultSet resultSet = statement.executeQuery(String.format(
+			"SELECT * from liner2_daemons WHERE id = %d;", id));
+		if (resultSet.next())
+			return true;
+		else
+			return false;	
+	}
+
 	public void daemonNotReady(int id) throws SQLException {
 		Statement statement = this.connection.createStatement();
 		statement.executeQuery("LOCK TABLES liner2_daemons AS read_liner2_daemons READ, " +
@@ -64,6 +74,10 @@ public class Database {
 	}
 
 	public Request getNextRequest(int daemonId) throws SQLException {
+		if (!checkRegistered(daemonId))
+			// TODO throw exception
+			return null;
+
 		Statement statement = this.connection.createStatement();
 		statement.executeQuery("LOCK TABLES liner2_requests AS write_liner2_requests WRITE, "
 			+ "liner2_requests AS read_liner2_requests READ;");

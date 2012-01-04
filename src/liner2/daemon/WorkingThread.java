@@ -18,11 +18,11 @@ import liner2.structure.Sentence;
 import liner2.Main;
 
 public class WorkingThread extends Thread {
-	LinerDaemon daemon;
+	DaemonThread daemon;
 	Chunker chunker;
 	Database db;
 	
-	public WorkingThread(LinerDaemon daemon, Chunker chunker, String databaseAddress) {
+	public WorkingThread(DaemonThread daemon, Chunker chunker, String databaseAddress) {
 		this.daemon = daemon;
 		this.chunker = chunker;
 		this.db = new Database(databaseAddress);

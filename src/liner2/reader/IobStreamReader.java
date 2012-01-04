@@ -29,7 +29,7 @@ public class IobStreamReader extends StreamReader {
 	/**
 	 * Read -DOCSTART CONFIG FEATURES line.
 	 */
-	protected void init() {
+	protected void init() throws DataFormatException {
 		if (this.init)
 			return;
 		while (true) {
@@ -37,10 +37,12 @@ public class IobStreamReader extends StreamReader {
 			try {
 				line = ir.readLine();
 			} catch (IOException ex) {
-				ex.printStackTrace();
+				throw new DataFormatException("I/O error.");
 			}
 			
-			if ((line == null) || (!line.startsWith("-DOCSTART CONFIG FEATURES")))
+			if (line == null)
+				throw new DataFormatException("Invalid file format.");
+			if (!line.startsWith("-DOCSTART CONFIG FEATURES"))
 				continue;
 			this.attributeIndex = new AttributeIndex();
 			String[] content = line.trim().split(" ");

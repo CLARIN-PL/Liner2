@@ -29,10 +29,10 @@ import liner2.Main;
  * Daemon class for NER WebService.
  * @author Maciej Janicki
  */
-public class LinerDaemon extends Thread {
+public class DaemonThread extends Thread {
 	private static final int DEFAULT_MAX_THREADS = 1;
 
-	String db_addr, myAddr;
+	String db_addr, myAddr, ip;
 	int port, myId = -1;
 	Database db;
 	Chunker chunker;
@@ -40,7 +40,7 @@ public class LinerDaemon extends Thread {
 	int numWorkingThreads, maxThreads;
 	Vector<WorkingThread> workingThreads;
 	
-	public LinerDaemon() throws ParameterException {
+	public DaemonThread() throws ParameterException {
 		// setup database address
 		String db_host = null, db_port = "3306", db_user = null,
 			db_pass = "", db_name = null;
@@ -90,7 +90,10 @@ public class LinerDaemon extends Thread {
 		//	"&useUnicode=true&characterEncoding=UTF-8";
 		this.db = new Database(this.db_addr);
 
-		// setup port number
+		// setup ip address and port number
+		this.ip = LinerOptions.getOption(LinerOptions.OPTION_IP);
+		if (this.ip == null)
+			throw new ParameterException("Daemon mode: -ip (IP address) option is obligatory!");
 		String optPort = LinerOptions.getOption(LinerOptions.OPTION_PORT);
 		if (optPort == null)
 			throw new ParameterException("Daemon mode: -p (port) option is obligatory!");
@@ -130,11 +133,12 @@ public class LinerDaemon extends Thread {
 			public void run() { shutdown(); }});
     
     	// register daemon
-		try {
-			this.myAddr = InetAddress.getLocalHost().getHostName() + ":" + this.port;
-		} catch (UnknownHostException ex) {
-			ex.printStackTrace();
-		}
+		this.myAddr = this.ip + ":" + this.port;
+//		try {
+//			this.myAddr = InetAddress.getLocalHost().getHostName() + ":" + this.port;
+//		} catch (UnknownHostException ex) {
+//			ex.printStackTrace();
+//		}
 		Main.log("My address: " + this.myAddr, true);
 		Main.log("Registering daemon...", false);
 		try {
@@ -155,7 +159,9 @@ public class LinerDaemon extends Thread {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		startWorkingThread(); // może na początku maksymalną ilość wątków?
+
+		for (int i = 0; i < this.maxThreads; i++) 
+			startWorkingThread();
 				
 		while (!serverSocket.isClosed()) {
 			try {
@@ -207,9 +213,6 @@ public class LinerDaemon extends Thread {
 			}
 		}
 		
-		//Main.log("Sleeping...", false);
-		//this.working = false;
-		//this.workingThread = null;
 		this.numWorkingThreads--;
 		this.workingThreads.remove(callingThread);
 		if (this.numWorkingThreads == 0)
@@ -227,10 +230,6 @@ public class LinerDaemon extends Thread {
 			}
 		}
 
-		//Main.log("Woke up and working.", false);
-		//this.working = true;
-		//this.workingThread = new WorkingThread(this, this.chunker, this.db_addr);
-		//this.workingThread.start();
 		if (this.numWorkingThreads == 0)
 			Main.log("Woke up!", false);
 		this.numWorkingThreads++;
