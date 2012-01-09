@@ -376,15 +376,15 @@ public class ChunkerEvaluator {
 		Main.log("");
 		Main.log("Chunks:");
 		
-		for (Chunk chunk : sortChunks(truePositives)) {
+		for (Chunk chunk : Chunk.sortChunks(truePositives)) {
 			Main.log(String.format("  TruePositive %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk)));
 		}
-		for (Chunk chunk : sortChunks(falsePositives)) {
+		for (Chunk chunk : Chunk.sortChunks(falsePositives)) {
 			Main.log(String.format("  FalsePositive %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk)));
 		}
-		for (Chunk chunk : sortChunks(falseNegatives)) {
+		for (Chunk chunk : Chunk.sortChunks(falseNegatives)) {
 			Main.log(String.format("  FalseNegative %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk)));
 		}
@@ -414,21 +414,21 @@ public class ChunkerEvaluator {
 		return result.toString().trim();
 	}
 	
-	private Chunk[] sortChunks(HashSet<Chunk> chunkSet) {
-		int size = chunkSet.size();
-		Chunk[] sorted = new Chunk[size];
-		int idx = 0;
-	    for (Chunk c : chunkSet)
-	    	sorted[idx++] = c;
-	    for (int i = 0; i < size; i++)
-	    	for (int j = i+1; j < size; j++)
-	    		if ((sorted[i].getBegin() > sorted[j].getBegin()) ||
-	    			((sorted[i].getBegin() == sorted[j].getBegin()) &&
-	    			(sorted[i].getEnd() > sorted[j].getEnd()))) {
-	    			Chunk aux = sorted[i];
-	    			sorted[i] = sorted[j];
-	    			sorted[j] = aux;
-	    		}
-		return sorted;
-	}
+//	private Chunk[] sortChunks(HashSet<Chunk> chunkSet) {
+//		int size = chunkSet.size();
+//		Chunk[] sorted = new Chunk[size];
+//		int idx = 0;
+//	    for (Chunk c : chunkSet)
+//	    	sorted[idx++] = c;
+//	    for (int i = 0; i < size; i++)
+//	    	for (int j = i+1; j < size; j++)
+//	    		if ((sorted[i].getBegin() > sorted[j].getBegin()) ||
+//	    			((sorted[i].getBegin() == sorted[j].getBegin()) &&
+//	    			(sorted[i].getEnd() > sorted[j].getEnd()))) {
+//	    			Chunk aux = sorted[i];
+//	    			sorted[i] = sorted[j];
+//	    			sorted[j] = aux;
+//	    		}
+//		return sorted;
+//	}
 }

@@ -1,6 +1,7 @@
 package liner2.structure;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * Klasa reprezentuje anotację jako ciągłą sekwencję tokenów w zdaniu.
@@ -82,5 +83,23 @@ public class Chunk {
 	
 	public void setEnd(int end) {
 		this.end = end;
+	}
+
+	public static Chunk[] sortChunks(HashSet<Chunk> chunkSet) {
+		int size = chunkSet.size();
+		Chunk[] sorted = new Chunk[size];
+		int idx = 0;
+	    for (Chunk c : chunkSet)
+	    	sorted[idx++] = c;
+	    for (int i = 0; i < size; i++)
+	    	for (int j = i+1; j < size; j++)
+	    		if ((sorted[i].getBegin() > sorted[j].getBegin()) ||
+	    			((sorted[i].getBegin() == sorted[j].getBegin()) &&
+	    			(sorted[i].getEnd() > sorted[j].getEnd()))) {
+	    			Chunk aux = sorted[i];
+	    			sorted[i] = sorted[j];
+	    			sorted[j] = aux;
+	    		}
+		return sorted;
 	}
 }

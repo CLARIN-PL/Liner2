@@ -41,7 +41,8 @@ public class TuplesStreamWriter extends StreamWriter {
 
 	private void writeSentence(Sentence sentence) {
 		try {
-			for (Chunk c : sentence.getChunks()) 
+			Chunk[] chunks = Chunk.sortChunks(sentence.getChunks());
+			for (Chunk c : chunks) 
 				writeChunk(c, sentence);			
 			this.ow.newLine();
 			
