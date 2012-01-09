@@ -114,6 +114,7 @@ public class LinerOptions {
 	public String arg1 = null;
 	public String arg2 = null;
 	public String arg3 = null;
+	public String linerPath = "";
 //	public String nerd = null;		// replaced with e.g. getOption(OPTION_NERD)
 //	public String inputFile = "";
 //	public String outputFile = "";
@@ -161,10 +162,15 @@ public class LinerOptions {
 		// Use to gather confugiration description
 		StringBuilder configDesc = new StringBuilder();
 		
+		String path = getClass().getResource("").getPath();
+		path = path.substring(path.indexOf(':')+1, path.indexOf('!'));
+		path = path.substring(0, path.lastIndexOf('/')+1);
+		this.linerPath = path;
+
 		// Try to load configuration from local.ini
-    	if (new File(LOCAL_INI).exists()) {
+    	if (new File(this.linerPath + LOCAL_INI).exists()) {
     		try {
-    			this.parseFromIni(LOCAL_INI, configDesc);
+    			this.parseFromIni(this.linerPath + LOCAL_INI, configDesc);
     		} catch (Exception ex) {
     			ex.printStackTrace();
     		}
