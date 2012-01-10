@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
 
@@ -50,8 +53,6 @@ public class ActionBatch extends Action{
 		
 		String maca = LinerOptions.getOption(LinerOptions.OPTION_MACA);
 		String wmbt = LinerOptions.getOption(LinerOptions.OPTION_WMBT);
-//		if (maca != null) System.out.println("maca: " + maca);
-//		if (wmbt != null) System.out.println("wmbt: " + wmbt);
 		
 		if (!LinerOptions.get().silent){
 			System.out.println("# Loading, please wait...");
@@ -67,13 +68,7 @@ public class ActionBatch extends Action{
 				System.out.println("#   Token attributes should be seperated with a single space.");
 				System.out.println("#   Example: Ala ala subst:sg:nom:f  ma mieć fin:sg:ter:imperf  kota kot subst:sg:acc:m1");			
 			}
-//			else {
-//				System.out.println("#   Using maca morphological analyzer with path: " + maca);
-//				if (wmbt != null)
-//					System.out.println("#   Using WMBT tagger with path: " + wmbt);
-//			}
-			//System.out.println("# To disable the additional outputs rerun with `-silent` option.");
-			//System.out.println("# To finish enter 'EOF'.");
+			System.out.println("# To finish, enter 'EOF'.");
         }
 		
 		do {
@@ -86,37 +81,46 @@ public class ActionBatch extends Action{
 			// If the text is not EndOfFile then process it
 			if (!cSeq.equals("EOF")) {
 
-				Sentence sentence;
+				// if empty line -- continue
+				if (Pattern.matches("^\\s*$", cSeq))
+					continue;
+
+				// force treating everything as one sentence? -- [SENTENCE] prefix
+				boolean forceSentence = false;
+				Pattern pSentence = Pattern.compile("^\\s*\\[SENTENCE\\]\\s*(.*)$");
+				Matcher mSentence = pSentence.matcher(cSeq);
+				if (mSentence.matches()) {
+					cSeq = mSentence.group(1);
+					forceSentence = true;
+				}
+
+				// morphological analysis, feature generation
+				Paragraph paragraph;
 				if (maca == null)
-					sentence = analyzePlain(cSeq);
+					paragraph = analyzePlain(cSeq);
 				else
-					sentence = analyze(cSeq, maca, wmbt);
+					paragraph = analyze(cSeq, maca, wmbt);
 
-				chunker.chunkSentenceInPlace(sentence);
-				Paragraph p =new Paragraph("");
-				p.addSentence(sentence);
-				ParagraphSet ps= new ParagraphSet();
-				ps.addParagraph(p);
+				// merge everything to one sentence if forced
+				if (forceSentence)
+					paragraph = mergeSentences(paragraph);
 
+				// chunking
+				for (Sentence s : paragraph.getSentences())
+					chunker.chunkSentenceInPlace(s);
+				ParagraphSet ps = new ParagraphSet();
+				ps.addParagraph(paragraph);
+
+				// write output
 				StreamWriter writer = WriterFactory.get().getStreamWriter(
 					LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FILE),
 					LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FORMAT));
 				writer.writeParagraphSet(ps);
-
-/*				Chunking chunking = chunker.chunkSentence(sentence);
-				String response = "";
-				for (Chunk chunk : chunking.chunkSet())
-					response += String.format("[%d,%d,%s]", chunk.getBegin()+1, chunk.getEnd()+1,
-						chunk.getType());
-				if (response.isEmpty())
-					response = "NONE";
-				System.out.println(response);*/
-
 			}
 		} while (!cSeq.equals("EOF"));
 	}
 	
-	private Sentence analyzePlain(String cSeq) {
+	private Paragraph analyzePlain(String cSeq) {
 		Sentence sentence = new Sentence();
 		AttributeIndex ai = new AttributeIndex();
 		ai.addAttribute("orth");
@@ -140,10 +144,13 @@ public class ActionBatch extends Action{
 				ex.printStackTrace();
 			}
 		}
-		return sentence;
+		Paragraph paragraph = new Paragraph(null);
+		paragraph.setAttributeIndex(ai);
+		paragraph.addSentence(sentence);
+		return paragraph;
 	}
 	
-	private Sentence analyze(String cSeq, String maca, String wmbt) {
+	private Paragraph analyze(String cSeq, String maca, String wmbt) {
 		// prepare maca command
 		String maca_cmd = maca.equals("-") ? "" : maca;
 		if (!maca.equals("-")) {
@@ -196,8 +203,7 @@ public class ActionBatch extends Action{
 				
 				StreamReader reader = ReaderFactory.get().getStreamReader(wmbt_in, "ccl");
 				Paragraph paragraph = reader.readParagraph();
-				Sentence sentence = paragraph.getSentences().get(0);
-				return sentence;
+				return paragraph;
 				
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -212,12 +218,25 @@ public class ActionBatch extends Action{
 				
 				StreamReader reader = ReaderFactory.get().getStreamReader(maca_in, "ccl");
 				Paragraph paragraph = reader.readParagraph();
-				Sentence sentence = paragraph.getSentences().get(0);
-				return sentence;
+				return paragraph;
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				return null;
 			}
 		}
+	}
+
+	private Paragraph mergeSentences(Paragraph paragraph) {
+		Sentence merged = new Sentence();
+		merged.setAttributeIndex(paragraph.getAttributeIndex());
+
+		for (Sentence sentence : paragraph.getSentences())
+			for (Token token : sentence.getTokens())
+				merged.addToken(token);
+
+		Paragraph resultParagraph = new Paragraph(paragraph.getId());
+		resultParagraph.setAttributeIndex(paragraph.getAttributeIndex());
+		resultParagraph.addSentence(merged);
+		return resultParagraph;
 	}
 }
