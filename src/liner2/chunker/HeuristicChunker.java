@@ -459,7 +459,7 @@ public class HeuristicChunker extends Chunker {
 					&& tokens.get(i+3).getAttributeValue(indexPattern).equals("DIGITS")){
 				chunking.addChunk(new Chunk(i+2, i+2, "ROAD_NAM", sentence));
 				
-				if ( i + 3 < tokens.size() 
+				if ( i + 6 < tokens.size() 
 						&& tokens.get(i+4).getAttributeValue(indexOrth).equals("/")
 						&& tokens.get(i+5).getAttributeValue(indexPattern).equals("UPPER_INIT")
 						&& tokens.get(i+6).getAttributeValue(indexPattern).equals("DIGITS")){
