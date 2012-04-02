@@ -1,15 +1,53 @@
 COMPILING
 
-To compile liner2, type the following commands:
+=== Compilation and installation of required dependences (CRF++) ===
 
-ant crfpp-compile
-cd external/crfpp/java
-make
-cd ../../..
-ant crfpp-jar
-ant jar
+First, set a path to your java sdk (containing jni.h) --- INCLUDE variable in the Makefile:
 
-If "make" command in "external/crfpp/java/" directory is unable to find file "jni.h", change line 6 of external/crfpp/java/Makefile to:
+  vi external/crfpp/java/Makefile
+  
+Next, run the following commands: 
+
+  ant crfpp-make
+  sudo ant crfpp-install
+  ant crfpp-jar
+
+  
+=== Compilation ===
+
+  ant jar  
+
+
+=== Test ===
+
+Command:
+
+   ./liner2.sh pipe -ini model-5nam-v1/model.ini -i ccl -f test/sentence.xml -o tuples
+ 
+Should return:
+
+	(4,6,PERSON_FIRST_NAM,"Ala")
+	(7,11,PERSON_LAST_NAM,"Nowak")
+	(20,28,CITY_NAM,"Warszawie")
+
+
+=== Run ===
+
+Pipe mode:
+
+  ./liner2.sh 
+
+Interactive mode:
+
+
+Interactive mode for raw text (requires maca):
+
+  ./liner2.sh batch -ini model-56nam-v1/model.ini -i plain -o tuples -maca -
+
+
+=== Error troubleshooting ===
+
+If `ant crfpp-jar` command in "external/crfpp/java/" directory is unable to find file "jni.h", change line 6 of external/crfpp/java/Makefile to:
 
 INCLUDE=/path/to/file
 

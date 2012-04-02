@@ -2,19 +2,18 @@
 
 <project name="Liner2 -- a module for named entity recognition for Polish" default="compile" basedir=".">
 
+	<property name="production_path" value="local/production" />
+	
 	<path id="classpath.standard">
-  		<pathelement location="production/lib/commons-cli-1.2.jar"/>
-  		<pathelement location="production/lib/lingpipe-3.8.2.jar"/>
-  		<pathelement location="production/lib/CRFPP.jar"/>
-  		<pathelement location="production/lib/mysql-connector-java-5.1.10.jar"/>
+  		<pathelement location="${production_path}/lib/commons-cli-1.2.jar"/>
+  		<pathelement location="${production_path}/lib/lingpipe-3.8.2.jar"/>
+  		<pathelement location="${production_path}/lib/CRFPP.jar"/>
+  		<pathelement location="${production_path}/lib/mysql-connector-java-5.1.10.jar"/>
 	</path>
-
+	
 	<target name="clean">
   		<delete dir="build"/>
-		
-		<delete includeemptydirs="true">
-        	<fileset dir="production" includes="**/*" defaultexcludes="false"/>
-        </delete>
+		<delete dir="${production_path}"/>
 
         <delete dir="models/">
         	<include name="**/crf/*.tar.gz"/>
@@ -25,15 +24,16 @@
             <include name="*.tpl"/>
             <include name="liner2.jar"/>
         </delete>
-
 	</target>
 
 	<target name="compile" depends="clean">
 		<mkdir dir="bin/lib"/>
-		<copy file="lib/commons-cli-1.2.jar" todir="production/lib"/>
-		<copy file="lib/libCRFPP.so" todir="production/lib"/>
-		<copy file="lib/CRFPP.jar" todir="production/lib"/>
-		<copy file="lib/mysql-connector-java-5.1.10.jar" todir="production/lib"/>
+		<mkdir dir="${production_path}"/>
+			
+		<copy file="lib/commons-cli-1.2.jar" todir="${production_path}/lib"/>
+		<copy file="lib/libCRFPP.so" todir="${production_path}/lib"/>
+		<copy file="lib/CRFPP.jar" todir="${production_path}/lib"/>
+		<copy file="lib/mysql-connector-java-5.1.10.jar" todir="${production_path}/lib"/>
 		<delete dir="build/classes"/>
 		<mkdir dir="build/classes"/>
 		<manifest file="MANIFEST.MF">
@@ -55,22 +55,10 @@
     		<fileset dir="build/classes" includes="**/*.class"/>
   		</jar>
                 
-		<copy file="liner2.jar" todir="production"/>
+		<copy file="liner2.jar" todir="${production_path}"/>
 		<delete file="MANIFEST.MF"/>
-    
-		<!--
-        <copy todir="production/external/">
-          <fileset dir="./external" />
-        </copy>
-        -->
-        
-		<!--
-        <copy todir="production/configs/">
-          <fileset dir="./configs" />
-        </copy>
-        -->
-        
-        <!-- <mkdir dir="production/models/crf"/>-->
+		<delete dir="bin"/>
+		<delete dir="build"/>
 	</target>
 
 	<!-- Instalacja modułu. Umożliwia uruchomienie modułu z dowolnej lokalizacji. --> 	

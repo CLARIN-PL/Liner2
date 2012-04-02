@@ -3,7 +3,7 @@ JAVAC=javac
 JAVA=java
 JAR=jar
 CXX=c++
-INCLUDE=/usr/local/jdk/include
+INCLUDE=/usr/local/jdk/includex
 
 PACKAGE=org/chasen/crfpp
 

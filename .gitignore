@@ -4,3 +4,4 @@ lib/CRFPP.jar
 lib/libCRFPP.so
 production/*
 liner2.jar
+local/*
