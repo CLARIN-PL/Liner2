@@ -218,6 +218,12 @@ public class CclStreamReader extends StreamReader {
 	
 	private Sentence getSentenceFromNode(Node sentenceNode) {
 		Sentence sentence = new Sentence();
+		for (int j=0; j<sentenceNode.getAttributes().getLength(); j++){
+			Node n = sentenceNode.getAttributes().item(j);
+			if ( n.getNodeName().equals("id"))
+				sentence.setId(n.getNodeValue());
+		}
+			
 		NodeList sentenceChildNodes = sentenceNode.getChildNodes();
 		int idx = 0;
 		Hashtable<String, Chunk> annotations = new Hashtable<String, Chunk>();
@@ -246,6 +252,12 @@ public class CclStreamReader extends StreamReader {
 	
 	private Token getTokenFromNode(int idx, Node tokenNode, Hashtable<String, Chunk> annotations, Sentence sentence) {
 		Token token = new Token();
+		for (int j=0; j<tokenNode.getAttributes().getLength(); j++){
+			Node n = tokenNode.getAttributes().item(j);
+			if ( n.getNodeName().equals("id"))
+				token.setId(n.getNodeValue());
+		}
+		
 		NodeList tokenChildNodes = tokenNode.getChildNodes();
 		for (int i = 0; i < tokenChildNodes.getLength(); i++) {
 			Node n = tokenChildNodes.item(i);
