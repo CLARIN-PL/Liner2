@@ -30,6 +30,8 @@ public class Chunk {
 	 */
 	private Sentence sentence = null;
 	
+	private String id = null;
+	
 	public Chunk(int begin, int end, String type, Sentence sentence){
 		this.begin = begin;
 		this.end = end;
@@ -47,6 +49,10 @@ public class Chunk {
 		else if (!this.type.equals(chunk.getType()))
 			return false;
 		return true;
+	}
+	
+	public String getId(){
+		return this.id;
 	}
 	
 	public int getBegin() {
@@ -79,6 +85,10 @@ public class Chunk {
 				text.append(" ");
 		}
 		return text.toString();
+	}
+	
+	public void setId(String id){
+		this.id = id;
 	}
 	
 	public void setEnd(int end) {

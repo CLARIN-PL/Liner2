@@ -21,6 +21,9 @@ public class Sentence {
 	/* Zbiór anotacji */
 	HashSet<Chunk> chunks = new HashSet<Chunk>();
 	
+	/* Identyfikator zdania */
+	String id = null;
+	
 	public Sentence()	{}
 	
 	public void addChunk(Chunk chunk) {
@@ -34,6 +37,10 @@ public class Sentence {
 	
 	public void addToken(Token token) {
 		tokens.add(token);
+	}
+	
+	public String getId(){
+		return this.id;
 	}
 	
 	/*
@@ -83,5 +90,9 @@ public class Sentence {
 
 	public void setChunking(Chunking chunking) {
 		this.chunks = chunking.chunkSet();
+	}
+	
+	public void setId(String id){
+		this.id = id;
 	}
 }

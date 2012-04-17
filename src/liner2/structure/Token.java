@@ -17,6 +17,8 @@ public class Token {
 	
 	/* Oznaczenie, czy między bieżącym a następnym tokenem był biały znak. */
 	boolean noSpaceAfter = false; 
+
+	private String id = null;
 	
 	public void clearAttributes() {
 		this.attributes = new ArrayList<String>();
@@ -34,6 +36,10 @@ public class Token {
 	
 	public int getNumAttributes() {
 		return attributes.size();
+	}
+
+	public String getId(){
+		return this.id;
 	}
 	
 	/**
@@ -72,4 +78,8 @@ public class Token {
 	public void setNoSpaceAfter(boolean noSpaceAfter) {
 		this.noSpaceAfter = noSpaceAfter;
 	}
+	
+	public void setId(String id){
+		this.id = id;
+	}	
 }

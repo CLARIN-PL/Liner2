@@ -19,7 +19,8 @@ public abstract class Chunker {
 	
 	public void chunkSentenceInPlace(Sentence sentence){
 		Chunking chunking = this.chunkSentence(sentence);
-		sentence.setChunking(chunking);
+		//sentence.setChunking(chunking);
+		sentence.addChunking(chunking);
 	}
 	
 	/**

@@ -6,10 +6,8 @@ import java.util.Hashtable;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.FileOutputStream;
 
 import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.stream.XMLStreamException;
 
@@ -38,6 +36,7 @@ public class CclStreamWriter extends StreamWriter {
 	private XMLStreamWriter xmlw;
 	private OutputStream os;
 	private boolean open = false;
+	private boolean indent = true;
 	
 	public CclStreamWriter(OutputStream os) {
 		this.os = os;
@@ -81,12 +80,14 @@ public class CclStreamWriter extends StreamWriter {
 		try {
 			if (!open)
 				open();
+			this.indent(1);
 			xmlw.writeStartElement(TAG_PARAGRAPH);
 			if (paragraph.getId() != null)
 				xmlw.writeAttribute(TAG_ID, paragraph.getId());
 			xmlw.writeCharacters("\n");
 			for (Sentence sentence : paragraph.getSentences())
 				writeSentence(sentence);
+			this.indent(1);
 			xmlw.writeEndElement();
 			xmlw.writeCharacters("\n");
 			xmlw.flush();
@@ -96,7 +97,10 @@ public class CclStreamWriter extends StreamWriter {
 	}
 	
 	private void writeSentence(Sentence sentence) throws XMLStreamException {
+		this.indent(2);
 		xmlw.writeStartElement(TAG_SENTENCE);
+		if (sentence.getId() != null)
+			xmlw.writeAttribute(TAG_ID, sentence.getId());
 		xmlw.writeCharacters("\n");
 		
 		// prepare annotation channels
@@ -115,14 +119,19 @@ public class CclStreamWriter extends StreamWriter {
 		ArrayList<Token> tokens = sentence.getTokens();
 		for (int i = 0; i < tokens.size(); i++)
 			writeToken(i, tokens.get(i), chunks, channels);
+		this.indent(2);
 		xmlw.writeEndElement();
 		xmlw.writeCharacters("\n");
 	}
 	
 	private void writeToken(int idx, Token token, HashSet<Chunk> chunks, Hashtable<Chunk, Integer> channels)
 		throws XMLStreamException {
+		this.indent(3);
 		xmlw.writeStartElement(TAG_TOKEN);
+		if (token.getId() != null)
+			xmlw.writeAttribute(TAG_ID, token.getId());
 		xmlw.writeCharacters("\n");
+		this.indent(4);
 		xmlw.writeStartElement(TAG_ORTH);
 		//xmlw.writeCharacters(token.getFirstValue().replace("&", "&amp;"));
 		//xmlw.writeCharacters(escapeXml(token.getFirstValue()));
@@ -143,6 +152,7 @@ public class CclStreamWriter extends StreamWriter {
 				strChannels.put(chunk.getType(), new Integer(0));
 		
 		for (String channel : strChannels.keySet()) {
+			this.indent(4);
 			xmlw.writeStartElement(TAG_ANN);
 			xmlw.writeAttribute(TAG_CHAN, channel.toLowerCase());
 			xmlw.writeCharacters("" + strChannels.get(channel));
@@ -150,16 +160,19 @@ public class CclStreamWriter extends StreamWriter {
 			xmlw.writeCharacters("\n");
 		}
 		
+		this.indent(3);
 		xmlw.writeEndElement();
 		xmlw.writeCharacters("\n");
 
 		if (token.getNoSpaceAfter()) {
+			this.indent(3);
 			xmlw.writeEmptyElement(TAG_NS);
 			xmlw.writeCharacters("\n");
 		}
 	}
 	
 	private void writeTag(Tag tag) throws XMLStreamException {
+		this.indent(4);
 		xmlw.writeStartElement(TAG_TAG);
 		if (tag.getDisamb())
 			xmlw.writeAttribute(TAG_DISAMB, "1");
@@ -196,5 +209,11 @@ public class CclStreamWriter extends StreamWriter {
 			xmlw.writeEntityRef("gt");
 		else 
 			xmlw.writeCharacters(text);
+	}
+	
+	private void indent(int repeat) throws XMLStreamException{
+		if (this.indent)
+			for (int i=0; i<repeat; i++)
+				xmlw.writeCharacters(" ");
 	}
 }
