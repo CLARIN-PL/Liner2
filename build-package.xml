@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+
+<project name="Liner2 -- a module for named entity recognition for Polish" default="make" basedir=".">
+
+	<property name="nerd_path" value="../../workspace_inforex/inforex_nerd" />
+	<property name="production_path" value="/nlp/eclipse/workspace_liner2/package" />
+
+	<target name="clean">
+  		<delete dir="${production_path}"/>
+	</target>
+
+	<target name="make" depends="clean,copy-liner,copy-nerd,copy-models"/>		
+
+	<target name="copy-liner">
+		<mkdir dir="${production_path}"/>
+		<exec executable="cp">
+			<arg value="./external"/>
+			<arg value="${production_path}/external"/>
+			<arg value="-R"/>
+		</exec>		
+		<copy todir="${production_path}/lib" >  
+			<fileset dir="./lib" includes="**"/>  
+		</copy>
+		<copy todir="${production_path}/src" >  
+			<fileset dir="./src" includes="**"/>
+		</copy>
+		<copy todir="${production_path}/test" >  
+			<fileset dir="./test" includes="**"/>
+		</copy>
+		<copy file="./build.xml" todir="${production_path}"/>
+		<copy file="./liner2.sh" todir="${production_path}"/>
+		<chmod file="${production_path}/liner2.sh" perm="a+x"></chmod>
+		<copy file="./README" todir="${production_path}"/>
+		<echo file="${production_path}/local.ini">-nerd ./nerd</echo> 
+	</target>
+
+	<target name="copy-nerd">
+		<mkdir dir="${production_path}/nerd"/>
+		<exec executable="git" dir="${nerd_path}/">
+			<arg value="checkout-index"/>
+			<arg value="-f"/>
+			<arg value="-a"/>
+			<arg value="--prefix=${production_path}/nerd/"/>
+		</exec>
+	</target>
+
+	<target name="copy-models">
+		<copy todir="${production_path}/model-5nam-v1" >  
+			<fileset dir="./model-5nam-v1" includes="**"/>  
+		</copy>		
+		<copy todir="${production_path}/model-56nam-v1" >  
+			<fileset dir="./model-56nam-v1" includes="**"/>  
+		</copy>		
+	</target>
+
+</project>
