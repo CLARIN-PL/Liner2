@@ -1,0 +1,48 @@
+    Copyright (C) 2012 Michał Marcińczuk, Maciej Janicki
+    Wrocław University of Technology  
+    
+Liner2 packages requires CRF++ (http://crfpp.googlecode.com/svn/trunk/doc/index.html).
+The compatible version can be also found in the ./external folder. If you do not
+have installed CRF++ then run bellow command, in other case you can skip this step.
+
+  ant crfpp-make
+  sudo ant crfpp-install
+  
+If you already have installed CRF++ then you have to compile Java wrappers. You
+can do it by executing following command:
+
+  ant crfpp-jar
+  
+At this step you might encounter a problem with finding jni.h file. You have to
+check a path to java-sdk, parameter INCLUDE in 'external/crfpp/java/Makefile'. 
+
+Make sure that the files 'lib/libCRFPP.so' and 'lib/CRFPP.jar' were created.
+
+Liner2 uses an external tool for features construction called NERD. It requires
+following Python packages:
+ * numpy-1.5.1.tar.gz
+ * PyYAML-3.09.tar.gz
+ * networkx-0.99.tar.gz
+ * biopython-1.54b.tar.gz
+ * setuptools-0.6c11.tar.gz
+ * MySQL-python-1.2.3.tar.gz
+ * nltk-2.0.1rc1.tar.gz
+ * Django 1.3
+
+To check what packages are missing, please run following command:
+
+  ./nerd/check.py
+
+The final step is compilation of Liner2, just execute:
+
+  ant jar
+  
+To check, if the configuration was successful run the following command:
+
+  ./liner2.sh pipe -ini model-5nam-v1/model.ini -i ccl -f test/sentence.xml -o tuples
+  
+You should see following output:
+
+	(4,6,PERSON_FIRST_NAM,"Ala")
+	(7,11,PERSON_LAST_NAM,"Nowak")
+	(20,28,CITY_NAM,"Warszawie")

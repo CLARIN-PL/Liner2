@@ -31,6 +31,7 @@
 		<copy file="./liner2.sh" todir="${production_path}"/>
 		<chmod file="${production_path}/liner2.sh" perm="a+x"></chmod>
 		<copy file="./README" todir="${production_path}"/>
+		<copy file="./LICENSE" todir="${production_path}"/>
 		<echo file="${production_path}/local.ini">-nerd ./nerd</echo> 
 	</target>
 
