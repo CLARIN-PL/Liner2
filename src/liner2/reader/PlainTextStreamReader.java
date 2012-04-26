@@ -52,7 +52,7 @@ public class PlainTextStreamReader extends StreamReader {
 		try {
 			maca_p = Runtime.getRuntime().exec(maca_cmd);
 		} catch (IOException ex) {
-			throw new DataFormatException("Failed to run morphological analyzer.");
+			throw new DataFormatException("Failed to run morphological analyzer.\nCommand: " + maca_cmd);
 		}
 
 		InputStream maca_in = maca_p.getInputStream();
