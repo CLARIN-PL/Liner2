@@ -1,47 +1,69 @@
-    Copyright (C) 2012 Michał Marcińczuk, Maciej Janicki
-    Wrocław University of Technology  
+Liner2 v2.0
+
+Copyright (C) 2011-2012 Michał Marcińczuk, Maciej Janicki;
+Wrocław University of Technology. Available under the terms 
+of the GNU General Public License; see the file LICENCE for details. 
     
-Liner2 packages requires CRF++ (http://crfpp.googlecode.com/svn/trunk/doc/index.html).
-The compatible version can be also found in the ./external folder. If you do not
-have installed CRF++ then run bellow command, in other case you can skip this step.
+Installation
+============    
+    
+  Liner2 requires CRF++ (http://crfpp.googlecode.com/svn/trunk/doc/index.html).
+  The compatible version can be also found in the ./external/crfpp folder. 
+  If you do not have installed CRF++ then run following command, in other case 
+  you can skip this step.
 
-  ant crfpp-make
-  sudo ant crfpp-install
+    ant crfpp-make
+    sudo ant crfpp-install
   
-If you already have installed CRF++ then you have to compile Java wrappers. You
-can do it by executing following command:
+  If you already have installed CRF++ then you have to compile Java wrapper. You
+  can do it by executing following command:
 
-  ant crfpp-jar
+    ant crfpp-jar
   
-At this step you might encounter a problem with finding jni.h file. You have to
-check a path to java-sdk, parameter INCLUDE in 'external/crfpp/java/Makefile'. 
+  At this step you might encounter a problem with finding jni.h file. You have to
+  check a path to java-sdk, parameter INCLUDE in 'external/crfpp/java/Makefile'. 
 
-Make sure that the files 'lib/libCRFPP.so' and 'lib/CRFPP.jar' were created.
+  When the wrapper is compiled make sure that the files './lib/libCRFPP.so' 
+  and './lib/CRFPP.jar' were created.
 
-Liner2 uses an external tool for features construction called NERD. It requires
-following Python packages:
- * numpy-1.5.1.tar.gz
- * PyYAML-3.09.tar.gz
- * networkx-0.99.tar.gz
- * biopython-1.54b.tar.gz
- * setuptools-0.6c11.tar.gz
- * MySQL-python-1.2.3.tar.gz
- * nltk-2.0.1rc1.tar.gz
- * Django 1.3
+  Liner2 uses an external tool for feature generation called NERD included in
+  the package. The NERD module requires following Python packages:
+   * numpy-1.5.1.tar.gz
+   * PyYAML-3.09.tar.gz
+   * networkx-0.99.tar.gz
+   * biopython-1.54b.tar.gz
+   * setuptools-0.6c11.tar.gz
+   * MySQL-python-1.2.3.tar.gz
+   * nltk-2.0.1rc1.tar.gz
+   * Django 1.3
 
-To check what packages are missing, please run following command:
+  To check if all required packages are installed, run the following command:
 
-  ./nerd/check.py
+    ./nerd/check.py
 
-The final step is compilation of Liner2, just execute:
+  If all packages are "ok", then compile Liner2 by executing:
 
-  ant jar
+    ant jar
+
+  To set a global command linked with the current installation run:
+
+    ant install
+
+  This will create a global command 'liner2' which allow to use current
+  installation instance from any location.
+
+Test
+====    
   
-To check, if the configuration was successful run the following command:
+  To check, if the installation was successful run the following command:
 
-  ./liner2.sh pipe -ini model-5nam-v1/model.ini -i ccl -f test/sentence.xml -o tuples
+    ./liner2.sh pipe -i ccl -f test/sentence.xml -o tuples
+
+  or using global command:
+
+    liner2 pipe -i ccl -f PATH/test/sentence.xml -o tuples
   
-You should see following output:
+  You should see following output:
 
 	(4,6,PERSON_FIRST_NAM,"Ala")
 	(7,11,PERSON_LAST_NAM,"Nowak")

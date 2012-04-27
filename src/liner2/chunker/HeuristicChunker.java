@@ -17,6 +17,12 @@ import liner2.tools.ParameterException;
 
 public class HeuristicChunker extends Chunker {
 	
+	private String ATTR_PERSON_FIRST_NAM = "person_first_nam";
+	private String ATTR_PERSON_LAST_NAM = "person_last_nam";
+	private String ATTR_CITY_NAM_NAM = "person_last_nam";
+	private String ATTR_COUNTRY_NAM = "person_last_nam";
+	private String ATTR_ROAD_NAM = "person_last_nam";
+	
 	private ArrayList<String> rules = null;
 	
 	public HeuristicChunker() {}
@@ -175,6 +181,9 @@ public class HeuristicChunker extends Chunker {
 		ArrayList<Token> tokens = sentence.getTokens();
 		AttributeIndex attributeIndex = sentence.getAttributeIndex();
 		
+		if (attributeIndex.getIndex("road_prefix")<0 || attributeIndex.getIndex("road_nam")<0)
+			return chunking;
+		
 		for (int i = 1; i < tokens.size(); i++) {
 			if (!attributeIndex.getAttributeValue(tokens.get(i-1), "road_prefix").equals("B")) {
 				if (!attributeIndex.getAttributeValue(tokens.get(i-1), "class").equals("interp"))
@@ -210,7 +219,12 @@ public class HeuristicChunker extends Chunker {
 		int indexPersonLastNam = ai.getIndex("person_last_nam");
 		int indexPersonNoun = ai.getIndex("person_noun");
 		int indexBase = ai.getIndex("base");
-		
+
+		if ( indexPersonLastNam < 0 || indexPersonFirstNam < 0 || indexPersonNoun < 0
+				|| indexBase < 0 ){
+			return chunking;
+		}
+
 		for (int i = 0; i + 2 < tokens.size(); i++ ){
 			if ( ( tokens.get(i).getAttributeValue(indexBase).toLowerCase().equals("pan")
 					|| tokens.get(i).getAttributeValue(indexBase).toLowerCase().equals("pani") 
@@ -245,7 +259,12 @@ public class HeuristicChunker extends Chunker {
 		int indexPattern = ai.getIndex("pattern");
 		int indexBase = ai.getIndex("base");
 		int indexOrth = ai.getIndex("orth");
-		
+
+		if ( indexPersonLastNam < 0 || indexPattern < 0 || indexBase < 0
+				|| indexOrth < 0 ){
+			return chunking;
+		}
+
 		for (int i = 0; i + 5 < tokens.size(); i++ ){
 			if ( ( tokens.get(i).getAttributeValue(indexBase).toLowerCase().equals("pan")
 					|| tokens.get(i).getAttributeValue(indexBase).toLowerCase().equals("pani") 
@@ -278,7 +297,11 @@ public class HeuristicChunker extends Chunker {
 		
 		int indexPersonLastNam = ai.getIndex("person_last_nam");
 		int indexPersonFirstNam = ai.getIndex("person_first_nam");
-		
+
+		if ( indexPersonLastNam < 0 || indexPersonFirstNam < 0 ){
+			return chunking;
+		}
+
 		for (int i = 0; i + 1 < tokens.size(); i++ ){
 			if ( tokens.get(i).getAttributeValue(indexPersonFirstNam).equals("B")
 					&& tokens.get(i).getAttributeValue(indexPersonLastNam).equals("O")
@@ -311,6 +334,11 @@ public class HeuristicChunker extends Chunker {
 		int indexStartsWithLowerCase = ai.getIndex("starts_with_lower_case");
 		int indexOrth = ai.getIndex("orth");
 		
+		if ( indexPersonLastNam < 0 || indexPersonFirstNam < 0 || indexPersonNoun < 0
+				|| indexStartsWithLowerCase < 0 || indexOrth < 0){
+			return chunking;
+		}
+		
 		for (int i = 0; i + 4 < tokens.size(); i++ ){
 			if ( tokens.get(i).getAttributeValue(indexPersonFirstNam).equals("B")
 					&& tokens.get(i+1).getAttributeValue(indexPersonLastNam).equals("B")
@@ -340,7 +368,12 @@ public class HeuristicChunker extends Chunker {
 		int indexPersonFirstNam = ai.getIndex("person_first_nam");
 		int indexStartsWithUpperCase = ai.getIndex("starts_with_upper_case");
 		int indexPersonNoun = ai.getIndex("person_noun");
-		
+
+		if ( indexPersonLastNam < 0 || indexPersonFirstNam < 0 || indexPersonNoun < 0
+				|| indexPersonNoun < 0 ){
+			return chunking;
+		}
+
 		for (int i = 0; i + 2 < tokens.size(); i++ ){
 			if ( tokens.get(i).getAttributeValue(indexPersonNoun).equals("B")
 					&& tokens.get(i+1).getAttributeValue(indexPersonFirstNam).equals("B")
@@ -369,7 +402,12 @@ public class HeuristicChunker extends Chunker {
 		int indexPersonNoun = ai.getIndex("person_noun");
 		int indexPattern = ai.getIndex("pattern");
 		int indexOrth = ai.getIndex("orth");
-		
+
+		if ( indexPersonLastNam < 0 || indexPersonFirstNam < 0 || indexPersonNoun < 0
+				|| indexPattern < 0 || indexOrth < 0){
+			return chunking;
+		}
+
 		for (int i = 0; i + 4 < tokens.size(); i++ ){
 			if ( tokens.get(i).getAttributeValue(indexPersonNoun).equals("B")
 					&& tokens.get(i+1).getAttributeValue(indexPersonFirstNam).equals("B")
@@ -395,6 +433,10 @@ public class HeuristicChunker extends Chunker {
 		int indexCityNam = ai.getIndex("city_nam");
 		int indexCase = ai.getIndex("case");
 	
+		if ( indexBase < 0 || indexCityNam < 0 || indexCase < 0){
+			return chunking;
+		}
+
 		for (int i = 0; i + 1 < tokens.size(); i++ ){
 			if ( ( tokens.get(i).getAttributeValue(indexBase).equals("gmina")
 					|| tokens.get(i).getAttributeValue(indexBase).equals("gmin") 
@@ -425,7 +467,11 @@ public class HeuristicChunker extends Chunker {
 		int indexOrth = ai.getIndex("orth");
 		int indexCityNam = ai.getIndex("city_nam");
 		int indexPattern = ai.getIndex("pattern");
-	
+
+		if ( indexOrth < 0 || indexCityNam < 0 || indexPattern < 0){
+			return chunking;
+		}
+		
 		for (int i = 0; i + 3 < tokens.size(); i++ ){
 			if ( tokens.get(i).getAttributeValue(indexPattern).equals("DIGITS")
 					&& tokens.get(i).getAttributeValue(indexOrth).length() == 2
@@ -451,6 +497,10 @@ public class HeuristicChunker extends Chunker {
 		
 		int indexOrth = ai.getIndex("orth");
 		int indexPattern = ai.getIndex("pattern");
+
+		if ( indexOrth < 0 || indexPattern < 0){
+			return chunking;
+		}
 		
 		for ( int i=0; i + 3 < tokens.size(); i++ ){
 			if ( tokens.get(i).getAttributeValue(indexOrth).toLowerCase().equals("ul")

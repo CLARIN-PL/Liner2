@@ -1,57 +1,71 @@
 <?xml version="1.0"?>
 
-<project name="Liner2 -- a module for named entity recognition for Polish" default="make" basedir=".">
+<project name="Liner2 -- Light Named Entity Recognizer" default="make" basedir=".">
 
-	<property name="nerd_path" value="../../workspace_inforex/inforex_nerd" />
-	<property name="production_path" value="/nlp/eclipse/workspace_liner2/package" />
+	<property name="release" value="liner2-1" />
+	<property name="path_nerd" value="../../workspace_inforex/inforex_nerd" />
+	<property name="path_models" value="../models" />
+	<property name="path_production" value="/nlp/eclipse/workspace_liner2/package/${release}" />
 
 	<target name="clean">
-  		<delete dir="${production_path}"/>
+  		<delete dir="${path_production}"/>
 	</target>
 
-	<target name="make" depends="clean,copy-liner,copy-nerd,copy-models"/>		
+	<target name="make" depends="clean,copy-liner,copy-nerd,copy-models,compress"/>		
 
 	<target name="copy-liner">
-		<mkdir dir="${production_path}"/>
+		<mkdir dir="${path_production}"/>
 		<exec executable="cp">
 			<arg value="./external"/>
-			<arg value="${production_path}/external"/>
+			<arg value="${path_production}/external"/>
 			<arg value="-R"/>
 		</exec>		
-		<copy todir="${production_path}/lib" >  
+		<copy todir="${path_production}/lib" >  
 			<fileset dir="./lib" includes="**"/>  
 		</copy>
-		<copy todir="${production_path}/src" >  
+		<copy todir="${path_production}/src" >  
 			<fileset dir="./src" includes="**"/>
 		</copy>
-		<copy todir="${production_path}/test" >  
+		<copy todir="${path_production}/test" >  
 			<fileset dir="./test" includes="**"/>
 		</copy>
-		<copy file="./build.xml" todir="${production_path}"/>
-		<copy file="./liner2.sh" todir="${production_path}"/>
-		<chmod file="${production_path}/liner2.sh" perm="a+x"></chmod>
-		<copy file="./README" todir="${production_path}"/>
-		<copy file="./LICENSE" todir="${production_path}"/>
-		<echo file="${production_path}/local.ini">-nerd ./nerd</echo> 
+		<copy file="./build.xml" todir="${path_production}"/>
+		<copy file="./liner2.sh" todir="${path_production}"/>
+		<chmod file="${path_production}/liner2.sh" perm="a+x"></chmod>
+		<copy file="./INSTALL" todir="${path_production}"/>
+		<copy file="./LICENSE" todir="${path_production}"/>
+		<copy file="./README" todir="${path_production}"/>
+		<echo file="${path_production}/local.ini"># Common configuration
+-nerd {INI_PATH}/nerd
+-ini {INI_PATH}/model-5nam-v1/model.ini
+		</echo> 
 	</target>
 
 	<target name="copy-nerd">
-		<mkdir dir="${production_path}/nerd"/>
-		<exec executable="git" dir="${nerd_path}/">
+		<mkdir dir="${path_production}/nerd"/>
+		<exec executable="git" dir="${path_nerd}/">
 			<arg value="checkout-index"/>
 			<arg value="-f"/>
 			<arg value="-a"/>
-			<arg value="--prefix=${production_path}/nerd/"/>
+			<arg value="--prefix=${path_production}/nerd/"/>
 		</exec>
 	</target>
 
 	<target name="copy-models">
-		<copy todir="${production_path}/model-5nam-v1" >  
-			<fileset dir="./model-5nam-v1" includes="**"/>  
+		<copy todir="${path_production}/model-5nam-v1" >  
+			<fileset dir="${path_models}/model-5nam-v1" includes="**"/>  
 		</copy>		
-		<copy todir="${production_path}/model-56nam-v1" >  
-			<fileset dir="./model-56nam-v1" includes="**"/>  
-		</copy>		
+	</target>
+
+	<target name="compress">
+		<exec executable="rm">
+			<arg value="/nlp/eclipse/workspace_liner2/package/${release}.7z"/>
+		</exec>
+		<exec executable="7z">
+			<arg value="a"/>
+			<arg value="/nlp/eclipse/workspace_liner2/package/${release}.7z"/>
+			<arg value="/nlp/eclipse/workspace_liner2/package/${release}"/>
+		</exec>				
 	</target>
 
 </project>
