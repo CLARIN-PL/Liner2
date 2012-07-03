@@ -1,65 +1,23 @@
-Liner2 v2.0
+    Copyright (C) 2012 Michał Marcińczuk, Maciej Janicki
+    Wrocław University of Technology  
 
-Copyright (C) 2011-2012 Michał Marcińczuk, Maciej Janicki;
-Wrocław University of Technology. Available under the terms 
-of the GNU General Public License; see the file LICENCE for details. 
+In this file you will find how to use Liner2. To find the installation 
+guideline please see INSTALL. To find the license terms please see LICENSE.
 
-Introduction
-============
-
-  In this file you will find how to use Liner2. To find the installation 
-  guideline please see INSTALL. To find the license terms please see LICENSE.
-
-  This is only brief introduction to Liner2. To see the complete description
-  of Liner2 options please visit: http://nlp.pwr.wroc.pl/redmine/projects/inforex-liner/wiki
-
-Models
-======
-
-  The Liner2 package contains a simple model called model-5nam-v1 for recognition
-  of 5 categories of proper names (first names, last names, names of countries,
-  cities and roads).
-
-  Additional models can be found at http://nlp.pwr.wroc.pl/en/tools-and-resources/liner2
-
-   * model-56nam-v1.7z --- 56 categories of proper names (complete list of names
-     can be found here http://nlp.pwr.wroc.pl/en/tools-and-resources/nelexicon).
-     Download: wget http://nlp.pwr.wroc.pl/download/liner2/model-56nam-v1.7z
-
-  To use another model then default you can modify the local.ini file or provide
-  the -ini {path} parameter in the command line. The -ini parameter from command
-  line override the -ini parameter from the local.ini file.
-  
-Usage
-=====
+This is only brief introduction to Liner2. To see the complete description
+of Liner2 options please visit: http://nlp.pwr.wroc.pl/redmine/projects/inforex-liner/wiki
     
-  * Pipe mode (to process a single document), read and write in ccl format:
+=== Run ===
 
-      ./liner2.sh pipe -ini model-5nam-v1/model.ini -i ccl -f test/sentence.xml -o ccl
+Pipe mode:
 
-    or with global command and default configuration:
-  
-      liner2 -i ccl -f test/sentence.xml -o ccl
+  ./liner2.sh 
 
-  * Interactive mode with preprocessed data:
+Interactive mode:
 
-      ./liner2.sh batch -ini model-56nam-v1/model.ini -o tuples
-  
-    == Input ==
-    Pani Pani subst:sg:nom:f  Jadwiga Jadwiga subst:sg:nom:f  Nowak Nowak subst:sg:nom:m1  z z prep:gen:nwok  Krakowa Kraków subst:sg:gen:m3
-  
-    == Output ==
-    (4,10,PERSON_FIRST_NAM,"Jadwiga")
-    (11,15,PERSON_LAST_NAM,"Nowak")
-  
 
-  * Interactive mode for raw text (requires maca):
+Interactive mode for raw text (requires maca):
 
-      ./liner2.sh batch -ini model-56nam-v1/model.ini -i plain -o tuples -maca -
+  ./liner2.sh batch -ini model-56nam-v1/model.ini -i plain -o tuples -maca -
 
-    == Input ==
-    Pani Jadwiga Nowak z Krakowa
 
-    == Output ==
-    (4,10,PERSON_FIRST_NAM,"Jadwiga")
-    (11,15,PERSON_LAST_NAM,"Nowak")
