@@ -94,7 +94,9 @@ public class Main {
 //            action = new ActionDictStats();
 //        } else if (mode.equals("tag") ) {
 //            action = new ActionTag();
-//        } else 
+//        } else
+	} else if (mode.equals("batch-file")){
+            action = new ActionBatchFile(); 
     	} else if (mode.equals("null") ) {
             action = new ActionNull();
         } else if (mode.equals("convert") ) {

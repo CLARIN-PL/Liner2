@@ -79,6 +79,7 @@ public class LinerOptions {
 	public static final String OPTION_HELP = "help";
 	public static final String OPTION_HEURISTICS = "heuristics";
 	public static final String OPTION_INI = "ini";
+	public static final String OPTION_IS = "is";
 	public static final String OPTION_INPUT_FILE = "f";
 	public static final String OPTION_INPUT_FORMAT = "i";
 	public static final String OPTION_IP = "ip";
@@ -256,7 +257,7 @@ public class LinerOptions {
 				continue;
 			if ( o.getOpt().equals("ini") ){
 				configDesc.append( String.format(PARAM_PRINT, o.getOpt(), o.getValue() + "\n" ) );
-    			this.parseFromIni(o.getValue(), configDesc);
+    				this.parseFromIni(o.getValue(), configDesc);
 			}				
 			else if (o.getLongOpt() == null) {
 				this.properties.setProperty(o.getOpt(), o.getValue());
@@ -449,6 +450,9 @@ public class LinerOptions {
     	options.addOption(OptionBuilder
 				.withArgName("filename").hasArg().withDescription("name of file with configuration")
 				.create(OPTION_INI));
+		options.addOption(OptionBuilder
+                                .withArgName("filename").hasArg().withDescription("name of file with list of input files")
+                                .create(OPTION_IS));
 		options.addOption(OptionBuilder.withArgName("filename").hasArg()
 			.withDescription("read input from file")
 			.create(OPTION_INPUT_FILE));
@@ -509,8 +513,10 @@ public class LinerOptions {
 		new HelpFormatter().printHelp("java -jar liner.jar <mode> [options]", options);
 		System.out.println();
     	System.out.println("Modes:");
-    	System.out.println("  batch               - ner batch moge");
+    	System.out.println("  batch               - ner batch mode");
     	System.out.println("                        Parameters: -feature, -chunker, -nerd");
+        System.out.println("  batch-file          - ner batch-file mode");
+        System.out.println("                        Parameters: -i, -o, -is, -feature, -chunker, -nerd");
     	System.out.println("  convert             - convert text from one format to another");
     	System.out.println("                        Parameteres: -i, -o, -f, -t");
        	System.out.println("  daemon              - Listen and process requests from a given database");
