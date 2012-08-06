@@ -1,11 +1,14 @@
 package liner2.structure;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
 public class Paragraph {
 
 	private String id = null;
 	private AttributeIndex attributeIndex = null;
+	private HashMap<String,String> chunkMetaData = null;
 	
 	private ArrayList<Sentence> sentences = new ArrayList<Sentence>(); 
 	
@@ -35,5 +38,17 @@ public class Paragraph {
 		this.attributeIndex = attributeIndex;
 		for (Sentence s : this.sentences)
 			s.setAttributeIndex(attributeIndex);
+	}
+	
+	public void setChunkMetaData(HashMap<String,String> chunkMetaData){
+		this.chunkMetaData = chunkMetaData;
+	}
+	
+	public Set<String> getKeysChunkMetaData(){
+		return this.chunkMetaData.keySet();
+	}
+	
+	public String getChunkMetaData(String key){
+		return this.chunkMetaData.get(key);
 	}
 }

@@ -3,6 +3,7 @@ package liner2.writer;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Set;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -82,6 +83,12 @@ public class CclStreamWriter extends StreamWriter {
 				open();
 			this.indent(1);
 			xmlw.writeStartElement(TAG_PARAGRAPH);
+			
+			Set<String> chunkMetaDataKeys = paragraph.getKeysChunkMetaData();
+			for(String key : chunkMetaDataKeys){
+				xmlw.writeAttribute(key, paragraph.getChunkMetaData(key));
+			}
+			
 			if (paragraph.getId() != null)
 				xmlw.writeAttribute(TAG_ID, paragraph.getId());
 			xmlw.writeCharacters("\n");

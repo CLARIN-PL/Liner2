@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -126,12 +127,19 @@ public class CclStreamReader extends StreamReader {
 		String paragraphText = "";
 		String paragraphId = null;
 		
+		HashMap<String,String> chunkMetaData = new HashMap<String,String>();
+		
 		// wczytaj kod xml następnego akapitu
 		try {
 			if (!paragraphReady())
 				return null;
-
 			paragraphText = "<" + TAG_PARAGRAPH + ">";
+			
+			for(int i=0; i<xmlr.getAttributeCount(); i++) {
+				
+				if(!xmlr.getAttributeName(i).toString().contains(":href"))chunkMetaData.put(xmlr.getAttributeName(i).toString(), xmlr.getAttributeValue(i));
+				else chunkMetaData.put("xlink:href", xmlr.getAttributeValue(i));
+			}
 			paragraphId = this.nextParagraphId;
 			this.nextParagraph = false;
 			this.nextParagraphId = null;
@@ -180,7 +188,7 @@ public class CclStreamReader extends StreamReader {
 		for (int i = 0; i < sentences.getLength(); i++) {
 			paragraph.addSentence(getSentenceFromNode(sentences.item(i)));
 		}
-		
+		paragraph.setChunkMetaData(chunkMetaData);
 		paragraph.setAttributeIndex(this.attributeIndex);
 		return paragraph;
 	}
