@@ -44,7 +44,7 @@ public class DictionaryChunker extends Chunker
 		Chunking chunking = new Chunking(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();
 		int sentenceLength = sentence.getTokenNumber();
-		
+		if(sentenceLength > 500) return chunking;
 		// [długość] -> początek => n-gram
 		ArrayList<HashMap<Integer, String>> nGrams = 
 			new ArrayList<HashMap<Integer, String>>();

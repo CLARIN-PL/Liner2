@@ -43,12 +43,15 @@ public class ActionBatchFile extends Action{
 		File file = null;
   		FileReader freader = null;
   		LineNumberReader lnreader = null;
+		int i=0;
   		try{
   			file = new File(LinerOptions.getOption(LinerOptions.OPTION_IS));
   			freader = new FileReader(file);
   			lnreader = new LineNumberReader(freader);
   			String line = "";
 			while ((line = lnreader.readLine()) != null){
+				i++;
+				System.out.println(i+": "+line);
 				StreamReader reader = ReaderFactory.get().getStreamReader(
                         		line,
                         		LinerOptions.getOption(LinerOptions.OPTION_INPUT_FORMAT));
@@ -60,6 +63,10 @@ public class ActionBatchFile extends Action{
                         		line+"."+LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FORMAT),
                         		LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FORMAT));
                 		writer.writeParagraphSet(ps);
+
+				reader.close();
+				writer.close();
+				ps = null;	
 			}
 		}
 		finally{
