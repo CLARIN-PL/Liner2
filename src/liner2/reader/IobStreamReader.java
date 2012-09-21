@@ -42,10 +42,15 @@ public class IobStreamReader extends StreamReader {
 			
 			if (line == null)
 				throw new DataFormatException("Invalid file format.");
-			if (!line.startsWith("-DOCSTART CONFIG FEATURES"))
+			if (!line.startsWith("-DOCSTART CONFIG FEATURES")){
 				continue;
+			}
 			this.attributeIndex = new AttributeIndex();
+			FeatureGenerator.docstart_config_features = line;
 			String[] content = line.trim().split(" ");
+			
+			/* Pierwsze trzy elementy to -DOCSTART, CONFIG, FEATURES,
+			 * więc je pomiń. */
 			for (int i = 3; i < content.length; i++)
 				this.attributeIndex.addAttribute(content[i]);
 			this.init = true;

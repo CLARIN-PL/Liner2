@@ -38,6 +38,7 @@ public class FeatureGenerator {
 	
 	public static final Pattern regexFeatureGeneralisation = Pattern.compile("hyp([0-9]+)");
     public static final Pattern regexFeatureDictionary = Pattern.compile("([^:]*)(:(.*))?:([^:]*)");
+    public static String docstart_config_features = "-DOCSTART CONFIG FEATURES orth base ctag";
 	
 	//private static FeatureGenerator generator = null;
 	private static boolean initialized = false;
@@ -86,6 +87,10 @@ public class FeatureGenerator {
 		String featureOthers = "";
 		for (String feature : LinerOptions.get().features) {
 			String featureName = feature;
+			
+			if ( featureName.endsWith(":iob") )
+				continue;
+			
 			if (featureName.equals("syn"))
 				featureOthers += " --generalization syn:::syn ";
 			
@@ -148,20 +153,27 @@ public class FeatureGenerator {
 		
 		if (updateIndex)
 			sentence.getAttributeIndex().update(LinerOptions.get().featureNames);
-		
+
+		String featureLoad = FeatureGenerator.docstart_config_features;
+		featureLoad = featureLoad.replace("-DOCSTART CONFIG FEATURES ", "");
+		featureLoad = featureLoad.replace(" ", ",");
+
 		FeatureGenerator.writeline("@FEATURES");
-		FeatureGenerator.writeline(FeatureGenerator.configuration);
-		FeatureGenerator.writeline("-DOCSTART CONFIG FEATURES orth base ctag");
+		FeatureGenerator.writeline(FeatureGenerator.configuration  + " -l " + featureLoad);
+		FeatureGenerator.writeline(FeatureGenerator.docstart_config_features);
 		
 		for (Token token : sentence.getTokens()) {
 			String line = String.format("%s %s %s O", token.getAttributeValue(0),
 				token.getAttributeValue(1), token.getAttributeValue(2));
-			FeatureGenerator.writeline(line);
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i<token.getNumAttributes(); i++)
+				sb.append(token.getAttributeValue(i) + " ");
+			sb.append("O");
+			FeatureGenerator.writeline(sb.toString());
 		}
 
 		FeatureGenerator.writeline("@EOC");	
 		FeatureGenerator.output.flush();
-		
 		FeatureGenerator.input.readLine();
 		
 //		String error = null;
@@ -173,8 +185,7 @@ public class FeatureGenerator {
 			line = line.substring(0, line.length() - 2);
 			String[] featureValues = line.split(" ");
 			for (int i = 0; i < featureValues.length; i++)
-				token.setAttributeValue(i, featureValues[i]);
-			
+				token.setAttributeValue(i, featureValues[i]);					
 		}
 
 //		String error = null;
@@ -248,6 +259,7 @@ public class FeatureGenerator {
 		
 	private static void writeline(String line) throws IOException{
 		FeatureGenerator.output.write(line + "\n");
+		//System.out.println("NERD: " + line);
 	}
 
 }
