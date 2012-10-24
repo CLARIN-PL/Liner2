@@ -1,9 +1,11 @@
 package liner2.chunker;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 import liner2.structure.Chunk;
 import liner2.structure.Chunking;
+import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
 
@@ -16,13 +18,27 @@ public abstract class Chunker {
 	 * @return
 	 */
 	public abstract Chunking chunkSentence(Sentence sentence);
-	
-	public void chunkSentenceInPlace(Sentence sentence){
+
+	private void chunkInPlace(Sentence sentence){
 		Chunking chunking = this.chunkSentence(sentence);
-		//sentence.setChunking(chunking);
 		sentence.addChunking(chunking);
 	}
-	
+
+	public HashMap<Sentence, Chunking> chunk(ParagraphSet ps){
+		HashMap<Sentence, Chunking> chunkings = new HashMap<Sentence, Chunking>();
+		for ( Paragraph paragraph : ps.getParagraphs() )
+			for (Sentence sentence : paragraph.getSentences()){
+				chunkings.put(sentence, this.chunkSentence(sentence));
+			}
+		return chunkings;
+	}
+
+	public void chunkInPlace(ParagraphSet ps){
+		for ( Paragraph paragraph : ps.getParagraphs() )
+			for (Sentence sentence : paragraph.getSentences())
+				this.chunkInPlace(sentence);
+	}
+
 	/**
 	 * Zwolnienie zasobów wykorzystywanych przez chunker, 
 	 * np. zamknięcie zewnętrznych procesów i połączeń.
@@ -39,4 +55,5 @@ public abstract class Chunker {
 	 */
 	public void prepare(ParagraphSet ps) {
 	}
+
 }

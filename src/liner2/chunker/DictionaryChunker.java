@@ -36,6 +36,8 @@ public class DictionaryChunker extends Chunker
 	
 	public DictionaryChunker(ArrayList<String> types) {
 		this.types = types;
+		this.dictionary = new HashMap<String, String>();
+		this.commons = new HashSet<String>();
 	}
 	
 	@Override
@@ -105,8 +107,6 @@ public class DictionaryChunker extends Chunker
 		try {
 			BufferedReader commonsReader = new BufferedReader(new FileReader(commonsFile));
 			HashSet<String> ambigous = new HashSet<String>();
-			this.dictionary = new HashMap<String, String>();
-			this.commons = new HashSet<String>();
 			
 			String line = commonsReader.readLine();
 			while (line != null) {
@@ -153,6 +153,11 @@ public class DictionaryChunker extends Chunker
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
+	}
+	
+	public void addEntry(String type, String value){
+		if (!this.dictionary.containsKey(value))
+			this.dictionary.put(value, type);
 	}
 	
     /**

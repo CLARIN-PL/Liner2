@@ -9,9 +9,7 @@ import liner2.reader.StreamReader;
 import liner2.writer.StreamWriter;
 import liner2.writer.WriterFactory;
 
-import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
-import liner2.structure.Sentence;
 import liner2.tools.ParameterException;
 
 import liner2.LinerOptions;
@@ -53,16 +51,15 @@ public class ActionBatchFile extends Action{
 				i++;
 				System.out.println(i+": "+line);
 				StreamReader reader = ReaderFactory.get().getStreamReader(
-                        		line,
-                        		LinerOptions.getOption(LinerOptions.OPTION_INPUT_FORMAT));
-                		ParagraphSet ps = reader.readParagraphSet();
-				for (Paragraph p : ps.getParagraphs())
-                        		for (Sentence s : p.getSentences())
-                                		chunker.chunkSentenceInPlace(s);
-                		StreamWriter writer = WriterFactory.get().getStreamWriter(
-                        		line+"."+LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FORMAT),
-                        		LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FORMAT));
-                		writer.writeParagraphSet(ps);
+                		line, LinerOptions.getOption(LinerOptions.OPTION_INPUT_FORMAT));
+                ParagraphSet ps = reader.readParagraphSet();
+
+                chunker.chunkInPlace(ps);
+                		
+        		StreamWriter writer = WriterFactory.get().getStreamWriter(
+                		line+"."+LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FORMAT),
+                		LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FORMAT));
+        		writer.writeParagraphSet(ps);
 
 				reader.close();
 				writer.close();
@@ -74,9 +71,6 @@ public class ActionBatchFile extends Action{
   			lnreader.close();
   		}
 		
-		/* Create all defined chunkers. */
-		
-
 	}
 		
 }

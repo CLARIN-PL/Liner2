@@ -9,6 +9,7 @@ import liner2.reader.FeatureGenerator;
 import liner2.structure.Chunk;
 import liner2.structure.Chunking;
 import liner2.structure.Paragraph;
+import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
 
@@ -60,98 +61,112 @@ public class ChunkerEvaluator {
 	private boolean quiet = false;		// print sentence results?
 	
 	public long tokensTime = 0;	
+	private long chunkerInitStart;
 	private long chunkerTime = 0;
 	private long tokensProcessed = 0;
 	
 	/**
 	 * @param chunker
 	 */
-	public ChunkerEvaluator(Chunker chunker) {
-		this.chunker = chunker;
+	public ChunkerEvaluator() {
+		//this.chunker = chunker;
+	}
+	
+	/**
+	 * Ocenia nerowanie całego dokumentu.
+	 * @param set
+	 */
+	public void evaluate(HashMap<Sentence, Chunking> chunkings, HashMap<Sentence, Chunking> chunkigsRef){
+		for ( Sentence sentence : chunkings.keySet()){
+			this.evaluate(sentence, chunkings.get(sentence), chunkigsRef.get(sentence));
+		}
+		recalculateStats();
+	}
+	
+	public void startTimer(){
+		this.chunkerInitStart = System.nanoTime();
+	}
+	
+	public void stopTimer(){
+		this.chunkerTime = System.nanoTime() - this.chunkerInitStart;
+		this.chunkerInitStart = 0;
+	}
+	
+	public long getTime(){
+		return this.chunkerTime;
 	}
 	
 	/**
 	 * 
 	 */
-	public void evaluate(Paragraph paragraph) {
+	private void evaluate(Sentence sentence, Chunking chunking, Chunking chunkingRef) {
 	
-		for (Sentence sentence : paragraph.getSentences()) {
-			// tylko na potrzeby wyświetlania szczegółów
-			HashSet<Chunk> myTruePositives = new HashSet<Chunk>();
-			this.sentenceNum++;
+		// tylko na potrzeby wyświetlania szczegółów
+		HashSet<Chunk> myTruePositives = new HashSet<Chunk>();
+		this.sentenceNum++;
+	
+		// każdy HashSet w dwóch kopiach - jedna do iterowania, druga do modyfikacji
+		HashSet<Chunk> trueChunkSet = new HashSet<Chunk>(chunkingRef.chunkSet());
+		HashSet<Chunk> trueChunkSetIter = new HashSet<Chunk>(trueChunkSet);
+
+		chunking.filter(LinerOptions.get().filters);			
+		HashSet<Chunk> testedChunkSet = new HashSet<Chunk>(chunking.chunkSet());
+		HashSet<Chunk> testedChunkSetIter = new HashSet<Chunk>(testedChunkSet);
 		
-			// każdy HashSet w dwóch kopiach - jedna do iterowania, druga do modyfikacji
-			HashSet<Chunk> trueChunkSet = sentence.getChunks();
-			HashSet<Chunk> trueChunkSetIter = new HashSet<Chunk>(trueChunkSet);
-			sentence.setChunking(new Chunking(sentence));
-			long chunkingStart = System.nanoTime();
-			Chunking chunking = this.chunker.chunkSentence(sentence);
-			long chunkingEnd = System.nanoTime();
-			this.chunkerTime += chunkingEnd - chunkingStart;
-			this.tokensTime += chunkingEnd - chunkingStart;
-			this.tokensProcessed += sentence.getTokenNumber();
-			chunking.filter(LinerOptions.get().filters);
-			HashSet<Chunk> testedChunkSet = chunking.chunkSet();
-//			HashSet<Chunk> testedChunkSet = this.chunker.chunkSentence(sentence).chunkSet();
-			HashSet<Chunk> testedChunkSetIter = new HashSet<Chunk>(testedChunkSet);
-			
-			// usuń z danych wszystkie poprawne chunki
-			for (Chunk trueChunk : trueChunkSetIter)
-				for (Chunk testedChunk : testedChunkSetIter)
-					if (trueChunk.equals(testedChunk)) {
-						// wpisz klucz do tablicy, jeśli jeszcze nie ma
-						if (!this.chunksTruePositives.containsKey(testedChunk.getType())) {
-							this.chunksTruePositives.put(testedChunk.getType(), new ArrayList<Chunk>());
-							this.truePositives.put(testedChunk.getType(), new Integer(0));
-							this.keys.add(testedChunk.getType());
-						}
-						// dodaj do istniejącego klucza
-						this.chunksTruePositives.get(testedChunk.getType()).add(testedChunk);
-						this.truePositives.put(testedChunk.getType(), 
-							this.truePositives.get(testedChunk.getType()) + 1);
-						this.globalTruePositives += 1;
-						// oznacz jako TruePositive
-						myTruePositives.add(testedChunk);
-						trueChunkSet.remove(trueChunk);
-						testedChunkSet.remove(testedChunk);
+		// usuń z danych wszystkie poprawne chunki
+		for (Chunk trueChunk : trueChunkSetIter)
+			for (Chunk testedChunk : testedChunkSetIter)
+				if (trueChunk.equals(testedChunk)) {
+					// wpisz klucz do tablicy, jeśli jeszcze nie ma
+					if (!this.chunksTruePositives.containsKey(testedChunk.getType())) {
+						this.chunksTruePositives.put(testedChunk.getType(), new ArrayList<Chunk>());
+						this.truePositives.put(testedChunk.getType(), new Integer(0));
+						this.keys.add(testedChunk.getType());
 					}
-					
-			// w testedChunkSet zostały falsePositives
-			for (Chunk testedChunk : testedChunkSet) {
-				// wpisz klucz do tablicy, jeśli jeszcze nie ma
-				if (!this.chunksFalsePositives.containsKey(testedChunk.getType())) {
-					this.chunksFalsePositives.put(testedChunk.getType(), new ArrayList<Chunk>());
-					this.falsePositives.put(testedChunk.getType(), new Integer(0));
-					this.keys.add(testedChunk.getType());
+					// dodaj do istniejącego klucza
+					this.chunksTruePositives.get(testedChunk.getType()).add(testedChunk);
+					this.truePositives.put(testedChunk.getType(), 
+						this.truePositives.get(testedChunk.getType()) + 1);
+					this.globalTruePositives += 1;
+					// oznacz jako TruePositive
+					myTruePositives.add(testedChunk);
+					trueChunkSet.remove(trueChunk);
+					testedChunkSet.remove(testedChunk);
 				}
-				// dodaj do istniejącego klucza
-				this.chunksFalsePositives.get(testedChunk.getType()).add(testedChunk);
-				this.falsePositives.put(testedChunk.getType(),
-					this.falsePositives.get(testedChunk.getType()) + 1);
-				this.globalFalsePositives += 1;
+				
+		// w testedChunkSet zostały falsePositives
+		for (Chunk testedChunk : testedChunkSet) {
+			// wpisz klucz do tablicy, jeśli jeszcze nie ma
+			if (!this.chunksFalsePositives.containsKey(testedChunk.getType())) {
+				this.chunksFalsePositives.put(testedChunk.getType(), new ArrayList<Chunk>());
+				this.falsePositives.put(testedChunk.getType(), new Integer(0));
+				this.keys.add(testedChunk.getType());
 			}
-					
-			// w trueChunkSet zostały falseNegatives
-			for (Chunk trueChunk : trueChunkSet) {
-				// wpisz klucz do tablicy, jeśli jeszcze nie ma
-				if (!this.chunksFalseNegatives.containsKey(trueChunk.getType())) {
-					this.chunksFalseNegatives.put(trueChunk.getType(), new ArrayList<Chunk>());
-					this.falseNegatives.put(trueChunk.getType(), new Integer(0));
-					this.keys.add(trueChunk.getType());
-				}
-				// dodaj do istniejącego klucza
-				this.chunksFalseNegatives.get(trueChunk.getType()).add(trueChunk);
-				this.falseNegatives.put(trueChunk.getType(),
-					this.falseNegatives.get(trueChunk.getType()) + 1);
-				this.globalFalseNegatives += 1;
+			// dodaj do istniejącego klucza
+			this.chunksFalsePositives.get(testedChunk.getType()).add(testedChunk);
+			this.falsePositives.put(testedChunk.getType(),
+				this.falsePositives.get(testedChunk.getType()) + 1);
+			this.globalFalsePositives += 1;
+		}
+				
+		// w trueChunkSet zostały falseNegatives
+		for (Chunk trueChunk : trueChunkSet) {
+			// wpisz klucz do tablicy, jeśli jeszcze nie ma
+			if (!this.chunksFalseNegatives.containsKey(trueChunk.getType())) {
+				this.chunksFalseNegatives.put(trueChunk.getType(), new ArrayList<Chunk>());
+				this.falseNegatives.put(trueChunk.getType(), new Integer(0));
+				this.keys.add(trueChunk.getType());
 			}
-			
-			if (!this.quiet)
-				printSentenceResults(sentence, paragraph.getId(),
-					myTruePositives, testedChunkSet, trueChunkSet);
+			// dodaj do istniejącego klucza
+			this.chunksFalseNegatives.get(trueChunk.getType()).add(trueChunk);
+			this.falseNegatives.put(trueChunk.getType(),
+				this.falseNegatives.get(trueChunk.getType()) + 1);
+			this.globalFalseNegatives += 1;
 		}
 		
-		recalculateStats();
+		if (!this.quiet)
+			printSentenceResults(sentence, sentence.getId(), myTruePositives, testedChunkSet, trueChunkSet);
+				
 	}
 	
 	/**
@@ -230,6 +245,8 @@ public class ChunkerEvaluator {
 	 * 
 	 */
 	public void printResults(){
+		System.out.println("====================================================");
+		System.out.println("# Exact match evaluation #");
 		System.out.println("Annotation           &   TP &   FP &   FN &"
 			+ " Precision & Recall  & F$_1$   \\\\");
 		System.out.println("\\hline");
@@ -259,6 +276,7 @@ public class ChunkerEvaluator {
 			System.out.println(String.format("Tokens per second: %.4f", 
 				this.tokensProcessed / tokensTimeSeconds));
 		}
+		System.out.println("====================================================");
 	}
 	
 	/**

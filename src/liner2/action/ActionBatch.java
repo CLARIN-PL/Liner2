@@ -22,8 +22,6 @@ import liner2.writer.StreamWriter;
 import liner2.writer.WriterFactory;
 
 import liner2.structure.AttributeIndex;
-import liner2.structure.Chunk;
-import liner2.structure.Chunking;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
@@ -105,11 +103,11 @@ public class ActionBatch extends Action{
 				if (forceSentence)
 					paragraph = mergeSentences(paragraph);
 
+				
 				// chunking
-				for (Sentence s : paragraph.getSentences())
-					chunker.chunkSentenceInPlace(s);
 				ParagraphSet ps = new ParagraphSet();
 				ps.addParagraph(paragraph);
+				chunker.chunkInPlace(ps);
 
 				// write output
 				StreamWriter writer = WriterFactory.get().getStreamWriter(

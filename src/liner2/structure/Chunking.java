@@ -15,6 +15,11 @@ public class Chunking {
 	HashSet<Chunk> chunks = new HashSet<Chunk>();
 	Sentence sentence = null;
 
+	public Chunking(Sentence sentence, HashSet<Chunk> chunks){
+		this.chunks = chunks;
+		this.sentence = sentence;
+	}
+	
 	public Chunking(Sentence sentence){
 		this.sentence = sentence;
 	}

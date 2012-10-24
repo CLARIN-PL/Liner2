@@ -89,10 +89,10 @@ public class WorkingThread extends Thread {
 		// process text and calculate stats
 		ParagraphSet ps = reader.readParagraphSet();
 		int numTokens = 0, numSentences = 0, numParagraphs = 0, numChunks = 0;
+		chunker.chunkInPlace(ps);
+		
 		for (Paragraph p : ps.getParagraphs()) {
 			for (Sentence s : p.getSentences()) {
-				this.chunker.chunkSentenceInPlace(s);
-
 				numSentences++;
 				numTokens += s.getTokenNumber();
 				numChunks += s.getChunks().size();

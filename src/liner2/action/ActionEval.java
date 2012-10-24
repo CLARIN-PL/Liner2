@@ -1,14 +1,18 @@
 package liner2.action;
 
+import java.util.HashMap;
+
 import liner2.LinerOptions;
 import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
 import liner2.reader.FeatureGenerator;
 import liner2.reader.ReaderFactory;
 import liner2.reader.StreamReader;
-import liner2.structure.Paragraph;
+import liner2.structure.Chunking;
 import liner2.structure.ParagraphSet;
+import liner2.structure.Sentence;
 import liner2.tools.ChunkerEvaluator;
+import liner2.tools.ChunkerEvaluatorMuc;
 import liner2.tools.ParameterException;
 
 /**
@@ -39,22 +43,27 @@ public class ActionEval extends Action{
     	}
     		
     	/* Create all defined chunkers. */
-    	long chunkerInitStart = System.nanoTime();
+    	ChunkerEvaluator eval = new ChunkerEvaluator();
+    	ChunkerEvaluatorMuc evalMuc = new ChunkerEvaluatorMuc();
+
+    	eval.startTimer();
     	ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescription);
     	Chunker chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
 		chunker.prepare(ps);
-    	long chunkerInitEnd = System.nanoTime();
-    		
-    	ChunkerEvaluator eval = new ChunkerEvaluator(chunker);
-//    	eval.chunkerTime = chunkerInitEnd - chunkerInitStart;
-		for (Paragraph p : ps.getParagraphs()){
-			eval.evaluate(p);
-		}
+		eval.stopTimer();
+		
+    	HashMap<Sentence, Chunking> chunkingsRef = ps.getChunkings();
+    	HashMap<Sentence, Chunking> chunkings = chunker.chunk(ps); 
+    	    	
+    	eval.evaluate(chunkings, chunkingsRef);
+		eval.printResults();
+
+		evalMuc.evaluate(chunkings, chunkingsRef);				
+		evalMuc.printResults();
 		
 		long timeTotal = System.nanoTime() - timeTotalStart;
-		eval.tokensTime = timeTotal - chunkerInitEnd + chunkerInitStart - FeatureGenerator.initTime;
+		eval.tokensTime = timeTotal - eval.getTime() - FeatureGenerator.initTime;
 		double timeTotalSeconds = (double)timeTotal / 1000000000;
-		eval.printResults();
 		System.out.println(String.format("Liner2 total time: %.4f s", timeTotalSeconds));
 	}
 }

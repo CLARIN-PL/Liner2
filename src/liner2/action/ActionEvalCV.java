@@ -3,14 +3,11 @@ package liner2.action;
 import java.io.File;
 import java.util.ArrayList;
 
-import liner2.Main;
 import liner2.LinerOptions;
 import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
-import liner2.reader.FeatureGenerator;
 import liner2.reader.ReaderFactory;
 import liner2.reader.StreamReader;
-import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.tools.ChunkerEvaluator;
 import liner2.tools.ParameterException;
@@ -33,8 +30,7 @@ public class ActionEvalCV extends Action{
 			throw new ParameterException("Parameter --use <chunker_pipe_desription> not set");
 		}
 	
-		ChunkerEvaluator globalEval = new ChunkerEvaluator(null);
-//		globalEval.setQuiet(true);
+		ChunkerEvaluator globalEval = new ChunkerEvaluator();
 		
 		for (int i = 1; ; i++) {			
 			String trainFile = LinerOptions.getOption(LinerOptions.OPTION_INPUT_FILE) + ".fold-" + i + ".train";
@@ -50,17 +46,12 @@ public class ActionEvalCV extends Action{
 			ChunkerFactory.loadChunkers(currentDescriptions);
 			Chunker chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
 			
-//			Main.log("Chunker trained. Testing...");
-							
 			StreamReader reader = ReaderFactory.get().getStreamReader(testFile, 
     			LinerOptions.getOption(LinerOptions.OPTION_INPUT_FORMAT));
     		ParagraphSet ps = reader.readParagraphSet();
 			
-			ChunkerEvaluator localEval = new ChunkerEvaluator(chunker);
-//			eval.setChunker(chunker);
-			for (Paragraph p : ps.getParagraphs()){
-				localEval.evaluate(p);
-			}
+			ChunkerEvaluator localEval = new ChunkerEvaluator();
+			localEval.evaluate(chunker.chunk(ps), ps.getChunkings());
 			
 			System.out.println("========== FOLD " + i + " ==========");	
 			localEval.printResults();

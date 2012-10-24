@@ -8,7 +8,6 @@ import liner2.reader.ReaderFactory;
 import liner2.writer.StreamWriter;
 import liner2.writer.WriterFactory;
 
-import liner2.tools.ParameterException;
 import liner2.LinerOptions;
 
 public class ActionConvert extends Action {
@@ -22,8 +21,6 @@ public class ActionConvert extends Action {
 		// -o format wyjściowy: iob, ccl
 		// -f (--file) plik wejściowy, jeżeli brak to czyta z stdin
 		// -t (--target) plik wyjściowy, jeżeli brak, to na stdout
-		
-//		LinerOptions.requireOption(OPTION_INPUT_FILE);
 		
 		StreamReader reader = ReaderFactory.get().getStreamReader(
 			LinerOptions.getOption(LinerOptions.OPTION_INPUT_FILE),
