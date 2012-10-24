@@ -13,6 +13,7 @@ import liner2.structure.Tag;
 import liner2.structure.Token;
 
 import liner2.tools.DataFormatException;
+import liner2.tools.StringHelper;
 
 public class IobStreamReader extends StreamReader {
 	
@@ -176,8 +177,9 @@ public class IobStreamReader extends StreamReader {
 	
 	private Token createToken(String[] words) throws Exception {
 		Token token = new Token();
-		if (words.length != this.attributeIndex.getLength() + 1)
-			throw new Exception("Invalid number of attributes.");
+		if (words.length != this.attributeIndex.getLength() + 1){
+			throw new Exception("Invalid number of attributes: " + StringHelper.implode(words));
+		}
 		for (int i = 0; i < words.length - 1; i++)
 			token.setAttributeValue(i, words[i]);
 		if (this.attributeIndex != null) {

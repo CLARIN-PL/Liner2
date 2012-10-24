@@ -97,6 +97,13 @@ public class FeatureGenerator {
 			Matcher m1 = regexFeatureDictionary.matcher(feature);
 			if (m1.find()) {
 				featureOthers += " -g" + feature;
+				
+				String[] parts = feature.split(":");
+				String filename = parts[parts.length-1];
+				File file = new File(filename);
+				if (!file.exists())
+					System.err.println(String.format("Liner2 ERROR: file %s does not exist.", file.getAbsolutePath()));
+				
 				featureName = m1.group(1);
 			}
 			
