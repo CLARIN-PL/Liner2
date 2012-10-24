@@ -90,10 +90,6 @@ public class ChunkerEvaluatorMuc {
 	
 	private boolean quiet = false;		// print sentence results?
 	
-	public long tokensTime = 0;	
-	private long chunkerTime = 0;
-	private long tokensProcessed = 0;
-	
 	/**
 	 * @param chunker
 	 */
@@ -258,7 +254,9 @@ public class ChunkerEvaluatorMuc {
 	 * 
 	 */
 	public void printResults(){
+		System.out.println("====================================================");
 		System.out.println("# MUC match evaluation #");
+		System.out.println("====================================================");
 		System.out.println("Annotation           &  COR &  ACT &  POS &"
 			+ " Precision & Recall  & F$_1$   \\\\");
 		System.out.println("\\hline");
@@ -284,19 +282,8 @@ public class ChunkerEvaluatorMuc {
 
 			System.out.println(String.format("*TOTAL*              & %4d & %4d & %4d &   %6.2f%% & %6.2f%% & %6.2f%%", 
 					this.globalTruePositives, this.globalFalsePositives, this.globalFalseNegatives, p*100, r*100, f*100));
-		}
-		
-		if (LinerOptions.get().mode.equals("eval")) {
-			System.out.println("");
-			double chunkerTimeSeconds = (double)this.chunkerTime / 1000000000;
-			double tokensTimeSeconds = (double)this.tokensTime / 1000000000;
-			double nerdTimeSeconds = (double)FeatureGenerator.getTime() / 1000000000;
-			System.out.println(String.format("Processing time: %.4f s", tokensTimeSeconds));
-			System.out.println(String.format("NERD time: %.4f s", nerdTimeSeconds));
-			System.out.println("Tokens processed: " + this.tokensProcessed);
-			System.out.println(String.format("Tokens per second: %.4f", 
-					this.tokensProcessed / tokensTimeSeconds));
-		}
+		}		
+		System.out.println("----------------------------------------------------");
 	}
 	
 	

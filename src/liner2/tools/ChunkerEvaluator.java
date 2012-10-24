@@ -57,13 +57,8 @@ public class ChunkerEvaluator {
 	private int sentenceNum = 0;
 	
 	private HashSet<String> keys = new HashSet<String>();
-	private Chunker chunker = null;
 	private boolean quiet = false;		// print sentence results?
 	
-	public long tokensTime = 0;	
-	private long chunkerInitStart;
-	private long chunkerTime = 0;
-	private long tokensProcessed = 0;
 	
 	/**
 	 * @param chunker
@@ -81,19 +76,6 @@ public class ChunkerEvaluator {
 			this.evaluate(sentence, chunkings.get(sentence), chunkigsRef.get(sentence));
 		}
 		recalculateStats();
-	}
-	
-	public void startTimer(){
-		this.chunkerInitStart = System.nanoTime();
-	}
-	
-	public void stopTimer(){
-		this.chunkerTime = System.nanoTime() - this.chunkerInitStart;
-		this.chunkerInitStart = 0;
-	}
-	
-	public long getTime(){
-		return this.chunkerTime;
 	}
 	
 	/**
@@ -222,10 +204,6 @@ public class ChunkerEvaluator {
 		return fMeasure.get(type);
 	}
 	
-	public void setChunker(Chunker chunker){
-		this.chunker = chunker;
-	}
-	
 	public void setQuiet(boolean quiet) {
 		this.quiet = quiet;
 	}
@@ -247,6 +225,7 @@ public class ChunkerEvaluator {
 	public void printResults(){
 		System.out.println("====================================================");
 		System.out.println("# Exact match evaluation #");
+		System.out.println("====================================================");
 		System.out.println("Annotation           &   TP &   FP &   FN &"
 			+ " Precision & Recall  & F$_1$   \\\\");
 		System.out.println("\\hline");
@@ -263,20 +242,8 @@ public class ChunkerEvaluator {
 		System.out.println(String.format("*TOTAL*              & %4d & %4d & %4d &"
 			+ "   %6.2f%% & %6.2f%% & %6.2f%%", this.globalTruePositives,
 			this.globalFalsePositives, this.globalFalseNegatives,
-			this.globalPrecision*100, this.globalRecall*100, this.globalFMeasure*100));
-		
-		if (LinerOptions.get().mode.equals("eval")) {
-			System.out.println("");
-			double chunkerTimeSeconds = (double)this.chunkerTime / 1000000000;
-			double tokensTimeSeconds = (double)this.tokensTime / 1000000000;
-			double nerdTimeSeconds = (double)FeatureGenerator.getTime() / 1000000000;
-			System.out.println(String.format("Processing time: %.4f s", tokensTimeSeconds));
-			System.out.println(String.format("NERD time: %.4f s", nerdTimeSeconds));
-			System.out.println("Tokens processed: " + this.tokensProcessed);
-			System.out.println(String.format("Tokens per second: %.4f", 
-				this.tokensProcessed / tokensTimeSeconds));
-		}
-		System.out.println("====================================================");
+			this.globalPrecision*100, this.globalRecall*100, this.globalFMeasure*100));		
+		System.out.println("----------------------------------------------------");
 	}
 	
 	/**

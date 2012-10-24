@@ -14,6 +14,7 @@ import liner2.structure.Sentence;
 import liner2.tools.ChunkerEvaluator;
 import liner2.tools.ChunkerEvaluatorMuc;
 import liner2.tools.ParameterException;
+import liner2.tools.ProcessingTimer;
 
 /**
  * Evaluate chunker on a specified corpus.
@@ -28,15 +29,25 @@ public class ActionEval extends Action{
 	 */
 		
 	public void run() throws Exception {
-		long timeTotalStart = System.nanoTime();
 		if ( !LinerOptions.isOption(LinerOptions.OPTION_USE) ){
 			throw new ParameterException("Parameter --use <chunker_pipe_desription> not set");
 		}
-		
+
+    	ProcessingTimer timer = new ProcessingTimer();
+
+    	timer.startTimer("Chunkers init.");
+    	ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescription);
+    	Chunker chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
+		timer.stopTimer();
+
         StreamReader reader = ReaderFactory.get().getStreamReader(
     			LinerOptions.getOption(LinerOptions.OPTION_INPUT_FILE),
     			LinerOptions.getOption(LinerOptions.OPTION_INPUT_FORMAT));
-    		ParagraphSet ps = reader.readParagraphSet();
+    	
+    	timer.startTimer("Data reading");
+    	ParagraphSet ps = reader.readParagraphSet();
+		chunker.prepare(ps);
+    	timer.stopTimer();
 
     	if ( !LinerOptions.isOption(LinerOptions.OPTION_USE) ){
     		throw new ParameterException("Parameter --use <chunker_pipe_desription> not set");
@@ -46,24 +57,19 @@ public class ActionEval extends Action{
     	ChunkerEvaluator eval = new ChunkerEvaluator();
     	ChunkerEvaluatorMuc evalMuc = new ChunkerEvaluatorMuc();
 
-    	eval.startTimer();
-    	ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescription);
-    	Chunker chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
-		chunker.prepare(ps);
-		eval.stopTimer();
-		
+		timer.startTimer("Chunking");
     	HashMap<Sentence, Chunking> chunkingsRef = ps.getChunkings();
-    	HashMap<Sentence, Chunking> chunkings = chunker.chunk(ps); 
+    	HashMap<Sentence, Chunking> chunkings = chunker.chunk(ps);
+    	timer.stopTimer();
     	    	
+    	timer.startTimer("Evaluation");
     	eval.evaluate(chunkings, chunkingsRef);
-		eval.printResults();
-
 		evalMuc.evaluate(chunkings, chunkingsRef);				
+		timer.stopTimer();
+
+		eval.printResults();
 		evalMuc.printResults();
-		
-		long timeTotal = System.nanoTime() - timeTotalStart;
-		eval.tokensTime = timeTotal - eval.getTime() - FeatureGenerator.initTime;
-		double timeTotalSeconds = (double)timeTotal / 1000000000;
-		System.out.println(String.format("Liner2 total time: %.4f s", timeTotalSeconds));
+		timer.countTokens(ps);
+		timer.printStats();
 	}
 }
