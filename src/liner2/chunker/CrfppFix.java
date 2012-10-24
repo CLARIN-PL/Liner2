@@ -1,11 +1,11 @@
 package liner2.chunker;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import liner2.structure.AttributeIndex;
 import liner2.structure.Chunk;
 import liner2.structure.Chunking;
-import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
@@ -25,11 +25,8 @@ public class CrfppFix extends Chunker {
      * @param cSeq --- text to tag
      * @return chunking with annotations
      */
+	private synchronized void fixSentenceChunking(Sentence sentence, Chunking chunking){
 
-	@Override
-	public synchronized Chunking chunkSentence(Sentence sentence){
-
-		Chunking chunking = this.chunker.chunkSentence(sentence);
 		AttributeIndex ai = sentence.getAttributeIndex();
 		
 		ArrayList<Token> tokens = sentence.getTokens();
@@ -56,9 +53,17 @@ public class CrfppFix extends Chunker {
 		}
 		
 		for (Chunk chunk : newChunks)
-			chunking.addChunk(chunk);
-		
-		return chunking;
+			chunking.addChunk(chunk);		
+	}
+
+	@Override
+	public HashMap<Sentence, Chunking> chunk(ParagraphSet ps) {
+		/* Get base chunking for every sentence. */
+		HashMap<Sentence, Chunking> chunkings = this.chunker.chunk(ps);
+
+		for (Sentence sentence : chunkings.keySet())
+				this.fixSentenceChunking(sentence, chunkings.get(sentence));
+		return chunkings;
 	}
 	
 }

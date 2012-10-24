@@ -17,6 +17,8 @@ import java.util.regex.Pattern;
 
 import liner2.structure.Chunk;
 import liner2.structure.Chunking;
+import liner2.structure.Paragraph;
+import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
 
@@ -40,8 +42,7 @@ public class DictionaryChunker extends Chunker
 		this.commons = new HashSet<String>();
 	}
 	
-	@Override
-	public Chunking chunkSentence(Sentence sentence) {
+	private Chunking chunkSentence(Sentence sentence) {
 		//System.out.println("chunkSentence");
 		Chunking chunking = new Chunking(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();
@@ -194,6 +195,15 @@ public class DictionaryChunker extends Chunker
 	@Override
 	public void close() {
 		
-	}	
+	}
+
+	@Override
+	public HashMap<Sentence, Chunking> chunk(ParagraphSet ps) {
+		HashMap<Sentence, Chunking> chunkings = new HashMap<Sentence, Chunking>();
+		for ( Paragraph paragraph : ps.getParagraphs() )
+			for (Sentence sentence : paragraph.getSentences())
+				chunkings.put(sentence, this.chunkSentence(sentence));
+		return chunkings;
+	}
 	
 }	

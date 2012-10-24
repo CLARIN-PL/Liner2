@@ -89,7 +89,9 @@ public class WorkingThread extends Thread {
 		// process text and calculate stats
 		ParagraphSet ps = reader.readParagraphSet();
 		int numTokens = 0, numSentences = 0, numParagraphs = 0, numChunks = 0;
+		System.out.println("Before chunking");
 		chunker.chunkInPlace(ps);
+		System.out.println("After chunking");
 		
 		for (Paragraph p : ps.getParagraphs()) {
 			for (Sentence s : p.getSentences()) {

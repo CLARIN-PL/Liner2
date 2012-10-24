@@ -28,6 +28,7 @@ public class ChunkerFactory {
 		this.items.add(new ChunkerFactoryItemDictLoad());
 		this.items.add(new ChunkerFactoryItemDictFullCompile());
 		this.items.add(new ChunkerFactoryItemDictFullLoad());
+		this.items.add(new ChunkerFactoryItemPropagate());
 		this.items.add(new ChunkerFactoryItemWccl());
 	}
 	

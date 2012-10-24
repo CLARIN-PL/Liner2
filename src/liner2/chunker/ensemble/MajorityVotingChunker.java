@@ -1,11 +1,14 @@
 package liner2.chunker.ensemble;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 
 import liner2.chunker.Chunker;
 import liner2.structure.Chunk;
 import liner2.structure.Chunking;
+import liner2.structure.Paragraph;
+import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
 
 /**
@@ -28,13 +31,12 @@ public class MajorityVotingChunker extends Chunker {
 		this.chunkers = chunkers;
 	}
 	
-	@Override
-	public Chunking chunkSentence(Sentence sentence) {
+	public Chunking voting(Sentence sentence, ArrayList<Chunking> chunkings) {
 		Chunking resultChunking = new Chunking(sentence);
 		
 		Hashtable<Chunk, Integer> votes = new Hashtable<Chunk, Integer>();
-		for (Chunker chunker : this.chunkers) {
-			Chunking chunking = chunker.chunkSentence(sentence);
+
+		for (Chunking chunking : chunkings){
 			for (Chunk chunk : chunking.chunkSet()) {
 				boolean found = false;
 				for (Chunk key : votes.keySet())
@@ -54,5 +56,27 @@ public class MajorityVotingChunker extends Chunker {
 				resultChunking.addChunk(chunk);
 		
 		return resultChunking;
+	}
+	
+	@Override
+	public HashMap<Sentence, Chunking> chunk(ParagraphSet ps) {
+				
+		HashMap<Sentence, Chunking> chunkings = new HashMap<Sentence, Chunking>();
+		HashMap<Sentence, ArrayList<Chunking>> sentenceChunkings = new HashMap<Sentence, ArrayList<Chunking>>();
+
+		for ( Paragraph paragraph : ps.getParagraphs() )
+			for (Sentence sentence : paragraph.getSentences())
+				sentenceChunkings.put(sentence, new ArrayList<Chunking>());
+		
+		for ( Chunker chunker : this.chunkers) {
+			HashMap<Sentence, Chunking> chunkingsThis = chunker.chunk(ps);
+			for (Sentence sentence : chunkingsThis.keySet())
+				sentenceChunkings.get(sentence).add(chunkingsThis.get(sentence));				
+		}
+		
+		for ( Sentence sentence : sentenceChunkings.keySet() )
+			chunkings.put(sentence, this.voting(sentence, sentenceChunkings.get(sentence)));
+		
+		return chunkings;
 	}
 }

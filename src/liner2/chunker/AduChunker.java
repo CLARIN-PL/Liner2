@@ -31,8 +31,7 @@ public class AduChunker extends Chunker {
 		this.one = one;
 	}
 
-	@Override
-	public Chunking chunkSentence(Sentence sentence) {
+	private Chunking chunkSentence(Sentence sentence) {
 		ArrayList<Token> tokens = sentence.getTokens();
 		AttributeIndex ai = sentence.getAttributeIndex();
 		int sentenceLength = sentence.getTokenNumber();
@@ -81,24 +80,25 @@ public class AduChunker extends Chunker {
 				}
 			}
 		}
+		return null;
 
-		return this.baseChunker.chunkSentence(sentence);
+		//return this.baseChunker.chunkSentence(sentence);
 	}
 	
-	@Override
-	public void prepare(ParagraphSet ps) {
-		for (Paragraph p : ps.getParagraphs()) {
-			for (Sentence s : p.getSentences()) {
-				Chunking chunking = this.baseChunker.chunkSentence(s);
-				ArrayList<Token> tokens = s.getTokens();
-
-				for (Chunk chunk : chunking.chunkSet()) {
-					String seq = tokens.get(chunk.getBegin()).getFirstValue();
-				 	for (int i = chunk.getBegin()+1; i < chunk.getEnd(); i++)
-						seq += " " + tokens.get(i).getFirstValue();
-					if (!this.dictionary.containsKey(seq))
-						this.dictionary.put(seq, chunk.getType());
-				} 
+//	@Override
+//	public void prepare(ParagraphSet ps) {
+//		for (Paragraph p : ps.getParagraphs()) {
+//			for (Sentence s : p.getSentences()) {
+//				Chunking chunking = this.baseChunker.chunkSentence(s);
+//				ArrayList<Token> tokens = s.getTokens();
+//
+//				for (Chunk chunk : chunking.chunkSet()) {
+//					String seq = tokens.get(chunk.getBegin()).getFirstValue();
+//				 	for (int i = chunk.getBegin()+1; i < chunk.getEnd(); i++)
+//						seq += " " + tokens.get(i).getFirstValue();
+//					if (!this.dictionary.containsKey(seq))
+//						this.dictionary.put(seq, chunk.getType());
+//				} 
 
 //				for (Chunk chunk : chunking.chunkSet()) {
 //					AttributeIndex ai = s.getAttributeIndex();
@@ -114,7 +114,16 @@ public class AduChunker extends Chunker {
 //							tokens.get(i).setAttributeValue(featureIdx, "I");
 //					}
 //				}
-			}
-		}
+//			}
+//		}
+//	}
+
+	@Override
+	public HashMap<Sentence, Chunking> chunk(ParagraphSet ps) {
+		HashMap<Sentence, Chunking> chunkings = new HashMap<Sentence, Chunking>();
+		for ( Paragraph paragraph : ps.getParagraphs() )
+			for (Sentence sentence : paragraph.getSentences())
+				chunkings.put(sentence, this.chunkSentence(sentence));
+		return chunkings;
 	}
 }

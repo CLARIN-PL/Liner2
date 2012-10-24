@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,8 +46,7 @@ public class CrfppChunker extends Chunker
      * @return chunking with annotations
      */
 
-	@Override
-	public synchronized Chunking chunkSentence(Sentence sentence){
+	private synchronized Chunking chunkSentence(Sentence sentence){
 		this.sendDataToTagger(sentence);
 		return this.readTaggerOutput(sentence);
 	}
@@ -272,6 +272,15 @@ public class CrfppChunker extends Chunker
 
 	public void setModelFilename(String modelFilename) {
 		this.model_filename = modelFilename;		
+	}
+
+	@Override
+	public HashMap<Sentence, Chunking> chunk(ParagraphSet ps) {
+		HashMap<Sentence, Chunking> chunkings = new HashMap<Sentence, Chunking>();
+		for ( Paragraph paragraph : ps.getParagraphs() )
+			for (Sentence sentence : paragraph.getSentences())
+				chunkings.put(sentence, this.chunkSentence(sentence));
+		return chunkings;
 	}
 
 }

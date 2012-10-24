@@ -1,10 +1,13 @@
 package liner2.chunker;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import liner2.structure.AttributeIndex;
 import liner2.structure.Chunk;
 import liner2.structure.Chunking;
+import liner2.structure.Paragraph;
+import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
 
@@ -38,8 +41,7 @@ public class HeuristicChunker extends Chunker {
 		}
 	}
 	
-	@Override
-	public Chunking chunkSentence(Sentence sentence) {
+	private Chunking chunkSentence(Sentence sentence) {
 		Chunking chunking = new Chunking(sentence);
 		if (ruleActive("general-ign-dict")) 
 			chunking.union(ruleGeneralIgnDict(sentence));
@@ -548,5 +550,14 @@ public class HeuristicChunker extends Chunker {
 			}
 		}
 		return chunking;
+	}
+
+	@Override
+	public HashMap<Sentence, Chunking> chunk(ParagraphSet ps) {
+		HashMap<Sentence, Chunking> chunkings = new HashMap<Sentence, Chunking>();
+		for ( Paragraph paragraph : ps.getParagraphs() )
+			for (Sentence sentence : paragraph.getSentences())
+				chunkings.put(sentence, this.chunkSentence(sentence));
+		return chunkings;
 	}
 }

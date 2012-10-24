@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 
 import liner2.reader.ReaderFactory;
 import liner2.reader.StreamReader;
@@ -35,8 +36,7 @@ public class WcclChunker extends Chunker {
 		this.wcclFile = filename;
 	}
 	
-	@Override
-	public Chunking chunkSentence(Sentence sentence) {
+	private Chunking chunkSentence(Sentence sentence) {
 		Chunking chunking = new Chunking(sentence);
 		String cmd = "wccl-rules -q -t nkjp -i ccl -I - " + this.wcclFile;
 		Process p = null;
@@ -82,5 +82,14 @@ public class WcclChunker extends Chunker {
 		
 		return chunking;
 	}	
+	
+	@Override
+	public HashMap<Sentence, Chunking> chunk(ParagraphSet ps) {
+		HashMap<Sentence, Chunking> chunkings = new HashMap<Sentence, Chunking>();
+		for ( Paragraph paragraph : ps.getParagraphs() )
+			for (Sentence sentence : paragraph.getSentences())
+				chunkings.put(sentence, this.chunkSentence(sentence));
+		return chunkings;
+	}
 	
 }

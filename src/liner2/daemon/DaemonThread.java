@@ -134,11 +134,6 @@ public class DaemonThread extends Thread {
     
     	// register daemon
 		this.myAddr = this.ip + ":" + this.port;
-//		try {
-//			this.myAddr = InetAddress.getLocalHost().getHostName() + ":" + this.port;
-//		} catch (UnknownHostException ex) {
-//			ex.printStackTrace();
-//		}
 		Main.log("My address: " + this.myAddr, true);
 		Main.log("Registering daemon...", false);
 		try {

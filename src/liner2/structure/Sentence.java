@@ -31,8 +31,9 @@ public class Sentence {
 	}
 	
 	public void addChunking(Chunking chunking) {
-		for (Chunk chunk : chunking.chunkSet())
-			addChunk(chunk);
+		if ( chunking != null)
+			for (Chunk chunk : chunking.chunkSet())
+				addChunk(chunk);
 	}
 	
 	public void addToken(Token token) {

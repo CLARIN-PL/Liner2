@@ -46,11 +46,6 @@ public class PropagateChunker extends Chunker {
 	}
 	
 	@Override
-	public Chunking chunkSentence(Sentence sentence) {
-		return null;
-	}
-	
-	@Override
 	public void prepare(ParagraphSet ps) {
 		
 	}
@@ -77,4 +72,5 @@ public class PropagateChunker extends Chunker {
 		
 		return chunkings;
 	}
+
 }
