@@ -29,7 +29,9 @@ public class HeuristicChunker extends Chunker {
 				(r.equals("person")) ||
 				(r.equals("city")) ||
 				(r.equals("road")) ||
-				(r.equals("road-prefix")))
+				(r.equals("road-prefix")) ||
+				(r.equals("nam"))
+				)
 				this.rules.add(r);
 			else
 				throw new ParameterException("HeuristicChunker: unknown heuristic " + r);
@@ -39,9 +41,12 @@ public class HeuristicChunker extends Chunker {
 	@Override
 	public Chunking chunkSentence(Sentence sentence) {
 		Chunking chunking = new Chunking(sentence);
-		if (ruleActive("general-ign-dict")) chunking.union(ruleGeneralIgnDict(sentence));
-		if (ruleActive("general-camel-base")) chunking.union(ruleGeneralCamelBase(sentence));
-		if (ruleActive("road-prefix")) chunking.union(ruleRoadPrefix(sentence));
+		if (ruleActive("general-ign-dict")) 
+			chunking.union(ruleGeneralIgnDict(sentence));
+		if (ruleActive("general-camel-base")) 
+			chunking.union(ruleGeneralCamelBase(sentence));
+		if (ruleActive("road-prefix")) 
+			chunking.union(ruleRoadPrefix(sentence));
 
 		if (ruleActive("person")){
 			chunking.union(rulePersonPanFirstLastNoun(sentence));
@@ -60,8 +65,78 @@ public class HeuristicChunker extends Chunker {
 			chunking.union(ruleRoadPrefixNumber(sentence));
 		}
 		
+		if (ruleActive("nam")){
+			chunking.union(ruleNamUpperCamelCase(sentence));
+			chunking.union(ruleNamParanthesis(sentence));
+			chunking.union(ruleNamAllUpper(sentence));
+		}
+		
 		return chunking;
 	}	
+	
+	/**
+	 * 
+	 * @param sentence
+	 * @return
+	 */
+	private Chunking ruleNamUpperCamelCase(Sentence sentence) {
+		Chunking chunking = new Chunking(sentence);
+		ArrayList<Token> tokens = sentence.getTokens();
+		AttributeIndex attributeIndex = sentence.getAttributeIndex();
+		
+		for (int i = 0; i < tokens.size(); i++) {
+			if (attributeIndex.getAttributeValue(tokens.get(i), "pattern").equals("UPPER_CAMEL_CASE")) {
+				chunking.addChunk(new Chunk(i, i, "NAM", sentence));
+			}			
+		}
+		
+		return chunking;	
+	}
+
+	private Chunking ruleNamParanthesis(Sentence sentence) {
+		Chunking chunking = new Chunking(sentence);
+		ArrayList<Token> tokens = sentence.getTokens();
+		AttributeIndex attributeIndex = sentence.getAttributeIndex();
+		
+		for (int i = 1; i < tokens.size(); i++) {
+			String orth = attributeIndex.getAttributeValue(tokens.get(i), "orth"); 
+			if ( i+2 < tokens.size() 
+					&& ( orth.equals("„") || orth.equals("“") ) 
+					&& attributeIndex.getAttributeValue(tokens.get(i+1), "starts_with_upper_case").equals("1") ){
+				
+				int j = i+1;
+				boolean ends = false;
+				while ( j < tokens.size() && !ends){
+					String orth2 = attributeIndex.getAttributeValue(tokens.get(j), "orth");
+					ends = orth2.equals("”");
+					j++;
+				}
+				if (ends && i+1 <= j-2 ){
+					/* i+1 do j-2 to tekst w cudzysłowiu */ 
+					chunking.addChunk(new Chunk(i+1, j-2, "NAM", sentence));
+					i = j-1;
+				}				
+			}			
+		}
+		
+		return chunking;	
+	}
+	
+	private Chunking ruleNamAllUpper(Sentence sentence) {
+		Chunking chunking = new Chunking(sentence);
+		ArrayList<Token> tokens = sentence.getTokens();
+		AttributeIndex attributeIndex = sentence.getAttributeIndex();
+		
+		for (int i = 0; i < tokens.size(); i++) {
+			if (attributeIndex.getAttributeValue(tokens.get(i), "pattern").equals("ALL_UPPER")
+					&& attributeIndex.getAttributeValue(tokens.get(i), "orth").length() > 2 ) {
+				chunking.addChunk(new Chunk(i, i, "NAM", sentence));
+			}			
+		}
+		
+		return chunking;	
+	}	
+	
 	
 	/**
 	 * Checks, whether the given heuristic is in use.
@@ -125,6 +200,11 @@ public class HeuristicChunker extends Chunker {
 		return chunking;
 	}
 	
+	/**
+	 * 
+	 * @param sentence
+	 * @return
+	 */
 	private Chunking ruleGeneralCamelBase(Sentence sentence) {
 		Chunking chunking = new Chunking(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();

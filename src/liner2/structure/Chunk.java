@@ -90,7 +90,11 @@ public class Chunk {
 	public void setId(String id){
 		this.id = id;
 	}
-	
+
+	public void setBegin(int begin) {
+		this.begin = begin;
+	}
+
 	public void setEnd(int end) {
 		this.end = end;
 	}
