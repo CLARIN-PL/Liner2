@@ -451,17 +451,17 @@ public class LinerOptions {
 				.withArgName("filename").hasArg().withDescription("name of file with configuration")
 				.create(OPTION_INI));
 		options.addOption(OptionBuilder
-                                .withArgName("filename").hasArg().withDescription("name of file with list of input files")
-                                .create(OPTION_IS));
+                 .withArgName("filename").hasArg().withDescription("name of file with list of input files")
+                 .create(OPTION_IS));
 		options.addOption(OptionBuilder.withArgName("filename").hasArg()
-			.withDescription("read input from file")
-			.create(OPTION_INPUT_FILE));
+				.withDescription("read input from file")
+				.create(OPTION_INPUT_FILE));
 		options.addOption(OptionBuilder.withArgName("format").hasArg()
-			.withDescription("input format [iob,ccl,plain]")
-			.create(OPTION_INPUT_FORMAT));
+				.withDescription("input format [iob,ccl,plain]")
+				.create(OPTION_INPUT_FORMAT));
 		options.addOption(OptionBuilder.withArgName("address").hasArg()
-			.withDescription("IP address for daemon")
-			.create(OPTION_IP));
+				.withDescription("IP address for daemon")
+				.create(OPTION_IP));
 		options.addOption(OptionBuilder.withArgName("description").hasArg()
 				.withDescription("path to maca (for batch mode)")
 				.create(OPTION_MACA));
@@ -474,15 +474,15 @@ public class LinerOptions {
     	options.addOption(OptionBuilder.withArgName("number").hasArg()
 				.withDescription("port to listen on (daemon mode)")
 				.create(OPTION_PORT));
-	options.addOption(OptionBuilder.withArgName("filename").hasArg()
+    	options.addOption(OptionBuilder.withArgName("filename").hasArg()
 				.withDescription("path to location of python interpreter")
 				.create(OPTION_PYTHON));
 		options.addOption(OptionBuilder.withArgName("filename").hasArg()
-			.withDescription("save output to file")
-			.create(OPTION_OUTPUT_FILE));
+				.withDescription("save output to file")
+				.create(OPTION_OUTPUT_FILE));
 		options.addOption(OptionBuilder.withArgName("chunkers").hasArg()
-			.withDescription("specify chunkers to use")
-			.create(OPTION_USE));
+				.withDescription("specify chunkers to use")
+				.create(OPTION_USE));
 		options.addOption(OptionBuilder.withArgName("format").hasArg()
 				.withDescription("output format [iob,ccl,tuples]")
 				.create(OPTION_OUTPUT_FORMAT));
