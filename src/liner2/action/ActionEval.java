@@ -62,7 +62,7 @@ public class ActionEval extends Action{
     	HashMap<Sentence, Chunking> chunkings = chunker.chunk(ps);
     	timer.stopTimer();
     	    	
-    	timer.startTimer("Evaluation");
+    	timer.startTimer("Evaluation", false);
     	eval.evaluate(chunkings, chunkingsRef);
 		evalMuc.evaluate(chunkings, chunkingsRef);				
 		timer.stopTimer();

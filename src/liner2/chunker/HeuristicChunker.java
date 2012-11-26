@@ -103,17 +103,17 @@ public class HeuristicChunker extends Chunker {
 		for (int i = 1; i < tokens.size(); i++) {
 			String orth = attributeIndex.getAttributeValue(tokens.get(i), "orth"); 
 			if ( i+2 < tokens.size() 
-					&& ( orth.equals("„") || orth.equals("“") ) 
+					&& ( orth.equals("„") || orth.equals("“") || orth.equals("\"") ) 
 					&& attributeIndex.getAttributeValue(tokens.get(i+1), "starts_with_upper_case").equals("1") ){
 				
 				int j = i+1;
 				boolean ends = false;
 				while ( j < tokens.size() && !ends){
 					String orth2 = attributeIndex.getAttributeValue(tokens.get(j), "orth");
-					ends = orth2.equals("”");
+					ends = orth2.equals("”") || orth2.equals("\"");
 					j++;
 				}
-				if (ends && i+1 <= j-2 ){
+				if (ends && i+1 <= j-2 && j-i < 5 ){
 					/* i+1 do j-2 to tekst w cudzysłowiu */ 
 					chunking.addChunk(new Chunk(i+1, j-2, "NAM", sentence));
 					i = j-1;

@@ -12,10 +12,12 @@ public class ProcessingTimer {
 	class Task{
 		private String label = null;
 		private long time = 0;
+		private boolean countInTotal = false;
 		
-		public Task(String label, long time){
+		public Task(String label, long time, boolean countInTotal){
 			this.label = label;
 			this.time = time;
+			this.countInTotal = countInTotal;
 		}
 		
 		public String getLabel(){
@@ -25,12 +27,17 @@ public class ProcessingTimer {
 		public long getTime(){
 			return this.time;
 		}
+		
+		public boolean getCountInTotal(){
+			return this.countInTotal;
+		}
 	}
 	
 	private String label = null;
 	private long startTime = 0;	
 	private int tokensNumber = 0;
 	private int textSize = 0;
+	private boolean countInTotal = false;
 
 	ArrayList<Task> tasks = new ArrayList<Task>();
 
@@ -48,12 +55,17 @@ public class ProcessingTimer {
 	}
 
 	public void startTimer(String label){
+		this.startTimer(label, true);
+	}
+	
+	public void startTimer(String label, boolean countInTotal){
 		this.label = label;
 		this.startTime = System.nanoTime();
+		this.countInTotal = countInTotal;
 	}
 	
 	public void stopTimer(){
-		this.tasks.add(new Task(this.label, System.nanoTime() - this.startTime ));
+		this.tasks.add(new Task(this.label, System.nanoTime() - this.startTime, this.countInTotal));
 		this.label = null;
 	}
 	
@@ -65,8 +77,13 @@ public class ProcessingTimer {
 		int i=1;
 		long totalTime = 0;
 		for ( Task task : this.tasks ){
-			System.out.println(String.format("%d) %-20s %5.2f s", i++, task.getLabel(), (float)task.getTime()/milisec));
-			totalTime += task.getTime();
+			String suffix = "";
+			if (task.getCountInTotal())
+				totalTime += task.getTime();
+			else
+				suffix = "(not in total time)";
+			
+			System.out.println(String.format("%d) %-20s %5.2f s %s", i++, task.getLabel(), (float)task.getTime()/milisec, suffix));
 		}
 		System.out.println("----------------------------------------------------");
 		System.out.println(String.format("## %-20s %5.2f s", "Total time", (float)totalTime/milisec));
