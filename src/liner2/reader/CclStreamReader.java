@@ -136,11 +136,19 @@ public class CclStreamReader extends StreamReader {
 			paragraphText = "<" + TAG_PARAGRAPH + ">";
 			
 			for(int i=0; i<xmlr.getAttributeCount(); i++) {
-				
-				if(!xmlr.getAttributeName(i).toString().contains(":href"))chunkMetaData.put(xmlr.getAttributeName(i).toString(), xmlr.getAttributeValue(i));
-				else chunkMetaData.put("xlink:href", xmlr.getAttributeValue(i));
+				String attributeName = xmlr.getAttributeName(i).toString();
+				if ( attributeName.equals(TAG_ID) ){
+					paragraphId = xmlr.getAttributeValue(i);
+				}
+				else if(!xmlr.getAttributeName(i).toString().contains(":href"))
+					chunkMetaData.put(xmlr.getAttributeName(i).toString(), xmlr.getAttributeValue(i));
+				else 
+					chunkMetaData.put("xlink:href", xmlr.getAttributeValue(i));
 			}
-			paragraphId = this.nextParagraphId;
+			
+			if ( paragraphId == null )
+				paragraphId = this.nextParagraphId;
+			
 			this.nextParagraph = false;
 			this.nextParagraphId = null;
 			
