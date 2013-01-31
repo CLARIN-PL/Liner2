@@ -8,7 +8,7 @@ public class Paragraph {
 
 	private String id = null;
 	private AttributeIndex attributeIndex = null;
-	private HashMap<String,String> chunkMetaData = null;
+	private HashMap<String,String> chunkMetaData = new HashMap<String, String>();
 	
 	private ArrayList<Sentence> sentences = new ArrayList<Sentence>(); 
 	

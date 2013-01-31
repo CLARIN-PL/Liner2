@@ -38,7 +38,7 @@ public class WcclChunker extends Chunker {
 	
 	private Chunking chunkSentence(Sentence sentence) {
 		Chunking chunking = new Chunking(sentence);
-		String cmd = "wccl-rules -q -t nkjp -i ccl -I - " + this.wcclFile;
+		String cmd = "wccl-rules -q -t nkjp -i ccl -I - -C " + this.wcclFile;
 		Process p = null;
 		
 		try {
@@ -78,7 +78,8 @@ public class WcclChunker extends Chunker {
 		
 		Sentence resultSentence = paragraph.getSentences().get(0);
 		for (Chunk chunk : resultSentence.getChunks())
-			chunking.addChunk(chunk);
+			if (!chunking.contains(chunk))
+				chunking.addChunk(chunk);
 		
 		return chunking;
 	}	
