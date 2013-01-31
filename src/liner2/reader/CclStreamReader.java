@@ -7,7 +7,6 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Vector;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -16,13 +15,11 @@ import javax.xml.stream.XMLStreamException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError; 
 import javax.xml.parsers.ParserConfigurationException; 
 
 import org.xml.sax.SAXException; 
 import org.xml.sax.SAXParseException; 
 import org.w3c.dom.Document;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
@@ -38,19 +35,37 @@ import liner2.tools.DataFormatException;
 
 public class CclStreamReader extends StreamReader {
 	
+	class AnnChan {
+		
+		public String chan = null;
+		public String number = null;
+		public String head = "0";
+		
+		public AnnChan(String chan, String number, String head){
+			this.chan = chan;
+			this.number = number;
+			this.head = head;
+		}
+		
+		public String toString(){
+			return this.chan + "#" + this.number;
+		}
+	}
+	
 	private final String TAG_ANN			= "ann";
 	private final String TAG_BASE 			= "base";
 	private final String TAG_CHAN			= "chan";
 	private final String TAG_CTAG			= "ctag";
-	private final String TAG_DISAMB			= "disamb";
+	private final String TAG_DISAMB		= "disamb";
 	private final String TAG_ID 			= "id";
 	private final String TAG_ORTH			= "orth";
-	private final String TAG_NS				= "ns";
-	private final String TAG_PARAGRAPH 		= "chunk";
+	private final String TAG_NS			= "ns";
+	private final String TAG_PARAGRAPH 	= "chunk";
 	private final String TAG_PARAGRAPH_SET	= "chunkSet";
 	private final String TAG_SENTENCE		= "sentence";
 	private final String TAG_TAG			= "lex";
-	private final String TAG_TOKEN 			= "tok";
+	private final String TAG_TOKEN 		= "tok";
+	private final String TAG_HEAD 			= "head";
 	
 	private XMLStreamReader xmlr;
 	private BufferedInputStream is;
@@ -232,6 +247,11 @@ public class CclStreamReader extends StreamReader {
 		return document;
 	}
 	
+	/**
+	 * 
+	 * @param sentenceNode
+	 * @return
+	 */
 	private Sentence getSentenceFromNode(Node sentenceNode) {
 		Sentence sentence = new Sentence();
 		for (int j=0; j<sentenceNode.getAttributes().getLength(); j++){
@@ -266,6 +286,14 @@ public class CclStreamReader extends StreamReader {
 		return sentence;
 	}
 	
+	/**
+	 * 
+	 * @param idx
+	 * @param tokenNode
+	 * @param annotations
+	 * @param sentence
+	 * @return
+	 */
 	private Token getTokenFromNode(int idx, Node tokenNode, Hashtable<String, Chunk> annotations, Sentence sentence) {
 		Token token = new Token();
 		for (int j=0; j<tokenNode.getAttributes().getLength(); j++){
@@ -284,13 +312,13 @@ public class CclStreamReader extends StreamReader {
 				else if (n.getNodeName().equals(TAG_TAG))
 					token.addTag(getTagFromNode(n));
 				else if (n.getNodeName().equals(TAG_ANN)) {
-					String ann = getAnnotationFromNode(n);
+					AnnChan ann = getAnnotationFromNode(n);
 					if (ann != null) {
 						if (annotations.containsKey(ann))
 							annotations.get(ann).setEnd(idx);
 						else {
-							String type = ann.substring(0, ann.lastIndexOf('#')).toUpperCase();
-							annotations.put(ann, new Chunk(idx, idx, type, sentence));
+							annotations.put(ann.toString(), 
+								new Chunk(idx, idx, ann.chan, sentence));
 						}
 					}
 				}
@@ -310,6 +338,11 @@ public class CclStreamReader extends StreamReader {
 		return token;
 	}
 	
+	/**
+	 * 
+	 * @param tagNode
+	 * @return
+	 */
 	private Tag getTagFromNode(Node tagNode) {
 		String base = null;
 		String ctag = null;
@@ -336,16 +369,29 @@ public class CclStreamReader extends StreamReader {
 		return new Tag(base, ctag, disamb);
 	}
 	
-	private String getAnnotationFromNode(Node annNode) {
+	/**
+	 * 
+	 * @param annNode
+	 * @return
+	 */
+	private AnnChan getAnnotationFromNode(Node annNode) {
 		NamedNodeMap attributes = annNode.getAttributes();
 		String chanName = attributes.getNamedItem(TAG_CHAN).getNodeValue();
 		String chanNumber = getTextFromNode(annNode).trim();
+		String head = attributes.getNamedItem(TAG_HEAD) != null ?
+				attributes.getNamedItem(TAG_HEAD).getNodeValue() : "0";
+				
 		if (chanNumber.equals("0"))
 			return null;
 		else
-			return chanName + "#" + chanNumber;
+			return new AnnChan(chanName, chanNumber, head);
 	}
 	
+	/**
+	 * 
+	 * @param textNode
+	 * @return
+	 */
 	private String getTextFromNode(Node textNode) {
 		String text = "";
 		NodeList textChildNodes = textNode.getChildNodes();
@@ -357,6 +403,11 @@ public class CclStreamReader extends StreamReader {
 		return text;
 	}
 	
+	/**
+	 * 
+	 * @param text
+	 * @return
+	 */
 	private String escapeXml(String text) {
 		text = text.replace("&", "&amp;");
 		text = text.replace("\"", "&quot;");
@@ -365,7 +416,12 @@ public class CclStreamReader extends StreamReader {
 		text = text.replace(">", "&gt;");
 		return text;
 	}
-
+	
+	/**
+	 * 
+	 * @param text
+	 * @return
+	 */
 	private String unescapeXml(String text) {
 		text = text.replace("&quot;", "\"");
 		text = text.replace("&apos;", "\'");
