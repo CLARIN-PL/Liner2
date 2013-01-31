@@ -161,48 +161,13 @@ public class FeatureGenerator {
 		if (updateIndex)
 			sentence.getAttributeIndex().update(LinerOptions.get().featureNames);
 
-		String featureLoad = FeatureGenerator.docstart_config_features;
-		featureLoad = featureLoad.replace("-DOCSTART CONFIG FEATURES ", "");
-		featureLoad = featureLoad.replace(" ", ",");
-
-		FeatureGenerator.writeline("@FEATURES");
-		FeatureGenerator.writeline(FeatureGenerator.configuration  + " -l " + featureLoad);
-		FeatureGenerator.writeline(FeatureGenerator.docstart_config_features);
-		
-		for (Token token : sentence.getTokens()) {
-			String line = String.format("%s %s %s O", token.getAttributeValue(0),
-				token.getAttributeValue(1), token.getAttributeValue(2));
-			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i<token.getNumAttributes(); i++)
-				sb.append(token.getAttributeValue(i) + " ");
-			sb.append("O");
-			FeatureGenerator.writeline(sb.toString());
+		int index_from = 0;
+		int max_tokens = 10;
+		while ( index_from < sentence.getTokenNumber() ){
+			int index_to = Math.min(index_from + max_tokens, sentence.getTokenNumber());
+			FeatureGenerator.generateAttributesForRange(sentence.getTokens(), index_from, index_to);
+			index_from = index_to;
 		}
-
-		FeatureGenerator.writeline("@EOC");	
-		FeatureGenerator.output.flush();
-		FeatureGenerator.input.readLine();
-		
-//		String error = null;
-//		while ( (error = FeatureGenerator.error.readLine()) != null)
-//			System.out.println("!!: " + error);
-		
-		for (Token token : sentence.getTokens()) {
-			String line = FeatureGenerator.input.readLine().trim();
-			line = line.substring(0, line.length() - 2);
-			String[] featureValues = line.split(" ");
-			for (int i = 0; i < featureValues.length; i++)
-				token.setAttributeValue(i, featureValues[i]);					
-		}
-
-//		String error = null;
-//		while ( (error = FeatureGenerator.error.readLine()) != null)
-//			System.out.println("!!: " + error);
-				
-		/* XXX */
-		FeatureGenerator.input.readLine();
-		FeatureGenerator.input.readLine();
-		FeatureGenerator.input.readLine();
 
 		if (sentence.getAttributeIndex().getIndex("agr1") > -1){
 			int cas = sentence.getAttributeIndex().getIndex("case");
@@ -237,6 +202,70 @@ public class FeatureGenerator {
 			FeatureGenerator.initTime = FeatureGenerator.time;
 	}
 	
+	/**
+	 * 
+	 * @param tokens
+	 * @param index_from
+	 * @param index_to
+	 * @throws IOException
+	 */
+	private static void generateAttributesForRange(ArrayList<Token> tokens, int index_from, int index_to) throws IOException{
+		String featureLoad = FeatureGenerator.docstart_config_features;
+		featureLoad = featureLoad.replace("-DOCSTART CONFIG FEATURES ", "");
+		featureLoad = featureLoad.replace(" ", ",");
+
+		FeatureGenerator.writeline("@FEATURES");
+		FeatureGenerator.writeline(FeatureGenerator.configuration  + " -l " + featureLoad);
+		FeatureGenerator.writeline(FeatureGenerator.docstart_config_features);
+		
+		for (int i=index_from; i<index_to; i++) {
+			Token token = tokens.get(i);
+			String line = String.format("%s %s %s O", token.getAttributeValue(0),
+				token.getAttributeValue(1), token.getAttributeValue(2));
+			StringBuilder sb = new StringBuilder();
+			for (int j = 0; j<token.getNumAttributes(); j++)
+				sb.append(token.getAttributeValue(j) + " ");
+			sb.append("O");
+			FeatureGenerator.writeline(sb.toString());
+		}
+
+		FeatureGenerator.writeline("@EOC");	
+		FeatureGenerator.output.flush();
+		FeatureGenerator.input.readLine();
+		
+//		String error = null;
+//		while ( (error = FeatureGenerator.error.readLine()) != null)
+//			System.out.println("!!: " + error);
+		
+		for (int i=index_from; i<index_to; i++) {
+			Token token = tokens.get(i);
+			String line = FeatureGenerator.input.readLine().trim();
+			line = line.substring(0, line.length() - 2);
+			String[] featureValues = line.split(" ");
+			for (int j = 0; j < featureValues.length; j++)
+				token.setAttributeValue(j, featureValues[j]);					
+		}
+
+//		String error = null;
+//		while ( (error = FeatureGenerator.error.readLine()) != null)
+//			System.out.println("!!: " + error);
+				
+		/* XXX */
+		FeatureGenerator.input.readLine();
+		FeatureGenerator.input.readLine();
+		FeatureGenerator.input.readLine();
+		
+	}
+	
+	/**
+	 * 
+	 * @param a1
+	 * @param a2
+	 * @param a3
+	 * @param t1
+	 * @param t2
+	 * @return
+	 */
 	private static String agree3attributes(int a1, int a2, int a3, Token t1, Token t2){
 
 		if ( t1.getAttributeValue(a1).equals("null") || t2.getAttributeValue(a1).equals("null")
