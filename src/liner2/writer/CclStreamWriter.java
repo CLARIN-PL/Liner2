@@ -24,15 +24,15 @@ public class CclStreamWriter extends StreamWriter {
 	private final String TAG_BASE 			= "base";
 	private final String TAG_CHAN			= "chan";
 	private final String TAG_CTAG			= "ctag";
-	private final String TAG_DISAMB			= "disamb";
-	private final String TAG_ID				= "id";
-	private final String TAG_NS				= "ns";
+	private final String TAG_DISAMB		= "disamb";
+	private final String TAG_ID			= "id";
+	private final String TAG_NS			= "ns";
 	private final String TAG_ORTH			= "orth";
-	private final String TAG_PARAGRAPH 		= "chunk";
-	private final String TAG_PARAGRAPH_SET 	= "chunkList";
+	private final String TAG_PARAGRAPH 	= "chunk";
+	private final String TAG_PARAGRAPH_SET	= "chunkList";
 	private final String TAG_SENTENCE		= "sentence";
 	private final String TAG_TAG			= "lex";
-	private final String TAG_TOKEN 			= "tok";
+	private final String TAG_TOKEN 		= "tok";
 
 	private XMLStreamWriter xmlw;
 	private OutputStream os;
@@ -53,7 +53,9 @@ public class CclStreamWriter extends StreamWriter {
 		if (open)
 			return;
 		try {
-			xmlw.writeStartDocument();
+			xmlw.writeStartDocument("UTF-8", "1.0");
+			xmlw.writeCharacters("\n");
+			xmlw.writeDTD("<!DOCTYPE chunkList SYSTEM \"ccl.dtd\">");
 			xmlw.writeCharacters("\n");
 			xmlw.writeStartElement(TAG_PARAGRAPH_SET);
 			xmlw.writeCharacters("\n");
