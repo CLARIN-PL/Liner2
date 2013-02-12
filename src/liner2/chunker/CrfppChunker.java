@@ -33,6 +33,7 @@ public class CrfppChunker extends Chunker
 	private String template_filename = null;
 	private String model_filename = null;
 	private int threads = 1;
+	private static final int MAX_TOKENS = 1000;
 
 	
     public CrfppChunker(int threads) {
@@ -47,6 +48,8 @@ public class CrfppChunker extends Chunker
      */
 
 	private synchronized Chunking chunkSentence(Sentence sentence){
+		if (sentence.getTokenNumber()>MAX_TOKENS)
+			return new Chunking(sentence);
 		this.sendDataToTagger(sentence);
 		return this.readTaggerOutput(sentence);
 	}
