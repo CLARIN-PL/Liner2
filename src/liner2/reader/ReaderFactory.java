@@ -30,7 +30,9 @@ public class ReaderFactory {
 	}
 	
 	public StreamReader getStreamReader(InputStream in, String inputFormat) throws Exception {
-		if (inputFormat.equals("ccl"))
+		if (inputFormat.equals("cclsax"))
+			return new CclSAXStreamReader(in);
+		else if (inputFormat.equals("ccl"))
 			return new CclStreamReader(in);
 		else if (inputFormat.equals("iob"))
 			return new IobStreamReader(in);
