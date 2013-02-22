@@ -3,13 +3,13 @@
 <project name="Liner2 -- a module for named entity recognition for Polish" default="make" basedir=".">
 
 	<property name="nerd_path" value="../../workspace_inforex/inforex_nerd" />
-	<property name="production_path" value="/nlp/eclipse/workspace_liner2/package" />
+	<property name="production_path" value="/nlp/eclipse/workspace_liner2/production/liner2.3" />
 
 	<target name="clean">
   		<delete dir="${production_path}"/>
 	</target>
 
-	<target name="make" depends="clean,copy-liner,copy-nerd,copy-models"/>		
+	<target name="make" depends="clean,copy-liner,copy-nerd"/>		
 
 	<target name="copy-liner">
 		<mkdir dir="${production_path}"/>
@@ -43,15 +43,6 @@
 			<arg value="-a"/>
 			<arg value="--prefix=${production_path}/nerd/"/>
 		</exec>
-	</target>
-
-	<target name="copy-models">
-		<copy todir="${production_path}/model-5nam-v1" >  
-			<fileset dir="./model-5nam-v1" includes="**"/>  
-		</copy>		
-		<copy todir="${production_path}/model-56nam-v1" >  
-			<fileset dir="./model-56nam-v1" includes="**"/>  
-		</copy>		
 	</target>
 
 </project>
