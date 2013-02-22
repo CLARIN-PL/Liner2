@@ -2,6 +2,7 @@ package liner2.chunker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 import liner2.structure.AttributeIndex;
 import liner2.structure.Chunk;
@@ -20,6 +21,7 @@ import liner2.tools.ParameterException;
 
 public class HeuristicChunker extends Chunker {
 	
+	private Pattern romanNumer = Pattern.compile("^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$");
 	private ArrayList<String> rules = null;
 	
 	public HeuristicChunker() {}
@@ -95,6 +97,11 @@ public class HeuristicChunker extends Chunker {
 		return chunking;	
 	}
 
+	/**
+	 * 
+	 * @param sentence
+	 * @return
+	 */
 	private Chunking ruleNamParanthesis(Sentence sentence) {
 		Chunking chunking = new Chunking(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();
@@ -103,14 +110,15 @@ public class HeuristicChunker extends Chunker {
 		for (int i = 1; i < tokens.size(); i++) {
 			String orth = attributeIndex.getAttributeValue(tokens.get(i), "orth"); 
 			if ( i+2 < tokens.size() 
-					&& ( orth.equals("„") || orth.equals("“") || orth.equals("\"") ) 
+					&& ( orth.equals("„") || orth.equals("“") || orth.equals("\"")
+							|| orth.equals("&quot;") ) 
 					&& attributeIndex.getAttributeValue(tokens.get(i+1), "starts_with_upper_case").equals("1") ){
 				
 				int j = i+1;
 				boolean ends = false;
 				while ( j < tokens.size() && !ends){
 					String orth2 = attributeIndex.getAttributeValue(tokens.get(j), "orth");
-					ends = orth2.equals("”") || orth2.equals("\"");
+					ends = orth2.equals("”") || orth2.equals("\"") || orth.equals("&quot;");
 					j++;
 				}
 				if (ends && i+1 <= j-2 && j-i < 5 ){
@@ -124,15 +132,47 @@ public class HeuristicChunker extends Chunker {
 		return chunking;	
 	}
 	
+	/**
+	 * 
+	 * @param sentence
+	 * @return
+	 */
 	private Chunking ruleNamAllUpper(Sentence sentence) {
 		Chunking chunking = new Chunking(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();
-		AttributeIndex attributeIndex = sentence.getAttributeIndex();
+		AttributeIndex ai = sentence.getAttributeIndex();
+		int iHasLoweCase = ai.getIndex("has_lower_case");
+		int iPattern = ai.getIndex("pattern");
+		int iOrth = ai.getIndex("orth");
+		
+		boolean hasLowerCase = false;
+		int k = 0;
+		while ( k < tokens.size() && hasLowerCase == false ){
+			hasLowerCase = tokens.get(k).getAttributeValue(iHasLoweCase).equals("1");
+			k++;
+		}
+		
+		if ( !hasLowerCase ){
+			return chunking;
+		}
 		
 		for (int i = 0; i < tokens.size(); i++) {
-			if (attributeIndex.getAttributeValue(tokens.get(i), "pattern").equals("ALL_UPPER")
-					&& attributeIndex.getAttributeValue(tokens.get(i), "orth").length() > 2 ) {
-				chunking.addChunk(new Chunk(i, i, "NAM", sentence));
+			if (tokens.get(i).getAttributeValue(iPattern).equals("ALL_UPPER")
+					&& tokens.get(i).getAttributeValue(iOrth).length() > 2 ) {
+				int j = i;
+				while ( j < tokens.size() 
+						&& tokens.get(j).getAttributeValue(iPattern).equals("ALL_UPPER")
+						&& tokens.get(j).getAttributeValue(iOrth).length() > 2 ){
+					j++;
+				}
+				/**
+				 * Sprawdź, czy kolejne słowo to nie "wiek", aby odrzucić liczby rzymskie
+				 */
+				if ( j - i > 1 
+						|| this.romanNumer.matcher(
+								ai.getAttributeValue(tokens.get(i), "orth")).find() == false ){
+					chunking.addChunk(new Chunk(i, j-1, "NAM", sentence));
+				}
 			}			
 		}
 		
