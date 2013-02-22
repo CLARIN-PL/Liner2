@@ -48,4 +48,11 @@ public class ParagraphSet {
 			for (Sentence sentence : paragraph.getSentences())
 				sentence.setChunking(chunkings.get(sentence));
 	}
+
+	public ArrayList<Sentence> getSentences() {
+		ArrayList<Sentence> sentences = new ArrayList<Sentence>();
+		for ( Paragraph paragraph : this.paragraphs )
+			sentences.addAll(paragraph.getSentences());
+		return sentences;
+	}
 }
