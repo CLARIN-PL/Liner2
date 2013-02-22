@@ -162,7 +162,7 @@ public class FeatureGenerator {
 			sentence.getAttributeIndex().update(LinerOptions.get().featureNames);
 
 		int index_from = 0;
-		int max_tokens = 10;
+		int max_tokens = sentence.getTokenNumber();
 		while ( index_from < sentence.getTokenNumber() ){
 			int index_to = Math.min(index_from + max_tokens, sentence.getTokenNumber());
 			FeatureGenerator.generateAttributesForRange(sentence.getTokens(), index_from, index_to);
@@ -174,25 +174,17 @@ public class FeatureGenerator {
 			int nmb = sentence.getAttributeIndex().getIndex("number");
 			int gnd = sentence.getAttributeIndex().getIndex("gender");
 			int agr1 = sentence.getAttributeIndex().getIndex("agr1");
-			int agr2 = sentence.getAttributeIndex().getIndex("agr2");
 			
 			for (int i=0; i<sentence.getTokenNumber(); i++){
 				
 				String agr1_value = "NULL";
-				String agr2_value = "NULL";
 				
 				if ( i>0 ){
 					agr1_value = FeatureGenerator.agree3attributes(cas, nmb, gnd, 
 							sentence.getTokens().get(i), sentence.getTokens().get(i-1));						
 				}
 				
-				if ( i + 1 < sentence.getTokenNumber() ){
-					agr2_value = FeatureGenerator.agree3attributes(cas, nmb, gnd, 
-							sentence.getTokens().get(i), sentence.getTokens().get(i+1));						
-				}
-
 				sentence.getTokens().get(i).setAttributeValue(agr1, agr1_value);
-				sentence.getTokens().get(i).setAttributeValue(agr2, agr2_value);
 			}
 		}
 		
