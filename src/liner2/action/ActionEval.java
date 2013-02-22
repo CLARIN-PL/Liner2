@@ -63,7 +63,7 @@ public class ActionEval extends Action{
     	timer.stopTimer();
     	    	
     	timer.startTimer("Evaluation", false);
-    	eval.evaluate(chunkings, chunkingsRef);
+    	eval.evaluate(ps.getSentences(), chunkings, chunkingsRef);
 		evalMuc.evaluate(chunkings, chunkingsRef);				
 		timer.stopTimer();
 

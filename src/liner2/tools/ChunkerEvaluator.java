@@ -71,8 +71,8 @@ public class ChunkerEvaluator {
 	 * Ocenia nerowanie całego dokumentu.
 	 * @param set
 	 */
-	public void evaluate(HashMap<Sentence, Chunking> chunkings, HashMap<Sentence, Chunking> chunkigsRef){
-		for ( Sentence sentence : chunkings.keySet()){
+	public void evaluate(ArrayList<Sentence> order, HashMap<Sentence, Chunking> chunkings, HashMap<Sentence, Chunking> chunkigsRef){
+		for ( Sentence sentence : order){
 			this.evaluate(sentence, chunkings.get(sentence), chunkigsRef.get(sentence));
 		}
 		recalculateStats();

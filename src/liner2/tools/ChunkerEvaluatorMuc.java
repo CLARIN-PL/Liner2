@@ -33,6 +33,8 @@ import liner2.Main;
  */
 public class ChunkerEvaluatorMuc {
 
+	private HashSet<String> keys = new HashSet<String>();
+	
 	class ChunkTypedSet {
 		
 		HashMap<String, ArrayList<Chunk>> chunks = new HashMap<String, ArrayList<Chunk>>();
@@ -46,6 +48,18 @@ public class ChunkerEvaluatorMuc {
 			else{
 				this.chunks.get(chunk.getType()).add(chunk);
 			}				
+		}
+		
+		public void addAll(ArrayList<Chunk> chunks){
+			for (Chunk chunk : chunks)
+				this.add(chunk);
+		}
+		
+		public ArrayList<Chunk> getChunks(String name){
+			if ( this.chunks.containsKey(name) )
+				return this.chunks.get(name);
+			else
+				return new ArrayList<Chunk>();
 		}
 		
 		/**
@@ -360,5 +374,47 @@ public class ChunkerEvaluatorMuc {
 			result.append(tokens.get(i).getFirstValue() + " ");
 		return result.toString().trim();
 	}
+	
+	/**
+	 * Dołącza do danych zawartość innego obiektu ChunkerEvaluator.
+	 */	
+	public void join(ChunkerEvaluatorMuc foreign) {
+			
+		for (String foreignKey : foreign.getTypes()) {
+			
+			if (!this.keys.contains(foreignKey))
+				this.keys.add(foreignKey);
+						
+			if (foreign.chunksTruePositives.getChunkCount(foreignKey)>0) {
+				ArrayList<Chunk> chunks = foreign.chunksTruePositives.getChunks(foreignKey);
+				this.chunksTruePositives.addAll(chunks);
+			}
+
+			if (foreign.chunksTruePartially.getChunkCount(foreignKey)>0) {
+				ArrayList<Chunk> chunks = foreign.chunksTruePartially.getChunks(foreignKey);
+				this.chunksTruePartially.addAll(chunks);
+			}
+
+			if (foreign.chunksFalsePositives.getChunkCount(foreignKey)>0) {
+				ArrayList<Chunk> chunks = foreign.chunksFalsePositives.getChunks(foreignKey);
+				this.chunksFalsePositives.addAll(chunks);
+			}
+			
+			if (foreign.chunksFalsePartially.getChunkCount(foreignKey)>0) {
+				ArrayList<Chunk> chunks = foreign.chunksFalsePartially.getChunks(foreignKey);
+				this.chunksFalsePartially.addAll(chunks);
+			}
+			
+			if (foreign.chunksFalseNegatives.getChunkCount(foreignKey)>0) {
+				ArrayList<Chunk> chunks = foreign.chunksFalseNegatives.getChunks(foreignKey);
+				this.chunksFalseNegatives.addAll(chunks);
+			}
+			
+		}
+		
+		this.globalTruePositives += foreign.globalTruePositives;
+		this.globalFalsePositives += foreign.globalFalsePositives;
+		this.globalFalseNegatives += foreign.globalFalseNegatives;
+	}	
 	
 }
