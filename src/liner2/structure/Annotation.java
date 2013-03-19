@@ -8,7 +8,7 @@ import java.util.HashSet;
  * @author czuk
  *
  */
-public class Chunk {
+public class Annotation {
 
 	/**
 	 * Indeks pierwszego tokenu.
@@ -32,14 +32,14 @@ public class Chunk {
 	
 	private String id = null;
 	
-	public Chunk(int begin, int end, String type, Sentence sentence){
+	public Annotation(int begin, int end, String type, Sentence sentence){
 		this.begin = begin;
 		this.end = end;
 		this.type = type;
 		this.sentence = sentence;
 	}
 	
-	public boolean equals(Chunk chunk) {
+	public boolean equals(Annotation chunk) {
 		if (this.begin != chunk.getBegin())
 			return false;
 		else if (this.end != chunk.getEnd())
@@ -99,18 +99,18 @@ public class Chunk {
 		this.end = end;
 	}
 
-	public static Chunk[] sortChunks(HashSet<Chunk> chunkSet) {
+	public static Annotation[] sortChunks(HashSet<Annotation> chunkSet) {
 		int size = chunkSet.size();
-		Chunk[] sorted = new Chunk[size];
+		Annotation[] sorted = new Annotation[size];
 		int idx = 0;
-	    for (Chunk c : chunkSet)
+	    for (Annotation c : chunkSet)
 	    	sorted[idx++] = c;
 	    for (int i = 0; i < size; i++)
 	    	for (int j = i+1; j < size; j++)
 	    		if ((sorted[i].getBegin() > sorted[j].getBegin()) ||
 	    			((sorted[i].getBegin() == sorted[j].getBegin()) &&
 	    			(sorted[i].getEnd() > sorted[j].getEnd()))) {
-	    			Chunk aux = sorted[i];
+	    			Annotation aux = sorted[i];
 	    			sorted[i] = sorted[j];
 	    			sorted[j] = aux;
 	    		}

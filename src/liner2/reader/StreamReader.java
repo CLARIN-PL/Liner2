@@ -1,7 +1,7 @@
 package liner2.reader;
 
 import liner2.features.NerdFeatureGenerator;
-import liner2.structure.AttributeIndex;
+import liner2.structure.TokenAttributeIndex;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 
@@ -16,7 +16,7 @@ import liner2.Main;
  */
 public abstract class StreamReader {
 
-	protected abstract AttributeIndex getAttributeIndex();
+	protected abstract TokenAttributeIndex getAttributeIndex();
 	protected abstract Paragraph readRawParagraph() throws DataFormatException;
 	public abstract void close() throws DataFormatException;
 	public abstract boolean paragraphReady() throws DataFormatException;

@@ -1,6 +1,6 @@
 package liner2.filter;
 
-import liner2.structure.Chunk;
+import liner2.structure.Annotation;
 
 public class FilterLength extends Filter {
 
@@ -17,7 +17,7 @@ public class FilterLength extends Filter {
 	}
 
 	@Override
-	public Chunk pass(Chunk chunk, CharSequence charSeq) {
+	public Annotation pass(Annotation chunk, CharSequence charSeq) {
 		if ( chunk.getEnd()-chunk.getBegin()>0 )
 			return chunk;
 		else

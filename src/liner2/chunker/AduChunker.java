@@ -3,9 +3,9 @@ package liner2.chunker;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import liner2.structure.AttributeIndex;
-import liner2.structure.Chunk;
-import liner2.structure.Chunking;
+import liner2.structure.TokenAttributeIndex;
+import liner2.structure.Annotation;
+import liner2.structure.AnnotationSet;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
@@ -31,9 +31,9 @@ public class AduChunker extends Chunker {
 		this.one = one;
 	}
 
-	private Chunking chunkSentence(Sentence sentence) {
+	private AnnotationSet chunkSentence(Sentence sentence) {
 		ArrayList<Token> tokens = sentence.getTokens();
-		AttributeIndex ai = sentence.getAttributeIndex();
+		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		int sentenceLength = sentence.getTokenNumber();
 
 		ArrayList<HashMap<Integer, String>> nGrams = 
@@ -119,8 +119,8 @@ public class AduChunker extends Chunker {
 //	}
 
 	@Override
-	public HashMap<Sentence, Chunking> chunk(ParagraphSet ps) {
-		HashMap<Sentence, Chunking> chunkings = new HashMap<Sentence, Chunking>();
+	public HashMap<Sentence, AnnotationSet> chunk(ParagraphSet ps) {
+		HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
 		for ( Paragraph paragraph : ps.getParagraphs() )
 			for (Sentence sentence : paragraph.getSentences())
 				chunkings.put(sentence, this.chunkSentence(sentence));

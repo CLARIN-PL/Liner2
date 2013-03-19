@@ -10,9 +10,9 @@ import java.util.HashMap;
 import liner2.reader.ReaderFactory;
 import liner2.reader.StreamReader;
 
-import liner2.structure.AttributeIndex;
-import liner2.structure.Chunk;
-import liner2.structure.Chunking;
+import liner2.structure.TokenAttributeIndex;
+import liner2.structure.Annotation;
+import liner2.structure.AnnotationSet;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
@@ -36,8 +36,8 @@ public class WcclChunker extends Chunker {
 		this.wcclFile = filename;
 	}
 	
-	private Chunking chunkSentence(Sentence sentence) {
-		Chunking chunking = new Chunking(sentence);
+	private AnnotationSet chunkSentence(Sentence sentence) {
+		AnnotationSet chunking = new AnnotationSet(sentence);
 		String cmd = "wccl-rules -q -t nkjp -i ccl -I - -C " + this.wcclFile;
 		Process p = null;
 		
@@ -52,7 +52,7 @@ public class WcclChunker extends Chunker {
 		OutputStream out = p.getOutputStream();
 		
 		// zapamiętaj AttributeIndex, żeby nie stracić go przy addSentence()
-		AttributeIndex ai = sentence.getAttributeIndex();
+		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		ParagraphSet paragraphSet = new ParagraphSet();
 		Paragraph paragraph = new Paragraph(null);
 		paragraph.addSentence(sentence);
@@ -77,7 +77,7 @@ public class WcclChunker extends Chunker {
 		}
 		
 		Sentence resultSentence = paragraph.getSentences().get(0);
-		for (Chunk chunk : resultSentence.getChunks())
+		for (Annotation chunk : resultSentence.getChunks())
 			if (!chunking.contains(chunk))
 				chunking.addChunk(chunk);
 		
@@ -85,8 +85,8 @@ public class WcclChunker extends Chunker {
 	}	
 	
 	@Override
-	public HashMap<Sentence, Chunking> chunk(ParagraphSet ps) {
-		HashMap<Sentence, Chunking> chunkings = new HashMap<Sentence, Chunking>();
+	public HashMap<Sentence, AnnotationSet> chunk(ParagraphSet ps) {
+		HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
 		for ( Paragraph paragraph : ps.getParagraphs() )
 			for (Sentence sentence : paragraph.getSentences())
 				chunkings.put(sentence, this.chunkSentence(sentence));

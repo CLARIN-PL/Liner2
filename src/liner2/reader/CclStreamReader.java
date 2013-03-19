@@ -24,8 +24,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 
-import liner2.structure.AttributeIndex;
-import liner2.structure.Chunk;
+import liner2.structure.TokenAttributeIndex;
+import liner2.structure.Annotation;
 import liner2.structure.Paragraph;
 import liner2.structure.Sentence;
 import liner2.structure.Tag;
@@ -69,7 +69,7 @@ public class CclStreamReader extends StreamReader {
 	
 	private XMLStreamReader xmlr;
 	private BufferedInputStream is;
-	private AttributeIndex attributeIndex;
+	private TokenAttributeIndex attributeIndex;
 	private String nextParagraphId = null;
 	private boolean nextParagraph = false;
 	
@@ -81,14 +81,14 @@ public class CclStreamReader extends StreamReader {
 		} catch (XMLStreamException ex) {
 			throw new DataFormatException("Failed to create XML stream reader.");
 		} 
-		this.attributeIndex = new AttributeIndex();
+		this.attributeIndex = new TokenAttributeIndex();
 		this.attributeIndex.addAttribute("orth");
 		this.attributeIndex.addAttribute("base");
 		this.attributeIndex.addAttribute("ctag");
 	}
 	
 	@Override
-	public AttributeIndex getAttributeIndex() {
+	public TokenAttributeIndex getAttributeIndex() {
 		return this.attributeIndex;
 	}
 	
@@ -262,7 +262,7 @@ public class CclStreamReader extends StreamReader {
 			
 		NodeList sentenceChildNodes = sentenceNode.getChildNodes();
 		int idx = 0;
-		Hashtable<String, Chunk> annotations = new Hashtable<String, Chunk>();
+		Hashtable<String, Annotation> annotations = new Hashtable<String, Annotation>();
 		Token currentToken = null;
 
 		for (int i = 0; i < sentenceChildNodes.getLength(); i++) {
@@ -280,7 +280,7 @@ public class CclStreamReader extends StreamReader {
 		}
 		
 		// process annotations
-		for (Chunk chunk : annotations.values())
+		for (Annotation chunk : annotations.values())
 			sentence.addChunk(chunk);
 		
 		return sentence;
@@ -294,7 +294,7 @@ public class CclStreamReader extends StreamReader {
 	 * @param sentence
 	 * @return
 	 */
-	private Token getTokenFromNode(int idx, Node tokenNode, Hashtable<String, Chunk> annotations, Sentence sentence) {
+	private Token getTokenFromNode(int idx, Node tokenNode, Hashtable<String, Annotation> annotations, Sentence sentence) {
 		Token token = new Token();
 		for (int j=0; j<tokenNode.getAttributes().getLength(); j++){
 			Node n = tokenNode.getAttributes().item(j);
@@ -318,7 +318,7 @@ public class CclStreamReader extends StreamReader {
 							annotations.get(ann).setEnd(idx);
 						else {
 							annotations.put(ann.toString(), 
-								new Chunk(idx, idx, ann.chan, sentence));
+								new Annotation(idx, idx, ann.chan, sentence));
 						}
 					}
 				}

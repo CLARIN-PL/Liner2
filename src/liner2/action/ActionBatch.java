@@ -21,7 +21,7 @@ import liner2.reader.StreamReader;
 import liner2.writer.StreamWriter;
 import liner2.writer.WriterFactory;
 
-import liner2.structure.AttributeIndex;
+import liner2.structure.TokenAttributeIndex;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
@@ -120,7 +120,7 @@ public class ActionBatch extends Action{
 	
 	private Paragraph analyzePlain(String cSeq) {
 		Sentence sentence = new Sentence();
-		AttributeIndex ai = new AttributeIndex();
+		TokenAttributeIndex ai = new TokenAttributeIndex();
 		ai.addAttribute("orth");
 		ai.addAttribute("base");
 		ai.addAttribute("ctag");

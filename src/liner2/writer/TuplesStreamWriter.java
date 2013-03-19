@@ -7,7 +7,7 @@ import java.io.OutputStreamWriter;
 
 import java.util.ArrayList;
 
-import liner2.structure.Chunk;
+import liner2.structure.Annotation;
 import liner2.structure.Paragraph;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
@@ -41,8 +41,8 @@ public class TuplesStreamWriter extends StreamWriter {
 
 	private void writeSentence(Sentence sentence) {
 		try {
-			Chunk[] chunks = Chunk.sortChunks(sentence.getChunks());
-			for (Chunk c : chunks) 
+			Annotation[] chunks = Annotation.sortChunks(sentence.getChunks());
+			for (Annotation c : chunks) 
 				writeChunk(c, sentence);			
 			this.ow.newLine();
 			
@@ -54,7 +54,7 @@ public class TuplesStreamWriter extends StreamWriter {
 		}
 	}
 
-	private void writeChunk(Chunk c, Sentence s) throws IOException {
+	private void writeChunk(Annotation c, Sentence s) throws IOException {
 		int begin = this.sentenceOffset;
 		int end = this.sentenceOffset;
 		ArrayList<Token> tokens = s.getTokens();

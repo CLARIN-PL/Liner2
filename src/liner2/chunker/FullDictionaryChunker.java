@@ -15,8 +15,8 @@ import java.util.HashMap;
 //import java.util.regex.Matcher;
 //import java.util.regex.Pattern;
 //
-import liner2.structure.Chunk;
-import liner2.structure.Chunking;
+import liner2.structure.Annotation;
+import liner2.structure.AnnotationSet;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
@@ -36,8 +36,8 @@ public class FullDictionaryChunker extends Chunker
 	
 	public FullDictionaryChunker() {}
 	
-	private Chunking chunkSentence(Sentence sentence) {
-		Chunking chunking = new Chunking(sentence);
+	private AnnotationSet chunkSentence(Sentence sentence) {
+		AnnotationSet chunking = new AnnotationSet(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();
 		int sentenceLength = sentence.getTokenNumber();
 		
@@ -72,7 +72,7 @@ public class FullDictionaryChunker extends Chunker
 					// dodaj wszystkie chunki
 					HashSet<String> types = this.dictionary.get(nGrams.get(n).get(idx));
 					for (String type : types) 
-						chunking.addChunk(new Chunk(i, i + n, type, sentence));
+						chunking.addChunk(new Annotation(i, i + n, type, sentence));
 					
 					// usuń z tablicy wszystkie krótsze n-gramy, które zahaczają o to miejsce
 					// j - dł. odrzucanego n-gramu - 1, k - pozycja startowa
@@ -147,8 +147,8 @@ public class FullDictionaryChunker extends Chunker
 	}
 
 	@Override
-	public HashMap<Sentence, Chunking> chunk(ParagraphSet ps) {
-		HashMap<Sentence, Chunking> chunkings = new HashMap<Sentence, Chunking>();
+	public HashMap<Sentence, AnnotationSet> chunk(ParagraphSet ps) {
+		HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
 		for ( Paragraph paragraph : ps.getParagraphs() )
 			for (Sentence sentence : paragraph.getSentences())
 				chunkings.put(sentence, this.chunkSentence(sentence));

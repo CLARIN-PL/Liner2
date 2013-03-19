@@ -13,8 +13,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import liner2.Main;
-import liner2.structure.Chunking;
-import liner2.structure.Chunk;
+import liner2.structure.AnnotationSet;
+import liner2.structure.Annotation;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
@@ -47,9 +47,9 @@ public class CrfppChunker extends Chunker
      * @return chunking with annotations
      */
 
-	private synchronized Chunking chunkSentence(Sentence sentence){
+	private synchronized AnnotationSet chunkSentence(Sentence sentence){
 		if (sentence.getTokenNumber()>MAX_TOKENS)
-			return new Chunking(sentence);
+			return new AnnotationSet(sentence);
 		this.sendDataToTagger(sentence);
 		return this.readTaggerOutput(sentence);
 	}
@@ -89,8 +89,8 @@ public class CrfppChunker extends Chunker
 //		        tagger.parse();  		
 	}
 	
-	private Chunking readTaggerOutput(Sentence sentence){
-        Chunking chunking = new Chunking(sentence);
+	private AnnotationSet readTaggerOutput(Sentence sentence){
+        AnnotationSet chunking = new AnnotationSet(sentence);
         String line = "";
         String type = null;
         int from = 0;
@@ -99,7 +99,7 @@ public class CrfppChunker extends Chunker
             Matcher m = p.matcher(tagger.y2(i));
                                   
             if ( type != null && ( !m.matches() || m.group(1).equals("B") ) ){
-            	chunking.addChunk(new Chunk(from, i-1, type, sentence));
+            	chunking.addChunk(new Annotation(from, i-1, type, sentence));
             	type = null;
             	from = 0;
             }
@@ -111,7 +111,7 @@ public class CrfppChunker extends Chunker
         }    
 
         if (type != null)
-        	chunking.addChunk(new Chunk(from, (int)tagger.size()-1, type, sentence));
+        	chunking.addChunk(new Annotation(from, (int)tagger.size()-1, type, sentence));
 
         return chunking;
     }
@@ -150,7 +150,7 @@ public class CrfppChunker extends Chunker
     				String oStr = "";
     				for (int j = 0; j < numAttrs; j++)
     					oStr += " " + tokens.get(i).getAttributeValue(j);
-    				Chunk chunk = sentence.getChunkAt(i);
+    				Annotation chunk = sentence.getChunkAt(i);
     				if (chunk == null)
     					oStr += " O";
     				else {
@@ -278,8 +278,8 @@ public class CrfppChunker extends Chunker
 	}
 
 	@Override
-	public HashMap<Sentence, Chunking> chunk(ParagraphSet ps) {
-		HashMap<Sentence, Chunking> chunkings = new HashMap<Sentence, Chunking>();
+	public HashMap<Sentence, AnnotationSet> chunk(ParagraphSet ps) {
+		HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
 		for ( Paragraph paragraph : ps.getParagraphs() )
 			for (Sentence sentence : paragraph.getSentences())
 				chunkings.put(sentence, this.chunkSentence(sentence));

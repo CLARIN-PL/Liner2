@@ -5,7 +5,7 @@ import java.util.Hashtable;
 import liner2.reader.ReaderFactory;
 import liner2.reader.StreamReader;
 
-import liner2.structure.AttributeIndex;
+import liner2.structure.TokenAttributeIndex;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 
@@ -45,7 +45,7 @@ public class CorpusFactory {
 		ParagraphSet paragraphSet = corpora.get(names[0]);
 		if (paragraphSet == null)
 			throw new ParameterException(String.format("Undefined corpus name: '%s'", names[0]));
-		AttributeIndex attributeIndex = paragraphSet.getAttributeIndex();
+		TokenAttributeIndex attributeIndex = paragraphSet.getAttributeIndex();
 		for (int i = 1; i < names.length; i++) {
 			ParagraphSet next = corpora.get(names[i]);
 			if (next == null)

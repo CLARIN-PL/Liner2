@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import liner2.chunker.Chunker;
-import liner2.structure.Chunking;
+import liner2.structure.AnnotationSet;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
@@ -27,15 +27,15 @@ public class UnionChunker extends Chunker {
 		this.chunkers = chunkers;
 	}
 		
-	public HashMap<Sentence, Chunking> chunk(ParagraphSet ps) {
-		HashMap<Sentence, Chunking> chunkings = new HashMap<Sentence, Chunking>();
+	public HashMap<Sentence, AnnotationSet> chunk(ParagraphSet ps) {
+		HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
 		
 		for (Paragraph p : ps.getParagraphs())
 			for (Sentence sentence : p.getSentences())
-				chunkings.put(sentence, new Chunking(sentence));
+				chunkings.put(sentence, new AnnotationSet(sentence));
 		
 		for ( Chunker chunker : this.chunkers){
-			HashMap<Sentence, Chunking> chunkingThis = chunker.chunk(ps);
+			HashMap<Sentence, AnnotationSet> chunkingThis = chunker.chunk(ps);
 			for (Sentence sentence : chunkingThis.keySet())
 				chunkings.get(sentence).union(chunkingThis.get(sentence));
 				

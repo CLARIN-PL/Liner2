@@ -3,7 +3,7 @@ package liner2.filter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import liner2.structure.Chunk;
+import liner2.structure.Annotation;
 
 public class FilterNoUnderline extends Filter {
 
@@ -26,7 +26,7 @@ public class FilterNoUnderline extends Filter {
 	}
 
 	@Override
-	public Chunk pass(Chunk chunk, CharSequence charSeq) {
+	public Annotation pass(Annotation chunk, CharSequence charSeq) {
 		Matcher m = pattern.matcher(charSeq);
 		if ( !m.find() )
 			return chunk;

@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 import liner2.chunker.Chunker;
-import liner2.structure.Chunk;
-import liner2.structure.Chunking;
+import liner2.structure.Annotation;
+import liner2.structure.AnnotationSet;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
@@ -31,15 +31,15 @@ public class MajorityVotingChunker extends Chunker {
 		this.chunkers = chunkers;
 	}
 	
-	public Chunking voting(Sentence sentence, ArrayList<Chunking> chunkings) {
-		Chunking resultChunking = new Chunking(sentence);
+	public AnnotationSet voting(Sentence sentence, ArrayList<AnnotationSet> chunkings) {
+		AnnotationSet resultChunking = new AnnotationSet(sentence);
 		
-		Hashtable<Chunk, Integer> votes = new Hashtable<Chunk, Integer>();
+		Hashtable<Annotation, Integer> votes = new Hashtable<Annotation, Integer>();
 
-		for (Chunking chunking : chunkings){
-			for (Chunk chunk : chunking.chunkSet()) {
+		for (AnnotationSet chunking : chunkings){
+			for (Annotation chunk : chunking.chunkSet()) {
 				boolean found = false;
-				for (Chunk key : votes.keySet())
+				for (Annotation key : votes.keySet())
 					if (chunk.equals(key)) {
 						found = true;
 						votes.put(key, votes.get(key) + 1);
@@ -51,7 +51,7 @@ public class MajorityVotingChunker extends Chunker {
 		}
 		
 		int majority = this.chunkers.size() / 2 + this.chunkers.size() % 2;
-		for (Chunk chunk : votes.keySet())
+		for (Annotation chunk : votes.keySet())
 			if (votes.get(chunk) >= majority)
 				resultChunking.addChunk(chunk);
 		
@@ -59,17 +59,17 @@ public class MajorityVotingChunker extends Chunker {
 	}
 	
 	@Override
-	public HashMap<Sentence, Chunking> chunk(ParagraphSet ps) {
+	public HashMap<Sentence, AnnotationSet> chunk(ParagraphSet ps) {
 				
-		HashMap<Sentence, Chunking> chunkings = new HashMap<Sentence, Chunking>();
-		HashMap<Sentence, ArrayList<Chunking>> sentenceChunkings = new HashMap<Sentence, ArrayList<Chunking>>();
+		HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
+		HashMap<Sentence, ArrayList<AnnotationSet>> sentenceChunkings = new HashMap<Sentence, ArrayList<AnnotationSet>>();
 
 		for ( Paragraph paragraph : ps.getParagraphs() )
 			for (Sentence sentence : paragraph.getSentences())
-				sentenceChunkings.put(sentence, new ArrayList<Chunking>());
+				sentenceChunkings.put(sentence, new ArrayList<AnnotationSet>());
 		
 		for ( Chunker chunker : this.chunkers) {
-			HashMap<Sentence, Chunking> chunkingsThis = chunker.chunk(ps);
+			HashMap<Sentence, AnnotationSet> chunkingsThis = chunker.chunk(ps);
 			for (Sentence sentence : chunkingsThis.keySet())
 				sentenceChunkings.get(sentence).add(chunkingsThis.get(sentence));				
 		}

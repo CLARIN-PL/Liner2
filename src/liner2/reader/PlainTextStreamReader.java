@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import liner2.structure.AttributeIndex;
+import liner2.structure.TokenAttributeIndex;
 import liner2.structure.Paragraph;
 
 import liner2.tools.DataFormatException;
@@ -138,7 +138,7 @@ public class PlainTextStreamReader extends StreamReader {
 	}
 
 	@Override
-	protected AttributeIndex getAttributeIndex() {
+	protected TokenAttributeIndex getAttributeIndex() {
 		if (!this.init) {
 			try {
 				init();

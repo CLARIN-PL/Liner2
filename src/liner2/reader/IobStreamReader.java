@@ -6,8 +6,8 @@ import java.io.InputStream;
 import java.io.IOException;
 
 import liner2.features.NerdFeatureGenerator;
-import liner2.structure.AttributeIndex;
-import liner2.structure.Chunk;
+import liner2.structure.TokenAttributeIndex;
+import liner2.structure.Annotation;
 import liner2.structure.Paragraph;
 import liner2.structure.Sentence;
 import liner2.structure.Tag;
@@ -19,7 +19,7 @@ import liner2.tools.StringHelper;
 public class IobStreamReader extends StreamReader {
 	
 	private BufferedReader ir;
-	private AttributeIndex attributeIndex = null;
+	private TokenAttributeIndex attributeIndex = null;
 	private String nextParagraphId = null;
 	private boolean nextParagraph = false;
 	private boolean init = false;
@@ -47,7 +47,7 @@ public class IobStreamReader extends StreamReader {
 			if (!line.startsWith("-DOCSTART CONFIG FEATURES")){
 				continue;
 			}
-			this.attributeIndex = new AttributeIndex();
+			this.attributeIndex = new TokenAttributeIndex();
 			NerdFeatureGenerator.docstart_config_features = line;
 			String[] content = line.trim().split(" ");
 			
@@ -102,7 +102,7 @@ public class IobStreamReader extends StreamReader {
 	}
 	
 	@Override
-	protected AttributeIndex getAttributeIndex() {
+	protected TokenAttributeIndex getAttributeIndex() {
 		return this.attributeIndex;
 	}
 
@@ -116,7 +116,7 @@ public class IobStreamReader extends StreamReader {
 		this.nextParagraphId = null;
 		this.nextParagraph = false;
 		Sentence currentSentence = new Sentence();
-		Chunk currentChunk = null;
+		Annotation currentChunk = null;
 
 		while (true) {
 			String line = null;
@@ -162,7 +162,7 @@ public class IobStreamReader extends StreamReader {
 					if (words[last].startsWith("B")) {
 						int idx = currentSentence.getTokenNumber() - 1;
 						String type = words[last].length() >= 3 ? words[last].substring(2) : "";
-						currentChunk = new Chunk(idx, idx, type, currentSentence);
+						currentChunk = new Annotation(idx, idx, type, currentSentence);
 						currentSentence.addChunk(currentChunk);
 					}
 					else if (words[last].startsWith("I")) {

@@ -1,6 +1,6 @@
 package liner2.filter;
 
-import liner2.structure.Chunk;
+import liner2.structure.Annotation;
 
 public class FilterUppercase extends Filter{
 
@@ -19,7 +19,7 @@ public class FilterUppercase extends Filter{
 	}
 	
 	@Override
-	public Chunk pass(Chunk chunk, CharSequence charSeq) {
+	public Annotation pass(Annotation chunk, CharSequence charSeq) {
 		if (charSeq.toString().matches(FilterUppercase.ucWordSeq))
 			return chunk;
 		else

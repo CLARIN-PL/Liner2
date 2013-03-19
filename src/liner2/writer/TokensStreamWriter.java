@@ -8,7 +8,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import liner2.chunker.Chunker;
-import liner2.structure.Chunk;
+import liner2.structure.Annotation;
 import liner2.structure.Paragraph;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
@@ -43,7 +43,7 @@ public class TokensStreamWriter extends StreamWriter {
 	private void writeSentence(Sentence sentence) {
 		String response ="";
 		try {
-			for (Chunk c : sentence.getChunks()) {
+			for (Annotation c : sentence.getChunks()) {
 				response += String.format("[%d,%d,%s]", c.getBegin()+1, c.getEnd()+1,
 					c.getType());
 			}

@@ -6,8 +6,8 @@ import java.util.HashSet;
 
 import liner2.chunker.Chunker;
 import liner2.features.NerdFeatureGenerator;
-import liner2.structure.Chunk;
-import liner2.structure.Chunking;
+import liner2.structure.Annotation;
+import liner2.structure.AnnotationSet;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
@@ -34,9 +34,9 @@ import liner2.Main;
 public class ChunkerEvaluator {
 
 	/* typ chunku => lista chunków danego typu */
-	private HashMap<String, ArrayList<Chunk>> chunksTruePositives = new HashMap<String, ArrayList<Chunk>>();
-	private HashMap<String, ArrayList<Chunk>> chunksFalsePositives = new HashMap<String, ArrayList<Chunk>>();
-	private HashMap<String, ArrayList<Chunk>> chunksFalseNegatives = new HashMap<String, ArrayList<Chunk>>();
+	private HashMap<String, ArrayList<Annotation>> chunksTruePositives = new HashMap<String, ArrayList<Annotation>>();
+	private HashMap<String, ArrayList<Annotation>> chunksFalsePositives = new HashMap<String, ArrayList<Annotation>>();
+	private HashMap<String, ArrayList<Annotation>> chunksFalseNegatives = new HashMap<String, ArrayList<Annotation>>();
 	
 	private HashMap<String, Float> precision = new HashMap<String, Float>();
 	private HashMap<String, Float> recall = new HashMap<String, Float>();
@@ -71,7 +71,7 @@ public class ChunkerEvaluator {
 	 * Ocenia nerowanie całego dokumentu.
 	 * @param set
 	 */
-	public void evaluate(ArrayList<Sentence> order, HashMap<Sentence, Chunking> chunkings, HashMap<Sentence, Chunking> chunkigsRef){
+	public void evaluate(ArrayList<Sentence> order, HashMap<Sentence, AnnotationSet> chunkings, HashMap<Sentence, AnnotationSet> chunkigsRef){
 		for ( Sentence sentence : order){
 			this.evaluate(sentence, chunkings.get(sentence), chunkigsRef.get(sentence));
 		}
@@ -81,27 +81,27 @@ public class ChunkerEvaluator {
 	/**
 	 * 
 	 */
-	private void evaluate(Sentence sentence, Chunking chunking, Chunking chunkingRef) {
+	private void evaluate(Sentence sentence, AnnotationSet chunking, AnnotationSet chunkingRef) {
 	
 		// tylko na potrzeby wyświetlania szczegółów
-		HashSet<Chunk> myTruePositives = new HashSet<Chunk>();
+		HashSet<Annotation> myTruePositives = new HashSet<Annotation>();
 		this.sentenceNum++;
 	
 		// każdy HashSet w dwóch kopiach - jedna do iterowania, druga do modyfikacji
-		HashSet<Chunk> trueChunkSet = new HashSet<Chunk>(chunkingRef.chunkSet());
-		HashSet<Chunk> trueChunkSetIter = new HashSet<Chunk>(trueChunkSet);
+		HashSet<Annotation> trueChunkSet = new HashSet<Annotation>(chunkingRef.chunkSet());
+		HashSet<Annotation> trueChunkSetIter = new HashSet<Annotation>(trueChunkSet);
 
 		chunking.filter(LinerOptions.get().filters);			
-		HashSet<Chunk> testedChunkSet = new HashSet<Chunk>(chunking.chunkSet());
-		HashSet<Chunk> testedChunkSetIter = new HashSet<Chunk>(testedChunkSet);
+		HashSet<Annotation> testedChunkSet = new HashSet<Annotation>(chunking.chunkSet());
+		HashSet<Annotation> testedChunkSetIter = new HashSet<Annotation>(testedChunkSet);
 		
 		// usuń z danych wszystkie poprawne chunki
-		for (Chunk trueChunk : trueChunkSetIter)
-			for (Chunk testedChunk : testedChunkSetIter)
+		for (Annotation trueChunk : trueChunkSetIter)
+			for (Annotation testedChunk : testedChunkSetIter)
 				if (trueChunk.equals(testedChunk)) {
 					// wpisz klucz do tablicy, jeśli jeszcze nie ma
 					if (!this.chunksTruePositives.containsKey(testedChunk.getType())) {
-						this.chunksTruePositives.put(testedChunk.getType(), new ArrayList<Chunk>());
+						this.chunksTruePositives.put(testedChunk.getType(), new ArrayList<Annotation>());
 						this.truePositives.put(testedChunk.getType(), new Integer(0));
 						this.keys.add(testedChunk.getType());
 					}
@@ -117,10 +117,10 @@ public class ChunkerEvaluator {
 				}
 				
 		// w testedChunkSet zostały falsePositives
-		for (Chunk testedChunk : testedChunkSet) {
+		for (Annotation testedChunk : testedChunkSet) {
 			// wpisz klucz do tablicy, jeśli jeszcze nie ma
 			if (!this.chunksFalsePositives.containsKey(testedChunk.getType())) {
-				this.chunksFalsePositives.put(testedChunk.getType(), new ArrayList<Chunk>());
+				this.chunksFalsePositives.put(testedChunk.getType(), new ArrayList<Annotation>());
 				this.falsePositives.put(testedChunk.getType(), new Integer(0));
 				this.keys.add(testedChunk.getType());
 			}
@@ -132,10 +132,10 @@ public class ChunkerEvaluator {
 		}
 				
 		// w trueChunkSet zostały falseNegatives
-		for (Chunk trueChunk : trueChunkSet) {
+		for (Annotation trueChunk : trueChunkSet) {
 			// wpisz klucz do tablicy, jeśli jeszcze nie ma
 			if (!this.chunksFalseNegatives.containsKey(trueChunk.getType())) {
-				this.chunksFalseNegatives.put(trueChunk.getType(), new ArrayList<Chunk>());
+				this.chunksFalseNegatives.put(trueChunk.getType(), new ArrayList<Annotation>());
 				this.falseNegatives.put(trueChunk.getType(), new Integer(0));
 				this.keys.add(trueChunk.getType());
 			}
@@ -258,10 +258,10 @@ public class ChunkerEvaluator {
 						
 			if (foreign.chunksTruePositives.containsKey(foreignKey)) {
 				if (!this.chunksTruePositives.containsKey(foreignKey)) {
-					this.chunksTruePositives.put(foreignKey, new ArrayList<Chunk>());
+					this.chunksTruePositives.put(foreignKey, new ArrayList<Annotation>());
 					this.truePositives.put(foreignKey, new Integer(0));
 				}
-				for (Chunk chunk : foreign.chunksTruePositives.get(foreignKey))
+				for (Annotation chunk : foreign.chunksTruePositives.get(foreignKey))
 					this.chunksTruePositives.get(foreignKey).add(chunk);
 				this.truePositives.put(foreignKey, this.truePositives.get(foreignKey) +
 					foreign.truePositives.get(foreignKey));
@@ -269,10 +269,10 @@ public class ChunkerEvaluator {
 			
 			if (foreign.chunksFalsePositives.containsKey(foreignKey)) {
 				if (!this.chunksFalsePositives.containsKey(foreignKey)) {
-					this.chunksFalsePositives.put(foreignKey, new ArrayList<Chunk>());
+					this.chunksFalsePositives.put(foreignKey, new ArrayList<Annotation>());
 					this.falsePositives.put(foreignKey, new Integer(0));
 				}
-				for (Chunk chunk : foreign.chunksFalsePositives.get(foreignKey))
+				for (Annotation chunk : foreign.chunksFalsePositives.get(foreignKey))
 					this.chunksFalsePositives.get(foreignKey).add(chunk);
 				this.falsePositives.put(foreignKey, this.falsePositives.get(foreignKey) +
 					foreign.falsePositives.get(foreignKey));
@@ -280,10 +280,10 @@ public class ChunkerEvaluator {
 			
 			if (foreign.chunksFalseNegatives.containsKey(foreignKey)) {
 				if (!this.chunksFalseNegatives.containsKey(foreignKey)) {
-					this.chunksFalseNegatives.put(foreignKey, new ArrayList<Chunk>());
+					this.chunksFalseNegatives.put(foreignKey, new ArrayList<Annotation>());
 					this.falseNegatives.put(foreignKey, new Integer(0));
 				}
-				for (Chunk chunk : foreign.chunksFalseNegatives.get(foreignKey))
+				for (Annotation chunk : foreign.chunksFalseNegatives.get(foreignKey))
 					this.chunksFalseNegatives.get(foreignKey).add(chunk);
 				this.falseNegatives.put(foreignKey, this.falseNegatives.get(foreignKey) +
 					foreign.falseNegatives.get(foreignKey));
@@ -334,8 +334,8 @@ public class ChunkerEvaluator {
 	}
 	
 	private void printSentenceResults(Sentence sentence, String paragraphId, 
-		HashSet<Chunk> truePositives, HashSet<Chunk> falsePositives, 
-		HashSet<Chunk> falseNegatives) {
+		HashSet<Annotation> truePositives, HashSet<Annotation> falsePositives, 
+		HashSet<Annotation> falseNegatives) {
 		
 		String sentenceHeader = "Sentence #" + this.sentenceNum;
 		if (paragraphId != null)
@@ -361,15 +361,15 @@ public class ChunkerEvaluator {
 		Main.log("");
 		Main.log("Chunks:");
 		
-		for (Chunk chunk : Chunk.sortChunks(truePositives)) {
+		for (Annotation chunk : Annotation.sortChunks(truePositives)) {
 			Main.log(String.format("  TruePositive %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk)));
 		}
-		for (Chunk chunk : Chunk.sortChunks(falsePositives)) {
+		for (Annotation chunk : Annotation.sortChunks(falsePositives)) {
 			Main.log(String.format("  FalsePositive %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk)));
 		}
-		for (Chunk chunk : Chunk.sortChunks(falseNegatives)) {
+		for (Annotation chunk : Annotation.sortChunks(falseNegatives)) {
 			Main.log(String.format("  FalseNegative %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk)));
 		}
@@ -391,7 +391,7 @@ public class ChunkerEvaluator {
 		Main.log("", true);
 	}
 	
-	private String printChunk(Chunk chunk) {
+	private String printChunk(Annotation chunk) {
 		ArrayList<Token> tokens = chunk.getSentence().getTokens();
 		StringBuilder result = new StringBuilder();
 		for (int i = chunk.getBegin(); i <= chunk.getEnd(); i++)

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
-import liner2.structure.AttributeIndex;
-import liner2.structure.Chunk;
-import liner2.structure.Chunking;
+import liner2.structure.TokenAttributeIndex;
+import liner2.structure.Annotation;
+import liner2.structure.AnnotationSet;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
@@ -43,8 +43,8 @@ public class HeuristicChunker extends Chunker {
 		}
 	}
 	
-	private Chunking chunkSentence(Sentence sentence) {
-		Chunking chunking = new Chunking(sentence);
+	private AnnotationSet chunkSentence(Sentence sentence) {
+		AnnotationSet chunking = new AnnotationSet(sentence);
 		if (ruleActive("general-ign-dict")) 
 			chunking.union(ruleGeneralIgnDict(sentence));
 		if (ruleActive("general-camel-base")) 
@@ -83,14 +83,14 @@ public class HeuristicChunker extends Chunker {
 	 * @param sentence
 	 * @return
 	 */
-	private Chunking ruleNamUpperCamelCase(Sentence sentence) {
-		Chunking chunking = new Chunking(sentence);
+	private AnnotationSet ruleNamUpperCamelCase(Sentence sentence) {
+		AnnotationSet chunking = new AnnotationSet(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();
-		AttributeIndex attributeIndex = sentence.getAttributeIndex();
+		TokenAttributeIndex attributeIndex = sentence.getAttributeIndex();
 		
 		for (int i = 0; i < tokens.size(); i++) {
 			if (attributeIndex.getAttributeValue(tokens.get(i), "pattern").equals("UPPER_CAMEL_CASE")) {
-				chunking.addChunk(new Chunk(i, i, "NAM", sentence));
+				chunking.addChunk(new Annotation(i, i, "NAM", sentence));
 			}			
 		}
 		
@@ -102,10 +102,10 @@ public class HeuristicChunker extends Chunker {
 	 * @param sentence
 	 * @return
 	 */
-	private Chunking ruleNamParanthesis(Sentence sentence) {
-		Chunking chunking = new Chunking(sentence);
+	private AnnotationSet ruleNamParanthesis(Sentence sentence) {
+		AnnotationSet chunking = new AnnotationSet(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();
-		AttributeIndex attributeIndex = sentence.getAttributeIndex();
+		TokenAttributeIndex attributeIndex = sentence.getAttributeIndex();
 		
 		for (int i = 1; i < tokens.size(); i++) {
 			String orth = attributeIndex.getAttributeValue(tokens.get(i), "orth"); 
@@ -123,7 +123,7 @@ public class HeuristicChunker extends Chunker {
 				}
 				if (ends && i+1 <= j-2 && j-i < 5 ){
 					/* i+1 do j-2 to tekst w cudzysłowiu */ 
-					chunking.addChunk(new Chunk(i+1, j-2, "NAM", sentence));
+					chunking.addChunk(new Annotation(i+1, j-2, "NAM", sentence));
 					i = j-1;
 				}				
 			}			
@@ -137,10 +137,10 @@ public class HeuristicChunker extends Chunker {
 	 * @param sentence
 	 * @return
 	 */
-	private Chunking ruleNamAllUpper(Sentence sentence) {
-		Chunking chunking = new Chunking(sentence);
+	private AnnotationSet ruleNamAllUpper(Sentence sentence) {
+		AnnotationSet chunking = new AnnotationSet(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();
-		AttributeIndex ai = sentence.getAttributeIndex();
+		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		int iHasLoweCase = ai.getIndex("has_lower_case");
 		int iPattern = ai.getIndex("pattern");
 		int iOrth = ai.getIndex("orth");
@@ -171,7 +171,7 @@ public class HeuristicChunker extends Chunker {
 				if ( j - i > 1 
 						|| this.romanNumer.matcher(
 								ai.getAttributeValue(tokens.get(i), "orth")).find() == false ){
-					chunking.addChunk(new Chunk(i, j-1, "NAM", sentence));
+					chunking.addChunk(new Annotation(i, j-1, "NAM", sentence));
 				}
 			}			
 		}
@@ -197,10 +197,10 @@ public class HeuristicChunker extends Chunker {
 	 * HEURISTICS FUNCTIONS
 	 */
 	 
-	private Chunking ruleGeneralIgnDict(Sentence sentence) {
-		Chunking chunking = new Chunking(sentence);
+	private AnnotationSet ruleGeneralIgnDict(Sentence sentence) {
+		AnnotationSet chunking = new AnnotationSet(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();
-		AttributeIndex attributeIndex = sentence.getAttributeIndex();
+		TokenAttributeIndex attributeIndex = sentence.getAttributeIndex();
 
 		for (int i = 0; i < tokens.size(); i++) {
 			Token token = tokens.get(i);
@@ -233,7 +233,7 @@ public class HeuristicChunker extends Chunker {
 				while ((k+1 < tokens.size()) && 
 					(tokens.get(k+1).getAttributeValue(feature).equals("I")))
 					k++;
-				chunking.addChunk(new Chunk(i, k, 
+				chunking.addChunk(new Annotation(i, k, 
 					attributeIndex.getName(feature).toUpperCase(), sentence));
 			}
 
@@ -247,10 +247,10 @@ public class HeuristicChunker extends Chunker {
 	 * @param sentence
 	 * @return
 	 */
-	private Chunking ruleGeneralCamelBase(Sentence sentence) {
-		Chunking chunking = new Chunking(sentence);
+	private AnnotationSet ruleGeneralCamelBase(Sentence sentence) {
+		AnnotationSet chunking = new AnnotationSet(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();
-		AttributeIndex attributeIndex = sentence.getAttributeIndex();
+		TokenAttributeIndex attributeIndex = sentence.getAttributeIndex();
 
 		for (int i = 0; i < tokens.size(); i++) {
 			Token token = tokens.get(i);
@@ -283,7 +283,7 @@ public class HeuristicChunker extends Chunker {
 				while ((k+1 < tokens.size()) && 
 					(tokens.get(k+1).getAttributeValue(feature).equals("I")))
 					k++;
-				chunking.addChunk(new Chunk(i, k, 
+				chunking.addChunk(new Annotation(i, k, 
 					attributeIndex.getName(feature).toUpperCase(), sentence));
 			}
 
@@ -292,10 +292,10 @@ public class HeuristicChunker extends Chunker {
 		return chunking;
 	}
 	
-	private Chunking ruleRoadPrefix(Sentence sentence) {
-		Chunking chunking = new Chunking(sentence);
+	private AnnotationSet ruleRoadPrefix(Sentence sentence) {
+		AnnotationSet chunking = new AnnotationSet(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();
-		AttributeIndex attributeIndex = sentence.getAttributeIndex();
+		TokenAttributeIndex attributeIndex = sentence.getAttributeIndex();
 		
 		for (int i = 1; i < tokens.size(); i++) {
 			if (!attributeIndex.getAttributeValue(tokens.get(i-1), "road_prefix").equals("B")) {
@@ -312,7 +312,7 @@ public class HeuristicChunker extends Chunker {
 			while ((k+1 < tokens.size()) &&
 				(attributeIndex.getAttributeValue(tokens.get(k+1), "road_nam").equals("I")))
 				k++;
-			chunking.addChunk(new Chunk(i, k, "ROAD_NAM", sentence));
+			chunking.addChunk(new Annotation(i, k, "ROAD_NAM", sentence));
 		}
 		
 		return chunking;
@@ -323,10 +323,10 @@ public class HeuristicChunker extends Chunker {
 	 * @param sentence
 	 * @return
 	 */
-	private Chunking rulePersonPanFirstLastNoun(Sentence sentence){
-		Chunking chunking = new Chunking(sentence);
+	private AnnotationSet rulePersonPanFirstLastNoun(Sentence sentence){
+		AnnotationSet chunking = new AnnotationSet(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();
-		AttributeIndex ai = sentence.getAttributeIndex();
+		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
 		int indexPersonFirstNam = ai.getIndex("person_first_nam");
 		int indexPersonLastNam = ai.getIndex("person_last_nam");
@@ -342,8 +342,8 @@ public class HeuristicChunker extends Chunker {
 					){
 				if ( i + 3 == tokens.size()
 						|| tokens.get(i+3).getAttributeValue(indexPersonNoun).equals("B") ){
-					chunking.addChunk(new Chunk(i+1, i+1, "PERSON_FIRST_NAM", sentence));
-					chunking.addChunk(new Chunk(i+2, i+2, "PERSON_LAST_NAM", sentence));
+					chunking.addChunk(new Annotation(i+1, i+1, "PERSON_FIRST_NAM", sentence));
+					chunking.addChunk(new Annotation(i+2, i+2, "PERSON_LAST_NAM", sentence));
 					i += 2;
 				}
 			}
@@ -358,10 +358,10 @@ public class HeuristicChunker extends Chunker {
 	 * @param sentence
 	 * @return
 	 */
-	private Chunking rulePersonPanInitialLast(Sentence sentence){
-		Chunking chunking = new Chunking(sentence);
+	private AnnotationSet rulePersonPanInitialLast(Sentence sentence){
+		AnnotationSet chunking = new AnnotationSet(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();
-		AttributeIndex ai = sentence.getAttributeIndex();
+		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
 		int indexPersonLastNam = ai.getIndex("person_last_nam");
 		int indexPattern = ai.getIndex("pattern");
@@ -380,7 +380,7 @@ public class HeuristicChunker extends Chunker {
 					&& tokens.get(i+4).getAttributeValue(indexOrth).equals(".")
 					&& tokens.get(i+5).getAttributeValue(indexPersonLastNam).equals("B")					
 					){
-					chunking.addChunk(new Chunk(i+5, i+5, "PERSON_LAST_NAM", sentence));
+					chunking.addChunk(new Annotation(i+5, i+5, "PERSON_LAST_NAM", sentence));
 					i += 5;
 				}				
 		}
@@ -393,10 +393,10 @@ public class HeuristicChunker extends Chunker {
 	 * @param sentence
 	 * @return
 	 */
-	private Chunking rulePersonFirstLast(Sentence sentence){
-		Chunking chunking = new Chunking(sentence);
+	private AnnotationSet rulePersonFirstLast(Sentence sentence){
+		AnnotationSet chunking = new AnnotationSet(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();
-		AttributeIndex ai = sentence.getAttributeIndex();
+		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
 		int indexPersonLastNam = ai.getIndex("person_last_nam");
 		int indexPersonFirstNam = ai.getIndex("person_first_nam");
@@ -408,8 +408,8 @@ public class HeuristicChunker extends Chunker {
 					&& tokens.get(i+1).getAttributeValue(indexPersonFirstNam).equals("O")
 					&&  ( i + 2 == tokens.size() || tokens.get(i+2).getAttributeValue(indexPersonLastNam).equals("O") )
 					){
-						chunking.addChunk(new Chunk(i, i, "PERSON_FIRST_NAM", sentence));
-						chunking.addChunk(new Chunk(i+1, i+1, "PERSON_LAST_NAM", sentence));						
+						chunking.addChunk(new Annotation(i, i, "PERSON_FIRST_NAM", sentence));
+						chunking.addChunk(new Annotation(i+1, i+1, "PERSON_LAST_NAM", sentence));						
 					}
 		}
 
@@ -422,10 +422,10 @@ public class HeuristicChunker extends Chunker {
 	 * @param sentence
 	 * @return
 	 */
-	private Chunking rulePersonFirstLastMaiden(Sentence sentence){
-		Chunking chunking = new Chunking(sentence);
+	private AnnotationSet rulePersonFirstLastMaiden(Sentence sentence){
+		AnnotationSet chunking = new AnnotationSet(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();
-		AttributeIndex ai = sentence.getAttributeIndex();
+		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
 		int indexPersonLastNam = ai.getIndex("person_last_nam");
 		int indexPersonFirstNam = ai.getIndex("person_first_nam");
@@ -441,9 +441,9 @@ public class HeuristicChunker extends Chunker {
 					&& tokens.get(i+3).getAttributeValue(indexPersonNoun).equals("O")
 					&& ( i + 5 == tokens.size() || tokens.get(i+5).getAttributeValue(indexStartsWithLowerCase).equals("1") )
 					){
-						chunking.addChunk(new Chunk(i, i, "PERSON_FIRST_NAM", sentence));
-						chunking.addChunk(new Chunk(i+1, i+1, "PERSON_LAST_NAM", sentence));						
-						chunking.addChunk(new Chunk(i+3, i+3, "PERSON_LAST_NAM", sentence));						
+						chunking.addChunk(new Annotation(i, i, "PERSON_FIRST_NAM", sentence));
+						chunking.addChunk(new Annotation(i+1, i+1, "PERSON_LAST_NAM", sentence));						
+						chunking.addChunk(new Annotation(i+3, i+3, "PERSON_LAST_NAM", sentence));						
 					}
 		}
 
@@ -453,10 +453,10 @@ public class HeuristicChunker extends Chunker {
 	/**
 	 * dyrektor Jan Nowak
 	 */
-	private Chunking rulePersonNounFirstLast(Sentence sentence){
-		Chunking chunking = new Chunking(sentence);
+	private AnnotationSet rulePersonNounFirstLast(Sentence sentence){
+		AnnotationSet chunking = new AnnotationSet(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();
-		AttributeIndex ai = sentence.getAttributeIndex();
+		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
 		int indexPersonLastNam = ai.getIndex("person_last_nam");
 		int indexPersonFirstNam = ai.getIndex("person_first_nam");
@@ -470,8 +470,8 @@ public class HeuristicChunker extends Chunker {
 					&& tokens.get(i+2).getAttributeValue(indexPersonFirstNam).equals("O")
 					&& ( i+3 == tokens.size() || tokens.get(i+3).getAttributeValue(indexStartsWithUpperCase).equals("0"))
 					){
-				chunking.addChunk(new Chunk(i+1, i+1, "PERSON_FIRST_NAM", sentence));
-				chunking.addChunk(new Chunk(i+2, i+2, "PERSON_LAST_NAM", sentence));										
+				chunking.addChunk(new Annotation(i+1, i+1, "PERSON_FIRST_NAM", sentence));
+				chunking.addChunk(new Annotation(i+2, i+2, "PERSON_LAST_NAM", sentence));										
 			}
 		}
 		
@@ -481,10 +481,10 @@ public class HeuristicChunker extends Chunker {
 	/**
 	 * dyrektor Jan K. Nowak
 	 */
-	private Chunking rulePersonNounFirstInitialLast(Sentence sentence){
-		Chunking chunking = new Chunking(sentence);
+	private AnnotationSet rulePersonNounFirstInitialLast(Sentence sentence){
+		AnnotationSet chunking = new AnnotationSet(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();
-		AttributeIndex ai = sentence.getAttributeIndex();
+		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
 		int indexPersonLastNam = ai.getIndex("person_last_nam");
 		int indexPersonFirstNam = ai.getIndex("person_first_nam");
@@ -500,18 +500,18 @@ public class HeuristicChunker extends Chunker {
 					&& tokens.get(i+3).getAttributeValue(indexOrth).equals(".")
 					&& tokens.get(i+4).getAttributeValue(indexPersonLastNam).equals("B")
 					){
-				chunking.addChunk(new Chunk(i+1, i+1, "PERSON_FIRST_NAM", sentence));
-				chunking.addChunk(new Chunk(i+4, i+4, "PERSON_LAST_NAM", sentence));										
+				chunking.addChunk(new Annotation(i+1, i+1, "PERSON_FIRST_NAM", sentence));
+				chunking.addChunk(new Annotation(i+4, i+4, "PERSON_LAST_NAM", sentence));										
 			}
 		}
 		
 		return chunking;
 	}
 	
-	private Chunking ruleCityPrefix(Sentence sentence){
-		Chunking chunking = new Chunking(sentence);
+	private AnnotationSet ruleCityPrefix(Sentence sentence){
+		AnnotationSet chunking = new AnnotationSet(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();
-		AttributeIndex ai = sentence.getAttributeIndex();
+		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
 		int indexBase = ai.getIndex("base");
 		int indexCityNam = ai.getIndex("city_nam");
@@ -526,7 +526,7 @@ public class HeuristicChunker extends Chunker {
 					&& !tokens.get(i+1).getAttributeValue(indexBase).equals("miasto")) {
 				int n = i + 1;
 				while (n + 1 < tokens.size() && tokens.get(n+1).getAttributeValue(indexCityNam).equals("I")) n++;
-				chunking.addChunk(new Chunk(i+1, n, "CITY_NAM", sentence));
+				chunking.addChunk(new Annotation(i+1, n, "CITY_NAM", sentence));
 			}
 		}
 		
@@ -539,10 +539,10 @@ public class HeuristicChunker extends Chunker {
 	 * @param sentence
 	 * @return
 	 */
-	private Chunking ruleCityPostal(Sentence sentence){
-		Chunking chunking = new Chunking(sentence);
+	private AnnotationSet ruleCityPostal(Sentence sentence){
+		AnnotationSet chunking = new AnnotationSet(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();
-		AttributeIndex ai = sentence.getAttributeIndex();
+		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
 		int indexOrth = ai.getIndex("orth");
 		int indexCityNam = ai.getIndex("city_nam");
@@ -558,7 +558,7 @@ public class HeuristicChunker extends Chunker {
 					) {
 				int n = i + 3;
 				while (n + 1 < tokens.size() && tokens.get(n+1).getAttributeValue(indexCityNam).equals("I")) n++;
-				chunking.addChunk(new Chunk(i+3, n, "CITY_NAM", sentence));
+				chunking.addChunk(new Annotation(i+3, n, "CITY_NAM", sentence));
 				i = n;
 			}
 		}
@@ -566,10 +566,10 @@ public class HeuristicChunker extends Chunker {
 		return chunking;
 	}
 	
-	private Chunking ruleRoadPrefixNumber(Sentence sentence){
-		Chunking chunking = new Chunking(sentence);
+	private AnnotationSet ruleRoadPrefixNumber(Sentence sentence){
+		AnnotationSet chunking = new AnnotationSet(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();
-		AttributeIndex ai = sentence.getAttributeIndex();
+		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
 		int indexOrth = ai.getIndex("orth");
 		int indexPattern = ai.getIndex("pattern");
@@ -579,13 +579,13 @@ public class HeuristicChunker extends Chunker {
 					&& tokens.get(i+1).getAttributeValue(indexOrth).equals(".")
 					&& tokens.get(i+2).getAttributeValue(indexPattern).equals("UPPER_INIT")
 					&& tokens.get(i+3).getAttributeValue(indexPattern).equals("DIGITS")){
-				chunking.addChunk(new Chunk(i+2, i+2, "ROAD_NAM", sentence));
+				chunking.addChunk(new Annotation(i+2, i+2, "ROAD_NAM", sentence));
 				
 				if ( i + 6 < tokens.size() 
 						&& tokens.get(i+4).getAttributeValue(indexOrth).equals("/")
 						&& tokens.get(i+5).getAttributeValue(indexPattern).equals("UPPER_INIT")
 						&& tokens.get(i+6).getAttributeValue(indexPattern).equals("DIGITS")){
-					chunking.addChunk(new Chunk(i+5, i+5, "ROAD_NAM", sentence));					
+					chunking.addChunk(new Annotation(i+5, i+5, "ROAD_NAM", sentence));					
 				}
 			}
 		}
@@ -593,8 +593,8 @@ public class HeuristicChunker extends Chunker {
 	}
 
 	@Override
-	public HashMap<Sentence, Chunking> chunk(ParagraphSet ps) {
-		HashMap<Sentence, Chunking> chunkings = new HashMap<Sentence, Chunking>();
+	public HashMap<Sentence, AnnotationSet> chunk(ParagraphSet ps) {
+		HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
 		for ( Paragraph paragraph : ps.getParagraphs() )
 			for (Sentence sentence : paragraph.getSentences())
 				chunkings.put(sentence, this.chunkSentence(sentence));

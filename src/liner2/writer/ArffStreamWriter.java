@@ -8,8 +8,8 @@ import java.io.OutputStreamWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import liner2.structure.AttributeIndex;
-import liner2.structure.Chunk;
+import liner2.structure.TokenAttributeIndex;
+import liner2.structure.Annotation;
 import liner2.structure.Paragraph;
 import liner2.structure.Sentence;
 import liner2.structure.Tag;
@@ -27,12 +27,12 @@ public class ArffStreamWriter extends StreamWriter {
 		this.ow = new BufferedWriter(new OutputStreamWriter(os));
 	}
 
-	protected void init(AttributeIndex attributeIndex) {
+	protected void init(TokenAttributeIndex attributeIndex) {
 		if (this.init)
 			return;
 		try {
 //			String line = "-DOCSTART CONFIG FEATURES orth base ctag";
-			AttributeIndex newAttributeIndex = expandAttributeIndex("t1", attributeIndex);
+			TokenAttributeIndex newAttributeIndex = expandAttributeIndex("t1", attributeIndex);
 			String line = "@relation rel";
 			ow.write(line, 0, line.length());
 			ow.newLine();
@@ -106,7 +106,7 @@ public class ArffStreamWriter extends StreamWriter {
 			line += (line.length() > 0 ? ",\t" : "") + attrval;
 		}
 		
-		Chunk chunk = sentence.getChunkAt(idx);
+		Annotation chunk = sentence.getChunkAt(idx);
 		if (chunk == null)
 			line += ",\tO";
 		else {
@@ -120,9 +120,9 @@ public class ArffStreamWriter extends StreamWriter {
 	}
 		
 	
-	private AttributeIndex expandAttributeIndex(String templateName, AttributeIndex attributeIndex) 
+	private TokenAttributeIndex expandAttributeIndex(String templateName, TokenAttributeIndex attributeIndex) 
 		throws Exception {
-		AttributeIndex result = new AttributeIndex();
+		TokenAttributeIndex result = new TokenAttributeIndex();
 		// rozwija cechy: np. base:-1:0:1 -> base-1, base+0, base+1
 		Template template = TemplateFactory.get().getTemplate(templateName);
 		ArrayList<String> featureNames = template.getFeatureNames();
@@ -154,10 +154,10 @@ public class ArffStreamWriter extends StreamWriter {
 	public Sentence expandAttributes(String templateName, Sentence sentence) throws Exception {
 		
 		Sentence newSentence = new Sentence();
-		AttributeIndex attributeIndex = sentence.getAttributeIndex();
-		AttributeIndex newAttributeIndex = expandAttributeIndex(templateName, attributeIndex);
+		TokenAttributeIndex attributeIndex = sentence.getAttributeIndex();
+		TokenAttributeIndex newAttributeIndex = expandAttributeIndex(templateName, attributeIndex);
 		newSentence.setAttributeIndex(newAttributeIndex);
-		for (Chunk chunk : sentence.getChunks())
+		for (Annotation chunk : sentence.getChunks())
 			newSentence.addChunk(chunk);
 		
 		Template template = TemplateFactory.get().getTemplate(templateName);

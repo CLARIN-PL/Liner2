@@ -1,6 +1,6 @@
 package liner2.filter;
 
-import liner2.structure.Chunk;
+import liner2.structure.Annotation;
 
 public class FilterFirstNotLower extends Filter {
 
@@ -20,7 +20,7 @@ public class FilterFirstNotLower extends Filter {
 	}
 
 	@Override
-	public Chunk pass(Chunk chunk, CharSequence charSeq) {
+	public Annotation pass(Annotation chunk, CharSequence charSeq) {
 		if ( !charSeq.toString().matches(FilterFirstNotLower.firstLower) )
 			return chunk;
 		else 

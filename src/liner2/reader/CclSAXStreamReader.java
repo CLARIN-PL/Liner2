@@ -16,8 +16,8 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.Attributes;
 
-import liner2.structure.AttributeIndex;
-import liner2.structure.Chunk;
+import liner2.structure.TokenAttributeIndex;
+import liner2.structure.Annotation;
 import liner2.structure.Paragraph;
 import liner2.structure.Sentence;
 import liner2.structure.Tag;
@@ -64,7 +64,7 @@ public class CclSAXStreamReader extends StreamReader {
 		Paragraph currentParagraph = null;
 		Sentence currentSentence = null;
 		HashMap<String,String> chunkMetaData;
-		Hashtable<String, Chunk> annotations;
+		Hashtable<String, Annotation> annotations;
 		Token currentToken = null;
 		String tmpBase = null;
 		String tmpCtag = null;
@@ -117,7 +117,7 @@ public class CclSAXStreamReader extends StreamReader {
 		    }
 		    if (elementName.equalsIgnoreCase(TAG_SENTENCE)) {
 		        currentSentence = new Sentence();
-		        annotations = new Hashtable<String, Chunk>();
+		        annotations = new Hashtable<String, Annotation>();
 		        idx =0;
 		        currentSentence.setId(attributes.getValue(TAG_ID));
 		        
@@ -152,7 +152,7 @@ public class CclSAXStreamReader extends StreamReader {
 		        paragraphs.add(currentParagraph);
 		    }
 		    if (element.equalsIgnoreCase(TAG_SENTENCE)) {
-		    	for (Chunk chunk : annotations.values())
+		    	for (Annotation chunk : annotations.values())
 					currentSentence.addChunk(chunk);
 		        currentParagraph.addSentence(currentSentence);
 		    }
@@ -193,7 +193,7 @@ public class CclSAXStreamReader extends StreamReader {
 					}
 					else {
 						annotations.put(ann.toString(), 
-							new Chunk(idx, idx, ann.chan, currentSentence));
+							new Annotation(idx, idx, ann.chan, currentSentence));
 					}
 		    		
 		    	}
@@ -207,12 +207,12 @@ public class CclSAXStreamReader extends StreamReader {
 	}
 
 	
-	private AttributeIndex attributeIndex;
+	private TokenAttributeIndex attributeIndex;
 	private int currIndex=0;
 	private CclSaxParser parser_out;
 	
 	public CclSAXStreamReader(InputStream is) throws DataFormatException {
-		this.attributeIndex = new AttributeIndex();
+		this.attributeIndex = new TokenAttributeIndex();
 		this.attributeIndex.addAttribute("orth");
 		this.attributeIndex.addAttribute("base");
 		this.attributeIndex.addAttribute("ctag");
@@ -221,7 +221,7 @@ public class CclSAXStreamReader extends StreamReader {
 	}
 	
 	@Override
-	public AttributeIndex getAttributeIndex() {
+	public TokenAttributeIndex getAttributeIndex() {
 		return this.attributeIndex;
 	}
 	

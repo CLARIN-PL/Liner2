@@ -6,7 +6,7 @@ import java.util.HashSet;
 
 public class ParagraphSet {
 
-	AttributeIndex attributeIndex = null;
+	TokenAttributeIndex attributeIndex = null;
 	ArrayList<Paragraph> paragraphs = new ArrayList<Paragraph>();
 	
 	public void addParagraph(Paragraph paragraph) {
@@ -15,7 +15,7 @@ public class ParagraphSet {
 			paragraph.setAttributeIndex(this.attributeIndex);
 	}
 	
-	public AttributeIndex getAttributeIndex() {
+	public TokenAttributeIndex getAttributeIndex() {
 		return this.attributeIndex;
 	}
 	
@@ -23,27 +23,27 @@ public class ParagraphSet {
 		return this.paragraphs;
 	}
 	
-	public void setAttributeIndex(AttributeIndex attributeIndex) {
+	public void setAttributeIndex(TokenAttributeIndex attributeIndex) {
 		this.attributeIndex = attributeIndex;
 		for (Paragraph p : this.paragraphs)
 			p.setAttributeIndex(this.attributeIndex);
 	}
 
-	public HashMap<Sentence, Chunking> getChunkings() {
-		HashMap<Sentence, Chunking> chunkings = new HashMap<Sentence, Chunking>();
+	public HashMap<Sentence, AnnotationSet> getChunkings() {
+		HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
 		for ( Paragraph paragraph : this.paragraphs)
 			for (Sentence sentence : paragraph.getSentences())
-				chunkings.put(sentence, new Chunking(sentence, sentence.getChunks()));
+				chunkings.put(sentence, new AnnotationSet(sentence, sentence.getChunks()));
 		return chunkings;
 	}
 
-	public void addChunks(HashMap<Sentence, Chunking> chunkings) {
+	public void addChunks(HashMap<Sentence, AnnotationSet> chunkings) {
 		for ( Paragraph paragraph : this.paragraphs)
 			for (Sentence sentence : paragraph.getSentences())
 				sentence.addChunking(chunkings.get(sentence));
 	}
 
-	public void setChunks(HashMap<Sentence, Chunking> chunkings) {
+	public void setChunks(HashMap<Sentence, AnnotationSet> chunkings) {
 		for ( Paragraph paragraph : this.paragraphs)
 			for (Sentence sentence : paragraph.getSentences())
 				sentence.setChunking(chunkings.get(sentence));

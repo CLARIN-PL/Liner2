@@ -12,7 +12,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.stream.XMLStreamException;
 
-import liner2.structure.Chunk;
+import liner2.structure.Annotation;
 import liner2.structure.Paragraph;
 import liner2.structure.Sentence;
 import liner2.structure.Tag;
@@ -113,10 +113,10 @@ public class CclStreamWriter extends StreamWriter {
 		xmlw.writeCharacters("\n");
 		
 		// prepare annotation channels
-		HashSet<Chunk> chunks = sentence.getChunks();	
+		HashSet<Annotation> chunks = sentence.getChunks();	
 		Hashtable<String, Integer> numChannels = new Hashtable<String, Integer>();
-		Hashtable<Chunk, Integer> channels = new Hashtable<Chunk, Integer>();
-		for (Chunk chunk : chunks) {
+		Hashtable<Annotation, Integer> channels = new Hashtable<Annotation, Integer>();
+		for (Annotation chunk : chunks) {
 			if (numChannels.containsKey(chunk.getType()))
 				numChannels.put(chunk.getType(),
 					numChannels.get(chunk.getType()) + 1);
@@ -133,7 +133,7 @@ public class CclStreamWriter extends StreamWriter {
 		xmlw.writeCharacters("\n");
 	}
 	
-	private void writeToken(int idx, Token token, HashSet<Chunk> chunks, Hashtable<Chunk, Integer> channels)
+	private void writeToken(int idx, Token token, HashSet<Annotation> chunks, Hashtable<Annotation, Integer> channels)
 		throws XMLStreamException {
 		this.indent(3);
 		xmlw.writeStartElement(TAG_TOKEN);
@@ -151,12 +151,12 @@ public class CclStreamWriter extends StreamWriter {
 			writeTag(tag);
 		
 		Hashtable<String, Integer> strChannels = new Hashtable<String, Integer>();
-		for (Chunk chunk : chunks) {
+		for (Annotation chunk : chunks) {
 			if ((chunk.getBegin() <= idx) &&
 				(chunk.getEnd() >= idx))
 				strChannels.put(chunk.getType(), channels.get(chunk));
 		}
-		for (Chunk chunk : chunks)
+		for (Annotation chunk : chunks)
 			if (!strChannels.containsKey(chunk.getType()))
 				strChannels.put(chunk.getType(), new Integer(0));
 		

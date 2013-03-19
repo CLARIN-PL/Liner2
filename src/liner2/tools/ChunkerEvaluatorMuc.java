@@ -6,8 +6,8 @@ import java.util.HashSet;
 
 import liner2.chunker.Chunker;
 import liner2.features.NerdFeatureGenerator;
-import liner2.structure.Chunk;
-import liner2.structure.Chunking;
+import liner2.structure.Annotation;
+import liner2.structure.AnnotationSet;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
@@ -37,11 +37,11 @@ public class ChunkerEvaluatorMuc {
 	
 	class ChunkTypedSet {
 		
-		HashMap<String, ArrayList<Chunk>> chunks = new HashMap<String, ArrayList<Chunk>>();
+		HashMap<String, ArrayList<Annotation>> chunks = new HashMap<String, ArrayList<Annotation>>();
 		
-		public void add(Chunk chunk){
+		public void add(Annotation chunk){
 			if ( !this.chunks.containsKey(chunk.getType()) ){
-				ArrayList<Chunk> list = new ArrayList<Chunk>();
+				ArrayList<Annotation> list = new ArrayList<Annotation>();
 				list.add(chunk);
 				this.chunks.put(chunk.getType(), list);
 			}
@@ -50,16 +50,16 @@ public class ChunkerEvaluatorMuc {
 			}				
 		}
 		
-		public void addAll(ArrayList<Chunk> chunks){
-			for (Chunk chunk : chunks)
+		public void addAll(ArrayList<Annotation> chunks){
+			for (Annotation chunk : chunks)
 				this.add(chunk);
 		}
 		
-		public ArrayList<Chunk> getChunks(String name){
+		public ArrayList<Annotation> getChunks(String name){
 			if ( this.chunks.containsKey(name) )
 				return this.chunks.get(name);
 			else
-				return new ArrayList<Chunk>();
+				return new ArrayList<Annotation>();
 		}
 		
 		/**
@@ -80,7 +80,7 @@ public class ChunkerEvaluatorMuc {
 		 */
 		public int getChunkCount(){
 			int sum = 0;
-			for ( ArrayList<Chunk> list : this.chunks.values())
+			for ( ArrayList<Annotation> list : this.chunks.values())
 				sum += list.size();
 			return sum;
 		}
@@ -114,7 +114,7 @@ public class ChunkerEvaluatorMuc {
 	 * Ocenia nerowanie całego dokumentu.
 	 * @param set
 	 */
-	public void evaluate(HashMap<Sentence, Chunking> chunkings, HashMap<Sentence, Chunking> chunkigsRef){
+	public void evaluate(HashMap<Sentence, AnnotationSet> chunkings, HashMap<Sentence, AnnotationSet> chunkigsRef){
 		for ( Sentence sentence : chunkings.keySet()){
 			this.evaluate(sentence, chunkings.get(sentence), chunkigsRef.get(sentence));
 		}
@@ -123,19 +123,19 @@ public class ChunkerEvaluatorMuc {
 	/**
 	 * 
 	 */
-	private void evaluate(Sentence sentence, Chunking chunking, Chunking chunkingRef) {
+	private void evaluate(Sentence sentence, AnnotationSet chunking, AnnotationSet chunkingRef) {
 	
 		// każdy HashSet w dwóch kopiach - jedna do iterowania, druga do modyfikacji
-		HashSet<Chunk> trueChunkSet = chunkingRef.chunkSet();
-		HashSet<Chunk> trueChunkSetIter = new HashSet<Chunk>(trueChunkSet);
+		HashSet<Annotation> trueChunkSet = chunkingRef.chunkSet();
+		HashSet<Annotation> trueChunkSetIter = new HashSet<Annotation>(trueChunkSet);
 
 		chunking.filter(LinerOptions.get().filters);			
-		HashSet<Chunk> testedChunkSet = chunking.chunkSet();
-		HashSet<Chunk> testedChunkSetIter = new HashSet<Chunk>(testedChunkSet);
+		HashSet<Annotation> testedChunkSet = chunking.chunkSet();
+		HashSet<Annotation> testedChunkSetIter = new HashSet<Annotation>(testedChunkSet);
 		
 		// usuń z danych wszystkie poprawne chunki
-		for (Chunk trueChunk : trueChunkSetIter)
-			for (Chunk testedChunk : testedChunkSetIter)
+		for (Annotation trueChunk : trueChunkSetIter)
+			for (Annotation testedChunk : testedChunkSetIter)
 				if (trueChunk.equals(testedChunk)) {
 					
 					this.chunksTruePositives.add(testedChunk);
@@ -147,7 +147,7 @@ public class ChunkerEvaluatorMuc {
 				}
 				
 		// w testedChunkSet zostały falsePositives
-		for (Chunk testedChunk : testedChunkSet) {
+		for (Annotation testedChunk : testedChunkSet) {
 			
 			if ( this.existsPartialyMatched(trueChunkSet, testedChunk) ){
 				this.chunksTruePartially.add(testedChunk);
@@ -162,7 +162,7 @@ public class ChunkerEvaluatorMuc {
 		}
 				
 		// w trueChunkSet zostały falseNegatives
-		for (Chunk trueChunk : trueChunkSet) {
+		for (Annotation trueChunk : trueChunkSet) {
 
 			if ( this.existsPartialyMatched(testedChunkSet, trueChunk) ){
 				this.chunksFalsePartially.add(trueChunk);
@@ -178,12 +178,12 @@ public class ChunkerEvaluatorMuc {
 		
 	}
 	
-	private boolean chunksOverlaps(Chunk a, Chunk b){
+	private boolean chunksOverlaps(Annotation a, Annotation b){
 		return !(a.getEnd() < b.getBegin() || a.getBegin() > b.getEnd());
 	}
 	
-	private boolean existsPartialyMatched(HashSet<Chunk> chunks, Chunk chunk){
-		for ( Chunk test : chunks )
+	private boolean existsPartialyMatched(HashSet<Annotation> chunks, Annotation chunk){
+		for ( Annotation test : chunks )
 			if ( test.getType().equals(chunk.getType()) && this.chunksOverlaps(test, chunk) )
 				return true;
 		return false;
@@ -310,8 +310,8 @@ public class ChunkerEvaluatorMuc {
 	 * @param falseNegatives
 	 */
 	private void printSentenceResults(Sentence sentence, String paragraphId, 
-		HashSet<Chunk> truePositives, HashSet<Chunk> falsePositives, 
-		HashSet<Chunk> falseNegatives) {
+		HashSet<Annotation> truePositives, HashSet<Annotation> falsePositives, 
+		HashSet<Annotation> falseNegatives) {
 		
 		String sentenceHeader = "Sentence #" + this.sentenceNum;
 		if (paragraphId != null)
@@ -337,15 +337,15 @@ public class ChunkerEvaluatorMuc {
 		Main.log("");
 		Main.log("Chunks:");
 		
-		for (Chunk chunk : Chunk.sortChunks(truePositives)) {
+		for (Annotation chunk : Annotation.sortChunks(truePositives)) {
 			Main.log(String.format("  TruePositive %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk)));
 		}
-		for (Chunk chunk : Chunk.sortChunks(falsePositives)) {
+		for (Annotation chunk : Annotation.sortChunks(falsePositives)) {
 			Main.log(String.format("  FalsePositive %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk)));
 		}
-		for (Chunk chunk : Chunk.sortChunks(falseNegatives)) {
+		for (Annotation chunk : Annotation.sortChunks(falseNegatives)) {
 			Main.log(String.format("  FalseNegative %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk)));
 		}
@@ -367,7 +367,7 @@ public class ChunkerEvaluatorMuc {
 		Main.log("", true);
 	}
 	
-	private String printChunk(Chunk chunk) {
+	private String printChunk(Annotation chunk) {
 		ArrayList<Token> tokens = chunk.getSentence().getTokens();
 		StringBuilder result = new StringBuilder();
 		for (int i = chunk.getBegin(); i <= chunk.getEnd(); i++)
@@ -386,27 +386,27 @@ public class ChunkerEvaluatorMuc {
 				this.keys.add(foreignKey);
 						
 			if (foreign.chunksTruePositives.getChunkCount(foreignKey)>0) {
-				ArrayList<Chunk> chunks = foreign.chunksTruePositives.getChunks(foreignKey);
+				ArrayList<Annotation> chunks = foreign.chunksTruePositives.getChunks(foreignKey);
 				this.chunksTruePositives.addAll(chunks);
 			}
 
 			if (foreign.chunksTruePartially.getChunkCount(foreignKey)>0) {
-				ArrayList<Chunk> chunks = foreign.chunksTruePartially.getChunks(foreignKey);
+				ArrayList<Annotation> chunks = foreign.chunksTruePartially.getChunks(foreignKey);
 				this.chunksTruePartially.addAll(chunks);
 			}
 
 			if (foreign.chunksFalsePositives.getChunkCount(foreignKey)>0) {
-				ArrayList<Chunk> chunks = foreign.chunksFalsePositives.getChunks(foreignKey);
+				ArrayList<Annotation> chunks = foreign.chunksFalsePositives.getChunks(foreignKey);
 				this.chunksFalsePositives.addAll(chunks);
 			}
 			
 			if (foreign.chunksFalsePartially.getChunkCount(foreignKey)>0) {
-				ArrayList<Chunk> chunks = foreign.chunksFalsePartially.getChunks(foreignKey);
+				ArrayList<Annotation> chunks = foreign.chunksFalsePartially.getChunks(foreignKey);
 				this.chunksFalsePartially.addAll(chunks);
 			}
 			
 			if (foreign.chunksFalseNegatives.getChunkCount(foreignKey)>0) {
-				ArrayList<Chunk> chunks = foreign.chunksFalseNegatives.getChunks(foreignKey);
+				ArrayList<Annotation> chunks = foreign.chunksFalseNegatives.getChunks(foreignKey);
 				this.chunksFalseNegatives.addAll(chunks);
 			}
 			

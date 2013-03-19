@@ -10,7 +10,7 @@ import java.util.Hashtable;
 import java.util.Set;
 
 import liner2.Main;
-import liner2.structure.AttributeIndex;
+import liner2.structure.TokenAttributeIndex;
 
 public class TemplateFactory {
 	
@@ -51,7 +51,7 @@ public class TemplateFactory {
 		}
 	}
 	
-	public void store(String templateName, String filename, AttributeIndex attributeIndex) throws Exception {
+	public void store(String templateName, String filename, TokenAttributeIndex attributeIndex) throws Exception {
 		if (!this.templates.containsKey(templateName))
 			throw new Exception("Template not found: " + templateName);
 		

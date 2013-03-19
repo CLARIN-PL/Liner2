@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * @author czuk
  *
  */
-public class AttributeIndex {
+public class TokenAttributeIndex {
 
 	/* Tablica zawiera nazwy atrybutów. Pozycja, na której znajduje się dany atrybut
 	 * jest indeksem tego atrybutu w tablicy atrybutów (klasa Token).
@@ -28,7 +28,7 @@ public class AttributeIndex {
 	/**
 	 * Porównuje z innym obiektem tej klasy.
 	 */
-	public boolean equals(AttributeIndex ai) {
+	public boolean equals(TokenAttributeIndex ai) {
 		if (this.indexes.size() != ai.getLength())
 			return false;
 		for (int i = 0; i < this.indexes.size(); i++)

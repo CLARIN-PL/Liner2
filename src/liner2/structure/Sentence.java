@@ -13,26 +13,26 @@ import java.util.HashSet;
 public class Sentence {
 	
 	/* Indeks nazw atrybutów */
-	AttributeIndex attributeIndex = null;
+	TokenAttributeIndex attributeIndex = null;
 	
 	/* Sekwencja tokenów wchodzących w skład zdania */
 	ArrayList<Token> tokens = new ArrayList<Token>();
 	
 	/* Zbiór anotacji */
-	HashSet<Chunk> chunks = new HashSet<Chunk>();
+	HashSet<Annotation> chunks = new HashSet<Annotation>();
 	
 	/* Identyfikator zdania */
 	String id = null;
 	
 	public Sentence()	{}
 	
-	public void addChunk(Chunk chunk) {
+	public void addChunk(Annotation chunk) {
 		chunks.add(chunk);
 	}
 	
-	public void addChunking(Chunking chunking) {
+	public void addChunking(AnnotationSet chunking) {
 		if ( chunking != null)
-			for (Chunk chunk : chunking.chunkSet())
+			for (Annotation chunk : chunking.chunkSet())
 				addChunk(chunk);
 	}
 	
@@ -48,11 +48,11 @@ public class Sentence {
 	 * Zwraca chunk dla podanego indeksu tokenu.
 	 * TODO zmienić parametr na token?
 	 */
-	public Chunk getChunkAt(int idx) {
-		Chunk returning = null;
-		Iterator<Chunk> i_chunk = chunks.iterator();
+	public Annotation getChunkAt(int idx) {
+		Annotation returning = null;
+		Iterator<Annotation> i_chunk = chunks.iterator();
 		while (i_chunk.hasNext()) {
-			Chunk currentChunk = i_chunk.next();
+			Annotation currentChunk = i_chunk.next();
 			if ((currentChunk.getBegin() <= idx) &&
 				(currentChunk.getEnd() >= idx)) {
 				returning = currentChunk;
@@ -62,7 +62,7 @@ public class Sentence {
 		return returning;
 	}
 	
-	public HashSet<Chunk> getChunks() {
+	public HashSet<Annotation> getChunks() {
 		return this.chunks;
 	}
 	
@@ -70,7 +70,7 @@ public class Sentence {
 		return this.attributeIndex.getLength();
 	}
 	
-	public AttributeIndex getAttributeIndex() {
+	public TokenAttributeIndex getAttributeIndex() {
 		return this.attributeIndex;
 	}
 	
@@ -85,11 +85,11 @@ public class Sentence {
 		return tokens;
 	}
 	
-	public void setAttributeIndex(AttributeIndex attributeIndex) {
+	public void setAttributeIndex(TokenAttributeIndex attributeIndex) {
 		this.attributeIndex = attributeIndex;
 	}
 
-	public void setChunking(Chunking chunking) {
+	public void setChunking(AnnotationSet chunking) {
 		this.chunks = chunking.chunkSet();
 	}
 	

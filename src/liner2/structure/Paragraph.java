@@ -7,7 +7,7 @@ import java.util.Set;
 public class Paragraph {
 
 	private String id = null;
-	private AttributeIndex attributeIndex = null;
+	private TokenAttributeIndex attributeIndex = null;
 	private HashMap<String,String> chunkMetaData = new HashMap<String, String>();
 	
 	private ArrayList<Sentence> sentences = new ArrayList<Sentence>(); 
@@ -22,7 +22,7 @@ public class Paragraph {
 			sentence.setAttributeIndex(this.attributeIndex);
 	}
 	
-	public AttributeIndex getAttributeIndex() {
+	public TokenAttributeIndex getAttributeIndex() {
 		return this.attributeIndex;
 	}
 	
@@ -34,7 +34,7 @@ public class Paragraph {
 		return this.sentences;
 	}
 	
-	public void setAttributeIndex(AttributeIndex attributeIndex) {
+	public void setAttributeIndex(TokenAttributeIndex attributeIndex) {
 		this.attributeIndex = attributeIndex;
 		for (Sentence s : this.sentences)
 			s.setAttributeIndex(attributeIndex);

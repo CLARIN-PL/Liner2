@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import liner2.structure.AttributeIndex;
-import liner2.structure.Chunk;
-import liner2.structure.Chunking;
+import liner2.structure.TokenAttributeIndex;
+import liner2.structure.Annotation;
+import liner2.structure.AnnotationSet;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
@@ -24,9 +24,9 @@ public class CrfppFix extends Chunker {
      * 
      */
 	@Override
-	public HashMap<Sentence, Chunking> chunk(ParagraphSet ps) {
+	public HashMap<Sentence, AnnotationSet> chunk(ParagraphSet ps) {
 		/* Get base chunking for every sentence. */
-		HashMap<Sentence, Chunking> chunkings = this.chunker.chunk(ps);
+		HashMap<Sentence, AnnotationSet> chunkings = this.chunker.chunk(ps);
 
 		for (Sentence sentence : chunkings.keySet()){
 				this.fixSentenceChunking(sentence, chunkings.get(sentence));
@@ -42,11 +42,11 @@ public class CrfppFix extends Chunker {
 	 * @param sentence
 	 * @param chunking
 	 */
-    private void mergeSubstNomChunks(Sentence sentence, Chunking chunking) {
-		ArrayList<ArrayList<Chunk>> orderedChunks = new ArrayList<ArrayList<Chunk>>();
+    private void mergeSubstNomChunks(Sentence sentence, AnnotationSet chunking) {
+		ArrayList<ArrayList<Annotation>> orderedChunks = new ArrayList<ArrayList<Annotation>>();
 		for ( int i=0; i<sentence.getTokens().size(); i++ )
-			orderedChunks.add(new ArrayList<Chunk>());
-		for ( Chunk chunk : chunking.chunkSet() ){
+			orderedChunks.add(new ArrayList<Annotation>());
+		for ( Annotation chunk : chunking.chunkSet() ){
 			orderedChunks.get(chunk.getBegin()).add(chunk);		
 		}
 		
@@ -56,8 +56,8 @@ public class CrfppFix extends Chunker {
 		for ( int i=0; i+1<orderedChunks.size(); i++){
 			if ( orderedChunks.get(i).size() == 1 
 					&& orderedChunks.get(i+1).size() == 1 ){
-				Chunk c1 = orderedChunks.get(i).get(0);
-				Chunk c2 = orderedChunks.get(i+1).get(0);
+				Annotation c1 = orderedChunks.get(i).get(0);
+				Annotation c2 = orderedChunks.get(i+1).get(0);
 				Token t1 = sentence.getTokens().get(i);
 				Token t2 = sentence.getTokens().get(i+1);
 						
@@ -80,11 +80,11 @@ public class CrfppFix extends Chunker {
 	 * @param sentence
 	 * @param chunking
 	 */
-    private void fixParanthesis(Sentence sentence, Chunking chunking) {
+    private void fixParanthesis(Sentence sentence, AnnotationSet chunking) {
 		
 		int index_orth = sentence.getAttributeIndex().getIndex("orth");
 		
-		for ( Chunk chunk : chunking.chunkSet()){
+		for ( Annotation chunk : chunking.chunkSet()){
 			int paranthesis = 0;
 			if ( chunk.getEnd()+1 < sentence.getTokens().size() ){
 				for (int i=chunk.getBegin(); i<=chunk.getEnd(); i++){
@@ -105,14 +105,14 @@ public class CrfppFix extends Chunker {
      * @param cSeq --- text to tag
      * @return chunking with annotations
      */
-	private synchronized void fixSentenceChunking(Sentence sentence, Chunking chunking){
+	private synchronized void fixSentenceChunking(Sentence sentence, AnnotationSet chunking){
 
-		AttributeIndex ai = sentence.getAttributeIndex();
+		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
 		ArrayList<Token> tokens = sentence.getTokens();
-		ArrayList<Chunk> newChunks = new ArrayList<Chunk>();
+		ArrayList<Annotation> newChunks = new ArrayList<Annotation>();
 		
-		for (Chunk chunk : chunking.chunkSet()){
+		for (Annotation chunk : chunking.chunkSet()){
 			
 			int end = chunk.getEnd();
 			int start = chunk.getBegin();
@@ -129,11 +129,11 @@ public class CrfppFix extends Chunker {
 					&& ai.getAttributeValue(tokens.get(end-2), "person_first_nam").equals("O")
 					&& ai.getAttributeValue(tokens.get(end-2), "pattern").equals("UPPER_INIT")){
 				chunk.setBegin(end-1);				
-				newChunks.add(new Chunk(start, end-2, "NAM", sentence));
+				newChunks.add(new Annotation(start, end-2, "NAM", sentence));
 			}											
 		}
 		
-		for (Chunk chunk : newChunks)
+		for (Annotation chunk : newChunks)
 			chunking.addChunk(chunk);		
 	}
 

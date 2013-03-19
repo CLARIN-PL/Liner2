@@ -10,29 +10,29 @@ import liner2.filter.Filter;
  * Opakowanie na zbiór chunków przypisanych do jednego zdania.
  *
  */
-public class Chunking {
+public class AnnotationSet {
 
-	HashSet<Chunk> chunks = new HashSet<Chunk>();
+	HashSet<Annotation> chunks = new HashSet<Annotation>();
 	Sentence sentence = null;
 
-	public Chunking(Sentence sentence, HashSet<Chunk> chunks){
+	public AnnotationSet(Sentence sentence, HashSet<Annotation> chunks){
 		this.chunks = chunks;
 		this.sentence = sentence;
 	}
 	
-	public Chunking(Sentence sentence){
+	public AnnotationSet(Sentence sentence){
 		this.sentence = sentence;
 	}
 	
-	public void addChunk(Chunk chunk){
+	public void addChunk(Annotation chunk){
 		this.chunks.add(chunk);
 	}
 	
-	public void removeChunk(Chunk chunk) {
+	public void removeChunk(Annotation chunk) {
 		this.chunks.remove(chunk);
 	}
 	
-	public HashSet<Chunk> chunkSet(){
+	public HashSet<Annotation> chunkSet(){
 		return chunks;
 	}
 
@@ -40,29 +40,29 @@ public class Chunking {
 		return sentence;
 	}
 
-	public boolean contains(Chunk chunk) {
+	public boolean contains(Annotation chunk) {
 		return this.chunks.contains(chunk);
 	}
 	
 	public void filter(ArrayList<Filter> filters) {
-		HashSet<Chunk> filteredChunks = new HashSet<Chunk>();
-		for (Chunk chunk : this.chunks) {
-			Chunk filteredChunk = Filter.filter(chunk, filters);
+		HashSet<Annotation> filteredChunks = new HashSet<Annotation>();
+		for (Annotation chunk : this.chunks) {
+			Annotation filteredChunk = Filter.filter(chunk, filters);
 			if (filteredChunk != null)
 				filteredChunks.add(filteredChunk);
 		}
 		this.chunks = filteredChunks;
 	}
 	
-	public void union(Chunking foreignChunking) {
+	public void union(AnnotationSet foreignChunking) {
 		if (foreignChunking.getSentence() == this.sentence) {
-			HashSet<Chunk> foreignChunks = foreignChunking.chunkSet();
-			Iterator<Chunk> i_fc = foreignChunks.iterator();
+			HashSet<Annotation> foreignChunks = foreignChunking.chunkSet();
+			Iterator<Annotation> i_fc = foreignChunks.iterator();
 			while (i_fc.hasNext()) {
-				Chunk foreignChunk = i_fc.next();
+				Annotation foreignChunk = i_fc.next();
 				boolean found = false;
-				HashSet<Chunk> chunksToRemove = new HashSet<Chunk>();
-				for (Chunk chunk : this.chunks)
+				HashSet<Annotation> chunksToRemove = new HashSet<Annotation>();
+				for (Annotation chunk : this.chunks)
 					if (chunk.equals(foreignChunk)) {
 						found = true;
 						break;
@@ -80,7 +80,7 @@ public class Chunking {
 							chunksToRemove.add(chunk);
 						}
 					}
-				for (Chunk chunkToRemove : chunksToRemove)
+				for (Annotation chunkToRemove : chunksToRemove)
 					removeChunk(chunkToRemove);
 				if (!found)
 					addChunk(foreignChunk);

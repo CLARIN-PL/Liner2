@@ -8,7 +8,7 @@ import liner2.chunker.factory.ChunkerFactory;
 import liner2.features.NerdFeatureGenerator;
 import liner2.reader.ReaderFactory;
 import liner2.reader.StreamReader;
-import liner2.structure.Chunking;
+import liner2.structure.AnnotationSet;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
 import liner2.tools.ChunkerEvaluator;
@@ -58,8 +58,8 @@ public class ActionEval extends Action{
     	ChunkerEvaluatorMuc evalMuc = new ChunkerEvaluatorMuc();
 
 		timer.startTimer("Chunking");
-    	HashMap<Sentence, Chunking> chunkingsRef = ps.getChunkings();
-    	HashMap<Sentence, Chunking> chunkings = chunker.chunk(ps);
+    	HashMap<Sentence, AnnotationSet> chunkingsRef = ps.getChunkings();
+    	HashMap<Sentence, AnnotationSet> chunkings = chunker.chunk(ps);
     	timer.stopTimer();
     	    	
     	timer.startTimer("Evaluation", false);

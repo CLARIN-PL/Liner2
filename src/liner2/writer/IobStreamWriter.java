@@ -7,8 +7,8 @@ import java.io.OutputStreamWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import liner2.structure.AttributeIndex;
-import liner2.structure.Chunk;
+import liner2.structure.TokenAttributeIndex;
+import liner2.structure.Annotation;
 import liner2.structure.Paragraph;
 import liner2.structure.Sentence;
 import liner2.structure.Tag;
@@ -23,7 +23,7 @@ public class IobStreamWriter extends StreamWriter {
 		this.ow = new BufferedWriter(new OutputStreamWriter(os));
 	}
 
-	protected void init(AttributeIndex attributeIndex) {
+	protected void init(TokenAttributeIndex attributeIndex) {
 		if (this.init)
 			return;
 		try {
@@ -81,7 +81,7 @@ public class IobStreamWriter extends StreamWriter {
 		for (int i = 0; i < sentence.getAttributeIndex().getLength(); i++)
 			line += (line.length() > 0 ? " " : "") + token.getAttributeValue(i);
 		
-		Chunk chunk = sentence.getChunkAt(idx);
+		Annotation chunk = sentence.getChunkAt(idx);
 		if (chunk == null)
 			line += " O";
 		else {

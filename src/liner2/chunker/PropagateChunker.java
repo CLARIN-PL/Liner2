@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import liner2.structure.Chunk;
-import liner2.structure.Chunking;
+import liner2.structure.Annotation;
+import liner2.structure.AnnotationSet;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
 
@@ -48,20 +48,20 @@ public class PropagateChunker extends Chunker {
 	}
 	
 	@Override
-	public HashMap<Sentence, Chunking> chunk(ParagraphSet ps){
-		HashMap<Sentence, Chunking> chunkings = this.baseChunker.chunk(ps);
+	public HashMap<Sentence, AnnotationSet> chunk(ParagraphSet ps){
+		HashMap<Sentence, AnnotationSet> chunkings = this.baseChunker.chunk(ps);
 
 		DictionaryChunker dictionaryChunker = new DictionaryChunker(null);
 
-		for (Chunking chunking : chunkings.values())
-			for (Chunk chunk : chunking.chunkSet()){
+		for (AnnotationSet chunking : chunkings.values())
+			for (Annotation chunk : chunking.chunkSet()){
 				String value = chunk.getText();
 				if (this.isAcceptable(value)){
 					dictionaryChunker.addEntry(chunk.getType(), value);
 				}
 			}
 		
-		HashMap<Sentence, Chunking> chukingsProp = dictionaryChunker.chunk(ps);
+		HashMap<Sentence, AnnotationSet> chukingsProp = dictionaryChunker.chunk(ps);
 		
 		for (Sentence sentence : chukingsProp.keySet()){
 			chunkings.get(sentence).union(chukingsProp.get(sentence));

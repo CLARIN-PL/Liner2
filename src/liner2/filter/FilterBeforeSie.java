@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.ArrayList;
 
-import liner2.structure.Chunk;
+import liner2.structure.Annotation;
 import liner2.structure.Token;
 
 public class FilterBeforeSie extends Filter {
@@ -23,7 +23,7 @@ public class FilterBeforeSie extends Filter {
 	}
 
 	@Override
-	public Chunk pass(Chunk chunk, CharSequence cSeq) {
+	public Annotation pass(Annotation chunk, CharSequence cSeq) {
 		ArrayList<Token> tokens = chunk.getSentence().getTokens();
 		// jeśli po chunku nic nie ma
 		if (chunk.getEnd() == tokens.size()-1)
