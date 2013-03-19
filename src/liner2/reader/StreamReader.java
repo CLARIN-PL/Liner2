@@ -1,5 +1,6 @@
 package liner2.reader;
 
+import liner2.features.NerdFeatureGenerator;
 import liner2.structure.AttributeIndex;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
@@ -24,9 +25,9 @@ public abstract class StreamReader {
 		if (paragraphReady()) {
 			Paragraph p = this.readRawParagraph();
 			
-			if (FeatureGenerator.isInitialized()) {
+			if (NerdFeatureGenerator.isInitialized()) {
 				try {
-					FeatureGenerator.generateFeatures(p, true);
+					NerdFeatureGenerator.generateFeatures(p, true);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -48,9 +49,9 @@ public abstract class StreamReader {
 			paragraphSet.addParagraph(readRawParagraph());
 		paragraphSet.setAttributeIndex(this.getAttributeIndex());
 		
-		if (FeatureGenerator.isInitialized()) {
+		if (NerdFeatureGenerator.isInitialized()) {
 			try {
-				FeatureGenerator.generateFeatures(paragraphSet);
+				NerdFeatureGenerator.generateFeatures(paragraphSet);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

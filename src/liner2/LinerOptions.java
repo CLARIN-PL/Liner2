@@ -8,9 +8,9 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.TreeSet;
 
+import liner2.features.NerdFeatureGenerator;
 import liner2.filter.*;
 import liner2.chunker.factory.ChunkerFactory;
-import liner2.reader.FeatureGenerator;
 import liner2.tools.CorpusFactory;
 import liner2.tools.ParameterException;
 import liner2.tools.TemplateFactory;
@@ -198,7 +198,7 @@ public class LinerOptions {
     	this.parseParameters(line, configDesc);
     	    	
 		if (this.features.size() > 0)
-			FeatureGenerator.initialize();
+			NerdFeatureGenerator.initialize();
 		
 		for (String cd : this.corpusDescriptions)
 			CorpusFactory.get().parse(cd);
@@ -400,6 +400,7 @@ public class LinerOptions {
 	}
 	
 	
+	@SuppressWarnings("static-access")
 	private Options makeOptions(){
     	Options options = new Options();    	
 
@@ -505,9 +506,10 @@ public class LinerOptions {
     public void printHelp(){
     	System.out.println("--------------------------------------------------*");
     	System.out.println("* A tool for Named Entity Recognition for Polish. *");
-    	System.out.println("*     Authors: Michał Marcińczuk (2010–2011)      *");
-    	System.out.println("*              Maciej Janicki (2011)              *");
-    	System.out.println("* Institution: Wrocław University of Technology.  *");
+    	System.out.println("*       Authors: Michał Marcińczuk (2010–2013)    *");
+    	System.out.println("*                Maciej Janicki (2011)            *");
+    	System.out.println("*  Contributors: Dominik Piasecki (2013)          *");
+    	System.out.println("*   Institution: Wrocław University of Technology.*");
     	System.out.println("--------------------------------------------------*");
     	System.out.println();
 		new HelpFormatter().printHelp("java -jar liner.jar <mode> [options]", options);

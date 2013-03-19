@@ -3,7 +3,7 @@ package liner2;
 import org.apache.commons.cli.UnrecognizedOptionException;
 
 import liner2.action.*;
-import liner2.reader.FeatureGenerator;
+import liner2.features.NerdFeatureGenerator;
 import liner2.tools.ParameterException;
 
 /**
@@ -45,7 +45,7 @@ public class Main {
             System.out.println(">> " + ex.getMessage());
     	}
     	finally{
-    		FeatureGenerator.close();
+    		NerdFeatureGenerator.close();
     	}
     }
     

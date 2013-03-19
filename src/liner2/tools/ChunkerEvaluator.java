@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import liner2.chunker.Chunker;
-import liner2.reader.FeatureGenerator;
+import liner2.features.NerdFeatureGenerator;
 import liner2.structure.Chunk;
 import liner2.structure.Chunking;
 import liner2.structure.Paragraph;

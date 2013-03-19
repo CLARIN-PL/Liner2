@@ -5,13 +5,10 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import liner2.structure.AttributeIndex;
 import liner2.structure.Chunk;
 import liner2.structure.Chunking;
-import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
-import liner2.structure.Token;
 
 /**
  * @author Michał Marcińczuk
