@@ -1,6 +1,7 @@
 package liner2.writer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
@@ -160,7 +161,10 @@ public class CclStreamWriter extends StreamWriter {
 			if (!strChannels.containsKey(chunk.getType()))
 				strChannels.put(chunk.getType(), new Integer(0));
 		
-		for (String channel : strChannels.keySet()) {
+		ArrayList<String> sortedChannels = new ArrayList<String>(strChannels.keySet());
+		Collections.sort(sortedChannels);
+		
+		for (String channel : sortedChannels) {
 			this.indent(4);
 			xmlw.writeStartElement(TAG_ANN);
 			xmlw.writeAttribute(TAG_CHAN, channel.toLowerCase());
