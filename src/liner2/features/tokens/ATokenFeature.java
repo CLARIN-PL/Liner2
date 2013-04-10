@@ -4,7 +4,7 @@ import liner2.structure.Token;
 
 public abstract class ATokenFeature {
 
-	private String name = null;
+	public String name;
 	
 	public ATokenFeature(String name){
 		this.name = name;
