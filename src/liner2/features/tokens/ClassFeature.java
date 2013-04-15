@@ -21,7 +21,6 @@ public class ClassFeature extends ATokenFeature{
 		for (String val: token.getAttributeValue(2).split(":")){
 			if (this.possible_classes.contains(val))
 				return val;
-		
 		}
 		return null;
 	}

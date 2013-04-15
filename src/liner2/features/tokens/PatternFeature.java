@@ -5,13 +5,13 @@ import java.util.regex.Pattern;
 
 public class PatternFeature extends ATokenFeature{
 	
-	private Pattern ALL_UPPER = Pattern.compile("^\\p{Upper}+$");
-	private Pattern ALL_LOWER = Pattern.compile("^\\p{Lower}+$");
-	private Pattern DIGITS = Pattern.compile("^\\p{Digit}+$");
-	private Pattern SYMBOLS = Pattern.compile("^\\p{Punct}+$");
-	private Pattern UPPER_INIT = Pattern.compile("^\\p{Upper}\\p{Lower}+$");
-	private Pattern UPPER_CAMEL_CASE = Pattern.compile("^\\p{Upper}\\p{Lower}+\\p{Upper}\\p{Lower}+$");
-	private Pattern LOWER_CAMEL_CASE = Pattern.compile("^\\p{Lower}+\\p{Upper}\\p{Lower}+$");
+	private Pattern ALL_UPPER = Pattern.compile("^\\p{Lu}+$");
+	private Pattern ALL_LOWER = Pattern.compile("^\\p{Ll}+$");
+	private Pattern DIGITS = Pattern.compile("^\\p{N}+$");
+	private Pattern SYMBOLS = Pattern.compile("^[\\p{Punct}\\p{P}\\p{S}\\p{Space}\\p{C}\\p{M}]+$");
+	private Pattern UPPER_INIT = Pattern.compile("^\\p{Lu}\\p{Ll}+$");
+	private Pattern UPPER_CAMEL_CASE = Pattern.compile("^\\p{Lu}+\\p{Ll}+\\p{Lu}*\\p{Ll}*$");
+	private Pattern LOWER_CAMEL_CASE = Pattern.compile("^\\p{Ll}+\\p{Lu}\\p{Ll}*$");
 	
 	
 	public PatternFeature(String name){

@@ -22,6 +22,22 @@ public class TokenFeatureFactory {
 			return new PrefixFeature(feature);
 		else if (feature.startsWith("suffix"))
 			return new SuffixFeature(feature);
+		else if (feature.equals("starts_with_upper_case")) 
+			return new StartsWithUpperFeature(feature);
+		else if (feature.equals("starts_with_lower_case")) 
+			return new StartsWithLowerFeature(feature);
+		else if (feature.equals("starts_with_digit")) 
+			return new StartsWithDigitFeature(feature);
+		else if (feature.equals("starts_with_symbol")) 
+			return new StartsWithSymbolFeature(feature);
+		else if (feature.equals("has_upper_case")) 
+            return new HasUpperFeature(feature);
+        else if (feature.equals("has_lower_case")) 
+            return new HasLowerFeature(feature);
+        else if (feature.equals("has_digit")) 
+            return new HasDigitFeature(feature);
+        else if (feature.equals("has_symbol")) 
+            return new HasSymbolFeature(feature);
 		else
 			return null;
 	}

@@ -63,11 +63,7 @@ public class TokenFeatureGenerator {
 
 	public void generateFeatures(Token t) throws Exception {
 		for (ATokenFeature f : this.generators){
-			String new_feat = f.generate(t);
-			System.out.print(" "+new_feat);
-			t.setAttributeValue(this.attributeIndex.getIndex(f.getName()), new_feat);
-
+			t.setAttributeValue(this.attributeIndex.getIndex(f.getName()), f.generate(t));
 		}
-		System.out.println();
 	}
 }

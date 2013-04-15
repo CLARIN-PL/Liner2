@@ -19,7 +19,6 @@ public class GenderFeature extends ATokenFeature{
 		for (String val: token.getAttributeValue(2).split(":")){
 			if (this.possible_genders.contains(val))
 				return val;
-		
 		}
 		return null;
 	}

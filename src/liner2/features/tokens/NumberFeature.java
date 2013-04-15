@@ -17,7 +17,6 @@ public class NumberFeature extends ATokenFeature{
 		for (String val: token.getAttributeValue(2).split(":")){
 			if (this.possible_numbers.contains(val))
 				return val;
-		
 		}
 		return null;
 	}

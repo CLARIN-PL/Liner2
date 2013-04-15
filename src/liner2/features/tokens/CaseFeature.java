@@ -16,8 +16,7 @@ public class CaseFeature extends ATokenFeature{
 		public String generate(Token token){
 			for (String val: token.getAttributeValue(2).split(":")){
 				if (this.possible_cases.contains(val))
-					return val;
-			
+					return val;	
 			}
 			return null;
 		}
