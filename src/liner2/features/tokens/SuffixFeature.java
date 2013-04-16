@@ -2,7 +2,7 @@ package liner2.features.tokens;
 
 import liner2.structure.Token;
 
-public class SuffixFeature extends ATokenFeature{
+public class SuffixFeature extends TokenFeature{
 	
 	private int n;
 	

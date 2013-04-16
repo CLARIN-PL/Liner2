@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 import liner2.structure.Token;
 
-public class StartsWithSymbolFeature extends ATokenFeature{
+public class StartsWithSymbolFeature extends TokenFeature{
 	
 	private Pattern SYMBOLS = Pattern.compile("^[\\p{Punct}\\p{P}\\p{S}\\p{Space}\\p{C}\\p{M}]");
 	

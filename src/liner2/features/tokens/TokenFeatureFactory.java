@@ -7,7 +7,7 @@ public class TokenFeatureFactory {
 	 * @param feature
 	 * @return
 	 */
-	public static ATokenFeature create(String feature){
+	public static Feature create(String feature){
 		if (feature.equals("class"))
 			return new ClassFeature(feature);
 		else if (feature.equals("case")) 
@@ -38,6 +38,10 @@ public class TokenFeatureFactory {
             return new HasDigitFeature(feature);
         else if (feature.equals("has_symbol")) 
             return new HasSymbolFeature(feature);
+        else if (feature.endsWith(".txt")){
+        	String[] fData = feature.split(":");
+        	return new DictFeature(fData[0], fData[2], fData[1]);
+        }
 		else
 			return null;
 	}

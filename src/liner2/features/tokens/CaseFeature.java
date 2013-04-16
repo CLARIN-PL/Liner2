@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 import liner2.structure.Token;
 
-public class CaseFeature extends ATokenFeature{
+public class CaseFeature extends TokenFeature{
 		
 		private ArrayList<String> possible_cases = new ArrayList<String>(Arrays.asList("nom", "gen", "dat", "acc", "inst", "loc", "voc"));
 		

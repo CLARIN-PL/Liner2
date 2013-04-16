@@ -2,7 +2,7 @@ package liner2.features.tokens;
 
 import liner2.structure.Token;
 
-public class TokenPrefix extends ATokenFeature {
+public class TokenPrefix extends TokenFeature {
 
 	private int index = 0;
 	private int prefixLength = 0;

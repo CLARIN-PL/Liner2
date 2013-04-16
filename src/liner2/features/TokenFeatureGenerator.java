@@ -3,7 +3,9 @@ package liner2.features;
 import java.util.ArrayList;
 
 import liner2.LinerOptions;
-import liner2.features.tokens.ATokenFeature;
+import liner2.features.tokens.DictFeature;
+import liner2.features.tokens.Feature;
+import liner2.features.tokens.TokenFeature;
 import liner2.features.tokens.TokenFeatureFactory;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
@@ -13,7 +15,8 @@ import liner2.structure.TokenAttributeIndex;
 
 public class TokenFeatureGenerator {
 
-	private ArrayList<ATokenFeature> generators = new ArrayList<ATokenFeature>();
+	private ArrayList<TokenFeature> tokenGenerators = new ArrayList<TokenFeature>();
+	private ArrayList<DictFeature> sentenceGenerators = new ArrayList<DictFeature>();
 	private TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
 	
 	/**
@@ -23,10 +26,16 @@ public class TokenFeatureGenerator {
 	public TokenFeatureGenerator(ArrayList<String> features){
 		for ( String feature : features ){
 			
-			ATokenFeature f = TokenFeatureFactory.create(feature);
-			if  (f != null)
-				this.generators.add(f);
-			this.attributeIndex.addAttribute(feature);
+			Feature f = TokenFeatureFactory.create(feature);
+			if  (f != null){
+				if (DictFeature.class.isInstance(f))
+					this.sentenceGenerators.add((DictFeature) f);
+				else
+					this.tokenGenerators.add((TokenFeature) f);
+				this.attributeIndex.addAttribute(f.getName());
+			}
+			else
+				this.attributeIndex.addAttribute(feature);
 		}
 	}
 	
@@ -57,12 +66,14 @@ public class TokenFeatureGenerator {
 	}
 
 	public void generateFeatures(Sentence s) throws Exception {
+		for (DictFeature f : this.sentenceGenerators){
+			f.generate(s, this.attributeIndex.getIndex(f.getSourceFeature()), this.attributeIndex.getIndex(f.getName()));}
 		for (Token t : s.getTokens())
 			generateFeatures(t);
 	}
 
 	public void generateFeatures(Token t) throws Exception {
-		for (ATokenFeature f : this.generators){
+		for (TokenFeature f : this.tokenGenerators){
 			t.setAttributeValue(this.attributeIndex.getIndex(f.getName()), f.generate(t));
 		}
 	}

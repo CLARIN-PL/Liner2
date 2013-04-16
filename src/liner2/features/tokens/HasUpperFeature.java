@@ -2,7 +2,7 @@ package liner2.features.tokens;
 
 import liner2.structure.Token;
 
-public class HasUpperFeature extends ATokenFeature{
+public class HasUpperFeature extends TokenFeature{
 	
 	public HasUpperFeature(String name){
 		super(name);

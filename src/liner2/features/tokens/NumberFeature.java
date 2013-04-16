@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 import liner2.structure.Token;
 
-public class NumberFeature extends ATokenFeature{
+public class NumberFeature extends TokenFeature{
 	
 	private ArrayList<String> possible_numbers = new ArrayList<String>(Arrays.asList("sg", "pl"));
 	

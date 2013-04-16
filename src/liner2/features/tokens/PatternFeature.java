@@ -3,7 +3,7 @@ package liner2.features.tokens;
 import liner2.structure.Token;
 import java.util.regex.Pattern;
 
-public class PatternFeature extends ATokenFeature{
+public class PatternFeature extends TokenFeature{
 	
 	private Pattern ALL_UPPER = Pattern.compile("^\\p{Lu}+$");
 	private Pattern ALL_LOWER = Pattern.compile("^\\p{Ll}+$");

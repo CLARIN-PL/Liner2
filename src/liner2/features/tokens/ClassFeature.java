@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 import liner2.structure.Token;
 
-public class ClassFeature extends ATokenFeature{
+public class ClassFeature extends TokenFeature{
 	
 	private ArrayList<String> possible_classes = new ArrayList<String>(Arrays.asList("subst", "depr", "num", "numcol", "adj", "adja", "adjp", "adv", "ppron12",
  			"ppron3", "siebie", "fin", "bedzie", "aglt", "praet", "impt", "imps",

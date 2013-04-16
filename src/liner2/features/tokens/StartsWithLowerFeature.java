@@ -2,7 +2,7 @@ package liner2.features.tokens;
 
 import liner2.structure.Token;
 
-public class StartsWithLowerFeature extends ATokenFeature{
+public class StartsWithLowerFeature extends TokenFeature{
 	
 	public StartsWithLowerFeature(String name){
 		super(name);

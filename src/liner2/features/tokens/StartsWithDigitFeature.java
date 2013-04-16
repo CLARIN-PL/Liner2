@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 import liner2.structure.Token;
 
-public class StartsWithDigitFeature extends ATokenFeature{
+public class StartsWithDigitFeature extends TokenFeature{
 	
 	private Pattern DIGITS = Pattern.compile("^\\p{N}");
 	

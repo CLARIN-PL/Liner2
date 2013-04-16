@@ -2,7 +2,7 @@ package liner2.features.tokens;
 
 import liner2.structure.Token;
 
-public class SimpleFeature extends ATokenFeature{
+public class SimpleFeature extends TokenFeature{
 
 	private String name = null;
 	
