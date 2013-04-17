@@ -12,11 +12,11 @@ import liner2.tools.TrieDictNode;
 public class DictFeature extends Feature{
 	
 	private TrieDictNode dict = new TrieDictNode(false);
-	private String sourceFeature;
+	private int sourceFeatureIdx;
 	
-	public DictFeature(String name, String dict_path, String sourceFeature){
+	public DictFeature(String name, String dict_path, int sourceFeatureIdx){
 		super(name);
-		this.sourceFeature = sourceFeature;
+		this.sourceFeatureIdx = sourceFeatureIdx;
 		try {
 			createDictFromFile(dict_path);
 		} catch (IOException e) {
@@ -49,7 +49,7 @@ public class DictFeature extends Feature{
 	}
 
 	
-	public void generate(Sentence sentence, int sourceFeatureIdx, int thisFeatureIdx){
+	public void generate(Sentence sentence, int thisFeatureIdx){
 		ArrayList<Token> tokens = sentence.getTokens();
 		int tokenIdx = 0;
 		String sourceFeatureValue = null;
@@ -82,18 +82,9 @@ public class DictFeature extends Feature{
 				tokens.get(tokenIdx).setAttributeValue(thisFeatureIdx, "O");
 			tokenIdx++;
 		}
-
 	}
 	
 	public boolean inDict(String value){
 		return this.dict.hasChild(value);
-	}
-
-	public String getSourceFeature() {
-		return sourceFeature;
-	}
-
-	public void setSourceFeature(String sourceFeature) {
-		this.sourceFeature = sourceFeature;
 	}
 }

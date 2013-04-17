@@ -18,14 +18,17 @@ public class TokenFeatureGenerator {
 	private ArrayList<TokenFeature> tokenGenerators = new ArrayList<TokenFeature>();
 	private ArrayList<DictFeature> sentenceGenerators = new ArrayList<DictFeature>();
 	private TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
+	private String[] sourceFeatures = new String[]{"orth", "base", "ctag"};
 	
 	/**
 	 * 
 	 * @param features — array with feature definitions
 	 */
 	public TokenFeatureGenerator(ArrayList<String> features){
+		for( String sf: sourceFeatures)
+			this.attributeIndex.addAttribute(sf);
+
 		for ( String feature : features ){
-			
 			Feature f = TokenFeatureFactory.create(feature);
 			if  (f != null){
 				if (DictFeature.class.isInstance(f))
@@ -34,8 +37,6 @@ public class TokenFeatureGenerator {
 					this.tokenGenerators.add((TokenFeature) f);
 				this.attributeIndex.addAttribute(f.getName());
 			}
-			else
-				this.attributeIndex.addAttribute(feature);
 		}
 	}
 	
@@ -55,9 +56,11 @@ public class TokenFeatureGenerator {
 	 * @throws Exception
 	 */
 	public void generateFeatures(ParagraphSet ps) throws Exception {
-		ps.getAttributeIndex().update(LinerOptions.get().featureNames);
-		for (Paragraph p : ps.getParagraphs())
+		ps.getAttributeIndex().update(this.attributeIndex.allAtributes());
+		for (Paragraph p : ps.getParagraphs()){
 			generateFeatures(p);
+		}
+		ps.getAttributeIndex().update(LinerOptions.get().featureNames);
 	}
 
 	public void generateFeatures(Paragraph p) throws Exception {
@@ -67,9 +70,18 @@ public class TokenFeatureGenerator {
 
 	public void generateFeatures(Sentence s) throws Exception {
 		for (DictFeature f : this.sentenceGenerators){
-			f.generate(s, this.attributeIndex.getIndex(f.getSourceFeature()), this.attributeIndex.getIndex(f.getName()));}
-		for (Token t : s.getTokens())
+			f.generate(s, this.attributeIndex.getIndex(f.getName()));}
+		for (Token t : s.getTokens()){
+			ArrayList<Integer> toDel = new ArrayList<Integer>();
 			generateFeatures(t);
+			for(String sourceFeat: sourceFeatures)
+				if(!LinerOptions.get().featureNames.contains(sourceFeat))
+					toDel.add(this.attributeIndex.getIndex(sourceFeat)-toDel.size());
+			for(int idx: toDel){
+				t.removeAttribute(idx);
+			}
+
+		}
 	}
 
 	public void generateFeatures(Token t) throws Exception {

@@ -40,9 +40,17 @@ public class TokenFeatureFactory {
             return new HasSymbolFeature(feature);
         else if (feature.endsWith(".txt")){
         	String[] fData = feature.split(":");
-        	return new DictFeature(fData[0], fData[2], fData[1]);
+        	int sourceFeatureIndex;
+        	System.out.println(fData[0]+"  "+fData[1]);
+			if(fData[1].equals("orth"))
+        		sourceFeatureIndex = 0;
+        	else if(fData[1].equals("base"))
+        		sourceFeatureIndex = 1;
+        	else // "ctag"
+        		sourceFeatureIndex = 2;
+        	return new DictFeature(fData[0], fData[2], sourceFeatureIndex);
         }
-		else
+		else // miedzy innymi zwroci null dla orth, base i ctag bo sa pobierane z pliku zrodlowego wiec nie potrzebe sa dla nich generatory
 			return null;
 	}
 	
