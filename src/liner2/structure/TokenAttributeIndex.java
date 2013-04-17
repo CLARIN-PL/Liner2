@@ -68,4 +68,8 @@ public class TokenAttributeIndex {
 			return null;
 	}
 	
+	public ArrayList<String> allAtributes(){
+		return indexes;
+	}
+	
 }

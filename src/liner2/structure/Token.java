@@ -24,6 +24,10 @@ public class Token {
 		this.attributes = new ArrayList<String>();
 	}
 	
+	public void removeAttribute(int attrIdx){
+		this.attributes.remove(attrIdx);
+	}
+	
 	/**
 	 * TODO
 	 * Zwraca wartość atrybutu o podany indeksie.
