@@ -14,10 +14,12 @@ public class CaseFeature extends TokenFeature{
 		}
 		
 		public String generate(Token token){
-			for (String val: token.getAttributeValue(2).split(":")){
-				if (this.possible_cases.contains(val))
-					return val;	
-			}
+			String ctag = token.getAttributeValue(2);
+			if(ctag != null)
+				for (String val: ctag.split(":")){
+					if (this.possible_cases.contains(val))
+						return val;	
+				}
 			return null;
 		}
 		

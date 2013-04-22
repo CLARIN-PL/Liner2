@@ -41,7 +41,6 @@ public class TokenFeatureFactory {
         else if (feature.endsWith(".txt")){
         	String[] fData = feature.split(":");
         	int sourceFeatureIndex;
-        	System.out.println(fData[0]+"  "+fData[1]);
 			if(fData[1].equals("orth"))
         		sourceFeatureIndex = 0;
         	else if(fData[1].equals("base"))
