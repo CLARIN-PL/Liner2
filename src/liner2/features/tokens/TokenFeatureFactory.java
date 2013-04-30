@@ -7,6 +7,8 @@ public class TokenFeatureFactory {
 	 * @param feature
 	 * @return
 	 */
+	static WordnetLoader database = null;
+	
 	public static Feature create(String feature){
 		if (feature.equals("class"))
 			return new ClassFeature(feature);
@@ -39,7 +41,7 @@ public class TokenFeatureFactory {
         else if (feature.equals("has_symbol")) 
             return new HasSymbolFeature(feature);
         else if (feature.endsWith(".txt")){
-        	String[] fData = feature.split(":");
+    		String[] fData = feature.split(":");
         	int sourceFeatureIndex;
 			if(fData[1].equals("orth"))
         		sourceFeatureIndex = 0;
@@ -49,6 +51,15 @@ public class TokenFeatureFactory {
         		sourceFeatureIndex = 2;
         	return new DictFeature(fData[0], fData[2], sourceFeatureIndex);
         }
+        else if (feature.startsWith("synonym")){
+        	String[] fData = feature.split(":");
+        	if(database == null)
+        		database = new WordnetLoader(fData[1]);
+        	return new SynonymFeature(fData[0], database);
+        }
+//        else if (feature.startsWith("hypernym")){
+//        	
+//        }
 		else // miedzy innymi zwroci null dla orth, base i ctag bo sa pobierane z pliku zrodlowego wiec nie potrzebe sa dla nich generatory
 			return null;
 	}
