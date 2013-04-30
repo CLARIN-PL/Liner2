@@ -3,7 +3,7 @@
 <project name="Liner2 — a module for named entity recognition for Polish" default="make" basedir=".">
 
 	<property name="nerd_path" value="../nerd" />
-	<property name="production_path" value="../liner2_production/liner2.2.2" />
+	<property name="production_path" value="../liner2_production/liner2.2.1" />
 
 	<target name="clean">
   		<delete dir="${production_path}"/>
