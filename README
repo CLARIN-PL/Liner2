@@ -11,10 +11,7 @@ of Liner2 options please visit: http://nlp.pwr.wroc.pl/redmine/projects/inforex-
 
 Pipe mode:
 
-  ./liner2.sh 
-
-Interactive mode:
-
+  ./liner2.sh pipe -ini model-5nam-v1/model.ini -i ccl -f test/sentence.xml -o tuples
 
 Interactive mode for raw text (requires maca):
 

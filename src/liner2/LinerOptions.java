@@ -400,6 +400,7 @@ public class LinerOptions {
 	}
 	
 	
+	@SuppressWarnings("static-access")
 	private Options makeOptions(){
     	Options options = new Options();    	
 
