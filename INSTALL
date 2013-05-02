@@ -43,15 +43,17 @@ Make sure that the files 'lib/libCRFPP.so' and 'lib/CRFPP.jar' were created.
 
 Copy the above files to liner2/libs folder:
 
-  cp  libCRFPP.so ../../lib
-  cp  CRFPP.jar ../../lib
+  cp libCRFPP.so ../../../lib
+  cp CRFPP.jar ../../../lib
 
 
 -----------------------------
 Step 3: Compile liner2
 -----------------------------
 
-To create liner2.jar execute the following command:
+The Ant Apache tool is required to build liner2.jar package.
+
+Execute the following command:
 
   ant jar
  

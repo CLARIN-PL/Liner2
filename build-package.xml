@@ -3,7 +3,7 @@
 <project name="Liner2 — a module for named entity recognition for Polish" default="make" basedir=".">
 
 	<property name="nerd_path" value="../nerd" />
-	<property name="production_path" value="../liner2_production/liner2.2.1" />
+	<property name="production_path" value="../liner2_production/liner2.2.2" />
 
 	<target name="clean">
   		<delete dir="${production_path}"/>
@@ -34,11 +34,9 @@
 
 	<target name="copy-nerd">
 		<mkdir dir="${production_path}/nerd"/>
-		<exec executable="git" dir="${nerd_path}/">
-			<arg value="checkout-index"/>
-			<arg value="-f"/>
-			<arg value="-a"/>
-			<arg value="--prefix=${production_path}/nerd/"/>
+		<exec executable="bash" dir="${nerd_path}/">
+			<arg value="-c"/>
+			<arg value="git archive --format=tar master | tar -x -C ${production_path}/nerd"/>
 		</exec>
 	</target>
 
