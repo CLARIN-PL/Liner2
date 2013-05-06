@@ -35,6 +35,7 @@ public class TokenFeatureGenerator {
 					this.sentenceGenerators.add((DictFeature) f);
 				else
 					this.tokenGenerators.add((TokenFeature) f);
+				System.out.println(f.getName());
 				this.attributeIndex.addAttribute(f.getName());
 			}
 		}

@@ -32,8 +32,6 @@ public class WordnetLoader {
 					
 				}
 			}
-			
-//				 Read all data files
 				for (String pos[] : poses){
 		
 					String filename = path + File.separator +  "data." + pos[0]; 

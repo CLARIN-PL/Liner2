@@ -24,7 +24,6 @@ public class SynonymFeature extends TokenFeature{
 			return base;
 		for(PrincetonDataLemmaRaw lr: synsets.get(0).lemmas)
 			lemmas.add(lr.lemma);
-		lemmas.remove(base);
 		if(synsets.size() > 1){
 			
 			for(PrincetonDataRaw synset: synsets.subList(1, synsets.size())){

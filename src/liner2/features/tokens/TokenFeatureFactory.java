@@ -57,9 +57,12 @@ public class TokenFeatureFactory {
         		database = new WordnetLoader(fData[1]);
         	return new SynonymFeature(fData[0], database);
         }
-//        else if (feature.startsWith("hypernym")){
-//        	
-//        }
+        else if (feature.startsWith("hypernym")){
+        	String[] fData = feature.split(":");
+        	if(database == null)
+        		database = new WordnetLoader(fData[2]);
+        	return new HypernymFeature(fData[0]+fData[1], database, Integer.parseInt(fData[1]));
+        }
 		else // miedzy innymi zwroci null dla orth, base i ctag bo sa pobierane z pliku zrodlowego wiec nie potrzebe sa dla nich generatory
 			return null;
 	}
