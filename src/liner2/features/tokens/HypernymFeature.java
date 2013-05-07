@@ -20,7 +20,6 @@ public class HypernymFeature extends TokenFeature{
 	
 	public String generate(Token token){
 		String base = token.getAttributeValue(1);
-		System.out.println(base+"  "+distance);
 		ArrayList<String> lemmas = new ArrayList<String>();
 		ArrayList<PrincetonDataRaw> thisDistSynsets =  database.getSynsets(base);
 		ArrayList<PrincetonDataRaw> allSynsets =  new ArrayList<PrincetonDataRaw>();
@@ -51,8 +50,6 @@ public class HypernymFeature extends TokenFeature{
 		if(lemmas.isEmpty())
 			return base;
 		Collections.sort(lemmas);
-		for(PrincetonDataLemmaRaw lr: allSynsets.get(0).lemmas)
-			System.out.println(lr.lemma);
 		return lemmas.get(0);
 			
 	}
