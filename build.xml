@@ -1,12 +1,11 @@
 <?xml version="1.0"?>
 
-<project name="Liner2 -- a module for named entity recognition for Polish" default="compile" basedir=".">
+<project name="Liner2 — a module for named entity recognition for Polish" default="compile" basedir=".">
 
 	<property name="production_path" value="local/production" />
 	
 	<path id="classpath.standard">
   		<pathelement location="${production_path}/lib/commons-cli-1.2.jar"/>
-  		<pathelement location="${production_path}/lib/lingpipe-3.8.2.jar"/>
   		<pathelement location="${production_path}/lib/CRFPP.jar"/>
   		<pathelement location="${production_path}/lib/mysql-connector-java-5.1.10.jar"/>
 		<pathelement location="${production_path}/lib/princetonAdapter.jar"/>
@@ -73,29 +72,5 @@ ${liner2.sh} $@
 		<chmod file="/usr/local/bin/liner2" perm="ugo+x"/>
 		<echo message="Now you can use `liner2 [parameters]`."/>
 	</target>
-		
-	<target name="crfpp-make" depends="clean">
-		<echo message=">>> CRFPP --- cofigure"/>
-		<exec executable="./configure" dir="external/crfpp"/>		
-		<echo message=">>> CRFPP --- make"/>
-		<exec executable="make" dir="external/crfpp"/>		
-	</target>
-
-	<target name="crfpp-install" depends="clean">
-		<echo message=">>> CRFPP --- make install"/>
-		<exec executable="make" dir="external/crfpp">
-			<arg value="install"/>
-		</exec>
-		<echo message=">>> CRFPP --- make clean"/>
-		<exec executable="make" dir="external/crfpp">
-			<arg value="clean"/>
-		</exec>
-	</target>
-
-	<target name="crfpp-jar" depends="clean">
-		<exec executable="make" dir="external/crfpp/java"/>		
-		<copy file="external/crfpp/java/CRFPP.jar" todir="lib"/>
-		<copy file="external/crfpp/java/libCRFPP.so" todir="lib"/>
-	</target>
-	
+			
 </project>
