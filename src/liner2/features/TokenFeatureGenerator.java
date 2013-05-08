@@ -35,7 +35,6 @@ public class TokenFeatureGenerator {
 					this.sentenceGenerators.add((DictFeature) f);
 				else
 					this.tokenGenerators.add((TokenFeature) f);
-				System.out.println(f.getName());
 				this.attributeIndex.addAttribute(f.getName());
 			}
 		}
@@ -70,19 +69,19 @@ public class TokenFeatureGenerator {
 	}
 
 	public void generateFeatures(Sentence s) throws Exception {
-		for (DictFeature f : this.sentenceGenerators){
-			f.generate(s, this.attributeIndex.getIndex(f.getName()));}
+
 		for (Token t : s.getTokens()){
+			t.packAtributes(this.attributeIndex.getLength());
 			ArrayList<Integer> toDel = new ArrayList<Integer>();
 			generateFeatures(t);
 			for(String sourceFeat: sourceFeatures)
 				if(!LinerOptions.get().featureNames.contains(sourceFeat))
 					toDel.add(this.attributeIndex.getIndex(sourceFeat)-toDel.size());
-			for(int idx: toDel){
+			for(int idx: toDel)
 				t.removeAttribute(idx);
-			}
-
 		}
+		for (DictFeature f : this.sentenceGenerators)
+			f.generate(s, this.attributeIndex.getIndex(f.getName()));
 	}
 
 	public void generateFeatures(Token t) throws Exception {

@@ -72,6 +72,11 @@ public class Token {
 		return tags;
 	}
 	
+	public void packAtributes(int size){
+		while(getNumAttributes()<size)
+			attributes.add(null);
+	}
+	
 	public void setAttributeValue(int index, String value) {
 		if (index < attributes.size())
 			attributes.set(index, value);
