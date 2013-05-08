@@ -42,9 +42,6 @@ public class TemplateFactory {
 			throw new Exception("Invalid template description: "+description);
 		String templateName = description.substring(0, pos);
 		String featureDesc = description.substring(pos+1);
-		
-		if(! LinerOptions.get().featureNames.contains(featureDesc))
-			throw new DataFormatException("Error while parsing template "+templateName+": "+featureDesc+" not specified in features");
 		if (this.templates.containsKey(templateName))
 			this.templates.get(templateName).addFeature(featureDesc);
 		else {

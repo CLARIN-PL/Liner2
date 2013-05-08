@@ -3,6 +3,7 @@ package liner2.tools;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import liner2.LinerOptions;
 import liner2.Main;
 
 public class Template {
@@ -19,6 +20,9 @@ public class Template {
 			if (pos == -1)
 				throw new Exception("Invalid template description: " + description);
 			String featureName = featureUnits[0].substring(0, pos);
+			if(! LinerOptions.get().featureNames.contains(featureName))
+				throw new DataFormatException("Error while parsing template: "+featureName+" not specified in features");
+
 			String[] windowDesc = featureUnits[0].split(":");
 			if (this.features.containsKey(featureName))
 				throw new Exception("Duplicate feature definition in template description: "+description);
