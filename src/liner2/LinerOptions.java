@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.TreeSet;
 
-import liner2.features.NerdFeatureGenerator;
 import liner2.filter.*;
 import liner2.chunker.factory.ChunkerFactory;
 import liner2.tools.CorpusFactory;
@@ -85,7 +84,7 @@ public class LinerOptions {
 	public static final String OPTION_IP = "ip";
 	public static final String OPTION_MACA = "maca";
 	public static final String OPTION_MAX_THREADS = "max_threads";
-	public static final String OPTION_NERD = "nerd";
+//	public static final String OPTION_NERD = "nerd";
 	public static final String OPTION_OUTPUT_FILE = "t";
 	public static final String OPTION_OUTPUT_FORMAT = "o";
 	public static final String OPTION_PORT = "p";
@@ -196,9 +195,6 @@ public class LinerOptions {
     	configDesc.append("> Mode: " + this.mode + "\n");
 
     	this.parseParameters(line, configDesc);
-    	    	
-		if (this.features.size() > 0)
-			NerdFeatureGenerator.initialize();
 		
 		for (String cd : this.corpusDescriptions)
 			CorpusFactory.get().parse(cd);
@@ -235,7 +231,7 @@ public class LinerOptions {
 		String iniPath = iniFile.getAbsoluteFile().getParentFile().getAbsolutePath();
         parameters = parameters.replace("{INI_PATH}", iniPath);
             
-      	CommandLine line = new GnuParser().parse(makeOptions(), parameters.split(" "));        		
+      	CommandLine line = new GnuParser().parse(makeOptions(), parameters.split(" "));
         configDesc.append("> Load parameters from a ini file: " + filename + "\n");
 
         this.parseParameters(line, configDesc);
@@ -435,7 +431,7 @@ public class LinerOptions {
 				.withDescription("database user name (daemon mode)")
 				.create(OPTION_DB_USER));
     	options.addOption(OptionBuilder.withArgName("description").hasArg()
-				.withDescription("feature name recognized by NERD (name or name:dictionary_file)")
+				.withDescription("recognized feature name")
 				.create(OPTION_FEATURE));
     	options.addOption(OptionBuilder.withArgName("filters").hasArg()
 				.withDescription("filters to apply")
@@ -472,9 +468,9 @@ public class LinerOptions {
 		options.addOption(OptionBuilder.withArgName("number").hasArg()
 				.withDescription("maximum number of processing threads (daemon mode)")
 				.create(OPTION_MAX_THREADS));
-    	options.addOption(OptionBuilder.withArgName("filename").hasArg()
-				.withDescription("path to location of nerd.py")
-				.create(OPTION_NERD));
+//    	options.addOption(OptionBuilder.withArgName("filename").hasArg()
+//				.withDescription("path to location of nerd.py")
+//				.create(OPTION_NERD));
     	options.addOption(OptionBuilder.withArgName("number").hasArg()
 				.withDescription("port to listen on (daemon mode)")
 				.create(OPTION_PORT));

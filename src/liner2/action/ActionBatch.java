@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 
 import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
-import liner2.features.NerdFeatureGenerator;
 
 import liner2.reader.ReaderFactory;
 import liner2.reader.StreamReader;
@@ -133,14 +132,6 @@ public class ActionBatch extends Action{
 			for (int i = 0; i < tokenAttrs.length; i++)
 				token.setAttributeValue(i, tokenAttrs[i]);
 			sentence.addToken(token);
-		}
-				
-		if (NerdFeatureGenerator.isInitialized()) {
-			try {
-				NerdFeatureGenerator.generateFeatures(sentence, true);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
 		}
 		Paragraph paragraph = new Paragraph(null);
 		paragraph.setAttributeIndex(ai);

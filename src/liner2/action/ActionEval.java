@@ -5,7 +5,6 @@ import java.util.HashMap;
 import liner2.LinerOptions;
 import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
-import liner2.features.NerdFeatureGenerator;
 import liner2.reader.ReaderFactory;
 import liner2.reader.StreamReader;
 import liner2.structure.AnnotationSet;

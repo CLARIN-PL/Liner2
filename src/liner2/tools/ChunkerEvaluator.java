@@ -4,12 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import liner2.chunker.Chunker;
-import liner2.features.NerdFeatureGenerator;
 import liner2.structure.Annotation;
 import liner2.structure.AnnotationSet;
-import liner2.structure.Paragraph;
-import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
 

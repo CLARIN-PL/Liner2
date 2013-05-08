@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 import java.io.InputStream;
 import java.io.IOException;
 
-import liner2.features.NerdFeatureGenerator;
 import liner2.structure.TokenAttributeIndex;
 import liner2.structure.Annotation;
 import liner2.structure.Paragraph;
@@ -48,7 +47,6 @@ public class IobStreamReader extends StreamReader {
 				continue;
 			}
 			this.attributeIndex = new TokenAttributeIndex();
-			NerdFeatureGenerator.docstart_config_features = line;
 			String[] content = line.trim().split(" ");
 			
 			/* Pierwsze trzy elementy to -DOCSTART, CONFIG, FEATURES,

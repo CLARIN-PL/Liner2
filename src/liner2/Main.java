@@ -1,11 +1,8 @@
 package liner2;
 
-import java.util.regex.Pattern;
-
 import org.apache.commons.cli.UnrecognizedOptionException;
 
 import liner2.action.*;
-import liner2.features.NerdFeatureGenerator;
 import liner2.tools.ParameterException;
 
 /**

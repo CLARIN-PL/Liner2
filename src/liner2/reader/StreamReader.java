@@ -1,14 +1,10 @@
 package liner2.reader;
 
-import liner2.features.NerdFeatureGenerator;
 import liner2.structure.TokenAttributeIndex;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 
 import liner2.tools.DataFormatException;
-
-import liner2.Main;
-import liner2.LinerOptions;
 /**
  * Abstrakcyjna klasa do strumieniowego wczytywania danych.
  * @author czuk
