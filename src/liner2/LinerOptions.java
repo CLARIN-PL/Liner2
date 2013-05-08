@@ -84,11 +84,9 @@ public class LinerOptions {
 	public static final String OPTION_IP = "ip";
 	public static final String OPTION_MACA = "maca";
 	public static final String OPTION_MAX_THREADS = "max_threads";
-//	public static final String OPTION_NERD = "nerd";
 	public static final String OPTION_OUTPUT_FILE = "t";
 	public static final String OPTION_OUTPUT_FORMAT = "o";
 	public static final String OPTION_PORT = "p";
-	public static final String OPTION_PYTHON = "python";
 	public static final String OPTION_SILENT = "silent";
 	public static final String OPTION_TEMPLATE = "template";
 	public static final String OPTION_USE = "use";
@@ -302,11 +300,6 @@ public class LinerOptions {
 		if (line.hasOption(OPTION_FILTER))
 			parseFilter(line.getOptionValue(OPTION_FILTER));
 		
-		if (line.hasOption(OPTION_PYTHON))
-			this.properties.setProperty(OPTION_PYTHON, line.getOptionValue(OPTION_PYTHON));
-		else
-			this.properties.setProperty(OPTION_PYTHON, "python");
-		
 		// read template descriptions
 		if (line.hasOption(OPTION_TEMPLATE)) {
 			for (String td : line.getOptionValues(OPTION_TEMPLATE)) {
@@ -468,15 +461,9 @@ public class LinerOptions {
 		options.addOption(OptionBuilder.withArgName("number").hasArg()
 				.withDescription("maximum number of processing threads (daemon mode)")
 				.create(OPTION_MAX_THREADS));
-//    	options.addOption(OptionBuilder.withArgName("filename").hasArg()
-//				.withDescription("path to location of nerd.py")
-//				.create(OPTION_NERD));
     	options.addOption(OptionBuilder.withArgName("number").hasArg()
 				.withDescription("port to listen on (daemon mode)")
 				.create(OPTION_PORT));
-    	options.addOption(OptionBuilder.withArgName("filename").hasArg()
-				.withDescription("path to location of python interpreter")
-				.create(OPTION_PYTHON));
 		options.addOption(OptionBuilder.withArgName("filename").hasArg()
 				.withDescription("save output to file")
 				.create(OPTION_OUTPUT_FILE));

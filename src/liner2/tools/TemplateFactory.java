@@ -9,6 +9,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Set;
 
+import liner2.LinerOptions;
 import liner2.Main;
 import liner2.structure.TokenAttributeIndex;
 
@@ -42,6 +43,8 @@ public class TemplateFactory {
 		String templateName = description.substring(0, pos);
 		String featureDesc = description.substring(pos+1);
 		
+		if(! LinerOptions.get().featureNames.contains(featureDesc))
+			throw new DataFormatException("Error while parsing template "+templateName+": "+featureDesc+" not specified in features");
 		if (this.templates.containsKey(templateName))
 			this.templates.get(templateName).addFeature(featureDesc);
 		else {
