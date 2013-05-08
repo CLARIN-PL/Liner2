@@ -2,6 +2,7 @@ package liner2.features.tokens;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ public class WordnetLoader {
 	public WordnetLoader(String path){
 		wordnet_path = path;
 		try {
+			if (!new File(path).exists())
+				throw new FileNotFoundException("Invalid database directory: "+path);
 			for (String pos[] : poses){
 			String filename = path + File.separator +  "index." + pos[0]; 
 				if ((new File(filename)).exists()){						

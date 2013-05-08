@@ -1,6 +1,8 @@
 package liner2.features.tokens;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,6 +27,8 @@ public class DictFeature extends Feature{
 	}
 	
 	public void createDictFromFile(String path) throws IOException{
+		if (!new File(path).exists())
+			throw new FileNotFoundException("Invalid dictionary directory for feature "+name+": "+path);
 		BufferedReader inFile = new BufferedReader(new FileReader(path));
 		String entry = inFile.readLine();
 		String[] words;
