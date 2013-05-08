@@ -1,5 +1,7 @@
 package liner2;
 
+import java.util.regex.Pattern;
+
 import org.apache.commons.cli.UnrecognizedOptionException;
 
 import liner2.action.*;
@@ -43,9 +45,6 @@ public class Main {
     	catch(Exception ex){
             ex.printStackTrace();
             System.out.println(">> " + ex.getMessage());
-    	}
-    	finally{
-    		NerdFeatureGenerator.close();
     	}
     }
     
