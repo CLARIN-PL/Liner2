@@ -3,6 +3,7 @@ package liner2.features;
 import java.util.ArrayList;
 
 import liner2.LinerOptions;
+import liner2.features.tokens.Arg1Feature;
 import liner2.features.tokens.DictFeature;
 import liner2.features.tokens.Feature;
 import liner2.features.tokens.TokenFeature;
@@ -19,6 +20,7 @@ public class TokenFeatureGenerator {
 	private ArrayList<DictFeature> sentenceGenerators = new ArrayList<DictFeature>();
 	private TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
 	private String[] sourceFeatures = new String[]{"orth", "base", "ctag"};
+	private Arg1Feature arg1Feat = null;
 	
 	/**
 	 * 
@@ -33,6 +35,8 @@ public class TokenFeatureGenerator {
 				if  (f != null){
 					if (DictFeature.class.isInstance(f))
 						this.sentenceGenerators.add((DictFeature) f);
+					else if(Arg1Feature.class.isInstance(f))
+						this.arg1Feat = (Arg1Feature)f;
 					else
 						this.tokenGenerators.add((TokenFeature) f);
 					this.attributeIndex.addAttribute(f.getName());
@@ -87,6 +91,11 @@ public class TokenFeatureGenerator {
 		}
 		for (DictFeature f : this.sentenceGenerators)
 			f.generate(s, this.attributeIndex.getIndex(f.getName()));
+		if (arg1Feat != null)
+			arg1Feat.generate(s, this.attributeIndex.getIndex("arg1"),
+								 this.attributeIndex.getIndex("case"),
+								 this.attributeIndex.getIndex("number"),
+								 this.attributeIndex.getIndex("gender"));
 	}
 
 	public void generateFeatures(Token t) throws Exception {

@@ -45,6 +45,8 @@ public class TokenFeatureFactory {
             return new HasDigitFeature(feature);
         else if (feature.equals("has_symbol")) 
             return new HasSymbolFeature(feature);
+        else if (feature.equals("arg1"))
+        	return new Arg1Feature(feature);
         else if (feature.endsWith(".txt")){
     		String[] fData = feature.split(":");
     		if(fData.length != 3)
