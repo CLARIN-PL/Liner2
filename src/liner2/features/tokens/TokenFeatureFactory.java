@@ -1,5 +1,7 @@
 package liner2.features.tokens;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.zip.DataFormatException;
 
 public class TokenFeatureFactory {
@@ -10,6 +12,7 @@ public class TokenFeatureFactory {
 	 * @return
 	 */
 	static WordnetLoader database = null;
+	private static List sourceFeats = Arrays.asList("orth", "base", "ctag");
 	
 	public static Feature create(String feature) throws Exception{
 		if (feature.equals("class"))
@@ -71,8 +74,10 @@ public class TokenFeatureFactory {
         		database = new WordnetLoader(fData[2]);
         	return new HypernymFeature(fData[0]+fData[1], database, Integer.parseInt(fData[1]));
         }
-		else // miedzy innymi zwroci null dla orth, base i ctag bo sa pobierane z pliku zrodlowego wiec nie potrzebe sa dla nich generatory
-			return null;
+        else if (sourceFeats.contains(feature))  //zwroci null dla orth, base i ctag bo sa pobierane z pliku zrodlowego wiec nie potrzebe sa dla nich generatory
+        	return null;
+        else 
+			throw new DataFormatException("Invalid feature: "+feature);
 	}
 	
 }
