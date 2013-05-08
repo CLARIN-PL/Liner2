@@ -8,7 +8,7 @@ import liner2.structure.ParagraphSet;
 import liner2.tools.DataFormatException;
 
 import liner2.Main;
-
+import liner2.LinerOptions;
 /**
  * Abstrakcyjna klasa do strumieniowego wczytywania danych.
  * @author czuk
@@ -22,18 +22,8 @@ public abstract class StreamReader {
 	public abstract boolean paragraphReady() throws DataFormatException;
 		
 	public Paragraph readParagraph() throws DataFormatException {
-		if (paragraphReady()) {
-			Paragraph p = this.readRawParagraph();
-			
-			if (NerdFeatureGenerator.isInitialized()) {
-				try {
-					NerdFeatureGenerator.generateFeatures(p, true);
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-			return p;
-		} 
+		if (paragraphReady())
+			return this.readRawParagraph();
 		else
 			return null;
 	}
@@ -48,14 +38,6 @@ public abstract class StreamReader {
 		while (paragraphReady())
 			paragraphSet.addParagraph(readRawParagraph());
 		paragraphSet.setAttributeIndex(this.getAttributeIndex());
-		
-		if (NerdFeatureGenerator.isInitialized()) {
-			try {
-				NerdFeatureGenerator.generateFeatures(paragraphSet);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
 		close();
 						
 		return paragraphSet; 

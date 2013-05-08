@@ -139,6 +139,9 @@ public class IobStreamReader extends StreamReader {
 			}
 			else {
 				String[] words = line.trim().split(" ");
+//				if(words.length > paragraph.getAttributeIndex().getLength()){
+//					System.out.print(line+"  ");
+//				}
 				if (words[0].equals("-DOCSTART")) {
 					if (words[1].equals("FILE")) {
 						if (words.length >= 3)
