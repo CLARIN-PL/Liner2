@@ -28,10 +28,6 @@ public class ActionConvert extends Action {
 			LinerOptions.getOption(LinerOptions.OPTION_INPUT_FILE),
 			LinerOptions.getOption(LinerOptions.OPTION_INPUT_FORMAT));
 		ParagraphSet ps = reader.readParagraphSet();
-		if (!LinerOptions.get().features.isEmpty()){
-			TokenFeatureGenerator gen = new TokenFeatureGenerator(LinerOptions.get().features);
-			gen.generateFeatures(ps);
-		}
 		StreamWriter writer = WriterFactory.get().getStreamWriter(
 			LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FILE),
 			LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FORMAT));

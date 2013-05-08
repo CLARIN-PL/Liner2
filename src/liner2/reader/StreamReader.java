@@ -1,5 +1,7 @@
 package liner2.reader;
 
+import liner2.LinerOptions;
+import liner2.features.TokenFeatureGenerator;
 import liner2.structure.TokenAttributeIndex;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
@@ -28,13 +30,18 @@ public abstract class StreamReader {
 	 * TODO
 	 * @return
 	 */
-	public ParagraphSet readParagraphSet() throws DataFormatException {
+	public ParagraphSet readParagraphSet() throws Exception {
 		ParagraphSet paragraphSet = new ParagraphSet();
 					
 		while (paragraphReady())
 			paragraphSet.addParagraph(readRawParagraph());
 		paragraphSet.setAttributeIndex(this.getAttributeIndex());
 		close();
+		
+		if (!LinerOptions.get().features.isEmpty()){
+			TokenFeatureGenerator gen = new TokenFeatureGenerator(LinerOptions.get().features);
+			gen.generateFeatures(paragraphSet);
+		}
 						
 		return paragraphSet; 
 	}
