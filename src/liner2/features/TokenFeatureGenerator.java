@@ -27,16 +27,21 @@ public class TokenFeatureGenerator {
 	public TokenFeatureGenerator(ArrayList<String> features){
 		for( String sf: sourceFeatures)
 			this.attributeIndex.addAttribute(sf);
-
-		for ( String feature : features ){
-			Feature f = TokenFeatureFactory.create(feature);
-			if  (f != null){
-				if (DictFeature.class.isInstance(f))
-					this.sentenceGenerators.add((DictFeature) f);
-				else
-					this.tokenGenerators.add((TokenFeature) f);
-				this.attributeIndex.addAttribute(f.getName());
+		try{
+			for ( String feature : features ){
+				Feature f = TokenFeatureFactory.create(feature);
+				if  (f != null){
+					if (DictFeature.class.isInstance(f))
+						this.sentenceGenerators.add((DictFeature) f);
+					else
+						this.tokenGenerators.add((TokenFeature) f);
+					this.attributeIndex.addAttribute(f.getName());
+				}
 			}
+		}
+		catch(Exception ex){
+            ex.printStackTrace();
+            System.out.println(">> " + ex.getMessage());
 		}
 	}
 	

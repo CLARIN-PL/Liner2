@@ -1,5 +1,7 @@
 package liner2.features.tokens;
 
+import java.util.zip.DataFormatException;
+
 public class TokenFeatureFactory {
 
 	/**
@@ -9,7 +11,7 @@ public class TokenFeatureFactory {
 	 */
 	static WordnetLoader database = null;
 	
-	public static Feature create(String feature){
+	public static Feature create(String feature) throws Exception{
 		if (feature.equals("class"))
 			return new ClassFeature(feature);
 		else if (feature.equals("case")) 
@@ -42,6 +44,8 @@ public class TokenFeatureFactory {
             return new HasSymbolFeature(feature);
         else if (feature.endsWith(".txt")){
     		String[] fData = feature.split(":");
+    		if(fData.length != 3)
+    			throw new DataFormatException("Invalid feature description: "+feature);
         	int sourceFeatureIndex;
 			if(fData[1].equals("orth"))
         		sourceFeatureIndex = 0;
@@ -53,12 +57,16 @@ public class TokenFeatureFactory {
         }
         else if (feature.startsWith("synonym")){
         	String[] fData = feature.split(":");
+        	if(fData.length != 2)
+    			throw new DataFormatException("Invalid feaeture description: "+feature);
         	if(database == null)
         		database = new WordnetLoader(fData[1]);
         	return new SynonymFeature(fData[0], database);
         }
         else if (feature.startsWith("hypernym")){
         	String[] fData = feature.split(":");
+        	if(fData.length != 3)
+    			throw new DataFormatException("Invalid feaeture description: "+feature);
         	if(database == null)
         		database = new WordnetLoader(fData[2]);
         	return new HypernymFeature(fData[0]+fData[1], database, Integer.parseInt(fData[1]));
