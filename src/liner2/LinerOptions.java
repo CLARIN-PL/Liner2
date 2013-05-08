@@ -281,8 +281,11 @@ public class LinerOptions {
 		if (line.hasOption(OPTION_FEATURE)) {
 			for (String feature : line.getOptionValues(OPTION_FEATURE)) {
 				this.features.add(feature);
-				int pos = feature.indexOf(":");
-				this.featureNames.add((pos > -1) ? feature.substring(0, pos) : feature);
+				String[] splitted = feature.split(":");
+				if(splitted.length > 2 && splitted[1].length() == 1)
+					this.featureNames.add(splitted[0]+splitted[1]);
+				else
+					this.featureNames.add(splitted[0]);
 			}
 		}
 		
