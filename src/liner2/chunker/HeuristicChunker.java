@@ -90,7 +90,7 @@ public class HeuristicChunker extends Chunker {
 		
 		for (int i = 0; i < tokens.size(); i++) {
 			if (attributeIndex.getAttributeValue(tokens.get(i), "pattern").equals("UPPER_CAMEL_CASE")) {
-				chunking.addChunk(new Annotation(i, i, "NAM", sentence));
+				chunking.addChunk(new Annotation(i, "NAM", sentence));
 			}			
 		}
 		
@@ -342,8 +342,8 @@ public class HeuristicChunker extends Chunker {
 					){
 				if ( i + 3 == tokens.size()
 						|| tokens.get(i+3).getAttributeValue(indexPersonNoun).equals("B") ){
-					chunking.addChunk(new Annotation(i+1, i+1, "PERSON_FIRST_NAM", sentence));
-					chunking.addChunk(new Annotation(i+2, i+2, "PERSON_LAST_NAM", sentence));
+					chunking.addChunk(new Annotation(i+1, "PERSON_FIRST_NAM", sentence));
+					chunking.addChunk(new Annotation(i+2, "PERSON_LAST_NAM", sentence));
 					i += 2;
 				}
 			}
@@ -380,7 +380,7 @@ public class HeuristicChunker extends Chunker {
 					&& tokens.get(i+4).getAttributeValue(indexOrth).equals(".")
 					&& tokens.get(i+5).getAttributeValue(indexPersonLastNam).equals("B")					
 					){
-					chunking.addChunk(new Annotation(i+5, i+5, "PERSON_LAST_NAM", sentence));
+					chunking.addChunk(new Annotation(i+5, "PERSON_LAST_NAM", sentence));
 					i += 5;
 				}				
 		}
@@ -408,8 +408,8 @@ public class HeuristicChunker extends Chunker {
 					&& tokens.get(i+1).getAttributeValue(indexPersonFirstNam).equals("O")
 					&&  ( i + 2 == tokens.size() || tokens.get(i+2).getAttributeValue(indexPersonLastNam).equals("O") )
 					){
-						chunking.addChunk(new Annotation(i, i, "PERSON_FIRST_NAM", sentence));
-						chunking.addChunk(new Annotation(i+1, i+1, "PERSON_LAST_NAM", sentence));						
+						chunking.addChunk(new Annotation(i, "PERSON_FIRST_NAM", sentence));
+						chunking.addChunk(new Annotation(i+1, "PERSON_LAST_NAM", sentence));						
 					}
 		}
 
@@ -441,9 +441,9 @@ public class HeuristicChunker extends Chunker {
 					&& tokens.get(i+3).getAttributeValue(indexPersonNoun).equals("O")
 					&& ( i + 5 == tokens.size() || tokens.get(i+5).getAttributeValue(indexStartsWithLowerCase).equals("1") )
 					){
-						chunking.addChunk(new Annotation(i, i, "PERSON_FIRST_NAM", sentence));
-						chunking.addChunk(new Annotation(i+1, i+1, "PERSON_LAST_NAM", sentence));						
-						chunking.addChunk(new Annotation(i+3, i+3, "PERSON_LAST_NAM", sentence));						
+						chunking.addChunk(new Annotation(i, "PERSON_FIRST_NAM", sentence));
+						chunking.addChunk(new Annotation(i+1, "PERSON_LAST_NAM", sentence));						
+						chunking.addChunk(new Annotation(i+3, "PERSON_LAST_NAM", sentence));						
 					}
 		}
 
@@ -470,8 +470,8 @@ public class HeuristicChunker extends Chunker {
 					&& tokens.get(i+2).getAttributeValue(indexPersonFirstNam).equals("O")
 					&& ( i+3 == tokens.size() || tokens.get(i+3).getAttributeValue(indexStartsWithUpperCase).equals("0"))
 					){
-				chunking.addChunk(new Annotation(i+1, i+1, "PERSON_FIRST_NAM", sentence));
-				chunking.addChunk(new Annotation(i+2, i+2, "PERSON_LAST_NAM", sentence));										
+				chunking.addChunk(new Annotation(i+1, "PERSON_FIRST_NAM", sentence));
+				chunking.addChunk(new Annotation(i+2, "PERSON_LAST_NAM", sentence));										
 			}
 		}
 		
@@ -500,8 +500,8 @@ public class HeuristicChunker extends Chunker {
 					&& tokens.get(i+3).getAttributeValue(indexOrth).equals(".")
 					&& tokens.get(i+4).getAttributeValue(indexPersonLastNam).equals("B")
 					){
-				chunking.addChunk(new Annotation(i+1, i+1, "PERSON_FIRST_NAM", sentence));
-				chunking.addChunk(new Annotation(i+4, i+4, "PERSON_LAST_NAM", sentence));										
+				chunking.addChunk(new Annotation(i+1, "PERSON_FIRST_NAM", sentence));
+				chunking.addChunk(new Annotation(i+4, "PERSON_LAST_NAM", sentence));										
 			}
 		}
 		
@@ -579,13 +579,13 @@ public class HeuristicChunker extends Chunker {
 					&& tokens.get(i+1).getAttributeValue(indexOrth).equals(".")
 					&& tokens.get(i+2).getAttributeValue(indexPattern).equals("UPPER_INIT")
 					&& tokens.get(i+3).getAttributeValue(indexPattern).equals("DIGITS")){
-				chunking.addChunk(new Annotation(i+2, i+2, "ROAD_NAM", sentence));
+				chunking.addChunk(new Annotation(i+2, "ROAD_NAM", sentence));
 				
 				if ( i + 6 < tokens.size() 
 						&& tokens.get(i+4).getAttributeValue(indexOrth).equals("/")
 						&& tokens.get(i+5).getAttributeValue(indexPattern).equals("UPPER_INIT")
 						&& tokens.get(i+6).getAttributeValue(indexPattern).equals("DIGITS")){
-					chunking.addChunk(new Annotation(i+5, i+5, "ROAD_NAM", sentence));					
+					chunking.addChunk(new Annotation(i+5, "ROAD_NAM", sentence));					
 				}
 			}
 		}

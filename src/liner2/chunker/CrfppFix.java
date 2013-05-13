@@ -70,7 +70,7 @@ public class CrfppFix extends Chunker {
 						&& t2.getAttributeValue(ca).equals("nom")){
 					orderedChunks.get(i+1).remove(c2);
 					chunking.removeChunk(c2);
-					c1.setEnd(c2.getEnd());
+					c1.addToken(c2.getEnd());
 				}
 			}
 		}		
@@ -93,7 +93,7 @@ public class CrfppFix extends Chunker {
 				}
 				if ( paranthesis == 1 
 						&& sentence.getTokens().get(chunk.getEnd()+1).getAttributeValue(index_orth).equals("&quot;")){
-					chunk.setEnd(chunk.getEnd()+1);
+					chunk.addToken(chunk.getEnd()+1);
 				}
 			}
     	}		
@@ -128,7 +128,7 @@ public class CrfppFix extends Chunker {
 					&& ai.getAttributeValue(tokens.get(end-1), "person_first_nam").equals("B") 
 					&& ai.getAttributeValue(tokens.get(end-2), "person_first_nam").equals("O")
 					&& ai.getAttributeValue(tokens.get(end-2), "pattern").equals("UPPER_INIT")){
-				chunk.setBegin(end-1);				
+				chunk.replaceTokens(end-1, end);				
 				newChunks.add(new Annotation(start, end-2, "NAM", sentence));
 			}											
 		}
