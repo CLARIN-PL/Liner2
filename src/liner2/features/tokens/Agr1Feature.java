@@ -1,11 +1,9 @@
 package liner2.features.tokens;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import liner2.structure.Sentence;
 import liner2.structure.Token;
-import liner2.tools.TrieDictNode;
 
 public class Agr1Feature extends Feature{
 
