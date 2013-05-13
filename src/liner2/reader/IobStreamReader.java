@@ -163,13 +163,14 @@ public class IobStreamReader extends StreamReader {
 					if (words[last].startsWith("B")) {
 						int idx = currentSentence.getTokenNumber() - 1;
 						String type = words[last].length() >= 3 ? words[last].substring(2) : "";
-						currentChunk = new Annotation(idx, idx, type, currentSentence);
+						currentChunk = new Annotation(idx, type, currentSentence);
 						currentSentence.addChunk(currentChunk);
 					}
 					else if (words[last].startsWith("I")) {
 						if (currentChunk != null) {
 							int idx = currentSentence.getTokenNumber() - 1;
-							currentChunk.setEnd(idx);
+							
+							currentChunk.addToken(idx);
 						}
 					}
 				}

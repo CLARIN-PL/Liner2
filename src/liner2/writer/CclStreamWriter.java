@@ -34,6 +34,7 @@ public class CclStreamWriter extends StreamWriter {
 	private final String TAG_SENTENCE		= "sentence";
 	private final String TAG_TAG			= "lex";
 	private final String TAG_TOKEN 		= "tok";
+	private final String TAG_HEAD 		= "head";
 
 	private XMLStreamWriter xmlw;
 	private OutputStream os;
@@ -121,6 +122,7 @@ public class CclStreamWriter extends StreamWriter {
 			if (numChannels.containsKey(chunk.getType()))
 				numChannels.put(chunk.getType(),
 					numChannels.get(chunk.getType()) + 1);
+
 			else
 				numChannels.put(chunk.getType(), new Integer(1));
 			channels.put(chunk, numChannels.get(chunk.getType()));
@@ -152,10 +154,12 @@ public class CclStreamWriter extends StreamWriter {
 			writeTag(tag);
 		
 		Hashtable<String, Integer> strChannels = new Hashtable<String, Integer>();
+		HashSet<String> heads = new HashSet<String>();
 		for (Annotation chunk : chunks) {
-			if ((chunk.getBegin() <= idx) &&
-				(chunk.getEnd() >= idx))
+			if (chunk.getTokens().contains(idx))
 				strChannels.put(chunk.getType(), channels.get(chunk));
+			if (chunk.hasHead() && chunk.getHead() == idx)
+				heads.add(chunk.getType());
 		}
 		for (Annotation chunk : chunks)
 			if (!strChannels.containsKey(chunk.getType()))
@@ -168,6 +172,8 @@ public class CclStreamWriter extends StreamWriter {
 			this.indent(4);
 			xmlw.writeStartElement(TAG_ANN);
 			xmlw.writeAttribute(TAG_CHAN, channel.toLowerCase());
+			if (heads.contains(channel))
+				xmlw.writeAttribute(TAG_HEAD, "1");
 			xmlw.writeCharacters("" + strChannels.get(channel));
 			xmlw.writeEndElement();
 			xmlw.writeCharacters("\n");

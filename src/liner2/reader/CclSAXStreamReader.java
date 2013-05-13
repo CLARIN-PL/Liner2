@@ -189,12 +189,14 @@ public class CclSAXStreamReader extends StreamReader {
 		    	if (!chanNumber.equals("0")){
 		    		AnnChan ann = new AnnChan(chanName, chanNumber, chanHead);
 		    		if (annotations.containsKey(ann.toString())){
-						annotations.get(ann.toString()).setEnd(idx);
+						annotations.get(ann.toString()).addToken(idx);
 					}
 					else {
 						annotations.put(ann.toString(), 
-							new Annotation(idx, idx, ann.chan, currentSentence));
+							new Annotation(idx, ann.chan, currentSentence));
 					}
+					if(ann.head.equals("1"))
+						annotations.get(ann.toString()).setHead(idx);
 		    		
 		    	}
 		    }
@@ -216,8 +218,7 @@ public class CclSAXStreamReader extends StreamReader {
 		this.attributeIndex.addAttribute("orth");
 		this.attributeIndex.addAttribute("base");
 		this.attributeIndex.addAttribute("ctag");
-		this.parser_out = new CclSaxParser(is);
-		
+		this.parser_out = new CclSaxParser(is);		
 	}
 	
 	@Override

@@ -9,17 +9,6 @@ import java.util.HashSet;
  *
  */
 public class Annotation {
-
-	/**
-	 * Indeks pierwszego tokenu.
-	 */
-	private int begin = -1;
-	
-	/**
-	 * Indeks ostatniego tokenu.
-	 */
-	private int end = -1;
-	
 	/**
 	 * Typ oznakowania.
 	 */
@@ -31,21 +20,67 @@ public class Annotation {
 	private Sentence sentence = null;
 	
 	private String id = null;
+	/**
+	 * Indeksy tokenów.
+	 */
+	private ArrayList<Integer> tokens = new ArrayList<Integer>();
+	
+	/**
+	 * Indeks głowy anotacji.
+	 */
+	private int head;
+	
+	/**
+	 * Informacja czy anotacja ma oznaczoną głowę.
+	 */
+	private boolean hasHead = false;
 	
 	public Annotation(int begin, int end, String type, Sentence sentence){
-		this.begin = begin;
-		this.end = end;
+		for(int i = begin; i <= end; i++)
+			this.tokens.add(i);
 		this.type = type;
 		this.sentence = sentence;
 	}
 	
+	public Annotation(int begin, String type, Sentence sentence){
+		this.tokens.add(begin);
+		this.type = type;
+		this.sentence = sentence;
+	}
+	
+	public boolean hasHead(){
+		return this.hasHead;
+	}
+	
+	public int getHead(){
+		return this.head;
+	}
+	
+	public void setHead(int idx){
+		this.hasHead = true;
+		this.head = idx;
+	}
+	
+	public void addToken(int idx){
+		if(idx > getEnd())
+			this.tokens.add(idx);
+		else
+			for(int i = 0; i < this.tokens.size(); i++)
+				if(this.tokens.get(i) < idx)
+					this.tokens.add(i,idx);
+	}
+	
+	public void replaceTokens(int begin, int end){
+		this.tokens = new ArrayList<Integer>();
+		for(int i = begin; i <= end; i++)
+			this.tokens.add(i);
+	}
+	
 	public boolean equals(Annotation chunk) {
-		if (this.begin != chunk.getBegin())
+		if (!this.tokens.equals(chunk.getTokens()))
 			return false;
-		else if (this.end != chunk.getEnd())
+		else if (!this.sentence.equals(chunk.getSentence()))
 			return false;
-//		else if (this.sentence != chunk.getSentence())
-//			return false;
 		else if (!this.type.equals(chunk.getType()))
 			return false;
 		return true;
@@ -56,11 +91,15 @@ public class Annotation {
 	}
 	
 	public int getBegin() {
-		return this.begin;
+		return this.tokens.get(0);
 	}
 	
 	public int getEnd() {
-		return this.end;
+		return this.tokens.get(this.tokens.size()-1);
+	}
+	
+	public ArrayList<Integer> getTokens(){
+		return this.tokens;
 	}
 	
 	public Sentence getSentence() {
@@ -78,10 +117,10 @@ public class Annotation {
 	public String getText(){
 		ArrayList<Token> tokens = this.sentence.getTokens();
 		StringBuilder text = new StringBuilder();
-		for (int i = this.begin; i <= this.end; i++) {
+		for (int i : this.tokens) {
 			Token token = tokens.get(i);
 			text.append(token.getFirstValue());
-			if ((!token.getNoSpaceAfter()) && (i < this.end))
+			if ((!token.getNoSpaceAfter()) && (i < getEnd()))
 				text.append(" ");
 		}
 		return text.toString();
@@ -90,14 +129,8 @@ public class Annotation {
 	public void setId(String id){
 		this.id = id;
 	}
+	
 
-	public void setBegin(int begin) {
-		this.begin = begin;
-	}
-
-	public void setEnd(int end) {
-		this.end = end;
-	}
 
 	public static Annotation[] sortChunks(HashSet<Annotation> chunkSet) {
 		int size = chunkSet.size();

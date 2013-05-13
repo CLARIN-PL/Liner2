@@ -315,10 +315,12 @@ public class CclStreamReader extends StreamReader {
 					AnnChan ann = getAnnotationFromNode(n);
 					if (ann != null) {
 						if (annotations.containsKey(ann))
-							annotations.get(ann).setEnd(idx);
+							annotations.get(ann).addToken(idx);
 						else {
 							annotations.put(ann.toString(), 
-								new Annotation(idx, idx, ann.chan, sentence));
+								new Annotation(idx, ann.chan, sentence));
+						if(ann.head.equals("1"))
+							annotations.get(ann).setHead(idx);
 						}
 					}
 				}
