@@ -7,10 +7,10 @@ import liner2.structure.Sentence;
 import liner2.structure.Token;
 import liner2.tools.TrieDictNode;
 
-public class Arg1Feature extends Feature{
+public class Agr1Feature extends Feature{
 
 	
-	public Arg1Feature(String name){
+	public Agr1Feature(String name){
 		super(name);
 	}
 	
