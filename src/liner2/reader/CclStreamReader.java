@@ -318,7 +318,7 @@ public class CclStreamReader extends StreamReader {
 							annotations.get(ann).addToken(idx);
 						else {
 							annotations.put(ann.toString(), 
-								new Annotation(idx, ann.chan, sentence));
+								new Annotation(idx, ann.chan, Integer.parseInt(ann.number), sentence));
 						if(ann.head.equals("1"))
 							annotations.get(ann).setHead(idx);
 						}

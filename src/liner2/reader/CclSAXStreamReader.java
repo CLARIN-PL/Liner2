@@ -192,8 +192,8 @@ public class CclSAXStreamReader extends StreamReader {
 						annotations.get(ann.toString()).addToken(idx);
 					}
 					else {
-						annotations.put(ann.toString(), 
-							new Annotation(idx, ann.chan, currentSentence));
+						annotations.put(ann.toString(),
+							new Annotation(idx, ann.chan, Integer.parseInt(chanNumber), currentSentence));		
 					}
 					if(ann.head.equals("1"))
 						annotations.get(ann.toString()).setHead(idx);

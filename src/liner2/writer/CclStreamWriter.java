@@ -115,18 +115,20 @@ public class CclStreamWriter extends StreamWriter {
 		xmlw.writeCharacters("\n");
 		
 		// prepare annotation channels
-		HashSet<Annotation> chunks = sentence.getChunks();	
-		Hashtable<String, Integer> numChannels = new Hashtable<String, Integer>();
-		Hashtable<Annotation, Integer> channels = new Hashtable<Annotation, Integer>();
+		HashSet<Annotation> chunks = sentence.getChunks();
+		ArrayList<String> channels = new ArrayList<String>();
 		for (Annotation chunk : chunks) {
-			if (numChannels.containsKey(chunk.getType()))
-				numChannels.put(chunk.getType(),
-					numChannels.get(chunk.getType()) + 1);
-
-			else
-				numChannels.put(chunk.getType(), new Integer(1));
-			channels.put(chunk, numChannels.get(chunk.getType()));
+			if (chunk.getChannelIdx() == 0){
+				int lastIdx = 0;
+				for(Annotation a: chunks)
+					if (a.getType().equals(chunk.getType()) && a.getChannelIdx() > lastIdx)
+						lastIdx = a.getChannelIdx();
+				chunk.setChannelIdx(lastIdx+1);
+			}
+			if (!channels.contains(chunk.getType()))
+				channels.add(chunk.getType());
 		}
+		Collections.sort(channels);
 		
 		ArrayList<Token> tokens = sentence.getTokens();
 		for (int i = 0; i < tokens.size(); i++)
@@ -136,7 +138,7 @@ public class CclStreamWriter extends StreamWriter {
 		xmlw.writeCharacters("\n");
 	}
 	
-	private void writeToken(int idx, Token token, HashSet<Annotation> chunks, Hashtable<Annotation, Integer> channels)
+	private void writeToken(int idx, Token token, HashSet<Annotation> chunks, ArrayList<String> channels)
 		throws XMLStreamException {
 		this.indent(3);
 		xmlw.writeStartElement(TAG_TOKEN);
@@ -153,28 +155,28 @@ public class CclStreamWriter extends StreamWriter {
 		for (Tag tag : token.getTags())
 			writeTag(tag);
 		
-		Hashtable<String, Integer> strChannels = new Hashtable<String, Integer>();
-		HashSet<String> heads = new HashSet<String>();
+		Annotation[] tokenchannels = new Annotation[channels.size()];
 		for (Annotation chunk : chunks) {
 			if (chunk.getTokens().contains(idx))
-				strChannels.put(chunk.getType(), channels.get(chunk));
-			if (chunk.hasHead() && chunk.getHead() == idx)
-				heads.add(chunk.getType());
+				tokenchannels[channels.indexOf(chunk.getType())] = chunk;
 		}
-		for (Annotation chunk : chunks)
-			if (!strChannels.containsKey(chunk.getType()))
-				strChannels.put(chunk.getType(), new Integer(0));
+
+//		Collections.sort(sortedChannels);
 		
-		ArrayList<String> sortedChannels = new ArrayList<String>(strChannels.keySet());
-		Collections.sort(sortedChannels);
-		
-		for (String channel : sortedChannels) {
+		for (int chanIdx = 0; chanIdx < channels.size(); chanIdx++) {
 			this.indent(4);
 			xmlw.writeStartElement(TAG_ANN);
-			xmlw.writeAttribute(TAG_CHAN, channel.toLowerCase());
-			if (heads.contains(channel))
-				xmlw.writeAttribute(TAG_HEAD, "1");
-			xmlw.writeCharacters("" + strChannels.get(channel));
+			Annotation ann = tokenchannels[chanIdx];
+			if (ann != null){
+				xmlw.writeAttribute(TAG_CHAN, ann.getType().toLowerCase());
+				if (ann.hasHead() && ann.getHead() == idx)
+					xmlw.writeAttribute(TAG_HEAD, "1");
+				xmlw.writeCharacters("" + ann.getChannelIdx());
+			}
+			else{
+				xmlw.writeAttribute(TAG_CHAN, channels.get(chanIdx).toLowerCase());
+				xmlw.writeCharacters("0");
+			}
 			xmlw.writeEndElement();
 			xmlw.writeCharacters("\n");
 		}
