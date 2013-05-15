@@ -17,7 +17,7 @@ import liner2.tools.CorpusFactory;
 public class ChunkerFactoryItemCrfppTrain extends ChunkerFactoryItem {
 
 	public ChunkerFactoryItemCrfppTrain() {
-		super("crfpp-train:p=([1-6]):template=(.*):(ccl|iob|data)=(.*?)(:model=(.*))?");
+		super("crfpp-train:p=([1-9]+):template=(.*):(ccl|iob|data)=(.*?)(:model=(.*))?");
 	}
 
 	@Override
