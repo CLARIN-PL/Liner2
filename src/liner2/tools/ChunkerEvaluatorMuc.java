@@ -1,6 +1,7 @@
 package liner2.tools;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -210,6 +211,7 @@ public class ChunkerEvaluatorMuc {
 	public ArrayList<String> getTypes(){
 		ArrayList<String> types = new ArrayList<String>();
 		types.addAll(this.chunks.chunks.keySet());
+		Collections.sort(types);
 		return types;
 	}
 	

@@ -1,6 +1,7 @@
 package liner2.tools;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -225,7 +226,10 @@ public class ChunkerEvaluator {
 		System.out.println("Annotation           &   TP &   FP &   FN &"
 			+ " Precision & Recall  & F$_1$   \\\\");
 		System.out.println("\\hline");
-		for (String key : this.keys) {
+		ArrayList<String> keys = new ArrayList<String>();
+		keys.addAll(this.keys);
+		Collections.sort(keys);
+		for (String key : keys) {
 			int tp = this.truePositives.containsKey(key) ? this.truePositives.get(key) : 0;
 			int fp = this.falsePositives.containsKey(key) ? this.falsePositives.get(key) : 0;
 			int fn = this.falseNegatives.containsKey(key) ? this.falseNegatives.get(key) : 0;
