@@ -41,6 +41,12 @@ public class ActionBatch extends Action{
 		File file = null;
   		FileReader freader = null;
   		LineNumberReader lnreader = null;
+  		
+  		String output_format = LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FORMAT);
+  		String output_ext = output_format;
+  		if ( output_ext.equals("ccl") )
+  			output_ext = "xml";
+  		
 		int i=0;
   		try{
   			file = new File(LinerOptions.getOption(LinerOptions.OPTION_IS));
@@ -49,16 +55,22 @@ public class ActionBatch extends Action{
   			String line = "";
 			while ((line = lnreader.readLine()) != null){
 				i++;
+				
+				if ( !line.startsWith("/") )
+					line = new File(file.getParent(), line).getPath();
+				
 				System.out.println(i+": "+line);
 				StreamReader reader = ReaderFactory.get().getStreamReader(
                 		line, LinerOptions.getOption(LinerOptions.OPTION_INPUT_FORMAT));
                 ParagraphSet ps = reader.readParagraphSet();
 
                 chunker.chunkInPlace(ps);
-                		
-        		StreamWriter writer = WriterFactory.get().getStreamWriter(
-                		line+"."+LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FORMAT),
-                		LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FORMAT));
+                
+                File input = new File(line);                
+                String output_file = new File(input.getParent(), 
+                		input.getName().replaceFirst("[.][^.]+$", "") + ".ner." + output_ext).getPath();
+                
+        		StreamWriter writer = WriterFactory.get().getStreamWriter(output_file, output_format);
         		writer.writeParagraphSet(ps);
 
 				reader.close();

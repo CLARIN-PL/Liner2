@@ -45,7 +45,7 @@
 				./lib/mysql-connector-java-5.1.10.jar
 				./lib/princetonAdapter.jar"/>			
    		</manifest>	
-		<javac optimize="on" debug="yes" debuglevel="source,lines,vars" destdir="build/classes">
+		<javac optimize="on" debug="yes" debuglevel="source,lines,vars" destdir="build/classes" includeantruntime="false">
     		<compilerarg value="-Xlint:all"/>
     		<classpath refid="classpath.standard"/>
     		<src path="src/"/>
