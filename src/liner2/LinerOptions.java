@@ -456,7 +456,7 @@ public class LinerOptions {
 				.withDescription("IP address for daemon")
 				.create(OPTION_IP));
 		options.addOption(OptionBuilder.withArgName("description").hasArg()
-				.withDescription("path to maca (for batch mode)")
+				.withDescription("path to maca (for interactive mode)")
 				.create(OPTION_MACA));
 		options.addOption(OptionBuilder.withArgName("number").hasArg()
 				.withDescription("maximum number of processing threads (daemon mode)")
@@ -477,9 +477,9 @@ public class LinerOptions {
 				.withDescription("define feature template")
 				.create(OPTION_TEMPLATE));
 		options.addOption(OptionBuilder.withArgName("description").hasArg()
-				.withDescription("path to WMBT (for batch mode)")
+				.withDescription("path to WMBT (for interactive mode)")
 				.create(OPTION_WMBT));
-    	options.addOption(new Option(OPTION_SILENT, false, "does not print any additional text in batch mode"));
+    	options.addOption(new Option(OPTION_SILENT, false, "does not print any additional text in interactive mode"));
     	options.addOption(new Option(OPTION_VERBOSE, false, "print brief information about processing"));
     	options.addOption(new Option(OPTION_VERBOSE_DETAILS, false, "print detailed information about processing"));
     	return options;		
@@ -502,9 +502,9 @@ public class LinerOptions {
 		new HelpFormatter().printHelp("java -jar liner.jar <mode> [options]", options);
 		System.out.println();
     	System.out.println("Modes:");
-    	System.out.println("  batch               - ner batch mode");
-    	System.out.println("                        Parameters: -feature, -chunker, -nerd");
-        System.out.println("  batch-file          - ner batch-file mode");
+    	System.out.println("  interactive         - interactive mode");
+    	System.out.println("                        Parameters: -feature, -chunker");
+        System.out.println("  batch               - batch mode");
         System.out.println("                        Parameters: -i, -o, -is, -feature, -chunker, -nerd");
     	System.out.println("  convert             - convert text from one format to another");
     	System.out.println("                        Parameteres: -i, -o, -f, -t");

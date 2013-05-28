@@ -15,6 +15,6 @@ Pipe mode:
 
 Interactive mode for raw text (requires maca):
 
-  ./liner2.sh batch -ini model-56nam-v1/model.ini -i plain -o tuples -maca -
+  ./liner2.sh interactive -ini model-56nam-v1/model.ini -i plain -o tuples -maca -
 
 
