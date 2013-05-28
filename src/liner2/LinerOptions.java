@@ -495,6 +495,7 @@ public class LinerOptions {
     	System.out.println("*       Authors: Michał Marcińczuk (2010–2013)    *");
     	System.out.println("*                Maciej Janicki (2011)            *");
     	System.out.println("*  Contributors: Dominik Piasecki (2013)          *");
+    	System.out.println("*                Michał Krautforst (2013)         *");
     	System.out.println("*   Institution: Wrocław University of Technology.*");
     	System.out.println("--------------------------------------------------*");
     	System.out.println();
