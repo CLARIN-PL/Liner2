@@ -19,9 +19,16 @@ public abstract class StreamReader {
 	public abstract void close() throws DataFormatException;
 	public abstract boolean paragraphReady() throws DataFormatException;
 		
-	public Paragraph readParagraph() throws DataFormatException {
-		if (paragraphReady())
-			return this.readRawParagraph();
+	public Paragraph readParagraph() throws Exception {
+		if (paragraphReady()){
+			Paragraph p = this.readRawParagraph();
+			p.setAttributeIndex(this.getAttributeIndex());
+			if (!LinerOptions.get().features.isEmpty()){
+				TokenFeatureGenerator gen = new TokenFeatureGenerator(LinerOptions.get().features);
+				gen.generateFeatures(p, true);
+			}
+			return p;
+		}
 		else
 			return null;
 	}
