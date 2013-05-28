@@ -13,7 +13,11 @@
 	<target name="copy-liner">
 		<mkdir dir="${production_path}"/>
 		<copy todir="${production_path}/lib" >  
-			<fileset dir="./lib" includes="**"/>  
+			<fileset dir="./lib">
+				<include name="commons-cli-1.2.jar"/>
+				<include name="mysql-connector-java-5.1.10.jar"/>
+				<include name="princetonAdapter.jar"/>
+			</fileset>
 		</copy>
 		<copy todir="${production_path}/src" >  
 			<fileset dir="./src" includes="**"/>
