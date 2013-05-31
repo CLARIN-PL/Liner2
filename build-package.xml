@@ -32,7 +32,8 @@
 		<copy file="./README" todir="${production_path}"/>
 		<copy file="./LICENSE" todir="${production_path}"/>
 		<copy file="./INSTALL" todir="${production_path}"/>
-		<echo file="${production_path}/local.ini">-nerd ./nerd</echo> 
+		<echo file="${production_path}/local.ini"># path to a default model
+#-ini ...</echo> 
 	</target>
 
 </project>
