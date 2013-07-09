@@ -456,7 +456,7 @@ public class LinerOptions {
 				.withDescription("IP address for daemon")
 				.create(OPTION_IP));
 		options.addOption(OptionBuilder.withArgName("description").hasArg()
-				.withDescription("path to maca (for batch mode)")
+				.withDescription("path to maca (for interactive mode)")
 				.create(OPTION_MACA));
 		options.addOption(OptionBuilder.withArgName("number").hasArg()
 				.withDescription("maximum number of processing threads (daemon mode)")
@@ -477,9 +477,9 @@ public class LinerOptions {
 				.withDescription("define feature template")
 				.create(OPTION_TEMPLATE));
 		options.addOption(OptionBuilder.withArgName("description").hasArg()
-				.withDescription("path to WMBT (for batch mode)")
+				.withDescription("path to WMBT (for interactive mode)")
 				.create(OPTION_WMBT));
-    	options.addOption(new Option(OPTION_SILENT, false, "does not print any additional text in batch mode"));
+    	options.addOption(new Option(OPTION_SILENT, false, "does not print any additional text in interactive mode"));
     	options.addOption(new Option(OPTION_VERBOSE, false, "print brief information about processing"));
     	options.addOption(new Option(OPTION_VERBOSE_DETAILS, false, "print detailed information about processing"));
     	return options;		
@@ -495,33 +495,30 @@ public class LinerOptions {
     	System.out.println("*       Authors: Michał Marcińczuk (2010–2013)    *");
     	System.out.println("*                Maciej Janicki (2011)            *");
     	System.out.println("*  Contributors: Dominik Piasecki (2013)          *");
+    	System.out.println("*                Michał Krautforst (2013)         *");
     	System.out.println("*   Institution: Wrocław University of Technology.*");
     	System.out.println("--------------------------------------------------*");
     	System.out.println();
 		new HelpFormatter().printHelp("java -jar liner.jar <mode> [options]", options);
 		System.out.println();
     	System.out.println("Modes:");
-    	System.out.println("  batch               - ner batch mode");
-    	System.out.println("                        Parameters: -feature, -chunker, -nerd");
-        System.out.println("  batch-file          - ner batch-file mode");
-        System.out.println("                        Parameters: -i, -o, -is, -feature, -chunker, -nerd");
+    	System.out.println("  interactive         - interactive mode");
+    	System.out.println("                        Parameters: -ini, -o");
+        System.out.println("  batch               - process list of files");
+        System.out.println("                        Parameters: -i, -o, -is, -ini");
     	System.out.println("  convert             - convert text from one format to another");
-    	System.out.println("                        Parameteres: -i, -o, -f, -t");
+    	System.out.println("                        Parameteres: -i, -o, -f, -t, -ini");
        	System.out.println("  daemon              - Listen and process requests from a given database");
-    	System.out.println("                        Parameteres: -p, -db_*, -feature, -chunker, -nerd, -use");
-    	//System.out.println("  dicts <arg1>        - print dictionary statistics");
+    	System.out.println("                        Parameteres: -p, -db_*, -ini");
     	System.out.println("  eval                - evaluate chunker on given input");
-    	System.out.println("                        Parameters: -i, -f, -feature, -chunker, -nerd");
+    	System.out.println("                        Parameters: -i, -f, -ini");
     	System.out.println("  evalcv              - perform 10-fold cross validation");
-    	System.out.println("                        Parameters: -i, -f, -feature, -chunker, -nerd");
+    	System.out.println("                        Parameters: -i, -f, -ini");
     	System.out.println("  pipe                - annotate data");
-    	System.out.println("                        Parameters: -i, (-f), -o, (-t), -feature, -chunker, -nerd");
+    	System.out.println("                        Parameters: -i, (-f), -o, (-t), -ini");
     	System.out.println("  train               - train CRFPP chunker");
-    	System.out.println("                        Parameters: -feature, -chunker, -template, -nerd");
-    	//System.out.println("  tag <text>          - tag `text` using chunker specified by `--chuner` parameters");
+    	System.out.println("                        Parameters: -ini");
     	System.out.println("");
-    	//System.out.println("Filters:");
-    	//this.printFilters();
     	System.out.println("");
     	System.out.println("Chunker factory (patterns for `-chunker` parameter):");
     	System.out.println(ChunkerFactory.getDescription());
@@ -531,14 +528,4 @@ public class LinerOptions {
 		Main.log(this.configurationDescription);
 	}
     
-	/**
-	 * Print list of activated filters.
-	 */
-	public void printFilters(){
-		Main.log(">> Filters:");
-//		int i=1;
-//		for (Filter filter : this.filters)
-//			Main.log("  "+(i++)+") "+filter.getDescription());
-	}
-
 }

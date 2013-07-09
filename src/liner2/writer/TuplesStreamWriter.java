@@ -44,7 +44,6 @@ public class TuplesStreamWriter extends StreamWriter {
 			Annotation[] chunks = Annotation.sortChunks(sentence.getChunks());
 			for (Annotation c : chunks) 
 				writeChunk(c, sentence);			
-			this.ow.newLine();
 			
 			for (Token t : sentence.getTokens())
 				this.sentenceOffset += t.getFirstValue().length();

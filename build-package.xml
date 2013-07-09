@@ -2,19 +2,22 @@
 
 <project name="Liner2 — a module for named entity recognition for Polish" default="make" basedir=".">
 
-	<property name="nerd_path" value="../nerd" />
-	<property name="production_path" value="../liner2_production/liner2.2.2" />
+	<property name="production_path" value="../liner2_production/liner2.3" />
 
 	<target name="clean">
   		<delete dir="${production_path}"/>
 	</target>
 
-	<target name="make" depends="clean,copy-liner,copy-nerd"/>		
+	<target name="make" depends="clean,copy-liner"/>		
 
 	<target name="copy-liner">
 		<mkdir dir="${production_path}"/>
 		<copy todir="${production_path}/lib" >  
-			<fileset dir="./lib" includes="**"/>  
+			<fileset dir="./lib">
+				<include name="commons-cli-1.2.jar"/>
+				<include name="mysql-connector-java-5.1.10.jar"/>
+				<include name="princetonAdapter.jar"/>
+			</fileset>
 		</copy>
 		<copy todir="${production_path}/src" >  
 			<fileset dir="./src" includes="**"/>
@@ -29,15 +32,8 @@
 		<copy file="./README" todir="${production_path}"/>
 		<copy file="./LICENSE" todir="${production_path}"/>
 		<copy file="./INSTALL" todir="${production_path}"/>
-		<echo file="${production_path}/local.ini">-nerd ./nerd</echo> 
-	</target>
-
-	<target name="copy-nerd">
-		<mkdir dir="${production_path}/nerd"/>
-		<exec executable="bash" dir="${nerd_path}/">
-			<arg value="-c"/>
-			<arg value="git archive --format=tar master | tar -x -C ${production_path}/nerd"/>
-		</exec>
+		<echo file="${production_path}/local.ini"># path to a default model
+#-ini ...</echo> 
 	</target>
 
 </project>

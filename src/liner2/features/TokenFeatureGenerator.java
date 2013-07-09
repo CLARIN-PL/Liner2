@@ -67,14 +67,18 @@ public class TokenFeatureGenerator {
 	public void generateFeatures(ParagraphSet ps) throws Exception {
 		ps.getAttributeIndex().update(this.attributeIndex.allAtributes());
 		for (Paragraph p : ps.getParagraphs()){
-			generateFeatures(p);
+			generateFeatures(p, false);
 		}
 		ps.getAttributeIndex().update(LinerOptions.get().featureNames);
 	}
 
-	public void generateFeatures(Paragraph p) throws Exception {
+	public void generateFeatures(Paragraph p, boolean updateAttributeIndex) throws Exception {
+		if(updateAttributeIndex)
+			p.getAttributeIndex().update(this.attributeIndex.allAtributes());
 		for (Sentence s : p.getSentences())
 			generateFeatures(s);
+		if(updateAttributeIndex)
+			p.getAttributeIndex().update(LinerOptions.get().featureNames);
 	}
 
 	public void generateFeatures(Sentence s) throws Exception {
