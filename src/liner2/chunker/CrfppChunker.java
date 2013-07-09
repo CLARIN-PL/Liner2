@@ -58,35 +58,15 @@ public class CrfppChunker extends Chunker
 		tagger.clear();
 		int numAttrs = sentence.getAttributeIndexLength();
 		for (Token token : sentence.getTokens()) {
-			String oStr = "";
-			for (int i = 0; i < numAttrs; i++)
-				oStr += " " + token.getAttributeValue(i);
-			tagger.add(oStr.trim());
+			StringBuilder oStr = new StringBuilder();
+			for (int i = 0; i < numAttrs; i++){
+				oStr.append(" ");
+				oStr.append(token.getAttributeValue(i));
+			}
+				//oStr += " " + token.getAttributeValue(i);
+			tagger.add(oStr.toString().trim());
 		}
-		tagger.parse();
-		
-//      String[] tokens = cSeq.toString().split("\\s");
-		//
-//		        if ( tokens.length != RegexLineTagParser.currentSentenceFeatures.size() ){
-//		        	String text = "Incompatible number of tokens.\n";
-//		        	text += "Sentence: >>>" + cSeq + "<<<";
-//		        	text += "tokens.length=" + tokens.length + " \n";
-//		        	text += "RegexLineTagParser.currentSentenceFeatures.size()=" + RegexLineTagParser.currentSentenceFeatures.size();
-//		        	RegexLineTagParser.printFeatures();
-//		        	throw new Error(text);
-//		        }
-//		        
-//		        tagger.clear();
-//		        
-//		        for (int i = 0; i < tokens.length; i++) {
-//		            String oStr = "";
-//		            for ( int j=0; j<RegexLineTagParser.currentSentenceFeatures.get(i).length; j++)            
-//		            	oStr += " " + RegexLineTagParser.currentSentenceFeatures.get(i)[j];          
-//		                        
-//		            tagger.add(oStr.trim());
-//		        }
-//		        
-//		        tagger.parse();  		
+		tagger.parse();		
 	}
 	
 	private AnnotationSet readTaggerOutput(Sentence sentence){
