@@ -151,7 +151,10 @@ public class Annotation {
 	}
 	
 
-
+	public void setType(String type){
+		this.type = type;
+	}
+	
 	public static Annotation[] sortChunks(HashSet<Annotation> chunkSet) {
 		int size = chunkSet.size();
 		Annotation[] sorted = new Annotation[size];

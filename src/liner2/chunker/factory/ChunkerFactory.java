@@ -2,13 +2,11 @@ package liner2.chunker.factory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
 
+import liner2.Main;
+import liner2.chunker.Chunker;
 import liner2.chunker.ensemble.MajorityVotingChunker;
 import liner2.chunker.ensemble.UnionChunker;
-import liner2.chunker.Chunker;
-import liner2.Main;
 
 public class ChunkerFactory {
 
@@ -19,6 +17,8 @@ public class ChunkerFactory {
 	
 	private ChunkerFactory(){
 		this.items.add(new ChunkerFactoryItemAdu());
+		this.items.add(new ChunkerFactoryItemAnnotationClassifierTrain());
+		this.items.add(new ChunkerFactoryItemAnnotationClassifierLoad());
 		this.items.add(new ChunkerFactoryItemEnsamble());
 		this.items.add(new ChunkerFactoryItemHeuristic());
 		this.items.add(new ChunkerFactoryItemCrfppFix());

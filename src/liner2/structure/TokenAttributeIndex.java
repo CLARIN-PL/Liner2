@@ -1,6 +1,7 @@
 package liner2.structure;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Klasa reprezentuje indeks atrybutów będący mapowaniem nazwy atrybutu na unikalny indeks.
@@ -14,6 +15,8 @@ public class TokenAttributeIndex {
 	 */
 	ArrayList<String> indexes = new ArrayList<String>();
 	
+	HashMap<String, Integer> nameToIndex = new HashMap<String, Integer>();
+	
 	/**
 	 * TODO
 	 * Dodaje nowy atrybut do indeksu i zwraca jego numer porządkowy (indeks).
@@ -22,7 +25,9 @@ public class TokenAttributeIndex {
 	 */
 	public int addAttribute(String name){
 		indexes.add(name);
-		return indexes.size()-1;
+		Integer index = indexes.size()-1;
+		this.nameToIndex.put(name, index);
+		return index;
 	}
 	
 	/**
@@ -50,6 +55,7 @@ public class TokenAttributeIndex {
 	 */
 	public int getIndex(String name){
 		return indexes.indexOf(name);
+		//return this.nameToIndex.get(name);
 	}
 	
 	public String getName(int index){
