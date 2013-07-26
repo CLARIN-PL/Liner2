@@ -141,6 +141,7 @@ public class AnnotationClassifierChunker extends Chunker
 			ObjectInputStream in = new ObjectInputStream(stream);
 			this.classes = (FastVector) in.readObject();
 			this.classifier = (Classifier) in.readObject();
+            this.filter = (StringToNominal) in.readObject();
 			in.close();
 			stream.close();
 		} catch (FileNotFoundException e) {
@@ -160,6 +161,7 @@ public class AnnotationClassifierChunker extends Chunker
 			ObjectOutputStream out = new ObjectOutputStream(stream);
 			out.writeObject(this.classes);
 			out.writeObject(this.classifier);
+            out.writeObject(this.filter);
 			out.close();
 			stream.close();
 		} catch (FileNotFoundException e) {
@@ -211,9 +213,6 @@ public class AnnotationClassifierChunker extends Chunker
     		instances.add(instance);
 		}
 
-    	//this.filter = new StringToNominal();
-//    	filter.setAttributeRange("first-" + this.featureGenerator.getFeaturesCount());
-//    	filter.setInputFormat(instances);
     	for ( int i=0; i<instances.numInstances(); i++)
     		filter.input(instances.instance(i));
     	
