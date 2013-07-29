@@ -51,7 +51,7 @@ public class ChunkerEvaluator {
 	private int globalFalsePositives = 0;
 	private int globalFalseNegatives = 0;
 
-    // grupowanie bez uwzglądnienia kanałów anotacji
+    //<<< grupowanie bez uwzglądnienia kanałów anotacji
     private int globalTruePositivesRangeOnly = 0;
     private int globalFalsePositivesRangeOnly = 0;
     private int globalFalseNegativesRangeOnly = 0;
@@ -59,6 +59,19 @@ public class ChunkerEvaluator {
     private float globalPrecisionRangeOnly = 0.0f;
     private float globalRecallRangeOnly = 0.0f;
     private float globalFMeasureRangeOnly = 0.0f;
+    // >>>
+
+    //<<< grupowanie anotacji o granicach wystepujacych juz w korpusie
+    private HashMap<String, Float> precisionExistingRangeOnly = new HashMap<String, Float>();
+    private HashMap<String, Float> fMeasureExistingRangeOnly = new HashMap<String, Float>();
+
+    private HashMap<String, Integer> falsePositivesExistingRangeOnly = new HashMap<String, Integer>();
+
+    private float globalPrecisionExistingRangeOnly = 0.0f;
+    private float globalFMeasureExistingRangeOnly = 0.0f;
+
+    private int globalFalsePositivesExistingRangeOnly = 0;
+    //>>>
 	
 	private int sentenceNum = 0;
 	
@@ -83,6 +96,7 @@ public class ChunkerEvaluator {
 		}
 		recalculateStats();
         recalculateRangeOnlyStats();
+        recalculateExistingRangeOnlyStats();
 	}
 	
 	/**
@@ -171,7 +185,24 @@ public class ChunkerEvaluator {
             if(!truePositiveSkippedChannelCheck)
                 this.globalFalseNegativesRangeOnly += 1;
 		}
-		
+
+        // zlicznie falsePositives dla anotacji o granicah wystepujacych we wzorcowym korpusie
+        for (Annotation testedChunk : testedChunkSet) {
+            for (Annotation trueChunk : trueChunkSetIter) {
+                if(testedChunk.getTokens().equals(trueChunk.getTokens())){
+                    // wpisz klucz do tablicy, jeśli jeszcze nie ma
+                    if (!this.falsePositivesExistingRangeOnly.containsKey(testedChunk.getType())) {
+                        this.falsePositivesExistingRangeOnly.put(testedChunk.getType(), new Integer(0));
+                    }
+                    // dodaj do istniejącego klucza
+                    this.falsePositivesExistingRangeOnly.put(testedChunk.getType(),
+                            this.falsePositivesExistingRangeOnly.get(testedChunk.getType()) + 1);
+                    this.globalFalsePositivesExistingRangeOnly += 1;
+                    break;
+                }
+            }
+        }
+        
 		if (!this.quiet)
 			printSentenceResults(sentence, sentence.getId(), myTruePositives, testedChunkSet, trueChunkSet);
 				
@@ -279,6 +310,26 @@ public class ChunkerEvaluator {
         System.out.println(String.format(" %4d & %4d & %4d &   %6.2f%% & %6.2f%% & %6.2f%%", this.globalTruePositivesRangeOnly,
                 this.globalFalsePositivesRangeOnly, this.globalFalseNegativesRangeOnly,
                 this.globalPrecisionRangeOnly*100, this.globalRecallRangeOnly*100, this.globalFMeasureRangeOnly*100));
+        System.out.println("====================================================");
+        System.out.println("# Existing range annotation match evaluation #");
+        System.out.println("====================================================");
+        System.out.println("Annotation           &   TP &   FP &   FN &"
+                + " Precision & Recall  & F$_1$   \\\\");
+        System.out.println("\\hline");
+        for (String key : keys) {
+            int tp = this.truePositives.containsKey(key) ? this.truePositives.get(key) : 0;
+            int fp = this.falsePositivesExistingRangeOnly.containsKey(key) ? this.falsePositivesExistingRangeOnly.get(key) : 0;
+            int fn = this.falseNegatives.containsKey(key) ? this.falseNegatives.get(key) : 0;
+
+            System.out.println(String.format("%-20s & %4d & %4d & %4d &"
+                    + "   %6.2f%% & %6.2f%% & %6.2f%% \\\\", key, tp, fp, fn,
+                    this.precisionExistingRangeOnly.get(key)*100, this.recall.get(key)*100, this.fMeasureExistingRangeOnly.get(key)*100));
+        }
+        System.out.println("\\hline");
+        System.out.println(String.format("*TOTAL*              & %4d & %4d & %4d &"
+                + "   %6.2f%% & %6.2f%% & %6.2f%%", this.globalTruePositives,
+                this.globalFalsePositivesExistingRangeOnly, this.globalFalseNegatives,
+                this.globalPrecisionExistingRangeOnly*100, this.globalRecall*100, this.globalFMeasureExistingRangeOnly*100));
         System.out.println("----------------------------------------------------");
     }
 	
@@ -382,6 +433,35 @@ public class ChunkerEvaluator {
                     (this.globalTruePositivesRangeOnly + this.globalFalseNegativesRangeOnly);
             this.globalFMeasureRangeOnly = 2 * (float)this.globalTruePositivesRangeOnly /
                     (2 * this.globalTruePositivesRangeOnly + this.globalFalsePositivesRangeOnly + this.globalFalseNegativesRangeOnly);
+        }
+    }
+
+    private void recalculateExistingRangeOnlyStats() {
+        for (String key : this.keys) {
+            int tp = this.truePositives.containsKey(key) ? this.truePositives.get(key) : 0;
+            int fp = this.falsePositivesExistingRangeOnly.containsKey(key) ? this.falsePositivesExistingRangeOnly.get(key) : 0;
+            int fn = this.falseNegatives.containsKey(key) ? this.falseNegatives.get(key) : 0;
+
+            // zabezpieczenie przed zerowym mianownikiem
+            if (tp == 0) {
+                this.precisionExistingRangeOnly.put(key, new Float(0));
+                this.fMeasureExistingRangeOnly.put(key, new Float(0));
+            }
+            else {
+                this.precisionExistingRangeOnly.put(key, new Float((float)tp) / (tp + fp));
+                this.fMeasureExistingRangeOnly.put(key, new Float((float)2 * tp) / (2 * tp + fp + fn));
+            }
+        }
+
+        if (this.globalTruePositives == 0) {
+            this.globalPrecisionExistingRangeOnly = 0;
+            this.globalFMeasureExistingRangeOnly = 0;
+        }
+        else {
+            this.globalPrecisionExistingRangeOnly = (float)this.globalTruePositives /
+                    (this.globalTruePositives + this.globalFalsePositivesExistingRangeOnly);
+            this.globalFMeasureExistingRangeOnly = 2 * (float)this.globalTruePositives /
+                    (2 * this.globalTruePositives + this.globalFalsePositivesExistingRangeOnly + this.globalFalseNegatives);
         }
     }
 	
