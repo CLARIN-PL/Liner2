@@ -50,6 +50,15 @@ public class ChunkerEvaluator {
 	private int globalTruePositives = 0;
 	private int globalFalsePositives = 0;
 	private int globalFalseNegatives = 0;
+
+    // grupowanie bez uwzglądnienia kanałów anotacji
+    private int globalTruePositivesRangeOnly = 0;
+    private int globalFalsePositivesRangeOnly = 0;
+    private int globalFalseNegativesRangeOnly = 0;
+
+    private float globalPrecisionRangeOnly = 0.0f;
+    private float globalRecallRangeOnly = 0.0f;
+    private float globalFMeasureRangeOnly = 0.0f;
 	
 	private int sentenceNum = 0;
 	
@@ -73,6 +82,7 @@ public class ChunkerEvaluator {
 			this.evaluate(sentence, chunkings.get(sentence), chunkigsRef.get(sentence));
 		}
 		recalculateStats();
+        recalculateRangeOnlyStats();
 	}
 	
 	/**
@@ -107,12 +117,13 @@ public class ChunkerEvaluator {
 					this.truePositives.put(testedChunk.getType(), 
 						this.truePositives.get(testedChunk.getType()) + 1);
 					this.globalTruePositives += 1;
+                    this.globalTruePositivesRangeOnly += 1;
 					// oznacz jako TruePositive
 					myTruePositives.add(testedChunk);
 					trueChunkSet.remove(trueChunk);
 					testedChunkSet.remove(testedChunk);
 				}
-				
+
 		// w testedChunkSet zostały falsePositives
 		for (Annotation testedChunk : testedChunkSet) {
 			// wpisz klucz do tablicy, jeśli jeszcze nie ma
@@ -126,6 +137,15 @@ public class ChunkerEvaluator {
 			this.falsePositives.put(testedChunk.getType(),
 				this.falsePositives.get(testedChunk.getType()) + 1);
 			this.globalFalsePositives += 1;
+            Boolean  truePositiveSkippedChannelCheck = false;
+            for(Annotation trueChunk : trueChunkSet)
+                if(testedChunk.getTokens().equals(trueChunk.getTokens()) && testedChunk.getSentence().equals(trueChunk.getSentence()))   {
+                    this.globalTruePositivesRangeOnly += 1;
+                    truePositiveSkippedChannelCheck = true;
+                    break;
+                }
+            if(!truePositiveSkippedChannelCheck)
+                this.globalFalsePositivesRangeOnly += 1;
 		}
 				
 		// w trueChunkSet zostały falseNegatives
@@ -141,6 +161,15 @@ public class ChunkerEvaluator {
 			this.falseNegatives.put(trueChunk.getType(),
 				this.falseNegatives.get(trueChunk.getType()) + 1);
 			this.globalFalseNegatives += 1;
+
+            Boolean  truePositiveSkippedChannelCheck = false;
+            for(Annotation testedChunk : testedChunkSet)
+                if(testedChunk.getTokens().equals(trueChunk.getTokens()) && testedChunk.getSentence().equals(trueChunk.getSentence()))   {
+                    truePositiveSkippedChannelCheck = true;
+                    break;
+                }
+            if(!truePositiveSkippedChannelCheck)
+                this.globalFalseNegativesRangeOnly += 1;
 		}
 		
 		if (!this.quiet)
@@ -242,9 +271,16 @@ public class ChunkerEvaluator {
 		System.out.println(String.format("*TOTAL*              & %4d & %4d & %4d &"
 			+ "   %6.2f%% & %6.2f%% & %6.2f%%", this.globalTruePositives,
 			this.globalFalsePositives, this.globalFalseNegatives,
-			this.globalPrecision*100, this.globalRecall*100, this.globalFMeasure*100));		
-		System.out.println("----------------------------------------------------");
-	}
+			this.globalPrecision*100, this.globalRecall*100, this.globalFMeasure*100));
+        System.out.println("====================================================");
+        System.out.println("# Range only evaluation (skipped channel comparision) #");
+        System.out.println("====================================================");
+        System.out.println("   TP &   FP &   FN &" + " Precision & Recall  & F$_1$   \\\\");
+        System.out.println(String.format(" %4d & %4d & %4d &   %6.2f%% & %6.2f%% & %6.2f%%", this.globalTruePositivesRangeOnly,
+                this.globalFalsePositivesRangeOnly, this.globalFalseNegativesRangeOnly,
+                this.globalPrecisionRangeOnly*100, this.globalRecallRangeOnly*100, this.globalFMeasureRangeOnly*100));
+        System.out.println("----------------------------------------------------");
+    }
 	
 	/**
 	 * Dołącza do danych zawartość innego obiektu ChunkerEvaluator.
@@ -300,7 +336,7 @@ public class ChunkerEvaluator {
 	 * Oblicz statystyki.
 	 */
 	private void recalculateStats() {
-		for (String key : this.keys) {
+        for (String key : this.keys) {
 			int tp = this.truePositives.containsKey(key) ? this.truePositives.get(key) : 0;
 			int fp = this.falsePositives.containsKey(key) ? this.falsePositives.get(key) : 0;
 			int fn = this.falseNegatives.containsKey(key) ? this.falseNegatives.get(key) : 0;
@@ -332,6 +368,22 @@ public class ChunkerEvaluator {
 				(2 * this.globalTruePositives + this.globalFalsePositives + this.globalFalseNegatives);
 		}
 	}
+
+    private void recalculateRangeOnlyStats() {
+        if (this.globalTruePositivesRangeOnly == 0) {
+            this.globalPrecisionRangeOnly = 0;
+            this.globalRecallRangeOnly = 0;
+            this.globalFMeasureRangeOnly = 0;
+        }
+        else {
+            this.globalPrecisionRangeOnly = (float)this.globalTruePositivesRangeOnly /
+                    (this.globalTruePositivesRangeOnly + this.globalFalsePositivesRangeOnly);
+            this.globalRecallRangeOnly = (float)this.globalTruePositivesRangeOnly /
+                    (this.globalTruePositivesRangeOnly + this.globalFalseNegativesRangeOnly);
+            this.globalFMeasureRangeOnly = 2 * (float)this.globalTruePositivesRangeOnly /
+                    (2 * this.globalTruePositivesRangeOnly + this.globalFalsePositivesRangeOnly + this.globalFalseNegativesRangeOnly);
+        }
+    }
 	
 	private void printSentenceResults(Sentence sentence, String paragraphId, 
 		HashSet<Annotation> truePositives, HashSet<Annotation> falsePositives, 
