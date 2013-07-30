@@ -38,18 +38,15 @@ public class AnnotationClassifierChunker extends Chunker
 	private Classifier classifier = null;
 	private FastVector classes = null;
 	private StringToNominal filter = null;
+    private List <String> features;
 	
 	/**
 	 * 
 	 * @param inputChunker
 	 */
-    public AnnotationClassifierChunker(Chunker inputChunker) {
+    public AnnotationClassifierChunker(Chunker inputChunker, List <String> features) {
     	
-    	List<String> features = new ArrayList<String>();
-    	for (int i=-3; i<=3; i++)
-    		if ( i != 0 )
-    			features.add("base:" + i);
-    	
+    	this.features = features;
     	this.featureGenerator = new AnnotationFeatureGenerator(features);
     	this.inputChunker = inputChunker;
     }

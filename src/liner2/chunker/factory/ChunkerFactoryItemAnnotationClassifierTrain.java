@@ -1,5 +1,9 @@
 package liner2.chunker.factory;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 
 import liner2.Main;
@@ -14,7 +18,7 @@ import liner2.tools.ParameterException;
 public class ChunkerFactoryItemAnnotationClassifierTrain extends ChunkerFactoryItem {
 
 	public ChunkerFactoryItemAnnotationClassifierTrain() {
-		super("classifier-train:(ccl|iob|data)=([^:]*?)(:model=([^:]*))?(:base=(.*))?");
+		super("classifier-train:(ccl|iob|data)=([^:]*?)(:model=([^:]*))?(:features=([^:]*))?(:base=(.*))?");
 	}
 
 	@Override
@@ -25,11 +29,11 @@ public class ChunkerFactoryItemAnnotationClassifierTrain extends ChunkerFactoryI
 		
 		if ( !m.find() )
 			return null;
-		
         String inputFormat = m.group(1);
         String inputFile = m.group(2);
         String outputFile = m.group(4);
-        String inputClassifier = m.group(6);
+        String featuresFile = m.group(6);
+        String inputClassifier = m.group(8);
 
 		Chunker baseChunker = null;
 		
@@ -38,8 +42,20 @@ public class ChunkerFactoryItemAnnotationClassifierTrain extends ChunkerFactoryI
 			if (baseChunker == null)
 				throw new ParameterException("Annotation Classifier: undefined base chunker: " + inputClassifier);
 		}
-		
-		AnnotationClassifierChunker chunker = new AnnotationClassifierChunker(baseChunker);
+
+        BufferedReader br = new BufferedReader(new FileReader(featuresFile));
+        List<String> features = new ArrayList<String>();
+        try {
+            String line = br.readLine();
+            while (line != null) {
+                features.add(line);
+                line = br.readLine();
+            }
+        } finally {
+            br.close();
+        }
+
+		AnnotationClassifierChunker chunker = new AnnotationClassifierChunker(baseChunker, features);
 
         if ((inputFormat.equals("iob")) || (inputFormat.equals("ccl"))) {
         	Main.log("--> Training on file=" + inputFile);            
