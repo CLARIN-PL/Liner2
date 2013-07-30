@@ -96,13 +96,21 @@ public class AnnotationClassifierChunker extends Chunker
     	instances.setClassIndex(this.featureGenerator.getFeaturesCount());
     	    	
     	for ( Sentence sentence : paragraphSet.getSentences() ){
+
+            List<HashMap<Annotation,String>> sentenceFeatures = this.featureGenerator.generate(sentence);
+
     		for (Annotation ann : sentence.getChunks()){
 	    		List<String> annotationFeatures = this.featureGenerator.generate(ann);
-	    		Instance instance = new Instance(annotationFeatures.size() + 1);
+	    		Instance instance = new Instance(this.featureGenerator.getFeaturesCount() + 1);
+
 	    		for (int i=0; i<annotationFeatures.size(); i++){
 	    			instance.setValue((Attribute)fva.elementAt(i), annotationFeatures.get(i));
 	    		}
-	    		instance.setValue((Attribute)fva.elementAt(annotationFeatures.size()), 
+
+                for (int i=annotationFeatures.size(); i<sentenceFeatures.size(); i++){
+                     instance.setValue((Attribute)fva.elementAt(i+annotationFeatures.size()),sentenceFeatures.get(i).get(ann));
+                }
+	    		instance.setValue((Attribute)fva.elementAt(this.featureGenerator.getFeaturesCount()),
 	    				ann.getType());
 	    		instances.add(instance);
     		}
