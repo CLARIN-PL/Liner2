@@ -10,6 +10,8 @@
   		<pathelement location="${production_path}/lib/mysql-connector-java-5.1.10.jar"/>
 		<pathelement location="${production_path}/lib/princetonAdapter.jar"/>
 		<pathelement location="${production_path}/lib/weka-3.6.9.jar"/>
+		<pathelement location="${production_path}/lib/maltparser-1.7.1.jar"/>
+		<pathelement location="${production_path}/lib/nlog4j-1.2.25.jar"/>
 	</path>
 	
 	<target name="clean">
@@ -37,6 +39,8 @@
 		<copy file="lib/mysql-connector-java-5.1.10.jar" todir="${production_path}/lib"/>
 		<copy file="lib/princetonAdapter.jar" todir="${production_path}/lib"/>
 		<copy file="lib/weka-3.6.9.jar" todir="${production_path}/lib"/>
+		<copy file="lib/maltparser-1.7.1.jar" todir="${production_path}/lib"/>
+		<copy file="lib/nlog4j-1.2.25.jar" todir="${production_path}/lib"/>
 		<delete dir="build/classes"/>
 		<mkdir dir="build/classes"/>
 		<manifest file="MANIFEST.MF">
@@ -46,7 +50,9 @@
 				./lib/CRFPP.jar
 				./lib/mysql-connector-java-5.1.10.jar
 				./lib/weka-3.6.9.jar
-				./lib/princetonAdapter.jar"/>			
+				./lib/princetonAdapter.jar
+				./lib/maltparser-1.7.1.jar
+				./lib/nlog4j-1.2.25.jar"/>			
    		</manifest>	
 		<javac optimize="on" debug="yes" debuglevel="source,lines,vars" destdir="build/classes" includeantruntime="false">
     		<compilerarg value="-Xlint:all"/>

@@ -1,5 +1,6 @@
 package liner2.features.annotations;
 
+import com.mysql.jdbc.StringUtils;
 import liner2.structure.Annotation;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
@@ -8,11 +9,9 @@ import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,10 +26,12 @@ public class AnnotationFeatureMalt extends AnnotationSentenceFeature {
     private HashMap<String, String> nkjpToCoNLLPos = getnkjpToCoNLLPos();
 
 
-    public AnnotationFeatureMalt(String model_path, int distance, String type) {
+    public AnnotationFeatureMalt(String modelPath, int distance, String type) {
         try {
             malt =  new MaltParserService();
-            malt.initializeParserModel(String.format("-c %s -m parse", model_path));
+
+            File modelFile = new File(modelPath);
+            malt.initializeParserModel(String.format("-c %s -m parse -w %s", modelFile.getName(), modelFile.getParent()));
         } catch (MaltChainedException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
@@ -40,7 +41,7 @@ public class AnnotationFeatureMalt extends AnnotationSentenceFeature {
     @Override
     public HashMap<Annotation, String> generate(Sentence sent) {
 
-
+        convertToCoNLL(sent);
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -55,8 +56,26 @@ public class AnnotationFeatureMalt extends AnnotationSentenceFeature {
             Token token = it.next();
             tokData.append(token.getAttributeValue(attributes.getIndex("orth"))+"\t");
             tokData.append(token.getAttributeValue(attributes.getIndex("base"))+"\t");
+            String ctag =  token.getAttributeValue(attributes.getIndex("ctag"));
+            System.out.println("ctag: "+ctag);
+            List<String> ctag_elements = Arrays.asList(ctag.split(":"));
+            String nkjpPos = ctag_elements.get(0);
 
-
+            tokData.append(nkjpToCoNLLPos.get(nkjpPos)+"\t");
+            tokData.append(nkjpPos+"\t");
+            StringBuilder feats = new StringBuilder();
+            boolean first = true;
+            for(String el: ctag_elements.subList(1,ctag_elements.size())){
+                if(first)
+                    first = false;
+                else
+                    feats.append("|");
+                feats.append(el);
+            }
+            tokData.append(feats.length() != 0 ? feats.toString() : "_"+"\t");
+            tokData.append("_"+"\t");
+            tokData.append("_"+"\t");
+            System.out.println(tokData.toString());
 
             tokens.add(tokData.toString());
         }

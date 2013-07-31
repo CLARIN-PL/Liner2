@@ -17,6 +17,8 @@
 				<include name="commons-cli-1.2.jar"/>
 				<include name="mysql-connector-java-5.1.10.jar"/>
 				<include name="princetonAdapter.jar"/>
+				<include name="maltparser-1.7.1.jar"/>
+				<include name="nlog4j-1.2.25.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="${production_path}/src" >  
