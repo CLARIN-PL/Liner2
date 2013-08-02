@@ -7,6 +7,8 @@ import liner2.structure.Token;
 import liner2.structure.TokenAttributeIndex;
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
+import org.maltparser.core.syntaxgraph.DependencyStructure;
+import org.maltparser.core.syntaxgraph.node.DependencyNode;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,16 +26,20 @@ public class AnnotationFeatureMalt extends AnnotationSentenceFeature {
 
     private MaltParserService malt;
     private HashMap<String, String> nkjpToCoNLLPos = getnkjpToCoNLLPos();
+    private String type;
+    private int distance;
 
 
     public AnnotationFeatureMalt(String modelPath, int distance, String type) {
+        this.type = type;
+        this.distance = distance;
         try {
             malt =  new MaltParserService();
 
             File modelFile = new File(modelPath);
             malt.initializeParserModel(String.format("-c %s -m parse -w %s", modelFile.getName(), modelFile.getParent()));
         } catch (MaltChainedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
     }
@@ -41,45 +47,130 @@ public class AnnotationFeatureMalt extends AnnotationSentenceFeature {
     @Override
     public HashMap<Annotation, String> generate(Sentence sent) {
 
-        convertToCoNLL(sent);
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        List<String[]> coNLLTokens = convertToCoNLL(sent);
+        HashMap<Integer, Annotation> annotatedTokens = new HashMap<Integer, Annotation>();
+        for( Annotation ann: sent.getChunks()){
+            if(ann.getBegin() != ann.getEnd())
+                annotatedTokens.put(ann.getBegin(), ann);
+        }
+        int newIdx = 1;
+        HashMap<Annotation, Integer> wrappedAnnotationsIndexes = new HashMap<Annotation, Integer>();
+        List<String[]> wrappedTokens = new ArrayList<String[]>();
+        for(int tokIdx=0; tokIdx<coNLLTokens.size(); tokIdx++){
+            if(annotatedTokens.containsKey(tokIdx)){
+                List<String> tokens = new ArrayList<String>();
+                Annotation ann =  annotatedTokens.get(tokIdx);
+                boolean foundHead = false;
+                int headIdx = tokIdx;
+                for(Integer annTokIdx: ann.getTokens())
+                    if(!foundHead && coNLLTokens.get(annTokIdx)[4].equals("subst")){
+                        headIdx = tokIdx;
+                        foundHead =true;
+                    }
+                tokIdx = ann.getEnd();
+
+                String[] wrappedAnn = coNLLTokens.get(headIdx);
+                wrappedAnn[0] = String.valueOf(newIdx);
+                wrappedAnn[1] = ann.getText();
+                wrappedAnn[2] = ann.getBaseText();
+                wrappedTokens.add(wrappedAnn);
+                wrappedAnnotationsIndexes.put(ann, wrappedTokens.size()-1);
+            }
+            else{
+                String[] token = coNLLTokens.get(tokIdx);
+                token[0] = String.valueOf(newIdx);
+                wrappedTokens.add(token);
+            }
+            newIdx++;
+        }
+
+        String[] dataForMalt = new String[wrappedTokens.size()];
+        for(int i=0; i<wrappedTokens.size(); i++)
+            dataForMalt[i] = join(Arrays.asList(wrappedTokens.get(i)), "\t");
+
+        HashMap<Annotation, String> features = new HashMap<Annotation, String>();
+        try {
+            String [] parsedTokens =  malt.parseTokens(dataForMalt);
+
+            for(Annotation ann: wrappedAnnotationsIndexes.keySet()){
+                String annData = parsedTokens[wrappedAnnotationsIndexes.get(ann)];
+                features.put(ann, getFeature(annData, parsedTokens));
+
+            }
+        } catch (MaltChainedException e) {
+            e.printStackTrace();
+        }
+        return features;
     }
 
-    public List<String> convertToCoNLL(Sentence sent){
-        List<String> tokens = new ArrayList<String>();
+    public String getFeature(String annotation, String[] maltData){
+        if(this.distance > 1){
+            int i=1;
+            int parentIdx = Integer.parseInt(annotation.split("\t")[8]) - 1;
+            while(i<distance){
+                if(parentIdx<0)
+                    return "NULL";
+                annotation =  maltData[parentIdx];
+                parentIdx = Integer.parseInt(annotation.split("\t")[8]) - 1;
+                i++;
+            }
+        }
+        if(this.type.equals("base"))
+            return getParentBase(annotation, maltData);
+        else if(this.type.equals("relation"))
+            return getRelation(annotation);
+        return null;
+    }
+
+    public String getRelation(String annotation){
+        return annotation.split("\t")[9];
+    }
+
+    public String getParentBase(String annotation, String[] maltData){
+        int parentIdx = Integer.parseInt(annotation.split("\t")[8]) - 1;
+        if(parentIdx < 0)
+            return "NULL";
+        return  maltData[parentIdx].split("\t")[2];
+    }
+
+    public List<String[]> convertToCoNLL(Sentence sent){
+        List<String[]> tokens = new ArrayList<String[]>();
         ListIterator<Token> it = sent.getTokens().listIterator();
         TokenAttributeIndex attributes = sent.getAttributeIndex();
         while (it.hasNext()) {
-            StringBuilder tokData = new StringBuilder();
-            tokData.append(it.nextIndex() + 1 + "\t");
+            String[] tokData = new String[8];
+            tokData[0] = String.valueOf(it.nextIndex() + 1);
 
             Token token = it.next();
-            tokData.append(token.getAttributeValue(attributes.getIndex("orth"))+"\t");
-            tokData.append(token.getAttributeValue(attributes.getIndex("base"))+"\t");
+            tokData[1] = token.getAttributeValue(attributes.getIndex("orth"));
+            tokData[2] = token.getAttributeValue(attributes.getIndex("base"));
             String ctag =  token.getAttributeValue(attributes.getIndex("ctag"));
-            System.out.println("ctag: "+ctag);
             List<String> ctag_elements = Arrays.asList(ctag.split(":"));
             String nkjpPos = ctag_elements.get(0);
 
-            tokData.append(nkjpToCoNLLPos.get(nkjpPos)+"\t");
-            tokData.append(nkjpPos+"\t");
-            StringBuilder feats = new StringBuilder();
-            boolean first = true;
-            for(String el: ctag_elements.subList(1,ctag_elements.size())){
-                if(first)
-                    first = false;
-                else
-                    feats.append("|");
-                feats.append(el);
-            }
-            tokData.append(feats.length() != 0 ? feats.toString() : "_"+"\t");
-            tokData.append("_"+"\t");
-            tokData.append("_"+"\t");
-            System.out.println(tokData.toString());
+            tokData[3] = nkjpToCoNLLPos.get(nkjpPos);
+            tokData[4] = nkjpPos;
+            String feats = join(ctag_elements.subList(1,ctag_elements.size()), "|");
+            tokData[5] = feats.length() != 0 ? feats.toString() : "_";
+            tokData[6] = "_";
+            tokData[7] = "_";
 
-            tokens.add(tokData.toString());
+            tokens.add(tokData);
         }
         return tokens;
+    }
+
+    public String join(List<String> sequence, String delimiter){
+        StringBuilder out = new StringBuilder();
+        boolean first = true;
+        for(String el: sequence){
+            if(first)
+                first = false;
+            else
+                out.append(delimiter);
+            out.append(el);
+        }
+        return out.toString();
     }
 
     public static HashMap<String, String> getnkjpToCoNLLPos(){

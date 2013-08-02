@@ -145,6 +145,19 @@ public class Annotation {
 		}
 		return text.toString();
 	}
+
+    public String getBaseText(){
+        ArrayList<Token> tokens = this.sentence.getTokens();
+        StringBuilder text = new StringBuilder();
+        TokenAttributeIndex index = this.sentence.getAttributeIndex();
+        for (int i : this.tokens) {
+            Token token = tokens.get(i);
+            text.append(token.getAttributeValue(index.getIndex("base")));
+            if ((!token.getNoSpaceAfter()) && (i < getEnd()))
+                text.append(" ");
+        }
+        return text.toString();
+    }
 	
 	public void setId(String id){
 		this.id = id;

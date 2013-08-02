@@ -19,6 +19,7 @@
 				<include name="princetonAdapter.jar"/>
 				<include name="maltparser-1.7.1.jar"/>
 				<include name="nlog4j-1.2.25.jar"/>
+				<include name="liblinear-1.92.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="${production_path}/src" >  
