@@ -5,6 +5,7 @@ import liner2.structure.Annotation;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
 import liner2.structure.TokenAttributeIndex;
+import liner2.tools.Maltparser;
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
 import org.maltparser.core.syntaxgraph.DependencyStructure;
@@ -33,15 +34,10 @@ public class AnnotationFeatureMalt extends AnnotationSentenceFeature {
     public AnnotationFeatureMalt(String modelPath, int distance, String type) {
         this.type = type;
         this.distance = distance;
-        try {
-            malt =  new MaltParserService();
-
-            File modelFile = new File(modelPath);
-            malt.initializeParserModel(String.format("-c %s -m parse -w %s", modelFile.getName(), modelFile.getParent()));
-        } catch (MaltChainedException e) {
-            e.printStackTrace();
-        }
-
+        if(Maltparser.isInitialized(modelPath))
+            malt = Maltparser.getParser(modelPath);
+        else
+            malt = Maltparser.addParser(modelPath);
     }
 
     @Override
