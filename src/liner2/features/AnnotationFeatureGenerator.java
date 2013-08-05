@@ -14,11 +14,13 @@ public class AnnotationFeatureGenerator {
 
 	private List<AnnotationFeature> features = new ArrayList<AnnotationFeature>();
     private List<AnnotationFeatureMalt> maltFeatures = new ArrayList<AnnotationFeatureMalt>();
+    private List<AnnotationSentenceFeature> sentenceFeatures = new ArrayList<AnnotationSentenceFeature>();
     private HashMap<String, String> nkjpToCoNLLPos = getnkjpToCoNLLPos();
 	
-	private Pattern patternBase = Pattern.compile("base:(-?[0-9]+)");
-    private Pattern patternDict = Pattern.compile("dict:([^:]*)");
-    private Pattern patternMalt = Pattern.compile("malt:([^:]*):([0-9]+):(base|relation)");
+	private Pattern patternBase = Pattern.compile("base:(-?[0-9]*)$");
+    private Pattern patternDict = Pattern.compile("dict:([^:]*)$");
+    private Pattern patternMalt = Pattern.compile("malt:([^:]*):([0-9]*):(base|relation)$");
+    private Pattern patternClosestBase = Pattern.compile("closest-base:(-?[0-9]*):([a-z]+)$");
 	
 	/**
 	 * 
@@ -41,6 +43,11 @@ public class AnnotationFeatureGenerator {
                 this.maltFeatures.add(new AnnotationFeatureMalt(matcherMalt.group(1), Integer.parseInt(matcherMalt.group(2)), matcherMalt.group(3)));
                 continue;
             }
+            Matcher matcherClosestBase = this.patternClosestBase.matcher(feature);
+            if ( matcherClosestBase.find() ){
+                this.sentenceFeatures.add(new AnnotationFeatureClosestBase(matcherClosestBase.group(2), Integer.parseInt(matcherClosestBase.group(1))));
+                continue;
+            }
 		}
 	}
 
@@ -59,11 +66,13 @@ public class AnnotationFeatureGenerator {
             for (AnnotationFeatureMalt afg : this.maltFeatures)
                 features.add(afg.generate(maltSent.getMaltData(), maltSent.getAnnotationIndices()));
         }
+        for (AnnotationSentenceFeature afg : this.sentenceFeatures)
+            features.add(afg.generate(sent));
         return features;
     }
 	
 	public int getFeaturesCount(){
-		return this.features.size()+this.maltFeatures.size();
+		return this.features.size()+this.maltFeatures.size()+this.sentenceFeatures.size();
 	}
 
     public List<String[]> convertToCoNLL(Sentence sent){

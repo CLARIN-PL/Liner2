@@ -106,7 +106,7 @@ public class AnnotationClassifierChunker extends Chunker
 	    		for (int i=0; i<annotationFeatures.size(); i++){
 	    			instance.setValue((Attribute)fva.elementAt(i), annotationFeatures.get(i));
 	    		}
-                for (int i=annotationFeatures.size(); i<sentenceFeatures.size(); i++){
+                for (int i=0; i<sentenceFeatures.size(); i++){
                      instance.setValue((Attribute)fva.elementAt(i+annotationFeatures.size()),sentenceFeatures.get(i).get(ann));
                 }
 	    		instance.setValue((Attribute)fva.elementAt(this.featureGenerator.getFeaturesCount()),
@@ -180,16 +180,8 @@ public class AnnotationClassifierChunker extends Chunker
 	@Override
 	public HashMap<Sentence, AnnotationSet> chunk(ParagraphSet ps) {
 		HashMap<Sentence, AnnotationSet> inputChunks = this.inputChunker.chunk(ps);
-		
-		List<Annotation> annotations = new ArrayList<Annotation>();
-		
-		for ( AnnotationSet as : inputChunks.values() )
-			annotations.addAll(as.chunkSet());
-		
-		System.out.println("Annotations : " + annotations.size());
-		
 		try {
-			this.classify(annotations);
+			this.classify(inputChunks);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -200,22 +192,33 @@ public class AnnotationClassifierChunker extends Chunker
 	/**
 	 * Classify each annotation in the collection and set the annotation category.
 	 * 
-	 * @param annotations — collection of annotations
+	 * @param annotationsBySentence — collection of AnnotationSet's grouped by sentences
 	 * @throws Exception 
 	 */
-	public void classify(List<Annotation> annotations) throws Exception{
-    	FastVector fva = this.getAttributesDefinition();
-    	Instances instances = new Instances("ner", fva, 10);
-    	instances.setClassIndex(this.featureGenerator.getFeaturesCount());
+	public void classify(HashMap<Sentence, AnnotationSet> annotationsBySentence) throws Exception{
+        FastVector fva = this.getAttributesDefinition();
+        Instances instances = new Instances("ner", fva, 10);
+        instances.setClassIndex(this.featureGenerator.getFeaturesCount());
 
-		for ( Annotation ann : annotations ){
-    		List<String> annotationFeatures = this.featureGenerator.generate(ann);
-    		Instance instance = new Instance(annotationFeatures.size() + 1);
-    		for (int i=0; i<annotationFeatures.size(); i++){
-    			instance.setValue((Attribute)fva.elementAt(i), annotationFeatures.get(i));
-    		}
-    		instances.add(instance);
-		}
+        List<Annotation> allAnnotations = new ArrayList<Annotation>();
+        for ( Sentence sentence : annotationsBySentence.keySet() ){
+
+            List<HashMap<Annotation,String>> sentenceFeatures = this.featureGenerator.generate(sentence);
+
+            for (Annotation ann : annotationsBySentence.get(sentence).chunkSet()){
+                allAnnotations.add(ann);
+                List<String> annotationFeatures = this.featureGenerator.generate(ann);
+                Instance instance = new Instance(this.featureGenerator.getFeaturesCount() + 1);
+
+                for (int i=0; i<annotationFeatures.size(); i++){
+                    instance.setValue((Attribute)fva.elementAt(i), annotationFeatures.get(i));
+                }
+                for (int i=0; i<sentenceFeatures.size(); i++){
+                    instance.setValue((Attribute)fva.elementAt(i+annotationFeatures.size()),sentenceFeatures.get(i).get(ann));
+                }
+                instances.add(instance);
+            }
+        }
 
     	for ( int i=0; i<instances.numInstances(); i++)
     		filter.input(instances.instance(i));
@@ -232,7 +235,7 @@ public class AnnotationClassifierChunker extends Chunker
     		Instance instance = filtered;
     		double d = this.classifier.classifyInstance(instance);
     		if ( d < 1.0 ) zero++;
-    		annotations.get(index++).setType(classAttribute.value((int)d));
+    		allAnnotations.get(index++).setType(classAttribute.value((int)d));
     	 }    	
     	System.out.println("Zero : " + zero);
 	}
