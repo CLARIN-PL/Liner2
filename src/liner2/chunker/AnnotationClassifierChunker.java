@@ -106,7 +106,6 @@ public class AnnotationClassifierChunker extends Chunker
 	    		for (int i=0; i<annotationFeatures.size(); i++){
 	    			instance.setValue((Attribute)fva.elementAt(i), annotationFeatures.get(i));
 	    		}
-
                 for (int i=annotationFeatures.size(); i<sentenceFeatures.size(); i++){
                      instance.setValue((Attribute)fva.elementAt(i+annotationFeatures.size()),sentenceFeatures.get(i).get(ann));
                 }

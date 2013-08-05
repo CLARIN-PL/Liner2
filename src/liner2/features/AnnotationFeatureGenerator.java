@@ -97,31 +97,38 @@ public class AnnotationFeatureGenerator {
         List<String[]> coNLLTokens = convertToCoNLL(sent);
         HashMap<Integer, Annotation> annotatedTokens = new HashMap<Integer, Annotation>();
         for( Annotation ann: sent.getChunks()){
-            if(ann.getBegin() != ann.getEnd())
-                annotatedTokens.put(ann.getBegin(), ann);
+            annotatedTokens.put(ann.getBegin(), ann);
         }
         int newIdx = 1;
         HashMap<Annotation, Integer> wrappedAnnotationsIndexes = new HashMap<Annotation, Integer>();
         List<String[]> wrappedTokens = new ArrayList<String[]>();
         for(int tokIdx=0; tokIdx<coNLLTokens.size(); tokIdx++){
             if(annotatedTokens.containsKey(tokIdx)){
-                List<String> tokens = new ArrayList<String>();
                 Annotation ann =  annotatedTokens.get(tokIdx);
-                boolean foundHead = false;
-                int headIdx = tokIdx;
-                for(Integer annTokIdx: ann.getTokens())
-                    if(!foundHead && coNLLTokens.get(annTokIdx)[4].equals("subst")){
-                        headIdx = tokIdx;
-                        foundHead =true;
-                    }
-                tokIdx = ann.getEnd();
+                if(ann.getEnd() != tokIdx){
+                    List<String> tokens = new ArrayList<String>();
+                    boolean foundHead = false;
+                    int headIdx = tokIdx;
+                    for(Integer annTokIdx: ann.getTokens())
+                        if(!foundHead && coNLLTokens.get(annTokIdx)[4].equals("subst")){
+                            headIdx = tokIdx;
+                            foundHead =true;
+                        }
+                    tokIdx = ann.getEnd();
 
-                String[] wrappedAnn = coNLLTokens.get(headIdx);
-                wrappedAnn[0] = String.valueOf(newIdx);
-                wrappedAnn[1] = ann.getText();
-                wrappedAnn[2] = ann.getBaseText();
-                wrappedTokens.add(wrappedAnn);
-                wrappedAnnotationsIndexes.put(ann, wrappedTokens.size()-1);
+                    String[] wrappedAnn = coNLLTokens.get(headIdx);
+                    wrappedAnn[0] = String.valueOf(newIdx);
+                    wrappedAnn[1] = ann.getText();
+                    wrappedAnn[2] = ann.getBaseText();
+                    wrappedTokens.add(wrappedAnn);
+                    wrappedAnnotationsIndexes.put(ann, wrappedTokens.size()-1);
+                }
+                else{
+                    String[] token = coNLLTokens.get(tokIdx);
+                    token[0] = String.valueOf(newIdx);
+                    wrappedTokens.add(token);
+                    wrappedAnnotationsIndexes.put(ann, newIdx-1);
+                }
             }
             else{
                 String[] token = coNLLTokens.get(tokIdx);
