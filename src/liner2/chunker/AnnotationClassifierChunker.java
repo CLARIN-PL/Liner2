@@ -97,7 +97,7 @@ public class AnnotationClassifierChunker extends Chunker
     	    	
     	for ( Sentence sentence : paragraphSet.getSentences() ){
 
-            List<HashMap<Annotation,String>> sentenceFeatures = this.featureGenerator.generate(sentence);
+            List<HashMap<Annotation,String>> sentenceFeatures = this.featureGenerator.generate(sentence, sentence.getChunks());
 
     		for (Annotation ann : sentence.getChunks()){
 	    		List<String> annotationFeatures = this.featureGenerator.generate(ann);
@@ -203,7 +203,7 @@ public class AnnotationClassifierChunker extends Chunker
         List<Annotation> allAnnotations = new ArrayList<Annotation>();
         for ( Sentence sentence : annotationsBySentence.keySet() ){
 
-            List<HashMap<Annotation,String>> sentenceFeatures = this.featureGenerator.generate(sentence);
+            List<HashMap<Annotation,String>> sentenceFeatures = this.featureGenerator.generate(sentence, annotationsBySentence.get(sentence).chunkSet());
 
             for (Annotation ann : annotationsBySentence.get(sentence).chunkSet()){
                 allAnnotations.add(ann);
@@ -214,7 +214,7 @@ public class AnnotationClassifierChunker extends Chunker
                     instance.setValue((Attribute)fva.elementAt(i), annotationFeatures.get(i));
                 }
                 for (int i=0; i<sentenceFeatures.size(); i++){
-                    instance.setValue((Attribute)fva.elementAt(i+annotationFeatures.size()),sentenceFeatures.get(i).get(ann));
+                    instance.setValue((Attribute)fva.elementAt(i+annotationFeatures.size()), sentenceFeatures.get(i).get(ann));
                 }
                 instances.add(instance);
             }

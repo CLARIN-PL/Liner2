@@ -6,6 +6,7 @@ import liner2.structure.Token;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -29,10 +30,10 @@ public class AnnotationFeatureClosestBase extends AnnotationSentenceFeature {
     }
 
     @Override
-    public HashMap<Annotation, String> generate(Sentence sent) {
+    public HashMap<Annotation, String> generate(Sentence sent, HashSet<Annotation> sentenceAnnotations) {
         HashMap<Annotation, String> features = new HashMap<Annotation, String>();
         int posIndex = sent.getAttributeIndex().getIndex("ctag");
-        for(Annotation ann: sent.getChunks()){
+        for(Annotation ann: sentenceAnnotations){
             List<Token> candidateTokens;
             if(searchForward)
                 candidateTokens =  sent.getTokens().subList(ann.getEnd(), sent.getTokenNumber());

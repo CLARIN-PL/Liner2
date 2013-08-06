@@ -79,6 +79,10 @@ public class AnnotationSet {
 						else if ((cb >= fb) && (ce <= fe)) {
 							chunksToRemove.add(chunk);
 						}
+                        else if ((cb >= fb && cb <= fe) || (ce >= fb && ce <=fe) ){
+                            found = true;
+                            break;
+                        }
 					}
 				for (Annotation chunkToRemove : chunksToRemove)
 					removeChunk(chunkToRemove);

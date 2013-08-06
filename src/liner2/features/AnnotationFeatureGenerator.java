@@ -58,16 +58,16 @@ public class AnnotationFeatureGenerator {
 		return features;		
 	}
 
-    public List<HashMap<Annotation,String>> generate(Sentence sent){
+    public List<HashMap<Annotation,String>> generate(Sentence sent, HashSet<Annotation> sentenceAnnotations){
         List<HashMap<Annotation,String>> features = new ArrayList<HashMap<Annotation, String>>();
         MaltFeatureSentence maltSent;
         if(!this.maltFeatures.isEmpty()){
-            maltSent = prepareSentenceForMaltparser(sent);
+            maltSent = prepareSentenceForMaltparser(sent, sentenceAnnotations);
             for (AnnotationFeatureMalt afg : this.maltFeatures)
                 features.add(afg.generate(maltSent.getMaltData(), maltSent.getAnnotationIndices()));
         }
         for (AnnotationSentenceFeature afg : this.sentenceFeatures)
-            features.add(afg.generate(sent));
+            features.add(afg.generate(sent, sentenceAnnotations));
         return features;
     }
 	
@@ -102,12 +102,12 @@ public class AnnotationFeatureGenerator {
         return tokens;
     }
 
-    public MaltFeatureSentence prepareSentenceForMaltparser(Sentence sent){
+    public MaltFeatureSentence prepareSentenceForMaltparser(Sentence sent, HashSet<Annotation> sentenceAnnotations){
         List<String[]> coNLLTokens = convertToCoNLL(sent);
         HashMap<Integer, Annotation> annotatedTokens = new HashMap<Integer, Annotation>();
-        for( Annotation ann: sent.getChunks()){
+        for( Annotation ann: sentenceAnnotations)
             annotatedTokens.put(ann.getBegin(), ann);
-        }
+
         int newIdx = 1;
         HashMap<Annotation, Integer> wrappedAnnotationsIndexes = new HashMap<Annotation, Integer>();
         List<String[]> wrappedTokens = new ArrayList<String[]>();
