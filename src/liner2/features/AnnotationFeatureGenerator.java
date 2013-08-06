@@ -21,6 +21,7 @@ public class AnnotationFeatureGenerator {
     private Pattern patternDict = Pattern.compile("dict:([^:]*)$");
     private Pattern patternMalt = Pattern.compile("malt:([^:]*):([0-9]*):(base|relation)$");
     private Pattern patternClosestBase = Pattern.compile("closest-base:(-?[0-9]*):([a-z]+)$");
+    private Pattern patternNeFirstBase = Pattern.compile("ne-first-base:(-?[0-9]*):([a-z]+)$");
 	
 	/**
 	 * 
@@ -47,6 +48,10 @@ public class AnnotationFeatureGenerator {
             if ( matcherClosestBase.find() ){
                 this.sentenceFeatures.add(new AnnotationFeatureClosestBase(matcherClosestBase.group(2), Integer.parseInt(matcherClosestBase.group(1))));
                 continue;
+            }
+            Matcher matcherNeFirstBase = this.patternNeFirstBase.matcher(feature);
+            if ( matcherNeFirstBase.find() ){
+                this.sentenceFeatures.add(new AnnotationFeatureNeFirstBase(matcherNeFirstBase.group(2), Integer.parseInt(matcherNeFirstBase.group(1))));
             }
 		}
 	}
