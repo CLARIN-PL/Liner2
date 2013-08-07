@@ -38,6 +38,8 @@ public class ReaderFactory {
 			return new IobStreamReader(in);
 		else if (inputFormat.equals("plain"))
 			return new PlainTextStreamReader(in);
+        else if (inputFormat.equals("ccl-batch"))
+            return new CclBatchReader(in);
 		else
 			throw new Exception("Input format " + inputFormat + " not recognized.");
 	}
