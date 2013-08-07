@@ -19,9 +19,11 @@ public class AnnotationFeatureDict extends AnnotationFeature {
 
 
     private HashSet<String> entries;
+    private String form;
 
-    public AnnotationFeatureDict(String dictFile){
+    public AnnotationFeatureDict(String dictFile, String form){
         entries = new HashSet<String>();
+        this.form = form;
 
         try{
             BufferedReader br = null;
@@ -45,6 +47,11 @@ public class AnnotationFeatureDict extends AnnotationFeature {
 
     @Override
     public String generate(Annotation an) {
+        String annotationText;
+        if(form.equals("orth"))
+            annotationText = an.getText();
+        else if(form.equals("base"))
+            an.getBaseText();
        return entries.contains(an.getText().toLowerCase())? "1": "0";
     }
 }

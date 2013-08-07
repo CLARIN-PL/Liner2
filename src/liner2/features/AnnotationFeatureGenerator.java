@@ -18,7 +18,7 @@ public class AnnotationFeatureGenerator {
     private HashMap<String, String> nkjpToCoNLLPos = getnkjpToCoNLLPos();
 	
 	private Pattern patternBase = Pattern.compile("base:(-?[0-9]*)$");
-    private Pattern patternDict = Pattern.compile("dict:([^:]*)$");
+    private Pattern patternDict = Pattern.compile("dict:([^:]*):([^:]*)$");
     private Pattern patternMalt = Pattern.compile("malt:([^:]*):([0-9]*):(base|relation)$");
     private Pattern patternClosestBase = Pattern.compile("closest-base:(-?[0-9]*):([a-z]+)$");
     private Pattern patternNeFirstBase = Pattern.compile("ne-first-base:(-?[0-9]*):([a-z]+)$");
@@ -36,7 +36,7 @@ public class AnnotationFeatureGenerator {
 			}
             Matcher matcherDict = this.patternDict.matcher(feature);
             if ( matcherDict.find() ){
-                this.features.add(new AnnotationFeatureDict(matcherDict.group(1)));
+                this.features.add(new AnnotationFeatureDict(matcherDict.group(2), matcherDict.group(1)));
                 continue;
             }
             Matcher matcherMalt = this.patternMalt.matcher(feature);
