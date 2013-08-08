@@ -1,5 +1,6 @@
 package liner2.writer;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -72,7 +73,8 @@ public class CclStreamWriter extends StreamWriter {
 		try {
 			xmlw.writeEndDocument();
 			xmlw.close();
-			os.close();
+            if(!(os instanceof PrintStream))
+                os.close();
 		} catch (XMLStreamException ex) {
 			ex.printStackTrace();
 		} catch (IOException ex) {
