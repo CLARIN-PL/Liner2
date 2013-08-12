@@ -75,12 +75,10 @@ public class WcclChunker extends Chunker {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
 		Sentence resultSentence = paragraph.getSentences().get(0);
 		for (Annotation chunk : resultSentence.getChunks())
 			if (!chunking.contains(chunk))
 				chunking.addChunk(chunk);
-		
 		return chunking;
 	}	
 	

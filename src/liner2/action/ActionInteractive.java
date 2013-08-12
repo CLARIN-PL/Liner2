@@ -14,17 +14,13 @@ import java.util.regex.Pattern;
 import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
 
+import liner2.features.TokenFeatureGenerator;
 import liner2.reader.ReaderFactory;
 import liner2.reader.StreamReader;
 
+import liner2.structure.*;
 import liner2.writer.StreamWriter;
 import liner2.writer.WriterFactory;
-
-import liner2.structure.TokenAttributeIndex;
-import liner2.structure.Paragraph;
-import liner2.structure.ParagraphSet;
-import liner2.structure.Sentence;
-import liner2.structure.Token;
 
 import liner2.tools.ParameterException;
 import liner2.LinerOptions;
@@ -50,7 +46,7 @@ public class ActionInteractive extends Action{
 		
 		String maca = LinerOptions.getOption(LinerOptions.OPTION_MACA);
 		String wmbt = LinerOptions.getOption(LinerOptions.OPTION_WMBT);
-		
+
 		if (!LinerOptions.get().silent){
 			System.out.println("# Loading, please wait...");
  	}
@@ -106,13 +102,19 @@ public class ActionInteractive extends Action{
 				// chunking
 				ParagraphSet ps = new ParagraphSet();
 				ps.addParagraph(paragraph);
+                ps.setAttributeIndex(paragraph.getAttributeIndex());
+
+                if (!LinerOptions.get().features.isEmpty()){
+                    TokenFeatureGenerator gen = new TokenFeatureGenerator(LinerOptions.get().features);
+                    gen.generateFeatures(ps);
+                }
 				chunker.chunkInPlace(ps);
 
 				// write output
 				StreamWriter writer = WriterFactory.get().getStreamWriter(
 					LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FILE),
 					LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FORMAT));
-				writer.writeParagraphSet(ps);
+                writer.writeParagraphSet(ps);
 			}
 		} while (!cSeq.equals("EOF"));
 	}
@@ -129,8 +131,10 @@ public class ActionInteractive extends Action{
 		for (String tokenStr : tokens) {
 			Token token = new Token();
 			String[] tokenAttrs = tokenStr.split(" ");
-			for (int i = 0; i < tokenAttrs.length; i++)
-				token.setAttributeValue(i, tokenAttrs[i]);
+			for (int i = 0; i < tokenAttrs.length; i++)   {
+				token.setAttributeValue(i, tokenAttrs[i]); }
+            Tag tag = new Tag(token.getAttributeValue(1), token.getAttributeValue(2), false);
+            token.addTag(tag);
 			sentence.addToken(token);
 		}
 		Paragraph paragraph = new Paragraph(null);
@@ -147,7 +151,7 @@ public class ActionInteractive extends Action{
 				maca_cmd += "/";
 			//maca_cmd += "bin/maca-analyse/";
 		}
-		maca_cmd += "maca-analyse -qs morfeusz-nkjp -o ccl";
+		maca_cmd += "maca-analyse -qs morfeusz-nkjp-official -o ccl";
 		
 		// execute maca
 		Process maca_p = null;
@@ -156,7 +160,7 @@ public class ActionInteractive extends Action{
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		
+
 		InputStream maca_in = maca_p.getInputStream();
 		OutputStream maca_out = maca_p.getOutputStream();
 		BufferedWriter maca_writer = new BufferedWriter(
@@ -188,8 +192,7 @@ public class ActionInteractive extends Action{
 				String line = null;
 				while ((line = maca_reader.readLine()) != null)
 					wmbt_writer.write(line, 0, line.length());
-				wmbt_writer.close(); 
-				
+				wmbt_writer.close();
 				StreamReader reader = ReaderFactory.get().getStreamReader(wmbt_in, "ccl");
 				Paragraph paragraph = reader.readParagraph();
 				return paragraph;
@@ -204,7 +207,6 @@ public class ActionInteractive extends Action{
 			try {
 				maca_writer.write(cSeq, 0, cSeq.length());
 				maca_writer.close();
-				
 				StreamReader reader = ReaderFactory.get().getStreamReader(maca_in, "ccl");
 				Paragraph paragraph = reader.readParagraph();
 				return paragraph;
