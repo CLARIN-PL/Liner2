@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="liner21">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/local/production/liner2.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

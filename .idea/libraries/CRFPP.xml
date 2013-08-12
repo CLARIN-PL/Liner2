@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="CRFPP">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/external/CRF++-0.57/java/CRFPP.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
