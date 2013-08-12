@@ -13,7 +13,6 @@
 		<pathelement location="${production_path}/lib/maltparser-1.7.1.jar"/>
 		<pathelement location="${production_path}/lib/nlog4j-1.2.25.jar"/>
 		<pathelement location="${production_path}/lib/liblinear-1.92.jar"/>
-		<pathelement location="${production_path}/lib/ini4j-0.5.0.jar"/>
 	</path>
 	
 	<target name="clean">
@@ -44,7 +43,6 @@
 		<copy file="lib/maltparser-1.7.1.jar" todir="${production_path}/lib"/>
 		<copy file="lib/nlog4j-1.2.25.jar" todir="${production_path}/lib"/>
 		<copy file="lib/liblinear-1.92.jar" todir="${production_path}/lib"/>
-		<copy file="lib/ini4j-0.5.0.jar" todir="${production_path}/lib"/>
 		<delete dir="build/classes"/>
 		<mkdir dir="build/classes"/>
 		<manifest file="MANIFEST.MF">
@@ -57,8 +55,7 @@
 				./lib/princetonAdapter.jar
 				./lib/maltparser-1.7.1.jar
 				./lib/nlog4j-1.2.25.jar
-				./lib/liblinear-1.92.jar
-				./lib/ini4j-0.5.0.jar"/>			
+				./lib/liblinear-1.92.jar"/>			
    		</manifest>	
 		<javac optimize="on" debug="yes" debuglevel="source,lines,vars" destdir="build/classes" includeantruntime="false">
     		<compilerarg value="-Xlint:all"/>

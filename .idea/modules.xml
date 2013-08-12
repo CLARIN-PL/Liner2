@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/external/CRF++-0.57/CRF++-0.57.iml" filepath="$PROJECT_DIR$/external/CRF++-0.57/CRF++-0.57.iml" />
+      <module fileurl="file://$PROJECT_DIR$/liner2.iml" filepath="$PROJECT_DIR$/liner2.iml" />
+    </modules>
+  </component>
+</project>
+

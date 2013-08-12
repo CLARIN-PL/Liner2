@@ -53,7 +53,7 @@ public class ChunkerFactoryItemAnnotationClassifier extends ChunkerFactoryItem {
         for(String featureName: featuresDesc.keySet())
         features.add(featuresDesc.get(featureName).replace("{INI_DIR}",iniDir));
 
-		AnnotationClassifierChunker chunker = new AnnotationClassifierChunker(baseChunker, features);
+		AnnotationClassifierChunker chunker = new AnnotationClassifierChunker(baseChunker, features, classifierDesc.get("type"));
 
         String mode = main.get("mode");
         String modelPath = main.get("store").replace("{INI_DIR}", iniDir);

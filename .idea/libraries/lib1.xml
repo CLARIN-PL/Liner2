@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lib1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/commons-cli-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/mysql-connector-java-5.1.10.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/CRFPP.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/princetonAdapter.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/weka-3.6.9.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

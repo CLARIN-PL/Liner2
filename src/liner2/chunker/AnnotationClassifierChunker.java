@@ -44,8 +44,12 @@ public class AnnotationClassifierChunker extends Chunker
 	 * 
 	 * @param inputChunker
 	 */
-    public AnnotationClassifierChunker(Chunker inputChunker, List <String> features) {
-    	
+    public AnnotationClassifierChunker(Chunker inputChunker, List <String> features, String classifierName) {
+        try {
+            classifier = Classifier.forName(classifierName, new String[0]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     	this.features = features;
     	this.featureGenerator = new AnnotationFeatureGenerator(features);
     	this.inputChunker = inputChunker;
@@ -127,11 +131,8 @@ public class AnnotationClassifierChunker extends Chunker
     	Instance filtered = null;
     	while ( (filtered = filter.output()) != null )
     		instancesFiltered.add(filtered);
-    	    	
-    	Classifier classifier = new J48();
-    	classifier.setDebug(true);
-    	classifier.buildClassifier(instancesFiltered);
-    	this.classifier = classifier;    	
+
+    	this.classifier.buildClassifier(instancesFiltered);
     }
 
     /**
