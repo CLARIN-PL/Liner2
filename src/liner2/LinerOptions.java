@@ -205,7 +205,7 @@ public class LinerOptions {
      * @param filename
      * @throws Exception 
      */
-    private void parseFromIni(String filename, StringBuilder configDesc)
+    public void parseFromIni(String filename, StringBuilder configDesc)
     	throws Exception {
     	File iniFile = new File(filename); 
         BufferedReader br = new BufferedReader(new FileReader(iniFile));

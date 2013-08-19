@@ -103,7 +103,6 @@ public class ChunkerEvaluator {
 	 * 
 	 */
 	private void evaluate(Sentence sentence, AnnotationSet chunking, AnnotationSet chunkingRef) {
-        System.out.println("---->>"+chunking);
 	
 		// tylko na potrzeby wyświetlania szczegółów
 		HashSet<Annotation> myTruePositives = new HashSet<Annotation>();
@@ -113,7 +112,7 @@ public class ChunkerEvaluator {
 		HashSet<Annotation> trueChunkSet = new HashSet<Annotation>(chunkingRef.chunkSet());
 		HashSet<Annotation> trueChunkSetIter = new HashSet<Annotation>(trueChunkSet);
 
-		chunking.filter(LinerOptions.get().filters);			
+		chunking.filter(LinerOptions.get().filters);
 		HashSet<Annotation> testedChunkSet = new HashSet<Annotation>(chunking.chunkSet());
 		HashSet<Annotation> testedChunkSetIter = new HashSet<Annotation>(testedChunkSet);
 		

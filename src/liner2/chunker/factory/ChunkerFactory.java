@@ -3,6 +3,7 @@ package liner2.chunker.factory;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import liner2.LinerOptions;
 import liner2.Main;
 import liner2.chunker.Chunker;
 import liner2.chunker.ensemble.MajorityVotingChunker;
@@ -72,10 +73,18 @@ public class ChunkerFactory {
 				
 		return null;
 	}
+
+    public static Chunker create(String ini_path) throws Exception{
+        StringBuilder configDesc = new StringBuilder();
+        LinerOptions.get().parseFromIni(ini_path, configDesc);
+        ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescription);
+        Chunker chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
+        return chunker;
+    }
 	
 	/**
 	 * Creates a hash of chunkers according to the description
-	 * @param description
+	 * @param descriptions
 	 * @return
 	 * @throws Exception 
 	 */
