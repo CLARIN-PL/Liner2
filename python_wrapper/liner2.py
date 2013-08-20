@@ -4,20 +4,14 @@ from jpype import *
 import tempfile
 import corpus2
 
-javaInitialized = False
+startJVM(getDefaultJVMPath(), "-Djava.library.path=../lib", "-Djava.class.path=../liner2.jar")
 
 class Liner2(object):
 	def __init__(self, ini_file, tagset='nkjp'):
-		global javaInitialized
-		if not javaInitialized:
-			startJVM(getDefaultJVMPath(), "-Djava.library.path=../lib", "-Djava.class.path=../liner2.jar")
-			javaInitialized = True 
 		ChunkerFactory = JClass("liner2.chunker.factory.ChunkerFactory")
 		self.tagset = corpus2.get_named_tagset(tagset)
 		self.chunker = ChunkerFactory.create(ini_file)
-
-	def __del__(self):
-		shutdownJVM()
+ 
 
 	def process_sentence(self, sentence, only_new=False):
 		sentence = sentence.clone_shared()
@@ -37,7 +31,7 @@ class Liner2(object):
 	def process_document(self, document, only_new=False):
 		ps = self.prepare_paragraph_set()
 		for paragraph in document.paragraphs():
-			p = JClass("liner2.structure.Paragraph")(paragraph.set_attribute('id'))
+			p = JClass("liner2.structure.Paragraph")(paragraph.get_attribute('id'))
 			for sentence in paragraph.sentences():
 				sentence = sentence.clone_shared()
 				if only_new:
@@ -51,9 +45,9 @@ class Liner2(object):
 		for liner_paragraph, corpus_paragraph in zip(ps.getParagraphs(), document.paragraphs()):
 			p = corpus_paragraph.clone_shared()
 			result_document.add_paragraph(p)
-			for liner_sentence, corpus_sentence in zip(liner_paragraph.getSetences(), p.sentences()):
+			for liner_sentence, corpus_sentence in zip(liner_paragraph.getSentences(), p.sentences()):
 				self.liner_annotations_to_corpus_sentence(liner_sentence, corpus_sentence)
-		return document
+		return result_document
 
 	def prepare_paragraph_set(self):
 		attribute_index = JClass("liner2.structure.TokenAttributeIndex")()
@@ -72,7 +66,7 @@ class Liner2(object):
 		for chan_name in asent.all_channels():
 			for ann in asent.get_channel(chan_name).make_annotation_vector():
 				indices = [i for i in ann.indices]
-				annotation = JClass("liner2.structure.Annotation")(indices[0], chan_name, ann.seg_number, sentence)
+				annotation = JClass("liner2.structure.Annotation")(indices[0], chan_name.decode('utf-8'), ann.seg_number, sentence)
 				for i in indices[1:]:
 					annotation.addToken(i)
 				annotation.setHead(ann.head_index)
@@ -84,11 +78,11 @@ class Liner2(object):
 		token.setAttributeValue(0, corpus2_token.orth_utf8().decode('utf-8'))
 		has_preffered_lexeme = False
 		for lex in corpus2_token.lexemes():
-			if not has_preffered_lexeme and lex.is_disamb():
-				token.setAttributeValue(1, lex.lemma_utf8())
-				token.setAttributeValue(2, lex.tag())
-				has_preffered_lexeme = True
 			ctag = self.tagset.tag_to_string(lex.tag())
+			if not has_preffered_lexeme and lex.is_disamb():
+				token.setAttributeValue(1, lex.lemma_utf8().decode('utf-8'))
+				token.setAttributeValue(2, ctag)
+				has_preffered_lexeme = True
 			new_tag = JClass("liner2.structure.Tag")(lex.lemma_utf8().decode('utf-8'), ctag, lex.is_disamb())
 			token.addTag(new_tag)
 		return token
@@ -98,7 +92,7 @@ class Liner2(object):
 		for chan in annotated_sentence.all_channels():
 				annotated_sentence.remove_channel(chan)
 		for ann in liner_sentence.getChunks():
-			chan_name = str(ann.getType())
+			chan_name = str(ann.getType().encode('utf-8'))
 			if not annotated_sentence.has_channel(chan_name):
 				annotated_sentence.create_channel(chan_name)	
 			chan = annotated_sentence.get_channel(chan_name)
