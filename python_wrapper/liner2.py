@@ -11,6 +11,11 @@ class Liner2(object):
 		ChunkerFactory = JClass("liner2.chunker.factory.ChunkerFactory")
 		self.tagset = corpus2.get_named_tagset(tagset)
 		self.chunker = ChunkerFactory.create(ini_file)
+		self.linerOptions = JClass("liner2.LinerOptions")
+		if not self.linerOptions.get().features.isEmpty():
+			self.featureGen = JClass("liner2.features.TokenFeatureGenerator")(self.linerOptions.get().features)
+		else:
+			self.featureGen = None
  
 
 	def process_sentence(self, sentence, only_new=False):
@@ -24,6 +29,7 @@ class Liner2(object):
 		liner_sentence = self.corpus_sent_to_liner(sentence)
 		p.addSentence(liner_sentence)
 		ps.addParagraph(p)
+		self.generate_features(ps)
 		self.chunker.chunkInPlace(ps)
 		self.liner_annotations_to_corpus_sentence(liner_sentence, sentence)
 		return sentence
@@ -40,6 +46,7 @@ class Liner2(object):
 						annotated_sentence.remove_channel(chan)
 				p.addSentence(self.corpus_sent_to_liner(sentence))
 			ps.addParagraph(p)
+		self.generate_features(ps)
 		self.chunker.chunkInPlace(ps)
 		result_document = corpus2.Document()
 		for liner_paragraph, corpus_paragraph in zip(ps.getParagraphs(), document.paragraphs()):
@@ -48,6 +55,10 @@ class Liner2(object):
 			for liner_sentence, corpus_sentence in zip(liner_paragraph.getSentences(), p.sentences()):
 				self.liner_annotations_to_corpus_sentence(liner_sentence, corpus_sentence)
 		return result_document
+
+	def generate_features(self, ps):
+		if self.featureGen is not None:
+			self.featureGen.generateFeatures(ps)
 
 	def prepare_paragraph_set(self):
 		attribute_index = JClass("liner2.structure.TokenAttributeIndex")()
