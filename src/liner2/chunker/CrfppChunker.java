@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -225,12 +227,14 @@ public class CrfppChunker extends Chunker
 	 */
 	static {
 		try {
-			System.loadLibrary("CRFPP");
-		  } catch (UnsatisfiedLinkError e) {
+            String linerJarPath = CrfppChunker.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+            System.load(linerJarPath.replace("liner2.jar","") + "external/CRF++-0.57/java/libCRFPP.so");
+        } catch (UnsatisfiedLinkError e) {
 		    System.err.println("Cannot load the libCRFPP.so native code.\nRun: java -Djava.library.path=./lib -jar liner.jar ..." + e);
 		    System.exit(1);
-		  }
-	}
+        }
+
+    }
 	
 	
 	/**
