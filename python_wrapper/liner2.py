@@ -71,6 +71,7 @@ class Liner2(object):
 
 	def corpus_sent_to_liner(self, corpus2_sentence):
 		sentence = JClass("liner2.structure.Sentence")()
+		sentence.setId(corpus2_sentence.id())
 		for token in corpus2_sentence.tokens():
 			sentence.addToken(self.corpus_token_to_liner(token))
 		asent = corpus2.AnnotatedSentence.wrap_sentence(corpus2_sentence)
