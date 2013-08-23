@@ -9,6 +9,13 @@ import java.util.ArrayList;
  */
 public class Token {
 
+    public Token(){}
+
+    public Token(String orth, Tag firstTag){
+        setAttributeValue(0, orth);
+        addTag(firstTag);
+    }
+
 	/* Uporządkowana lista atrybutów */
 	ArrayList<String> attributes = new ArrayList<String>();
 	
@@ -31,7 +38,7 @@ public class Token {
 	/**
 	 * TODO
 	 * Zwraca wartość atrybutu o podany indeksie.
-	 * @param name
+	 * @param index
 	 * @return
 	 */
 	public String getAttributeValue(int index){

@@ -2,6 +2,8 @@ package liner2.chunker.factory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 import liner2.LinerOptions;
 import liner2.Main;
@@ -65,19 +67,17 @@ public class ChunkerFactory {
 	 */
 	public static Chunker createChunker(String description) throws Exception{
 		Main.log("-> Setting up chunker: " + description);
-		
-		if (true)
+		if (true){
 			for (ChunkerFactoryItem item : ChunkerFactory.get().items)
 				if ( item.getPattern().matcher(description).find() )
 					return item.getChunker(description);
-				
+        }
 		return null;
 	}
 
-    public static Chunker create(String ini_path) throws Exception{
-        StringBuilder configDesc = new StringBuilder();
-        LinerOptions.get().parseFromIni(ini_path, configDesc);
-        ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescription);
+    public static Chunker create(String iniPath) throws Exception{
+        LinerOptions.get().loadChunkerDescription(iniPath);
+        ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescriptions);
         Chunker chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
         return chunker;
     }
@@ -88,7 +88,7 @@ public class ChunkerFactory {
 	 * @return
 	 * @throws Exception 
 	 */
-	public static void loadChunkers(ArrayList<String> descriptions)
+	public static void loadChunkers(LinkedHashSet<String> descriptions)
 		throws Exception {
 		for (String desc : descriptions) {
 			int pos = desc.indexOf(':');
@@ -96,9 +96,16 @@ public class ChunkerFactory {
 				throw new Exception("Invalid chunker name.");
 			String chunkerName = desc.substring(0, pos);
 			String chunkerDesc = desc.substring(pos+1);
+            if(ChunkerFactory.get().chunkers.containsKey(chunkerName)){
+                if(!ChunkerFactory.get().chunkers.get(chunkerName).getDescription().equals(chunkerDesc)){
+                    throw new Error(String.format("Chunker name '%s' duplicated", chunkerName));
+                }
+            }
 			Chunker chunker = ChunkerFactory.createChunker(chunkerDesc);
-			if (chunker != null)
+            if (chunker != null){
+                chunker.setDescription(chunkerDesc);
 				ChunkerFactory.get().chunkers.put(chunkerName, chunker);
+            }
 			else
 				throw new Error(String.format("Chunker description '%s' not recognized", 
 						chunkerDesc));

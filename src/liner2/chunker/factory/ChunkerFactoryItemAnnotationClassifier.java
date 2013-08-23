@@ -42,7 +42,7 @@ public class ChunkerFactoryItemAnnotationClassifier extends ChunkerFactoryItem {
         Ini.Section featuresDesc = ini.get("features");
 
         Chunker baseChunker = null;
-		
+
 		if ( inputClassifier != null ){
 			baseChunker = ChunkerFactory.getChunkerByName(inputClassifier);
 			if (baseChunker == null)

@@ -35,7 +35,7 @@ public class ActionBatch extends Action{
 		if ( !LinerOptions.isOption(LinerOptions.OPTION_IS) ){
                         throw new ParameterException("Parameter --is <file_with_input_files_list> not set");
                 }
-		ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescription);
+		ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescriptions);
 		Chunker chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
 
 		File file = null;

@@ -6,10 +6,8 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 import java.sql.SQLException;
 
@@ -123,7 +121,7 @@ public class DaemonThread extends Thread {
 	public void run() {
 		// load chunker
 		try {
-			ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescription);
+			ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescriptions);
 			this.chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
 		} catch (Exception ex) {
 			ex.printStackTrace();

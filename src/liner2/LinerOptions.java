@@ -3,10 +3,7 @@ package liner2;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Properties;
-import java.util.TreeSet;
+import java.util.*;
 
 import liner2.filter.*;
 import liner2.chunker.factory.ChunkerFactory;
@@ -57,7 +54,7 @@ public class LinerOptions {
 	public static void requireOption(String option) throws ParameterException {
 		// TODO not implemented yet
 	}
-        
+
 	private Options options = null;
 	private String configurationDescription = "";
 	private Properties properties;
@@ -118,7 +115,7 @@ public class LinerOptions {
 //	public String outputFile = "";
 //	public String python = "python";
 	public ArrayList<Integer> folds = new ArrayList<Integer>();
-	public ArrayList<String> chunkersDescription = new ArrayList<String>();
+	public LinkedHashSet<String> chunkersDescriptions = new LinkedHashSet<String>();
 	public ArrayList<String> corpusDescriptions = new ArrayList<String>();
 	public TreeSet<String> common = new TreeSet<String>();
 	
@@ -149,6 +146,32 @@ public class LinerOptions {
 	public Properties getProperties() {
 		return this.properties;
 	}
+
+    public void loadIni(String ini){
+        try {
+            parseFromIni(ini, new StringBuilder(), null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadFeatures(String featuresIni){
+        try {
+            features.clear();
+            featureNames.clear();
+            parseFromIni(featuresIni, new StringBuilder(), new ArrayList<String>(Arrays.asList("feature", "template", "ini")));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadChunkerDescription(String chunkerIni){
+        try {
+            parseFromIni(chunkerIni, new StringBuilder(), new ArrayList<String>(Arrays.asList("chunker", "use")));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 	
 	/**
 	 * 
@@ -168,7 +191,7 @@ public class LinerOptions {
 		// Try to load configuration from local.ini
     	if (new File(this.linerPath + LOCAL_INI).exists()) {
     		try {
-    			this.parseFromIni(this.linerPath + LOCAL_INI, configDesc);
+    			this.parseFromIni(this.linerPath + LOCAL_INI, configDesc, null);
     		} catch (Exception ex) {
     			ex.printStackTrace();
     		}
@@ -192,12 +215,12 @@ public class LinerOptions {
     	this.mode = line.getArgs()[0];
     	configDesc.append("> Mode: " + this.mode + "\n");
 
-    	this.parseParameters(line, configDesc);
+    	this.parseParameters(line, configDesc, null);
 		
 		for (String cd : this.corpusDescriptions)
 			CorpusFactory.get().parse(cd);
     	
-		this.configurationDescription = configDesc.toString();
+//		this.configurationDescription = configDesc.toString();
 	}
     
     /**
@@ -205,7 +228,7 @@ public class LinerOptions {
      * @param filename
      * @throws Exception 
      */
-    public void parseFromIni(String filename, StringBuilder configDesc)
+    private void parseFromIni(String filename, StringBuilder configDesc, ArrayList<String> allowedOptions)
     	throws Exception {
     	File iniFile = new File(filename); 
         BufferedReader br = new BufferedReader(new FileReader(iniFile));
@@ -214,11 +237,22 @@ public class LinerOptions {
         String eachLine = br.readLine().trim();
             
         while(eachLine != null) {
-        	if ((!eachLine.startsWith("#")) &&
-        		(!eachLine.isEmpty()))
+        	if ((!eachLine.startsWith("#")) && (!eachLine.isEmpty())){
+                boolean validOption = false;
+                if(allowedOptions != null){
+                    for(String option: allowedOptions)
+                        if(eachLine.startsWith("-"+option))
+                            validOption = true;
+                }
+                else
+                    validOption = true;
+                if(!validOption)
+                    throw new Exception("IniParseError in: " + filename + ". Not allowed option: " + eachLine);
         		sb.append(eachLine + " ");
+            }
            	eachLine = br.readLine();
 		}
+        br.close();
 
         // Insert fixed paths
         String parameters = sb.toString().trim();
@@ -232,7 +266,8 @@ public class LinerOptions {
       	CommandLine line = new GnuParser().parse(makeOptions(), parameters.split(" "));
         configDesc.append("> Load parameters from a ini file: " + filename + "\n");
 
-        this.parseParameters(line, configDesc);
+        this.parseParameters(line, configDesc, allowedOptions);
+//        this.configurationDescription = configDesc.toString();
     }
 	
 	/**
@@ -241,7 +276,7 @@ public class LinerOptions {
 	 * @throws Exception 
 	 * @throws Exception 
 	 */
-	private void parseParameters(CommandLine line, StringBuilder configDesc) throws Exception {
+	private void parseParameters(CommandLine line, StringBuilder configDesc, ArrayList<String> allowedOptions) throws Exception {
 		
 		// Copy parameters passed by command line to properties
 		Iterator<?> i_options = line.iterator();
@@ -251,7 +286,7 @@ public class LinerOptions {
 				continue;
 			if ( o.getOpt().equals("ini") ){
 				configDesc.append( String.format(PARAM_PRINT, o.getOpt(), o.getValue() + "\n" ) );
-    				this.parseFromIni(o.getValue(), configDesc);
+    				this.parseFromIni(o.getValue(), configDesc, allowedOptions);
 			}				
 			else if (o.getLongOpt() == null) {
 				this.properties.setProperty(o.getOpt(), o.getValue());
@@ -285,8 +320,9 @@ public class LinerOptions {
 		
 		// read chunker descriptions
 		if (line.hasOption(OPTION_CHUNKER)) {
-			for (String cd : line.getOptionValues(OPTION_CHUNKER))
-				this.chunkersDescription.add(cd);
+			for (String cd : line.getOptionValues(OPTION_CHUNKER)){
+					this.chunkersDescriptions.add(cd);
+            }
 		}
 		
 		// read corpus descriptions
@@ -487,7 +523,6 @@ public class LinerOptions {
 	
     /**
      * Prints program usage and description.
-     * @param options
      */
     public void printHelp(){
     	System.out.println("--------------------------------------------------*");

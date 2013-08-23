@@ -7,18 +7,39 @@ import corpus2
 startJVM(getDefaultJVMPath(), "-Djava.library.path=../lib", "-Djava.class.path=../liner2.jar")
 
 class Liner2(object):
-	def __init__(self, ini_file, tagset='nkjp'):
+	def __init__(self, liner_ini, chunkers=[], tagset='nkjp'):
 		ChunkerFactory = JClass("liner2.chunker.factory.ChunkerFactory")
 		self.tagset = corpus2.get_named_tagset(tagset)
-		self.chunker = ChunkerFactory.create(ini_file)
+		self.chunkerFactory = JClass("liner2.chunker.factory.ChunkerFactory")
+		self.chunkers = {}
 		self.linerOptions = JClass("liner2.LinerOptions")
+		self.linerOptions.get().loadIni(liner_ini)
 		if not self.linerOptions.get().features.isEmpty():
-			self.featureGen = JClass("liner2.features.TokenFeatureGenerator")(self.linerOptions.get().features)
+			self.featureGen = JClass("liner2.features.TokenFeatureGenerator")
+			self.featureGen.initialize()
 		else:
 			self.featureGen = None
+		print self.featureGen
+		for chunker_ini in chunkers:
+			self.add_chunker(chunker_ini)
+
+	def add_chunker(self, chunker_ini):
+		new_chunker = self.chunkerFactory.create(chunker_ini)
+		chunker_name = self.linerOptions.getOption(self.linerOptions.OPTION_USE)
+		self.chunkers[chunker_name] = new_chunker
+
+	def get_chunker(self, name):
+		if name:
+			chunker = self.chunkers.get(name)
+		else:
+			chunker = self.chunkers.get(self.linerOptions.getOption(self.linerOptions.OPTION_USE))
+		assert chunker is not None, "Invalid chunker name: "+name
+		print chunker
+		return chunker
  
 
-	def process_sentence(self, sentence, only_new=False):
+	def process_sentence(self, sentence, chunker_name='', only_new=False):
+		chunker = self.get_chunker(chunker_name)
 		sentence = sentence.clone_shared()
 		if only_new:
 			annotated_sentence = corpus2.AnnotatedSentence.wrap_sentence(sentence)
@@ -30,11 +51,12 @@ class Liner2(object):
 		p.addSentence(liner_sentence)
 		ps.addParagraph(p)
 		self.generate_features(ps)
-		self.chunker.chunkInPlace(ps)
+		chunker.chunkInPlace(ps)
 		self.liner_annotations_to_corpus_sentence(liner_sentence, sentence)
 		return sentence
 
-	def process_document(self, document, only_new=False):
+	def process_document(self, document, chunker_name='', only_new=False):
+		chunker = self.get_chunker(chunker_name)
 		ps = self.prepare_paragraph_set()
 		for paragraph in document.paragraphs():
 			p = JClass("liner2.structure.Paragraph")(paragraph.get_attribute('id'))
@@ -47,7 +69,7 @@ class Liner2(object):
 				p.addSentence(self.corpus_sent_to_liner(sentence))
 			ps.addParagraph(p)
 		self.generate_features(ps)
-		self.chunker.chunkInPlace(ps)
+		chunker.chunkInPlace(ps)
 		result_document = corpus2.Document()
 		for liner_paragraph, corpus_paragraph in zip(ps.getParagraphs(), document.paragraphs()):
 			p = corpus_paragraph.clone_shared()
@@ -105,6 +127,7 @@ class Liner2(object):
 				annotated_sentence.remove_channel(chan)
 		for ann in liner_sentence.getChunks():
 			chan_name = str(ann.getType().encode('utf-8'))
+			print chan_name
 			if not annotated_sentence.has_channel(chan_name):
 				annotated_sentence.create_channel(chan_name)	
 			chan = annotated_sentence.get_channel(chan_name)

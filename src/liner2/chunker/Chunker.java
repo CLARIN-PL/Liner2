@@ -9,6 +9,7 @@ import liner2.structure.Sentence;
 
 public abstract class Chunker {
 
+    String description;
 	abstract public HashMap<Sentence, AnnotationSet> chunk(ParagraphSet ps);
 
 	public void chunkInPlace(ParagraphSet ps){
@@ -19,6 +20,14 @@ public abstract class Chunker {
 					sentence.addChunking(chunking.get(sentence));
 	}
 
+
+    public void setDescription(String description){
+        this.description = description;
+    }
+
+    public String getDescription(){
+        return description;
+    }
 
 	
 	/**

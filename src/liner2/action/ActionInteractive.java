@@ -50,7 +50,7 @@ public class ActionInteractive extends Action{
 		if (!LinerOptions.get().silent){
 			System.out.println("# Loading, please wait...");
  	}
-		ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescription);		
+		ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescriptions);
 		Chunker chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
 		
 	
@@ -105,8 +105,8 @@ public class ActionInteractive extends Action{
                 ps.setAttributeIndex(paragraph.getAttributeIndex());
 
                 if (!LinerOptions.get().features.isEmpty()){
-                    TokenFeatureGenerator gen = new TokenFeatureGenerator(LinerOptions.get().features);
-                    gen.generateFeatures(ps);
+                    TokenFeatureGenerator.initialize();
+                    TokenFeatureGenerator.generateFeatures(ps);
                 }
 				chunker.chunkInPlace(ps);
 

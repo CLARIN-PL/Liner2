@@ -16,6 +16,12 @@ public class TokenAttributeIndex {
 	ArrayList<String> indexes = new ArrayList<String>();
 	
 	HashMap<String, Integer> nameToIndex = new HashMap<String, Integer>();
+
+    public void addDefaultAttributes(){
+        addAttribute("orth");
+        addAttribute("base");
+        addAttribute("ctag");
+    }
 	
 	/**
 	 * TODO

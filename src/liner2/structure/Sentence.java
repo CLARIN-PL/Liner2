@@ -96,4 +96,12 @@ public class Sentence {
 	public void setId(String id){
 		this.id = id;
 	}
+
+    public String annotationsToString(){
+        StringBuilder output = new StringBuilder();
+        for(Annotation chunk: chunks)
+            output.append(chunk.getType()+" | "+chunk.getText()+"\n");
+        return output.toString();
+    }
+
 }

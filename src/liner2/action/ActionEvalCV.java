@@ -2,6 +2,8 @@ package liner2.action;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 import liner2.LinerOptions;
 import liner2.chunker.Chunker;
@@ -41,8 +43,8 @@ public class ActionEvalCV extends Action{
 				break;
 			}
 			
-			ArrayList<String> currentDescriptions = new ArrayList<String>();
-			for (String desc : LinerOptions.get().chunkersDescription)
+			LinkedHashSet<String> currentDescriptions = new LinkedHashSet<String>();
+			for (String desc : LinerOptions.get().chunkersDescriptions)
 				currentDescriptions.add(desc.replace("FILENAME", trainFile));
 			
 			ChunkerFactory.reset();

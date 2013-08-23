@@ -37,7 +37,7 @@ public class ActionPipe extends Action{
 		ParagraphSet ps = reader.readParagraphSet();
 		
 		/* Create all defined chunkers. */
-		ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescription);
+		ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescriptions);
 		
 		Chunker chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
 		chunker.chunkInPlace(ps);

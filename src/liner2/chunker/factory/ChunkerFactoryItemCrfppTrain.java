@@ -2,7 +2,6 @@ package liner2.chunker.factory;
 
 import java.util.regex.Matcher;
 
-import liner2.LinerOptions;
 import liner2.Main;
 
 import liner2.chunker.CrfppChunker;
