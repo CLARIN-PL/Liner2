@@ -1,4 +1,4 @@
-package liner2.reader;
+package liner2.reader.parser;
 
 import liner2.structure.*;
 import liner2.tools.DataFormatException;
@@ -24,7 +24,7 @@ import java.util.Hashtable;
  * Time: 9:16 AM
  * To change this template use File | Settings | File Templates.
  */
-class CclSaxParser extends DefaultHandler {
+public class CclSaxParser extends DefaultHandler {
 
     private final String TAG_ANN			= "ann";
     private final String TAG_BASE 			= "base";
@@ -191,6 +191,10 @@ class CclSaxParser extends DefaultHandler {
             tmpValue += ac[i];
     }
 
+
+    public ArrayList<Paragraph> getParagraphs(){
+        return paragraphs;
+    }
 
     class AnnChan {
 

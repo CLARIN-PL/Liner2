@@ -19,6 +19,7 @@ import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
 import weka.classifiers.Classifier;
 import weka.classifiers.functions.Logistic;
+import weka.classifiers.meta.MultiClassClassifier;
 import weka.classifiers.trees.J48;
 import weka.core.Attribute;
 import weka.core.FastVector;
@@ -44,9 +45,18 @@ public class AnnotationClassifierChunker extends Chunker
 	 * 
 	 * @param inputChunker
 	 */
-    public AnnotationClassifierChunker(Chunker inputChunker, List <String> features, String classifierName) {
+    public AnnotationClassifierChunker(Chunker inputChunker, List <String> features, String classifierName, String[] classifierOptions, String strategy) {
         try {
-            classifier = Classifier.forName(classifierName, new String[0]);
+            if (strategy.equals("1-vs-all")){
+                classifier = new MultiClassClassifier();
+                classifier.setOptions(new String[]{"-W", classifierName});
+            }
+            else if (strategy.equals("multi")){
+                classifier = Classifier.forName(classifierName, classifierOptions);
+            }
+            else{
+                throw new Exception("Invalid classifier strategy: "+strategy);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

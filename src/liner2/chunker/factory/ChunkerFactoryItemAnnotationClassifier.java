@@ -52,8 +52,16 @@ public class ChunkerFactoryItemAnnotationClassifier extends ChunkerFactoryItem {
         List<String> features = new ArrayList<String>();
         for(String featureName: featuresDesc.keySet())
         features.add(featuresDesc.get(featureName).replace("{INI_DIR}",iniDir));
-
-		AnnotationClassifierChunker chunker = new AnnotationClassifierChunker(baseChunker, features, classifierDesc.get("type"));
+        String[] parameters;
+        if(classifierDesc.containsKey("parameters")){
+            parameters = classifierDesc.get("parameters").split(",");
+        }
+        else{
+            parameters = new String[0];
+        }
+        for(String p: parameters)
+        System.out.println(p);
+		AnnotationClassifierChunker chunker = new AnnotationClassifierChunker(baseChunker, features, classifierDesc.get("type"), parameters, classifierDesc.get("strategy"));
 
         String mode = main.get("mode");
         String modelPath = main.get("store").replace("{INI_DIR}", iniDir);
