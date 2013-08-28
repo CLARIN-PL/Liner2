@@ -1,27 +1,11 @@
 package liner2.reader;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.SAXException; 
-import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.Attributes;
+import liner2.reader.parser.CclSaxParser;
 
 import liner2.structure.TokenAttributeIndex;
-import liner2.structure.Annotation;
 import liner2.structure.Paragraph;
-import liner2.structure.Sentence;
-import liner2.structure.Tag;
-import liner2.structure.Token;
 
 import liner2.tools.DataFormatException;
 
@@ -51,7 +35,7 @@ public class CclSAXStreamReader extends StreamReader {
 		
 	@Override
 	public boolean paragraphReady() throws DataFormatException {
-		if (currIndex<parser_out.paragraphs.size())
+		if (currIndex<parser_out.getParagraphs().size())
 			return true;
 		else
 			return false;
@@ -61,7 +45,7 @@ public class CclSAXStreamReader extends StreamReader {
 	protected Paragraph readRawParagraph() throws DataFormatException {
 		if (!paragraphReady())
 			return null;
-		return parser_out.paragraphs.get(currIndex++);
+		return parser_out.getParagraphs().get(currIndex++);
 	}
 	
 }

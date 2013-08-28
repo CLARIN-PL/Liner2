@@ -1,5 +1,6 @@
 package liner2.reader;
 
+import liner2.reader.parser.CclSaxParser;
 import liner2.structure.Paragraph;
 import liner2.structure.TokenAttributeIndex;
 import liner2.tools.DataFormatException;
@@ -52,7 +53,7 @@ public class CclBatchReader extends StreamReader {
             }
 
             CclSaxParser parser_out = new CclSaxParser(fileAsStream, this.attributeIndex);
-            allParagraphs.addAll(parser_out.paragraphs);
+            allParagraphs.addAll(parser_out.getParagraphs());
         }
 
 

@@ -99,18 +99,18 @@ public class CclSaxParser extends DefaultHandler {
             currentParagraph.setChunkMetaData(chunkMetaData);
             currentParagraph.setAttributeIndex(attributeIndex);
         }
-        if (elementName.equalsIgnoreCase(TAG_SENTENCE)) {
+        else if (elementName.equalsIgnoreCase(TAG_SENTENCE)) {
             currentSentence = new Sentence();
             annotations = new Hashtable<String, Annotation>();
             idx =0;
             currentSentence.setId(attributes.getValue(TAG_ID));
 
         }
-        if (elementName.equalsIgnoreCase(TAG_TOKEN)) {
+        else if (elementName.equalsIgnoreCase(TAG_TOKEN)) {
             currentToken = new Token();
             currentToken.setId(attributes.getValue(TAG_ID));
         }
-        if(elementName.equalsIgnoreCase(TAG_TAG)){
+        else if(elementName.equalsIgnoreCase(TAG_TAG)){
             if (attributes.getValue(TAG_DISAMB) == null)
                 tmpDisamb = false;
             else
@@ -119,12 +119,12 @@ public class CclSaxParser extends DefaultHandler {
             else
                 tmpDisamb = true;
         }
-        if (elementName.equalsIgnoreCase(TAG_ANN)) {
+        else if (elementName.equalsIgnoreCase(TAG_ANN)) {
             chanName = attributes.getValue(TAG_CHAN);
             chanHead = attributes.getValue(TAG_HEAD) != null ?
                     attributes.getValue(TAG_HEAD) : "0";
         }
-        if (elementName.equalsIgnoreCase(TAG_NS)) {
+        else if (elementName.equalsIgnoreCase(TAG_NS)) {
             if (currentToken != null){
                 currentToken.setNoSpaceAfter(true);
             }

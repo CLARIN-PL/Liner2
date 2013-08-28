@@ -17,4 +17,8 @@ public class Tag {
 	public String getBase()		{ return base;	}
 	public String getCtag()		{ return ctag;	}
 	public boolean getDisamb()	{ return disamb; }
+
+    public void setDisamb(boolean disamb){
+        this.disamb = disamb;
+    }
 }

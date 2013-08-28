@@ -1,5 +1,6 @@
 package liner2.reader;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.IOException;
@@ -26,7 +27,12 @@ public class ReaderFactory {
 	 * @return
 	 */
 	public StreamReader getStreamReader(String inputFile, String inputFormat) throws Exception {
-		return getStreamReader(getInputStream(inputFile), inputFormat);
+        if (inputFormat.equals("tei")){
+            return getTEIStreamReader(inputFile);
+        }
+        else{
+		    return getStreamReader(getInputStream(inputFile), inputFormat);
+        }
 	}
 	
 	public StreamReader getStreamReader(InputStream in, String inputFormat) throws Exception {
@@ -43,6 +49,12 @@ public class ReaderFactory {
 		else
 			throw new Exception("Input format " + inputFormat + " not recognized.");
 	}
+
+    public StreamReader getTEIStreamReader(String inputFolder) throws Exception{
+        InputStream annMorphosyntax = getInputStream(new File(inputFolder,"ann_morphosyntax.xml").getPath());
+        InputStream annNamed = getInputStream(new File(inputFolder,"ann_named.xml").getPath());
+        return new TEIStreamReader(annMorphosyntax, annNamed);
+    }
 	
 	private InputStream getInputStream(String inputFile) throws Exception {
 		if ((inputFile == null) || (inputFile.isEmpty()))
