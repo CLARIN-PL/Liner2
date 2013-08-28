@@ -90,8 +90,11 @@ public class AnnNamedSAXParser extends DefaultHandler {
             currentFeatureName = attributes.getValue("name");
         }
         else if (elementName.equalsIgnoreCase(TAG_SYMBOL)) {
-            if (currentFeatureName.equals("type")){
+            if (currentFeatureName.equals("ne_type")){
                 annotationType =  attributes.getValue("value");
+            }
+            else if (currentFeatureName.equals("ne_subtype")){
+                annotationType +=  "-" + attributes.getValue("value");
             }
         }
         else if (elementName.equalsIgnoreCase(TAG_POINTER)) {
