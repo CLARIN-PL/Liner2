@@ -1,8 +1,6 @@
 package liner2.writer;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 
 import liner2.writer.CclStreamWriter;
 import liner2.writer.IobStreamWriter;
@@ -25,7 +23,12 @@ public class WriterFactory {
 	 * @return
 	 */
 	public StreamWriter getStreamWriter(String outputFile, String outputFormat) throws Exception {
-		return getStreamWriter(getOutputStream(outputFile), outputFormat);
+        if (outputFormat.equals("tei")){
+            return getTEIWriter(outputFile);
+        }
+        else{
+            return getStreamWriter(getOutputStream(outputFile), outputFormat);
+        }
 	}
 	
 	public StreamWriter getStreamWriter(OutputStream out, String outputFormat) throws Exception {
@@ -42,6 +45,14 @@ public class WriterFactory {
 		else		
 			throw new Exception("Output format " + outputFormat + " not recognized.");
 	}
+
+    public StreamWriter getTEIWriter(String outputFolder) throws Exception{
+        OutputStream text = getOutputStream(new File(outputFolder,"text.xml").getPath());
+        OutputStream annSegmentation = getOutputStream(new File(outputFolder,"ann_segmentation.xml").getPath());
+        OutputStream annMorphosyntax = getOutputStream(new File(outputFolder,"ann_morphosyntax.xml").getPath());
+        OutputStream annNamed = getOutputStream(new File(outputFolder,"ann_named.xml").getPath());
+        return new TEIStreamWriter(text, annSegmentation, annMorphosyntax, annNamed, new File(outputFolder).getName());
+    }
 	
 	private OutputStream getOutputStream(String outputFile) throws Exception {
 		if ((outputFile == null) || (outputFile.isEmpty()))
