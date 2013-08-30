@@ -149,6 +149,35 @@ public class TEIStreamWriter extends StreamWriter{
         xmlw.writeStartElement(TAG_TEXT);
     }
 
+    private void writeParagraphStart(String paragraphId, String paragraphSegmentationId) throws XMLStreamException {
+        this.indent(5, textWriter);
+        textWriter.writeStartElement(TAG_PARAGRAPH);
+        textWriter.writeAttribute("xml:id", paragraphId);
+        textWriter.writeCharacters("\n");
+        this.indent(6, textWriter);
+
+        this.indent(4, annSegmentationWriter);
+        annSegmentationWriter.writeStartElement(TAG_PARAGRAPH);
+        annSegmentationWriter.writeAttribute("corresp", "text_structure.xml#" + paragraphId);
+        annSegmentationWriter.writeAttribute("xml:id", paragraphSegmentationId);
+        annSegmentationWriter.writeCharacters("\n");
+
+        this.indent(4, annMorphosyntaxWriter);
+        annMorphosyntaxWriter.writeStartElement(TAG_PARAGRAPH);
+        annMorphosyntaxWriter.writeAttribute("xml:id", paragraphId);
+        annMorphosyntaxWriter.writeCharacters("\n");
+
+        this.indent(4, annNamedWriter);
+        annNamedWriter.writeStartElement(TAG_PARAGRAPH);
+        annNamedWriter.writeAttribute("xml:id", paragraphId);
+        annNamedWriter.writeAttribute("corresp", "ann_morphosyntax.xml#" + paragraphId);
+        annNamedWriter.writeCharacters("\n");
+    }
+
+    private void writeSentence(){
+
+    }
+
     @Override
     public void writeParagraph(Paragraph paragraph) {
         try{
@@ -157,30 +186,9 @@ public class TEIStreamWriter extends StreamWriter{
             }
             currentParagraphIdx++;
             String paragraphId = "p-"+currentParagraphIdx;
-            String segmentId = "segm_" + paragraphId;
+            String paragraphSegmentationId = "segm_" + paragraphId;
 
-            this.indent(5, textWriter);
-            textWriter.writeStartElement(TAG_PARAGRAPH);
-            textWriter.writeAttribute("xml:id", paragraphId);
-            textWriter.writeCharacters("\n");
-            this.indent(6, textWriter);
-
-            this.indent(4, annSegmentationWriter);
-            annSegmentationWriter.writeStartElement(TAG_PARAGRAPH);
-            annSegmentationWriter.writeAttribute("corresp", "text_structure.xml#" + paragraphId);
-            annSegmentationWriter.writeAttribute("xml:id", segmentId);
-            annSegmentationWriter.writeCharacters("\n");
-
-            this.indent(4, annMorphosyntaxWriter);
-            annMorphosyntaxWriter.writeStartElement(TAG_PARAGRAPH);
-            annMorphosyntaxWriter.writeAttribute("xml:id", paragraphId);
-            annMorphosyntaxWriter.writeCharacters("\n");
-
-            this.indent(4, annNamedWriter);
-            annNamedWriter.writeStartElement(TAG_PARAGRAPH);
-            annNamedWriter.writeAttribute("xml:id", paragraphId);
-            annNamedWriter.writeAttribute("corresp", "ann_morphosyntax.xml#" + paragraphId);
-            annNamedWriter.writeCharacters("\n");
+            writeParagraphStart(paragraphId, paragraphSegmentationId);
 
             boolean noSpace = false;
             int sentenceNr = 1;
@@ -192,12 +200,12 @@ public class TEIStreamWriter extends StreamWriter{
 
                 this.indent(5, annSegmentationWriter);
                 annSegmentationWriter.writeStartElement(TAG_SENTENCE);
-                annSegmentationWriter.writeAttribute("xml:id", segmentId+"."+sentenceNr+"-s");
+                annSegmentationWriter.writeAttribute("xml:id", paragraphSegmentationId+"."+sentenceNr+"-s");
                 annSegmentationWriter.writeCharacters("\n");
 
                 this.indent(5, annMorphosyntaxWriter);
                 annMorphosyntaxWriter.writeStartElement(TAG_SENTENCE);
-                annMorphosyntaxWriter.writeAttribute("corresp", "ann_segmentation.xml#" + segmentId+"."+sentenceNr+"-s");
+                annMorphosyntaxWriter.writeAttribute("corresp", "ann_segmentation.xml#" + paragraphSegmentationId+"."+sentenceNr+"-s");
                 annMorphosyntaxWriter.writeAttribute("xml:id",sentenceId);
                 annMorphosyntaxWriter.writeCharacters("\n");
 
@@ -210,14 +218,12 @@ public class TEIStreamWriter extends StreamWriter{
 
 
                 ArrayList<Token> sentenceTokens = sent.getTokens();
-//                System.out.println("SENT:" +sent.getId()+"| num tokens: "+sent.getTokenNumber());
                 for(int i=0; i < sent.getTokenNumber(); i++){
-                    String tokenTEIId = segmentId+"."+tokenNr+"-seg";
+                    String tokenTEIId = paragraphSegmentationId+"."+tokenNr+"-seg";
                     tokenTEIIds.put(i, tokenTEIId);
 
                     Token tok = sentenceTokens.get(i);
                     int currentTokenStart = wholeParagraph.length();
-//                    System.out.println(wholeParagraph.length()+" >>"+wholeParagraph.toString()+"<< ");
                     String orth = tok.getFirstValue();
 
                     this.indent(6, annSegmentationWriter);
@@ -232,7 +238,7 @@ public class TEIStreamWriter extends StreamWriter{
                     String morphSegId = "morph_" + paragraphId + "." + tokenNr + "-seg";
                     this.indent(6, annMorphosyntaxWriter);
                     annMorphosyntaxWriter.writeStartElement(TAG_SEGMENT);
-                    annMorphosyntaxWriter.writeAttribute("corresp", "ann_segmentation.xml#" + segmentId + "." + tokenNr + "-seg");
+                    annMorphosyntaxWriter.writeAttribute("corresp", "ann_segmentation.xml#" + paragraphSegmentationId + "." + tokenNr + "-seg");
                     annMorphosyntaxWriter.writeAttribute("xml:id", morphSegId);
                     annMorphosyntaxWriter.writeCharacters("\n");
                     this.indent(7, annMorphosyntaxWriter);
@@ -273,7 +279,7 @@ public class TEIStreamWriter extends StreamWriter{
                         this.indent(annMorphoSyntaxIndent, annMorphosyntaxWriter);
                         annMorphosyntaxWriter.writeStartElement(TAG_FEATURESET);
                         annMorphosyntaxWriter.writeAttribute("type", "lex");
-                        annMorphosyntaxWriter.writeAttribute("xml:id", morphSegId+"_"+(lexId++)+"-lex");
+                        annMorphosyntaxWriter.writeAttribute("xml:id", morphSegId + "_" + (lexId++) + "-lex");
                         annMorphosyntaxWriter.writeCharacters("\n");
                         this.indent(++annMorphoSyntaxIndent, annMorphosyntaxWriter);
                         annMorphosyntaxWriter.writeStartElement(TAG_FEATURE);
@@ -457,6 +463,10 @@ public class TEIStreamWriter extends StreamWriter{
                 annMorphosyntaxWriter.writeEndElement();
                 annMorphosyntaxWriter.writeCharacters("\n");
 
+                this.indent(5, annNamedWriter);
+                annNamedWriter.writeEndElement();
+                annNamedWriter.writeCharacters("\n");
+
             }
             this.indent(4, annSegmentationWriter);
             annSegmentationWriter.writeEndElement();
@@ -465,6 +475,10 @@ public class TEIStreamWriter extends StreamWriter{
             this.indent(4, annMorphosyntaxWriter);
             annMorphosyntaxWriter.writeEndElement();
             annMorphosyntaxWriter.writeCharacters("\n");
+
+            this.indent(4, annNamedWriter);
+            annNamedWriter.writeEndElement();
+            annNamedWriter.writeCharacters("\n");
 
             textWriter.writeCharacters(wholeParagraph.toString().trim());
             textWriter.writeCharacters("\n");
@@ -486,6 +500,7 @@ public class TEIStreamWriter extends StreamWriter{
             writeClosing(textWriter, 4);
             writeClosing(annSegmentationWriter, 3);
             writeClosing(annMorphosyntaxWriter, 3);
+            writeClosing(annNamedWriter, 3);
 
             textWriter.close();
             annSegmentationWriter.close();
