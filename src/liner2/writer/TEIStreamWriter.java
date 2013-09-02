@@ -222,15 +222,19 @@ public class TEIStreamWriter extends StreamWriter{
 
         ArrayList<Token> sentenceTokens = sent.getTokens();
         HashMap<Integer, String> tokenTEIIds = new HashMap<Integer, String>();
-        boolean noPreviousSpace = true;
+        boolean noPreviousSpace = false;
         for(int i=0; i < sent.getTokenNumber(); i++){
             currentIds.put("tokenId", currentIds.get("paragraphId") + "." + (currentTokenNr++) + "-seg");
             Token currentToken = sentenceTokens.get(i);
             tokenTEIIds.put(i, "morph_" + currentIds.get("tokenId"));
             writeToken(currentToken, currentIds, wholeParagraph, noPreviousSpace);
             noPreviousSpace = currentToken.getNoSpaceAfter();
+            System.out.println(" bez spacji >>"+wholeParagraph.toString()+"<<");
+            if (!noPreviousSpace){
+                wholeParagraph.append(" ");
+            }
+            System.out.println(" po spacji >>"+wholeParagraph.toString()+"<<");
         }
-        wholeParagraph.append(" ");
 
         int annotationNr = 1;
         for(Annotation ann: sent.getChunks()){
@@ -282,10 +286,6 @@ public class TEIStreamWriter extends StreamWriter{
     }
 
     public void writeToken(Token tok, HashMap<String, String> currentIds, StringBuilder wholeParagraph, boolean noPreviousSpace) throws XMLStreamException {
-        if (!noPreviousSpace){
-            wholeParagraph.append(" ");
-        }
-
         int tokenStart = wholeParagraph.length();
         String orth = tok.getFirstValue();
 
