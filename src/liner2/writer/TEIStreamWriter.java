@@ -7,10 +7,9 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintStream;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -54,6 +53,8 @@ public class TEIStreamWriter extends StreamWriter{
     private boolean indent = true;
     private String documentName;
     private int currentParagraphIdx;
+    TokenAttributeIndex attributeIndex;
+
     public TEIStreamWriter(OutputStream text, OutputStream annSegmentation, OutputStream annMorphosyntax, OutputStream annNamed, String documentName) {
         this.documentName = documentName;
         this.text = text;
@@ -171,6 +172,7 @@ public class TEIStreamWriter extends StreamWriter{
 
     @Override
     public void writeParagraph(Paragraph paragraph) {
+        attributeIndex = paragraph.getAttributeIndex();
         try{
             HashMap<String, String> currentIds = new HashMap<String, String>();
             if (!open){
@@ -224,7 +226,7 @@ public class TEIStreamWriter extends StreamWriter{
         for(int i=0; i < sent.getTokenNumber(); i++){
             currentIds.put("tokenId", currentIds.get("paragraphId") + "." + (currentTokenNr++) + "-seg");
             Token currentToken = sentenceTokens.get(i);
-            tokenTEIIds.put(i, "segm_" + currentIds.get("tokenId"));
+            tokenTEIIds.put(i, "morph_" + currentIds.get("tokenId"));
             writeToken(currentToken, currentIds, wholeParagraph, currentToken.getNoSpaceAfter());
         }
 
@@ -346,7 +348,8 @@ public class TEIStreamWriter extends StreamWriter{
         annMorphosyntaxWriter.writeCharacters("\n");
         this.indent(9, annMorphosyntaxWriter);
         annMorphosyntaxWriter.writeStartElement(TAG_FEATURESET);
-        annMorphosyntaxWriter.writeAttribute("feats", "ToDo");
+        String featsVal =  attributeIndex.getAttributeValue(tok, "tagTool");
+        annMorphosyntaxWriter.writeAttribute("feats", featsVal != null ? featsVal : "#unknown");
         annMorphosyntaxWriter.writeAttribute("type", "tool_report");
         annMorphosyntaxWriter.writeCharacters("\n");
         this.indent(10, annMorphosyntaxWriter);

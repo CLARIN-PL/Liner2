@@ -27,6 +27,7 @@ public class TEIStreamReader extends  StreamReader{
         this.attributeIndex.addAttribute("orth");
         this.attributeIndex.addAttribute("base");
         this.attributeIndex.addAttribute("ctag");
+        this.attributeIndex.addAttribute("tagTool");
         AnnMorphosyntaxSAXParser morphoParser = new AnnMorphosyntaxSAXParser(annMorphosyntax, this.attributeIndex);
         AnnNamedSAXParser namedParser = new AnnNamedSAXParser(annNamed, morphoParser.getParagraphs(), morphoParser.getTokenIdsMap());
         this.paragraphs = namedParser.getParagraphs();
