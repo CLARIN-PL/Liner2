@@ -222,13 +222,15 @@ public class TEIStreamWriter extends StreamWriter{
 
         ArrayList<Token> sentenceTokens = sent.getTokens();
         HashMap<Integer, String> tokenTEIIds = new HashMap<Integer, String>();
-
+        boolean noPreviousSpace = true;
         for(int i=0; i < sent.getTokenNumber(); i++){
             currentIds.put("tokenId", currentIds.get("paragraphId") + "." + (currentTokenNr++) + "-seg");
             Token currentToken = sentenceTokens.get(i);
             tokenTEIIds.put(i, "morph_" + currentIds.get("tokenId"));
-            writeToken(currentToken, currentIds, wholeParagraph, currentToken.getNoSpaceAfter());
+            writeToken(currentToken, currentIds, wholeParagraph, noPreviousSpace);
+            noPreviousSpace = currentToken.getNoSpaceAfter();
         }
+        wholeParagraph.append(" ");
 
         int annotationNr = 1;
         for(Annotation ann: sent.getChunks()){
@@ -279,7 +281,11 @@ public class TEIStreamWriter extends StreamWriter{
         writeEndElementLine(--annNamedIndent, annNamedWriter);
     }
 
-    public void writeToken(Token tok, HashMap<String, String> currentIds, StringBuilder wholeParagraph, boolean noSpace) throws XMLStreamException {
+    public void writeToken(Token tok, HashMap<String, String> currentIds, StringBuilder wholeParagraph, boolean noPreviousSpace) throws XMLStreamException {
+        if (!noPreviousSpace){
+            wholeParagraph.append(" ");
+        }
+
         int tokenStart = wholeParagraph.length();
         String orth = tok.getFirstValue();
 
@@ -289,6 +295,9 @@ public class TEIStreamWriter extends StreamWriter{
         this.indent(6, annSegmentationWriter);
         annSegmentationWriter.writeEmptyElement(TAG_SEGMENT);
         annSegmentationWriter.writeAttribute("corresp", String.format("text_structure.xml#string-range(%s,%d,%d)", currentIds.get("paragraphId"), tokenStart, orth.length()));
+        if (noPreviousSpace){
+            annSegmentationWriter.writeAttribute("nkjp:nps","true");
+        }
         annSegmentationWriter.writeAttribute("xml:id","segm_" + currentIds.get("tokenId"));
         annSegmentationWriter.writeCharacters("\n");
 
@@ -369,11 +378,7 @@ public class TEIStreamWriter extends StreamWriter{
         for(int i=10; i > 5; i--){
             writeEndElementLine(i, annMorphosyntaxWriter);
         }
-
         wholeParagraph.append(orth);
-        if (!noSpace){
-            wholeParagraph.append(" ");
-        }
     }
 
     public void writeLexeme(TEILex lex, HashMap<String, String> currentIds, int currentIndent) throws XMLStreamException {

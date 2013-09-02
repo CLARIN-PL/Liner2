@@ -52,8 +52,9 @@ public class ReaderFactory {
 
     public StreamReader getTEIStreamReader(String inputFolder) throws Exception{
         InputStream annMorphosyntax = getInputStream(new File(inputFolder,"ann_morphosyntax.xml").getPath());
+        InputStream annSegmentation = getInputStream(new File(inputFolder,"ann_segmentation.xml").getPath());
         InputStream annNamed = getInputStream(new File(inputFolder,"ann_named.xml").getPath());
-        return new TEIStreamReader(annMorphosyntax, annNamed);
+        return new TEIStreamReader(annMorphosyntax, annSegmentation, annNamed);
     }
 	
 	private InputStream getInputStream(String inputFile) throws Exception {

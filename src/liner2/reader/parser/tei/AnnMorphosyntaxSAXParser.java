@@ -96,6 +96,7 @@ public class AnnMorphosyntaxSAXParser extends DefaultHandler{
             currentTokenTags = new HashMap<String, Tag>();
             tokenIdsMap.put(attributes.getValue(TAG_ID),idx++);
             currentToken.setId(attributes.getValue(TAG_ID));
+
         }
         else if (elementName.equalsIgnoreCase(TAG_FEATURE)) {
             if(currentFeatureName.equals("disamb") && attributes.getValue("name").equals("choice")){
