@@ -229,11 +229,9 @@ public class TEIStreamWriter extends StreamWriter{
             tokenTEIIds.put(i, "morph_" + currentIds.get("tokenId"));
             writeToken(currentToken, currentIds, wholeParagraph, noPreviousSpace);
             noPreviousSpace = currentToken.getNoSpaceAfter();
-            System.out.println(" bez spacji >>"+wholeParagraph.toString()+"<<");
             if (!noPreviousSpace){
                 wholeParagraph.append(" ");
             }
-            System.out.println(" po spacji >>"+wholeParagraph.toString()+"<<");
         }
 
         int annotationNr = 1;
