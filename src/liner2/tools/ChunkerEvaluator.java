@@ -112,7 +112,7 @@ public class ChunkerEvaluator {
 		HashSet<Annotation> trueChunkSet = new HashSet<Annotation>(chunkingRef.chunkSet());
 		HashSet<Annotation> trueChunkSetIter = new HashSet<Annotation>(trueChunkSet);
 
-		chunking.filter(LinerOptions.get().filters);
+		chunking.filter(LinerOptions.getGlobal().filters);
 		HashSet<Annotation> testedChunkSet = new HashSet<Annotation>(chunking.chunkSet());
 		HashSet<Annotation> testedChunkSetIter = new HashSet<Annotation>(testedChunkSet);
 		

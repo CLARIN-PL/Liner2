@@ -20,7 +20,7 @@ public class ChunkerFactoryItemCrfppTrain extends ChunkerFactoryItem {
 	}
 
 	@Override
-	public Chunker getChunker(String description) throws Exception {
+	public Chunker getChunker(String description, ChunkerManager cm) throws Exception {
 
        	Matcher matcherCRFPP = this.pattern.matcher(description);
 		if (matcherCRFPP.find()){

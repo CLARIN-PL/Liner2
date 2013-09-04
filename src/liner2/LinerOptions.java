@@ -40,20 +40,21 @@ public class LinerOptions {
 	 * Read-only access to the LinerOptions 
 	 * @return
 	 */
-	public static LinerOptions get(){
+	public static LinerOptions getGlobal(){
 		return linerOptions;
 	}
 	
 	/**
 	 * Get property value
 	 */
-	public static String getOption(String option) {
-		return linerOptions.getProperties().getProperty(option);
+	public String getOption(String option) {
+		return properties.getProperty(option);
 	}
-	
-	public static void requireOption(String option) throws ParameterException {
-		// TODO not implemented yet
-	}
+
+    public String getOptionUse() {
+        return properties.getProperty(OPTION_USE);
+    }
+
 
 	private Options options = null;
 	private String configurationDescription = "";
@@ -96,8 +97,6 @@ public class LinerOptions {
 	public String mode = "";
 
 	// List of options read from cmd
-	public boolean nested = false;
-	public boolean useHeuristics = false;
 	public boolean verbose = false;
 	public boolean verboseDetails = false;
 	public boolean silent = false;
@@ -105,19 +104,12 @@ public class LinerOptions {
 	public ArrayList<Filter> filters = new ArrayList<Filter>();
 	public ArrayList<String> features = new ArrayList<String>();
 	public ArrayList<String> featureNames = new ArrayList<String>();
-//	public DictionaryManager dm = new DictionaryManager();
 	public String arg1 = null;
 	public String arg2 = null;
 	public String arg3 = null;
 	public String linerPath = "";
-//	public String nerd = null;		// replaced with e.g. getOption(OPTION_NERD)
-//	public String inputFile = "";
-//	public String outputFile = "";
-//	public String python = "python";
-	public ArrayList<Integer> folds = new ArrayList<Integer>();
 	public LinkedHashSet<String> chunkersDescriptions = new LinkedHashSet<String>();
 	public ArrayList<String> corpusDescriptions = new ArrayList<String>();
-	public TreeSet<String> common = new TreeSet<String>();
 	
 	/**
 	 * Constructor
@@ -132,7 +124,7 @@ public class LinerOptions {
 	}
 	
 	public static boolean isOption(String name){
-		return LinerOptions.get().getProperties().containsKey(name);
+		return LinerOptions.getGlobal().getProperties().containsKey(name);
 	}
 	
 	/**
@@ -220,7 +212,7 @@ public class LinerOptions {
 		for (String cd : this.corpusDescriptions)
 			CorpusFactory.get().parse(cd);
     	
-//		this.configurationDescription = configDesc.toString();
+		this.configurationDescription = configDesc.toString();
 	}
     
     /**

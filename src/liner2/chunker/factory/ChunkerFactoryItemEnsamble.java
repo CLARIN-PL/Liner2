@@ -14,11 +14,11 @@ public class ChunkerFactoryItemEnsamble extends ChunkerFactoryItem {
 	}
 
 	@Override
-	public Chunker getChunker(String description) throws Exception {
+	public Chunker getChunker(String description, ChunkerManager cm) throws Exception {
 		Matcher matcher = this.pattern.matcher(description);
 		if (matcher.find()) {
 			String chunkerDescription = matcher.group(1);
-			return ChunkerFactory.getChunkerPipe(chunkerDescription);
+			return ChunkerFactory.getChunkerPipe(chunkerDescription, cm);
 		}
 		else
 			return null;

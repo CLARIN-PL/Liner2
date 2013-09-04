@@ -15,13 +15,13 @@ public class ChunkerFactoryItemPropagate extends ChunkerFactoryItem {
 	}
 	
 	@Override
-	public Chunker getChunker(String description) throws Exception {
+	public Chunker getChunker(String description, ChunkerManager cm) throws Exception {
 		Matcher matcher = this.pattern.matcher(description);
 		if (matcher.find()) {
 			Main.log("--> Chunk propagation");
 
 			String baseChunkerName = matcher.group(1);
-			Chunker baseChunker = ChunkerFactory.getChunkerByName(baseChunkerName);
+			Chunker baseChunker = cm.getChunkerByName(baseChunkerName);
 			if (baseChunker == null)
 				throw new ParameterException("Propagate Chunker: undefined base chunker: " + baseChunkerName);
 			return new PropagateChunker(baseChunker);

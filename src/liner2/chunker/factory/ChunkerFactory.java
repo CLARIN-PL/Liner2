@@ -16,7 +16,6 @@ public class ChunkerFactory {
 	private static ChunkerFactory factory = null;
 	
 	private ArrayList<ChunkerFactoryItem> items = new ArrayList<ChunkerFactoryItem>();
-	private HashMap<String, Chunker> chunkers = new HashMap<String, Chunker>(); 
 	
 	private ChunkerFactory(){
 		this.items.add(new ChunkerFactoryItemAdu());
@@ -43,10 +42,6 @@ public class ChunkerFactory {
 			ChunkerFactory.factory = new ChunkerFactory();
 		return ChunkerFactory.factory;
 	}
-
-	public static Chunker getChunkerByName(String name) {
-		return ChunkerFactory.get().chunkers.get(name);
-	}
 	
 	/**
 	 * Get human-readable description of chunker commands.
@@ -65,51 +60,37 @@ public class ChunkerFactory {
 	 * @return
 	 * @throws Exception 
 	 */
-	public static Chunker createChunker(String description) throws Exception{
+	public static Chunker createChunker(String description, ChunkerManager cm) throws Exception{
 		Main.log("-> Setting up chunker: " + description);
-		if (true){
-			for (ChunkerFactoryItem item : ChunkerFactory.get().items)
-				if ( item.getPattern().matcher(description).find() )
-					return item.getChunker(description);
+		for (ChunkerFactoryItem item : ChunkerFactory.get().items) {
+			if ( item.getPattern().matcher(description).find() ) {
+				Chunker chunker =  item.getChunker(description, cm);
+                chunker.setDescription(description);
+                return chunker;
+            }
         }
-		return null;
+        throw new Error(String.format("Chunker description '%s' not recognized", description));
 	}
-
-    public static Chunker create(String iniPath) throws Exception{
-        LinerOptions.get().loadChunkerDescription(iniPath);
-        ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescriptions);
-        Chunker chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
-        return chunker;
-    }
 	
 	/**
 	 * Creates a hash of chunkers according to the description
 	 * @param descriptions
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	public static void loadChunkers(LinkedHashSet<String> descriptions)
-		throws Exception {
+	public static ChunkerManager loadChunkers(LinkedHashSet<String> descriptions) throws Exception {
+        ChunkerManager cm = new ChunkerManager();
 		for (String desc : descriptions) {
 			int pos = desc.indexOf(':');
-			if (pos == -1)
+			if (pos == -1){
 				throw new Exception("Invalid chunker name.");
+            }
 			String chunkerName = desc.substring(0, pos);
 			String chunkerDesc = desc.substring(pos+1);
-            if(ChunkerFactory.get().chunkers.containsKey(chunkerName)){
-                if(!ChunkerFactory.get().chunkers.get(chunkerName).getDescription().equals(chunkerDesc)){
-                    throw new Error(String.format("Chunker name '%s' duplicated", chunkerName));
-                }
-            }
-			Chunker chunker = ChunkerFactory.createChunker(chunkerDesc);
-            if (chunker != null){
-                chunker.setDescription(chunkerDesc);
-				ChunkerFactory.get().chunkers.put(chunkerName, chunker);
-            }
-			else
-				throw new Error(String.format("Chunker description '%s' not recognized", 
-						chunkerDesc));
+			Chunker chunker = ChunkerFactory.createChunker(chunkerDesc, cm);
+            cm.addChunker(chunkerName, chunker);
 		}
+        return cm;
 	}
 	
 	
@@ -125,50 +106,43 @@ public class ChunkerFactory {
 		return false;
 	}
 	
-	public static void reset() {
-		ChunkerFactory.get().chunkers = new HashMap<String, Chunker>();
-	}
-	
 	/**
 	 * Create chunker pipe according to given description. The chunker names
 	 * must be provided in the list of chunker description passed to the
 	 * constructor.
-	 * 
-	 * Example: c1 --- get single chunker named `c1`
-	 * 
+	 *
+	 * Example: c1 --- getGlobal single chunker named `c1`
+	 *
 	 * @param description
 	 * @return
 	 */
-	public static Chunker getChunkerPipe(String description) {
-		return ChunkerFactory.get().getChunkerUnionPipe(description.split("\\+"));
-	}
-	
-	private Chunker getChunkerUnionPipe(String[] descriptions) {
-		if (descriptions.length == 1)
-			return getChunkerVotingPipe(descriptions[0].split("\\*"));
-		else {
-			ArrayList<Chunker> chunkers = new ArrayList<Chunker>();
-			for (int i = 0; i < descriptions.length; i++)
-				chunkers.add(getChunkerVotingPipe(descriptions[i].split("\\*")));
-			return new UnionChunker(chunkers);
-		}
-	}
-	
-	private Chunker getChunkerVotingPipe(String[] descriptions) {
-		if (descriptions.length == 1)
-			return getAtomChunkerPipe(descriptions[0]);
-		else {
-			ArrayList<Chunker> chunkers = new ArrayList<Chunker>();
-			for (int i = 0; i < descriptions.length; i++)
-				chunkers.add(getAtomChunkerPipe(descriptions[i]));
-			return new MajorityVotingChunker(chunkers);
-		}
-	}
-	
-	private Chunker getAtomChunkerPipe(String description) {
-		if (chunkers.containsKey(description))
-			return chunkers.get(description);
-		else
-			throw new Error(String.format("Chunker '%s' not defined", description));
-	}
+    public static Chunker getChunkerPipe(String description, ChunkerManager cm) {
+        return getChunkerUnionPipe(description.split("\\+"), cm);
+    }
+
+    private static Chunker getChunkerUnionPipe(String[] chunkerNames, ChunkerManager cm) {
+        if (chunkerNames.length == 1) {
+            return getChunkerVotingPipe(chunkerNames[0].split("\\*"), cm);
+        }
+        else {
+            ArrayList<Chunker> chunkers = new ArrayList<Chunker>();
+            for (String name: chunkerNames) {
+                chunkers.add(getChunkerVotingPipe(name.split("\\*"), cm));
+            }
+            return new UnionChunker(chunkers);
+        }
+    }
+
+    private static Chunker getChunkerVotingPipe(String[] chunkerNames, ChunkerManager cm) {
+        if (chunkerNames.length == 1){
+            return cm.getChunkerByName(chunkerNames[0]);
+        }
+        else {
+            ArrayList<Chunker> chunkers = new ArrayList<Chunker>();
+            for (String name: chunkerNames){
+                chunkers.add(cm.getChunkerByName(name));
+            }
+            return new MajorityVotingChunker(chunkers);
+        }
+    }
 }

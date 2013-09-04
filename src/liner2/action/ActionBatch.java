@@ -3,6 +3,8 @@ package liner2.action;
 import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
 
+import liner2.chunker.factory.ChunkerManager;
+import liner2.features.TokenFeatureGenerator;
 import liner2.reader.ReaderFactory;
 import liner2.reader.StreamReader;
 
@@ -35,21 +37,21 @@ public class ActionBatch extends Action{
 		if ( !LinerOptions.isOption(LinerOptions.OPTION_IS) ){
                         throw new ParameterException("Parameter --is <file_with_input_files_list> not set");
                 }
-		ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescriptions);
-		Chunker chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
+		ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal().chunkersDescriptions);
+        Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
 
 		File file = null;
   		FileReader freader = null;
   		LineNumberReader lnreader = null;
   		
-  		String output_format = LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FORMAT);
+  		String output_format = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FORMAT);
   		String output_ext = output_format;
   		if ( output_ext.equals("ccl") )
   			output_ext = "xml";
   		
 		int i=0;
   		try{
-  			file = new File(LinerOptions.getOption(LinerOptions.OPTION_IS));
+  			file = new File(LinerOptions.getGlobal().getOption(LinerOptions.OPTION_IS));
   			freader = new FileReader(file);
   			lnreader = new LineNumberReader(freader);
   			String line = "";
@@ -61,8 +63,13 @@ public class ActionBatch extends Action{
 				
 				System.out.println(i+": "+line);
 				StreamReader reader = ReaderFactory.get().getStreamReader(
-                		line, LinerOptions.getOption(LinerOptions.OPTION_INPUT_FORMAT));
+                		line, LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FORMAT));
                 ParagraphSet ps = reader.readParagraphSet();
+
+                if (!LinerOptions.getGlobal().features.isEmpty()){
+                    TokenFeatureGenerator gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
+                    gen.generateFeatures(ps);
+                }
 
                 chunker.chunkInPlace(ps);
                 

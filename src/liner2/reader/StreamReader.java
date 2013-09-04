@@ -23,10 +23,6 @@ public abstract class StreamReader {
 		if (paragraphReady()){
 			Paragraph p = this.readRawParagraph();
 			p.setAttributeIndex(this.getAttributeIndex());
-			if (!LinerOptions.get().features.isEmpty()){
-				TokenFeatureGenerator.initialize();
-                TokenFeatureGenerator.generateFeatures(p, true);
-			}
 			return p;
 		}
 		else
@@ -44,11 +40,6 @@ public abstract class StreamReader {
 			paragraphSet.addParagraph(readRawParagraph());
 		paragraphSet.setAttributeIndex(this.getAttributeIndex());
 		close();
-		
-		if (!LinerOptions.get().features.isEmpty()){
-            TokenFeatureGenerator.initialize();
-            TokenFeatureGenerator.generateFeatures(paragraphSet);
-		}
 						
 		return paragraphSet; 
 	}

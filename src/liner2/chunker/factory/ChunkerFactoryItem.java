@@ -17,6 +17,15 @@ public abstract class ChunkerFactoryItem {
 		return this.pattern;
 	}
 	
-	abstract public Chunker getChunker(String description) throws Exception ;
+	abstract public Chunker getChunker(String description, ChunkerManager cm) throws Exception ;
+
+    public void addChunker(Chunker chunker, String chunkerName, String chunkerDesc, ChunkerManager cm){
+        if (chunker != null){
+            chunker.setDescription(chunkerDesc);
+            cm.addChunker(chunkerName, chunker);
+        }
+        else
+            throw new Error(String.format("Chunker description '%s' not recognized", chunkerDesc));
+    }
 	
 }

@@ -36,7 +36,7 @@ public class CorpusFactory {
 	
 	/*
 	 * Get a corpus defined by queryString.
-	   @param queryString Corpus name or multiple names separated by commas to get a union of corpora.
+	   @param queryString Corpus name or multiple names separated by commas to getGlobal a union of corpora.
 	   @return Corpus specified by queryString.
 	 */
 	

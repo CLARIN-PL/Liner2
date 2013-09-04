@@ -15,7 +15,7 @@ public class ChunkerFactoryItemDictFullLoad extends ChunkerFactoryItem {
 	}
 
 	@Override
-	public Chunker getChunker(String description) throws Exception {
+	public Chunker getChunker(String description, ChunkerManager cm) throws Exception {
 		Matcher matcher = this.pattern.matcher(description);
 		if (matcher.find()){
             Main.log("--> Dictionary Chunker load");

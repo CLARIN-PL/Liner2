@@ -16,59 +16,46 @@ import liner2.structure.TokenAttributeIndex;
 
 public class TokenFeatureGenerator {
 
-	private static ArrayList<TokenFeature> tokenGenerators = new ArrayList<TokenFeature>();
-	private static ArrayList<DictFeature> sentenceGenerators = new ArrayList<DictFeature>();
-	private static TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
-	private final static String[] sourceFeatures = new String[]{"orth", "base", "ctag"};
-	private static Agr1Feature agr1Feat = null;
-	private static boolean initialized = false;
-
-    private TokenFeatureGenerator(){}
-
-	public static void initialize(){
-        if(!initialized){
-            for( String sf: sourceFeatures){
-                attributeIndex.addAttribute(sf);
-            }
-            try{
-                for ( String feature : LinerOptions.get().features ){
-                    Feature f = TokenFeatureFactory.create(feature);
-                    if  (f != null){
-                        if (DictFeature.class.isInstance(f))
-                            sentenceGenerators.add((DictFeature) f);
-                        else if(Agr1Feature.class.isInstance(f))
-                            agr1Feat = (Agr1Feature)f;
-                        else
-                            tokenGenerators.add((TokenFeature) f);
-                        attributeIndex.addAttribute(f.getName());
-                    }
-                }
-            }
-            catch(Exception ex){
-                ex.printStackTrace();
-                System.out.println(">> " + ex.getMessage());
-            }
-            initialized = true;
-        }
+	private ArrayList<TokenFeature> tokenGenerators = new ArrayList<TokenFeature>();
+	private ArrayList<DictFeature> sentenceGenerators = new ArrayList<DictFeature>();
+	private TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
+	private String[] sourceFeatures = new String[]{"orth", "base", "ctag"};
+	private Agr1Feature agr1Feat = null;
+	
+	/**
+	 * 
+	 * @param features — array with feature definitions
+	 */
+	public TokenFeatureGenerator(ArrayList<String> features){
+		for( String sf: sourceFeatures)
+			this.attributeIndex.addAttribute(sf);
+		try{
+			for ( String feature : features ){
+				Feature f = TokenFeatureFactory.create(feature);
+				if  (f != null){
+					if (DictFeature.class.isInstance(f))
+						this.sentenceGenerators.add((DictFeature) f);
+					else if(Agr1Feature.class.isInstance(f))
+						this.agr1Feat = (Agr1Feature)f;
+					else
+						this.tokenGenerators.add((TokenFeature) f);
+					this.attributeIndex.addAttribute(f.getName());
+				}
+			}
+		}
+		catch(Exception ex){
+            ex.printStackTrace();
+            System.out.println(">> " + ex.getMessage());
+		}
 	}
-
-    public static void updateFeatures(){
-        tokenGenerators = new ArrayList<TokenFeature>();
-        sentenceGenerators = new ArrayList<DictFeature>();
-        attributeIndex = new TokenAttributeIndex();
-        agr1Feat = null;
-        initialized = false;
-        initialize();
-
-    }
 	
 	/**
 	 * Return index of token attributes (mapping from feature name to their corresponding
 	 * position in the array of attributes).
 	 * @return
 	 */
-	public static TokenAttributeIndex getAttributeIndex(){
-		return attributeIndex;
+	public TokenAttributeIndex getAttributeIndex(){
+		return this.attributeIndex;
 	}
 	
 	/**
@@ -77,47 +64,47 @@ public class TokenFeatureGenerator {
 	 * @param ps
 	 * @throws Exception
 	 */
-	public static void generateFeatures(ParagraphSet ps) throws Exception {
-		ps.getAttributeIndex().update(attributeIndex.allAtributes());
+	public void generateFeatures(ParagraphSet ps) throws Exception {
+		ps.getAttributeIndex().update(this.attributeIndex.allAtributes());
 		for (Paragraph p : ps.getParagraphs()){
 			generateFeatures(p, false);
 		}
-		ps.getAttributeIndex().update(LinerOptions.get().featureNames);
+		ps.getAttributeIndex().update(LinerOptions.getGlobal().featureNames);
 	}
 
-	public static void generateFeatures(Paragraph p, boolean updateAttributeIndex) throws Exception {
+	public void generateFeatures(Paragraph p, boolean updateAttributeIndex) throws Exception {
 		if(updateAttributeIndex)
-			p.getAttributeIndex().update(attributeIndex.allAtributes());
+			p.getAttributeIndex().update(this.attributeIndex.allAtributes());
 		for (Sentence s : p.getSentences())
 			generateFeatures(s);
 		if(updateAttributeIndex)
-			p.getAttributeIndex().update(LinerOptions.get().featureNames);
+			p.getAttributeIndex().update(LinerOptions.getGlobal().featureNames);
 	}
 
-	public static void generateFeatures(Sentence s) throws Exception {
+	public void generateFeatures(Sentence s) throws Exception {
 
 		for (Token t : s.getTokens()){
-			t.packAtributes(attributeIndex.getLength());
+			t.packAtributes(this.attributeIndex.getLength());
 			ArrayList<Integer> toDel = new ArrayList<Integer>();
 			generateFeatures(t);
 			for(String sourceFeat: sourceFeatures)
-				if(!LinerOptions.get().featureNames.contains(sourceFeat))
-					toDel.add(attributeIndex.getIndex(sourceFeat)-toDel.size());
+				if(!LinerOptions.getGlobal().featureNames.contains(sourceFeat))
+					toDel.add(this.attributeIndex.getIndex(sourceFeat)-toDel.size());
 			for(int idx: toDel)
 				t.removeAttribute(idx);
 		}
-		for (DictFeature f :sentenceGenerators)
-			f.generate(s, attributeIndex.getIndex(f.getName()));
+		for (DictFeature f : this.sentenceGenerators)
+			f.generate(s, this.attributeIndex.getIndex(f.getName()));
 		if (agr1Feat != null)
-			agr1Feat.generate(s, attributeIndex.getIndex("agr1"),
-								 attributeIndex.getIndex("case"),
-								 attributeIndex.getIndex("number"),
-								 attributeIndex.getIndex("gender"));
+			agr1Feat.generate(s, this.attributeIndex.getIndex("agr1"),
+								 this.attributeIndex.getIndex("case"),
+								 this.attributeIndex.getIndex("number"),
+								 this.attributeIndex.getIndex("gender"));
 	}
 
-	public static void generateFeatures(Token t) throws Exception {
-		for (TokenFeature f : tokenGenerators){
-			t.setAttributeValue(attributeIndex.getIndex(f.getName()), f.generate(t));
+	public void generateFeatures(Token t) throws Exception {
+		for (TokenFeature f : this.tokenGenerators){
+			t.setAttributeValue(this.attributeIndex.getIndex(f.getName()), f.generate(t));
 		}
 	}
 }

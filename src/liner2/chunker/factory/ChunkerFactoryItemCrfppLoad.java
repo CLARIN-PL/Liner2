@@ -14,7 +14,7 @@ public class ChunkerFactoryItemCrfppLoad extends ChunkerFactoryItem {
 	}
 
 	@Override
-	public Chunker getChunker(String description) throws Exception {
+	public Chunker getChunker(String description, ChunkerManager cm) throws Exception {
        	Matcher matcherCRFPPload = this.pattern.matcher(description);
 		if (matcherCRFPPload.find()){
 			String model_filename = matcherCRFPPload.group(1); 

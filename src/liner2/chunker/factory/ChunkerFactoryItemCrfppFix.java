@@ -17,13 +17,13 @@ public class ChunkerFactoryItemCrfppFix extends ChunkerFactoryItem {
 	}
 
 	@Override
-	public Chunker getChunker(String description) throws Exception {
+	public Chunker getChunker(String description, ChunkerManager cm) throws Exception {
        	Matcher matcher = this.pattern.matcher(description);
 		if (matcher.find()){
 			String chunkername = matcher.group(1); 
             Main.log("--> CRFPP Fix Chunker on  " + chunkername);
             
-			Chunker baseChunker = ChunkerFactory.getChunkerByName(chunkername);
+			Chunker baseChunker = cm.getChunkerByName(chunkername);
 			if (baseChunker == null)
 				throw new ParameterException("Crfpp Fix: undefined base chunker: " + chunkername);
 			return new CrfppFix(baseChunker);

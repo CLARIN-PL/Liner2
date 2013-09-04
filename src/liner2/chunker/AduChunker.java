@@ -93,9 +93,9 @@ public class AduChunker extends Chunker {
 //				ArrayList<Token> tokens = s.getTokens();
 //
 //				for (Chunk chunk : chunking.chunkSet()) {
-//					String seq = tokens.get(chunk.getBegin()).getFirstValue();
+//					String seq = tokens.getGlobal(chunk.getBegin()).getFirstValue();
 //				 	for (int i = chunk.getBegin()+1; i < chunk.getEnd(); i++)
-//						seq += " " + tokens.get(i).getFirstValue();
+//						seq += " " + tokens.getGlobal(i).getFirstValue();
 //					if (!this.dictionary.containsKey(seq))
 //						this.dictionary.put(seq, chunk.getType());
 //				} 
@@ -105,13 +105,13 @@ public class AduChunker extends Chunker {
 //					int featureIdx = ai.getIndex(chunk.getType().toLowerCase());
 //					boolean updateFeature = true;
 //					for (int i = chunk.getBegin(); i < chunk.getEnd(); i++) {
-//						if (!tokens.get(i).getAttributeValue(featureIdx).equals("O"))
+//						if (!tokens.getGlobal(i).getAttributeValue(featureIdx).equals("O"))
 //							updateFeature = false;
 //					}
 //					if (updateFeature) {
-//						tokens.get(chunk.getBegin()).setAttributeValue(featureIdx, "B");
+//						tokens.getGlobal(chunk.getBegin()).setAttributeValue(featureIdx, "B");
 //						for (int i = chunk.getBegin()+1; i < chunk.getEnd(); i++)
-//							tokens.get(i).setAttributeValue(featureIdx, "I");
+//							tokens.getGlobal(i).setAttributeValue(featureIdx, "I");
 //					}
 //				}
 //			}

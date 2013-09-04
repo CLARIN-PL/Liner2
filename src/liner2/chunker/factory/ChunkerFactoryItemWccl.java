@@ -17,7 +17,7 @@ public class ChunkerFactoryItemWccl extends ChunkerFactoryItem {
 	}
 
 	@Override
-	public Chunker getChunker(String description) throws Exception {
+	public Chunker getChunker(String description, ChunkerManager cm) throws Exception {
 		Matcher matcherWccl = this.pattern.matcher(description);
 		if (matcherWccl.find()) {
 			String wcclFile = matcherWccl.group(1);

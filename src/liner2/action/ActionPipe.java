@@ -3,6 +3,8 @@ package liner2.action;
 import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
 
+import liner2.chunker.factory.ChunkerManager;
+import liner2.features.TokenFeatureGenerator;
 import liner2.reader.ReaderFactory;
 import liner2.reader.StreamReader;
 
@@ -31,20 +33,25 @@ public class ActionPipe extends Action{
 		}		
 	
         StreamReader reader = ReaderFactory.get().getStreamReader(
-			LinerOptions.getOption(LinerOptions.OPTION_INPUT_FILE),
-			LinerOptions.getOption(LinerOptions.OPTION_INPUT_FORMAT));
+			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FILE),
+			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FORMAT));
         
 		ParagraphSet ps = reader.readParagraphSet();
+
+        if (!LinerOptions.getGlobal().features.isEmpty()){
+            TokenFeatureGenerator gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
+            gen.generateFeatures(ps);
+        }
 		
 		/* Create all defined chunkers. */
-		ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescriptions);
-		
-		Chunker chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
+        ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal().chunkersDescriptions);
+        Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
+
 		chunker.chunkInPlace(ps);
 			
 		StreamWriter writer = WriterFactory.get().getStreamWriter(
-			LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FILE),
-			LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FORMAT));
+			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FILE),
+			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FORMAT));
 		writer.writeParagraphSet(ps);
 	}
 		

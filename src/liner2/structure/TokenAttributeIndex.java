@@ -61,7 +61,7 @@ public class TokenAttributeIndex {
 	 */
 	public int getIndex(String name){
 		return indexes.indexOf(name);
-		//return this.nameToIndex.get(name);
+		//return this.nameToIndex.getGlobal(name);
 	}
 	
 	public String getName(int index){

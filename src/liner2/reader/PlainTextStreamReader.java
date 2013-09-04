@@ -34,8 +34,8 @@ public class PlainTextStreamReader extends StreamReader {
 		if (this.init)
 			return;
 
-		String maca_path = LinerOptions.getOption(LinerOptions.OPTION_MACA);
-		String wmbt_path = LinerOptions.getOption(LinerOptions.OPTION_WMBT);
+		String maca_path = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_MACA);
+		String wmbt_path = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_WMBT);
 		if (maca_path == null)
 			throw new DataFormatException("Plain text reader: requires morphological analyzer (set -maca option).");
 		if (maca_path.equals("-")) 

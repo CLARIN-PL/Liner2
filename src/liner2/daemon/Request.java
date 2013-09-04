@@ -23,7 +23,7 @@ public class Request {
 	public String getOutputFormat() { return this.outputFormat; }
 	public String getText() { return this.text; }
 
-	// get stats
+	// getGlobal stats
 	public int getNumTokens() { return this.numTokens; }
 	public int getNumSentences() { return this.numSentences; }
 	public int getNumParagraphs() { return this.numParagraphs; }

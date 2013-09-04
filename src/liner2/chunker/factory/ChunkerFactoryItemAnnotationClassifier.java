@@ -24,7 +24,7 @@ public class ChunkerFactoryItemAnnotationClassifier extends ChunkerFactoryItem {
 	}
 
 	@Override
-	public Chunker getChunker(String description) throws Exception {
+	public Chunker getChunker(String description, ChunkerManager cm) throws Exception {
 		Main.log("Training annotation classifier");
 
 		Matcher m = this.pattern.matcher(description);
@@ -44,7 +44,7 @@ public class ChunkerFactoryItemAnnotationClassifier extends ChunkerFactoryItem {
         Chunker baseChunker = null;
 
 		if ( inputClassifier != null ){
-			baseChunker = ChunkerFactory.getChunkerByName(inputClassifier);
+			baseChunker = cm.getChunkerByName(inputClassifier);
 			if (baseChunker == null)
 				throw new ParameterException("Annotation Classifier: undefined base chunker: " + inputClassifier);
 		}

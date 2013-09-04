@@ -20,7 +20,7 @@ public class ChunkerFactoryItemHeuristic extends ChunkerFactoryItem {
 	}
 
 	@Override
-	public Chunker getChunker(String description) throws Exception {
+	public Chunker getChunker(String description, ChunkerManager cm) throws Exception {
 		Matcher matcherHeuristic = this.pattern.matcher(description);
 		if (matcherHeuristic.find()) {
 			HeuristicChunker chunker = null;

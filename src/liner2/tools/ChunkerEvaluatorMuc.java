@@ -126,7 +126,7 @@ public class ChunkerEvaluatorMuc {
 		HashSet<Annotation> trueChunkSet = chunkingRef.chunkSet();
 		HashSet<Annotation> trueChunkSetIter = new HashSet<Annotation>(trueChunkSet);
 
-		chunking.filter(LinerOptions.get().filters);			
+		chunking.filter(LinerOptions.getGlobal().filters);
 		HashSet<Annotation> testedChunkSet = chunking.chunkSet();
 		HashSet<Annotation> testedChunkSetIter = new HashSet<Annotation>(testedChunkSet);
 		
@@ -227,7 +227,7 @@ public class ChunkerEvaluatorMuc {
 //	 * @param type
 //	 */
 //	public float getRecall(String type){
-//		return recall.get(type);
+//		return recall.getGlobal(type);
 //	}
 //
 //	/**
@@ -244,7 +244,7 @@ public class ChunkerEvaluatorMuc {
 //	 * @return
 //	 */
 //	public float getFMeasure(String type){
-//		return fMeasure.get(type);
+//		return fMeasure.getGlobal(type);
 //	}
 	
 	public void setQuiet(boolean quiet) {

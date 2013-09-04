@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import liner2.LinerOptions;
-import liner2.Main;
 
 public class Template {
 	ArrayList<String> featureNames = new ArrayList<String>();
@@ -20,7 +19,7 @@ public class Template {
 			if (pos == -1)
 				throw new Exception("Invalid template description: " + description);
 			String featureName = featureUnits[0].substring(0, pos);
-			if(! LinerOptions.get().featureNames.contains(featureName))
+			if(! LinerOptions.getGlobal().featureNames.contains(featureName))
 				throw new DataFormatException("Error while parsing template: "+featureName+" not specified in features");
 
 			String[] windowDesc = featureUnits[0].split(":");

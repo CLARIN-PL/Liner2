@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
 
+import liner2.chunker.factory.ChunkerManager;
 import liner2.features.TokenFeatureGenerator;
 import liner2.reader.ReaderFactory;
 import liner2.reader.StreamReader;
@@ -44,17 +45,17 @@ public class ActionInteractive extends Action{
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		String cSeq = "";
 		
-		String maca = LinerOptions.getOption(LinerOptions.OPTION_MACA);
-		String wmbt = LinerOptions.getOption(LinerOptions.OPTION_WMBT);
+		String maca = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_MACA);
+		String wmbt = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_WMBT);
 
-		if (!LinerOptions.get().silent){
+		if (!LinerOptions.getGlobal().silent){
 			System.out.println("# Loading, please wait...");
  	}
-		ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescriptions);
-		Chunker chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
+        ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal().chunkersDescriptions);
+        Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
 		
 	
-		if (!LinerOptions.get().silent){
+		if (!LinerOptions.getGlobal().silent){
 			System.out.println("# Enter a sentence and press Enter.");
 			if (maca == null) {
 				System.out.println("#   Tokens should be seperated with double spaces.");
@@ -65,7 +66,7 @@ public class ActionInteractive extends Action{
         }
 		
 		do {
-	        if (!LinerOptions.get().silent)
+	        if (!LinerOptions.getGlobal().silent)
 	        	System.out.print("> ");
 			
 			// Get line of text to process
@@ -104,16 +105,16 @@ public class ActionInteractive extends Action{
 				ps.addParagraph(paragraph);
                 ps.setAttributeIndex(paragraph.getAttributeIndex());
 
-                if (!LinerOptions.get().features.isEmpty()){
-                    TokenFeatureGenerator.initialize();
-                    TokenFeatureGenerator.generateFeatures(ps);
+                if (!LinerOptions.getGlobal().features.isEmpty()){
+                    TokenFeatureGenerator gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
+                    gen.generateFeatures(ps);
                 }
 				chunker.chunkInPlace(ps);
 
 				// write output
 				StreamWriter writer = WriterFactory.get().getStreamWriter(
-					LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FILE),
-					LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FORMAT));
+					LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FILE),
+					LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FORMAT));
                 writer.writeParagraphSet(ps);
 			}
 		} while (!cSeq.equals("EOF"));

@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
 
+import liner2.chunker.factory.ChunkerManager;
 import liner2.tools.ParameterException;
 
 import liner2.LinerOptions;
@@ -43,8 +44,8 @@ public class DaemonThread extends Thread {
 		String db_host = null, db_port = "3306", db_user = null,
 			db_pass = "", db_name = null;
 
-		// get access data from db_uri parameter
-		String db_uri = LinerOptions.getOption(LinerOptions.OPTION_DB_URI);
+		// getGlobal access data from db_uri parameter
+		String db_uri = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_URI);
 		if (db_uri != null) {
 			Pattern dbUriPattern = Pattern.compile("([^:@]*)(:([^:@]*))?@([^:@]*)(:([^:@]*))?/(.*)");
 			Matcher dbUriMatcher = dbUriPattern.matcher(db_uri);
@@ -60,16 +61,16 @@ public class DaemonThread extends Thread {
 		}
 
 		// overwrite with access data from db_* parameters
-		if (LinerOptions.getOption(LinerOptions.OPTION_DB_HOST) != null)
-			db_host = LinerOptions.getOption(LinerOptions.OPTION_DB_HOST);
-		if (LinerOptions.getOption(LinerOptions.OPTION_DB_PORT) != null)
-			db_port = LinerOptions.getOption(LinerOptions.OPTION_DB_PORT);
-		if (LinerOptions.getOption(LinerOptions.OPTION_DB_USER) != null)
-			db_user = LinerOptions.getOption(LinerOptions.OPTION_DB_USER);
-		if (LinerOptions.getOption(LinerOptions.OPTION_DB_PASSWORD) != null)
-			db_pass = LinerOptions.getOption(LinerOptions.OPTION_DB_PASSWORD);
-		if (LinerOptions.getOption(LinerOptions.OPTION_DB_NAME) != null)
-			db_name = LinerOptions.getOption(LinerOptions.OPTION_DB_NAME);
+		if (LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_HOST) != null)
+			db_host = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_HOST);
+		if (LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_PORT) != null)
+			db_port = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_PORT);
+		if (LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_USER) != null)
+			db_user = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_USER);
+		if (LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_PASSWORD) != null)
+			db_pass = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_PASSWORD);
+		if (LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_NAME) != null)
+			db_name = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_NAME);
 
 		if ((db_host == null) || (db_user == null) || (db_name == null))
 			throw new ParameterException("Daemon mode: database access data required!");
@@ -89,10 +90,10 @@ public class DaemonThread extends Thread {
 		this.db = new Database(this.db_addr);
 
 		// setup ip address and port number
-		this.ip = LinerOptions.getOption(LinerOptions.OPTION_IP);
+		this.ip = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_IP);
 		if (this.ip == null)
 			throw new ParameterException("Daemon mode: -ip (IP address) option is obligatory!");
-		String optPort = LinerOptions.getOption(LinerOptions.OPTION_PORT);
+		String optPort = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_PORT);
 		if (optPort == null)
 			throw new ParameterException("Daemon mode: -p (port) option is obligatory!");
     	try {
@@ -103,7 +104,7 @@ public class DaemonThread extends Thread {
 
 		// setup maximum threads number
 		this.maxThreads = this.DEFAULT_MAX_THREADS;
-		String optMaxThreads = LinerOptions.getOption(LinerOptions.OPTION_MAX_THREADS);
+		String optMaxThreads = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_MAX_THREADS);
 		if (optMaxThreads != null) {
 			try {
 				this.maxThreads = Integer.parseInt(optMaxThreads);
@@ -121,8 +122,8 @@ public class DaemonThread extends Thread {
 	public void run() {
 		// load chunker
 		try {
-			ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescriptions);
-			this.chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
+            ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal().chunkersDescriptions);
+            this.chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

@@ -92,7 +92,7 @@ public class ArffStreamWriter extends StreamWriter {
 		throws IOException {
 //		String line = token.getFirstValue();
 //		ArrayList<Tag> tags = token.getTags();
-//		Tag firstTag = tags.get(0);
+//		Tag firstTag = tags.getGlobal(0);
 //		line += " " + firstTag.getBase() + " " + firstTag.getCtag();
 		String line = "";
 //		for (int i = 0; i < token.getNumAttributes(); i++)

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import liner2.LinerOptions;
 import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
+import liner2.chunker.factory.ChunkerManager;
+import liner2.features.TokenFeatureGenerator;
 import liner2.reader.ReaderFactory;
 import liner2.reader.StreamReader;
 import liner2.structure.AnnotationSet;
@@ -35,16 +37,22 @@ public class ActionEval extends Action{
     	ProcessingTimer timer = new ProcessingTimer();
 
     	timer.startTimer("Chunkers init.");
-    	ChunkerFactory.loadChunkers(LinerOptions.get().chunkersDescriptions);
-    	Chunker chunker = ChunkerFactory.getChunkerPipe(LinerOptions.getOption(LinerOptions.OPTION_USE));
+        ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal().chunkersDescriptions);
+        Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
 		timer.stopTimer();
 
         StreamReader reader = ReaderFactory.get().getStreamReader(
-    			LinerOptions.getOption(LinerOptions.OPTION_INPUT_FILE),
-    			LinerOptions.getOption(LinerOptions.OPTION_INPUT_FORMAT));
+    			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FILE),
+    			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FORMAT));
     	
     	timer.startTimer("Data reading");
     	ParagraphSet ps = reader.readParagraphSet();
+
+        if (!LinerOptions.getGlobal().features.isEmpty()){
+            TokenFeatureGenerator gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
+            gen.generateFeatures(ps);
+        }
+
 		chunker.prepare(ps);
     	timer.stopTimer();
 

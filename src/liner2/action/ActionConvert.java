@@ -1,5 +1,6 @@
 package liner2.action;
 
+import liner2.features.TokenFeatureGenerator;
 import liner2.structure.ParagraphSet;
 
 import liner2.reader.StreamReader;
@@ -9,8 +10,6 @@ import liner2.writer.StreamWriter;
 import liner2.writer.WriterFactory;
 
 import liner2.LinerOptions;
-
-import liner2.features.TokenFeatureGenerator;
 
 public class ActionConvert extends Action {
 	
@@ -25,12 +24,18 @@ public class ActionConvert extends Action {
 		// -t (--target) plik wyjściowy, jeżeli brak, to na stdout
 		
 		StreamReader reader = ReaderFactory.get().getStreamReader(
-			LinerOptions.getOption(LinerOptions.OPTION_INPUT_FILE),
-			LinerOptions.getOption(LinerOptions.OPTION_INPUT_FORMAT));
+			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FILE),
+			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FORMAT));
 		ParagraphSet ps = reader.readParagraphSet();
+
+        if (!LinerOptions.getGlobal().features.isEmpty()){
+            TokenFeatureGenerator gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
+            gen.generateFeatures(ps);
+        }
+
 		StreamWriter writer = WriterFactory.get().getStreamWriter(
-			LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FILE),
-			LinerOptions.getOption(LinerOptions.OPTION_OUTPUT_FORMAT));
+			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FILE),
+			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FORMAT));
 		writer.writeParagraphSet(ps);
 	}
 

@@ -21,8 +21,8 @@ public class Main {
     	Action action = null;
 
     	try{
-            LinerOptions.get().parse(args);            
-	    	String mode = LinerOptions.get().mode;
+            LinerOptions.getGlobal().parse(args);
+	    	String mode = LinerOptions.getGlobal().mode;
 	    	action = Main.getAction(mode);	    	
 	    	if (action == null){
 	            throw new ParameterException(String.format("Mode '%s' not recognized", mode));
@@ -32,11 +32,11 @@ public class Main {
 	    	}
     	}
     	catch (UnrecognizedOptionException ex) {
-            LinerOptions.get().printHelp();
+            LinerOptions.getGlobal().printHelp();
             System.out.println(">> " + ex.getMessage() );            
 		}
     	catch(ParameterException ex){
-            LinerOptions.get().printHelp();
+            LinerOptions.getGlobal().printHelp();
             System.out.println(">> " + ex.getMessage() );            
     	}
     	catch(Exception ex){
@@ -59,7 +59,7 @@ public class Main {
      * @param details
      */
     public static void log(String text, boolean details){
-    	if (LinerOptions.get().verboseDetails || (!details && LinerOptions.get().verbose) )
+    	if (LinerOptions.getGlobal().verboseDetails || (!details && LinerOptions.getGlobal().verbose) )
     		System.out.println(text);
     }
     
@@ -98,7 +98,7 @@ public class Main {
             action = new ActionTrain();
         }
 
-		LinerOptions.get().printConfigurationDescription();
+		LinerOptions.getGlobal().printConfigurationDescription();
 
     	return action;
     }
