@@ -8,6 +8,11 @@ import liner2.LinerOptions;
 public class Template {
 	ArrayList<String> featureNames = new ArrayList<String>();
 	Hashtable<String, String[]> features = new Hashtable<String, String[]>();
+    ArrayList<String> validFeatures = new ArrayList<String>();
+
+    public Template(ArrayList<String> validFeatures){
+        this.validFeatures = validFeatures;
+    }
 	
 	public void addFeature(String description) throws Exception {
 		String[] featureUnits = description.split("/");
@@ -19,7 +24,7 @@ public class Template {
 			if (pos == -1)
 				throw new Exception("Invalid template description: " + description);
 			String featureName = featureUnits[0].substring(0, pos);
-			if(! LinerOptions.getGlobal().featureNames.contains(featureName))
+			if(!validFeatures.contains(featureName))
 				throw new DataFormatException("Error while parsing template: "+featureName+" not specified in features");
 
 			String[] windowDesc = featureUnits[0].split(":");
@@ -40,6 +45,8 @@ public class Template {
 				String[] featureUnit = featureUnits[i].split(":");
 				if (featureUnit.length != 2)
 					throw new Exception("Invalid template description: " + description);
+                if (!validFeatures.contains(featureUnit[0]))
+                    throw new DataFormatException("Error while parsing template: "+featureUnit[0]+" not specified in features");
 				if (featureNameB.length() > 0)
 					featureNameB.append("/");
 				featureNameB.append(featureUnit[0] + "[" + featureUnit[1] + "]");

@@ -35,7 +35,7 @@ public class TemplateFactory {
 		return this.templates.keySet();
 	}
 	
-	public void parse(String description) throws Exception {
+	public void parse(String description, ArrayList<String> validFeatures) throws Exception {
 		Main.log("TemplateFactory.parse("+description+")");
 		int pos = description.indexOf(":");
 		if (pos == -1)
@@ -45,7 +45,7 @@ public class TemplateFactory {
 		if (this.templates.containsKey(templateName))
 			this.templates.get(templateName).addFeature(featureDesc);
 		else {
-			Template template = new Template();
+			Template template = new Template(validFeatures);
 			template.addFeature(featureDesc);
 			this.templates.put(templateName, template);
 		}
