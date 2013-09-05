@@ -1,6 +1,9 @@
 package liner2.features;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Set;
 
 import liner2.LinerOptions;
 import liner2.features.tokens.Agr1Feature;
@@ -21,16 +24,17 @@ public class TokenFeatureGenerator {
 	private TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
 	private String[] sourceFeatures = new String[]{"orth", "base", "ctag"};
 	private Agr1Feature agr1Feat = null;
-	
+	private ArrayList<String> featureNames;
 	/**
 	 * 
 	 * @param features — array with feature definitions
 	 */
-	public TokenFeatureGenerator(ArrayList<String> features){
+	public TokenFeatureGenerator(LinkedHashMap<String, String> features){
+        this.featureNames = new ArrayList<String>(features.keySet());
 		for( String sf: sourceFeatures)
 			this.attributeIndex.addAttribute(sf);
 		try{
-			for ( String feature : features ){
+			for ( String feature : features.values() ){
 				Feature f = TokenFeatureFactory.create(feature);
 				if  (f != null){
 					if (DictFeature.class.isInstance(f))
@@ -69,7 +73,7 @@ public class TokenFeatureGenerator {
 		for (Paragraph p : ps.getParagraphs()){
 			generateFeatures(p, false);
 		}
-		ps.getAttributeIndex().update(LinerOptions.getGlobal().featureNames);
+		ps.getAttributeIndex().update(featureNames);
 	}
 
 	public void generateFeatures(Paragraph p, boolean updateAttributeIndex) throws Exception {
@@ -78,7 +82,7 @@ public class TokenFeatureGenerator {
 		for (Sentence s : p.getSentences())
 			generateFeatures(s);
 		if(updateAttributeIndex)
-			p.getAttributeIndex().update(LinerOptions.getGlobal().featureNames);
+			p.getAttributeIndex().update(featureNames);
 	}
 
 	public void generateFeatures(Sentence s) throws Exception {
@@ -88,7 +92,7 @@ public class TokenFeatureGenerator {
 			ArrayList<Integer> toDel = new ArrayList<Integer>();
 			generateFeatures(t);
 			for(String sourceFeat: sourceFeatures)
-				if(!LinerOptions.getGlobal().featureNames.contains(sourceFeat))
+				if(!featureNames.contains(sourceFeat))
 					toDel.add(this.attributeIndex.getIndex(sourceFeat)-toDel.size());
 			for(int idx: toDel)
 				t.removeAttribute(idx);

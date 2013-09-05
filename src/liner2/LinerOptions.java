@@ -102,8 +102,9 @@ public class LinerOptions {
 	public boolean silent = false;
 
 	public ArrayList<Filter> filters = new ArrayList<Filter>();
-	public ArrayList<String> features = new ArrayList<String>();
-	public ArrayList<String> featureNames = new ArrayList<String>();
+//	public ArrayList<String> features = new ArrayList<String>();
+//	public ArrayList<String> featureNames = new ArrayList<String>();
+    public LinkedHashMap<String, String> features = new LinkedHashMap<String, String>();
 	public String arg1 = null;
 	public String arg2 = null;
 	public String arg3 = null;
@@ -150,7 +151,6 @@ public class LinerOptions {
     public void loadFeatures(String featuresIni){
         try {
             features.clear();
-            featureNames.clear();
             parseFromIni(featuresIni, new StringBuilder(), new ArrayList<String>(Arrays.asList("feature", "template", "ini")));
         } catch (Exception e) {
             e.printStackTrace();
@@ -301,13 +301,16 @@ public class LinerOptions {
 		// read feature definitions and initialize feature generator
 		if (line.hasOption(OPTION_FEATURE)) {
 			for (String feature : line.getOptionValues(OPTION_FEATURE)) {
-				this.features.add(feature);
 				String[] splitted = feature.split(":");
-				if(splitted.length > 2 && splitted[1].length() == 1)
-					this.featureNames.add(splitted[0]+splitted[1]);
-				else
-					this.featureNames.add(splitted[0]);
-			}
+                String featureName;
+                if(splitted.length > 2 && splitted[1].length() == 1) {
+                    featureName = splitted[0]+splitted[1];
+                }
+				else {
+                    featureName = splitted[0];
+                }
+                this.features.put(featureName, feature);
+            }
 		}
 		
 		// read chunker descriptions
@@ -331,7 +334,7 @@ public class LinerOptions {
 		// read template descriptions
 		if (line.hasOption(OPTION_TEMPLATE)) {
 			for (String td : line.getOptionValues(OPTION_TEMPLATE)) {
-				TemplateFactory.get().parse(td);
+				TemplateFactory.get().parse(td, features.keySet());
 			}
 		}
 		

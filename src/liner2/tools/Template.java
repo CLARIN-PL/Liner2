@@ -2,15 +2,16 @@ package liner2.tools;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Set;
 
 import liner2.LinerOptions;
 
 public class Template {
 	ArrayList<String> featureNames = new ArrayList<String>();
 	Hashtable<String, String[]> features = new Hashtable<String, String[]>();
-    ArrayList<String> validFeatures = new ArrayList<String>();
+    Set<String> validFeatures;
 
-    public Template(ArrayList<String> validFeatures){
+    public Template(Set<String> validFeatures){
         this.validFeatures = validFeatures;
     }
 	

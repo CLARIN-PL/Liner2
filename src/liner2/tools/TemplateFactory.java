@@ -35,7 +35,7 @@ public class TemplateFactory {
 		return this.templates.keySet();
 	}
 	
-	public void parse(String description, ArrayList<String> validFeatures) throws Exception {
+	public void parse(String description, Set<String> validFeatures) throws Exception {
 		Main.log("TemplateFactory.parse("+description+")");
 		int pos = description.indexOf(":");
 		if (pos == -1)
