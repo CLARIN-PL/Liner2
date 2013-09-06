@@ -25,6 +25,14 @@ public class ChunkerManager {
         chunkers.put(name, chunker);
     }
 
+    public void addChunker(String name, String description){
+        try {
+            addChunker(name, ChunkerFactory.createChunker(description, this));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public Chunker getChunkerByName(String name) {
         return chunkers.get(name);
     }
