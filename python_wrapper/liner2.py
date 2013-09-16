@@ -1,7 +1,6 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 from jpype import *
-import tempfile
 import corpus2
 
 startJVM(getDefaultJVMPath(), "-Djava.library.path=../lib", "-Djava.class.path=../liner2.jar")
@@ -25,7 +24,7 @@ class Liner2(object):
         if not name:
             name = self.options.getOptionUse()
         return self.chunkerManager.getChunkerByName(name)
- 
+
 
     def process_sentence(self, sentence, chunker_name='', only_new=False):
         chunker = self.get_chunker(chunker_name)
