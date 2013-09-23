@@ -102,7 +102,6 @@ public class CrfppChunker extends Chunker
     @Override
 	public void train(ParagraphSet paragraphSet) throws Exception {
 		this.prepareTrainingData(paragraphSet);
-		this.prepareTemplates(paragraphSet);
 		this.compileTagger();
     }
 
@@ -150,17 +149,6 @@ public class CrfppChunker extends Chunker
     	this.trainingFileWriter.flush();
     		
     }
-
-    /**
-     * 
-     * @param paragraphSet
-     * @throws Exception 
-     */
-    private void prepareTemplates(ParagraphSet paragraphSet) throws Exception {
-        for (Object templateName : TemplateFactory.get().getTemplateNames())
-        	TemplateFactory.get().store(""+templateName, templateName+".tpl",
-        		paragraphSet.getAttributeIndex());
-	}
     
     /**
      * Kompilacja chunkera.

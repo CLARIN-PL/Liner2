@@ -9,6 +9,7 @@ import liner2.filter.*;
 import liner2.chunker.factory.ChunkerFactory;
 import liner2.tools.CorpusFactory;
 import liner2.tools.ParameterException;
+import liner2.tools.Template;
 import liner2.tools.TemplateFactory;
 
 import org.apache.commons.cli.CommandLine;
@@ -88,6 +89,7 @@ public class LinerOptions {
 	public static final String OPTION_SILENT = "silent";
 	public static final String OPTION_TEMPLATE = "template";
 	public static final String OPTION_USE = "use";
+    public static final String OPTION_ARFF_TEMPLATE = "arff-template";
 	public static final String OPTION_VERBOSE = "verbose";
 	public static final String OPTION_VERBOSE_DETAILS = "verboseDetails";
 	public static final String OPTION_WMBT = "wmbt";
@@ -105,6 +107,8 @@ public class LinerOptions {
 //	public ArrayList<String> features = new ArrayList<String>();
 //	public ArrayList<String> featureNames = new ArrayList<String>();
     public LinkedHashMap<String, String> features = new LinkedHashMap<String, String>();
+    public HashMap<String, Template> templates = new HashMap<String, Template>();
+    Template arffTemplate;
 	public String arg1 = null;
 	public String arg2 = null;
 	public String arg3 = null;
@@ -164,7 +168,32 @@ public class LinerOptions {
             e.printStackTrace();
         }
     }
-	
+
+
+    public Template getTemplate(String name) throws Exception {
+        Template t = templates.get(name);
+        if (t != null){
+            return templates.get(name);
+        }
+        else{
+            throw new Exception("Invalid template name: "+name);
+        }
+    }
+
+    public Template getArffTemplate() throws Exception {
+         Object templateName = properties.get(OPTION_ARFF_TEMPLATE);
+        if (templateName != null){
+            return getTemplate(String.valueOf(templateName));
+        }
+        else{
+            if (templates.isEmpty()) {
+                throw new Exception("No templates specified in config");
+            }
+            else {
+                return templates.values().iterator().next();
+            }
+        }
+    }
 	/**
 	 * 
 	 * @param args
@@ -319,8 +348,16 @@ public class LinerOptions {
 					this.chunkersDescriptions.add(cd);
             }
 		}
-		
-		// read corpus descriptions
+
+        // read template descriptions
+        if (line.hasOption(OPTION_TEMPLATE)) {
+            for (String td : line.getOptionValues(OPTION_TEMPLATE)) {
+                TemplateFactory.parseFeature(td, templates, features.keySet());
+            }
+        }
+
+
+        // read corpus descriptions
 		if (line.hasOption(OPTION_CORPUS)) {
 			for (String cd : line.getOptionValues(OPTION_CORPUS)) {
 				this.corpusDescriptions.add(cd);
@@ -330,13 +367,6 @@ public class LinerOptions {
 		// filters
 		if (line.hasOption(OPTION_FILTER))
 			parseFilter(line.getOptionValue(OPTION_FILTER));
-		
-		// read template descriptions
-		if (line.hasOption(OPTION_TEMPLATE)) {
-			for (String td : line.getOptionValues(OPTION_TEMPLATE)) {
-				TemplateFactory.get().parse(td, features.keySet());
-			}
-		}
 		
 		// Arguments
 		if (line.getArgs().length > 1 && line.getArgs()[1].length() > 0 ){

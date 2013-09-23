@@ -47,7 +47,7 @@ public class ActionEvalCV extends Action{
 			for (String desc : LinerOptions.getGlobal().chunkersDescriptions)
 				currentDescriptions.add(desc.replace("FILENAME", trainFile));
 
-            ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal().chunkersDescriptions);
+            ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
             Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
 			
 			StreamReader reader = ReaderFactory.get().getStreamReader(testFile, 

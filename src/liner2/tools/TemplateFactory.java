@@ -1,59 +1,38 @@
 package liner2.tools;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Set;
+import java.util.*;
 
 import liner2.LinerOptions;
 import liner2.Main;
 import liner2.structure.TokenAttributeIndex;
 
 public class TemplateFactory {
+
+    public static void parseFeature(String description, HashMap<String, Template> templates, Set<String> validFeatures) throws Exception{
+
+        Main.log("TemplateFactory.parseFeature("+description+")");
+        int pos = description.indexOf(":");
+        if (pos == -1){
+            throw new Exception("Invalid template description: "+description);
+        }
+
+        String templateName = description.substring(0, pos);
+        String featureDesc = description.substring(pos+1);
+        if (templates.containsKey(templateName)) {
+            templates.get(templateName).addFeature(featureDesc);
+        }
+        else {
+            Template template = new Template(validFeatures);
+             template.addFeature(featureDesc);
+             templates.put(templateName, template);
+        }
+
+    }
+
 	
-	private static final TemplateFactory templateFactory = new TemplateFactory();
-	
-	private Hashtable<String, Template> templates = new Hashtable<String, Template>();
-	
-	public static TemplateFactory get() {
-		return templateFactory;
-	}
-	
-	public Template getTemplate(String templateName) {
-		return this.templates.get(templateName);
-	}
-	
-	public Hashtable<String, Template> getTemplates() {
-		return this.templates;
-	}
-	
-	public Set getTemplateNames() {
-		return this.templates.keySet();
-	}
-	
-	public void parse(String description, Set<String> validFeatures) throws Exception {
-		Main.log("TemplateFactory.parse("+description+")");
-		int pos = description.indexOf(":");
-		if (pos == -1)
-			throw new Exception("Invalid template description: "+description);
-		String templateName = description.substring(0, pos);
-		String featureDesc = description.substring(pos+1);
-		if (this.templates.containsKey(templateName))
-			this.templates.get(templateName).addFeature(featureDesc);
-		else {
-			Template template = new Template(validFeatures);
-			template.addFeature(featureDesc);
-			this.templates.put(templateName, template);
-		}
-	}
-	
-	public void store(String templateName, String filename, TokenAttributeIndex attributeIndex) throws Exception {
-		if (!this.templates.containsKey(templateName))
-			throw new Exception("Template not found: " + templateName);
+	public static void store(Template template, String filename, TokenAttributeIndex attributeIndex) throws Exception {
 		
 		PrintWriter pw = null;
 		
@@ -62,9 +41,7 @@ public class TemplateFactory {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		
 		pw.write("# Unigram\n");
-		Template template = this.templates.get(templateName);
 		Hashtable<String, String[]> features = template.getFeatures();
 		for (String featureName : template.getFeatureNames()) {
 			pw.write("# " + featureName + "\n");
@@ -72,6 +49,9 @@ public class TemplateFactory {
 			// cecha pojedyncza
 			if (featureName.equals(windowDesc[0])) {
 				String featureId = Integer.toString(attributeIndex.getIndex(featureName));
+                if(featureId.equals("-1")){
+                    throw new Exception("Feature not found: "+featureName);
+                }
 				String featureIdFixed = featureId;
 				while (featureIdFixed.length() < 2)
 					featureIdFixed = "0" + featureIdFixed;
@@ -79,8 +59,7 @@ public class TemplateFactory {
 					String wFixed = windowDesc[i];
 					if (!wFixed.startsWith("-"))
 						wFixed = "+" + wFixed;
-					pw.write("U" + featureIdFixed + wFixed 
-						+ ":%x[" + windowDesc[i] + "," + featureId + "]\n");
+					pw.write("U" + featureIdFixed + wFixed + ":%x[" + windowDesc[i] + "," + featureId + "]\n");
 				}
 			}
 			// cecha złożona
@@ -104,7 +83,6 @@ public class TemplateFactory {
 			}
 			pw.write("\n");
 		}
-		
 		pw.write("# Bigram\n");
 		pw.write("B\n");
 		pw.close();

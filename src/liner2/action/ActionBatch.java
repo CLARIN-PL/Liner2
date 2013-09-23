@@ -8,6 +8,7 @@ import liner2.features.TokenFeatureGenerator;
 import liner2.reader.ReaderFactory;
 import liner2.reader.StreamReader;
 
+import liner2.tools.Template;
 import liner2.writer.StreamWriter;
 import liner2.writer.WriterFactory;
 
@@ -37,7 +38,7 @@ public class ActionBatch extends Action{
 		if ( !LinerOptions.isOption(LinerOptions.OPTION_IS) ){
                         throw new ParameterException("Parameter --is <file_with_input_files_list> not set");
                 }
-		ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal().chunkersDescriptions);
+		ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
         Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
 
 		File file = null;
@@ -76,8 +77,16 @@ public class ActionBatch extends Action{
                 File input = new File(line);                
                 String output_file = new File(input.getParent(), 
                 		input.getName().replaceFirst("[.][^.]+$", "") + ".ner." + output_ext).getPath();
-                
-        		StreamWriter writer = WriterFactory.get().getStreamWriter(output_file, output_format);
+
+                StreamWriter writer;
+                if (output_format.equals("arff")){
+                    Template arff_template = LinerOptions.getGlobal().getArffTemplate();
+                    writer = WriterFactory.get().getArffWriter(output_file, arff_template);
+                }
+                else{
+                    writer = WriterFactory.get().getStreamWriter(output_file, output_format);
+                }
+
         		writer.writeParagraphSet(ps);
 
 				reader.close();

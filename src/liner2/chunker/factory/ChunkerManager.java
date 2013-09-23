@@ -1,5 +1,6 @@
 package liner2.chunker.factory;
 
+import liner2.LinerOptions;
 import liner2.chunker.Chunker;
 import liner2.chunker.ensemble.MajorityVotingChunker;
 import liner2.chunker.ensemble.UnionChunker;
@@ -17,6 +18,11 @@ import java.util.HashMap;
 public class ChunkerManager {
 
     private HashMap<String, Chunker> chunkers = new HashMap<String, Chunker>();
+    public LinerOptions opts;
+
+    public ChunkerManager(LinerOptions opts){
+        this.opts = opts;
+    }
 
     public void addChunker(String name, Chunker chunker) {
         if(chunkers.containsKey(name)){

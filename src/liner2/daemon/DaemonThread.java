@@ -122,7 +122,7 @@ public class DaemonThread extends Thread {
 	public void run() {
 		// load chunker
 		try {
-            ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal().chunkersDescriptions);
+            ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
             this.chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
 		} catch (Exception ex) {
 			ex.printStackTrace();

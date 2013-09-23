@@ -22,7 +22,7 @@ public class ActionTrain extends Action{
 		
 
 		/* Loading chunkers make them train */
-        ChunkerFactory.loadChunkers(LinerOptions.getGlobal().chunkersDescriptions);
+        ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
 
 	}
 		

@@ -74,13 +74,13 @@ public class ChunkerFactory {
 	
 	/**
 	 * Creates a hash of chunkers according to the description
-	 * @param descriptions
+	 * @param opts
 	 * @return
 	 * @throws Exception
 	 */
-	public static ChunkerManager loadChunkers(LinkedHashSet<String> descriptions) throws Exception {
-        ChunkerManager cm = new ChunkerManager();
-		for (String desc : descriptions) {
+	public static ChunkerManager loadChunkers(LinerOptions opts) throws Exception {
+        ChunkerManager cm = new ChunkerManager(opts);
+		for (String desc : opts.chunkersDescriptions) {
 			int pos = desc.indexOf(':');
 			if (pos == -1){
 				throw new Exception("Invalid chunker name.");

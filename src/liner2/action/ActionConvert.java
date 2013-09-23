@@ -6,6 +6,7 @@ import liner2.structure.ParagraphSet;
 import liner2.reader.StreamReader;
 import liner2.reader.ReaderFactory;
 
+import liner2.tools.Template;
 import liner2.writer.StreamWriter;
 import liner2.writer.WriterFactory;
 
@@ -33,9 +34,16 @@ public class ActionConvert extends Action {
             gen.generateFeatures(ps);
         }
 
-		StreamWriter writer = WriterFactory.get().getStreamWriter(
-			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FILE),
-			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FORMAT));
+        String output_format = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FORMAT);
+        String output_file = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FILE);
+        StreamWriter writer;
+        if (output_format.equals("arff")){
+            Template arff_template = LinerOptions.getGlobal().getArffTemplate();
+            writer = WriterFactory.get().getArffWriter(output_file, arff_template);
+        }
+        else{
+            writer = WriterFactory.get().getStreamWriter(output_file, output_format);
+        }
 		writer.writeParagraphSet(ps);
 	}
 

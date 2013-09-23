@@ -4,10 +4,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.sql.SQLException;
 
+import liner2.LinerOptions;
 import liner2.chunker.Chunker;
 
 import liner2.reader.ReaderFactory;
 import liner2.reader.StreamReader;
+import liner2.tools.Template;
 import liner2.writer.StreamWriter;
 import liner2.writer.WriterFactory;
 
@@ -84,7 +86,14 @@ public class WorkingThread extends Thread {
 		StreamReader reader = ReaderFactory.get().getStreamReader(ins, request.getInputFormat());
 					
 		ByteArrayOutputStream ous = new ByteArrayOutputStream();
-		StreamWriter writer = WriterFactory.get().getStreamWriter(ous, request.getOutputFormat());
+        StreamWriter writer;
+        if (request.getOutputFormat().equals("arff")){
+            Template arff_template = LinerOptions.getGlobal().getArffTemplate();
+            writer = WriterFactory.get().getArffWriter(ous, arff_template);
+        }
+        else{
+            writer = WriterFactory.get().getStreamWriter(ous, request.getOutputFormat());
+        }
 
 		// process text and calculate stats
 		ParagraphSet ps = reader.readParagraphSet();

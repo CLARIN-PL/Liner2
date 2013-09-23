@@ -2,6 +2,7 @@ package liner2.writer;
 
 import java.io.*;
 
+import liner2.tools.Template;
 import liner2.writer.CclStreamWriter;
 import liner2.writer.IobStreamWriter;
 import liner2.writer.TokensStreamWriter;
@@ -30,11 +31,17 @@ public class WriterFactory {
             return getStreamWriter(getOutputStream(outputFile), outputFormat);
         }
 	}
+
+    public StreamWriter getArffWriter(OutputStream out, Template template){
+        return new ArffStreamWriter(out, template);
+    }
+
+    public StreamWriter getArffWriter(String outputFile, Template template) throws Exception{
+        return getArffWriter(getOutputStream(outputFile), template);
+    }
 	
 	public StreamWriter getStreamWriter(OutputStream out, String outputFormat) throws Exception {
-		if (outputFormat.equals("arff"))
-			return new ArffStreamWriter(out);
-		else if (outputFormat.equals("ccl"))
+        if (outputFormat.equals("ccl"))
 			return new CclStreamWriter(out);
 		else if (outputFormat.equals("iob"))
 			return new IobStreamWriter(out);
@@ -42,6 +49,8 @@ public class WriterFactory {
 			return new TuplesStreamWriter(out);
 		else if (outputFormat.equals("tokens"))
 			return new TokensStreamWriter(out);
+        else if (outputFormat.equals("arff"))
+            throw new Exception("In order to write to arff format use getArffWriter instead of getStreamWriter");
 		else		
 			throw new Exception("Output format " + outputFormat + " not recognized.");
 	}

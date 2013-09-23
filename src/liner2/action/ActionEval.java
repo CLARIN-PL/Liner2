@@ -37,7 +37,7 @@ public class ActionEval extends Action{
     	ProcessingTimer timer = new ProcessingTimer();
 
     	timer.startTimer("Chunkers init.");
-        ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal().chunkersDescriptions);
+        ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
         Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
 		timer.stopTimer();
 

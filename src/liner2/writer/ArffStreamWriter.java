@@ -8,31 +8,34 @@ import java.io.OutputStreamWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import liner2.structure.TokenAttributeIndex;
-import liner2.structure.Annotation;
-import liner2.structure.Paragraph;
-import liner2.structure.Sentence;
-import liner2.structure.Tag;
-import liner2.structure.Token;
+import liner2.structure.*;
 
 import liner2.tools.Template;
 import liner2.tools.TemplateFactory;
 
-public class ArffStreamWriter extends StreamWriter {
+public class ArffStreamWriter extends StreamWriter{
 
 	private BufferedWriter ow;
 	private boolean init = false;
+    private Template template;
 
-	public ArffStreamWriter(OutputStream os) {
+	public ArffStreamWriter(OutputStream os, Template template) {
 		this.ow = new BufferedWriter(new OutputStreamWriter(os));
+        this.template = template;
 	}
+
+    public void writeParagraphSet(ParagraphSet paragraphSet) {
+        for (Paragraph p : paragraphSet.getParagraphs())
+            writeParagraph(p);
+        close();
+    }
 
 	protected void init(TokenAttributeIndex attributeIndex) {
 		if (this.init)
 			return;
 		try {
 //			String line = "-DOCSTART CONFIG FEATURES orth base ctag";
-			TokenAttributeIndex newAttributeIndex = expandAttributeIndex("t1", attributeIndex);
+			TokenAttributeIndex newAttributeIndex = expandAttributeIndex(attributeIndex);
 			String line = "@relation rel";
 			ow.write(line, 0, line.length());
 			ow.newLine();
@@ -73,7 +76,7 @@ public class ArffStreamWriter extends StreamWriter {
 			if (!init)
 				init(paragraph.getAttributeIndex());
 			for (Sentence sentence : paragraph.getSentences())
-				writeSentence(expandAttributes("t1", sentence));
+				writeSentence(expandAttributes(template, sentence));
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		} catch (Exception ex) {
@@ -120,11 +123,11 @@ public class ArffStreamWriter extends StreamWriter {
 	}
 		
 	
-	private TokenAttributeIndex expandAttributeIndex(String templateName, TokenAttributeIndex attributeIndex) 
+	private TokenAttributeIndex expandAttributeIndex(TokenAttributeIndex attributeIndex)
 		throws Exception {
+
 		TokenAttributeIndex result = new TokenAttributeIndex();
 		// rozwija cechy: np. base:-1:0:1 -> base-1, base+0, base+1
-		Template template = TemplateFactory.get().getTemplate(templateName);
 		ArrayList<String> featureNames = template.getFeatureNames();
 		Hashtable<String, String[]> features = template.getFeatures();
 		for (int i = 0; i < attributeIndex.getLength(); i++) {
@@ -151,16 +154,15 @@ public class ArffStreamWriter extends StreamWriter {
 		return result;
 	}
 	
-	public Sentence expandAttributes(String templateName, Sentence sentence) throws Exception {
+	public Sentence expandAttributes(Template template, Sentence sentence) throws Exception {
 		
 		Sentence newSentence = new Sentence();
 		TokenAttributeIndex attributeIndex = sentence.getAttributeIndex();
-		TokenAttributeIndex newAttributeIndex = expandAttributeIndex(templateName, attributeIndex);
+		TokenAttributeIndex newAttributeIndex = expandAttributeIndex(attributeIndex);
 		newSentence.setAttributeIndex(newAttributeIndex);
 		for (Annotation chunk : sentence.getChunks())
 			newSentence.addChunk(chunk);
-		
-		Template template = TemplateFactory.get().getTemplate(templateName);
+
 		ArrayList<String> featureNames = template.getFeatureNames();
 		Hashtable<String, String[]> features = template.getFeatures();
 		
