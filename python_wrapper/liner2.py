@@ -11,7 +11,7 @@ class Liner2(object):
         ChunkerFactory = JClass("liner2.chunker.factory.ChunkerFactory")
         self.options = JClass("liner2.LinerOptions")()
         self.options.loadIni(liner_ini)
-        self.chunkerManager = ChunkerFactory.loadChunkers(self.options.chunkersDescriptions)
+        self.chunkerManager = ChunkerFactory.loadChunkers(self.options)
         if not self.options.features.isEmpty():
             self.featureGen = JClass("liner2.features.TokenFeatureGenerator")(self.options.features)
         else:
