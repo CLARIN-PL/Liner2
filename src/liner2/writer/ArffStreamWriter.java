@@ -30,6 +30,7 @@ public class ArffStreamWriter extends StreamWriter{
         close();
     }
 
+
 	protected void init(TokenAttributeIndex attributeIndex) {
 		if (this.init)
 			return;
@@ -141,9 +142,6 @@ public class ArffStreamWriter extends StreamWriter{
 					result.addAttribute(featureName + w);
 				}
 			}
-			else {
-				throw new Exception("Feature not found: " + featureName);
-			}
 		}
 		// cechy złożone
 		for (String featureName : template.getFeatureNames()) {
@@ -192,8 +190,6 @@ public class ArffStreamWriter extends StreamWriter{
 						int newAttrIdx = newAttributeIndex.getIndex(newFeatureName);
 						newToken.setAttributeValue(newAttrIdx, featureValue);
 					}
-				} else {
-					throw new Exception("Feature not found: " + featureName);
 				}
 			}
 
