@@ -36,7 +36,7 @@ public class ArffStreamWriter extends StreamWriter{
 			return;
 		try {
 //			String line = "-DOCSTART CONFIG FEATURES orth base ctag";
-			TokenAttributeIndex newAttributeIndex = expandAttributeIndex(attributeIndex);
+			TokenAttributeIndex newAttributeIndex = template.expandAttributeIndex(attributeIndex);
 			String line = "@relation rel";
 			ow.write(line, 0, line.length());
 			ow.newLine();
@@ -77,7 +77,7 @@ public class ArffStreamWriter extends StreamWriter{
 			if (!init)
 				init(paragraph.getAttributeIndex());
 			for (Sentence sentence : paragraph.getSentences())
-				writeSentence(expandAttributes(template, sentence));
+				writeSentence(template.expandAttributes(sentence));
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		} catch (Exception ex) {
@@ -124,98 +124,5 @@ public class ArffStreamWriter extends StreamWriter{
 	}
 		
 	
-	private TokenAttributeIndex expandAttributeIndex(TokenAttributeIndex attributeIndex)
-		throws Exception {
 
-		TokenAttributeIndex result = new TokenAttributeIndex();
-		// rozwija cechy: np. base:-1:0:1 -> base-1, base+0, base+1
-		ArrayList<String> featureNames = template.getFeatureNames();
-		Hashtable<String, String[]> features = template.getFeatures();
-		for (int i = 0; i < attributeIndex.getLength(); i++) {
-			String featureName = attributeIndex.getName(i);
-			if (featureNames.contains(featureName)) {
-				String[] windowDesc = features.get(featureName);
-				
-				for (int j = 1; j < windowDesc.length; j++) {
-					String w = windowDesc[j];
-					if (!w.startsWith("-")) w = "+" + w;
-					result.addAttribute(featureName + w);
-				}
-			}
-		}
-		// cechy złożone
-		for (String featureName : template.getFeatureNames()) {
-			if (featureName.indexOf('/') > -1) {
-				result.addAttribute(featureName.replace('/', '_'));
-			}
-		}
-		return result;
-	}
-	
-	public Sentence expandAttributes(Template template, Sentence sentence) throws Exception {
-		
-		Sentence newSentence = new Sentence();
-		TokenAttributeIndex attributeIndex = sentence.getAttributeIndex();
-		TokenAttributeIndex newAttributeIndex = expandAttributeIndex(attributeIndex);
-		newSentence.setAttributeIndex(newAttributeIndex);
-		for (Annotation chunk : sentence.getChunks())
-			newSentence.addChunk(chunk);
-
-		ArrayList<String> featureNames = template.getFeatureNames();
-		Hashtable<String, String[]> features = template.getFeatures();
-		
-		ArrayList<Token> tokens = sentence.getTokens();
-		for (int k = 0; k < tokens.size(); k++) {
-			Token newToken = new Token();
-			for (Tag tag : tokens.get(k).getTags())
-				newToken.addTag(tag);
-			newToken.clearAttributes();
-			
-			// cechy proste
-			for (int i = 0; i < attributeIndex.getLength(); i++) {
-				String featureName = attributeIndex.getName(i);
-				if (featureNames.contains(featureName)) {
-					String[] windowDesc = features.get(featureName);
-					
-					for (int j = 1; j < windowDesc.length; j++) {
-						String w = windowDesc[j];
-						int idx = Integer.parseInt(w);
-						if (!w.startsWith("-")) w = "+" + w;
-						String newFeatureName = featureName + w;
-//						newAttributeIndex.addAttribute(newFeatureName);
-					
-						String featureValue = null;
-						if ((k + idx >= 0) && (k + idx < tokens.size()))
-							featureValue = tokens.get(k+idx).getAttributeValue(i);
-						int newAttrIdx = newAttributeIndex.getIndex(newFeatureName);
-						newToken.setAttributeValue(newAttrIdx, featureValue);
-					}
-				}
-			}
-
-			// cechy złożone
-			for (String featureName : template.getFeatureNames()) {	
-				if (featureName.indexOf('/') > -1) {
-					String newFeatureName = featureName.replace('/', '_');
-					String[] windowDesc = features.get(featureName);
-					
-					String featureValue = "";
-					for (int i = 0; i < windowDesc.length-1; i += 2) {
-						int attrIdx = attributeIndex.getIndex(windowDesc[i]);
-						int idx = Integer.parseInt(windowDesc[i+1]);
-						if ((k + idx >= 0) && (k + idx < tokens.size())) {
-							if (featureValue.length() > 0) featureValue += "#";
-							featureValue += tokens.get(k+idx).getAttributeValue(attrIdx);
-						}
-					}
-					int newAttrIdx = newAttributeIndex.getIndex(newFeatureName);
-					newToken.setAttributeValue(newAttrIdx, featureValue);
-				}
-			}
-			
-			newSentence.addToken(newToken);
-		}
-				
-		return newSentence;
-	}
 }
