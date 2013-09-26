@@ -3,6 +3,7 @@ package liner2.structure;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 
 /**
@@ -19,7 +20,7 @@ public class Sentence {
 	ArrayList<Token> tokens = new ArrayList<Token>();
 	
 	/* Zbiór anotacji */
-	HashSet<Annotation> chunks = new HashSet<Annotation>();
+	LinkedHashSet<Annotation> chunks = new LinkedHashSet<Annotation>();
 	
 	/* Identyfikator zdania */
 	String id = null;
@@ -90,7 +91,7 @@ public class Sentence {
 	}
 
 	public void setChunking(AnnotationSet chunking) {
-		this.chunks = chunking.chunkSet();
+		this.chunks = (LinkedHashSet<Annotation>) chunking.chunkSet();
 	}
 	
 	public void setId(String id){
