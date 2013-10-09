@@ -44,7 +44,7 @@ public class ChunkerFactoryItemCrfppTrain extends ChunkerFactoryItem {
 
             String inputFormat = dataDesc.get("format");
             String inputFile = dataDesc.get("source").replace("{INI_PATH}", iniDir);
-            String modelFilename = main.get("store");
+            String modelFilename = main.get("store").replace("{INI_PATH}", iniDir);
 
             ParagraphSet ps;
             if ((inputFormat.equals("iob")) || (inputFormat.equals("ccl"))) {
