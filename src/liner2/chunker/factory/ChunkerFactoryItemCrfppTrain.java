@@ -47,7 +47,7 @@ public class ChunkerFactoryItemCrfppTrain extends ChunkerFactoryItem {
             String modelFilename = main.get("store").replace("{INI_PATH}", iniDir);
 
             ParagraphSet ps;
-            if ((inputFormat.equals("iob")) || (inputFormat.equals("ccl"))) {
+            if ((inputFormat.equals("iob")) || (inputFormat.equals("ccl")) || (inputFormat.equals("ccl-batch"))) {
             	Main.log("--> Training on file=" + inputFile);            
             	StreamReader reader = ReaderFactory.get().getStreamReader(inputFile, inputFormat);
                 ps = reader.readParagraphSet();
