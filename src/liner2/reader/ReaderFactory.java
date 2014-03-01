@@ -2,13 +2,13 @@ package liner2.reader;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.IOException;
-
-import liner2.reader.CclStreamReader;
-import liner2.reader.IobStreamReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import liner2.LinerOptions;
+
+import org.apache.commons.io.IOUtils;
 
 public class ReaderFactory {
 
@@ -30,12 +30,24 @@ public class ReaderFactory {
         if (inputFormat.equals("tei")){
             return getTEIStreamReader(inputFile);
         }
+        else if (inputFile.equals("{CV-TRAIN}")){        	
+        	return getStreamReader(
+        			IOUtils.toInputStream(LinerOptions.getGlobal().getCvTrain()),
+        			"",        			
+        			inputFormat);
+        }
         else{
-		    return getStreamReader(getInputStream(inputFile), inputFormat);
+		    return getStreamReader(getInputStream(inputFile),
+		    		(new File(inputFile)).getParent(),
+		    		inputFormat);
         }
 	}
-	
+
 	public StreamReader getStreamReader(InputStream in, String inputFormat) throws Exception {
+		return getStreamReader(in, "", inputFormat);
+	}
+
+	public StreamReader getStreamReader(InputStream in, String root, String inputFormat) throws Exception {
 		if (inputFormat.equals("ccl"))
 			return new CclSAXStreamReader(in);
 		else if (inputFormat.equals("ccl-deprecated"))
@@ -45,7 +57,7 @@ public class ReaderFactory {
 		else if (inputFormat.equals("plain"))
 			return new PlainTextStreamReader(in);
         else if (inputFormat.equals("ccl-batch"))
-            return new CclBatchReader(in);
+            return new CclBatchReader(in, root);
 		else
 			throw new Exception("Input format " + inputFormat + " not recognized.");
 	}

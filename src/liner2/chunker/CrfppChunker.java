@@ -2,26 +2,21 @@ package liner2.chunker;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import liner2.Main;
-import liner2.structure.AnnotationSet;
 import liner2.structure.Annotation;
+import liner2.structure.AnnotationSet;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
-import liner2.tools.TemplateFactory;
 
 import org.chasen.crfpp.Tagger;
 
@@ -63,9 +58,8 @@ public class CrfppChunker extends Chunker
 			StringBuilder oStr = new StringBuilder();
 			for (int i = 0; i < numAttrs; i++){
 				oStr.append(" ");
-				oStr.append(token.getAttributeValue(i));
+				oStr.append(token.getAttributeValue(i).replace(" ", "_"));
 			}
-				//oStr += " " + token.getAttributeValue(i);
 			tagger.add(oStr.toString().trim());
 		}
 		tagger.parse();		
@@ -73,7 +67,6 @@ public class CrfppChunker extends Chunker
 	
 	private AnnotationSet readTaggerOutput(Sentence sentence){
         AnnotationSet chunking = new AnnotationSet(sentence);
-        String line = "";
         String type = null;
         int from = 0;
 
@@ -130,7 +123,7 @@ public class CrfppChunker extends Chunker
     			for (int i = 0; i < tokens.size(); i++) {
     				String oStr = "";
     				for (int j = 0; j < numAttrs; j++)
-    					oStr += " " + tokens.get(i).getAttributeValue(j);
+    					oStr += " " + tokens.get(i).getAttributeValue(j).replace(" ", "_");
     				Annotation chunk = sentence.getChunkAt(i);
     				if (chunk == null)
     					oStr += " O";

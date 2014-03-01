@@ -56,7 +56,6 @@ public class LinerOptions {
         return properties.getProperty(OPTION_USE);
     }
 
-
 	private Options options = null;
 	private String configurationDescription = "";
 	private Properties properties;
@@ -104,8 +103,6 @@ public class LinerOptions {
 	public boolean silent = false;
 
 	public ArrayList<Filter> filters = new ArrayList<Filter>();
-//	public ArrayList<String> features = new ArrayList<String>();
-//	public ArrayList<String> featureNames = new ArrayList<String>();
     public LinkedHashMap<String, String> features = new LinkedHashMap<String, String>();
     public HashMap<String, Template> templates = new HashMap<String, Template>();
     Template arffTemplate;
@@ -115,6 +112,7 @@ public class LinerOptions {
 	public String linerPath = "";
 	public LinkedHashSet<String> chunkersDescriptions = new LinkedHashSet<String>();
 	public ArrayList<String> corpusDescriptions = new ArrayList<String>();
+	private String cvTrainData = null; 
 	
 	/**
 	 * Constructor
@@ -450,6 +448,15 @@ public class LinerOptions {
 			if (!found)
 				throw new ParameterException("Unknown filter '"+f+"'");
 		}
+	}
+	
+	
+	public void setCvTrain(String data){
+		this.cvTrainData = data;
+	}
+	
+	public String getCvTrain(){
+		return this.cvTrainData;
 	}
 	
 	

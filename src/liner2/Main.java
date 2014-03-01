@@ -75,16 +75,11 @@ public class Main {
           action = new ActionEval();
         } else if (mode.equals("evalcv")) {
             action = new ActionEvalCV();
-//        } else if (mode.equals("dict")) {
-//            action = new ActionDict();
+        } else if (mode.equals("evalcvbatch")) {
+            action = new ActionEvalCvBatch();
         } else if (mode.equals("interactive")) {
             action = new ActionInteractive();
-//        } else if (mode.equals("dicts")) {
-//            action = new ActionDictStats();
-//        } else if (mode.equals("tag") ) {
-//            action = new ActionTag();
-//        } else
-	} else if (mode.equals("batch")){
+        } else if (mode.equals("batch")){
             action = new ActionBatch(); 
     	} else if (mode.equals("null") ) {
             action = new ActionNull();

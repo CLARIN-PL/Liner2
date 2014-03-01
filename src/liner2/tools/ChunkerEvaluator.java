@@ -321,9 +321,12 @@ public class ChunkerEvaluator {
             int fp = this.falsePositivesExistingRangeOnly.containsKey(key) ? this.falsePositivesExistingRangeOnly.get(key) : 0;
             int fn = this.falseNegatives.containsKey(key) ? this.falseNegatives.get(key) : 0;
 
+            float p = this.precisionExistingRangeOnly.containsKey(key) ? this.precisionExistingRangeOnly.get(key) : 0;
+            float r = this.recall.containsKey(key) ? this.recall.get(key) : 0;
+            float f = this.fMeasureExistingRangeOnly.containsKey(key) ? this.fMeasureExistingRangeOnly.get(key) : 0; 
+                      
             System.out.println(String.format("%-20s & %4d & %4d & %4d &"
-                    + "   %6.2f%% & %6.2f%% & %6.2f%% \\\\", key, tp, fp, fn,
-                    this.precisionExistingRangeOnly.get(key)*100, this.recall.get(key)*100, this.fMeasureExistingRangeOnly.get(key)*100));
+                    + "   %6.2f%% & %6.2f%% & %6.2f%% \\\\", key, tp, fp, fn, p*100, r*100, f*100));
         }
         System.out.println("\\hline");
         System.out.println(String.format("*TOTAL*              & %4d & %4d & %4d &"

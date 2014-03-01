@@ -1,5 +1,6 @@
 package liner2.reader;
 
+import liner2.Main;
 import liner2.reader.parser.CclSaxParser;
 import liner2.structure.Paragraph;
 import liner2.structure.TokenAttributeIndex;
@@ -25,7 +26,13 @@ public class CclBatchReader extends StreamReader {
     private List<Paragraph> allParagraphs;
     private BufferedReader ir;
 
-    public CclBatchReader(InputStream is) throws  DataFormatException{
+    /**
+     * 
+     * @param is — the stream contains relative or absolute paths to ccl files,
+     * @param root — absolute path to a root for absolute paths from the stream,
+     * @throws DataFormatException
+     */
+    public CclBatchReader(InputStream is, String root) throws  DataFormatException{
         this.attributeIndex = new TokenAttributeIndex();
         this.attributeIndex.addAttribute("orth");
         this.attributeIndex.addAttribute("base");
@@ -44,16 +51,25 @@ public class CclBatchReader extends StreamReader {
             String cclFile = line.trim().split(";")[0];
             if (cclFile.length() == 0)
                 return;
+            
+            if (!cclFile.startsWith("/"))
+            	cclFile = root + "/" + cclFile;
 
-            InputStream  fileAsStream;
-            try {
-                fileAsStream = new FileInputStream(cclFile);
-            } catch (IOException ex) {
-                throw new DataFormatException("Unable to read input file: " + cclFile);
+            Main.log("Reading " + cclFile, true);
+            
+            if (!new File(cclFile).exists())
+            	System.err.println("File not found while reading ccl-batch: " + cclFile);
+            else{            
+	            InputStream  fileAsStream;
+	            try {
+	                fileAsStream = new FileInputStream(cclFile);
+	            } catch (IOException ex) {
+	                throw new DataFormatException("Unable to read input file: " + cclFile);
+	            }
+	
+	            CclSaxParser parser_out = new CclSaxParser(fileAsStream, this.attributeIndex);
+	            allParagraphs.addAll(parser_out.getParagraphs());
             }
-
-            CclSaxParser parser_out = new CclSaxParser(fileAsStream, this.attributeIndex);
-            allParagraphs.addAll(parser_out.getParagraphs());
         }
 
 

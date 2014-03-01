@@ -4,21 +4,18 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.regex.Matcher;
 
-import liner2.LinerOptions;
 import liner2.Main;
-
-import liner2.chunker.CrfppChunker;
 import liner2.chunker.Chunker;
+import liner2.chunker.CrfppChunker;
 import liner2.chunker.TrainableChunkerInterface;
-
 import liner2.features.TokenFeatureGenerator;
 import liner2.reader.ReaderFactory;
 import liner2.reader.StreamReader;
-
 import liner2.structure.ParagraphSet;
 import liner2.tools.CorpusFactory;
 import liner2.tools.Template;
 import liner2.tools.TemplateFactory;
+
 import org.ini4j.Ini;
 
 public class ChunkerFactoryItemCrfppTrain extends ChunkerFactoryItem {
