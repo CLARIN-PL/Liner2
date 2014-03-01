@@ -31,7 +31,6 @@ public class CrfppChunker extends Chunker
 	private String model_filename = null;
 	private int threads = 1;
 	private static final int MAX_TOKENS = 1000;
-
 	
     public CrfppChunker(int threads) {
 		this.threads = threads;
@@ -58,7 +57,7 @@ public class CrfppChunker extends Chunker
 			StringBuilder oStr = new StringBuilder();
 			for (int i = 0; i < numAttrs; i++){
 				oStr.append(" ");
-				oStr.append(token.getAttributeValue(i).replace(" ", "_"));
+				oStr.append(token.getAttributeValue(i).replaceAll("\\s", "_"));
 			}
 			tagger.add(oStr.toString().trim());
 		}
@@ -116,14 +115,18 @@ public class CrfppChunker extends Chunker
 			}			
     	}
     	
+    	String val = null;
     	for (Paragraph paragraph : paragraphSet.getParagraphs())
     		for (Sentence sentence : paragraph.getSentences()) {
     			int numAttrs = sentence.getAttributeIndexLength();
-    			ArrayList<Token> tokens = sentence.getTokens();
+    			ArrayList<Token> tokens = sentence.getTokens();    			
     			for (int i = 0; i < tokens.size(); i++) {
     				String oStr = "";
-    				for (int j = 0; j < numAttrs; j++)
-    					oStr += " " + tokens.get(i).getAttributeValue(j).replace(" ", "_");
+    				for (int j = 0; j < numAttrs; j++){
+    					val = tokens.get(i).getAttributeValue(j).replaceAll("\\s+", "_");
+    					val = val.length()==0 ? "NULL" : val;
+    					oStr += " " + val;
+    				}
     				Annotation chunk = sentence.getChunkAt(i);
     				if (chunk == null)
     					oStr += " O";
