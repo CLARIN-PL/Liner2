@@ -36,7 +36,7 @@ public class ActionEvalCvBatch extends Action{
 		ChunkerEvaluator globalEval = new ChunkerEvaluator();
 		ChunkerEvaluatorMuc globalEvalMuc = new ChunkerEvaluatorMuc();
 		
-		int folds_num = 3;
+		int folds_num = LinerOptions.getGlobal().getFoldsNumber();
 		String inputPattern =  LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FILE);
 		ArrayList<List<String>> folds = new ArrayList<List<String>>();
 		

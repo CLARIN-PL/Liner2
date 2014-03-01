@@ -73,6 +73,7 @@ public class LinerOptions {
 	public static final String OPTION_DB_URI = "db_uri";
 	public static final String OPTION_FEATURE = "feature";
 	public static final String OPTION_FILTER = "filter";
+	public static final String OPTION_FOLDS_NUMBER = "folds_number";
 	public static final String OPTION_HELP = "help";
 	public static final String OPTION_HEURISTICS = "heuristics";
 	public static final String OPTION_INI = "ini";
@@ -191,6 +192,14 @@ public class LinerOptions {
                 return templates.values().iterator().next();
             }
         }
+    }
+    
+    public int getFoldsNumber(){
+    	if (this.properties.containsKey(LinerOptions.OPTION_FOLDS_NUMBER))
+    		return Integer.parseInt(this.properties.getProperty(LinerOptions.OPTION_FOLDS_NUMBER));
+    	else
+    		return 10;
+    			
     }
 	/**
 	 * 
@@ -499,7 +508,7 @@ public class LinerOptions {
 				.create("filter"));
     	options.addOption(OptionBuilder.withArgName("span").hasArg()
 				.withDescription("number of folds")
-				.create("fold"));
+				.create(OPTION_FOLDS_NUMBER));
     	options.addOption(OptionBuilder.withArgName("gazetters").hasArg()
 				.withDescription("(multiple) loads a gazetteer: 'TYPE:location'")
 				.create("gaze"));
