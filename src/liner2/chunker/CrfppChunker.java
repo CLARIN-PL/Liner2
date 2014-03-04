@@ -53,11 +53,17 @@ public class CrfppChunker extends Chunker
 	private void sendDataToTagger(Sentence sentence){
 		tagger.clear();
 		int numAttrs = sentence.getAttributeIndexLength();
+		String val = null;
 		for (Token token : sentence.getTokens()) {
 			StringBuilder oStr = new StringBuilder();
 			for (int i = 0; i < numAttrs; i++){
 				oStr.append(" ");
-				oStr.append(token.getAttributeValue(i).replaceAll("\\s", "_"));
+				val = token.getAttributeValue(i);
+				if ( val != null){
+                                	val = val.replaceAll("\\s+", "_");
+                                        val = val.length()==0 ? "NULL" : val;
+                                }
+				oStr.append(val);
 			}
 			tagger.add(oStr.toString().trim());
 		}
@@ -123,8 +129,11 @@ public class CrfppChunker extends Chunker
     			for (int i = 0; i < tokens.size(); i++) {
     				String oStr = "";
     				for (int j = 0; j < numAttrs; j++){
-    					val = tokens.get(i).getAttributeValue(j).replaceAll("\\s+", "_");
-    					val = val.length()==0 ? "NULL" : val;
+    					val = tokens.get(i).getAttributeValue(j);
+					if ( val != null){
+						val = val.replaceAll("\\s+", "_");
+    						val = val.length()==0 ? "NULL" : val;
+					}
     					oStr += " " + val;
     				}
     				Annotation chunk = sentence.getChunkAt(i);
