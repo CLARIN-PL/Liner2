@@ -30,7 +30,7 @@ public class ChunkerFactoryItemCrfppLoad extends ChunkerFactoryItem {
 			
             Main.log("--> CRFPP Chunker deserialize from " + store);
             
-            CrfppChunker chunker = new CrfppChunker(1);
+            CrfppChunker chunker = new CrfppChunker();
             chunker.deserialize(store);
 
             return chunker;		

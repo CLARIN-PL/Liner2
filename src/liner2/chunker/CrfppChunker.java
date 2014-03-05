@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,9 +33,15 @@ public class CrfppChunker extends Chunker
 	private String model_filename = null;
 	private int threads = 1;
 	private static final int MAX_TOKENS = 1000;
+	private HashSet<String> types = null;
 	
-    public CrfppChunker(int threads) {
+    public CrfppChunker() {
+		this.types = new HashSet<String>();    	
+    }
+    
+    public CrfppChunker(int threads, HashSet<String> types){
 		this.threads = threads;
+		this.types = types;    	
     }
 
     /**
@@ -128,15 +136,20 @@ public class CrfppChunker extends Chunker
     			ArrayList<Token> tokens = sentence.getTokens();    			
     			for (int i = 0; i < tokens.size(); i++) {
     				String oStr = "";
+    				
     				for (int j = 0; j < numAttrs; j++){
     					val = tokens.get(i).getAttributeValue(j);
-					if ( val != null){
-						val = val.replaceAll("\\s+", "_");
-    						val = val.length()==0 ? "NULL" : val;
-					}
+    					if ( val != null){
+    						val = val.replaceAll("\\s+", "_");
+    							val = val.length()==0 ? "NULL" : val;
+    					}
     					oStr += " " + val;
     				}
-    				Annotation chunk = sentence.getChunkAt(i);
+    				
+    				Annotation chunk = this.types.size() == 0 
+    						? sentence.getChunkAt(i)
+    						: sentence.getChunkAt(i, this.types);
+    				
     				if (chunk == null)
     					oStr += " O";
     				else {
@@ -146,6 +159,7 @@ public class CrfppChunker extends Chunker
     						oStr += " I-";
     					oStr += chunk.getType();
     				}
+    				
     				this.trainingFileWriter.write(oStr.trim() + "\n");
     			}
     			this.trainingFileWriter.write("\n");

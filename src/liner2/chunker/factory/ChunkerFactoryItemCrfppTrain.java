@@ -2,6 +2,7 @@ package liner2.chunker.factory;
 
 import java.io.File;
 import java.io.FileReader;
+import java.util.HashSet;
 import java.util.regex.Matcher;
 
 import liner2.Main;
@@ -42,7 +43,12 @@ public class ChunkerFactoryItemCrfppTrain extends ChunkerFactoryItem {
             String inputFormat = dataDesc.get("format");
             String inputFile = dataDesc.get("source").replace("{INI_PATH}", iniDir);
             String modelFilename = main.get("store").replace("{INI_PATH}", iniDir);
-
+            
+            HashSet<String> types = new HashSet<String>();
+            if ( dataDesc.containsKey("types") && dataDesc.get("types").length() > 0 )
+            	for (String line : dataDesc.get("types").split(","))
+            		types.add(line);
+            
             ParagraphSet ps;
             if ((inputFormat.equals("iob")) || (inputFormat.equals("ccl")) || (inputFormat.equals("ccl-batch"))) {
             	Main.log("--> Training on file=" + inputFile);            
@@ -61,7 +67,7 @@ public class ChunkerFactoryItemCrfppTrain extends ChunkerFactoryItem {
             File templateFile = File.createTempFile("template", ".tpl");
             TemplateFactory.store(template, templateFile.getAbsolutePath(), ps.getAttributeIndex());
 
-            CrfppChunker chunker = new CrfppChunker(threads);
+            CrfppChunker chunker = new CrfppChunker(threads, types);
             chunker.setTemplateFilename(templateFile.getAbsolutePath());
             chunker.setModelFilename(modelFilename);
 

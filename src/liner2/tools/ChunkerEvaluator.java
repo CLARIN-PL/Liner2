@@ -75,15 +75,19 @@ public class ChunkerEvaluator {
 	
 	private int sentenceNum = 0;
 	
-	private HashSet<String> keys = new HashSet<String>();
 	private boolean quiet = false;		// print sentence results?
+	private HashSet<String> keys = new HashSet<String>();
+	private HashSet<String> types = new HashSet<String>();
 	
 	
 	/**
 	 * @param chunker
 	 */
 	public ChunkerEvaluator() {
-		//this.chunker = chunker;
+	}
+	
+	public ChunkerEvaluator(HashSet<String> types) {
+		this.types = types;
 	}
 	
 	/**
@@ -103,17 +107,34 @@ public class ChunkerEvaluator {
 	 * 
 	 */
 	private void evaluate(Sentence sentence, AnnotationSet chunking, AnnotationSet chunkingRef) {
+
+		chunking.filter(LinerOptions.getGlobal().filters);
 	
 		// tylko na potrzeby wyświetlania szczegółów
 		HashSet<Annotation> myTruePositives = new HashSet<Annotation>();
 		this.sentenceNum++;
 	
+		// Wybierz anotacje do oceny jeżeli został określony ich typ
+		HashSet<Annotation> chunkingRefSet = new HashSet<Annotation>();
+		HashSet<Annotation> chunkingSet = new HashSet<Annotation>();
+		if ( this.types.size() == 0 ){
+			chunkingRefSet = chunkingRef.chunkSet();
+			chunkingSet = chunking.chunkSet();
+		}
+		else{
+			for ( Annotation ann : chunkingRef.chunkSet() )
+				if ( this.types.contains(ann.getType()) )
+					chunkingRefSet.add(ann);
+			for ( Annotation ann : chunking.chunkSet() )
+				if ( this.types.contains(ann.getType()) )
+					chunkingSet.add(ann);
+		}
+		
 		// każdy HashSet w dwóch kopiach - jedna do iterowania, druga do modyfikacji
-		HashSet<Annotation> trueChunkSet = new HashSet<Annotation>(chunkingRef.chunkSet());
+		HashSet<Annotation> trueChunkSet = new HashSet<Annotation>(chunkingRefSet);
 		HashSet<Annotation> trueChunkSetIter = new HashSet<Annotation>(trueChunkSet);
 
-		chunking.filter(LinerOptions.getGlobal().filters);
-		HashSet<Annotation> testedChunkSet = new HashSet<Annotation>(chunking.chunkSet());
+		HashSet<Annotation> testedChunkSet = new HashSet<Annotation>(chunkingSet);
 		HashSet<Annotation> testedChunkSetIter = new HashSet<Annotation>(testedChunkSet);
 		
 		// usuń z danych wszystkie poprawne chunki
@@ -280,11 +301,11 @@ public class ChunkerEvaluator {
 	 * 
 	 */
 	public void printResults(){
-		System.out.println("====================================================");
-		System.out.println("# Exact match evaluation #");
-		System.out.println("====================================================");
-		System.out.println("Annotation           &   TP &   FP &   FN &"
-			+ " Precision & Recall  & F$_1$   \\\\");
+		String header = "        Annotation           &   TP &   FP &   FN & Precision & Recall  & F$_1$   \\\\";
+		String line = "        %-20s & %4d & %4d & %4d &   %6.2f%% & %6.2f%% & %6.2f%% \\\\";
+		
+		this.printHeader("Exact match evaluation -- annotation span and types evaluation");
+		System.out.println(header);
 		System.out.println("\\hline");
 		ArrayList<String> keys = new ArrayList<String>();
 		keys.addAll(this.keys);
@@ -292,29 +313,28 @@ public class ChunkerEvaluator {
 		for (String key : keys) {
 			int tp = this.truePositives.containsKey(key) ? this.truePositives.get(key) : 0;
 			int fp = this.falsePositives.containsKey(key) ? this.falsePositives.get(key) : 0;
-			int fn = this.falseNegatives.containsKey(key) ? this.falseNegatives.get(key) : 0;
-			
-			System.out.println(String.format("%-20s & %4d & %4d & %4d &"
-				+ "   %6.2f%% & %6.2f%% & %6.2f%% \\\\", key, tp, fp, fn,
-				this.precision.get(key)*100, this.recall.get(key)*100, this.fMeasure.get(key)*100));
+			int fn = this.falseNegatives.containsKey(key) ? this.falseNegatives.get(key) : 0;			
+			System.out.println(
+					String.format(line, key, tp, fp, fn, this.precision.get(key)*100, this.recall.get(key)*100, this.fMeasure.get(key)*100));
 		}
 		System.out.println("\\hline");
-		System.out.println(String.format("*TOTAL*              & %4d & %4d & %4d &"
-			+ "   %6.2f%% & %6.2f%% & %6.2f%%", this.globalTruePositives,
-			this.globalFalsePositives, this.globalFalseNegatives,
+		System.out.println(String.format(line, "*TOTAL*", 
+			this.globalTruePositives, this.globalFalsePositives, this.globalFalseNegatives,
 			this.globalPrecision*100, this.globalRecall*100, this.globalFMeasure*100));
-        System.out.println("====================================================");
-        System.out.println("# Range only evaluation (skipped channel comparision) #");
-        System.out.println("====================================================");
-        System.out.println("   TP &   FP &   FN &" + " Precision & Recall  & F$_1$   \\\\");
-        System.out.println(String.format(" %4d & %4d & %4d &   %6.2f%% & %6.2f%% & %6.2f%%", this.globalTruePositivesRangeOnly,
-                this.globalFalsePositivesRangeOnly, this.globalFalseNegativesRangeOnly,
+		System.out.println("\n");
+
+		
+		this.printHeader("Exact match evaluation -- annotation span evaluation (annotation types ignored)");
+        System.out.println(header);
+        System.out.println("\\hline");
+		System.out.println(String.format(line, "*TOTAL*", 
+        		this.globalTruePositivesRangeOnly, this.globalFalsePositivesRangeOnly, this.globalFalseNegativesRangeOnly,
                 this.globalPrecisionRangeOnly*100, this.globalRecallRangeOnly*100, this.globalFMeasureRangeOnly*100));
-        System.out.println("====================================================");
-        System.out.println("# Existing range annotation match evaluation #");
-        System.out.println("====================================================");
-        System.out.println("Annotation           &   TP &   FP &   FN &"
-                + " Precision & Recall  & F$_1$   \\\\");
+		System.out.println("\n");
+        
+		
+		this.printHeader("Exact match evaluation -- annotation span evaluation for each type");
+        System.out.println(header);
         System.out.println("\\hline");
         for (String key : keys) {
             int tp = this.truePositives.containsKey(key) ? this.truePositives.get(key) : 0;
@@ -325,16 +345,20 @@ public class ChunkerEvaluator {
             float r = this.recall.containsKey(key) ? this.recall.get(key) : 0;
             float f = this.fMeasureExistingRangeOnly.containsKey(key) ? this.fMeasureExistingRangeOnly.get(key) : 0; 
                       
-            System.out.println(String.format("%-20s & %4d & %4d & %4d &"
-                    + "   %6.2f%% & %6.2f%% & %6.2f%% \\\\", key, tp, fp, fn, p*100, r*100, f*100));
+            System.out.println(String.format(line, key, tp, fp, fn, p*100, r*100, f*100));
         }
         System.out.println("\\hline");
-        System.out.println(String.format("*TOTAL*              & %4d & %4d & %4d &"
-                + "   %6.2f%% & %6.2f%% & %6.2f%%", this.globalTruePositives,
+        System.out.println(String.format(line, "*TOTAL*", this.globalTruePositives,
                 this.globalFalsePositivesExistingRangeOnly, this.globalFalseNegatives,
                 this.globalPrecisionExistingRangeOnly*100, this.globalRecall*100, this.globalFMeasureExistingRangeOnly*100));
-        System.out.println("----------------------------------------------------");
+		System.out.println("\n");
     }
+	
+	public void printHeader(String header){
+        System.out.println("======================================================================================");
+        System.out.println("# " + header);
+        System.out.println("======================================================================================");
+	}
 	
 	/**
 	 * Dołącza do danych zawartość innego obiektu ChunkerEvaluator.
@@ -468,6 +492,14 @@ public class ChunkerEvaluator {
         }
     }
 	
+    /**
+     * 
+     * @param sentence
+     * @param paragraphId
+     * @param truePositives
+     * @param falsePositives
+     * @param falseNegatives
+     */
 	private void printSentenceResults(Sentence sentence, String paragraphId, 
 		HashSet<Annotation> truePositives, HashSet<Annotation> falsePositives, 
 		HashSet<Annotation> falseNegatives) {
@@ -526,6 +558,11 @@ public class ChunkerEvaluator {
 		Main.log("", true);
 	}
 	
+	/**
+	 * 
+	 * @param chunk
+	 * @return
+	 */
 	private String printChunk(Annotation chunk) {
 		ArrayList<Token> tokens = chunk.getSentence().getTokens();
 		StringBuilder result = new StringBuilder();
@@ -534,21 +571,4 @@ public class ChunkerEvaluator {
 		return result.toString().trim();
 	}
 	
-//	private Chunk[] sortChunks(HashSet<Chunk> chunkSet) {
-//		int size = chunkSet.size();
-//		Chunk[] sorted = new Chunk[size];
-//		int idx = 0;
-//	    for (Chunk c : chunkSet)
-//	    	sorted[idx++] = c;
-//	    for (int i = 0; i < size; i++)
-//	    	for (int j = i+1; j < size; j++)
-//	    		if ((sorted[i].getBegin() > sorted[j].getBegin()) ||
-//	    			((sorted[i].getBegin() == sorted[j].getBegin()) &&
-//	    			(sorted[i].getEnd() > sorted[j].getEnd()))) {
-//	    			Chunk aux = sorted[i];
-//	    			sorted[i] = sorted[j];
-//	    			sorted[j] = aux;
-//	    		}
-//		return sorted;
-//	}
 }

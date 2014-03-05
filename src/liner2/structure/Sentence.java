@@ -63,6 +63,26 @@ public class Sentence {
 		return returning;
 	}
 	
+	/*
+	 * Zwraca chunk dla podanego indeksu tokenu.
+	 * TODO zmienić parametr na token?
+	 */
+	public Annotation getChunkAt(int idx, HashSet<String> types) {
+		Annotation returning = null;
+		Iterator<Annotation> i_chunk = chunks.iterator();
+		while (i_chunk.hasNext()) {
+			Annotation currentChunk = i_chunk.next();
+			if ( currentChunk.getBegin() <= idx 
+					&& currentChunk.getEnd() >= idx
+					&& types.contains(currentChunk.getType())					
+				) {
+				returning = currentChunk;
+				break;
+			}
+		}
+		return returning;
+	}	
+	
 	public HashSet<Annotation> getChunks() {
 		return this.chunks;
 	}

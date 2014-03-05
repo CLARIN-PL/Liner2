@@ -100,11 +100,16 @@ public class ChunkerEvaluatorMuc {
 	private int sentenceNum = 0;
 	
 	private boolean quiet = false;		// print sentence results?
+	HashSet<String> types = new HashSet<String>();
 	
 	/**
 	 * @param chunker
 	 */
 	public ChunkerEvaluatorMuc() {
+	}
+
+	public ChunkerEvaluatorMuc(HashSet<String> types) {
+		this.types = types;
 	}
 	
 	/**
@@ -122,12 +127,28 @@ public class ChunkerEvaluatorMuc {
 	 */
 	private void evaluate(Sentence sentence, AnnotationSet chunking, AnnotationSet chunkingRef) {
 	
+		
+		// Wybierz anotacje do oceny jeżeli został określony ich typ
+		HashSet<Annotation> chunkingRefSet = new HashSet<Annotation>();
+		HashSet<Annotation> chunkingSet = new HashSet<Annotation>();
+		if ( this.types.size() == 0 ){
+			chunkingRefSet = chunkingRef.chunkSet();
+			chunkingSet = chunking.chunkSet();
+		}
+		else{
+			for ( Annotation ann : chunkingRef.chunkSet() )
+				if ( this.types.contains(ann.getType()) )
+					chunkingRefSet.add(ann);
+			for ( Annotation ann : chunking.chunkSet() )
+				if ( this.types.contains(ann.getType()) )
+					chunkingSet.add(ann);
+		}
+		
 		// każdy HashSet w dwóch kopiach - jedna do iterowania, druga do modyfikacji
-		HashSet<Annotation> trueChunkSet = chunkingRef.chunkSet();
+		HashSet<Annotation> trueChunkSet = new HashSet<Annotation>(chunkingRefSet);
 		HashSet<Annotation> trueChunkSetIter = new HashSet<Annotation>(trueChunkSet);
 
-		chunking.filter(LinerOptions.getGlobal().filters);
-		HashSet<Annotation> testedChunkSet = chunking.chunkSet();
+		HashSet<Annotation> testedChunkSet = new HashSet<Annotation>(chunkingSet);
 		HashSet<Annotation> testedChunkSetIter = new HashSet<Annotation>(testedChunkSet);
 		
 		// usuń z danych wszystkie poprawne chunki
@@ -215,38 +236,6 @@ public class ChunkerEvaluatorMuc {
 		return types;
 	}
 	
-//	/**
-//	 * Kompletność dla wszystkich typów anotacji. 
-//	 */
-//	public float getRecall(){
-//		return globalRecall;
-//	}
-//
-//	/**
-//	 * Kompletność dla wskazanego typu anotacji. 
-//	 * @param type
-//	 */
-//	public float getRecall(String type){
-//		return recall.getGlobal(type);
-//	}
-//
-//	/**
-//	 * Średnia harmoniczna dla wszystkich typów anotacji. 
-//	 * @return
-//	 */
-//	public float getFMeasure(){
-//		return globalFMeasure;
-//	}
-//	
-//	/**
-//	 * Średnia harmoniczna dla wskazanego typu anotacji.
-//	 * @param type
-//	 * @return
-//	 */
-//	public float getFMeasure(String type){
-//		return fMeasure.getGlobal(type);
-//	}
-	
 	public void setQuiet(boolean quiet) {
 		this.quiet = quiet;
 	}
@@ -266,10 +255,8 @@ public class ChunkerEvaluatorMuc {
 	 * 
 	 */
 	public void printResults(){
-		System.out.println("====================================================");
-		System.out.println("# MUC match evaluation #");
-		System.out.println("====================================================");
-		System.out.println("Annotation           &  COR &  ACT &  POS &"
+		this.printHeader("MUC match evaluation");
+		System.out.println("        Annotation           &  COR &  ACT &  POS &"
 			+ " Precision & Recall  & F$_1$   \\\\");
 		System.out.println("\\hline");
 		for (String type : this.getTypes()) {
@@ -281,7 +268,7 @@ public class ChunkerEvaluatorMuc {
 			float r = (float)tp / ((float)tp + (float)fn);
 			float f = 2*p*r / ( p + r);
 			
-			System.out.println(String.format("%-20s & %4d & %4d & %4d &   %6.2f%% & %6.2f%% & %6.2f%% \\\\", 
+			System.out.println(String.format("        %-20s & %4d & %4d & %4d &   %6.2f%% & %6.2f%% & %6.2f%% \\\\", 
 					type, tp, fp, fn, p*100, r*100, f*100));
 		}
 		System.out.println("\\hline");
@@ -292,12 +279,17 @@ public class ChunkerEvaluatorMuc {
 			float r = (float)this.globalTruePositives / ((float)this.globalTruePositives + (float)this.globalFalseNegatives);
 			float f = 2*p*r / ( p + r);
 
-			System.out.println(String.format("*TOTAL*              & %4d & %4d & %4d &   %6.2f%% & %6.2f%% & %6.2f%%", 
+			System.out.println(String.format("        *TOTAL*              & %4d & %4d & %4d &   %6.2f%% & %6.2f%% & %6.2f%%", 
 					this.globalTruePositives, this.globalFalsePositives, this.globalFalseNegatives, p*100, r*100, f*100));
 		}		
-		System.out.println("----------------------------------------------------");
+		System.out.println("\n");
 	}
-	
+
+	public void printHeader(String header){
+        System.out.println("======================================================================================");
+        System.out.println("# " + header);
+        System.out.println("======================================================================================");
+	}
 	
 	/**
 	 * 

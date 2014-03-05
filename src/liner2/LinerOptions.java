@@ -88,6 +88,7 @@ public class LinerOptions {
 	public static final String OPTION_PORT = "p";
 	public static final String OPTION_SILENT = "silent";
 	public static final String OPTION_TEMPLATE = "template";
+	public static final String OPTION_TYPES = "types";
 	public static final String OPTION_USE = "use";
     public static final String OPTION_ARFF_TEMPLATE = "arff-template";
 	public static final String OPTION_VERBOSE = "verbose";
@@ -114,7 +115,8 @@ public class LinerOptions {
 	public LinkedHashSet<String> chunkersDescriptions = new LinkedHashSet<String>();
 	public ArrayList<String> corpusDescriptions = new ArrayList<String>();
 	private String cvTrainData = null; 
-	
+	private HashSet<String> types = null;
+	 
 	/**
 	 * Constructor
 	 */
@@ -128,7 +130,7 @@ public class LinerOptions {
 	}
 	
 	public static boolean isOption(String name){
-		return LinerOptions.getGlobal().getProperties().containsKey(name);
+		return LinerOptions.getGlobal().getProperties().containsKey(name);		
 	}
 	
 	/**
@@ -201,6 +203,20 @@ public class LinerOptions {
     		return 10;
     			
     }
+    
+    public HashSet<String> getTypes(){
+    	if ( this.types == null )
+	    	if ( isOption(OPTION_TYPES) ){
+	    		HashSet<String> types = new HashSet<String>();
+	    		for (String type : getOption(OPTION_TYPES).split(","))
+	    			types.add(type);
+	    		this.types = types;
+	    	}
+	    	else
+	    		this.types = new HashSet<String>();
+    	return this.types;
+    }
+    
 	/**
 	 * 
 	 * @param args
@@ -262,15 +278,18 @@ public class LinerOptions {
         BufferedReader br = new BufferedReader(new FileReader(iniFile));
             
         StringBuffer sb = new StringBuffer();
-        String eachLine = br.readLine().trim();
+        String eachLine = br.readLine();
             
         while(eachLine != null) {
+        	eachLine = eachLine.trim();
         	if ((!eachLine.startsWith("#")) && (!eachLine.isEmpty())){
                 boolean validOption = false;
-                if(allowedOptions != null){
+                if( allowedOptions != null ){
                     for(String option: allowedOptions)
-                        if(eachLine.startsWith("-"+option))
+                        if(eachLine.startsWith("-"+option+" ") || eachLine.equals("-"+option)){
                             validOption = true;
+                            break;
+                        }
                 }
                 else
                     validOption = true;
@@ -284,10 +303,6 @@ public class LinerOptions {
 
         // Insert fixed paths
         String parameters = sb.toString().trim();
-        // TODO ścieżka bezwzględna do pliku
-//        String iniPath = "./";
-//        if (iniFile.getParentFile() != null)
-//        	iniPath = iniFile.getParentFile().getAbsolutePath();
 		String iniPath = iniFile.getAbsoluteFile().getParentFile().getAbsolutePath();
         parameters = parameters.replace("{INI_PATH}", iniPath);
             
@@ -295,7 +310,6 @@ public class LinerOptions {
         configDesc.append("> Load parameters from a ini file: " + filename + "\n");
 
         this.parseParameters(line, configDesc, allowedOptions);
-//        this.configurationDescription = configDesc.toString();
     }
 	
 	/**
@@ -506,7 +520,7 @@ public class LinerOptions {
     	options.addOption(OptionBuilder.withArgName("filters").hasArg()
 				.withDescription("filters to apply")
 				.create("filter"));
-    	options.addOption(OptionBuilder.withArgName("span").hasArg()
+    	options.addOption(OptionBuilder.withArgName("num").hasArg()
 				.withDescription("number of folds")
 				.create(OPTION_FOLDS_NUMBER));
     	options.addOption(OptionBuilder.withArgName("gazetters").hasArg()
@@ -541,6 +555,9 @@ public class LinerOptions {
     	options.addOption(OptionBuilder.withArgName("number").hasArg()
 				.withDescription("port to listen on (daemon mode)")
 				.create(OPTION_PORT));
+    	options.addOption(OptionBuilder.withArgName("types").hasArg()
+				.withDescription("types of annotation to evaluate")
+				.create(OPTION_TYPES));
 		options.addOption(OptionBuilder.withArgName("filename").hasArg()
 				.withDescription("save output to file")
 				.create(OPTION_OUTPUT_FILE));

@@ -43,8 +43,7 @@ public class ActionEvalCvBatch extends Action{
 		/** Wczytaj listy plików */
 		for (int i=1; i<=folds_num; i++){
 			String filename = inputPattern.replace("FOLD", ""+i);
-			String root = (new File(filename)).getParent();
-			FileInputStream fis = null;
+			String root = (new File(filename)).getParentFile().getAbsolutePath();
 			BufferedReader bf = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
 			List<String> lines = new ArrayList<String>();
 			String line = bf.readLine();
@@ -54,18 +53,20 @@ public class ActionEvalCvBatch extends Action{
 				lines.add(line);
 				line = bf.readLine();
 			}
+			bf.close();
 			folds.add(lines);
 		}
 				
 		for (int i = 1; i <= folds_num; i++) {			
 			StringBuilder sbtrain = new StringBuilder();
 			
-			for ( int j=1; j<=folds_num; j++){
-				for ( String line : folds.get(j-1))
-					sbtrain.append(line + "\n");							
+			for ( int j = 1; j<=folds_num; j++){
+				if ( i != j ) 
+					for ( String line : folds.get(j-1))
+						sbtrain.append(line + "\n");							
 			}
 			
-			/** Ustaw wartość dla globalnej zmiennej dla ini {CV-TRAIN} */
+			/** Ustaw wartość dla globalnej zmiennej {CV-TRAIN} */
 			LinerOptions.getGlobal().setCvTrain(sbtrain.toString());
 
             ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
@@ -80,8 +81,8 @@ public class ActionEvalCvBatch extends Action{
                 gen.generateFeatures(ps);
             }
 			
-			ChunkerEvaluator localEval = new ChunkerEvaluator();
-			ChunkerEvaluatorMuc localEvalMuc = new ChunkerEvaluatorMuc();
+			ChunkerEvaluator localEval = new ChunkerEvaluator(LinerOptions.getGlobal().getTypes());
+			ChunkerEvaluatorMuc localEvalMuc = new ChunkerEvaluatorMuc(LinerOptions.getGlobal().getTypes());
 			
 			localEval.evaluate(ps.getSentences(), chunker.chunk(ps), ps.getChunkings());
 			localEvalMuc.evaluate(chunker.chunk(ps), ps.getChunkings());

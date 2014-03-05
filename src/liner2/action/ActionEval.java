@@ -33,7 +33,7 @@ public class ActionEval extends Action{
 		if ( !LinerOptions.isOption(LinerOptions.OPTION_USE) ){
 			throw new ParameterException("Parameter --use <chunker_pipe_desription> not set");
 		}
-
+		
     	ProcessingTimer timer = new ProcessingTimer();
 
     	timer.startTimer("Chunkers init.");
@@ -61,8 +61,8 @@ public class ActionEval extends Action{
     	}
     		
     	/* Create all defined chunkers. */
-    	ChunkerEvaluator eval = new ChunkerEvaluator();
-    	ChunkerEvaluatorMuc evalMuc = new ChunkerEvaluatorMuc();
+    	ChunkerEvaluator eval = new ChunkerEvaluator(LinerOptions.getGlobal().getTypes());
+    	ChunkerEvaluatorMuc evalMuc = new ChunkerEvaluatorMuc(LinerOptions.getGlobal().getTypes());
 
 		timer.startTimer("Chunking");
     	HashMap<Sentence, AnnotationSet> chunkingsRef = ps.getChunkings();
