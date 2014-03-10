@@ -50,6 +50,7 @@ public class TemplateFactory {
 			if (featureName.equals(windowDesc[0])) {
 				String featureId = Integer.toString(attributeIndex.getIndex(featureName));
                 if(featureId.equals("-1")){
+                	pw.close();
                     throw new Exception("Feature not found: "+featureName);
                 }
 				String featureIdFixed = featureId;

@@ -293,8 +293,10 @@ public class LinerOptions {
                 }
                 else
                     validOption = true;
-                if(!validOption)
+                if(!validOption){
+                	br.close();
                     throw new Exception("IniParseError in: " + filename + ". Not allowed option: " + eachLine);
+                }
         		sb.append(eachLine + " ");
             }
            	eachLine = br.readLine();
@@ -585,10 +587,10 @@ public class LinerOptions {
     public void printHelp(){
     	System.out.println("--------------------------------------------------*");
     	System.out.println("* A tool for Named Entity Recognition for Polish. *");
-    	System.out.println("*       Authors: Michał Marcińczuk (2010–2013)    *");
+    	System.out.println("*       Authors: Michał Marcińczuk (2010–2014)    *");
     	System.out.println("*                Maciej Janicki (2011)            *");
     	System.out.println("*  Contributors: Dominik Piasecki (2013)          *");
-    	System.out.println("*                Michał Krautforst (2013)         *");
+    	System.out.println("*                Michał Krautforst (2013-2014)    *");
     	System.out.println("*   Institution: Wrocław University of Technology.*");
     	System.out.println("--------------------------------------------------*");
     	System.out.println();
