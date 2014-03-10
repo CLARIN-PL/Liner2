@@ -45,6 +45,8 @@ public class TokenFeatureFactory {
             return new HasDigitFeature(feature);
         else if (feature.equals("has_symbol")) 
             return new HasSymbolFeature(feature);
+        else if (feature.equals("is_number")) 
+            return new IsNumberFeature(feature);
         else if (feature.equals("agr1"))
         	return new Agr1Feature(feature);
         else if (feature.endsWith(".txt")){

@@ -19,7 +19,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
     	Action action = null;
-
+ 
     	try{
             LinerOptions.getGlobal().parse(args);
 	    	String mode = LinerOptions.getGlobal().mode;
@@ -49,7 +49,7 @@ public class Main {
      * Messages are print to std.out only with -verbose parameter.
      * @param text
      */
-    public static void log(String text){
+    public static void log(String text){ 
     	Main.log(text, false);
     }
     
