@@ -13,7 +13,7 @@ public class IsNumberFeature extends TokenFeature{
 	public String generate(Token token, TokenAttributeIndex index){
 		  try  
 		  {  
-		    double d = Double.parseDouble(token.getAttributeValue(0));  
+		    Double.parseDouble(token.getAttributeValue(index.getIndex("orth")));  
 		  }  
 		  catch(NumberFormatException nfe)  
 		  {  

@@ -21,7 +21,7 @@ public class PatternFeature extends TokenFeature{
 	}
 	
 	public String generate(Token t, TokenAttributeIndex index){
-		String orth = t.getAttributeValue(0);
+		String orth = t.getAttributeValue(index.getIndex("orth"));
 		if (ALL_UPPER.matcher(orth).find())
 			return "ALL_UPPER";
 		else if (ALL_LOWER.matcher(orth).find())

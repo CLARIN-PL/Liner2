@@ -13,9 +13,9 @@ public class PrefixFeature extends TokenFeature{
 	}
 	
 	public String generate(Token t, TokenAttributeIndex index){
-		String orth = t.getAttributeValue(0);
+		String orth = t.getAttributeValue(index.getIndex("orth"));
 		if (orth.length() >= n)
-			return t.getAttributeValue(0).substring(0,n);
+			return orth.substring(0,n);
 		else{
 			 StringBuilder sb = new StringBuilder(orth);
 			 for(int i = 0; i < (n - orth.length()); i++)

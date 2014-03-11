@@ -10,7 +10,7 @@ public class HasUpperFeature extends TokenFeature{
 	}
 	
 	public String generate(Token token, TokenAttributeIndex index){
-		for (char c: token.getAttributeValue(0).toCharArray()){
+		for (char c: token.getAttributeValue(index.getIndex("orth")).toCharArray()){
 			if (Character.isUpperCase(c))
 				return "1";
 		}

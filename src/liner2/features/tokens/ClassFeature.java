@@ -19,7 +19,7 @@ public class ClassFeature extends TokenFeature{
 	
 	
 	public String generate(Token token, TokenAttributeIndex index){
-		String ctag = token.getAttributeValue(2);
+		String ctag = token.getAttributeValue(index.getIndex("ctag"));
 		if(ctag != null)
 			for (String val: ctag.split(":")){
 				if (this.possible_classes.contains(val))

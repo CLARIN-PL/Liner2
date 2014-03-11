@@ -14,7 +14,7 @@ public class HasDigitFeature extends TokenFeature{
 	}
 	
 	public String generate(Token token, TokenAttributeIndex index){
-		if (DIGITS.matcher(token.getAttributeValue(0)).find())
+		if (DIGITS.matcher(token.getAttributeValue(index.getIndex("orth"))).find())
 			return "1";
 		else
 			return "0";

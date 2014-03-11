@@ -14,7 +14,7 @@ public class StartsWithSymbolFeature extends TokenFeature{
 	}
 	
 	public String generate(Token token, TokenAttributeIndex index){
-		if (SYMBOLS.matcher(token.getAttributeValue(0)).find())
+		if (SYMBOLS.matcher(token.getAttributeValue(index.getIndex("orth"))).find())
 			return "1";
 		else
 			return "0";

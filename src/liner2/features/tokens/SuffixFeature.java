@@ -13,7 +13,7 @@ public class SuffixFeature extends TokenFeature{
 	}
 	
 	public String generate(Token t, TokenAttributeIndex index){
-		String orth = t.getAttributeValue(0);
+		String orth = t.getAttributeValue(index.getIndex("orth"));
 		if (orth.length() >= n)
 			return orth.substring(orth.length()-n);
 		else{

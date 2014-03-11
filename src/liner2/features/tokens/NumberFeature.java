@@ -15,7 +15,7 @@ public class NumberFeature extends TokenFeature{
 	}
 	
 	public String generate(Token token, TokenAttributeIndex index){
-		String ctag = token.getAttributeValue(2);
+		String ctag = token.getAttributeValue(index.getIndex("ctag"));
 		if(ctag != null)
 			for (String val: ctag.split(":")){
 				if (this.possible_numbers.contains(val))

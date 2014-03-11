@@ -18,7 +18,7 @@ public class SynonymFeature extends TokenFeature{
 	}
 	
 	public String generate(Token token, TokenAttributeIndex index){
-		String base = token.getAttributeValue(1);
+		String base = token.getAttributeValue(index.getIndex("base"));
 		ArrayList<String> lemmas = new ArrayList<String>();
 		ArrayList<PrincetonDataRaw> synsets =  database.getSynsets(base);
 		if(synsets.isEmpty())
