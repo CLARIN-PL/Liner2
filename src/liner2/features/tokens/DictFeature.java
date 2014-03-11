@@ -11,7 +11,7 @@ import liner2.structure.Token;
 import liner2.structure.Sentence;
 import liner2.tools.TrieDictNode;
 
-public class DictFeature extends Feature{
+public class DictFeature extends TokenInSentenceFeature{
 	
 	private TrieDictNode dict = new TrieDictNode(false);
 	private int sourceFeatureIdx;
@@ -52,8 +52,9 @@ public class DictFeature extends Feature{
 		inFile.close();
 	}
 
-	
-	public void generate(Sentence sentence, int thisFeatureIdx){
+	@Override
+	public void generate(Sentence sentence){
+		int thisFeatureIdx = sentence.getAttributeIndex().getIndex(this.getName());
 		ArrayList<Token> tokens = sentence.getTokens();
 		int tokenIdx = 0;
 		String sourceFeatureValue = null;

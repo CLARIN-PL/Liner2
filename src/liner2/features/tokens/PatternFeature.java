@@ -1,6 +1,8 @@
 package liner2.features.tokens;
 
 import liner2.structure.Token;
+import liner2.structure.TokenAttributeIndex;
+
 import java.util.regex.Pattern;
 
 public class PatternFeature extends TokenFeature{
@@ -18,7 +20,7 @@ public class PatternFeature extends TokenFeature{
 		super(name);
 	}
 	
-	public String generate(Token t){
+	public String generate(Token t, TokenAttributeIndex index){
 		String orth = t.getAttributeValue(0);
 		if (ALL_UPPER.matcher(orth).find())
 			return "ALL_UPPER";

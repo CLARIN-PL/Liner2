@@ -1,6 +1,7 @@
 package liner2.features.tokens;
 
 import liner2.structure.Token;
+import liner2.structure.TokenAttributeIndex;
 
 public class PrefixFeature extends TokenFeature{
 	
@@ -11,7 +12,7 @@ public class PrefixFeature extends TokenFeature{
 		this.n = Integer.parseInt(name.substring(name.length()-1));
 	}
 	
-	public String generate(Token t){
+	public String generate(Token t, TokenAttributeIndex index){
 		String orth = t.getAttributeValue(0);
 		if (orth.length() >= n)
 			return t.getAttributeValue(0).substring(0,n);

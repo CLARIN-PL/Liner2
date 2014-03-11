@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import liner2.structure.Token;
+import liner2.structure.TokenAttributeIndex;
 
 public class CaseFeature extends TokenFeature{
 		
@@ -13,7 +14,7 @@ public class CaseFeature extends TokenFeature{
 			super(name);
 		}
 		
-		public String generate(Token token){
+		public String generate(Token token, TokenAttributeIndex index){
 			String ctag = token.getAttributeValue(2);
 			if(ctag != null)
 				for (String val: ctag.split(":")){

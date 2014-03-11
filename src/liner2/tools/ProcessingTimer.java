@@ -83,13 +83,15 @@ public class ProcessingTimer {
 			else
 				suffix = "(not in total time)";
 			
-			System.out.println(String.format("%d) %-20s %5.2f s %s", i++, task.getLabel(), (float)task.getTime()/milisec, suffix));
+			System.out.println(String.format("%d) %-20s : %5.2f s %s", i++, task.getLabel(), (float)task.getTime()/milisec, suffix));
 		}
 		System.out.println("----------------------------------------------------");
 		System.out.println(String.format("## %-20s %5.2f s", "Total time", (float)totalTime/milisec));
 		System.out.println("----------------------------------------------------");
-		System.out.println(String.format("Tokens  / second: %5.2f", (float)this.tokensNumber / (totalTime/milisec) ));
-		System.out.println(String.format("Text kB / second: %5.2f", (float)this.textSize / 1024f / (totalTime/milisec) ));
+		System.out.println(String.format("Tokens           : %8d", this.tokensNumber));
+		System.out.println(String.format("Text kB          : %11.2f", (float)this.textSize / 1024f ));
+		System.out.println(String.format("Tokens  / second : %11.2f", (float)this.tokensNumber / (totalTime/milisec) ));
+		System.out.println(String.format("Text kB / second : %11.2f", (float)this.textSize / 1024f / (totalTime/milisec) ));
 		System.out.println("----------------------------------------------------");
 	}
 }

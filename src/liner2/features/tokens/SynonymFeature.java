@@ -6,6 +6,7 @@ import java.util.Collections;
 import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataLemmaRaw;
 import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRaw;
 import liner2.structure.Token;
+import liner2.structure.TokenAttributeIndex;
 
 public class SynonymFeature extends TokenFeature{
 	
@@ -16,7 +17,7 @@ public class SynonymFeature extends TokenFeature{
 		this.database = database;
 	}
 	
-	public String generate(Token token){
+	public String generate(Token token, TokenAttributeIndex index){
 		String base = token.getAttributeValue(1);
 		ArrayList<String> lemmas = new ArrayList<String>();
 		ArrayList<PrincetonDataRaw> synsets =  database.getSynsets(base);

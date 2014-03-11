@@ -2,15 +2,11 @@ package liner2.features;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
 
-import liner2.LinerOptions;
-import liner2.features.tokens.Agr1Feature;
-import liner2.features.tokens.DictFeature;
 import liner2.features.tokens.Feature;
 import liner2.features.tokens.TokenFeature;
 import liner2.features.tokens.TokenFeatureFactory;
+import liner2.features.tokens.TokenInSentenceFeature;
 import liner2.structure.Paragraph;
 import liner2.structure.ParagraphSet;
 import liner2.structure.Sentence;
@@ -20,10 +16,10 @@ import liner2.structure.TokenAttributeIndex;
 public class TokenFeatureGenerator {
 
 	private ArrayList<TokenFeature> tokenGenerators = new ArrayList<TokenFeature>();
-	private ArrayList<DictFeature> sentenceGenerators = new ArrayList<DictFeature>();
+	private ArrayList<TokenInSentenceFeature> sentenceGenerators 
+		= new ArrayList<TokenInSentenceFeature>();
 	private TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
 	private String[] sourceFeatures = new String[]{"orth", "base", "ctag"};
-	private Agr1Feature agr1Feat = null;
 	private ArrayList<String> featureNames;
 	/**
 	 * 
@@ -37,12 +33,12 @@ public class TokenFeatureGenerator {
 			for ( String feature : features.values() ){
 				Feature f = TokenFeatureFactory.create(feature);
 				if  (f != null){
-					if (DictFeature.class.isInstance(f))
-						this.sentenceGenerators.add((DictFeature) f);
-					else if(Agr1Feature.class.isInstance(f))
-						this.agr1Feat = (Agr1Feature)f;
-					else
+					if (TokenInSentenceFeature.class.isInstance(f))
+						this.sentenceGenerators.add((TokenInSentenceFeature) f);
+					else if (TokenFeature.class.isInstance(f))
 						this.tokenGenerators.add((TokenFeature) f);
+					else
+						throw new Error("Unknow type of feature " + f);
 					this.attributeIndex.addAttribute(f.getName());
 				}
 			}
@@ -97,18 +93,16 @@ public class TokenFeatureGenerator {
 			for(int idx: toDel)
 				t.removeAttribute(idx);
 		}
-		for (DictFeature f : this.sentenceGenerators)
-			f.generate(s, this.attributeIndex.getIndex(f.getName()));
-		if (agr1Feat != null)
-			agr1Feat.generate(s, this.attributeIndex.getIndex("agr1"),
-								 this.attributeIndex.getIndex("case"),
-								 this.attributeIndex.getIndex("number"),
-								 this.attributeIndex.getIndex("gender"));
+		
+		for (TokenInSentenceFeature f : this.sentenceGenerators)
+			f.generate(s);		
 	}
 
 	public void generateFeatures(Token t) throws Exception {
 		for (TokenFeature f : this.tokenGenerators){
-			t.setAttributeValue(this.attributeIndex.getIndex(f.getName()), f.generate(t));
+			t.setAttributeValue(
+					this.attributeIndex.getIndex(f.getName()), 
+					f.generate(t, this.attributeIndex));
 		}
 	}
 }

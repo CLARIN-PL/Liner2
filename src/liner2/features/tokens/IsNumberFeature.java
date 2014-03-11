@@ -1,6 +1,7 @@
 package liner2.features.tokens;
 
 import liner2.structure.Token;
+import liner2.structure.TokenAttributeIndex;
 
 public class IsNumberFeature extends TokenFeature{
 	
@@ -9,7 +10,7 @@ public class IsNumberFeature extends TokenFeature{
 		super(name);
 	}
 	
-	public String generate(Token token){
+	public String generate(Token token, TokenAttributeIndex index){
 		  try  
 		  {  
 		    double d = Double.parseDouble(token.getAttributeValue(0));  

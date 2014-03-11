@@ -27,8 +27,7 @@ public class ActionEval extends Action{
 
 	/**
 	 * 
-	 */
-		
+	 */		
 	public void run() throws Exception {
 		if ( !LinerOptions.isOption(LinerOptions.OPTION_USE) ){
 			throw new ParameterException("Parameter --use <chunker_pipe_desription> not set");
@@ -36,7 +35,7 @@ public class ActionEval extends Action{
 		
     	ProcessingTimer timer = new ProcessingTimer();
 
-    	timer.startTimer("Chunkers init.");
+    	timer.startTimer("Model loading");
         ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
         Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
 		timer.stopTimer();

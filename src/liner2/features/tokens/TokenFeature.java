@@ -1,6 +1,7 @@
 package liner2.features.tokens;
 
 import liner2.structure.Token;
+import liner2.structure.TokenAttributeIndex;
 
 public abstract class TokenFeature extends Feature{
 
@@ -8,6 +9,6 @@ public abstract class TokenFeature extends Feature{
 		super(name);
 	}
 
-	public abstract String generate(Token token);
+	public abstract String generate(Token token, TokenAttributeIndex index);
 	
 }

@@ -91,6 +91,8 @@ public class Main {
             action = new ActionPipe();
         } else if (mode.equals("train") ) {
             action = new ActionTrain();
+        } else if (mode.equals("time") ) {
+            action = new ActionTime();
         }
 
 		LinerOptions.getGlobal().printConfigurationDescription();

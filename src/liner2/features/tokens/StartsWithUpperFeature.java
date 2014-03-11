@@ -1,6 +1,7 @@
 package liner2.features.tokens;
 
 import liner2.structure.Token;
+import liner2.structure.TokenAttributeIndex;
 
 public class StartsWithUpperFeature extends TokenFeature{
 	
@@ -8,7 +9,7 @@ public class StartsWithUpperFeature extends TokenFeature{
 		super(name);
 	}
 	
-	public String generate(Token token){
+	public String generate(Token token, TokenAttributeIndex index){
 		if (Character.isUpperCase(token.getAttributeValue(0).charAt(0)))
 			return "1";
 		else

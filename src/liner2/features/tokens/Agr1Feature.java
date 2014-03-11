@@ -5,14 +5,17 @@ import java.util.ArrayList;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
 
-public class Agr1Feature extends Feature{
-
+public class Agr1Feature extends TokenInSentenceFeature{
 	
 	public Agr1Feature(String name){
 		super(name);
 	}
 	
-	public void generate(Sentence sentence, int thisFeatureIdx, int caseIdx, int numberIdx, int genderIdx){
+	public void generate(Sentence sentence){
+		int thisFeatureIdx = sentence.getAttributeIndex().addAttribute(this.getName()); 
+		int caseIdx = sentence.getAttributeIndex().addAttribute("case");
+		int numberIdx = sentence.getAttributeIndex().addAttribute("number");
+		int genderIdx = sentence.getAttributeIndex().addAttribute("gender");
 		ArrayList<Token> tokens = sentence.getTokens();
 		tokens.get(0).setAttributeValue(thisFeatureIdx, "NULL");
 		for (int i=1; i<sentence.getTokenNumber(); i++){

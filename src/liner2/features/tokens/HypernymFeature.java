@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import liner2.structure.Token;
+import liner2.structure.TokenAttributeIndex;
 import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataLemmaRaw;
 import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRaw;
 
@@ -18,7 +19,7 @@ public class HypernymFeature extends TokenFeature{
 		this.distance = distance;
 	}
 	
-	public String generate(Token token){
+	public String generate(Token token, TokenAttributeIndex index){
 		String base = token.getAttributeValue(1);
 		ArrayList<String> lemmas = new ArrayList<String>();
 		ArrayList<PrincetonDataRaw> thisDistSynsets =  database.getSynsets(base);

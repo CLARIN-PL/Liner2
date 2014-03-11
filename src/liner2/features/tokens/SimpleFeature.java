@@ -1,6 +1,7 @@
 package liner2.features.tokens;
 
 import liner2.structure.Token;
+import liner2.structure.TokenAttributeIndex;
 
 public class SimpleFeature extends TokenFeature{
 
@@ -12,7 +13,7 @@ public class SimpleFeature extends TokenFeature{
 	}
 	
 	
-	public String generate(Token token){
+	public String generate(Token token, TokenAttributeIndex index){
 		return "SimpleGenerator";
 	}
 	
