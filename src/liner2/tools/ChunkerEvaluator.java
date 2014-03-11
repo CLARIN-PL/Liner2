@@ -281,7 +281,7 @@ public class ChunkerEvaluator {
 	public int getFalsePositive(){
 		int fp = 0;
 		for ( String type : this.chunksFalsePositives.keySet())
-			fp += this.getTruePositive(type);
+			fp += this.getFalsePositive(type);
 		return fp;
 	}
 
@@ -292,7 +292,7 @@ public class ChunkerEvaluator {
 	public int getFalseNegative(){
 		int fn = 0;
 		for ( String type : this.chunksFalseNegatives.keySet())
-			fn += this.getTruePositive(type);
+			fn += this.getFalseNegatives(type);
 		return fn;
 	}
 

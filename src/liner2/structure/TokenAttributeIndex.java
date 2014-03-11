@@ -10,19 +10,14 @@ import java.util.HashMap;
  */
 public class TokenAttributeIndex {
 
-	/* Tablica zawiera nazwy atrybutów. Pozycja, na której znajduje się dany atrybut
+	/** 
+	 * Tablica zawiera nazwy atrybutów. Pozycja, na której znajduje się dany atrybut
 	 * jest indeksem tego atrybutu w tablicy atrybutów (klasa Token).
 	 */
 	ArrayList<String> indexes = new ArrayList<String>();
 	
-	HashMap<String, Integer> nameToIndex = new HashMap<String, Integer>();
+	HashMap<String, Integer> nameToIndex = new HashMap<String, Integer>();	
 
-    public void addDefaultAttributes(){
-        addAttribute("orth");
-        addAttribute("base");
-        addAttribute("ctag");
-    }
-	
 	/**
 	 * TODO
 	 * Dodaje nowy atrybut do indeksu i zwraca jego numer porządkowy (indeks).
@@ -30,10 +25,15 @@ public class TokenAttributeIndex {
 	 * @return
 	 */
 	public int addAttribute(String name){
-		indexes.add(name);
-		Integer index = indexes.size()-1;
-		this.nameToIndex.put(name, index);
-		return index;
+		if ( !this.nameToIndex.containsKey(name) ){
+			indexes.add(name);
+			Integer index = indexes.size()-1;
+			this.nameToIndex.put(name, index);
+			return index;
+		}
+		else{
+			return this.nameToIndex.get(name);
+		}
 	}
 	
 	/**
@@ -48,10 +48,14 @@ public class TokenAttributeIndex {
 		return true;
 	}
 	
+	/**
+	 * Dodaje listę atrybutów pomijając już zadeklarowane.
+	 * @param features
+	 */
 	public void update(ArrayList<String> features) {
-		indexes = new ArrayList<String>();
-		for (String feature : features)
+		for (String feature : features){
 			addAttribute(feature);
+		}
 	}
 	
 	/**
@@ -60,18 +64,32 @@ public class TokenAttributeIndex {
 	 * @return
 	 */
 	public int getIndex(String name){
-		return indexes.indexOf(name);
-		//return this.nameToIndex.getGlobal(name);
+		return this.nameToIndex.get(name);
 	}
 	
+	/**
+	 * Return name of an attribute for given index.
+	 * @param index -- attribute index in the token feature vector
+	 * @return name of the attribute
+	 */
 	public String getName(int index){
 		return indexes.get(index);
 	}
 	
+	/**
+	 * Return number of declared attributes.
+	 * @return number of attributes
+	 */
 	public int getLength() {
 		return indexes.size();
 	}
 	
+	/**
+	 * 
+	 * @param token
+	 * @param attributeName
+	 * @return
+	 */
 	public String getAttributeValue(Token token, String attributeName){
 		int idx = this.getIndex(attributeName);
 		if (idx != -1)
