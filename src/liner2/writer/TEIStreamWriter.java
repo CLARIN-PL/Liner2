@@ -18,7 +18,7 @@ import java.util.HashMap;
  * Time: 2:29 PM
  * To change this template use File | Settings | File Templates.
  */
-public class TEIStreamWriter extends StreamWriter{
+public class TEIStreamWriter extends AbstractDocumentWriter{
 
     //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //ToDo: podzielić readParagraph na podmetody!!!!!
@@ -73,6 +73,10 @@ public class TEIStreamWriter extends StreamWriter{
 
     }
 
+	@Override
+	public void flush() {
+	}
+	
     public void open() {
         if (open)
             return;
@@ -171,7 +175,12 @@ public class TEIStreamWriter extends StreamWriter{
     }
 
     @Override
-    public void writeParagraph(Paragraph paragraph) {
+    public void writeDocument(Document document){
+    	for ( Paragraph paragraph : document.getParagraphs() )
+    		this.writeParagraph(paragraph);
+    }
+    
+    private void writeParagraph(Paragraph paragraph) {
         attributeIndex = paragraph.getAttributeIndex();
         try{
             HashMap<String, String> currentIds = new HashMap<String, String>();

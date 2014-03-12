@@ -1,26 +1,25 @@
 package liner2.writer;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Set;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 import liner2.structure.Annotation;
+import liner2.structure.Document;
 import liner2.structure.Paragraph;
 import liner2.structure.Sentence;
 import liner2.structure.Tag;
 import liner2.structure.Token;
 
-public class CclStreamWriter extends StreamWriter {
+public class CclStreamWriter extends AbstractDocumentWriter {
 
 	private final String TAG_ANN			= "ann";
 	private final String TAG_BASE 			= "base";
@@ -67,6 +66,15 @@ public class CclStreamWriter extends StreamWriter {
 		}
 		open = true;
 	}
+
+	@Override
+	public void flush() {
+		try {
+			os.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+	}
 	
 	@Override
 	public void close() {
@@ -81,12 +89,21 @@ public class CclStreamWriter extends StreamWriter {
 			ex.printStackTrace();
 		}
 	}
-	
+
 	@Override
+	public void writeDocument(Document document){
+		this.open();
+		for (Paragraph paragraph : document.getParagraphs())
+			this.writeParagraph(paragraph);
+		try {
+			xmlw.writeEndElement();
+		} catch (XMLStreamException e) {
+			e.printStackTrace();
+		}
+	}	
+
 	public void writeParagraph(Paragraph paragraph) {
 		try {
-			if (!open)
-				open();
 			this.indent(1);
 			xmlw.writeStartElement(TAG_PARAGRAPH);
 			

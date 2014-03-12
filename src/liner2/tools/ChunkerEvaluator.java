@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
+import liner2.Main;
 import liner2.structure.Annotation;
 import liner2.structure.AnnotationSet;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
-
-import liner2.LinerOptions;
-import liner2.Main;
 
 /**
  * 
@@ -82,7 +81,7 @@ public class ChunkerEvaluator {
 	 * Ocenia nerowanie całego dokumentu.
 	 * @param set
 	 */
-	public void evaluate(ArrayList<Sentence> order, HashMap<Sentence, AnnotationSet> chunkings, HashMap<Sentence, AnnotationSet> chunkigsRef){
+	public void evaluate(List<Sentence> order, HashMap<Sentence, AnnotationSet> chunkings, HashMap<Sentence, AnnotationSet> chunkigsRef){
 		for ( Sentence sentence : order){
 			this.evaluate(sentence, chunkings.get(sentence), chunkigsRef.get(sentence));
 		}
@@ -93,8 +92,6 @@ public class ChunkerEvaluator {
 	 */
 	private void evaluate(Sentence sentence, AnnotationSet chunking, AnnotationSet chunkingRef) {
 
-		chunking.filter(LinerOptions.getGlobal().filters);
-	
 		// tylko na potrzeby wyświetlania szczegółów
 		HashSet<Annotation> myTruePositives = new HashSet<Annotation>();
 		this.sentenceNum++;
@@ -341,7 +338,7 @@ public class ChunkerEvaluator {
 		System.out.println("\n");
 
 		
-		this.printHeader("Exact match evaluation -- annotation span evaluation (annotation types ignored)");
+		this.printHeader("Annotation span evaluation (annotation types are ignored)");
         System.out.println(header);
         System.out.println("\\hline");
 		System.out.println(String.format(line, "*TOTAL*", 
@@ -350,7 +347,7 @@ public class ChunkerEvaluator {
 		System.out.println("\n");
         
 		
-		this.printHeader("Exact match evaluation -- annotation span evaluation for each type");
+		this.printHeader("Annotation span evaluation for each type ??");
         System.out.println(header);
         System.out.println("\\hline");
         for (String key : keys) {

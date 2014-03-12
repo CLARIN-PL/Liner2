@@ -12,11 +12,11 @@ public class ActionTrain extends Action{
 
 	/**
 	 * Module entry function.
+	 * 
+	 * Loads annotation recognizers.
 	 */
 	public void run() throws Exception{
-		/* Loading chunkers make them train */
         ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
-
 	}
 		
 }

@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.InputStream;
 import java.io.IOException;
 
+import liner2.structure.Document;
 import liner2.structure.TokenAttributeIndex;
 import liner2.structure.Annotation;
 import liner2.structure.Paragraph;
@@ -15,7 +16,7 @@ import liner2.structure.Token;
 import liner2.tools.DataFormatException;
 import liner2.tools.StringHelper;
 
-public class IobStreamReader extends StreamReader {
+public class IobStreamReader extends AbstractDocumentReader {
 	
 	private BufferedReader ir;
 	private TokenAttributeIndex attributeIndex = null;
@@ -67,7 +68,6 @@ public class IobStreamReader extends StreamReader {
 		}
 	}
 
-	@Override
 	public boolean paragraphReady() throws DataFormatException {
 		if (!this.init)
 			init();
@@ -105,7 +105,7 @@ public class IobStreamReader extends StreamReader {
 	}
 
 	@Override
-	protected Paragraph readRawParagraph() throws DataFormatException {
+	public Document nextDocument() throws DataFormatException {
 		if (!paragraphReady())
 			return null;
 			
@@ -122,7 +122,9 @@ public class IobStreamReader extends StreamReader {
 				if (!ir.ready()) {
 					if (currentSentence.getTokenNumber() > 0)
 						paragraph.addSentence(currentSentence);
-					return paragraph;
+					Document document = new Document("IOB todo", this.attributeIndex);
+					document.addParagraph(paragraph);
+					return document;
 				}		
 				line = ir.readLine();
 			} catch (IOException ex) {
@@ -137,15 +139,14 @@ public class IobStreamReader extends StreamReader {
 			}
 			else {
 				String[] words = line.trim().split(" ");
-//				if(words.length > paragraph.getAttributeIndex().getLength()){
-//					System.out.print(line+"  ");
-//				}
 				if (words[0].equals("-DOCSTART")) {
 					if (words[1].equals("FILE")) {
 						if (words.length >= 3)
 							this.nextParagraphId = words[2];
 						this.nextParagraph = true;
-						return paragraph;
+						Document document = new Document("IOB todo", this.attributeIndex);
+						document.addParagraph(paragraph);
+						return document;
 					}
 					else
 						continue;

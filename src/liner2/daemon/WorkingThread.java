@@ -8,13 +8,13 @@ import liner2.LinerOptions;
 import liner2.chunker.Chunker;
 
 import liner2.reader.ReaderFactory;
-import liner2.reader.StreamReader;
+import liner2.reader.AbstractDocumentReader;
 import liner2.tools.Template;
-import liner2.writer.StreamWriter;
+import liner2.writer.AbstractDocumentWriter;
 import liner2.writer.WriterFactory;
 
 import liner2.structure.Paragraph;
-import liner2.structure.ParagraphSet;
+import liner2.structure.Document;
 import liner2.structure.Sentence;
 
 import liner2.Main;
@@ -83,10 +83,10 @@ public class WorkingThread extends Thread {
 		Main.log("Processing request with id: " + request.getId(), false);		
 
 		ByteArrayInputStream ins = new ByteArrayInputStream(request.getText().getBytes());
-		StreamReader reader = ReaderFactory.get().getStreamReader(ins, request.getInputFormat());
+		AbstractDocumentReader reader = ReaderFactory.get().getStreamReader("byte stream", ins, request.getInputFormat());
 					
 		ByteArrayOutputStream ous = new ByteArrayOutputStream();
-        StreamWriter writer;
+        AbstractDocumentWriter writer;
         if (request.getOutputFormat().equals("arff")){
             Template arff_template = LinerOptions.getGlobal().getArffTemplate();
             writer = WriterFactory.get().getArffWriter(ous, arff_template);
@@ -96,7 +96,7 @@ public class WorkingThread extends Thread {
         }
 
 		// process text and calculate stats
-		ParagraphSet ps = reader.readParagraphSet();
+		Document ps = reader.nextDocument();
 		int numTokens = 0, numSentences = 0, numParagraphs = 0, numChunks = 0;
 		System.out.println("Before chunking");
 		chunker.chunkInPlace(ps);
@@ -110,7 +110,7 @@ public class WorkingThread extends Thread {
 			}
 			numParagraphs++;
 		}
-		writer.writeParagraphSet(ps);
+		writer.writeDocument(ps);
 
 		// save results
 		request.setStats(numTokens, numSentences, numParagraphs, numChunks);

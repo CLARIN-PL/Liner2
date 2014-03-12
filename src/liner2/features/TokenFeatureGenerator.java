@@ -2,13 +2,14 @@ package liner2.features;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 import liner2.features.tokens.Feature;
 import liner2.features.tokens.TokenFeature;
 import liner2.features.tokens.TokenFeatureFactory;
 import liner2.features.tokens.TokenInSentenceFeature;
 import liner2.structure.Paragraph;
-import liner2.structure.ParagraphSet;
+import liner2.structure.Document;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
 import liner2.structure.TokenAttributeIndex;
@@ -64,7 +65,7 @@ public class TokenFeatureGenerator {
 	 * @param ps
 	 * @throws Exception
 	 */
-	public void generateFeatures(ParagraphSet ps) throws Exception {
+	public void generateFeatures(Document ps) throws Exception {
 		ps.getAttributeIndex().update(this.attributeIndex.allAtributes());
 		for (Paragraph p : ps.getParagraphs()){
 			generateFeatures(p, false);
@@ -83,9 +84,10 @@ public class TokenFeatureGenerator {
 
 	public void generateFeatures(Sentence s) throws Exception {
 
+		LinkedList<Integer> toDel = new LinkedList<Integer>();
 		for (Token t : s.getTokens()){
 			t.packAtributes(this.attributeIndex.getLength());
-			ArrayList<Integer> toDel = new ArrayList<Integer>();
+			toDel.clear();
 			generateFeatures(t);
 			for(String sourceFeat: sourceFeatures)
 				if(!featureNames.contains(sourceFeat))

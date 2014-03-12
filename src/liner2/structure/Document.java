@@ -2,12 +2,28 @@ package liner2.structure;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
-public class ParagraphSet {
+public class Document {
 
+	String uri = null;
 	TokenAttributeIndex attributeIndex = null;
 	ArrayList<Paragraph> paragraphs = new ArrayList<Paragraph>();
+	
+	public Document(String uri, TokenAttributeIndex attributeIndex){
+		this.uri = uri;
+		this.attributeIndex = attributeIndex;
+	}
+	
+	public Document(String uri, ArrayList<Paragraph> paragraphs, TokenAttributeIndex attributeIndex){
+		this.uri = uri;
+		this.paragraphs = paragraphs;
+		this.attributeIndex = attributeIndex;
+	}
+	
+	public String getUri(){
+		return this.uri;
+	}
+	
 	
 	public void addParagraph(Paragraph paragraph) {
 		paragraphs.add(paragraph);

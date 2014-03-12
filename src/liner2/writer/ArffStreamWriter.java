@@ -1,19 +1,20 @@
 package liner2.writer;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-
 import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
-import liner2.structure.*;
-
+import liner2.structure.Annotation;
+import liner2.structure.Document;
+import liner2.structure.Paragraph;
+import liner2.structure.Sentence;
+import liner2.structure.Token;
+import liner2.structure.TokenAttributeIndex;
 import liner2.tools.Template;
-import liner2.tools.TemplateFactory;
 
-public class ArffStreamWriter extends StreamWriter{
+public class ArffStreamWriter extends AbstractDocumentWriter{
 
 	private BufferedWriter ow;
 	private boolean init = false;
@@ -24,7 +25,8 @@ public class ArffStreamWriter extends StreamWriter{
         this.template = template;
 	}
 
-    public void writeParagraphSet(ParagraphSet paragraphSet) {
+	@Override
+    public void writeDocument(Document paragraphSet) {
         for (Paragraph p : paragraphSet.getParagraphs())
             writeParagraph(p);
         close();
@@ -63,6 +65,15 @@ public class ArffStreamWriter extends StreamWriter{
 	}
 
 	@Override
+	public void flush() {
+		try {
+			ow.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+	}
+	
+	@Override
 	public void close() {
 		try {
 			ow.close();
@@ -71,7 +82,6 @@ public class ArffStreamWriter extends StreamWriter{
 		}
 	}
 	
-	@Override
 	public void writeParagraph(Paragraph paragraph) {
 		try {
 			if (!init)

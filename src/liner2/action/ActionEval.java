@@ -7,10 +7,10 @@ import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
 import liner2.chunker.factory.ChunkerManager;
 import liner2.features.TokenFeatureGenerator;
+import liner2.reader.AbstractDocumentReader;
 import liner2.reader.ReaderFactory;
-import liner2.reader.StreamReader;
 import liner2.structure.AnnotationSet;
-import liner2.structure.ParagraphSet;
+import liner2.structure.Document;
 import liner2.structure.Sentence;
 import liner2.tools.ChunkerEvaluator;
 import liner2.tools.ChunkerEvaluatorMuc;
@@ -34,27 +34,20 @@ public class ActionEval extends Action{
 		}
 		
     	ProcessingTimer timer = new ProcessingTimer();
+    	TokenFeatureGenerator gen = null;
 
     	timer.startTimer("Model loading");
         ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
         Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
-		timer.stopTimer();
+        if (!LinerOptions.getGlobal().features.isEmpty()){
+            gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
+        }        
+        timer.stopTimer();
 
-        StreamReader reader = ReaderFactory.get().getStreamReader(
+        AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(
     			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FILE),
     			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FORMAT));
     	
-    	timer.startTimer("Data reading");
-    	ParagraphSet ps = reader.readParagraphSet();
-
-        if (!LinerOptions.getGlobal().features.isEmpty()){
-            TokenFeatureGenerator gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
-            gen.generateFeatures(ps);
-        }
-
-		chunker.prepare(ps);
-    	timer.stopTimer();
-
     	if ( !LinerOptions.isOption(LinerOptions.OPTION_USE) ){
     		throw new ParameterException("Parameter --use <chunker_pipe_desription> not set");
     	}
@@ -63,19 +56,34 @@ public class ActionEval extends Action{
     	ChunkerEvaluator eval = new ChunkerEvaluator(LinerOptions.getGlobal().getTypes());
     	ChunkerEvaluatorMuc evalMuc = new ChunkerEvaluatorMuc(LinerOptions.getGlobal().getTypes());
 
-		timer.startTimer("Chunking");
-    	HashMap<Sentence, AnnotationSet> chunkingsRef = ps.getChunkings();
-    	HashMap<Sentence, AnnotationSet> chunkings = chunker.chunk(ps);
+    	timer.startTimer("Data reading");
+    	Document ps = reader.nextDocument();
     	timer.stopTimer();
+    	
+    	HashMap<Sentence, AnnotationSet> chunkings = null;
+    	while ( ps != null ){
+    		timer.startTimer("Feature generation");
+            gen.generateFeatures(ps);
+            timer.stopTimer();
+    		
+    		timer.startTimer("Chunking");
+    		chunker.prepare(ps);
+        	chunkings = chunker.chunk(ps);
+        	timer.stopTimer();
+        	
+        	timer.startTimer("Evaluation", false);
+    		timer.addTokens(ps);
+        	eval.evaluate(ps.getSentences(), chunkings, ps.getChunkings());
+    		evalMuc.evaluate(chunkings, ps.getChunkings());				
+    		timer.stopTimer();
+            
+        	timer.startTimer("Data reading");
+        	ps = reader.nextDocument();
+        	timer.stopTimer();
+    	}
     	    	
-    	timer.startTimer("Evaluation", false);
-    	eval.evaluate(ps.getSentences(), chunkings, chunkingsRef);
-		evalMuc.evaluate(chunkings, chunkingsRef);				
-		timer.stopTimer();
-
 		eval.printResults();
 		evalMuc.printResults();
-		timer.countTokens(ps);
 		timer.printStats();
 	}
 }

@@ -11,9 +11,8 @@ import liner2.chunker.CrfppChunker;
 import liner2.chunker.TrainableChunkerInterface;
 import liner2.features.TokenFeatureGenerator;
 import liner2.reader.ReaderFactory;
-import liner2.reader.StreamReader;
-import liner2.structure.ParagraphSet;
-import liner2.tools.CorpusFactory;
+import liner2.reader.AbstractDocumentReader;
+import liner2.structure.Document;
 import liner2.tools.Template;
 import liner2.tools.TemplateFactory;
 
@@ -49,29 +48,27 @@ public class ChunkerFactoryItemCrfppTrain extends ChunkerFactoryItem {
             	for (String line : dataDesc.get("types").split(","))
             		types.add(line);
             
-            ParagraphSet ps;
-            if ((inputFormat.equals("iob")) || (inputFormat.equals("ccl")) || (inputFormat.equals("ccl-batch"))) {
-            	Main.log("--> Training on file=" + inputFile);            
-            	StreamReader reader = ReaderFactory.get().getStreamReader(inputFile, inputFormat);
-                ps = reader.readParagraphSet();
-            }
-            else {
-            	Main.log("--> Training on corpus=" + inputFile);
-                ps = CorpusFactory.get().query(inputFile);
-            }
+        	Main.log("--> Training on file=" + inputFile);            
+        	AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFile, inputFormat);
+
             TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
-            gen.generateFeatures(ps);
 
             String templateName = main.get("template");
             Template template = cm.opts.getTemplate(templateName);
             File templateFile = File.createTempFile("template", ".tpl");
-            TemplateFactory.store(template, templateFile.getAbsolutePath(), ps.getAttributeIndex());
 
             CrfppChunker chunker = new CrfppChunker(threads, types);
             chunker.setTemplateFilename(templateFile.getAbsolutePath());
             chunker.setModelFilename(modelFilename);
 
-            ((TrainableChunkerInterface) chunker).train(ps);
+            Document document = reader.nextDocument();
+            while ( document != null ){
+                gen.generateFeatures(document);
+            	((TrainableChunkerInterface) chunker).addTrainingData(document);
+            	document = reader.nextDocument();
+            }
+            TemplateFactory.store(template, templateFile.getAbsolutePath(), gen.getAttributeIndex());
+            chunker.train();
                         
             return chunker;		
 		}

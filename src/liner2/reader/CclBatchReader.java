@@ -1,44 +1,44 @@
 package liner2.reader;
 
-import liner2.Main;
-import liner2.reader.parser.CclSaxParser;
-import liner2.structure.Paragraph;
-import liner2.structure.TokenAttributeIndex;
-import liner2.tools.DataFormatException;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import liner2.reader.parser.CclSaxParser;
+import liner2.structure.Document;
+import liner2.structure.TokenAttributeIndex;
+import liner2.tools.DataFormatException;
+
 /**
- * Created with IntelliJ IDEA.
- * User: michal
- * Date: 8/6/13
- * Time: 3:17 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
-
-
-public class CclBatchReader extends StreamReader {
+public class CclBatchReader extends AbstractDocumentReader {
 
     private TokenAttributeIndex attributeIndex;
-    private int currIndex=0;
-    private List<Paragraph> allParagraphs;
-    private BufferedReader ir;
+    private int fileIndex=0;
+    private List<String> files = new ArrayList<String>();
 
     /**
      * 
      * @param is — the stream contains relative or absolute paths to ccl files,
      * @param root — absolute path to a root for absolute paths from the stream,
      * @throws DataFormatException
+     * @throws IOException 
+     * @throws FileNotFoundException 
      */
-    public CclBatchReader(InputStream is, String root) throws  DataFormatException{
+    public CclBatchReader(InputStream is, String root) throws DataFormatException, IOException{
         this.attributeIndex = new TokenAttributeIndex();
         this.attributeIndex.addAttribute("orth");
         this.attributeIndex.addAttribute("base");
         this.attributeIndex.addAttribute("ctag");
-        allParagraphs = new ArrayList<Paragraph>();
-        ir = new BufferedReader(new InputStreamReader(is));
+        
+        BufferedReader ir = new BufferedReader(new InputStreamReader(is));
         while (true) {
             String line;
             try {
@@ -47,54 +47,44 @@ public class CclBatchReader extends StreamReader {
                 throw new DataFormatException("I/O error.");
             }
             if(line == null)
-                return;
+                break;
             String cclFile = line.trim().split(";")[0];
             if (cclFile.length() == 0)
-                return;
+                break;
             
             if (!cclFile.startsWith("/"))
             	cclFile = root + "/" + cclFile;
 
-            Main.log("Reading " + cclFile, true);
-            
             if (!new File(cclFile).exists())
             	System.err.println("File not found while reading ccl-batch: " + cclFile);
-            else{            
-	            InputStream  fileAsStream;
-	            try {
-	                fileAsStream = new FileInputStream(cclFile);
-	            } catch (IOException ex) {
-	                throw new DataFormatException("Unable to read input file: " + cclFile);
-	            }
-	
-	            CclSaxParser parser_out = new CclSaxParser(fileAsStream, this.attributeIndex);
-	            allParagraphs.addAll(parser_out.getParagraphs());
+            else{
+            	this.files.add(cclFile);
             }
         }
-
-
+        ir.close();
     }
+    
+    @Override
+    public Document nextDocument() throws DataFormatException, IOException {
+    	if ( this.fileIndex < this.files.size() ){
+        	String cclFile = this.files.get(this.fileIndex++);
+            InputStream  fileAsStream = new FileInputStream(cclFile);
+            CclSaxParser parser_out = new CclSaxParser(cclFile, fileAsStream, this.attributeIndex);
+    		Document document = parser_out.getDocument();
+    		fileAsStream.close();
+    		return document;
+    	}
+    	else
+    		return null;
+    }
+    
     @Override
     protected TokenAttributeIndex getAttributeIndex() {
         return this.attributeIndex;
     }
 
     @Override
-    protected Paragraph readRawParagraph() throws DataFormatException {
-        if (!paragraphReady())
-            return null;
-        return allParagraphs.get(currIndex++);
-    }
-
-    @Override
     public void close() throws DataFormatException {
     }
 
-    @Override
-    public boolean paragraphReady() throws DataFormatException {
-        if (currIndex<allParagraphs.size())
-            return true;
-        else
-            return false;
-    }
 }

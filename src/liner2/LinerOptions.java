@@ -3,14 +3,23 @@ package liner2;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Properties;
 
-import liner2.filter.*;
 import liner2.chunker.factory.ChunkerFactory;
-import liner2.tools.CorpusFactory;
+import liner2.reader.AbstractDocumentReader;
+import liner2.reader.ReaderFactory;
 import liner2.tools.ParameterException;
 import liner2.tools.Template;
 import liner2.tools.TemplateFactory;
+import liner2.writer.AbstractDocumentWriter;
+import liner2.writer.WriterFactory;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
@@ -64,7 +73,6 @@ public class LinerOptions {
 	
 	public static final String OPTION_CHUNKER = "chunker";
 	public static final String OPTION_COMMON = "common";
-	public static final String OPTION_CORPUS = "corpus";
 	public static final String OPTION_DB_HOST = "db_host";
 	public static final String OPTION_DB_NAME = "db_name";
 	public static final String OPTION_DB_PASSWORD = "db_pass";
@@ -72,7 +80,6 @@ public class LinerOptions {
 	public static final String OPTION_DB_USER = "db_user";
 	public static final String OPTION_DB_URI = "db_uri";
 	public static final String OPTION_FEATURE = "feature";
-	public static final String OPTION_FILTER = "filter";
 	public static final String OPTION_FOLDS_NUMBER = "folds_number";
 	public static final String OPTION_HELP = "help";
 	public static final String OPTION_HEURISTICS = "heuristics";
@@ -81,7 +88,6 @@ public class LinerOptions {
 	public static final String OPTION_INPUT_FILE = "f";
 	public static final String OPTION_INPUT_FORMAT = "i";
 	public static final String OPTION_IP = "ip";
-	public static final String OPTION_MACA = "maca";
 	public static final String OPTION_MAX_THREADS = "max_threads";
 	public static final String OPTION_OUTPUT_FILE = "t";
 	public static final String OPTION_OUTPUT_FORMAT = "o";
@@ -93,9 +99,7 @@ public class LinerOptions {
     public static final String OPTION_ARFF_TEMPLATE = "arff-template";
 	public static final String OPTION_VERBOSE = "verbose";
 	public static final String OPTION_VERBOSE_DETAILS = "verboseDetails";
-	public static final String OPTION_WMBT = "wmbt";
-	
-	
+		
 	// List of argument read from cmd
 	public String mode = "";
 
@@ -104,7 +108,6 @@ public class LinerOptions {
 	public boolean verboseDetails = false;
 	public boolean silent = false;
 
-	public ArrayList<Filter> filters = new ArrayList<Filter>();
     public LinkedHashMap<String, String> features = new LinkedHashMap<String, String>();
     public HashMap<String, Template> templates = new HashMap<String, Template>();
     Template arffTemplate;
@@ -113,7 +116,6 @@ public class LinerOptions {
 	public String arg3 = null;
 	public String linerPath = "";
 	public LinkedHashSet<String> chunkersDescriptions = new LinkedHashSet<String>();
-	public ArrayList<String> corpusDescriptions = new ArrayList<String>();
 	private String cvTrainData = null; 
 	private HashSet<String> types = null;
 	 
@@ -261,9 +263,6 @@ public class LinerOptions {
 
     	this.parseParameters(line, configDesc, null);
 		
-		for (String cd : this.corpusDescriptions)
-			CorpusFactory.get().parse(cd);
-    	
 		this.configurationDescription = configDesc.toString();
 	}
     
@@ -379,18 +378,6 @@ public class LinerOptions {
             }
         }
 
-
-        // read corpus descriptions
-		if (line.hasOption(OPTION_CORPUS)) {
-			for (String cd : line.getOptionValues(OPTION_CORPUS)) {
-				this.corpusDescriptions.add(cd);
-			}
-		}
-		
-		// filters
-		if (line.hasOption(OPTION_FILTER))
-			parseFilter(line.getOptionValue(OPTION_FILTER));
-		
 		// Arguments
 		if (line.getArgs().length > 1 && line.getArgs()[1].length() > 0 ){
 			this.arg1 = line.getArgs()[1];
@@ -407,75 +394,7 @@ public class LinerOptions {
 			configDesc.append( String.format(PARAM_PRINT, "Argument 3", this.arg3) + "\n" );
 		}
 	}
-		
-	/**
-	 * 
-	 * @param filter
-	 * @throws Exception
-	 */
-	public void parseFilter(String filter) throws ParameterException{
-		String filters[] = filter.split(",");
-		for (String f : filters){
-			boolean found = false;
-			if (f.equals("uppercase") || f.equals("all")) {
-				this.filters.add(new FilterUppercase());
-				found = true;
-			}
-//			if ( found |= (f.equals("trim") || f.equals("all")) )
-//				this.filters.add(new FilterTrim());
-			if (f.equals("firstnotlower") || f.equals("all")) {
-				this.filters.add(new FilterFirstNotLower());
-				found = true;
-			}
-			if (f.equals("hasvowel") || f.equals("all")) {
-				this.filters.add(new FilterHasVowel());
-				found = true;
-			}
-			if (f.equals("nosymbol") || f.equals("all")) {
-				this.filters.add(new FilterNoSymbol());
-				found = true;
-			}
-			if (f.equals("beforesie") || f.equals("all")) {
-				this.filters.add(new FilterBeforeSie());
-				found = true;
-			}
-			if (f.equals("nounderline") || f.equals("all")) {
-				this.filters.add(new FilterNoUnderline());
-				found = true;
-			}
-			if (f.equals("nodot") || f.equals("all")) {
-				this.filters.add(new FilterNoDot());
-				found = true;
-			}
-			if (f.equals("nohyphen") || f.equals("all")) {
-				this.filters.add(new FilterNoHyphen());
-				found = true;
-			}
-			if (f.equals("patternulu") || f.equals("all")) {
-				this.filters.add(new FilterPatternULU());
-				found = true;
-			}
-//			if (f.equals("length") || f.equals("all")) {
-//				this.filters.add(new FilterLength());
-//				found = true;
-//			}
-			if (f.equals("hasalphanumeric") || f.equals("all")) {
-				this.filters.add(new FilterHasAlphanumeric());
-				found = true;
-			}
-//			if ( found |= (f.equals("extendtoword") || f.equals("all")) )
-//				this.filters.add(new FilterExtendToWord());
-			if (f.equals("cutroadprefix") || f.equals("all")) {
-				this.filters.add(new FilterCutRoadPrefix());
-				found = true;
-			}
 			
-			if (!found)
-				throw new ParameterException("Unknown filter '"+f+"'");
-		}
-	}
-	
-	
 	public void setCvTrain(String data){
 		this.cvTrainData = data;
 	}
@@ -484,6 +403,35 @@ public class LinerOptions {
 		return this.cvTrainData;
 	}
 	
+	/**
+	 * Get document writer defined with the -o and -t options.
+	 * @return
+	 * @throws Exception
+	 */
+	public AbstractDocumentWriter getOutputWriter() throws Exception{
+        String output_format = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FORMAT);
+        String output_file = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FILE);
+        AbstractDocumentWriter writer;
+        if (output_format.equals("arff")){
+            Template arff_template = LinerOptions.getGlobal().getArffTemplate();
+            writer = WriterFactory.get().getArffWriter(output_file, arff_template);
+        }
+        else{
+            writer = WriterFactory.get().getStreamWriter(output_file, output_format);
+        }
+        return writer;
+	}
+
+	/**
+	 * Get document reader defined with the -i and -f options.
+	 * @return
+	 * @throws Exception
+	 */
+	public AbstractDocumentReader getInputReader() throws Exception{
+        return ReaderFactory.get().getStreamReader(
+			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FILE),
+			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FORMAT));        
+	}
 	
 	@SuppressWarnings("static-access")
 	private Options makeOptions(){
@@ -495,9 +443,6 @@ public class LinerOptions {
     	options.addOption(OptionBuilder.withArgName("filename").hasArg()
 				.withDescription("loads a list of common words from a file")
 				.create("common"));
-		options.addOption(OptionBuilder.withArgName("description").hasArg()
-				.withDescription("load a specified file as a corpus")
-				.create(OPTION_CORPUS));
 		options.addOption(OptionBuilder.withArgName("name").hasArg()
 				.withDescription("database host name (daemon mode)")
 				.create(OPTION_DB_HOST));
@@ -519,9 +464,6 @@ public class LinerOptions {
     	options.addOption(OptionBuilder.withArgName("description").hasArg()
 				.withDescription("recognized feature name")
 				.create(OPTION_FEATURE));
-    	options.addOption(OptionBuilder.withArgName("filters").hasArg()
-				.withDescription("filters to apply")
-				.create("filter"));
     	options.addOption(OptionBuilder.withArgName("num").hasArg()
 				.withDescription("number of folds")
 				.create(OPTION_FOLDS_NUMBER));
@@ -543,14 +485,11 @@ public class LinerOptions {
 				.withDescription("read input from file")
 				.create(OPTION_INPUT_FILE));
 		options.addOption(OptionBuilder.withArgName("format").hasArg()
-				.withDescription("input format [iob,ccl,plain]")
+				.withDescription("input format [plain,iob,ccl,ccl-batch]")
 				.create(OPTION_INPUT_FORMAT));
 		options.addOption(OptionBuilder.withArgName("address").hasArg()
 				.withDescription("IP address for daemon")
 				.create(OPTION_IP));
-		options.addOption(OptionBuilder.withArgName("description").hasArg()
-				.withDescription("path to maca (for interactive mode)")
-				.create(OPTION_MACA));
 		options.addOption(OptionBuilder.withArgName("number").hasArg()
 				.withDescription("maximum number of processing threads (daemon mode)")
 				.create(OPTION_MAX_THREADS));
@@ -572,9 +511,6 @@ public class LinerOptions {
 		options.addOption(OptionBuilder.withArgName("description").hasArg()
 				.withDescription("define feature template")
 				.create(OPTION_TEMPLATE));
-		options.addOption(OptionBuilder.withArgName("description").hasArg()
-				.withDescription("path to WMBT (for interactive mode)")
-				.create(OPTION_WMBT));
     	options.addOption(new Option(OPTION_SILENT, false, "does not print any additional text in interactive mode"));
     	options.addOption(new Option(OPTION_VERBOSE, false, "print brief information about processing"));
     	options.addOption(new Option(OPTION_VERBOSE_DETAILS, false, "print detailed information about processing"));
@@ -613,6 +549,8 @@ public class LinerOptions {
     	System.out.println("                        Parameters: -i, (-f), -o, (-t), -ini");
     	System.out.println("  train               - train CRFPP chunker");
     	System.out.println("                        Parameters: -ini");
+    	System.out.println("  time                - measure processing time");
+    	System.out.println("                        Parameters: -i, (-f), -o, (-t), -ini");
     	System.out.println("");
     	System.out.println("");
     	System.out.println("Chunker factory (patterns for `-chunker` parameter):");

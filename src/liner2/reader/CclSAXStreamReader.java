@@ -1,52 +1,40 @@
 package liner2.reader;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import liner2.reader.parser.CclSaxParser;
-
+import liner2.structure.Document;
 import liner2.structure.TokenAttributeIndex;
-import liner2.structure.Paragraph;
-
 import liner2.tools.DataFormatException;
 
-public class CclSAXStreamReader extends StreamReader {
+public class CclSAXStreamReader extends AbstractDocumentReader {
 	
-	private TokenAttributeIndex attributeIndex;
-	private int currIndex=0;
-	private CclSaxParser parser_out;
+	private Document document;
 	
-	public CclSAXStreamReader(InputStream is) throws DataFormatException {
-		this.attributeIndex = new TokenAttributeIndex();
-		this.attributeIndex.addAttribute("orth");
-		this.attributeIndex.addAttribute("base");
-		this.attributeIndex.addAttribute("ctag");
-		this.parser_out = new CclSaxParser(is, this.attributeIndex);
+	public CclSAXStreamReader(String uri, InputStream is) throws DataFormatException {
+		TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
+		attributeIndex.addAttribute("orth");
+		attributeIndex.addAttribute("base");
+		attributeIndex.addAttribute("ctag");
+		CclSaxParser parser_out = new CclSaxParser(uri, is, attributeIndex);
+		this.document = parser_out.getDocument();		
 	}
 	
 	@Override
 	public TokenAttributeIndex getAttributeIndex() {
-		return this.attributeIndex;
+		return this.document.getAttributeIndex();
 	}
 	
 	@Override
 	public void close() throws DataFormatException {
 		
+	}
+
+	@Override
+	public Document nextDocument() throws DataFormatException, IOException {
+		return this.document;
 	}	
-		
-	@Override
-	public boolean paragraphReady() throws DataFormatException {
-		if (currIndex<parser_out.getParagraphs().size())
-			return true;
-		else
-			return false;
-	}
-	
-	@Override
-	protected Paragraph readRawParagraph() throws DataFormatException {
-		if (!paragraphReady())
-			return null;
-		return parser_out.getParagraphs().get(currIndex++);
-	}
-	
+			
 }
 

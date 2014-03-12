@@ -8,7 +8,7 @@ import liner2.chunker.Chunker;
 import liner2.structure.Annotation;
 import liner2.structure.AnnotationSet;
 import liner2.structure.Paragraph;
-import liner2.structure.ParagraphSet;
+import liner2.structure.Document;
 import liner2.structure.Sentence;
 
 /**
@@ -59,7 +59,7 @@ public class MajorityVotingChunker extends Chunker {
 	}
 	
 	@Override
-	public HashMap<Sentence, AnnotationSet> chunk(ParagraphSet ps) {
+	public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
 				
 		HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
 		HashMap<Sentence, ArrayList<AnnotationSet>> sentenceChunkings = new HashMap<Sentence, ArrayList<AnnotationSet>>();

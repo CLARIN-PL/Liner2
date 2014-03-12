@@ -8,16 +8,16 @@ import java.io.OutputStream;
 import java.util.HashMap;
 
 import liner2.reader.ReaderFactory;
-import liner2.reader.StreamReader;
+import liner2.reader.AbstractDocumentReader;
 
 import liner2.structure.TokenAttributeIndex;
 import liner2.structure.Annotation;
 import liner2.structure.AnnotationSet;
 import liner2.structure.Paragraph;
-import liner2.structure.ParagraphSet;
+import liner2.structure.Document;
 import liner2.structure.Sentence;
 
-import liner2.writer.StreamWriter;
+import liner2.writer.AbstractDocumentWriter;
 import liner2.writer.WriterFactory;
 
 import liner2.Main;
@@ -53,24 +53,24 @@ public class WcclChunker extends Chunker {
 		
 		// zapamiętaj AttributeIndex, żeby nie stracić go przy addSentence()
 		TokenAttributeIndex ai = sentence.getAttributeIndex();
-		ParagraphSet paragraphSet = new ParagraphSet();
+		Document document = new Document("wccl chunker", ai);
 		Paragraph paragraph = new Paragraph(null);
 		paragraph.addSentence(sentence);
-		paragraphSet.addParagraph(paragraph);
-		paragraphSet.setAttributeIndex(ai);
+		document.addParagraph(paragraph);
+		document.setAttributeIndex(ai);
 		
 		try {
-			StreamWriter writer = WriterFactory.get().getStreamWriter(out, "ccl");
-			writer.writeParagraphSet(paragraphSet);
+			AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(out, "ccl");
+			writer.writeDocument(document);
 			writer.close();
-			StreamReader reader = ReaderFactory.get().getStreamReader(in, "ccl");
+			AbstractDocumentReader reader = ReaderFactory.get().getStreamReader("wccl chunker", in, "ccl");
 			if (err.ready()) {
 				while (err.ready())
 					// TODO rzucić wyjątek?
 					Main.log("WCCL error: " + err.readLine()); 
 				return null;
 			}
-			paragraph = reader.readParagraph();
+			document = reader.nextDocument();
 			reader.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -83,7 +83,7 @@ public class WcclChunker extends Chunker {
 	}	
 	
 	@Override
-	public HashMap<Sentence, AnnotationSet> chunk(ParagraphSet ps) {
+	public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
 		HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
 		for ( Paragraph paragraph : ps.getParagraphs() )
 			for (Sentence sentence : paragraph.getSentences())

@@ -9,8 +9,8 @@ import liner2.chunker.factory.ChunkerFactory;
 import liner2.chunker.factory.ChunkerManager;
 import liner2.features.TokenFeatureGenerator;
 import liner2.reader.ReaderFactory;
-import liner2.reader.StreamReader;
-import liner2.structure.ParagraphSet;
+import liner2.reader.AbstractDocumentReader;
+import liner2.structure.Document;
 import liner2.tools.ChunkerEvaluator;
 import liner2.tools.ChunkerEvaluatorMuc;
 import liner2.tools.ParameterException;
@@ -50,9 +50,9 @@ public class ActionEvalCV extends Action{
             ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
             Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
 			
-			StreamReader reader = ReaderFactory.get().getStreamReader(testFile, 
+			AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(testFile, 
     			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FORMAT));
-    		ParagraphSet ps = reader.readParagraphSet();
+    		Document ps = reader.nextDocument();
 
             if (!LinerOptions.getGlobal().features.isEmpty()){
                 TokenFeatureGenerator gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);

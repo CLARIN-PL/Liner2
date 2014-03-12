@@ -5,19 +5,16 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import java.util.ArrayList;
-
-import liner2.chunker.Chunker;
 import liner2.structure.Annotation;
+import liner2.structure.Document;
 import liner2.structure.Paragraph;
 import liner2.structure.Sentence;
-import liner2.structure.Token;
 
 /*
  * Drukowanie wyników w postaci listy tokenów.
  * @author Dominik Piasecki
  */
-public class TokensStreamWriter extends StreamWriter {
+public class TokensStreamWriter extends AbstractDocumentWriter {
 	private BufferedWriter ow;
 	
 	public TokensStreamWriter(OutputStream os) {
@@ -27,17 +24,22 @@ public class TokensStreamWriter extends StreamWriter {
 	@Override
 	public void close() {
 		try {
-			this.ow.flush();//close();
+			this.ow.flush();
+			this.ow.close();
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
 	}
-
+	
 	@Override
+	public void writeDocument(Document document){
+		for (Paragraph paragraph : document.getParagraphs())
+			this.writeParagraph(paragraph);
+	}
+
 	public void writeParagraph(Paragraph paragraph) {
 		for (Sentence s : paragraph.getSentences())
 			writeSentence(s);
-		close();
 	}
 
 	private void writeSentence(Sentence sentence) {
@@ -56,4 +58,12 @@ public class TokensStreamWriter extends StreamWriter {
 		}
 	}
 
+	@Override
+	public void flush() {
+		try {
+			ow.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+	}
 }

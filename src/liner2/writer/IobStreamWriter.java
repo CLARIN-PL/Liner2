@@ -1,20 +1,19 @@
 package liner2.writer;
 
-import java.util.ArrayList;
-
 import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
-import liner2.structure.TokenAttributeIndex;
 import liner2.structure.Annotation;
+import liner2.structure.Document;
 import liner2.structure.Paragraph;
 import liner2.structure.Sentence;
-import liner2.structure.Tag;
 import liner2.structure.Token;
+import liner2.structure.TokenAttributeIndex;
 
-public class IobStreamWriter extends StreamWriter {
+public class IobStreamWriter extends AbstractDocumentWriter {
 
 	private BufferedWriter ow;
 	private boolean init = false;
@@ -27,7 +26,6 @@ public class IobStreamWriter extends StreamWriter {
 		if (this.init)
 			return;
 		try {
-//			String line = "-DOCSTART CONFIG FEATURES orth base ctag";
 			String line = "-DOCSTART CONFIG FEATURES";
 			for (int i = 0; i < attributeIndex.getLength(); i++)
 				line += " " + attributeIndex.getName(i);
@@ -41,6 +39,15 @@ public class IobStreamWriter extends StreamWriter {
 	}
 
 	@Override
+	public void flush() {
+		try {
+			ow.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+	}
+	
+	@Override
 	public void close() {
 		try {
 			ow.close();
@@ -48,8 +55,13 @@ public class IobStreamWriter extends StreamWriter {
 			ex.printStackTrace();
 		}
 	}
-	
+
 	@Override
+	public void writeDocument(Document document){
+		for (Paragraph paragraph : document.getParagraphs())
+			this.writeParagraph(paragraph);
+	}
+
 	public void writeParagraph(Paragraph paragraph) {
 		try {
 			if (!init)

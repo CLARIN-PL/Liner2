@@ -6,7 +6,7 @@ import java.util.HashMap;
 import liner2.chunker.Chunker;
 import liner2.structure.AnnotationSet;
 import liner2.structure.Paragraph;
-import liner2.structure.ParagraphSet;
+import liner2.structure.Document;
 import liner2.structure.Sentence;
 
 /**
@@ -27,7 +27,7 @@ public class UnionChunker extends Chunker {
 		this.chunkers = chunkers;
 	}
 		
-	public HashMap<Sentence, AnnotationSet> chunk(ParagraphSet ps) {
+	public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
 		HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
 		
 		for (Paragraph p : ps.getParagraphs())

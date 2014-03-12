@@ -8,7 +8,7 @@ import liner2.structure.TokenAttributeIndex;
 import liner2.structure.Annotation;
 import liner2.structure.AnnotationSet;
 import liner2.structure.Paragraph;
-import liner2.structure.ParagraphSet;
+import liner2.structure.Document;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
 
@@ -593,7 +593,7 @@ public class HeuristicChunker extends Chunker {
 	}
 
 	@Override
-	public HashMap<Sentence, AnnotationSet> chunk(ParagraphSet ps) {
+	public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
 		HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
 		for ( Paragraph paragraph : ps.getParagraphs() )
 			for (Sentence sentence : paragraph.getSentences())

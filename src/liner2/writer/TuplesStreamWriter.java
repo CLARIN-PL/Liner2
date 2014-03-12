@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import liner2.structure.Annotation;
+import liner2.structure.Document;
 import liner2.structure.Paragraph;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
@@ -16,7 +17,7 @@ import liner2.structure.Token;
  * Drukowanie wyników w postaci listy krotek.
  * @author Maciej Janicki
  */
-public class TuplesStreamWriter extends StreamWriter {
+public class TuplesStreamWriter extends AbstractDocumentWriter {
 	private BufferedWriter ow;
 	private int sentenceOffset = 0;
 	
@@ -34,6 +35,11 @@ public class TuplesStreamWriter extends StreamWriter {
 	}
 
 	@Override
+	public void writeDocument(Document document){
+		for (Paragraph paragraph : document.getParagraphs())
+			this.writeParagraph(paragraph);
+	}
+	
 	public void writeParagraph(Paragraph paragraph) {
 		for (Sentence s : paragraph.getSentences())
 			writeSentence(s);
@@ -64,5 +70,14 @@ public class TuplesStreamWriter extends StreamWriter {
 			end += tokens.get(i).getFirstValue().length();
 
 		this.ow.write("(" + begin + "," + (end-1) + "," + c.getType() + ",\"" + c.getText() + "\")\n");
+	}
+
+	@Override
+	public void flush() {
+		try {
+			ow.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
 	}
 }

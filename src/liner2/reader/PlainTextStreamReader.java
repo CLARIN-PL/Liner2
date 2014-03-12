@@ -2,157 +2,135 @@ package liner2.reader;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import liner2.structure.TokenAttributeIndex;
+import liner2.structure.Document;
 import liner2.structure.Paragraph;
-
+import liner2.structure.Sentence;
+import liner2.structure.Tag;
+import liner2.structure.Token;
+import liner2.structure.TokenAttributeIndex;
 import liner2.tools.DataFormatException;
 
-import liner2.LinerOptions;
+public class PlainTextStreamReader extends AbstractDocumentReader {
 
-public class PlainTextStreamReader extends StreamReader {
-	private static final String CMD_MORPH = "{PATH}maca-analyse -qs morfeusz-nkjp -o ccl";
-	private static final String CMD_TAGGER = "{PATH}wmbt/wmbt.py -d {PATH}model_nkjp10 -i ccl -o ccl {PATH}config/nkjp-k11.ini -";
+	private Document document;
 
-	private InputStream inputStream;
-	private StreamReader cclStreamReader;
-	private boolean init = false;
+	public PlainTextStreamReader(InputStream is, String analyzer) {
+		this.read(is, analyzer);		
+	}
+
+	private void read(InputStream is, String analyzer){
+		BufferedReader input_reader = new BufferedReader(new InputStreamReader(is));
+		
+		StringBuilder sb = new StringBuilder();
+		String line = null;
+		try {
+			while (( line = input_reader.readLine()) != null )
+				sb.append(line + "\n");
+			input_reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+					
+		if (analyzer.equals("none"))
+			this.document = analyzePlain(sb.toString().trim());
+		else
+			this.document = analyze(sb.toString().trim(), analyzer);
+		
+	}
 	
-	public PlainTextStreamReader(InputStream is) {
-		this.inputStream = is;
-	}
-
-	/**
-	 * Send data to tagger, read it back from CCL output
-     */
-	protected void init() throws DataFormatException {
-		if (this.init)
-			return;
-
-		String maca_path = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_MACA);
-		String wmbt_path = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_WMBT);
-		if (maca_path == null)
-			throw new DataFormatException("Plain text reader: requires morphological analyzer (set -maca option).");
-		if (maca_path.equals("-")) 
-			maca_path = "";
-		else if (!maca_path.endsWith("/"))
-			maca_path += "/";
-
-		// prepare maca command
-		String maca_cmd = this.CMD_MORPH;
-		maca_cmd = maca_cmd.replaceAll("\\{PATH\\}", maca_path);
-
-		// execute maca
-		Process maca_p = null;
-		try {
-			maca_p = Runtime.getRuntime().exec(maca_cmd);
-		} catch (IOException ex) {
-			throw new DataFormatException("Failed to run morphological analyzer.\nCommand: " + maca_cmd);
-		}
-
-		InputStream maca_in = maca_p.getInputStream();
-		OutputStream maca_out = maca_p.getOutputStream();
-
-		// send text to maca
-		BufferedReader input_reader = new BufferedReader(new InputStreamReader(this.inputStream));
-		BufferedWriter maca_writer = new BufferedWriter(new OutputStreamWriter(maca_out));		
-		try {
-			String line = null;
-			while ((line = input_reader.readLine()) != null)
-				maca_writer.write(line, 0, line.length());
-			maca_writer.close();
-		} catch (IOException ex) {
-			throw new DataFormatException("I/O error while tagging text.");
-		}
-
-		if (wmbt_path != null) {
-			// prepare WMBT command
-			if (!wmbt_path.endsWith("/"))
-				wmbt_path += "/";
-			String wmbt_cmd = this.CMD_TAGGER;
-			wmbt_cmd = wmbt_cmd.replaceAll("\\{PATH\\}", wmbt_path);
-
-			// execute WMBT
-			Process wmbt_p = null;
-			try {
-				wmbt_p = Runtime.getRuntime().exec(wmbt_cmd);
-			} catch (IOException ex) {
-				maca_p.destroy();
-				throw new DataFormatException("Failed to run tagger.");
-			}
-			
-			InputStream wmbt_in = wmbt_p.getInputStream();
-			OutputStream wmbt_out = wmbt_p.getOutputStream();
-
-			// read text from maca and write to WMBT
-			BufferedReader maca_reader = new BufferedReader(new InputStreamReader(maca_in));
-			BufferedWriter wmbt_writer = new BufferedWriter(new OutputStreamWriter(wmbt_out));
-			try {
-				String line = null;
-				while ((line = maca_reader.readLine()) != null)
-					wmbt_writer.write(line, 0, line.length());
-				wmbt_writer.close();
-			} catch (IOException ex) {
-				throw new DataFormatException("I/O error while tagging text.");
-			}
-
-			// read CCL output from wmbt
-			try {
-				this.cclStreamReader = ReaderFactory.get().getStreamReader(wmbt_in,  "ccl");
-			} catch (Exception ex) {
-				throw new DataFormatException("Could not read tagger output.");
-			}
-		}
-		else {
-			// read CCL output from maca
-			try {
-				this.cclStreamReader = ReaderFactory.get().getStreamReader(maca_in, "ccl");
-			} catch (Exception ex) {
-				throw new DataFormatException("Could not read tagger output.");
-			}
-		}
-
-		this.init = true;
-	}
-
 	@Override
 	public void close() throws DataFormatException {
-		try {
-			this.cclStreamReader.close();
-			this.inputStream.close();
-		} catch (IOException ex) {
-			throw new DataFormatException("Failed to close input stream.");
-		}
-	}
-
-	@Override
-	public boolean paragraphReady() throws DataFormatException {
-		if (!this.init)
-			init();
-		return this.cclStreamReader.paragraphReady();
 	}
 
 	@Override
 	protected TokenAttributeIndex getAttributeIndex() {
-		if (!this.init) {
-			try {
-				init();
-			} catch (DataFormatException ex) {
-				ex.printStackTrace();
-			}
-		}
-		return this.cclStreamReader.getAttributeIndex();
+		if ( this.document != null )
+			return this.document.getAttributeIndex();
+		else
+			return null;
 	}
 
 	@Override
-	protected Paragraph readRawParagraph() throws DataFormatException {
-		if (!this.init)
-			init();
-		return this.cclStreamReader.readRawParagraph();
-	}	
+	public Document nextDocument() {
+		if ( this.document != null ){
+			Document document = this.document;
+			this.document = null;
+			return document;
+		}
+		else{			
+			return null;
+		}
+	}
+	
+	/**
+	 * Analyze text provided with morphological information.
+	 * @param cSeq
+	 * @return
+	 */
+	private Document analyzePlain(String cSeq) {
+		Sentence sentence = new Sentence();
+		TokenAttributeIndex ai = new TokenAttributeIndex();
+		ai.addAttribute("orth");
+		ai.addAttribute("base");
+		ai.addAttribute("ctag");
+		sentence.setAttributeIndex(ai);
+
+		String[] tokens = cSeq.trim().split("  ");
+		for (String tokenStr : tokens) {
+			Token token = new Token();
+			String[] tokenAttrs = tokenStr.split(" ");
+			for (int i = 0; i < tokenAttrs.length; i++)   {
+				token.setAttributeValue(i, tokenAttrs[i]); }
+            Tag tag = new Tag(token.getAttributeValue(1), token.getAttributeValue(2), false);
+            token.addTag(tag);
+			sentence.addToken(token);
+		}
+		Paragraph paragraph = new Paragraph(null);
+		paragraph.setAttributeIndex(ai);
+		paragraph.addSentence(sentence);
+		Document document = new Document("terminal input", ai);
+		document.addParagraph(paragraph);
+		return document;
+	}
+	
+	/**
+	 * Analyze plain text using maca analyzer or wcrft tagger.
+	 * @param cSeq
+	 * @param analyzer
+	 * @return
+	 */
+	private Document analyze(String cSeq, String analyzer) {
+		// prepare maca command
+		String cmd = "maca-analyse -qs morfeusz-nkjp-official -o ccl";
+
+		if ( analyzer.equals("wcrft") )
+			cmd = "wcrft nkjp_s2.ini -d " + "/nlp/resources/model_nkjp10_wcrft_s2" + " -i text -o ccl - ";
+				
+		Process tager = null;
+		try {
+			tager = Runtime.getRuntime().exec(cmd);
+			InputStream tager_in = tager.getInputStream();
+			OutputStream tager_out = tager.getOutputStream();
+			
+			BufferedWriter tager_writer = new BufferedWriter(
+				new OutputStreamWriter(tager_out));
+				
+			tager_writer.write(cSeq, 0, cSeq.length());
+			tager_writer.close();
+			
+			AbstractDocumentReader reader = ReaderFactory.get().getStreamReader("terminal input", tager_in, "ccl");
+			return reader.nextDocument();
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}				
+	}
+	
 }

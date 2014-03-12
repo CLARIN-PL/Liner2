@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import liner2.LinerOptions;
 
@@ -26,43 +25,48 @@ public class ReaderFactory {
 	 * TODO
 	 * @return
 	 */
-	public StreamReader getStreamReader(String inputFile, String inputFormat) throws Exception {
+	public AbstractDocumentReader getStreamReader(String inputFile, String inputFormat) throws Exception {
         if (inputFormat.equals("tei")){
             return getTEIStreamReader(inputFile);
         }
         else if (inputFile.equals("{CV-TRAIN}")){        	
         	return getStreamReader(
+        			inputFile,
         			IOUtils.toInputStream(LinerOptions.getGlobal().getCvTrain()),
         			"",        			
         			inputFormat);
         }
         else{
-		    return getStreamReader(getInputStream(inputFile),
+		    return getStreamReader(
+		    		inputFile,
+		    		getInputStream(inputFile),
 		    		(new File(inputFile)).getParent(),
 		    		inputFormat);
         }
 	}
 
-	public StreamReader getStreamReader(InputStream in, String inputFormat) throws Exception {
-		return getStreamReader(in, "", inputFormat);
+	public AbstractDocumentReader getStreamReader(String uri, InputStream in, String inputFormat) throws Exception {
+		return getStreamReader(uri, in, "", inputFormat);
 	}
 
-	public StreamReader getStreamReader(InputStream in, String root, String inputFormat) throws Exception {
+	public AbstractDocumentReader getStreamReader(String uri, InputStream in, String root, String inputFormat) throws Exception {
 		if (inputFormat.equals("ccl"))
-			return new CclSAXStreamReader(in);
-		else if (inputFormat.equals("ccl-deprecated"))
-			return new CclStreamReader(in);
+			return new CclSAXStreamReader(uri, in);
 		else if (inputFormat.equals("iob"))
 			return new IobStreamReader(in);
 		else if (inputFormat.equals("plain"))
-			return new PlainTextStreamReader(in);
+			return new PlainTextStreamReader(in, "none");
+		else if (inputFormat.equals("plain:maca"))
+			return new PlainTextStreamReader(in, "maca");
+		else if (inputFormat.equals("plain:wcrft"))
+			return new PlainTextStreamReader(in, "wcrft");
         else if (inputFormat.equals("ccl-batch"))
             return new CclBatchReader(in, root);
 		else
 			throw new Exception("Input format " + inputFormat + " not recognized.");
 	}
 
-    public StreamReader getTEIStreamReader(String inputFolder) throws Exception{
+    public AbstractDocumentReader getTEIStreamReader(String inputFolder) throws Exception{
         InputStream annMorphosyntax = getInputStream(new File(inputFolder,"ann_morphosyntax.xml").getPath());
         InputStream annSegmentation = getInputStream(new File(inputFolder,"ann_segmentation.xml").getPath());
         InputStream annNamed = getInputStream(new File(inputFolder,"ann_named.xml").getPath());

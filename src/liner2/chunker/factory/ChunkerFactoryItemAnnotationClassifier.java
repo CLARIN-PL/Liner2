@@ -1,6 +1,5 @@
 package liner2.chunker.factory;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -12,9 +11,9 @@ import liner2.chunker.AnnotationClassifierChunker;
 import liner2.chunker.Chunker;
 import liner2.chunker.TrainableChunkerInterface;
 import liner2.reader.ReaderFactory;
-import liner2.reader.StreamReader;
-import liner2.tools.CorpusFactory;
+import liner2.reader.AbstractDocumentReader;
 import liner2.tools.ParameterException;
+
 import org.ini4j.Ini;
 
 public class ChunkerFactoryItemAnnotationClassifier extends ChunkerFactoryItem {
@@ -73,15 +72,12 @@ public class ChunkerFactoryItemAnnotationClassifier extends ChunkerFactoryItem {
             String inputFormat = dataDesc.get("format");
             String inputFile = dataDesc.get("source").replace("{INI_DIR}",iniDir);
 
-            if ((inputFormat.equals("iob")) || (inputFormat.equals("ccl"))) {
-                Main.log("--> Training on file=" + inputFile);
-                StreamReader reader = ReaderFactory.get().getStreamReader(inputFile, inputFormat);
-                ((TrainableChunkerInterface)chunker).train(reader.readParagraphSet());
-            }
-            else {
-                Main.log("--> Training on corpus=" + inputFile);
-                ((TrainableChunkerInterface)chunker).train(CorpusFactory.get().query(inputFile));
-            }
+            Main.log("--> Training on file=" + inputFile);
+            AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFile, inputFormat);
+            // TODO
+            ((TrainableChunkerInterface)chunker).addTrainingData(reader.nextDocument());
+            ((TrainableChunkerInterface)chunker).train();
+
             modelFile.createNewFile();
             chunker.serialize(modelPath);
         }

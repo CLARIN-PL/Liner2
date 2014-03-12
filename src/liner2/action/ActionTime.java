@@ -1,27 +1,19 @@
 package liner2.action;
 
+import liner2.LinerOptions;
+import liner2.Main;
 import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
-
 import liner2.chunker.factory.ChunkerManager;
 import liner2.features.TokenFeatureGenerator;
-import liner2.reader.ReaderFactory;
-import liner2.reader.StreamReader;
-
-import liner2.tools.ProcessingTimer;
-import liner2.tools.Template;
-import liner2.writer.StreamWriter;
-import liner2.writer.WriterFactory;
-
-import liner2.structure.ParagraphSet;
+import liner2.reader.AbstractDocumentReader;
+import liner2.structure.Document;
 import liner2.tools.ParameterException;
-
-import liner2.LinerOptions;
+import liner2.tools.ProcessingTimer;
+import liner2.writer.AbstractDocumentWriter;
 
 /**
- * Chunking in pipe mode.
- * @author Maciej Janicki, Michał Marcińczuk
- *
+ * Measuring processing time.
  */
 public class ActionTime extends Action{
 
@@ -33,48 +25,56 @@ public class ActionTime extends Action{
         if ( !LinerOptions.isOption(LinerOptions.OPTION_USE) ){
 			throw new ParameterException("Parameter --use <chunker_pipe_desription> not set");
 		}		
-
+        
+        TokenFeatureGenerator gen = null;
     	ProcessingTimer timer = new ProcessingTimer();
 
-    	timer.startTimer("Model loading");
+    	timer.startTimer("Model loading", false);
         ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
-        Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
+        Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());    	
+        if (!LinerOptions.getGlobal().features.isEmpty()){
+            gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
+        }
     	timer.stopTimer();
 
     	timer.startTimer("Data reading");
-    	StreamReader reader = ReaderFactory.get().getStreamReader(
-			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FILE),
-			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FORMAT));        
-		ParagraphSet ps = reader.readParagraphSet();
+    	AbstractDocumentReader reader = LinerOptions.getGlobal().getInputReader();        
     	timer.stopTimer();
 
-    	timer.startTimer("Feature generation");
-        if (!LinerOptions.getGlobal().features.isEmpty()){
-            TokenFeatureGenerator gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
-            gen.generateFeatures(ps);
-        }
-    	timer.stopTimer();
-		
-    	timer.startTimer("Recognition");
-		chunker.chunkInPlace(ps);
+    	// Setup writing stream
+    	AbstractDocumentWriter writer = LinerOptions.getGlobal().getOutputWriter();
+    	        
+    	timer.startTimer("Data reading");
+    	Document ps = reader.nextDocument();
     	timer.stopTimer();
 
-    	timer.startTimer("Data writing");
-        String output_format = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FORMAT);
-        String output_file = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FILE);
-        StreamWriter writer;
-        if (output_format.equals("arff")){
-            Template arff_template = LinerOptions.getGlobal().getArffTemplate();
-            writer = WriterFactory.get().getArffWriter(output_file, arff_template);
-        }
-        else{
-            writer = WriterFactory.get().getStreamWriter(output_file, output_format);
-        }
-		writer.writeParagraphSet(ps);
-    	timer.stopTimer();
-    	
-		timer.countTokens(ps);
+    	while ( ps != null ){
+    		Main.log("Loaded URI: " + ps.getUri());
+    		timer.addTokens(ps);
+    		
+    		// Generate features
+        	timer.startTimer("Feature generation");
+        	if (gen != null){
+                gen.generateFeatures(ps);    		
+        	}
+        	timer.stopTimer();
+    		
+        	timer.startTimer("Recognition");
+    		chunker.chunkInPlace(ps);
+        	timer.stopTimer();
+        	
+        	timer.startTimer("Data writing");
+    		writer.writeDocument(ps);
+        	timer.stopTimer();
+
+    		// Read next document from the stream
+        	timer.startTimer("Data reading");
+        	ps = reader.nextDocument();
+        	timer.stopTimer();
+    	}
+    	reader.close();
+    	writer.close();
 		timer.printStats();    	
 	}
-		
+			
 }

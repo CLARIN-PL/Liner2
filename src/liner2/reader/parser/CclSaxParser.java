@@ -57,13 +57,16 @@ public class CclSaxParser extends DefaultHandler {
     String chanHead;
     boolean foundDisamb;
     TokenAttributeIndex attributeIndex;
+    Document document = null;
 
-    public CclSaxParser(InputStream is, TokenAttributeIndex attributeIndex) throws DataFormatException {
+    public CclSaxParser(String uri, InputStream is, TokenAttributeIndex attributeIndex) throws DataFormatException {
         this.is = is;
         this.attributeIndex = attributeIndex;
         paragraphs = new ArrayList<Paragraph>();
         parseDocument();
+        this.document = new Document(uri, this.paragraphs, this.attributeIndex);
     }
+    
     private void parseDocument() throws DataFormatException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
@@ -192,8 +195,8 @@ public class CclSaxParser extends DefaultHandler {
     }
 
 
-    public ArrayList<Paragraph> getParagraphs(){
-        return paragraphs;
+    public Document getDocument(){
+        return this.document;
     }
 
     class AnnChan {

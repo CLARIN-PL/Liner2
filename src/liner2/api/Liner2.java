@@ -5,7 +5,7 @@ import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerManager;
 import liner2.features.TokenFeatureGenerator;
 import liner2.structure.AnnotationSet;
-import liner2.structure.ParagraphSet;
+import liner2.structure.Document;
 import liner2.structure.Sentence;
 
 import java.util.HashMap;
@@ -27,7 +27,7 @@ public class Liner2 extends Chunker {
     }
 
     @Override
-    public HashMap<Sentence, AnnotationSet> chunk(ParagraphSet ps) {
+    public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
         try {
             gen.generateFeatures(ps);
         } catch (Exception e) {

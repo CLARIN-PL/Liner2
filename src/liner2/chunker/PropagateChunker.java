@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 import liner2.structure.Annotation;
 import liner2.structure.AnnotationSet;
-import liner2.structure.ParagraphSet;
+import liner2.structure.Document;
 import liner2.structure.Sentence;
 
 /**
@@ -43,12 +43,12 @@ public class PropagateChunker extends Chunker {
 	}
 	
 	@Override
-	public void prepare(ParagraphSet ps) {
+	public void prepare(Document ps) {
 		
 	}
 	
 	@Override
-	public HashMap<Sentence, AnnotationSet> chunk(ParagraphSet ps){
+	public HashMap<Sentence, AnnotationSet> chunk(Document ps){
 		HashMap<Sentence, AnnotationSet> chunkings = this.baseChunker.chunk(ps);
 
 		DictionaryChunker dictionaryChunker = new DictionaryChunker(null);

@@ -2,7 +2,6 @@ package liner2.tools;
 
 import java.util.HashMap;
 
-
 public class TrieDictNode {
 
 	private HashMap<String,TrieDictNode> children = new HashMap<String,TrieDictNode>();
@@ -39,8 +38,7 @@ public class TrieDictNode {
 	public void setTerminal(boolean terminal) {
 		this.terminal = terminal;
 	}
-	
-	
+		
 	public String toString(){
 		String out = this.children.toString();
 		for(TrieDictNode c: this.children.values())

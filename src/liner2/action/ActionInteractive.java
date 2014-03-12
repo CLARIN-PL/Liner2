@@ -1,31 +1,26 @@
 package liner2.action;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import liner2.LinerOptions;
 import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
-
 import liner2.chunker.factory.ChunkerManager;
 import liner2.features.TokenFeatureGenerator;
+import liner2.reader.AbstractDocumentReader;
 import liner2.reader.ReaderFactory;
-import liner2.reader.StreamReader;
-
-import liner2.structure.*;
-import liner2.tools.Template;
-import liner2.writer.StreamWriter;
+import liner2.structure.Document;
+import liner2.structure.Paragraph;
+import liner2.structure.Sentence;
+import liner2.structure.Token;
+import liner2.tools.ParameterException;
+import liner2.writer.AbstractDocumentWriter;
 import liner2.writer.WriterFactory;
 
-import liner2.tools.ParameterException;
-import liner2.LinerOptions;
+import org.apache.commons.io.IOUtils;
 
 /**
  * Chunking in interactive mode.
@@ -43,26 +38,26 @@ public class ActionInteractive extends Action{
 			throw new ParameterException("Parameter --use <chunker_pipe_desription> not set");
 		}
 
+        TokenFeatureGenerator gen = null;
+        String inputFormat = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FORMAT);
+        String output_format = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FORMAT);
+        AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(System.out, output_format);
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		String cSeq = "";
 		
-		String maca = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_MACA);
-		String wmbt = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_WMBT);
-
 		if (!LinerOptions.getGlobal().silent){
 			System.out.println("# Loading, please wait...");
- 	}
+		}
         ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
         Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
 		
-	
+        if (!LinerOptions.getGlobal().features.isEmpty()){
+            gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
+        }
+
 		if (!LinerOptions.getGlobal().silent){
 			System.out.println("# Enter a sentence and press Enter.");
-			if (maca == null) {
-				System.out.println("#   Tokens should be seperated with double spaces.");
-				System.out.println("#   Token attributes should be seperated with a single space.");
-				System.out.println("#   Example: Ala ala subst:sg:nom:f  ma mieć fin:sg:ter:imperf  kota kot subst:sg:acc:m1");			
-			}
+			System.out.println("# Input format: " + inputFormat);
 			System.out.println("# To finish, enter 'EOF'.");
         }
 		
@@ -90,143 +85,36 @@ public class ActionInteractive extends Action{
 				}
 
 				// morphological analysis, feature generation
-				Paragraph paragraph;
-				if (maca == null)
-					paragraph = analyzePlain(cSeq);
-				else
-					paragraph = analyze(cSeq, maca, wmbt);
+				AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(
+						"terminal input", 
+						IOUtils.toInputStream(cSeq), 
+						inputFormat);
+				Document ps = reader.nextDocument();
+				reader.close();
 
-				// merge everything to one sentence if forced
 				if (forceSentence)
-					paragraph = mergeSentences(paragraph);
-
+					ps = mergeSentences(ps);
 				
-				// chunking
-				ParagraphSet ps = new ParagraphSet();
-				ps.addParagraph(paragraph);
-                ps.setAttributeIndex(paragraph.getAttributeIndex());
-
-                if (!LinerOptions.getGlobal().features.isEmpty()){
-                    TokenFeatureGenerator gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
-                    gen.generateFeatures(ps);
-                }
+				if ( gen != null )
+					gen.generateFeatures(ps);
+                
 				chunker.chunkInPlace(ps);
 
 				// write output
-                String output_format = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FORMAT);
-                String output_file = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FILE);
-                StreamWriter writer;
-                if (output_format.equals("arff")){
-                    Template arff_template = LinerOptions.getGlobal().getArffTemplate();
-                    writer = WriterFactory.get().getArffWriter(output_file, arff_template);
-                }
-                else{
-                    writer = WriterFactory.get().getStreamWriter(output_file, output_format);
-                }
-                writer.writeParagraphSet(ps);
+                writer.writeDocument(ps);
+                writer.flush();
 			}
 		} while (!cSeq.equals("EOF"));
+		writer.close();
 	}
 	
-	private Paragraph analyzePlain(String cSeq) {
-		Sentence sentence = new Sentence();
-		TokenAttributeIndex ai = new TokenAttributeIndex();
-		ai.addAttribute("orth");
-		ai.addAttribute("base");
-		ai.addAttribute("ctag");
-		sentence.setAttributeIndex(ai);
 
-		String[] tokens = cSeq.trim().split("  ");
-		for (String tokenStr : tokens) {
-			Token token = new Token();
-			String[] tokenAttrs = tokenStr.split(" ");
-			for (int i = 0; i < tokenAttrs.length; i++)   {
-				token.setAttributeValue(i, tokenAttrs[i]); }
-            Tag tag = new Tag(token.getAttributeValue(1), token.getAttributeValue(2), false);
-            token.addTag(tag);
-			sentence.addToken(token);
-		}
-		Paragraph paragraph = new Paragraph(null);
-		paragraph.setAttributeIndex(ai);
-		paragraph.addSentence(sentence);
-		return paragraph;
-	}
-	
-	private Paragraph analyze(String cSeq, String maca, String wmbt) {
-		// prepare maca command
-		String maca_cmd = maca.equals("-") ? "" : maca;
-		if (!maca.equals("-")) {
-			if (!maca.endsWith("/"))
-				maca_cmd += "/";
-			//maca_cmd += "bin/maca-analyse/";
-		}
-		maca_cmd += "maca-analyse -qs morfeusz-nkjp-official -o ccl";
-		
-		// execute maca
-		Process maca_p = null;
-		try {
-			maca_p = Runtime.getRuntime().exec(maca_cmd);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-
-		InputStream maca_in = maca_p.getInputStream();
-		OutputStream maca_out = maca_p.getOutputStream();
-		BufferedWriter maca_writer = new BufferedWriter(
-			new OutputStreamWriter(maca_out));
-		
-		// if using wmbt, then combine maca with wmbt
-		if (wmbt != null) {
-			// prepare wmbt command
-			if (!wmbt.endsWith("/"))
-				wmbt += "/";
-			String wmbt_cmd = wmbt + "wmbt/wmbt.py";
-			wmbt_cmd += " -d " + wmbt + "model_nkjp10 -i ccl -o ccl";
-			wmbt_cmd += " " + wmbt + "config/nkjp-k11.ini -";
-			
-			Process wmbt_p = null;
-			try {
-				wmbt_p = Runtime.getRuntime().exec(wmbt_cmd);
-				InputStream wmbt_in = wmbt_p.getInputStream();
-				OutputStream wmbt_out = wmbt_p.getOutputStream();
-				
-				BufferedReader maca_reader = new BufferedReader(
-					new InputStreamReader(maca_in));
-				BufferedWriter wmbt_writer = new BufferedWriter(
-					new OutputStreamWriter(wmbt_out));
-					
-				maca_writer.write(cSeq, 0, cSeq.length());
-				maca_writer.close();
-				
-				String line = null;
-				while ((line = maca_reader.readLine()) != null)
-					wmbt_writer.write(line, 0, line.length());
-				wmbt_writer.close();
-				StreamReader reader = ReaderFactory.get().getStreamReader(wmbt_in, "ccl");
-				Paragraph paragraph = reader.readParagraph();
-				return paragraph;
-				
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				return null;
-			}		
-		}
-		
-		else {
-			try {
-				maca_writer.write(cSeq, 0, cSeq.length());
-				maca_writer.close();
-				StreamReader reader = ReaderFactory.get().getStreamReader(maca_in, "ccl");
-				Paragraph paragraph = reader.readParagraph();
-				return paragraph;
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				return null;
-			}
-		}
-	}
-
-	private Paragraph mergeSentences(Paragraph paragraph) {
+	/**
+	 * Merge all tokens into a single sentence.	
+	 * @param paragraph
+	 * @return
+	 */
+	private Document mergeSentences(Document paragraph) {
 		Sentence merged = new Sentence();
 		merged.setAttributeIndex(paragraph.getAttributeIndex());
 
@@ -234,9 +122,11 @@ public class ActionInteractive extends Action{
 			for (Token token : sentence.getTokens())
 				merged.addToken(token);
 
-		Paragraph resultParagraph = new Paragraph(paragraph.getId());
-		resultParagraph.setAttributeIndex(paragraph.getAttributeIndex());
+		Document document = new Document("interactive mode", paragraph.getAttributeIndex());
+		Paragraph resultParagraph = new Paragraph("id1");		
 		resultParagraph.addSentence(merged);
-		return resultParagraph;
+		document.addParagraph(resultParagraph);
+
+		return document;
 	}
 }

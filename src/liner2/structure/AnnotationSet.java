@@ -1,10 +1,7 @@
 package liner2.structure;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-
-import liner2.filter.Filter;
 
 /**
  * Opakowanie na zbiór chunków przypisanych do jednego zdania.
@@ -42,16 +39,6 @@ public class AnnotationSet {
 
 	public boolean contains(Annotation chunk) {
 		return this.chunks.contains(chunk);
-	}
-	
-	public void filter(ArrayList<Filter> filters) {
-		HashSet<Annotation> filteredChunks = new HashSet<Annotation>();
-		for (Annotation chunk : this.chunks) {
-			Annotation filteredChunk = Filter.filter(chunk, filters);
-			if (filteredChunk != null)
-				filteredChunks.add(filteredChunk);
-		}
-		this.chunks = filteredChunks;
 	}
 	
 	public void union(AnnotationSet foreignChunking) {

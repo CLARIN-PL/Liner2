@@ -1,9 +1,11 @@
 package liner2.chunker;
 
-import liner2.structure.ParagraphSet;
+import liner2.structure.Document;
 
 public interface TrainableChunkerInterface {
 
-	public void train(ParagraphSet paragraphSet) throws Exception;
+	public void addTrainingData(Document document) throws Exception;
+	
+	public void train() throws Exception;
 	
 }

@@ -8,7 +8,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,7 +15,7 @@ import liner2.Main;
 import liner2.structure.Annotation;
 import liner2.structure.AnnotationSet;
 import liner2.structure.Paragraph;
-import liner2.structure.ParagraphSet;
+import liner2.structure.Document;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
 
@@ -68,8 +67,8 @@ public class CrfppChunker extends Chunker
 				oStr.append(" ");
 				val = token.getAttributeValue(i);
 				if ( val != null){
-                                	val = val.replaceAll("\\s+", "_");
-                                        val = val.length()==0 ? "NULL" : val;
+					val = val.replaceAll("\\s+", "_");
+                    val = val.length()==0 ? "NULL" : val;
                                 }
 				oStr.append(val);
 			}
@@ -106,22 +105,17 @@ public class CrfppChunker extends Chunker
 	
 	            
     @Override
-	public void train(ParagraphSet paragraphSet) throws Exception {
-		this.prepareTrainingData(paragraphSet);
+	public void train() throws Exception {
+    	this.trainingFileWriter.close();
 		this.compileTagger();
     }
 
-	/**
-     * 
-     * @param paragraphSet
-     */
-    private void prepareTrainingData(ParagraphSet paragraphSet) {
+    @Override
+    public void addTrainingData(Document paragraphSet) {
 
     	// Utwórz tymczasowy plik do zapisu danych treningowych
     	if ( this.trainingFileWriter == null ){
     		try {
-				//this.temporary_iob = File.createTempFile("crf", ".iob");
-				//this.temporary_iob.deleteOnExit();
     			this.trainingFile = new File("crf_iob.txt");
 				this.trainingFileWriter = new PrintWriter(this.trainingFile);
 			} catch (IOException e) {
@@ -269,7 +263,7 @@ public class CrfppChunker extends Chunker
 	}
 
 	@Override
-	public HashMap<Sentence, AnnotationSet> chunk(ParagraphSet ps) {
+	public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
 		HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
 		for ( Paragraph paragraph : ps.getParagraphs() )
 			for (Sentence sentence : paragraph.getSentences())

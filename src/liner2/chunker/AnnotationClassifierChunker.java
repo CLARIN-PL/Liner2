@@ -15,18 +15,21 @@ import java.util.Set;
 import liner2.features.AnnotationFeatureGenerator;
 import liner2.structure.Annotation;
 import liner2.structure.AnnotationSet;
-import liner2.structure.ParagraphSet;
+import liner2.structure.Document;
 import liner2.structure.Sentence;
 import weka.classifiers.Classifier;
-import weka.classifiers.functions.Logistic;
 import weka.classifiers.meta.MultiClassClassifier;
-import weka.classifiers.trees.J48;
 import weka.core.Attribute;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.filters.unsupervised.attribute.StringToNominal;
 
+/**
+ * TODO: wymaga aktualizacji dla rozdzielenia train na addTrainingData i train.
+ * @author czuk
+ *
+ */
 public class AnnotationClassifierChunker extends Chunker 
 	implements TrainableChunkerInterface, DeserializableChunkerInterface, SerializableChunkerInterface {
 	
@@ -86,7 +89,7 @@ public class AnnotationClassifierChunker extends Chunker
      * 
      * @param paragraphSet
      */
-    private void setupClasses(ParagraphSet paragraphSet){
+    private void setupClasses(Document paragraphSet){
     	// Create a list of possible classes on the basis on training set
     	Set<String> classes = new HashSet<String>();
     	FastVector fvClasses = new FastVector();
@@ -102,47 +105,47 @@ public class AnnotationClassifierChunker extends Chunker
     }
     
     @Override
-	public void train(ParagraphSet paragraphSet) throws Exception {
-    	this.setupClasses(paragraphSet);
-    	    	
-    	FastVector fva = this.getAttributesDefinition();
-    	Instances instances = new Instances("ner", fva, 10);
-    	instances.setClassIndex(this.featureGenerator.getFeaturesCount());
-    	    	
-    	for ( Sentence sentence : paragraphSet.getSentences() ){
-
-            List<HashMap<Annotation,String>> sentenceFeatures = this.featureGenerator.generate(sentence, sentence.getChunks());
-
-    		for (Annotation ann : sentence.getChunks()){
-	    		List<String> annotationFeatures = this.featureGenerator.generate(ann);
-	    		Instance instance = new Instance(this.featureGenerator.getFeaturesCount() + 1);
-
-	    		for (int i=0; i<annotationFeatures.size(); i++){
-	    			instance.setValue((Attribute)fva.elementAt(i), annotationFeatures.get(i));
-	    		}
-                for (int i=0; i<sentenceFeatures.size(); i++){
-                     instance.setValue((Attribute)fva.elementAt(i+annotationFeatures.size()),sentenceFeatures.get(i).get(ann));
-                }
-	    		instance.setValue((Attribute)fva.elementAt(this.featureGenerator.getFeaturesCount()),
-	    				ann.getType());
-	    		instances.add(instance);
-    		}
-    	}
-
-    	this.filter = new StringToNominal();
-    	filter.setAttributeRange("first-" + this.featureGenerator.getFeaturesCount());
-    	filter.setInputFormat(instances);
-    	for ( int i=0; i<instances.numInstances(); i++)
-    		filter.input(instances.instance(i));
-    	
-    	filter.batchFinished();
-    	
-    	Instances instancesFiltered = filter.getOutputFormat();
-    	Instance filtered = null;
-    	while ( (filtered = filter.output()) != null )
-    		instancesFiltered.add(filtered);
-
-    	this.classifier.buildClassifier(instancesFiltered);
+	public void train() throws Exception {
+//    	this.setupClasses(paragraphSet);
+//    	    	
+//    	FastVector fva = this.getAttributesDefinition();
+//    	Instances instances = new Instances("ner", fva, 10);
+//    	instances.setClassIndex(this.featureGenerator.getFeaturesCount());
+//    	    	
+//    	for ( Sentence sentence : paragraphSet.getSentences() ){
+//
+//            List<HashMap<Annotation,String>> sentenceFeatures = this.featureGenerator.generate(sentence, sentence.getChunks());
+//
+//    		for (Annotation ann : sentence.getChunks()){
+//	    		List<String> annotationFeatures = this.featureGenerator.generate(ann);
+//	    		Instance instance = new Instance(this.featureGenerator.getFeaturesCount() + 1);
+//
+//	    		for (int i=0; i<annotationFeatures.size(); i++){
+//	    			instance.setValue((Attribute)fva.elementAt(i), annotationFeatures.get(i));
+//	    		}
+//                for (int i=0; i<sentenceFeatures.size(); i++){
+//                     instance.setValue((Attribute)fva.elementAt(i+annotationFeatures.size()),sentenceFeatures.get(i).get(ann));
+//                }
+//	    		instance.setValue((Attribute)fva.elementAt(this.featureGenerator.getFeaturesCount()),
+//	    				ann.getType());
+//	    		instances.add(instance);
+//    		}
+//    	}
+//
+//    	this.filter = new StringToNominal();
+//    	filter.setAttributeRange("first-" + this.featureGenerator.getFeaturesCount());
+//    	filter.setInputFormat(instances);
+//    	for ( int i=0; i<instances.numInstances(); i++)
+//    		filter.input(instances.instance(i));
+//    	
+//    	filter.batchFinished();
+//    	
+//    	Instances instancesFiltered = filter.getOutputFormat();
+//    	Instance filtered = null;
+//    	while ( (filtered = filter.output()) != null )
+//    		instancesFiltered.add(filtered);
+//
+//    	this.classifier.buildClassifier(instancesFiltered);
     }
 
     /**
@@ -189,7 +192,7 @@ public class AnnotationClassifierChunker extends Chunker
 
 
 	@Override
-	public HashMap<Sentence, AnnotationSet> chunk(ParagraphSet ps) {
+	public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
 		HashMap<Sentence, AnnotationSet> inputChunks = this.inputChunker.chunk(ps);
 		try {
 			this.classify(inputChunks);
@@ -250,4 +253,11 @@ public class AnnotationClassifierChunker extends Chunker
     	 }    	
     	System.out.println("Zero : " + zero);
 	}
+
+	@Override
+	public void addTrainingData(Document document) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }
