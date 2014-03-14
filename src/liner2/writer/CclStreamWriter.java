@@ -91,7 +91,6 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 
 	@Override
 	public void writeDocument(Document document){
-		System.out.println(document.getName());
 		this.openXml();
 		for (Paragraph paragraph : document.getParagraphs())
 			this.writeParagraph(paragraph);
