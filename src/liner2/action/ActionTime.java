@@ -49,7 +49,7 @@ public class ActionTime extends Action{
     	timer.stopTimer();
 
     	while ( ps != null ){
-    		Main.log("Loaded URI: " + ps.getUri());
+    		Main.log("Loaded URI: " + ps.getName());
     		timer.addTokens(ps);
     		
     		// Generate features

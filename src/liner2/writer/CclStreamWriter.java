@@ -38,23 +38,17 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 
 	private XMLStreamWriter xmlw;
 	private OutputStream os;
-	private boolean open = false;
+	private XMLOutputFactory xmlof = null;
 	private boolean indent = true;
 	
 	public CclStreamWriter(OutputStream os) {
 		this.os = os;
-		XMLOutputFactory xmlof = XMLOutputFactory.newFactory();
-		try {
-			this.xmlw = xmlof.createXMLStreamWriter(os);
-		} catch (XMLStreamException ex) {
-			ex.printStackTrace();
-		}
+		this.xmlof = XMLOutputFactory.newFactory();
 	}
 	
-	public void open() {
-		if (open)
-			return;
+	private void openXml() {
 		try {
+			this.xmlw = xmlof.createXMLStreamWriter(os);
 			xmlw.writeStartDocument("UTF-8", "1.0");
 			xmlw.writeCharacters("\n");
 			xmlw.writeDTD("<!DOCTYPE chunkList SYSTEM \"ccl.dtd\">");
@@ -64,27 +58,32 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 		} catch (XMLStreamException ex) {
 			ex.printStackTrace();
 		}
-		open = true;
+	}
+	
+	private void closeXml() {
+		try {
+			xmlw.writeEndDocument();
+			xmlw.close();
+		} catch (XMLStreamException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 	}
 
 	@Override
 	public void flush() {
 		try {
-			os.flush();
+			this.os.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}		
+		}
 	}
 	
 	@Override
 	public void close() {
 		try {
-			xmlw.writeEndDocument();
-			xmlw.close();
             if(!(os instanceof PrintStream))
                 os.close();
-		} catch (XMLStreamException ex) {
-			ex.printStackTrace();
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
@@ -92,17 +91,14 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 
 	@Override
 	public void writeDocument(Document document){
-		this.open();
+		System.out.println(document.getName());
+		this.openXml();
 		for (Paragraph paragraph : document.getParagraphs())
 			this.writeParagraph(paragraph);
-		try {
-			xmlw.writeEndElement();
-		} catch (XMLStreamException e) {
-			e.printStackTrace();
-		}
+		this.closeXml();
 	}	
 
-	public void writeParagraph(Paragraph paragraph) {
+	private void writeParagraph(Paragraph paragraph) {
 		try {
 			this.indent(1);
 			xmlw.writeStartElement(TAG_PARAGRAPH);
@@ -120,7 +116,6 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 			this.indent(1);
 			xmlw.writeEndElement();
 			xmlw.writeCharacters("\n");
-			xmlw.flush();
 		} catch (XMLStreamException ex) {
 			ex.printStackTrace();
 		}
@@ -166,8 +161,6 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 		xmlw.writeCharacters("\n");
 		this.indent(4);
 		xmlw.writeStartElement(TAG_ORTH);
-		//xmlw.writeCharacters(token.getFirstValue().replace("&", "&amp;"));
-		//xmlw.writeCharacters(escapeXml(token.getFirstValue()));
 		writeText(token.getFirstValue());
 		xmlw.writeEndElement();
 		xmlw.writeCharacters("\n");
@@ -217,25 +210,13 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 		if (tag.getDisamb())
 			xmlw.writeAttribute(TAG_DISAMB, "1");
 		xmlw.writeStartElement(TAG_BASE);
-		//xmlw.writeCharacters(tag.getBase().replace("&", "&amp;"));
-		//xmlw.writeCharacters(escapeXml(tag.getBase()));
 		writeText(tag.getBase());
 		xmlw.writeEndElement();
 		xmlw.writeStartElement(TAG_CTAG);
-		//xmlw.writeCharacters(tag.getCtag());
 		writeText(tag.getCtag());
 		xmlw.writeEndElement();
 		xmlw.writeEndElement();
 		xmlw.writeCharacters("\n");
-	}
-
-	private String escapeXml(String text) {
-		//text = text.replace("&", "&amp;");
-		text = text.replace("\"", "&quot;");
-		text = text.replace("\'", "&apos;");
-		text = text.replace("<", "&lt;");
-		text = text.replace(">", "&gt;");
-		return text;
 	}
 
 	private void writeText(String text) throws XMLStreamException {

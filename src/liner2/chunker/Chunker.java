@@ -17,7 +17,7 @@ public abstract class Chunker {
 		for ( Paragraph paragraph : ps.getParagraphs() )
 			for (Sentence sentence : paragraph.getSentences())
 				if ( chunking.containsKey(sentence) )
-					sentence.addChunking(chunking.get(sentence));
+					sentence.addAnnotations(chunking.get(sentence));
 	}
 
 

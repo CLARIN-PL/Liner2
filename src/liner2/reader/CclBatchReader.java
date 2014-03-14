@@ -23,6 +23,7 @@ public class CclBatchReader extends AbstractDocumentReader {
     private TokenAttributeIndex attributeIndex;
     private int fileIndex=0;
     private List<String> files = new ArrayList<String>();
+    private File root = null;
 
     /**
      * 
@@ -33,6 +34,7 @@ public class CclBatchReader extends AbstractDocumentReader {
      * @throws FileNotFoundException 
      */
     public CclBatchReader(InputStream is, String root) throws DataFormatException, IOException{
+    	this.root = new File(root);
         this.attributeIndex = new TokenAttributeIndex();
         this.attributeIndex.addAttribute("orth");
         this.attributeIndex.addAttribute("base");
@@ -48,17 +50,18 @@ public class CclBatchReader extends AbstractDocumentReader {
             }
             if(line == null)
                 break;
-            String cclFile = line.trim().split(";")[0];
+            String name = line.trim().split(";")[0];
+            String cclFile = name;
             if (cclFile.length() == 0)
                 break;
             
             if (!cclFile.startsWith("/"))
-            	cclFile = root + "/" + cclFile;
+            	cclFile = new File(this.root, cclFile).getAbsolutePath();
 
             if (!new File(cclFile).exists())
             	System.err.println("File not found while reading ccl-batch: " + cclFile);
             else{
-            	this.files.add(cclFile);
+            	this.files.add(name);
             }
         }
         ir.close();
@@ -67,9 +70,9 @@ public class CclBatchReader extends AbstractDocumentReader {
     @Override
     public Document nextDocument() throws DataFormatException, IOException {
     	if ( this.fileIndex < this.files.size() ){
-        	String cclFile = this.files.get(this.fileIndex++);
-            InputStream  fileAsStream = new FileInputStream(cclFile);
-            CclSaxParser parser_out = new CclSaxParser(cclFile, fileAsStream, this.attributeIndex);
+        	String name = this.files.get(this.fileIndex++);
+            InputStream  fileAsStream = new FileInputStream(new File(this.root, name).getAbsolutePath());
+            CclSaxParser parser_out = new CclSaxParser(name, fileAsStream, this.attributeIndex);
     		Document document = parser_out.getDocument();
     		fileAsStream.close();
     		return document;

@@ -31,7 +31,7 @@ public class Sentence {
 		chunks.add(chunk);
 	}
 	
-	public void addChunking(AnnotationSet chunking) {
+	public void addAnnotations(AnnotationSet chunking) {
 		if ( chunking != null)
 			for (Annotation chunk : chunking.chunkSet())
 				addChunk(chunk);
@@ -110,7 +110,7 @@ public class Sentence {
 		this.attributeIndex = attributeIndex;
 	}
 
-	public void setChunking(AnnotationSet chunking) {
+	public void setAnnotations(AnnotationSet chunking) {
 		this.chunks = (LinkedHashSet<Annotation>) chunking.chunkSet();
 	}
 	

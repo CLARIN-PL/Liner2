@@ -3,28 +3,37 @@ package liner2.structure;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * 
+ * @author Michał Marcińczuk
+ *
+ */
 public class Document {
 
-	String uri = null;
+	String name = null;
 	TokenAttributeIndex attributeIndex = null;
 	ArrayList<Paragraph> paragraphs = new ArrayList<Paragraph>();
 	
-	public Document(String uri, TokenAttributeIndex attributeIndex){
-		this.uri = uri;
+	public Document(String name, TokenAttributeIndex attributeIndex){
+		this.name = name;
 		this.attributeIndex = attributeIndex;
 	}
 	
-	public Document(String uri, ArrayList<Paragraph> paragraphs, TokenAttributeIndex attributeIndex){
-		this.uri = uri;
+	public Document(String name, ArrayList<Paragraph> paragraphs, TokenAttributeIndex attributeIndex){
+		this.name = name;
 		this.paragraphs = paragraphs;
 		this.attributeIndex = attributeIndex;
 	}
 	
-	public String getUri(){
-		return this.uri;
+	/**
+	 * Get the name of document source. If the document was read from a file, 
+	 * it is a path to the file. 
+	 * @return source of the document
+	 */
+	public String getName(){
+		return this.name;
 	}
-	
-	
+		
 	public void addParagraph(Paragraph paragraph) {
 		paragraphs.add(paragraph);
 		if (paragraph.getAttributeIndex() == null)
@@ -53,16 +62,24 @@ public class Document {
 		return chunkings;
 	}
 
-	public void addChunks(HashMap<Sentence, AnnotationSet> chunkings) {
+	/**
+	 * Add annotations to sentences.
+	 * @param chunkings
+	 */
+	public void addAnnotations(HashMap<Sentence, AnnotationSet> chunkings) {
 		for ( Paragraph paragraph : this.paragraphs)
 			for (Sentence sentence : paragraph.getSentences())
-				sentence.addChunking(chunkings.get(sentence));
+				sentence.addAnnotations(chunkings.get(sentence));
 	}
 
-	public void setChunks(HashMap<Sentence, AnnotationSet> chunkings) {
+	/**
+	 * Discard existing annotations and set given set.
+	 * @param chunkings
+	 */
+	public void setAnnotations(HashMap<Sentence, AnnotationSet> chunkings) {
 		for ( Paragraph paragraph : this.paragraphs)
 			for (Sentence sentence : paragraph.getSentences())
-				sentence.setChunking(chunkings.get(sentence));
+				sentence.setAnnotations(chunkings.get(sentence));
 	}
 
 	public ArrayList<Sentence> getSentences() {

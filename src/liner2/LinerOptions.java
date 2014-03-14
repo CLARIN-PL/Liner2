@@ -19,6 +19,7 @@ import liner2.tools.ParameterException;
 import liner2.tools.Template;
 import liner2.tools.TemplateFactory;
 import liner2.writer.AbstractDocumentWriter;
+import liner2.writer.CclBatchWriter;
 import liner2.writer.WriterFactory;
 
 import org.apache.commons.cli.CommandLine;
@@ -409,12 +410,18 @@ public class LinerOptions {
 	 * @throws Exception
 	 */
 	public AbstractDocumentWriter getOutputWriter() throws Exception{
+        String input_format = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FORMAT);
         String output_format = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FORMAT);
         String output_file = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FILE);
         AbstractDocumentWriter writer;
         if (output_format.equals("arff")){
             Template arff_template = LinerOptions.getGlobal().getArffTemplate();
             writer = WriterFactory.get().getArffWriter(output_file, arff_template);
+        }
+        else if ( output_format.equals("ccl-batch") ){
+        	if ( !input_format.equals("ccl-batch") )
+        		throw new Exception("Output format `ccl-batch` (-o) is valid only for `ccl-batch` input format (-i).");        	
+        	writer = new CclBatchWriter(output_file);
         }
         else{
             writer = WriterFactory.get().getStreamWriter(output_file, output_format);

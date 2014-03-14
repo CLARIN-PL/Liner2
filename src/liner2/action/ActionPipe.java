@@ -44,6 +44,7 @@ public class ActionPipe extends Action{
 				gen.generateFeatures(ps);
 			chunker.chunkInPlace(ps);
 			writer.writeDocument(ps);
+			ps = reader.nextDocument();
 		}
 
 		reader.close();
