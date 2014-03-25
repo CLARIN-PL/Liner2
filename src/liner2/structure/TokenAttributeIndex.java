@@ -83,9 +83,9 @@ public class TokenAttributeIndex {
 	public int getLength() {
 		return indexes.size();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param token
 	 * @param attributeName
 	 * @return

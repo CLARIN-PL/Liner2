@@ -117,7 +117,7 @@ public class CrfppFix extends Chunker {
 			int end = chunk.getEnd();
 			int start = chunk.getBegin();
 			int len = end - start + 1;
-//			String w = tokens.getGlobal(end).getFirstValue();
+//			String w = tokens.getGlobal(end).getOrth();
 //			
 //			if ( w.equals(":") || w.equals(",")){
 //				chunk.setEnd(end-1);

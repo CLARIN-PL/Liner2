@@ -180,7 +180,7 @@ public class IobStreamReader extends AbstractDocumentReader {
 	}
 	
 	private Token createToken(String[] words) throws Exception {
-		Token token = new Token();
+		Token token = new Token(this.attributeIndex);
 		if (words.length != this.attributeIndex.getLength() + 1){
 			throw new Exception("Invalid number of attributes: " + StringHelper.implode(words));
 		}

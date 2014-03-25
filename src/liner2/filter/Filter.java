@@ -3,10 +3,7 @@ package liner2.filter;
 import java.util.ArrayList;
 
 import liner2.structure.Annotation;
-import liner2.structure.Sentence;
 import liner2.structure.Token;
-
-import liner2.Main;
 
 public abstract class Filter {
 
@@ -43,7 +40,7 @@ public abstract class Filter {
     	ArrayList<Token> tokens = chunk.getSentence().getTokens();
     	for (int i = chunk.getBegin(); i <= chunk.getEnd(); i++) {
     		Token token = tokens.get(i);
-    		sb.append(token.getFirstValue() + (token.getNoSpaceAfter() ? "" : " "));
+    		sb.append(token.getOrth() + (token.getNoSpaceAfter() ? "" : " "));
     	}
     	return Filter.filter(chunk, sb.toString().trim(), filters);
 	}

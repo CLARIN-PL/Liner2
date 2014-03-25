@@ -53,7 +53,7 @@ public class ProcessingTimer {
 		for (Paragraph p : ps.getParagraphs() )
 			for (Sentence s : p.getSentences() )
 				for (Token t : s.getTokens()){
-					chars += t.getFirstValue().getBytes().length + (t.getNoSpaceAfter() ? 0 : 1);
+					chars += t.getOrth().getBytes().length + (t.getNoSpaceAfter() ? 0 : 1);
 					tokens ++;
 				}
 		this.textSize += chars;

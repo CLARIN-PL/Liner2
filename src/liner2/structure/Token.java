@@ -9,12 +9,17 @@ import java.util.ArrayList;
  */
 public class Token {
 
-    public Token(){}
+    public Token(TokenAttributeIndex attrIdx){
+        this.attrIdx = attrIdx;
+    }
 
-    public Token(String orth, Tag firstTag){
-        setAttributeValue(0, orth);
+    public Token(String orth, Tag firstTag, TokenAttributeIndex attrIdx){
+        this.attrIdx = attrIdx;
+        setAttributeValue(attrIdx.getIndex("orth"), orth);
         addTag(firstTag);
     }
+    /* Indeks atrybutów */
+    TokenAttributeIndex attrIdx;
 
 	/* Uporządkowana lista atrybutów */
 	ArrayList<String> attributes = new ArrayList<String>();
@@ -34,7 +39,7 @@ public class Token {
 	public void removeAttribute(int attrIdx){
 		this.attributes.remove(attrIdx);
 	}
-	
+
 	/**
 	 * TODO
 	 * Zwraca wartość atrybutu o podany indeksie.
@@ -59,8 +64,8 @@ public class Token {
 	 * Przeważnie będzie to orth.
 	 * @return
 	 */
-	public String getFirstValue(){
-		return attributes.get(0);		
+	public String getOrth(){
+		return attributes.get(attrIdx.getIndex("orth"));
 	}
 	
 	public boolean getNoSpaceAfter() {
@@ -68,12 +73,14 @@ public class Token {
 	}
 	
 	public void addTag(Tag tag) {
-		tags.add(tag);
-		if (attributes.size() < 3) {
-			this.setAttributeValue(1, tag.getBase());
-			this.setAttributeValue(2, tag.getCtag());
-		}
-	}
+        tags.add(tag);
+        if (attrIdx.getIndex("base") != -1 && attributes.get(attrIdx.getIndex("base")) == null) {
+            this.setAttributeValue(this.attrIdx.getIndex("base"), tag.getBase());
+        }
+        if (attrIdx.getIndex("ctag") != -1 && attributes.get(attrIdx.getIndex("ctag")) == null) {
+            this.setAttributeValue(this.attrIdx.getIndex("ctag"), tag.getCtag());
+        }
+    }
 	
 	public ArrayList<Tag> getTags() {
 		return tags;

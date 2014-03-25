@@ -139,7 +139,7 @@ public class Annotation {
 		StringBuilder text = new StringBuilder();
 		for (int i : this.tokens) {
 			Token token = tokens.get(i);
-			text.append(token.getFirstValue());
+			text.append(token.getOrth());
 			if ((!token.getNoSpaceAfter()) && (i < getEnd()))
 				text.append(" ");
 		}

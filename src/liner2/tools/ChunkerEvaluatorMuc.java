@@ -10,7 +10,6 @@ import liner2.structure.AnnotationSet;
 import liner2.structure.Sentence;
 import liner2.structure.Token;
 
-import liner2.LinerOptions;
 import liner2.Main;
 
 /**
@@ -313,7 +312,7 @@ public class ChunkerEvaluatorMuc {
 		int idx = 0;
 		for (Token token : sentence.getTokens()) {
 			idx++;
-			String tokenOrth = token.getFirstValue();
+			String tokenOrth = token.getOrth();
 			String tokenNum = ""+idx;
 			while (tokenOrth.length() < tokenNum.length())
 				tokenOrth += " ";
@@ -361,7 +360,7 @@ public class ChunkerEvaluatorMuc {
 		ArrayList<Token> tokens = chunk.getSentence().getTokens();
 		StringBuilder result = new StringBuilder();
 		for (int i = chunk.getBegin(); i <= chunk.getEnd(); i++)
-			result.append(tokens.get(i).getFirstValue() + " ");
+			result.append(tokens.get(i).getOrth() + " ");
 		return result.toString().trim();
 	}
 	

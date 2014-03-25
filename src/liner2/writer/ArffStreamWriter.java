@@ -104,7 +104,7 @@ public class ArffStreamWriter extends AbstractDocumentWriter{
 	
 	private void writeToken(int idx, Token token, Sentence sentence) 
 		throws IOException {
-//		String line = token.getFirstValue();
+//		String line = token.getOrth();
 //		ArrayList<Tag> tags = token.getTags();
 //		Tag firstTag = tags.getGlobal(0);
 //		line += " " + firstTag.getBase() + " " + firstTag.getCtag();

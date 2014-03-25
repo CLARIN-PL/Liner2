@@ -109,7 +109,7 @@ public class Template {
 
         ArrayList<Token> tokens = sentence.getTokens();
         for (int k = 0; k < tokens.size(); k++) {
-            Token newToken = new Token();
+            Token newToken = new Token(newAttributeIndex);
             for (Tag tag : tokens.get(k).getTags())
                 newToken.addTag(tag);
             newToken.clearAttributes();

@@ -110,7 +110,7 @@ public class CclSaxParser extends DefaultHandler {
 
         }
         else if (elementName.equalsIgnoreCase(TAG_TOKEN)) {
-            currentToken = new Token();
+            currentToken = new Token(attributeIndex);
             currentToken.setId(attributes.getValue(TAG_ID));
         }
         else if(elementName.equalsIgnoreCase(TAG_TAG)){
@@ -148,19 +148,19 @@ public class CclSaxParser extends DefaultHandler {
             foundDisamb = false;
             for (Tag tag : tags) {
                 if (tag.getDisamb()) {
-                    currentToken.setAttributeValue(1, tag.getBase());
-                    currentToken.setAttributeValue(2, tag.getCtag());
+                    currentToken.setAttributeValue(attributeIndex.getIndex("base"), tag.getBase());
+                    currentToken.setAttributeValue(attributeIndex.getIndex("ctag"), tag.getCtag());
                 }
             }
             if (!foundDisamb){
-                currentToken.setAttributeValue(1, tags.get(0).getBase());
-                currentToken.setAttributeValue(2, tags.get(0).getCtag());
+                currentToken.setAttributeValue(attributeIndex.getIndex("base"), tags.get(0).getBase());
+                currentToken.setAttributeValue(attributeIndex.getIndex("ctag"), tags.get(0).getCtag());
             }
             currentSentence.addToken(currentToken);
             idx++;
         }
         if(element.equalsIgnoreCase(TAG_ORTH)){
-            currentToken.setAttributeValue(0,tmpValue);
+            currentToken.setAttributeValue(attributeIndex.getIndex("orth"),tmpValue);
         }
         if(element.equalsIgnoreCase(TAG_TAG)){
             currentToken.addTag(new Tag(tmpBase,tmpCtag,tmpDisamb));

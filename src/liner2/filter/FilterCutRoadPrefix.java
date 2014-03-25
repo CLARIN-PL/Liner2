@@ -22,8 +22,8 @@ public class FilterCutRoadPrefix extends Filter {
 		int begin = chunk.getBegin();
 		int end = chunk.getEnd();
 		if (end - begin > 2)
-			if ((tokens.get(begin).getFirstValue().equals("ul")) &&
-				(tokens.get(begin + 1).getFirstValue().equals(".")))
+			if ((tokens.get(begin).getOrth().equals("ul")) &&
+				(tokens.get(begin + 1).getOrth().equals(".")))
 				return new Annotation(begin + 2, end, chunk.getType(), chunk.getSentence());
 		return chunk;
 	}

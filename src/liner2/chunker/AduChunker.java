@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import liner2.structure.TokenAttributeIndex;
-import liner2.structure.Annotation;
 import liner2.structure.AnnotationSet;
 import liner2.structure.Paragraph;
 import liner2.structure.Document;
@@ -42,13 +41,13 @@ public class AduChunker extends Chunker {
 		// wygeneruj unigramy
 		nGrams.add(new HashMap<Integer, String>());		
 		for (int i = 0; i < sentenceLength; i++)
-			nGrams.get(0).put(new Integer(i), tokens.get(i).getFirstValue());
+			nGrams.get(0).put(new Integer(i), tokens.get(i).getOrth());
 		// wygeneruj n-gramy
 		for (int n = 1; n < sentenceLength; n++) {
 			nGrams.add(new HashMap<Integer, String>());
 			for (int j = 0; j < sentenceLength - n; j++)
 				nGrams.get(n).put(new Integer(j), 
-					nGrams.get(n-1).get(j) + " " + tokens.get(j+n).getFirstValue());
+					nGrams.get(n-1).get(j) + " " + tokens.get(j+n).getOrth());
 		}
 		
 		// aktualizuj cechy słownikowe (poczynając od najdłuższych n-gramów)
@@ -93,9 +92,9 @@ public class AduChunker extends Chunker {
 //				ArrayList<Token> tokens = s.getTokens();
 //
 //				for (Chunk chunk : chunking.chunkSet()) {
-//					String seq = tokens.getGlobal(chunk.getBegin()).getFirstValue();
+//					String seq = tokens.getGlobal(chunk.getBegin()).getOrth();
 //				 	for (int i = chunk.getBegin()+1; i < chunk.getEnd(); i++)
-//						seq += " " + tokens.getGlobal(i).getFirstValue();
+//						seq += " " + tokens.getGlobal(i).getOrth();
 //					if (!this.dictionary.containsKey(seq))
 //						this.dictionary.put(seq, chunk.getType());
 //				} 

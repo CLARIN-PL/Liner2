@@ -55,13 +55,13 @@ public class DictionaryChunker extends Chunker
 		// wygeneruj unigramy
 		nGrams.add(new HashMap<Integer, String>());		
 		for (int i = 0; i < sentenceLength; i++)
-			nGrams.get(0).put(new Integer(i), tokens.get(i).getFirstValue());
+			nGrams.get(0).put(new Integer(i), tokens.get(i).getOrth());
 		// wygeneruj n-gramy
 		for (int n = 1; n < sentenceLength; n++) {
 			nGrams.add(new HashMap<Integer, String>());
 			for (int j = 0; j < sentenceLength - n; j++)
 				nGrams.get(n).put(new Integer(j), 
-					nGrams.get(n-1).get(j) + " " + tokens.get(j+n).getFirstValue());
+					nGrams.get(n-1).get(j) + " " + tokens.get(j+n).getOrth());
 		}
 		
 		// chunkuj (poczynając od najdłuższych n-gramów)
