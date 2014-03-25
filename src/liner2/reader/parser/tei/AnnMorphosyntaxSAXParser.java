@@ -92,7 +92,7 @@ public class AnnMorphosyntaxSAXParser extends DefaultHandler{
             currentSentence.setId(attributes.getValue(TAG_ID));
         }
         else if (elementName.equalsIgnoreCase(TAG_SEGMENT)) {
-            currentToken = new Token();
+            currentToken = new Token(attributeIndex);
             currentTokenTags = new HashMap<String, Tag>();
             tokenIdsMap.put(attributes.getValue(TAG_ID),idx++);
             currentToken.setId(attributes.getValue(TAG_ID));
@@ -144,7 +144,7 @@ public class AnnMorphosyntaxSAXParser extends DefaultHandler{
         }
         else if (element.equalsIgnoreCase(TAG_STRING)) {
             if(currentFeatureName.equals("orth")){
-                currentToken.setAttributeValue(0, tmpValue);
+                currentToken.setAttributeValue(attributeIndex.getIndex("orth"), tmpValue);
             }
             else if (currentFeatureName.equals("base")) {
                 tmpBase = tmpValue;

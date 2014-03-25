@@ -83,11 +83,11 @@ public class PlainTextStreamReader extends AbstractDocumentReader {
 
 		String[] tokens = cSeq.trim().split("  ");
 		for (String tokenStr : tokens) {
-			Token token = new Token();
+			Token token = new Token(ai);
 			String[] tokenAttrs = tokenStr.split(" ");
 			for (int i = 0; i < tokenAttrs.length; i++)   {
 				token.setAttributeValue(i, tokenAttrs[i]); }
-            Tag tag = new Tag(token.getAttributeValue(1), token.getAttributeValue(2), false);
+            Tag tag = new Tag(ai.getAttributeValue(token, "base"), ai.getAttributeValue(token, "ctag"), false);
             token.addTag(tag);
 			sentence.addToken(token);
 		}

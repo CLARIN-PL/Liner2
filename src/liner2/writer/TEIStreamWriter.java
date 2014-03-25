@@ -294,7 +294,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
 
     public void writeToken(Token tok, HashMap<String, String> currentIds, StringBuilder wholeParagraph, boolean noPreviousSpace) throws XMLStreamException {
         int tokenStart = wholeParagraph.length();
-        String orth = tok.getFirstValue();
+        String orth = tok.getOrth();
 
         this.indent(6, annSegmentationWriter);
         annSegmentationWriter.writeComment(" "+orth+" ");

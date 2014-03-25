@@ -52,7 +52,7 @@ public class TuplesStreamWriter extends AbstractDocumentWriter {
 				writeChunk(c, sentence);			
 			
 			for (Token t : sentence.getTokens())
-				this.sentenceOffset += t.getFirstValue().length();
+				this.sentenceOffset += t.getOrth().length();
 			
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -64,10 +64,10 @@ public class TuplesStreamWriter extends AbstractDocumentWriter {
 		int end = this.sentenceOffset;
 		ArrayList<Token> tokens = s.getTokens();
 		for (int i = 0; i < c.getBegin(); i++)
-			begin += tokens.get(i).getFirstValue().length();
+			begin += tokens.get(i).getOrth().length();
 		end = begin;
 		for (int i = c.getBegin(); i <= c.getEnd(); i++)
-			end += tokens.get(i).getFirstValue().length();
+			end += tokens.get(i).getOrth().length();
 
 		this.ow.write("(" + begin + "," + (end-1) + "," + c.getType() + ",\"" + c.getText() + "\")\n");
 	}

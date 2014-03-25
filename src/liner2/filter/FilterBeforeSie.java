@@ -1,7 +1,5 @@
 package liner2.filter;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.ArrayList;
 
 import liner2.structure.Annotation;
@@ -29,7 +27,7 @@ public class FilterBeforeSie extends Filter {
 		if (chunk.getEnd() == tokens.size()-1)
 			return chunk;
 		// jeśli po chunku jest "się"
-		if (tokens.get(chunk.getEnd() + 1).getFirstValue().equals("się"))
+		if (tokens.get(chunk.getEnd() + 1).getOrth().equals("się"))
 			return null;
 		else
 			return chunk;

@@ -160,7 +160,7 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 		xmlw.writeCharacters("\n");
 		this.indent(4);
 		xmlw.writeStartElement(TAG_ORTH);
-		writeText(token.getFirstValue());
+		writeText(token.getOrth());
 		xmlw.writeEndElement();
 		xmlw.writeCharacters("\n");
 		for (Tag tag : token.getTags())

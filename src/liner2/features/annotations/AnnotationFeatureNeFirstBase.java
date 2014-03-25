@@ -45,7 +45,7 @@ public class AnnotationFeatureNeFirstBase extends AnnotationSentenceFeature {
                 if(posVal.equals(this.pos)){
                     currentDistance++;
                     if(currentDistance == distance){
-                        features.put(ann, tok.getFirstValue());
+                        features.put(ann, tok.getOrth());
                         break;
                     }
                 }
