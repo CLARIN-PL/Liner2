@@ -11,10 +11,12 @@ public class Token {
 
     public Token(TokenAttributeIndex attrIdx){
         this.attrIdx = attrIdx;
+        packAtributes(attrIdx.getLength());
     }
 
     public Token(String orth, Tag firstTag, TokenAttributeIndex attrIdx){
         this.attrIdx = attrIdx;
+        packAtributes(attrIdx.getLength());
         setAttributeValue(attrIdx.getIndex("orth"), orth);
         addTag(firstTag);
     }
