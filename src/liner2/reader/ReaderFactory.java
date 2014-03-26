@@ -26,7 +26,14 @@ public class ReaderFactory {
 	 * @return
 	 */
 	public AbstractDocumentReader getStreamReader(String inputFile, String inputFormat) throws Exception {
-        if (inputFormat.equals("tei")){
+        if (inputFile == null){
+		    return getStreamReader(
+		    		"System.in",
+		    		System.in,
+		    		null,
+		    		inputFormat);        	
+        }
+        else if (inputFormat.equals("tei")){
             return getTEIStreamReader(inputFile);
         }
         else if (inputFile.equals("{CV-TRAIN}")){        	

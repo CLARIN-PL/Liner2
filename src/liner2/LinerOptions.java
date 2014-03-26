@@ -414,7 +414,10 @@ public class LinerOptions {
         String output_format = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FORMAT);
         String output_file = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FILE);
         AbstractDocumentWriter writer;
-        if (output_format.equals("arff")){
+        if (output_format == null){
+            writer = WriterFactory.get().getStreamWriter(System.out, output_format);        	
+        }
+        else if (output_format.equals("arff")){
             Template arff_template = LinerOptions.getGlobal().getArffTemplate();
             writer = WriterFactory.get().getArffWriter(output_file, arff_template);
         }

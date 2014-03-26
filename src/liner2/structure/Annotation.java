@@ -43,19 +43,19 @@ public class Annotation {
 	public Annotation(int begin, int end, String type, Sentence sentence){
 		for(int i = begin; i <= end; i++)
 			this.tokens.add(i);
-		this.type = type;
+		this.type = type.toLowerCase();
 		this.sentence = sentence;
 	}
 	
 	public Annotation(int begin, String type, Sentence sentence){
 		this.tokens.add(begin);
-		this.type = type;
+		this.type = type.toLowerCase();
 		this.sentence = sentence;
 	}
 	
 	public Annotation(int begin, String type, int channelIdx, Sentence sentence){
 		this.tokens.add(begin);
-		this.type = type;
+		this.type = type.toLowerCase();
 		this.sentence = sentence;
 		this.channelIdx = channelIdx;
 	}
@@ -165,7 +165,7 @@ public class Annotation {
 	
 
 	public void setType(String type){
-		this.type = type;
+		this.type = type.toLowerCase();
 	}
 	
 	public static Annotation[] sortChunks(HashSet<Annotation> chunkSet) {
