@@ -100,6 +100,7 @@ public class LinerOptions {
     public static final String OPTION_ARFF_TEMPLATE = "arff-template";
 	public static final String OPTION_VERBOSE = "verbose";
 	public static final String OPTION_VERBOSE_DETAILS = "verboseDetails";
+    public static final String OPTION_CRFLIB = "CRFlib";
 		
 	// List of argument read from cmd
 	public String mode = "";
@@ -108,6 +109,7 @@ public class LinerOptions {
 	public boolean verbose = false;
 	public boolean verboseDetails = false;
 	public boolean silent = false;
+    public boolean libCRFPPLoaded = false;
 
     public LinkedHashMap<String, String> features = new LinkedHashMap<String, String>();
     public HashMap<String, Template> templates = new HashMap<String, Template>();
@@ -246,6 +248,8 @@ public class LinerOptions {
 	
     	// Parse parameters passed by command line
 		CommandLine line = new GnuParser().parse(options, args);
+
+
 		
 		if (line.hasOption(OPTION_HELP)) {
 			printHelp();
@@ -341,6 +345,17 @@ public class LinerOptions {
 				configDesc.append( String.format(PARAM_PRINT, o.getLongOpt(), o.getValue() + "\n" ) );
 			}
 		}
+        //loads external library for CRF
+        if (line.hasOption(OPTION_CRFLIB)){
+            String libraryPath = line.getOptionValue(OPTION_CRFLIB);
+            try {
+                System.load(libraryPath);
+                libCRFPPLoaded = true;
+            } catch (UnsatisfiedLinkError e) {
+                System.err.println("Cannot load the libCRFPP.so native code.\nRun: java -Djava.library.path=./lib -jar liner2.jar ..." + e);
+                System.exit(1);
+            }
+        }
 		
 		// sets boolean fields
 		if (line.hasOption(OPTION_VERBOSE))
@@ -521,6 +536,9 @@ public class LinerOptions {
 		options.addOption(OptionBuilder.withArgName("description").hasArg()
 				.withDescription("define feature template")
 				.create(OPTION_TEMPLATE));
+        options.addOption(OptionBuilder.withArgName("CRFlib").hasArg()
+                .withDescription("path co external library libCRFPP.so")
+                .create(OPTION_CRFLIB));
     	options.addOption(new Option(OPTION_SILENT, false, "does not print any additional text in interactive mode"));
     	options.addOption(new Option(OPTION_VERBOSE, false, "print brief information about processing"));
     	options.addOption(new Option(OPTION_VERBOSE_DETAILS, false, "print detailed information about processing"));

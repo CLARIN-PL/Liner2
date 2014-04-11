@@ -1,9 +1,6 @@
 package liner2.chunker.factory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 
 import liner2.LinerOptions;
 import liner2.Main;
@@ -23,8 +20,7 @@ public class ChunkerFactory {
 		this.items.add(new ChunkerFactoryItemEnsamble());
 		this.items.add(new ChunkerFactoryItemHeuristic());
 		this.items.add(new ChunkerFactoryItemCrfppFix());
-		this.items.add(new ChunkerFactoryItemCrfppTrain());
-		this.items.add(new ChunkerFactoryItemCrfppLoad());
+		this.items.add(new ChunkerFactoryItemCrfpp());
 		this.items.add(new ChunkerFactoryItemDictCompile());
 		this.items.add(new ChunkerFactoryItemDictLoad());
 		this.items.add(new ChunkerFactoryItemDictFullCompile());

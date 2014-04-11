@@ -221,21 +221,7 @@ public class CrfppChunker extends Chunker
 		this.tagger.delete();
 		
 	}
-		
-	
-	/**
-	 * Load external library.
-	 */
-	static {
-		try {
-            String linerJarPath = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-            System.load(linerJarPath.replace("liner2.jar","") + "lib/libCRFPP.so");
-        } catch (UnsatisfiedLinkError e) {
-		    System.err.println("Cannot load the libCRFPP.so native code.\nRun: java -Djava.library.path=./lib -jar liner2.jar ..." + e);
-		    System.exit(1);
-        }
 
-    }
 	
 	
 	/**
