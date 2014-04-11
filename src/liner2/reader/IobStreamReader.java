@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.InputStream;
 import java.io.IOException;
 
+import liner2.features.tokens.TokenInSentenceFeature;
 import liner2.structure.Document;
 import liner2.structure.TokenAttributeIndex;
 import liner2.structure.Annotation;
@@ -52,8 +53,9 @@ public class IobStreamReader extends AbstractDocumentReader {
 			
 			/* Pierwsze trzy elementy to -DOCSTART, CONFIG, FEATURES,
 			 * więc je pomiń. */
-			for (int i = 3; i < content.length; i++)
+			for (int i = 3; i < content.length; i++){
 				this.attributeIndex.addAttribute(content[i]);
+			}
 			this.init = true;
 			return;
 		}
@@ -109,8 +111,10 @@ public class IobStreamReader extends AbstractDocumentReader {
 		if (!paragraphReady())
 			return null;
 			
+		TokenAttributeIndex index = this.attributeIndex.clone();
+		
 		Paragraph paragraph = new Paragraph(nextParagraphId);
-		paragraph.setAttributeIndex(this.attributeIndex);
+		paragraph.setAttributeIndex(index);
 		this.nextParagraphId = null;
 		this.nextParagraph = false;
 		Sentence currentSentence = new Sentence();
@@ -122,7 +126,7 @@ public class IobStreamReader extends AbstractDocumentReader {
 				if (!ir.ready()) {
 					if (currentSentence.getTokenNumber() > 0)
 						paragraph.addSentence(currentSentence);
-					Document document = new Document("IOB todo", this.attributeIndex);
+					Document document = new Document("IOB todo", index);
 					document.addParagraph(paragraph);
 					return document;
 				}		
@@ -144,7 +148,7 @@ public class IobStreamReader extends AbstractDocumentReader {
 						if (words.length >= 3)
 							this.nextParagraphId = words[2];
 						this.nextParagraph = true;
-						Document document = new Document("IOB todo", this.attributeIndex);
+						Document document = new Document("IOB todo", index);
 						document.addParagraph(paragraph);
 						return document;
 					}
@@ -154,7 +158,7 @@ public class IobStreamReader extends AbstractDocumentReader {
 				else {
 					// add token
 					try {
-						currentSentence.addToken(createToken(words));
+						currentSentence.addToken(createToken(words, index));
 					} catch (Exception ex) {
 						throw new DataFormatException("Error while reading token: " + ex.getMessage());
 					}
@@ -179,16 +183,17 @@ public class IobStreamReader extends AbstractDocumentReader {
 		}
 	}
 	
-	private Token createToken(String[] words) throws Exception {
-		Token token = new Token(this.attributeIndex);
-		if (words.length != this.attributeIndex.getLength() + 1){
-			throw new Exception("Invalid number of attributes: " + StringHelper.implode(words));
+	private Token createToken(String[] words, TokenAttributeIndex index) throws Exception {
+		Token token = new Token(index);
+		if (words.length != index.getLength() + 1){
+			throw new Exception("Invalid number of attributes: " + StringHelper.implode(words) 
+					+ ". Expecting " + index.getLength());
 		}
 		for (int i = 0; i < words.length - 1; i++)
 			token.setAttributeValue(i, words[i]);
 		if (this.attributeIndex != null) {
-			String base = this.attributeIndex.getAttributeValue(token, "base");
-			String ctag = this.attributeIndex.getAttributeValue(token, "ctag");
+			String base = index.getAttributeValue(token, "base");
+			String ctag = index.getAttributeValue(token, "ctag");
 			token.addTag(new Tag(base, ctag, false));
 		}
 		return token;
