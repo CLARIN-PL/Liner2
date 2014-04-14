@@ -28,8 +28,14 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
 
 	@Override
 	public Chunker getChunker(String description, ChunkerManager cm) throws Exception {
-        if(!cm.opts.libCRFPPLoaded){
-            throw new Exception("Required external library libCRFPP.so not loaded, add '-CRFlib path_to_library' to main config file.");
+        if (!cm.opts.libCRFPPLoaded){
+            try {
+                String linerJarPath = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+                System.load(linerJarPath.replace("liner2.jar","") + "lib/libCRFPP.so");
+            } catch (UnsatisfiedLinkError e) {
+                System.err.println("Cannot load the libCRFPP.so native code.\nIf you are using liner as an imported jar specify correct path as CRFlib parameter in config.\n" + e);
+                System.exit(1);
+            }
         }
        	Matcher matcherCRFPP = this.pattern.matcher(description);
 		if (matcherCRFPP.find()){

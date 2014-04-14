@@ -352,7 +352,7 @@ public class LinerOptions {
                 System.load(libraryPath);
                 libCRFPPLoaded = true;
             } catch (UnsatisfiedLinkError e) {
-                System.err.println("Cannot load the libCRFPP.so native code.\nRun: java -Djava.library.path=./lib -jar liner2.jar ..." + e);
+                System.err.println("Cannot load the libCRFPP.so native code.\n" + e);
                 System.exit(1);
             }
         }
