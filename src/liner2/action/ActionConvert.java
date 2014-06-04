@@ -1,6 +1,8 @@
 package liner2.action;
 
 import liner2.LinerOptions;
+import liner2.converter.Converter;
+import liner2.converter.ConverterFactory;
 import liner2.features.TokenFeatureGenerator;
 import liner2.reader.AbstractDocumentReader;
 import liner2.reader.ReaderFactory;
@@ -28,6 +30,11 @@ public class ActionConvert extends Action {
         if (!LinerOptions.getGlobal().features.isEmpty()){
             TokenFeatureGenerator gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
             gen.generateFeatures(ps);
+        }
+
+        if (!LinerOptions.getGlobal().convertersDesciptions.isEmpty()){
+            Converter converter = ConverterFactory.createPipe(LinerOptions.getGlobal().convertersDesciptions);
+            converter.apply(ps);
         }
 
         String output_format = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FORMAT);
