@@ -83,7 +83,7 @@ public class Sentence {
 		return returning;
 	}	
 	
-	public HashSet<Annotation> getChunks() {
+	public LinkedHashSet<Annotation> getChunks() {
 		return this.chunks;
 	}
 	
