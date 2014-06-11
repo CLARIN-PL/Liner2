@@ -13,6 +13,7 @@ import java.util.LinkedHashSet;
 import java.util.Properties;
 
 import liner2.chunker.factory.ChunkerFactory;
+import liner2.filter.Filter;
 import liner2.reader.AbstractDocumentReader;
 import liner2.reader.ReaderFactory;
 import liner2.tools.ParameterException;
@@ -101,8 +102,8 @@ public class LinerOptions {
 	public static final String OPTION_VERBOSE = "verbose";
 	public static final String OPTION_VERBOSE_DETAILS = "verboseDetails";
     public static final String OPTION_CRFLIB = "CRFlib";
-		
-	// List of argument read from cmd
+    public static final String OPTION_CONVERSION = "conversion";
+    // List of argument read from cmd
 	public String mode = "";
 
 	// List of options read from cmd
@@ -121,6 +122,7 @@ public class LinerOptions {
 	public LinkedHashSet<String> chunkersDescriptions = new LinkedHashSet<String>();
 	private String cvTrainData = null; 
 	private HashSet<String> types = null;
+    public ArrayList<String> convertersDesciptions = new ArrayList<String>();
 	 
 	/**
 	 * Constructor
@@ -387,6 +389,12 @@ public class LinerOptions {
             }
 		}
 
+        if (line.hasOption(OPTION_CONVERSION)) {
+            for (String cd : line.getOptionValues(OPTION_CONVERSION)){
+                this.convertersDesciptions.add(cd);
+            }
+        }
+
         // read template descriptions
         if (line.hasOption(OPTION_TEMPLATE)) {
             for (String td : line.getOptionValues(OPTION_TEMPLATE)) {
@@ -539,6 +547,9 @@ public class LinerOptions {
         options.addOption(OptionBuilder.withArgName("CRFlib").hasArg()
                 .withDescription("path co external library libCRFPP.so")
                 .create(OPTION_CRFLIB));
+        options.addOption(OptionBuilder.withArgName("conversion").hasArg()
+                .withDescription("converter description")
+                .create(OPTION_CONVERSION));
     	options.addOption(new Option(OPTION_SILENT, false, "does not print any additional text in interactive mode"));
     	options.addOption(new Option(OPTION_VERBOSE, false, "print brief information about processing"));
     	options.addOption(new Option(OPTION_VERBOSE_DETAILS, false, "print detailed information about processing"));

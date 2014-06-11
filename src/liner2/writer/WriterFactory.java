@@ -25,6 +25,9 @@ public class WriterFactory {
         if (outputFormat.equals("tei")){
             return getTEIWriter(outputFile);
         }
+        else if (outputFormat.equals("ccl-batch")){
+            return new CclBatchWriter(outputFile);
+        }
         else{
             return getStreamWriter(getOutputStream(outputFile), outputFormat);
         }
