@@ -96,6 +96,14 @@ public class TokenFeatureFactory {
         		database = new WordnetLoader(fData[2]);
         	return new HypernymFeature(fData[0]+fData[1], database, Integer.parseInt(fData[1]));
         }
+        else if (feature.startsWith("top4hyper")){
+        	String[] fData = feature.split(":");
+        	if(fData.length != 3)
+    			throw new DataFormatException("Invalid feaeture description: "+feature);
+        	if(database == null)
+        		database = new WordnetLoader(fData[2]);
+        	return new TopHyperFeature(fData[0]+fData[1], database, Integer.parseInt(fData[1]));
+        }		
         else if (sourceFeats.contains(feature))  //zwroci null dla orth, base i ctag bo sa pobierane z pliku zrodlowego wiec nie potrzebe sa dla nich generatory
         	return null;
         else 

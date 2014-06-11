@@ -25,13 +25,13 @@ public class RegexFeature extends TokenFeature{
 
 	
 	/*public static void main(String args[]){
-		RegexFeature s = new RegexFeature("regex:\\p{L}");
+		RegexFeature s = new RegexFeature("regex:^\\d+\\W\\d+$");
 		TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
 	    attributeIndex.addAttribute("orth");
 	    attributeIndex.addAttribute("base");
 	    attributeIndex.addAttribute("ctag");
 		Tag tag = new Tag("", "", true);
-		Token token = new Token("123...abCDEfg:OOoo0982:4567", tag, attributeIndex);
+		Token token = new Token("a213:54", tag, attributeIndex);
 		System.out.println(s.generate(token, attributeIndex));
 	}*/
 
