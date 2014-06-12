@@ -2,6 +2,7 @@ package liner2.chunker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,13 +53,20 @@ public class PropagateChunker extends Chunker {
 		HashMap<Sentence, AnnotationSet> chunkings = this.baseChunker.chunk(ps);
 
 		DictionaryChunker dictionaryChunker = new DictionaryChunker(null);
-
+        HashSet<String> ambigious = new HashSet<String>();
 		for (AnnotationSet chunking : chunkings.values())
 			for (Annotation chunk : chunking.chunkSet()){
-				String value = chunk.getText();
-				if (this.isAcceptable(value)){
-					dictionaryChunker.addEntry(chunk.getType(), value);
-				}
+				String name = chunk.getText();
+                String channel = chunk.getType();
+				if (this.isAcceptable(name) && !ambigious.contains(name)){
+                    if(dictionaryChunker.hasName(name) && !dictionaryChunker.getChannel(name).equals(channel)){
+                        dictionaryChunker.removeEntry(name);
+                        ambigious.add(name);
+                    }
+                    else{
+                        dictionaryChunker.addEntry(name, channel);
+                    }
+                }
 			}
 		
 		HashMap<Sentence, AnnotationSet> chukingsProp = dictionaryChunker.chunk(ps);

@@ -156,14 +156,26 @@ public class DictionaryChunker extends Chunker
 		}
 	}
 	
-	public void addEntry(String type, String value){
-		if (!this.dictionary.containsKey(value))
-			this.dictionary.put(value, type);
+	public void addEntry(String name, String channel){
+        this.dictionary.put(name, channel);
 	}
+
+    public void removeEntry(String name){
+        this.dictionary.remove(name);
+    }
+
+    public boolean hasName(String name){
+        return this.dictionary.containsKey(name);
+    }
+
+    public String getChannel(String name){
+        return this.dictionary.get(name);
+    }
+
 	
     /**
      * Wczytuje chunker z modelu binarnego.
-     * @param model_filename
+     * @param filename
      */
 	@Override
 	@SuppressWarnings("unchecked")

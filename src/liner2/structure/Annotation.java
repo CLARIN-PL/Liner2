@@ -2,6 +2,7 @@ package liner2.structure;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Objects;
 
 /**
  * Klasa reprezentuje anotację jako ciągłą sekwencję tokenów w zdaniu.
@@ -95,8 +96,10 @@ public class Annotation {
 		for(int i = begin; i <= end; i++)
 			this.tokens.add(i);
 	}
-	
-	public boolean equals(Annotation chunk) {
+
+	@Override
+	public boolean equals(Object object) {
+       Annotation chunk = (Annotation) object;
 		if (!this.tokens.equals(chunk.getTokens()))
 			return false;
 		else if (!this.sentence.equals(chunk.getSentence()))
@@ -185,4 +188,13 @@ public class Annotation {
 	    		}
 		return sorted;
 	}
+
+    @Override
+    public int hashCode() {
+        int hash = 1;
+        hash += tokens.hashCode();
+        hash += sentence.hashCode();
+        hash += type.hashCode();
+        return hash;
+    }
 }

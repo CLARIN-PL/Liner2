@@ -2,6 +2,7 @@ package liner2.structure;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 
 /**
  * Opakowanie na zbiór chunków przypisanych do jednego zdania.
@@ -9,10 +10,10 @@ import java.util.Iterator;
  */
 public class AnnotationSet {
 
-	HashSet<Annotation> chunks = new HashSet<Annotation>();
+	LinkedHashSet<Annotation> chunks = new LinkedHashSet<Annotation>();
 	Sentence sentence = null;
 
-	public AnnotationSet(Sentence sentence, HashSet<Annotation> chunks){
+	public AnnotationSet(Sentence sentence, LinkedHashSet<Annotation> chunks){
 		this.chunks = chunks;
 		this.sentence = sentence;
 	}
@@ -42,6 +43,7 @@ public class AnnotationSet {
 	}
 	
 	public void union(AnnotationSet foreignChunking) {
+
 		if (foreignChunking.getSentence() == this.sentence) {
 			HashSet<Annotation> foreignChunks = foreignChunking.chunkSet();
 			Iterator<Annotation> i_fc = foreignChunks.iterator();
