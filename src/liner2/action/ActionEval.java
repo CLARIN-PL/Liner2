@@ -63,7 +63,9 @@ public class ActionEval extends Action{
     	HashMap<Sentence, AnnotationSet> chunkings = null;
     	while ( ps != null ){
     		timer.startTimer("Feature generation");
-            gen.generateFeatures(ps);
+            if(gen != null){
+                gen.generateFeatures(ps);
+            }
             timer.stopTimer();
     		
     		timer.startTimer("Chunking");
