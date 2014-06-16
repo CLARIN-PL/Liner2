@@ -72,7 +72,18 @@ public class WcclChunker extends Chunker {
                 throw new Exception(error);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            try {
+                String error = err.readLine();
+                if(error != null){
+                    throw new Exception(error);
+                }
+                else{
+                    ex.printStackTrace();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
         sentence.setAnnotations(new AnnotationSet(sentence, sentenceAnns));
         Sentence resultSentence = document.getSentences().get(0);
@@ -81,8 +92,8 @@ public class WcclChunker extends Chunker {
                 chunking.addChunk(chunk);
             }
         return chunking;
-	}	
-	
+	}
+
 	@Override
 	public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
 		HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
