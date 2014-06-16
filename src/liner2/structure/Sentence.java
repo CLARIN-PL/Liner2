@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 
 /**
@@ -124,5 +125,14 @@ public class Sentence {
             output.append(chunk.getType()+" | "+chunk.getText()+"\n");
         return output.toString();
     }
+
+	public void removeAnnotations(String annotation) {
+		Set<Annotation> toRemove = new HashSet<Annotation>();
+		for (Annotation an : this.chunks)
+			if ( an.getType().equals(annotation) )
+				toRemove.add(an);
+		System.out.println("Remove: " + toRemove.size());
+		this.chunks.removeAll(toRemove);		
+	}
 
 }

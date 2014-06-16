@@ -88,4 +88,15 @@ public class Document {
 			sentences.addAll(paragraph.getSentences());
 		return sentences;
 	}
+
+	/**
+	 * Removes all anotation with given name.
+	 * @param annotation
+	 */
+	public void removeAnnotations(String annotation) {
+		for (Paragraph paragraph : this.paragraphs)
+			for (Sentence sentence : paragraph.getSentences())
+				sentence.removeAnnotations(annotation);
+		
+	}
 }
