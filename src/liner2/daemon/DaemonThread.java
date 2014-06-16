@@ -11,6 +11,7 @@ import java.net.Socket;
 
 import java.sql.SQLException;
 
+import java.util.HashMap;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,6 +20,7 @@ import liner2.chunker.Chunker;
 import liner2.chunker.factory.ChunkerFactory;
 
 import liner2.chunker.factory.ChunkerManager;
+import liner2.features.TokenFeatureGenerator;
 import liner2.tools.ParameterException;
 
 import liner2.LinerOptions;
@@ -29,16 +31,17 @@ import liner2.Main;
  * @author Maciej Janicki
  */
 public class DaemonThread extends Thread {
-	private static final int DEFAULT_MAX_THREADS = 1;
+	private static final int DEFAULT_MAX_THREADS = 5;
 
 	String db_addr, myAddr, ip;
 	int port, myId = -1;
 	Database db;
-	Chunker chunker;
 	ServerSocket serverSocket;
 	int numWorkingThreads, maxThreads;
 	Vector<WorkingThread> workingThreads;
-	
+    private HashMap<String, TokenFeatureGenerator> featureGenerators;
+    private HashMap<String, Chunker> chunkers;
+
 	public DaemonThread() throws ParameterException {
 		// setup database address
 		String db_host = null, db_port = "3306", db_user = null,
@@ -116,17 +119,29 @@ public class DaemonThread extends Thread {
 		// setup working threads
 		this.numWorkingThreads = 0;
 		this.workingThreads = new Vector<WorkingThread>();
+
+        chunkers = new HashMap<String, Chunker>();
+        featureGenerators = new HashMap<String, TokenFeatureGenerator>();
+        try {
+            for (String modelNam: LinerOptions.getGlobal().models.keySet()){
+                LinerOptions modelConfig = LinerOptions.getGlobal().models.get(modelNam);
+                ChunkerManager cm = ChunkerFactory.loadChunkers(modelConfig);
+                this.chunkers.put(modelNam, cm.getChunkerByName(modelConfig.getOptionUse()));
+                TokenFeatureGenerator gen = null;
+                if (!modelConfig.features.isEmpty()) {
+                     gen = new TokenFeatureGenerator(modelConfig.features);
+                }
+                this.featureGenerators.put(modelNam, gen);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 	}
 
 	@Override
 	public void run() {
-		// load chunker
-		try {
-            ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
-            this.chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
     
     	Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() { shutdown(); }});
@@ -153,11 +168,13 @@ public class DaemonThread extends Thread {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-
+        System.out.println("max threads"+this.maxThreads);
 		for (int i = 0; i < this.maxThreads; i++) 
 			startWorkingThread();
-				
-		while (!serverSocket.isClosed()) {
+
+        System.out.println("working threads at begining"+this.numWorkingThreads);
+        while (!serverSocket.isClosed()) {
+            System.out.println("working threads"+this.numWorkingThreads);
 			try {
 				Socket accepted = this.serverSocket.accept();
 				BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -215,20 +232,21 @@ public class DaemonThread extends Thread {
 
 	public void startWorkingThread() {
 		synchronized (this.db) {
-			try {
-				this.db.connect();
-				this.db.daemonNotReady(this.myId);
-				this.db.disconnect();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
+            try {
+                this.db.connect();
+                this.db.daemonNotReady(this.myId);
+                this.db.disconnect();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
 
-		if (this.numWorkingThreads == 0)
-			Main.log("Woke up!", false);
-		this.numWorkingThreads++;
-		WorkingThread newThread = new WorkingThread(this, this.chunker, this.db_addr);
-		this.workingThreads.add(newThread);
+        if (this.numWorkingThreads == 0) {
+            Main.log("Woke up!", false);
+        }
+        this.numWorkingThreads++;
+        WorkingThread newThread = new WorkingThread(this, this.db_addr, this.chunkers, this.featureGenerators);
+        this.workingThreads.add(newThread);
 		newThread.start();
 	}
 	

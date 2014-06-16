@@ -82,10 +82,13 @@ public class Database {
 		statement.executeQuery("LOCK TABLES liner2_requests AS write_liner2_requests WRITE, "
 			+ "liner2_requests AS read_liner2_requests READ;");
     	ResultSet resultSet = statement.executeQuery(
-    		"SELECT request_id FROM liner2_requests AS read_liner2_requests WHERE state =\'QUEUED\' LIMIT 1");
+    		"SELECT request_id, model_name FROM liner2_requests AS read_liner2_requests WHERE state =\'QUEUED\' LIMIT 1");
 		int requestId = -1;
-    	if (resultSet.next())
-    		requestId = resultSet.getInt("request_id");
+        String modelName = "";
+    	if (resultSet.next()){
+            requestId = resultSet.getInt("request_id");
+            modelName = resultSet.getString("model_name");
+        }
     	else
     		return null;
 
@@ -112,7 +115,7 @@ public class Database {
 			// TODO throw exception
 			return null;
 		
-		return new Request(requestId, input_format, output_format, rawText);
+		return new Request(requestId, input_format, output_format, rawText, modelName);
 	}
 
 	public void submitResult(Request request) throws SQLException {

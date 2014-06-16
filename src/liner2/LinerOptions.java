@@ -3,6 +3,7 @@ package liner2;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,6 +31,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.UnrecognizedOptionException;
+import org.ini4j.Ini;
+import org.ini4j.Profile;
 
 /**
  * This class handles module parameters. The parameters are read from
@@ -103,6 +106,7 @@ public class LinerOptions {
 	public static final String OPTION_VERBOSE_DETAILS = "verboseDetails";
     public static final String OPTION_CRFLIB = "CRFlib";
     public static final String OPTION_CONVERSION = "conversion";
+    public static final String OPTION_MODELS = "models";
     // List of argument read from cmd
 	public String mode = "";
 
@@ -123,6 +127,8 @@ public class LinerOptions {
 	private String cvTrainData = null; 
 	private HashSet<String> types = null;
     public ArrayList<String> convertersDesciptions = new ArrayList<String>();
+    public HashMap<String, LinerOptions> models = null;
+    public String defaultModel = null;
 	 
 	/**
 	 * Constructor
@@ -401,6 +407,9 @@ public class LinerOptions {
                 TemplateFactory.parseFeature(td, templates, features.keySet());
             }
         }
+        if (line.hasOption(OPTION_MODELS)) {
+            parseModelsIni(line.getOptionValue(OPTION_MODELS));
+        }
 
 		// Arguments
 		if (line.getArgs().length > 1 && line.getArgs()[1].length() > 0 ){
@@ -465,6 +474,19 @@ public class LinerOptions {
 			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FILE),
 			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FORMAT));        
 	}
+
+    private void parseModelsIni(String iniFile) throws Exception {
+        String iniPath = new File(iniFile).getAbsoluteFile().getParentFile().getAbsolutePath();
+        models = new HashMap<String, LinerOptions>();
+        Ini ini = new Ini(new File(iniFile));
+        this.defaultModel = ini.get("main", "default");
+        Profile.Section modelsDef = ini.get("models");
+        for(String model: modelsDef.keySet()){
+            LinerOptions modelConfig = new LinerOptions();
+            modelConfig.parseFromIni(modelsDef.get(model).replace("{INI_DIR}", iniPath), new StringBuilder(), null);
+            models.put(model, modelConfig);
+        }
+    }
 	
 	@SuppressWarnings("static-access")
 	private Options makeOptions(){
@@ -550,6 +572,9 @@ public class LinerOptions {
         options.addOption(OptionBuilder.withArgName("conversion").hasArg()
                 .withDescription("converter description")
                 .create(OPTION_CONVERSION));
+        options.addOption(OptionBuilder.withArgName("models").hasArg()
+                .withDescription("multiple models config for daemon")
+                .create(OPTION_MODELS));
     	options.addOption(new Option(OPTION_SILENT, false, "does not print any additional text in interactive mode"));
     	options.addOption(new Option(OPTION_VERBOSE, false, "print brief information about processing"));
     	options.addOption(new Option(OPTION_VERBOSE_DETAILS, false, "print detailed information about processing"));

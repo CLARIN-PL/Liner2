@@ -9,19 +9,22 @@ public class Request {
 	String inputFormat;
 	String outputFormat;
 	String text;
+    String modelName;
 	int numTokens = 0, numSentences = 0, numParagraphs = 0, numChunks = 0;	
 
-	public Request(int id, String inputFormat, String outputFormat, String text) {
+	public Request(int id, String inputFormat, String outputFormat, String text, String modelName) {
 		this.id = id;
 		this.inputFormat = inputFormat;
 		this.outputFormat = outputFormat;
 		this.text = text;
+        this.modelName = modelName.toLowerCase();
 	}
 
 	public int getId() { return this.id; }
 	public String getInputFormat() { return this.inputFormat; }
 	public String getOutputFormat() { return this.outputFormat; }
 	public String getText() { return this.text; }
+    public String getModelName() { return this.modelName; }
 
 	// getGlobal stats
 	public int getNumTokens() { return this.numTokens; }
