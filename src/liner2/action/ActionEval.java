@@ -83,7 +83,14 @@ public class ActionEval extends Action{
     		
     		timer.startTimer("Chunking");
     		chunker.prepare(ps);
-        	chunkings = chunker.chunk(ps);
+    		try{
+    			chunkings = chunker.chunk(ps);
+    		}
+    		catch(Exception ex){
+    			System.err.println("Failed to chunk a sentence in document " + ps.getName());
+    			ex.printStackTrace(System.err);
+    			chunkings = new HashMap<Sentence, AnnotationSet>();
+    		}
         	timer.stopTimer();
         	
         	timer.startTimer("Evaluation", false);

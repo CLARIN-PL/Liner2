@@ -2,7 +2,6 @@ package liner2.structure;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Objects;
 
 /**
  * Klasa reprezentuje anotację jako ciągłą sekwencję tokenów w zdaniu.

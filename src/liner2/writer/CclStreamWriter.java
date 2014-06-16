@@ -34,7 +34,7 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 	private final String TAG_SENTENCE		= "sentence";
 	private final String TAG_TAG			= "lex";
 	private final String TAG_TOKEN 		= "tok";
-	private final String TAG_HEAD 		= "head";
+	private final String TAG_HEAD 			= "head";
 
 	private XMLStreamWriter xmlw;
 	private OutputStream os;
@@ -48,7 +48,7 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 	
 	private void openXml() {
 		try {
-			this.xmlw = xmlof.createXMLStreamWriter(os);
+			this.xmlw = this.xmlof.createXMLStreamWriter(os);
 			xmlw.writeStartDocument("UTF-8", "1.0");
 			xmlw.writeCharacters("\n");
 			xmlw.writeDTD("<!DOCTYPE chunkList SYSTEM \"ccl.dtd\">");
@@ -73,8 +73,10 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 	@Override
 	public void flush() {
 		try {
-			this.os.flush();
-		} catch (IOException e) {
+			if ( this.xmlw != null )
+				this.xmlw.flush();
+		} catch (XMLStreamException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

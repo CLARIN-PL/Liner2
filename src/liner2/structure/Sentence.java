@@ -133,5 +133,15 @@ public class Sentence {
 				toRemove.add(an);
 		this.chunks.removeAll(toRemove);		
 	}
+	
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		for (Token t : this.tokens){
+			sb.append(t.getOrth());
+			sb.append(t.getNoSpaceAfter() ? "" : " ");
+		}
+		return sb.toString().trim();
+	}
 
 }

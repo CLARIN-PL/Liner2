@@ -125,8 +125,7 @@ public class ChunkerEvaluatorMuc {
 	 * 
 	 */
 	private void evaluate(Sentence sentence, AnnotationSet chunking, AnnotationSet chunkingRef) {
-	
-		
+			
 		// Wybierz anotacje do oceny jeżeli został określony ich typ
 		HashSet<Annotation> chunkingRefSet = new HashSet<Annotation>();
 		HashSet<Annotation> chunkingSet = new HashSet<Annotation>();
