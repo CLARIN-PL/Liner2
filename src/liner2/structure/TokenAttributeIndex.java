@@ -102,4 +102,10 @@ public class TokenAttributeIndex {
 		return indexes;
 	}
 	
+	public TokenAttributeIndex clone(){
+		TokenAttributeIndex index = new TokenAttributeIndex();
+		for (String name : this.indexes)
+			index.addAttribute(name);
+		return index;
+	}
 }

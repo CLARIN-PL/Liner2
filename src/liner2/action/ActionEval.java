@@ -35,6 +35,11 @@ public class ActionEval extends Action{
 		
     	ProcessingTimer timer = new ProcessingTimer();
     	TokenFeatureGenerator gen = null;
+    	
+    	System.out.print("Annotations to evaluate:");
+    	for (String annotation : LinerOptions.getGlobal().getTypes())
+    		System.out.print(" " + annotation);
+    	System.out.println();
 
     	timer.startTimer("Model loading");
         ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
@@ -62,10 +67,18 @@ public class ActionEval extends Action{
     	
     	HashMap<Sentence, AnnotationSet> chunkings = null;
     	while ( ps != null ){
+
+    		/* Get reference set of annotations */
+    		HashMap<Sentence, AnnotationSet> referenceChunks = ps.getChunkings();
+    		
+    		/* Remove annotation to be evaluated */
+    		for (String annotation : LinerOptions.getGlobal().getTypes())
+    			ps.removeAnnotations(annotation);	    		
+    			    		
+    		/* Generate features */    		
     		timer.startTimer("Feature generation");
-            if(gen != null){
-                gen.generateFeatures(ps);
-            }
+    		if ( gen != null )
+    			gen.generateFeatures(ps);
             timer.stopTimer();
     		
     		timer.startTimer("Chunking");
@@ -75,8 +88,8 @@ public class ActionEval extends Action{
         	
         	timer.startTimer("Evaluation", false);
     		timer.addTokens(ps);
-        	eval.evaluate(ps.getSentences(), chunkings, ps.getChunkings());
-    		evalMuc.evaluate(chunkings, ps.getChunkings());				
+        	eval.evaluate(ps.getSentences(), chunkings, referenceChunks);
+    		evalMuc.evaluate(chunkings, referenceChunks);				
     		timer.stopTimer();
             
         	timer.startTimer("Data reading");

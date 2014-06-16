@@ -14,7 +14,6 @@ import java.util.LinkedHashSet;
 import java.util.Properties;
 
 import liner2.chunker.factory.ChunkerFactory;
-import liner2.filter.Filter;
 import liner2.reader.AbstractDocumentReader;
 import liner2.reader.ReaderFactory;
 import liner2.tools.ParameterException;
@@ -29,6 +28,7 @@ import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.UnrecognizedOptionException;
 import org.ini4j.Ini;
@@ -77,7 +77,6 @@ public class LinerOptions {
 	private static final String LOCAL_INI = "local.ini";
 	
 	public static final String OPTION_CHUNKER = "chunker";
-	public static final String OPTION_COMMON = "common";
 	public static final String OPTION_DB_HOST = "db_host";
 	public static final String OPTION_DB_NAME = "db_name";
 	public static final String OPTION_DB_PASSWORD = "db_pass";
@@ -87,7 +86,6 @@ public class LinerOptions {
 	public static final String OPTION_FEATURE = "feature";
 	public static final String OPTION_FOLDS_NUMBER = "folds_number";
 	public static final String OPTION_HELP = "help";
-	public static final String OPTION_HEURISTICS = "heuristics";
 	public static final String OPTION_INI = "ini";
 	public static final String OPTION_IS = "is";
 	public static final String OPTION_INPUT_FILE = "f";
@@ -119,9 +117,6 @@ public class LinerOptions {
     public LinkedHashMap<String, String> features = new LinkedHashMap<String, String>();
     public HashMap<String, Template> templates = new HashMap<String, Template>();
     Template arffTemplate;
-	public String arg1 = null;
-	public String arg2 = null;
-	public String arg3 = null;
 	public String linerPath = "";
 	public LinkedHashSet<String> chunkersDescriptions = new LinkedHashSet<String>();
 	private String cvTrainData = null; 
@@ -410,22 +405,6 @@ public class LinerOptions {
         if (line.hasOption(OPTION_MODELS)) {
             parseModelsIni(line.getOptionValue(OPTION_MODELS));
         }
-
-		// Arguments
-		if (line.getArgs().length > 1 && line.getArgs()[1].length() > 0 ){
-			this.arg1 = line.getArgs()[1];
-			configDesc.append( String.format(PARAM_PRINT, "Argument 1", this.arg1) + "\n" );
-		}
-		
-		if (line.getArgs().length > 2 && line.getArgs()[2].length() > 0 ){
-			this.arg2 = line.getArgs()[2];
-			configDesc.append( String.format(PARAM_PRINT, "Argument 2", this.arg2) + "\n" );
-		}
-		
-		if (line.getArgs().length > 3 && line.getArgs()[3].length() > 0 ){
-			this.arg3 = line.getArgs()[3];
-			configDesc.append( String.format(PARAM_PRINT, "Argument 3", this.arg3) + "\n" );
-		}
 	}
 			
 	public void setCvTrain(String data){
@@ -492,42 +471,45 @@ public class LinerOptions {
 	private Options makeOptions(){
     	Options options = new Options();    	
 
+    	OptionGroup daemonOptions = new OptionGroup();
+    	daemonOptions.addOption(OptionBuilder.withArgName("name").hasArg()
+				.withDescription("database host name (daemon mode)")
+				.create(OPTION_DB_HOST));
+    	daemonOptions.addOption(OptionBuilder.withArgName("name").hasArg()
+				.withDescription("database name (daemon mode)")
+				.create(OPTION_DB_NAME));
+    	daemonOptions.addOption(OptionBuilder.withArgName("password").hasArg()
+				.withDescription("database password (daemon mode)")
+				.create(OPTION_DB_PASSWORD));
+    	daemonOptions.addOption(OptionBuilder.withArgName("number").hasArg()
+				.withDescription("database port number (daemon mode)")
+				.create(OPTION_DB_PORT));
+    	daemonOptions.addOption(OptionBuilder.withArgName("address").hasArg()
+				.withDescription("database URI address (daemon mode)")
+				.create(OPTION_DB_URI));
+    	daemonOptions.addOption(OptionBuilder.withArgName("username").hasArg()
+				.withDescription("database user name (daemon mode)")
+				.create(OPTION_DB_USER));
+    	daemonOptions.addOption(OptionBuilder.withArgName("number").hasArg()
+				.withDescription("maximum number of processing threads (daemon mode)")
+				.create(OPTION_MAX_THREADS));
+    	daemonOptions.addOption(OptionBuilder.withArgName("address").hasArg()
+				.withDescription("IP address for daemon")
+				.create(OPTION_IP));
+    	daemonOptions.addOption(OptionBuilder.withArgName("number").hasArg()
+				.withDescription("port to listen on (daemon mode)")
+				.create(OPTION_PORT));
+    	
+    	options.addOptionGroup(daemonOptions);
     	options.addOption(OptionBuilder.withArgName("description").hasArg()
 				.withDescription("load chunker from chunker factory")
 				.create(OPTION_CHUNKER));
-    	options.addOption(OptionBuilder.withArgName("filename").hasArg()
-				.withDescription("loads a list of common words from a file")
-				.create("common"));
-		options.addOption(OptionBuilder.withArgName("name").hasArg()
-				.withDescription("database host name (daemon mode)")
-				.create(OPTION_DB_HOST));
-		options.addOption(OptionBuilder.withArgName("name").hasArg()
-				.withDescription("database name (daemon mode)")
-				.create(OPTION_DB_NAME));
-		options.addOption(OptionBuilder.withArgName("password").hasArg()
-				.withDescription("database password (daemon mode)")
-				.create(OPTION_DB_PASSWORD));
-		options.addOption(OptionBuilder.withArgName("number").hasArg()
-				.withDescription("database port number (daemon mode)")
-				.create(OPTION_DB_PORT));
-		options.addOption(OptionBuilder.withArgName("address").hasArg()
-				.withDescription("database URI address (daemon mode)")
-				.create(OPTION_DB_URI));
-		options.addOption(OptionBuilder.withArgName("username").hasArg()
-				.withDescription("database user name (daemon mode)")
-				.create(OPTION_DB_USER));
     	options.addOption(OptionBuilder.withArgName("description").hasArg()
 				.withDescription("recognized feature name")
 				.create(OPTION_FEATURE));
     	options.addOption(OptionBuilder.withArgName("num").hasArg()
 				.withDescription("number of folds")
 				.create(OPTION_FOLDS_NUMBER));
-    	options.addOption(OptionBuilder.withArgName("gazetters").hasArg()
-				.withDescription("(multiple) loads a gazetteer: 'TYPE:location'")
-				.create("gaze"));
-    	options.addOption(OptionBuilder.withArgName("file name").hasArg()
-				.withDescription("name of file with a list of gazetteers. File line format: TYPE:location")
-				.create("gazef"));
 		options.addOption(OptionBuilder.withLongOpt(OPTION_HELP).withDescription("print this help")
 				.create(OPTION_HELP));
     	options.addOption(OptionBuilder
@@ -542,15 +524,6 @@ public class LinerOptions {
 		options.addOption(OptionBuilder.withArgName("format").hasArg()
 				.withDescription("input format [plain,iob,ccl,ccl-batch]")
 				.create(OPTION_INPUT_FORMAT));
-		options.addOption(OptionBuilder.withArgName("address").hasArg()
-				.withDescription("IP address for daemon")
-				.create(OPTION_IP));
-		options.addOption(OptionBuilder.withArgName("number").hasArg()
-				.withDescription("maximum number of processing threads (daemon mode)")
-				.create(OPTION_MAX_THREADS));
-    	options.addOption(OptionBuilder.withArgName("number").hasArg()
-				.withDescription("port to listen on (daemon mode)")
-				.create(OPTION_PORT));
     	options.addOption(OptionBuilder.withArgName("types").hasArg()
 				.withDescription("types of annotation to evaluate")
 				.create(OPTION_TYPES));
