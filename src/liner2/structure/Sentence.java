@@ -131,7 +131,6 @@ public class Sentence {
 		for (Annotation an : this.chunks)
 			if ( an.getType().equals(annotation) )
 				toRemove.add(an);
-		System.out.println("Remove: " + toRemove.size());
 		this.chunks.removeAll(toRemove);		
 	}
 
