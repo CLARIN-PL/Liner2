@@ -17,12 +17,9 @@ import liner2.structure.Sentence;
 import liner2.writer.AbstractDocumentWriter;
 import liner2.writer.WriterFactory;
 
-import liner2.Main;
-
-/*
- * @author Maciej Janicki
+/**
+ * Recognize annotations using a set of WCCL files stored in a given file.
  */
-
 public class WcclChunker extends Chunker {
 	
 	private String wcclFile = null;
@@ -47,7 +44,6 @@ public class WcclChunker extends Chunker {
         OutputStream out = p.getOutputStream();
         BufferedReader err = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 
-
         // zapamiętaj AttributeIndex, żeby nie stracić go przy addSentence()
         TokenAttributeIndex ai = sentence.getAttributeIndex();
         Document document = new Document("wccl chunker", ai);
@@ -57,7 +53,6 @@ public class WcclChunker extends Chunker {
         paragraph.addSentence(sentence);
         document.addParagraph(paragraph);
         document.setAttributeIndex(ai);
-
 
         try {
             AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(out, "ccl");
@@ -78,7 +73,13 @@ public class WcclChunker extends Chunker {
                     throw new Exception(error);
                 }
                 else{
-                    ex.printStackTrace();
+                	if ( ex.getMessage().startsWith("Wcclerror:")){
+                		System.err.println(ex.getMessage());
+                		System.err.println("WCCL rules failed on the sentence: " + sentence.toString() );
+                	}
+                	else{
+                		ex.printStackTrace();
+                	}
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -86,11 +87,15 @@ public class WcclChunker extends Chunker {
 
         }
         sentence.setAnnotations(new AnnotationSet(sentence, sentenceAnns));
-        Sentence resultSentence = document.getSentences().get(0);
-        for (Annotation chunk : resultSentence.getChunks())
-			if (!chunking.contains(chunk)) {
-                chunking.addChunk(chunk);
-            }
+        if ( document.getSentences().size() > 0){
+		    Sentence resultSentence = document.getSentences().get(0);
+		    for (Annotation chunk : resultSentence.getChunks())
+				if (!chunking.contains(chunk)) {
+					/* Create a new annotation with reference to the input sentence. */
+					Annotation an = new Annotation(chunk.getBegin(), chunk.getEnd(), chunk.getType(), sentence);
+		            chunking.addChunk(an);
+		        }
+        }
         return chunking;
 	}
 

@@ -13,7 +13,6 @@ import liner2.structure.Sentence;
 import liner2.structure.Token;
 
 /**
- * 
  * Klasa służąca do oceny skuteczności chunkera. 
  * 
  * Skuteczność chunkera wyrażana jest przy pomocy trzech parametrów: precyzja, 
@@ -47,19 +46,12 @@ public class ChunkerEvaluator {
     //<<< grupowanie anotacji o granicach wystepujacych juz w korpusie
     private HashMap<String, Float> precisionExistingRangeOnly = new HashMap<String, Float>();
     private HashMap<String, Float> fMeasureExistingRangeOnly = new HashMap<String, Float>();
-
     private HashMap<String, Integer> falsePositivesExistingRangeOnly = new HashMap<String, Integer>();
-
-    private float globalPrecisionExistingRangeOnly = 0.0f;
-    private float globalFMeasureExistingRangeOnly = 0.0f;
-
-    private int globalFalsePositivesExistingRangeOnly = 0;
     //>>>
 	
 	private int sentenceNum = 0;
 	
 	private boolean quiet = false;		// print sentence results?
-	//private HashSet<String> keys = new HashSet<String>();
 	private HashSet<String> types = new HashSet<String>();
 	
 	
@@ -77,7 +69,6 @@ public class ChunkerEvaluator {
 			this.chunksFalseNegatives.put(type,  new ArrayList<Annotation>());
 			this.precisionExistingRangeOnly.put(type,  0.0f);
 			this.fMeasureExistingRangeOnly.put(type, 0.0f);
-			
 		}
 	}
 	
@@ -192,7 +183,6 @@ public class ChunkerEvaluator {
                     // dodaj do istniejącego klucza
                     this.falsePositivesExistingRangeOnly.put(testedChunk.getType(),
                             this.falsePositivesExistingRangeOnly.get(testedChunk.getType()) + 1);
-                    this.globalFalsePositivesExistingRangeOnly += 1;
                     break;
                 }
             }
@@ -223,6 +213,16 @@ public class ChunkerEvaluator {
 		float fp = this.getFalsePositive(type);		
 		return (tp+fp)==0 ? 0 : tp / (tp+fp);
 	}
+
+	/**
+	 * Precyzja dla wszystkich typów anotacji. = TP/(TP+FP)
+	 * @return
+	 */
+	public float getSpanPrecision(){
+		float tp = this.globalTruePositivesRangeOnly;
+		float fp = this.globalFalsePositivesRangeOnly;		
+		return (tp+fp)==0 ? 0 : tp / (tp+fp);
+	}
 	
 	public boolean getQuiet() {
 		return this.quiet;
@@ -248,6 +248,16 @@ public class ChunkerEvaluator {
 	}
 
 	/**
+	 * Kompletność dla rozpoznawania granic anotacji. 
+	 * @param type
+	 */
+	public float getSpanRecall(){
+		float tp = this.globalTruePositivesRangeOnly;
+		float fn = this.globalFalseNegativesRangeOnly;	
+		return (tp+fn)==0 ? 0 : tp / (tp+fn);
+	}
+	
+	/**
 	 * Średnia harmoniczna dla wszystkich typów anotacji. 
 	 * @return
 	 */
@@ -268,6 +278,17 @@ public class ChunkerEvaluator {
 		return (p+r)==0 ? 0 : (2*p*r)/(p+r);
 	}
 
+	/**
+	 * Średnia harmoniczna dla rozpoznawania granic anotacji.
+	 * @param type
+	 * @return
+	 */
+	public float getSpanFMeasure(){
+		float p = this.getSpanPrecision();
+		float r = this.getSpanRecall();
+		return (p+r)==0 ? 0 : (2*p*r)/(p+r);
+	}
+	
 	public int getTruePositive(){
 		int tp = 0;
 		for ( String type : this.chunksTruePositives.keySet())
@@ -327,7 +348,6 @@ public class ChunkerEvaluator {
 		System.out.println(header);
 		System.out.println("\\hline");
 		ArrayList<String> keys = new ArrayList<String>();
-		//keys.addAll(this.keys);
 		keys.addAll(this.types);
 		Collections.sort(keys);
 		for (String key : keys) {
@@ -348,29 +368,8 @@ public class ChunkerEvaluator {
         System.out.println("\\hline");
 		System.out.println(String.format(line, "*TOTAL*", 
         		this.globalTruePositivesRangeOnly, this.globalFalsePositivesRangeOnly, this.globalFalseNegativesRangeOnly,
-                this.globalPrecisionRangeOnly*100, this.globalRecallRangeOnly*100, this.globalFMeasureRangeOnly*100));
-		System.out.println("\n");
-        
-		
-		this.printHeader("Annotation span evaluation for each type ??");
-        System.out.println(header);
-        System.out.println("\\hline");
-        for (String key : keys) {
-            int fp = this.falsePositivesExistingRangeOnly.containsKey(key) ? this.falsePositivesExistingRangeOnly.get(key) : 0;
-
-            float p = this.precisionExistingRangeOnly.containsKey(key) ? this.precisionExistingRangeOnly.get(key) : 0;
-            float r = this.getRecall(key);
-            float f = this.fMeasureExistingRangeOnly.containsKey(key) ? this.fMeasureExistingRangeOnly.get(key) : 0; 
-                      
-            System.out.println(String.format(line, key, 
-            		this.getTruePositive(key), fp, this.getFalseNegatives(key), 
-            		p*100, r*100, f*100));
-        }
-        System.out.println("\\hline");
-        System.out.println(String.format(line, "*TOTAL*", this.getTruePositive(),
-                this.globalFalsePositivesExistingRangeOnly, this.getFalseNegative(),
-                this.globalPrecisionExistingRangeOnly*100, this.getRecall()*100, this.globalFMeasureExistingRangeOnly*100));
-		System.out.println("\n");
+                this.getSpanPrecision()*100, this.getSpanRecall()*100, this.getSpanFMeasure()*100));
+		System.out.println("\n");		
     }
 	
 	public void printHeader(String header){
@@ -384,11 +383,7 @@ public class ChunkerEvaluator {
 	 */	
 	public void join(ChunkerEvaluator foreign) {
 			
-		for (String foreignKey : foreign.types) {
-			
-//			if (!this.keys.contains(foreignKey))
-//				this.keys.add(foreignKey);
-						
+		for (String foreignKey : foreign.types) {					
 			this.joinMaps(foreignKey, this.chunksTruePositives, foreign.chunksTruePositives);
 			this.joinMaps(foreignKey, this.chunksFalsePositives, foreign.chunksFalsePositives);
 			this.joinMaps(foreignKey, this.chunksFalseNegatives, foreign.chunksFalseNegatives);

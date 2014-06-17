@@ -2,6 +2,7 @@ package liner2.structure;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 
 /**
  * 
@@ -54,11 +55,19 @@ public class Document {
 			p.setAttributeIndex(this.attributeIndex);
 	}
 
+	/**
+	 * Creates a copy of collections of annotations. A new collection is created. The annotation
+	 * and sentence are not copied. 
+	 * @return
+	 */
 	public HashMap<Sentence, AnnotationSet> getChunkings() {
 		HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
 		for ( Paragraph paragraph : this.paragraphs)
-			for (Sentence sentence : paragraph.getSentences())
-				chunkings.put(sentence, new AnnotationSet(sentence, sentence.getChunks()));
+			for (Sentence sentence : paragraph.getSentences()){
+				LinkedHashSet<Annotation> annotations = new LinkedHashSet<Annotation>();
+				annotations.addAll(sentence.getChunks());
+				chunkings.put(sentence, new AnnotationSet(sentence, annotations));
+			}
 		return chunkings;
 	}
 

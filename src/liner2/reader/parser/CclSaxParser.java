@@ -72,9 +72,10 @@ public class CclSaxParser extends DefaultHandler {
         try {
             SAXParser parser = factory.newSAXParser();
             parser.parse(is,this);
-        } catch (ParserConfigurationException e) {
+        } catch (ParserConfigurationException e) {        	
             throw new DataFormatException("Parse error (ParserConfigurationException)");
         } catch (SAXException e) {
+        	e.printStackTrace();
             throw new DataFormatException("Parse error (SAXException)");
         } catch (IOException e) {
             throw new DataFormatException("Parse error (IOException)");

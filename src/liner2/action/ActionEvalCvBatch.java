@@ -74,6 +74,15 @@ public class ActionEvalCvBatch extends Action{
 
     		Document ps = reader.nextDocument();
 	    	while ( ps != null ){
+	    		
+	    		/* Get reference set of annotations */
+	    		HashMap<Sentence, AnnotationSet> referenceChunks = ps.getChunkings();
+	    		
+	    		/* Remove annotation to be evaluated */
+	    		for (String annotation : LinerOptions.getGlobal().getTypes())
+	    			ps.removeAnnotations(annotation);	    		
+	    			    		
+	    		/* Generate features */
 	    		timer.startTimer("Feature generation");
 	    		if ( gen != null )
 	    			gen.generateFeatures(ps);
@@ -86,9 +95,9 @@ public class ActionEvalCvBatch extends Action{
 	        	
 	    		timer.startTimer("Evaluation");
 	    		timer.addTokens(ps);
-	    		localEval.evaluate(ps.getSentences(), chunkings, ps.getChunkings());
+	    		localEval.evaluate(ps.getSentences(), chunkings, referenceChunks);
 	    		localEvalMuc.evaluate(chunkings, ps.getChunkings());
-	    		globalEval.evaluate(ps.getSentences(), chunkings, ps.getChunkings());
+	    		globalEval.evaluate(ps.getSentences(), chunkings, referenceChunks);
 	    		globalEvalMuc.evaluate(chunkings, ps.getChunkings());
 	    		timer.stopTimer();
 	            
