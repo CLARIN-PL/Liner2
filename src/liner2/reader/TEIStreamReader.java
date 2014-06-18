@@ -23,7 +23,7 @@ public class TEIStreamReader extends  AbstractDocumentReader{
     private int currIndex=0;
     private Document document;
 
-    public TEIStreamReader(InputStream annMorphosyntax, InputStream annSegmentation, InputStream annNamed) throws DataFormatException {
+    public TEIStreamReader(InputStream annMorphosyntax, InputStream annSegmentation, InputStream annNamed, String docName) throws DataFormatException {
         
     	this.attributeIndex = new TokenAttributeIndex();
         this.attributeIndex.addAttribute("orth");
@@ -34,7 +34,7 @@ public class TEIStreamReader extends  AbstractDocumentReader{
         AnnMorphosyntaxSAXParser morphoParser = new AnnMorphosyntaxSAXParser(annMorphosyntax, this.attributeIndex);
         AnnSegmentationSAXParser segmentationParser = new AnnSegmentationSAXParser(annSegmentation, morphoParser.getParagraphs());
         AnnNamedSAXParser namedParser = new AnnNamedSAXParser(annNamed, segmentationParser.getParagraphs(), morphoParser.getTokenIdsMap());
-        this.document = new Document("unknown", namedParser.getParagraphs(), this.attributeIndex);
+        this.document = new Document(docName, namedParser.getParagraphs(), this.attributeIndex);
     }
 
     @Override

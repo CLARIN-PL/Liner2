@@ -64,7 +64,7 @@ public class TokenAttributeIndex {
 	 * @return
 	 */
 	public int getIndex(String name){
-		return this.nameToIndex.get(name);
+		return this.nameToIndex.containsKey(name) ? this.nameToIndex.get(name) : -1;
 	}
 	
 	/**

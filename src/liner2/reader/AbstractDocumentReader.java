@@ -17,5 +17,5 @@ public abstract class AbstractDocumentReader {
 	
 	public abstract void close() throws DataFormatException;
 		
-	public abstract Document nextDocument() throws DataFormatException, IOException ;
+	public abstract Document nextDocument() throws Exception;
 }

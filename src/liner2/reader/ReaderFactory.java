@@ -34,7 +34,7 @@ public class ReaderFactory {
 		    		inputFormat);        	
         }
         else if (inputFormat.equals("tei")){
-            return getTEIStreamReader(inputFile);
+            return getTEIStreamReader(inputFile, inputFile);
         }
         else if (inputFile.equals("{CV-TRAIN}")){        	
         	return getStreamReader(
@@ -42,6 +42,10 @@ public class ReaderFactory {
         			IOUtils.toInputStream(LinerOptions.getGlobal().getCvTrain()),
         			"",        			
         			inputFormat);
+        }
+        else if (inputFormat.endsWith("batch")){
+            String[] format = inputFormat.split("-");
+            return new CclBatchReader(getInputStream(inputFile), (new File(inputFile)).getParent(), format[0]);
         }
         else{
 		    return getStreamReader(
@@ -67,17 +71,15 @@ public class ReaderFactory {
 			return new PlainTextStreamReader(in, "maca");
 		else if (inputFormat.equals("plain:wcrft"))
 			return new PlainTextStreamReader(in, "wcrft");
-        else if (inputFormat.equals("ccl-batch"))
-            return new CclBatchReader(in, root);
 		else
 			throw new Exception("Input format " + inputFormat + " not recognized.");
 	}
 
-    public AbstractDocumentReader getTEIStreamReader(String inputFolder) throws Exception{
+    public AbstractDocumentReader getTEIStreamReader(String inputFolder, String docname) throws Exception{
         InputStream annMorphosyntax = getInputStream(new File(inputFolder,"ann_morphosyntax.xml").getPath());
         InputStream annSegmentation = getInputStream(new File(inputFolder,"ann_segmentation.xml").getPath());
         InputStream annNamed = getInputStream(new File(inputFolder,"ann_named.xml").getPath());
-        return new TEIStreamReader(annMorphosyntax, annSegmentation, annNamed);
+        return new TEIStreamReader(annMorphosyntax, annSegmentation, annNamed, docname);
     }
 	
 	private InputStream getInputStream(String inputFile) throws Exception {

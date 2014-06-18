@@ -24,6 +24,7 @@ public class CclBatchReader extends AbstractDocumentReader {
     private int fileIndex=0;
     private List<String> files = new ArrayList<String>();
     private File root = null;
+    private String format;
 
     /**
      * 
@@ -33,8 +34,9 @@ public class CclBatchReader extends AbstractDocumentReader {
      * @throws IOException 
      * @throws FileNotFoundException 
      */
-    public CclBatchReader(InputStream is, String root) throws DataFormatException, IOException{
+    public CclBatchReader(InputStream is, String root, String format) throws DataFormatException, IOException{
     	this.root = new File(root);
+        this.format = format;
         this.attributeIndex = new TokenAttributeIndex();
         this.attributeIndex.addAttribute("orth");
         this.attributeIndex.addAttribute("base");
@@ -68,13 +70,19 @@ public class CclBatchReader extends AbstractDocumentReader {
     }
     
     @Override
-    public Document nextDocument() throws DataFormatException, IOException {
+    public Document nextDocument() throws Exception {
     	if ( this.fileIndex < this.files.size() ){
         	String name = this.files.get(this.fileIndex++);
-            InputStream  fileAsStream = new FileInputStream(new File(this.root, name).getAbsolutePath());
-            CclSaxParser parser_out = new CclSaxParser(name, fileAsStream, this.attributeIndex);
-    		Document document = parser_out.getDocument();
-    		fileAsStream.close();
+            String path = new File(this.root, name).getAbsolutePath();
+            AbstractDocumentReader reader;
+            if(this.format.equals("tei")){
+                reader = ReaderFactory.get().getTEIStreamReader(path, name);
+            }
+            else{
+                reader = ReaderFactory.get().getStreamReader(name, new FileInputStream(path), this.format);
+            }
+    		Document document = reader.nextDocument();
+            reader.close();
     		return document;
     	}
     	else

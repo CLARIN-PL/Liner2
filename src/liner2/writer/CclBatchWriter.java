@@ -14,13 +14,36 @@ import liner2.structure.Document;
 public class CclBatchWriter extends AbstractDocumentWriter {
 
 	private String outputRoot = null;
-	
+	private String format;
+    private String extension;
+
 	/**
 	 * 
-	 * @param outputUriRoot -- path that will be appended to the document URI
+	 * @param outputRoot -- path that will be appended to the document URI
 	 */
-	public CclBatchWriter(String outputRoot) {
+	public CclBatchWriter(String outputRoot, String format) {
 		this.outputRoot = outputRoot;
+        this.format = format;
+        if(format.equals("ccl")){
+            extension = ".xml";
+        }
+        else if(format.equals("iob")){
+            extension = ".iob";
+        }
+        else if(format.equals("tuples")){
+            extension = ".txt";
+        }
+        else if(format.equals("tokens")){
+            extension = ".txt";
+        }
+        else if(format.equals("arff")){
+            extension = ".arff";
+        }
+        else if(format.equals("tei")){
+            extension = "";
+        }
+
+
 	}
 	
 	@Override
@@ -41,17 +64,28 @@ public class CclBatchWriter extends AbstractDocumentWriter {
 		}
 		else{
 			File uriRoot = new File(this.outputRoot);
-			File file = new File(uriRoot, name);
-			file.getParentFile().mkdirs();
+            int dotIdx = name.lastIndexOf("."); // if input format is tei 'name' is directory, not file
+            name = (dotIdx != -1 ? name.substring(0, dotIdx) : name)  + this.extension;
+            File file = new File(uriRoot, name);
 			try {
-				CclStreamWriter writer = new CclStreamWriter(new FileOutputStream(file));
+                AbstractDocumentWriter writer;
+                if (this.format.equals("tei")){
+                    file.mkdirs();
+                    writer = WriterFactory.get().getTEIWriter(file.getAbsolutePath());
+                }
+                else{
+                    file.getParentFile().mkdirs();
+                    writer = WriterFactory.get().getStreamWriter(new FileOutputStream(file), this.format);
+                }
 				writer.writeDocument(document);
 				writer.close();
 			} catch (FileNotFoundException e) {
 				System.err.println("Error: FileNotFoundException " + e.getMessage());
 				e.printStackTrace();
-			}
-		}
+			} catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 				
 	}	
 
