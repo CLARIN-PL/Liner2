@@ -18,7 +18,7 @@ import liner2.tools.DataFormatException;
 /**
  *
  */
-public class CclBatchReader extends AbstractDocumentReader {
+public class BatchReader extends AbstractDocumentReader {
 
     private TokenAttributeIndex attributeIndex;
     private int fileIndex=0;
@@ -34,7 +34,7 @@ public class CclBatchReader extends AbstractDocumentReader {
      * @throws IOException 
      * @throws FileNotFoundException 
      */
-    public CclBatchReader(InputStream is, String root, String format) throws DataFormatException, IOException{
+    public BatchReader(InputStream is, String root, String format) throws DataFormatException, IOException{
     	this.root = new File(root);
         this.format = format;
         this.attributeIndex = new TokenAttributeIndex();

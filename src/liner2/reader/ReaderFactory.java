@@ -45,7 +45,7 @@ public class ReaderFactory {
         }
         else if (inputFormat.endsWith("batch")){
             String[] format = inputFormat.split("-");
-            return new CclBatchReader(getInputStream(inputFile), (new File(inputFile)).getParent(), format[0]);
+            return new BatchReader(getInputStream(inputFile), (new File(inputFile)).getParent(), format[0]);
         }
         else{
 		    return getStreamReader(
