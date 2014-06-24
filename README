@@ -1,0 +1,96 @@
+Poniżej znajduje się instrukcja instalacji narzędzi bezpośrednio z repozytorium.
+
+A. Struktura katalogów na repozytorium
+---------------------------------------
+
+  * deploy    -- katalog, w którym będą umieszczane pełne paczki do dystrybucji narzędzia.
+                 Wygenerowane wersje nie powinny być wgrywane na repozytorium.
+  
+  * lib       -- wszystkie biblioteki, z których korzystają moduły. Do tego katalogu mają dostęp
+                 wszystkie moduły, więc biblioteki nię są duplikowane. Biblioteki zewnętrzne powinny
+                 być trzymane na repozytorium. Biblioteki generowane z kodów źródłowych (np. moduły
+                 i CRF++ po kompilacji) nie powinny być umieszczane na repozytorium.
+              
+  * modules   -- katalog z modułami. Każdy moduł znajduje się w osobnym podkatalogu
+                 i kompiluje się do pojedynczego jar-a o nazwie odpowiadającej nawie katalogu,
+               
+  * resources -- zasoby tekstowe potrzebne do generowania paczek z narzędziem (dokumentacja,
+                 opis instalacji, przykładowe pliki do testów narzędzia),
+                 
+  * wrappers  -- wrapery pozwalające na wykorzystanie modułów w innych językach programowania.    
+
+
+
+B. Przygotowanie biblioteki CRF++
+---------------------------------------
+
+   Moduł g419-liner2-api korzysta z biblioteki CRF++. Biblioteka ta musi być zainstalowana
+   w systemie oraz muszą zostać wygenerowane wrapery dla Javy. Jeżeli biblioteka jest już
+   zainstalowana, a wrapery zostały wygenerowane w innym miejscu, to należy skopiować pliki
+   CRFPP.jar i libCRFPP.so do katalogu lib.
+
+   Jeżeli biblioteka nie jest zainstalowana w systemie, to należy wykonać poniższe kroki:
+
+   1. Rozpakować lib/CRF++-0.57.tar.gz
+     
+      tar -xvf lib/CRF++-0.57.tar.gz
+      
+   2. Skompilować i zainstalować bibliotekę
+   
+      cd lib/CRF++-0.57
+      ./configure
+      make
+      sudo make install
+      sudo ldconfig
+      
+   3. Wygenerować wrapery do javy
+   
+      cd java
+      make
+
+      Podczas generowania wraperów może wystąpić problem ze znalezieniem pliku jni.h.
+      W takim przypadku należy ustalić lokalizację pliku jni.h i ustawić parametr INCLUDE
+      w pliku 'crfpp/java/Makefile'
+
+   4. Skopiować wrapery do katalogu lib
+
+      cp libCRFPP.so ../../../lib
+      cp CRFPP.jar ../../../lib      
+
+
+C. Wccl i corpus2
+---------------------------------------
+
+   Moduł g419-liner2-api korzysta z narzędzia wccl (polecenie wccl-rules?). To narzędzie wymagane
+   jest przez regułowy rozpoznawacz anotacji. Procedura instalacji wccl-a znajduje się na stronie:
+   http://www.nlp.pwr.wroc.pl/wccl
+   
+      
+D. Kompilacja kodów
+---------------------------------------
+
+   Aby wygenerować wszystkie biblioteki należy uruchomić poniższe polecenie:
+   
+   ant jar
+   
+   Aby skompilować pojedynczy moduł należy wywołać jedno z poniższych poleceń:
+   
+   ant jar-corpus            -- tworzy bibliotekę g419-corpus.jar
+   ant jar-liner2-api        -- tworzy bibliotekę g419-liner2-api.jar
+   ant jar-liner2-api-all    -- tworzy bibliotekę g419-liner2-api.jar i zależności
+   ant jar-liner2-cli        -- tworzy bibliotekę g419-liner2-cli.jar
+   ant jar-liner2-cli-all    -- tworzy bibliotekę g419-liner2-cli.jar i zależności
+   
+   Wygenerowane biblioteki kopiowane są do katalogu lib.
+   
+   
+E. Uruchomienie modułów
+---------------------------------------
+
+   Do uruchomienia modułów służą następujące skrypty:
+   
+   liner2-cli     -- narzędzie do anotowania tekstów uruchamiane z poziomu konsoli
+   liner2-daemon  -- daemon do obsługi usługi sieciowej do znakowania tekstów 
+
+   Moduły g419-corpus i g419-liner2-api mają postać bibliotek, które moża wykorzystać
+   z poziomu kodu.
