@@ -27,11 +27,8 @@ import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.UnrecognizedOptionException;
-import org.ini4j.Ini;
-import org.ini4j.Profile;
 
 /**
  * This class handles module parameters. The parameters are read from
@@ -46,7 +43,7 @@ public class LinerOptions {
 	/**
 	 * There is one LinetOptions object. 
 	 */
-	static private final LinerOptions linerOptions = new LinerOptions();
+	static protected final LinerOptions linerOptions = new LinerOptions();
 	static protected final String PARAM_PRINT = ">> Param: %20s = %s ";
 	static protected final String paramDefPrint = ">> Param: %20s = %s (as default)";
 	
@@ -69,19 +66,13 @@ public class LinerOptions {
         return properties.getProperty(OPTION_USE);
     }
 
-	private Options options = null;
-	private String configurationDescription = "";
-	private Properties properties;
+	protected Options options = null;
+	protected String configurationDescription = "";
+	protected Properties properties;
 	
 	private static final String LOCAL_INI = "local.ini";
 	
 	public static final String OPTION_CHUNKER = "chunker";
-	public static final String OPTION_DB_HOST = "db_host";
-	public static final String OPTION_DB_NAME = "db_name";
-	public static final String OPTION_DB_PASSWORD = "db_pass";
-	public static final String OPTION_DB_PORT = "db_port";
-	public static final String OPTION_DB_USER = "db_user";
-	public static final String OPTION_DB_URI = "db_uri";
 	public static final String OPTION_FEATURE = "feature";
 	public static final String OPTION_FOLDS_NUMBER = "folds_number";
 	public static final String OPTION_HELP = "help";
@@ -89,11 +80,8 @@ public class LinerOptions {
 	public static final String OPTION_IS = "is";
 	public static final String OPTION_INPUT_FILE = "f";
 	public static final String OPTION_INPUT_FORMAT = "i";
-	public static final String OPTION_IP = "ip";
-	public static final String OPTION_MAX_THREADS = "max_threads";
 	public static final String OPTION_OUTPUT_FILE = "t";
 	public static final String OPTION_OUTPUT_FORMAT = "o";
-	public static final String OPTION_PORT = "p";
 	public static final String OPTION_SILENT = "silent";
 	public static final String OPTION_TEMPLATE = "template";
 	public static final String OPTION_TYPES = "types";
@@ -103,7 +91,6 @@ public class LinerOptions {
 	public static final String OPTION_VERBOSE_DETAILS = "verboseDetails";
     public static final String OPTION_CRFLIB = "CRFlib";
     public static final String OPTION_CONVERSION = "conversion";
-    public static final String OPTION_MODELS = "models";
     // List of argument read from cmd
 	public String mode = "";
 
@@ -118,8 +105,8 @@ public class LinerOptions {
     CrfTemplate arffTemplate;
 	public String linerPath = "";
 	public LinkedHashSet<String> chunkersDescriptions = new LinkedHashSet<String>();
-	private String cvTrainData = null; 
-	private HashSet<String> types = null;
+	protected String cvTrainData = null;
+    protected HashSet<String> types = null;
     public ArrayList<String> convertersDesciptions = new ArrayList<String>();
     public HashMap<String, LinerOptions> models = null;
     public String defaultModel = null;
@@ -251,27 +238,30 @@ public class LinerOptions {
     	// Parse parameters passed by command line
 		CommandLine line = new GnuParser().parse(options, args);
 
+        if (line.hasOption(OPTION_HELP)) {
+            printHelp();
+            System.exit(0);
+        }
 
-		
-		if (line.hasOption(OPTION_HELP)) {
-			printHelp();
-			System.exit(0);
-		}
+        checkMode(line);
 
-    	if (this.mode == null && line.getArgs().length == 0)
-    		throw new ParameterException("mode not set");
-    	
-    	if ( line.getArgs().length == 0){
-    		throw new UnrecognizedOptionException("Mode name not given");
-    	}
-    	
-    	this.mode = line.getArgs()[0];
-    	configDesc.append("> Mode: " + this.mode + "\n");
+        if(mode != null){
+            configDesc.append("> Mode: " + this.mode + "\n");
+        }
 
     	this.parseParameters(line, configDesc, null);
 		
 		this.configurationDescription = configDesc.toString();
 	}
+
+    protected void checkMode(CommandLine line) throws ParameterException, UnrecognizedOptionException {
+        this.mode = line.getArgs()[0];
+        if (this.mode == null && line.getArgs().length == 0)
+            throw new ParameterException("mode not set");
+        if ( line.getArgs().length == 0){
+            throw new UnrecognizedOptionException("Mode name not given");
+        }
+    }
     
     /**
      * Read configuration from an ini file.
@@ -326,7 +316,7 @@ public class LinerOptions {
 	 * @throws Exception 
 	 * @throws Exception 
 	 */
-	private void parseParameters(CommandLine line, StringBuilder configDesc, ArrayList<String> allowedOptions) throws Exception {
+	protected void parseParameters(CommandLine line, StringBuilder configDesc, ArrayList<String> allowedOptions) throws Exception {
 		
 		// Copy parameters passed by command line to properties
 		Iterator<?> i_options = line.iterator();
@@ -360,8 +350,10 @@ public class LinerOptions {
         }
 		
 		// sets boolean fields
-		if (line.hasOption(OPTION_VERBOSE))
-			this.verbose = true;
+		if (line.hasOption(OPTION_VERBOSE)){
+            System.out.println("VERBOSE");
+            this.verbose = true;
+        }
 		if (line.hasOption(OPTION_VERBOSE_DETAILS))
 			this.verboseDetails = true;
 		if (line.hasOption(OPTION_SILENT))
@@ -400,9 +392,6 @@ public class LinerOptions {
             for (String td : line.getOptionValues(OPTION_TEMPLATE)) {
                 TemplateFactory.parseFeature(td, templates, features.keySet());
             }
-        }
-        if (line.hasOption(OPTION_MODELS)) {
-            parseModelsIni(line.getOptionValue(OPTION_MODELS));
         }
 	}
 			
@@ -452,53 +441,11 @@ public class LinerOptions {
 			LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FORMAT));        
 	}
 
-    private void parseModelsIni(String iniFile) throws Exception {
-        String iniPath = new File(iniFile).getAbsoluteFile().getParentFile().getAbsolutePath();
-        models = new HashMap<String, LinerOptions>();
-        Ini ini = new Ini(new File(iniFile));
-        this.defaultModel = ini.get("main", "default");
-        Profile.Section modelsDef = ini.get("models");
-        for(String model: modelsDef.keySet()){
-            LinerOptions modelConfig = new LinerOptions();
-            modelConfig.parseFromIni(modelsDef.get(model).replace("{INI_DIR}", iniPath), new StringBuilder(), null);
-            models.put(model, modelConfig);
-        }
-    }
 	
 	@SuppressWarnings("static-access")
-	private Options makeOptions(){
+	protected Options makeOptions(){
     	Options options = new Options();    	
 
-    	OptionGroup daemonOptions = new OptionGroup();
-    	daemonOptions.addOption(OptionBuilder.withArgName("name").hasArg()
-				.withDescription("database host name (daemon mode)")
-				.create(OPTION_DB_HOST));
-    	daemonOptions.addOption(OptionBuilder.withArgName("name").hasArg()
-				.withDescription("database name (daemon mode)")
-				.create(OPTION_DB_NAME));
-    	daemonOptions.addOption(OptionBuilder.withArgName("password").hasArg()
-				.withDescription("database password (daemon mode)")
-				.create(OPTION_DB_PASSWORD));
-    	daemonOptions.addOption(OptionBuilder.withArgName("number").hasArg()
-				.withDescription("database port number (daemon mode)")
-				.create(OPTION_DB_PORT));
-    	daemonOptions.addOption(OptionBuilder.withArgName("address").hasArg()
-				.withDescription("database URI address (daemon mode)")
-				.create(OPTION_DB_URI));
-    	daemonOptions.addOption(OptionBuilder.withArgName("username").hasArg()
-				.withDescription("database user name (daemon mode)")
-				.create(OPTION_DB_USER));
-    	daemonOptions.addOption(OptionBuilder.withArgName("number").hasArg()
-				.withDescription("maximum number of processing threads (daemon mode)")
-				.create(OPTION_MAX_THREADS));
-    	daemonOptions.addOption(OptionBuilder.withArgName("address").hasArg()
-				.withDescription("IP address for daemon")
-				.create(OPTION_IP));
-    	daemonOptions.addOption(OptionBuilder.withArgName("number").hasArg()
-				.withDescription("port to listen on (daemon mode)")
-				.create(OPTION_PORT));
-    	
-    	options.addOptionGroup(daemonOptions);
     	options.addOption(OptionBuilder.withArgName("description").hasArg()
 				.withDescription("load chunker from chunker factory")
 				.create(OPTION_CHUNKER));
@@ -543,9 +490,6 @@ public class LinerOptions {
         options.addOption(OptionBuilder.withArgName("conversion").hasArg()
                 .withDescription("converter description")
                 .create(OPTION_CONVERSION));
-        options.addOption(OptionBuilder.withArgName("models").hasArg()
-                .withDescription("multiple models config for daemon")
-                .create(OPTION_MODELS));
     	options.addOption(new Option(OPTION_SILENT, false, "does not print any additional text in interactive mode"));
     	options.addOption(new Option(OPTION_VERBOSE, false, "print brief information about processing"));
     	options.addOption(new Option(OPTION_VERBOSE_DETAILS, false, "print detailed information about processing"));
@@ -565,32 +509,33 @@ public class LinerOptions {
     	System.out.println("*   Institution: Wrocław University of Technology.*");
     	System.out.println("--------------------------------------------------*");
     	System.out.println();
-		new HelpFormatter().printHelp("java -jar liner.jar <mode> [options]", options);
-		System.out.println();
-    	System.out.println("Modes:");
-    	System.out.println("  interactive         - interactive mode");
-    	System.out.println("                        Parameters: -ini, -o");
-        System.out.println("  batch               - process list of files");
-        System.out.println("                        Parameters: -i, -o, -is, -ini");
-    	System.out.println("  convert             - convert text from one format to another");
-    	System.out.println("                        Parameteres: -i, -o, -f, -t, -ini");
-       	System.out.println("  daemon              - Listen and process requests from a given database");
-    	System.out.println("                        Parameteres: -p, -db_*, -ini");
-    	System.out.println("  eval                - evaluate chunker on given input");
-    	System.out.println("                        Parameters: -i, -f, -ini");
-    	System.out.println("  evalcv              - perform 10-fold cross validation");
-    	System.out.println("                        Parameters: -i, -f, -ini");
-    	System.out.println("  pipe                - annotate data");
-    	System.out.println("                        Parameters: -i, (-f), -o, (-t), -ini");
-    	System.out.println("  train               - train CRFPP chunker");
-    	System.out.println("                        Parameters: -ini");
-    	System.out.println("  time                - measure processing time");
-    	System.out.println("                        Parameters: -i, (-f), -o, (-t), -ini");
-    	System.out.println("");
-    	System.out.println("");
+        printModes();
+        new HelpFormatter().printHelp("java -jar liner.jar <mode> [options]", options);
+        System.out.println();
     	System.out.println("Chunker factory (patterns for `-chunker` parameter):");
     	System.out.println(ChunkerFactory.getDescription());
-    }	
+    }
+
+    protected void printModes(){
+        System.out.println("Modes:");
+        System.out.println("  interactive         - interactive mode");
+        System.out.println("                        Parameters: -ini, -o");
+        System.out.println("  batch               - process list of files");
+        System.out.println("                        Parameters: -i, -o, -is, -ini");
+        System.out.println("  convert             - convert text from one format to another");
+        System.out.println("                        Parameteres: -i, -o, -f, -t, -ini");
+        System.out.println("  eval                - evaluate chunker on given input");
+        System.out.println("                        Parameters: -i, -f, -ini");
+        System.out.println("  evalcv              - perform 10-fold cross validation");
+        System.out.println("                        Parameters: -i, -f, -ini");
+        System.out.println("  pipe                - annotate data");
+        System.out.println("                        Parameters: -i, (-f), -o, (-t), -ini");
+        System.out.println("  train               - train CRFPP chunker");
+        System.out.println("                        Parameters: -ini");
+        System.out.println("  time                - measure processing time");
+        System.out.println("                        Parameters: -i, (-f), -o, (-t), -ini");
+        System.out.println();
+    }
 
 	public void printConfigurationDescription(){
 		Logger.log(this.configurationDescription);

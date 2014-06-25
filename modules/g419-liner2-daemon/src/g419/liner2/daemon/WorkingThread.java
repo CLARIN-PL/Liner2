@@ -20,9 +20,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 
-
-
-
 public class WorkingThread extends Thread {
 	DaemonThread daemon;
 	Database db;
@@ -93,7 +90,7 @@ public class WorkingThread extends Thread {
             throw new Exception("Unrecognized model in request: "+model);
         }
         if(model.equals("default")){
-            model = LinerOptions.getGlobal().getOption(LinerOptions.getGlobal().defaultModel);
+            model = DaemonOptions.getGlobal().getOption(DaemonOptions.getGlobal().defaultModel);
         }
         TokenFeatureGenerator gen = featureGenerators.get(model);
         Chunker chunker = chunkers.get(model);
@@ -104,7 +101,7 @@ public class WorkingThread extends Thread {
 		ByteArrayOutputStream ous = new ByteArrayOutputStream();
         AbstractDocumentWriter writer;
         if (request.getOutputFormat().equals("arff")){
-            CrfTemplate arff_template = LinerOptions.getGlobal().getArffTemplate();
+            CrfTemplate arff_template = DaemonOptions.getGlobal().getArffTemplate();
             writer = WriterFactory.get().getArffWriter(ous, arff_template);
         }
         else{

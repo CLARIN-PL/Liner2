@@ -47,7 +47,7 @@ public class DaemonThread extends Thread {
 			db_pass = "", db_name = null;
 
 		// getGlobal access data from db_uri parameter
-		String db_uri = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_URI);
+		String db_uri = DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_URI);
 		if (db_uri != null) {
 			Pattern dbUriPattern = Pattern.compile("([^:@]*)(:([^:@]*))?@([^:@]*)(:([^:@]*))?/(.*)");
 			Matcher dbUriMatcher = dbUriPattern.matcher(db_uri);
@@ -63,16 +63,16 @@ public class DaemonThread extends Thread {
 		}
 
 		// overwrite with access data from db_* parameters
-		if (LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_HOST) != null)
-			db_host = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_HOST);
-		if (LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_PORT) != null)
-			db_port = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_PORT);
-		if (LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_USER) != null)
-			db_user = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_USER);
-		if (LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_PASSWORD) != null)
-			db_pass = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_PASSWORD);
-		if (LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_NAME) != null)
-			db_name = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_DB_NAME);
+		if (DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_HOST) != null)
+			db_host = DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_HOST);
+		if (DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_PORT) != null)
+			db_port = DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_PORT);
+		if (DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_USER) != null)
+			db_user = DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_USER);
+		if (DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_PASSWORD) != null)
+			db_pass = DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_PASSWORD);
+		if (DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_NAME) != null)
+			db_name = DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_NAME);
 
 		if ((db_host == null) || (db_user == null) || (db_name == null))
 			throw new ParameterException("Daemon mode: database access data required!");
@@ -92,10 +92,10 @@ public class DaemonThread extends Thread {
 		this.db = new Database(this.db_addr);
 
 		// setup ip address and port number
-		this.ip = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_IP);
+		this.ip = DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_IP);
 		if (this.ip == null)
 			throw new ParameterException("Daemon mode: -ip (IP address) option is obligatory!");
-		String optPort = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_PORT);
+		String optPort = DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_PORT);
 		if (optPort == null)
 			throw new ParameterException("Daemon mode: -p (port) option is obligatory!");
     	try {
@@ -105,8 +105,8 @@ public class DaemonThread extends Thread {
 		}
 
 		// setup maximum threads number
-		this.maxThreads = this.DEFAULT_MAX_THREADS;
-		String optMaxThreads = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_MAX_THREADS);
+		this.maxThreads = DEFAULT_MAX_THREADS;
+		String optMaxThreads = DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_MAX_THREADS);
 		if (optMaxThreads != null) {
 			try {
 				this.maxThreads = Integer.parseInt(optMaxThreads);
@@ -122,8 +122,8 @@ public class DaemonThread extends Thread {
         chunkers = new HashMap<String, Chunker>();
         featureGenerators = new HashMap<String, TokenFeatureGenerator>();
         try {
-            for (String modelNam: LinerOptions.getGlobal().models.keySet()){
-                LinerOptions modelConfig = LinerOptions.getGlobal().models.get(modelNam);
+            for (String modelNam: DaemonOptions.getGlobal().models.keySet()){
+                LinerOptions modelConfig = DaemonOptions.getGlobal().models.get(modelNam);
                 ChunkerManager cm = ChunkerFactory.loadChunkers(modelConfig);
                 this.chunkers.put(modelNam, cm.getChunkerByName(modelConfig.getOptionUse()));
                 TokenFeatureGenerator gen = null;
@@ -167,13 +167,10 @@ public class DaemonThread extends Thread {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-        System.out.println("max threads"+this.maxThreads);
 		for (int i = 0; i < this.maxThreads; i++) 
 			startWorkingThread();
 
-        System.out.println("working threads at begining"+this.numWorkingThreads);
         while (!serverSocket.isClosed()) {
-            System.out.println("working threads"+this.numWorkingThreads);
 			try {
 				Socket accepted = this.serverSocket.accept();
 				BufferedReader reader = new BufferedReader(new InputStreamReader(

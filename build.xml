@@ -20,16 +20,19 @@
 		<copy file="modules/g419-liner2-cli/g419-liner2-cli.jar" todir="./lib"></copy>
 	</target>
 
+    <target name="jar-liner2-daemon">
+        <exec dir="modules/g419-liner2-daemon" executable="ant"><arg line="jar"/></exec>
+        <copy file="modules/g419-liner2-daemon/g419-liner2-daemon.jar" todir="./lib"></copy>
+    </target>
+
 	<target name="jar-liner2-api-all" depends="jar-corpus"></target>
 	
 	<target name="jar-liner2-cli-all" depends="jar-corpus,jar-liner2-api"></target>
+
+    <target name="jar-liner2-daemon-all" depends="jar-corpus,jar-liner2-api"></target>
 		
-	<target name="jar" depends="jar-corpus,jar-liner2-api,jar-liner2-cli"></target>
-	
-<!--		
-        <exec dir="modules/g419-liner2-daemon" executable="ant"><arg line="jar"/></exec>
-		<copy file="modules/g419-liner2-daemon/g419-liner2-daemon.jar" todir="./lib"></copy>
--->	
+	<target name="jar" depends="jar-corpus,jar-liner2-api,jar-liner2-cli, jar-liner2-daemon"></target>
+
 	
 	<target name="deploy" depends="jar">
 		<delete dir="${version_path}"/>
@@ -51,7 +54,6 @@
 				<include name="weka-3.6.9.jar"/>
 				<include name="g419-corpus.jar"/>
 				<include name="g419-liner2-api.jar"/>
-				<include name="g419-liner2-daemon.jar"/>
 			</fileset>
 		</copy>
 		
