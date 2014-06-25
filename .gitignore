@@ -10,7 +10,10 @@ external/CRF++-0.57
 lib/CRFPP.jar
 lib/libCRFPP.so
 production/*
-liner2.jar
 local/*
 *.swp
 *.class
+g419-corpus.jar
+g419-liner2-api.jar
+g419-liner2-cli.jar
+g419-liner2-daemon.jar
