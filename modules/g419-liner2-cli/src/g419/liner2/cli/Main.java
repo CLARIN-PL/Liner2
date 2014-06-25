@@ -3,7 +3,6 @@ package g419.liner2.cli;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.tools.ParameterException;
 import g419.liner2.cli.action.Action;
-import g419.liner2.cli.action.ActionBatch;
 import g419.liner2.cli.action.ActionConvert;
 import g419.liner2.cli.action.ActionEval;
 import g419.liner2.cli.action.ActionEvalCV;
@@ -73,8 +72,6 @@ public class Main {
             action = new ActionEvalCvBatch();
         } else if (mode.equals("interactive")) {
             action = new ActionInteractive();
-        } else if (mode.equals("batch")){
-            action = new ActionBatch(); 
     	} else if (mode.equals("null") ) {
             action = new ActionNull();
         } else if (mode.equals("convert") ) {

@@ -414,8 +414,8 @@ public class LinerOptions {
         String output_file = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FILE);
         AbstractDocumentWriter writer;
 
-        if ( output_format.endsWith("batch") && !input_format.endsWith("batch") ) {
-            throw new Exception("Output format `*-batch` (-o) is valid only for `*-batch` input format (-i).");
+        if ( output_format.startsWith("batch:") && !input_format.startsWith("batch:") ) {
+            throw new Exception("Output format `batch:` (-o) is valid only for `batch:` input format (-i).");
         }
         if (output_format == null){
             writer = WriterFactory.get().getStreamWriter(System.out, output_format);        	
@@ -467,7 +467,7 @@ public class LinerOptions {
 				.withDescription("read input from file")
 				.create(OPTION_INPUT_FILE));
 		options.addOption(OptionBuilder.withArgName("format").hasArg()
-				.withDescription("input format [plain,iob,ccl,ccl-batch]")
+				.withDescription("input format [iob,ccl,plain,plain:maca,plain:wcrft,tei,batch:{format}]")
 				.create(OPTION_INPUT_FORMAT));
     	options.addOption(OptionBuilder.withArgName("types").hasArg()
 				.withDescription("types of annotation to evaluate")
@@ -479,7 +479,7 @@ public class LinerOptions {
 				.withDescription("specify chunkers to use")
 				.create(OPTION_USE));
 		options.addOption(OptionBuilder.withArgName("format").hasArg()
-				.withDescription("output format [iob,ccl,tuples]")
+				.withDescription("output format [iob,ccl,tuples,tokens,arff,tei,batch:{format}]")
 				.create(OPTION_OUTPUT_FORMAT));
 		options.addOption(OptionBuilder.withArgName("description").hasArg()
 				.withDescription("define feature template")
