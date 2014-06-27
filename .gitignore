@@ -1,3 +1,6 @@
 lib/CRFPP.jar
 lib/libCRFPP.so
+lib/g419-corpus.jar
+lib/g419-liner2-api.jar
+lib/g419-liner2-cli.jar
 modules/**/*.jar
