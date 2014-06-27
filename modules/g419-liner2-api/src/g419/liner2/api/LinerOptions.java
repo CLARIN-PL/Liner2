@@ -238,7 +238,7 @@ public class LinerOptions {
     	// Parse parameters passed by command line
 		CommandLine line = new GnuParser().parse(options, args);
 
-        if (line.hasOption(OPTION_HELP)) {
+        if (line.hasOption(OPTION_HELP) || line.getArgs().length == 0) {
             printHelp();
             System.exit(0);
         }
