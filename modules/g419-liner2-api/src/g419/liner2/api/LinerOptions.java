@@ -520,8 +520,6 @@ public class LinerOptions {
         System.out.println("Modes:");
         System.out.println("  interactive         - interactive mode");
         System.out.println("                        Parameters: -ini, -o");
-        System.out.println("  batch               - process list of files");
-        System.out.println("                        Parameters: -i, -o, -is, -ini");
         System.out.println("  convert             - convert text from one format to another");
         System.out.println("                        Parameteres: -i, -o, -f, -t, -ini");
         System.out.println("  eval                - evaluate chunker on given input");
