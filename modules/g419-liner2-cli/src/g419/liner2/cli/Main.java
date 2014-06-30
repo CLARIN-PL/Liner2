@@ -6,7 +6,6 @@ import g419.liner2.cli.action.Action;
 import g419.liner2.cli.action.ActionConvert;
 import g419.liner2.cli.action.ActionEval;
 import g419.liner2.cli.action.ActionEvalCV;
-import g419.liner2.cli.action.ActionEvalCvBatch;
 import g419.liner2.cli.action.ActionInteractive;
 import g419.liner2.cli.action.ActionNull;
 import g419.liner2.cli.action.ActionPipe;
@@ -66,10 +65,6 @@ public class Main {
     	
     	if (mode.equals("eval")) {
           action = new ActionEval();
-        } else if (mode.equals("evalcv")) {
-            action = new ActionEvalCV();
-        } else if (mode.equals("evalcvbatch")) {
-            action = new ActionEvalCvBatch();
         } else if (mode.equals("interactive")) {
             action = new ActionInteractive();
     	} else if (mode.equals("null") ) {

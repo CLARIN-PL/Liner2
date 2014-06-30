@@ -74,10 +74,8 @@ public class LinerOptions {
 	
 	public static final String OPTION_CHUNKER = "chunker";
 	public static final String OPTION_FEATURE = "feature";
-	public static final String OPTION_FOLDS_NUMBER = "folds_number";
 	public static final String OPTION_HELP = "help";
 	public static final String OPTION_INI = "ini";
-	public static final String OPTION_IS = "is";
 	public static final String OPTION_INPUT_FILE = "f";
 	public static final String OPTION_INPUT_FORMAT = "i";
 	public static final String OPTION_OUTPUT_FILE = "t";
@@ -188,14 +186,6 @@ public class LinerOptions {
                 return templates.values().iterator().next();
             }
         }
-    }
-    
-    public int getFoldsNumber(){
-    	if (this.properties.containsKey(LinerOptions.OPTION_FOLDS_NUMBER))
-    		return Integer.parseInt(this.properties.getProperty(LinerOptions.OPTION_FOLDS_NUMBER));
-    	else
-    		return 10;
-    			
     }
     
     public HashSet<String> getTypes(){
@@ -452,17 +442,11 @@ public class LinerOptions {
     	options.addOption(OptionBuilder.withArgName("description").hasArg()
 				.withDescription("recognized feature name")
 				.create(OPTION_FEATURE));
-    	options.addOption(OptionBuilder.withArgName("num").hasArg()
-				.withDescription("number of folds")
-				.create(OPTION_FOLDS_NUMBER));
 		options.addOption(OptionBuilder.withLongOpt(OPTION_HELP).withDescription("print this help")
 				.create(OPTION_HELP));
     	options.addOption(OptionBuilder
 				.withArgName("filename").hasArg().withDescription("name of file with configuration")
 				.create(OPTION_INI));
-		options.addOption(OptionBuilder
-                 .withArgName("filename").hasArg().withDescription("name of file with list of input files")
-                 .create(OPTION_IS));
 		options.addOption(OptionBuilder.withArgName("filename").hasArg()
 				.withDescription("read input from file")
 				.create(OPTION_INPUT_FILE));
