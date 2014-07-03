@@ -18,6 +18,7 @@ import g419.liner2.api.tools.ParameterException;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,9 +31,25 @@ import org.apache.commons.io.IOUtils;
  */
 public class ActionInteractive extends Action{
 
-	/**
+    /**
 	 * Module entry function.
 	 */
+
+    private static HashSet<String> validInputFormats = new HashSet<String>();
+    private static HashSet<String> validOutputFormats = new HashSet<String>();
+
+    static{
+        validInputFormats.add("plain");
+        validInputFormats.add("plain:maca");
+        validInputFormats.add("plain:wcrft");
+
+        validOutputFormats.add("ccl");
+        validOutputFormats.add("iob");
+        validOutputFormats.add("tuples");
+        validOutputFormats.add("tokens");
+    }
+
+
 	public void run() throws Exception {
         
         if ( !LinerOptions.isOption(LinerOptions.OPTION_USE) ){
@@ -41,8 +58,14 @@ public class ActionInteractive extends Action{
 
         TokenFeatureGenerator gen = null;
         String inputFormat = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FORMAT);
-        String output_format = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FORMAT);
-        AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(System.out, output_format);
+        if(!validInputFormats.contains(inputFormat)){
+            throw new ParameterException("Input format " + inputFormat + " is not valid for interactive mode. Use one of: " + validInputFormats);
+        }
+        String outputFormat = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FORMAT);
+        if(!validOutputFormats.contains(outputFormat)){
+            throw new ParameterException("Output format " + outputFormat + " is not valid for interactive mode. Use one of: " + validOutputFormats);
+        }
+        AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(System.out, outputFormat);
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		String cSeq = "";
 		
@@ -64,7 +87,7 @@ public class ActionInteractive extends Action{
 		
 		do {
 	        if (!LinerOptions.getGlobal().silent)
-	        	System.out.print("> ");
+	        	System.out.print("\n> ");
 			
 			// Get line of text to process
 			cSeq = in.readLine();
@@ -105,7 +128,7 @@ public class ActionInteractive extends Action{
                 writer.writeDocument(ps);
                 writer.flush();
 			}
-		} while (!cSeq.equals("EOF"));
+        } while (!cSeq.equals("EOF"));
 		writer.close();
 	}
 	
