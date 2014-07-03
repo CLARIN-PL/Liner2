@@ -21,8 +21,10 @@ public class ActionPipe extends Action{
 	 * Module entry function.
 	 */
 	public void run() throws Exception{
+       /* Ustawienie domyślnych parametrów. */
+        LinerOptions.getGlobal().setDefaultDataFormats("ccl", "ccl");
 	
-        if ( !LinerOptions.isOption(LinerOptions.OPTION_USE) ){
+        if ( !LinerOptions.getGlobal().isOption(LinerOptions.OPTION_USE) ){
 			throw new ParameterException("Parameter '--use <chunker_name>' not set");
 		}		
 	

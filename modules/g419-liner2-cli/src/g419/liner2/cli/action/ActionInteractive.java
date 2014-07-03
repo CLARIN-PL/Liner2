@@ -51,6 +51,7 @@ public class ActionInteractive extends Action{
 
 
 	public void run() throws Exception {
+        LinerOptions.getGlobal().setDefaultDataFormats("plain:maca", "ccl");
         
         if ( !LinerOptions.isOption(LinerOptions.OPTION_USE) ){
 			throw new ParameterException("Parameter --use <chunker_pipe_desription> not set");

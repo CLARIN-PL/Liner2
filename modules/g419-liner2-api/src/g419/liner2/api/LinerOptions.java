@@ -116,11 +116,16 @@ public class LinerOptions {
 	public LinerOptions(){
 		this.options = makeOptions();
 		this.properties = new Properties();
-		
-		/* Ustawienie domyślnych parametrów. */
-		this.properties.setProperty(LinerOptions.OPTION_OUTPUT_FORMAT, "ccl");
-		this.properties.setProperty(LinerOptions.OPTION_INPUT_FORMAT, "ccl");
 	}
+
+    public void setDefaultDataFormats(String input, String output){
+        if(this.properties.getProperty(LinerOptions.OPTION_INPUT_FORMAT) == null){
+            this.properties.setProperty(LinerOptions.OPTION_INPUT_FORMAT, input);
+        }
+        if(this.properties.getProperty(LinerOptions.OPTION_OUTPUT_FORMAT) == null){
+            this.properties.setProperty(LinerOptions.OPTION_OUTPUT_FORMAT, output);
+        }
+    }
 	
 	public static boolean isOption(String name){
 		return LinerOptions.getGlobal().getProperties().containsKey(name);		
@@ -409,7 +414,7 @@ public class LinerOptions {
         if ( output_format.startsWith("batch:") && !input_format.startsWith("batch:") ) {
             throw new Exception("Output format `batch:` (-o) is valid only for `batch:` input format (-i).");
         }
-        if (output_format == null){
+        if (output_file == null){
             writer = WriterFactory.get().getStreamWriter(System.out, output_format);        	
         }
         else if (output_format.equals("arff")){
