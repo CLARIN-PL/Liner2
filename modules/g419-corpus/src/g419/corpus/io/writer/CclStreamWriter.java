@@ -74,7 +74,7 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 	@Override
 	public void flush() {
 		try {
-			if ( this.xmlw != null )
+			if ( this.xmlw != null && !this.os.equals(System.out))
 				this.xmlw.flush();
 		} catch (XMLStreamException e) {
 			// TODO Auto-generated catch block
