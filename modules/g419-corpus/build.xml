@@ -4,7 +4,7 @@
 	<property name="build_path" value="build" />
 	
 	<path id="classpath.standard">
-		<pathelement location="../../lib/commons-lang3-3.3.2.jar"/>				
+		<pathelement location="../../lib/commons-lang3-3.3.2.jar"/>
 	</path>
 	
 	<target name="clean">

@@ -33,13 +33,13 @@ public class CrfppChunker extends Chunker
 	private String model_filename = null;
 	private int threads = 1;
 	private static final int MAX_TOKENS = 1000;
-	private HashSet<String> types = null;
+	private HashSet<Pattern> types = null;
 	
     public CrfppChunker() {
-		this.types = new HashSet<String>();    	
+		this.types = new HashSet<Pattern>();
     }
     
-    public CrfppChunker(int threads, HashSet<String> types){
+    public CrfppChunker(int threads, HashSet<Pattern> types){
 		this.threads = threads;
 		this.types = types;    	
     }
@@ -47,7 +47,6 @@ public class CrfppChunker extends Chunker
     /**
      * Reads output from the external CRF tagger. 
      * Transforms the result from IOB format into a list of annotations.
-     * @param cSeq --- text to tag
      * @return chunking with annotations
      */
 
@@ -148,13 +147,15 @@ public class CrfppChunker extends Chunker
     				if (chunk == null)
     					oStr += " O";
     				else {
-    					if (chunk.getBegin() == i)
-    						oStr += " B-";
-    					else
-    						oStr += " I-";
-    					oStr += chunk.getType();
-    				}
-    				
+    					if (chunk.getBegin() == i) {
+                            oStr += " B-";
+                        }
+    					else {
+                            oStr += " I-";
+                        }
+                        oStr += chunk.getType();
+                    }
+//    				System.out.println(oStr.trim());
     				this.trainingFileWriter.write(oStr.trim() + "\n");
     			}
     			this.trainingFileWriter.write("\n");
@@ -236,7 +237,9 @@ public class CrfppChunker extends Chunker
 		
 		public String get_crf_learn(){
 			String cmd = String.format("crf_learn %s %s %s -f 5 -c 1 -p %d", this.file_template, this.file_iob, this.file_model, this.threads);
-			//cmd += " -m 20";
+            //cmd += " -m 20";
+//            File iob = new File(file_iob);
+//            iob.delete();
 			return cmd;
 		}
 	}

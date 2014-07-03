@@ -2,10 +2,11 @@ package g419.liner2.api.chunker.factory;
 
 
 import g419.corpus.io.reader.AbstractDocumentReader;
+import g419.corpus.io.reader.BatchReader;
 import g419.corpus.io.reader.ReaderFactory;
-import g419.corpus.structure.CrfTemplate;
-import g419.corpus.structure.Document;
+import g419.corpus.structure.*;
 import g419.liner2.api.Liner2;
+import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.CrfppChunker;
 import g419.liner2.api.features.TokenFeatureGenerator;
@@ -14,8 +15,12 @@ import g419.liner2.api.tools.TemplateFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.io.IOUtils;
 
 import org.ini4j.Ini;
 
@@ -75,25 +80,32 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         Ini.Section dataDesc = ini.get("data");
 
         int threads = Integer.parseInt(main.get("threads"));
-
-        String inputFormat = dataDesc.get("format");
         String inputFile = dataDesc.get("source").replace("{INI_PATH}", iniDir);
+        String inputFormat;
+        AbstractDocumentReader reader;
         String modelFilename = main.get("store").replace("{INI_PATH}", iniDir);
 
-        HashSet<String> types = new HashSet<String>();
+        if(inputFile.equals("{CV_TRAIN}")){
+            inputFormat = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FORMAT).substring(3);
+            reader = new BatchReader(IOUtils.toInputStream(LinerOptions.getGlobal().getCvTrain()), "", inputFormat);
+        }
+        else{
+            inputFormat = dataDesc.get("format");
+            reader = ReaderFactory.get().getStreamReader(inputFile, inputFormat);
+        }
+
+        HashSet<Pattern> types = new HashSet<Pattern>();
         if ( dataDesc.containsKey("types") && dataDesc.get("types").length() > 0 )
             for (String line : dataDesc.get("types").split(","))
-                types.add(line);
+                types.add(Pattern.compile("^"+line+"$"));
 
         Logger.log("--> Training on file=" + inputFile);
-        AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFile, inputFormat);
 
         TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
 
         String templateName = main.get("template");
         CrfTemplate template = cm.opts.getTemplate(templateName);
         File templateFile = File.createTempFile("template", ".tpl");
-
         CrfppChunker chunker = new CrfppChunker(threads, types);
         chunker.setTemplateFilename(templateFile.getAbsolutePath());
         chunker.setModelFilename(modelFilename);

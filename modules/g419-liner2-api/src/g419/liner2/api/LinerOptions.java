@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
@@ -104,7 +105,7 @@ public class LinerOptions {
 	public String linerPath = "";
 	public LinkedHashSet<String> chunkersDescriptions = new LinkedHashSet<String>();
 	protected String cvTrainData = null;
-    protected HashSet<String> types = null;
+    protected HashSet<Pattern> types = null;
     public ArrayList<String> convertersDesciptions = new ArrayList<String>();
     public HashMap<String, LinerOptions> models = null;
     public String defaultModel = null;
@@ -188,16 +189,17 @@ public class LinerOptions {
         }
     }
     
-    public HashSet<String> getTypes(){
+    public HashSet<Pattern> getTypes(){
     	if ( this.types == null )
 	    	if ( isOption(OPTION_TYPES) ){
-	    		HashSet<String> types = new HashSet<String>();
-	    		for (String type : getOption(OPTION_TYPES).split(","))
-	    			types.add(type);
+	    		HashSet<Pattern> types = new HashSet<Pattern>();
+	    		for (String type : getOption(OPTION_TYPES).split(",")){
+                    types.add(Pattern.compile("^"+type+"$"));
+                }
 	    		this.types = types;
 	    	}
 	    	else
-	    		this.types = new HashSet<String>();
+	    		this.types = new HashSet<Pattern>();
     	return this.types;
     }
     

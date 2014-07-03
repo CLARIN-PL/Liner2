@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 
 /**
@@ -68,17 +69,20 @@ public class Sentence {
 	 * Zwraca chunk dla podanego indeksu tokenu.
 	 * TODO zmienić parametr na token?
 	 */
-	public Annotation getChunkAt(int idx, HashSet<String> types) {
+	public Annotation getChunkAt(int idx, HashSet<Pattern> types) {
 		Annotation returning = null;
 		Iterator<Annotation> i_chunk = chunks.iterator();
 		while (i_chunk.hasNext()) {
 			Annotation currentChunk = i_chunk.next();
 			if ( currentChunk.getBegin() <= idx 
 					&& currentChunk.getEnd() >= idx
-					&& types.contains(currentChunk.getType())					
 				) {
-				returning = currentChunk;
-				break;
+                for(Pattern patt: types){
+                    if(patt.matcher(currentChunk.getType()).find()){
+                        returning = currentChunk;
+                        break;
+                    }
+                }
 			}
 		}
 		return returning;

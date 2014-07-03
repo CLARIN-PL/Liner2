@@ -21,6 +21,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
+
 import org.apache.commons.io.IOUtils;
 
 
@@ -48,8 +50,8 @@ public class ActionEval extends Action{
             System.out.print(" all");
         }
         else{
-            for (String annotation : LinerOptions.getGlobal().getTypes())
-                System.out.print(" " + annotation);
+            for (Pattern pattern : LinerOptions.getGlobal().getTypes())
+                System.out.print(" " + pattern);
         }
     	System.out.println();
 
@@ -117,9 +119,8 @@ public class ActionEval extends Action{
     		/* Get reference set of annotations */
             HashMap<Sentence, AnnotationSet> referenceChunks = ps.getChunkings();
 
-    		/* Remove annotation to be evaluated */
-            for (String annotation : LinerOptions.getGlobal().getTypes())
-                ps.removeAnnotations(annotation);
+    		/* Remove annotations from data */
+            ps.removeAnnotations();
 
     		/* Generate features */
             timer.startTimer("Feature generation");

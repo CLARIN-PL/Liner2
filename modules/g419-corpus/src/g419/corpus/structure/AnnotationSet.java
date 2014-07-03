@@ -80,4 +80,15 @@ public class AnnotationSet {
 			}
 		}
 	}
+
+    /**
+     * Returns all anotation types in AnnotationSet
+     */
+    public HashSet<String> getAnnotationTypes(){
+        HashSet<String> types = new HashSet<String>();
+        for(Annotation an: this.chunks){
+            types.add(an.getType());
+        }
+            return types;
+    }
 }

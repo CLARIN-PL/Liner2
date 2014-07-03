@@ -1,12 +1,10 @@
 package g419.corpus.io.reader;
 
-
-import g419.liner2.api.LinerOptions;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
 
 public class ReaderFactory {
 
@@ -34,14 +32,6 @@ public class ReaderFactory {
         }
         else if (inputFormat.equals("tei")){
             return getTEIStreamReader(inputFile, inputFile);
-        }
-// TODO uaktualnić po reorganizacji
-        else if (inputFile.equals("{CV-TRAIN}")){
-        	return getStreamReader(
-        			inputFile,
-        			IOUtils.toInputStream(LinerOptions.getGlobal().getCvTrain()),
-        			"",
-        			inputFormat);
         }
         else if (inputFormat.startsWith("batch:")){
             String format = inputFormat.substring(6);

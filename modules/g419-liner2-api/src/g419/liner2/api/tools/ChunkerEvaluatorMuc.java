@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-
+import java.util.regex.Pattern;
 
 
 /**
@@ -100,21 +100,16 @@ public class ChunkerEvaluatorMuc {
 	private int sentenceNum = 0;
 	
 	private boolean quiet = false;		// print sentence results?
+    HashSet<Pattern> patterns = new HashSet<Pattern>();
 	HashSet<String> types = new HashSet<String>();
-	
-	/**
-	 * @param chunker
-	 */
-	public ChunkerEvaluatorMuc() {
-	}
 
-	public ChunkerEvaluatorMuc(HashSet<String> types) {
-		this.types = types;
+
+	public ChunkerEvaluatorMuc(HashSet<Pattern> patterns) {
+		this.patterns = patterns;
 	}
 	
 	/**
 	 * Ocenia nerowanie całego dokumentu.
-	 * @param set
 	 */
 	public void evaluate(HashMap<Sentence, AnnotationSet> chunkings, HashMap<Sentence, AnnotationSet> chunkigsRef){
 		for ( Sentence sentence : chunkings.keySet()){
@@ -126,10 +121,17 @@ public class ChunkerEvaluatorMuc {
 	 * 
 	 */
 	private void evaluate(Sentence sentence, AnnotationSet chunking, AnnotationSet chunkingRef) {
+        HashSet<String> newTypes = chunkingRef.getAnnotationTypes();
+        newTypes.addAll(chunking.getAnnotationTypes());
+        newTypes.removeAll(this.types);
+        updateTypes(newTypes);
+//        System.out.println("MUC: " + types);
+
 			
 		// Wybierz anotacje do oceny jeżeli został określony ich typ
 		HashSet<Annotation> chunkingRefSet = new HashSet<Annotation>();
 		HashSet<Annotation> chunkingSet = new HashSet<Annotation>();
+
 		if ( this.types.size() == 0 ){
 			chunkingRefSet = chunkingRef.chunkSet();
 			chunkingSet = chunking.chunkSet();
@@ -194,6 +196,20 @@ public class ChunkerEvaluatorMuc {
 		}
 		
 	}
+
+    private void updateTypes(HashSet<String> newTypes){
+        for(String newType: newTypes){
+            if(!this.types.contains(newType)){
+                for(Pattern patt: this.patterns){
+                    if(patt.matcher(newType).find()){
+                        this.types.add(newType);
+                        break;
+                    }
+
+                }
+            }
+        }
+    }
 	
 	private boolean chunksOverlaps(Annotation a, Annotation b){
 		return !(a.getEnd() < b.getBegin() || a.getBegin() > b.getEnd());
@@ -227,13 +243,6 @@ public class ChunkerEvaluatorMuc {
 	public boolean getQuiet() {
 		return this.quiet;
 	}
-
-	public ArrayList<String> getTypes(){
-		ArrayList<String> types = new ArrayList<String>();
-		types.addAll(this.chunks.chunks.keySet());
-		Collections.sort(types);
-		return types;
-	}
 	
 	public void setQuiet(boolean quiet) {
 		this.quiet = quiet;
@@ -258,7 +267,7 @@ public class ChunkerEvaluatorMuc {
 		System.out.println("        Annotation           &  COR &  ACT &  POS &"
 			+ " Precision & Recall  & F$_1$   \\\\");
 		System.out.println("\\hline");
-		for (String type : this.getTypes()) {
+		for (String type : this.types) {
 			int tp = this.chunksTruePositives.getChunkCount(type) * 2 + this.chunksTruePartially.getChunkCount(type);
 			int fp = this.chunksFalsePositives.getChunkCount(type) * 2 + this.chunksTruePartially.getChunkCount(type);
 			int fn = this.chunksFalseNegatives.getChunkCount(type) * 2 + this.chunksFalsePartially.getChunkCount(type);
@@ -369,7 +378,7 @@ public class ChunkerEvaluatorMuc {
 	 */	
 	public void join(ChunkerEvaluatorMuc foreign) {
 			
-		for (String foreignKey : foreign.getTypes()) {
+		for (String foreignKey : foreign.types) {
 			
 			if (!this.keys.contains(foreignKey))
 				this.keys.add(foreignKey);

@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.regex.Pattern;
 
 
 /**
@@ -53,29 +54,15 @@ public class ChunkerEvaluator {
 	private int sentenceNum = 0;
 	
 	private boolean quiet = false;		// print sentence results?
-	private HashSet<String> types = new HashSet<String>();
+	private HashSet<Pattern> patterns = new HashSet<Pattern>();
+    private HashSet<String> types = new HashSet<String>();
 	
-	
-	/**
-	 * @param chunker
-	 */
-	public ChunkerEvaluator() {
-	}
-	
-	public ChunkerEvaluator(HashSet<String> types) {
-		this.types = types;
-		for (String type : types){
-			this.chunksTruePositives.put(type,  new ArrayList<Annotation>());
-			this.chunksFalsePositives.put(type,  new ArrayList<Annotation>());
-			this.chunksFalseNegatives.put(type,  new ArrayList<Annotation>());
-			this.precisionExistingRangeOnly.put(type,  0.0f);
-			this.fMeasureExistingRangeOnly.put(type, 0.0f);
-		}
+	public ChunkerEvaluator(HashSet<Pattern> types) {
+		this.patterns = types;
 	}
 	
 	/**
 	 * Ocenia nerowanie całego dokumentu.
-	 * @param set
 	 */
 	public void evaluate(List<Sentence> order, HashMap<Sentence, AnnotationSet> chunkings, HashMap<Sentence, AnnotationSet> chunkigsRef){
 		for ( Sentence sentence : order){
@@ -95,6 +82,12 @@ public class ChunkerEvaluator {
 		// Wybierz anotacje do oceny jeżeli został określony ich typ
 		HashSet<Annotation> chunkingRefSet = new HashSet<Annotation>();
 		HashSet<Annotation> chunkingSet = new HashSet<Annotation>();
+
+        HashSet<String> newTypes = chunkingRef.getAnnotationTypes();
+        newTypes.addAll(chunking.getAnnotationTypes());
+        newTypes.removeAll(this.types);
+        updateTypes(newTypes);
+
 		if ( this.types.size() == 0 ){
 			chunkingRefSet = chunkingRef.chunkSet();
 			chunkingSet = chunking.chunkSet();
@@ -193,6 +186,25 @@ public class ChunkerEvaluator {
 			printSentenceResults(sentence, sentence.getId(), myTruePositives, testedChunkSet, trueChunkSet);
 				
 	}
+
+    private void updateTypes(HashSet<String> newTypes){
+        for(String newType: newTypes){
+            if(!this.types.contains(newType)){
+                for(Pattern patt: this.patterns){
+                    if(patt.matcher(newType).find()){
+                        this.chunksTruePositives.put(newType,  new ArrayList<Annotation>());
+                        this.chunksFalsePositives.put(newType,  new ArrayList<Annotation>());
+                        this.chunksFalseNegatives.put(newType,  new ArrayList<Annotation>());
+                        this.precisionExistingRangeOnly.put(newType,  0.0f);
+                        this.fMeasureExistingRangeOnly.put(newType, 0.0f);
+                        this.types.add(newType);
+                        break;
+                    }
+
+                }
+            }
+        }
+    }
 	
 	/**
 	 * Precyzja dla wszystkich typów anotacji. = TP/(TP+FP)
@@ -384,7 +396,7 @@ public class ChunkerEvaluator {
 	 */	
 	public void join(ChunkerEvaluator foreign) {
 			
-		for (String foreignKey : foreign.types) {					
+		for (String foreignKey : foreign.types) {
 			this.joinMaps(foreignKey, this.chunksTruePositives, foreign.chunksTruePositives);
 			this.joinMaps(foreignKey, this.chunksFalsePositives, foreign.chunksFalsePositives);
 			this.joinMaps(foreignKey, this.chunksFalseNegatives, foreign.chunksFalseNegatives);

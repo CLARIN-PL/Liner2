@@ -2,6 +2,7 @@ package g419.corpus.structure;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 
 /**
@@ -108,4 +109,15 @@ public class Document {
 				sentence.removeAnnotations(annotation);
 		
 	}
+
+    /**
+     * Removes all anotation
+     */
+    public void removeAnnotations() {
+        for (Paragraph paragraph : this.paragraphs)
+            for (Sentence sentence : paragraph.getSentences())
+                sentence.chunks = new LinkedHashSet<Annotation>();
+
+    }
+
 }
