@@ -111,7 +111,7 @@ public class PlainTextStreamReader extends AbstractDocumentReader {
 		String cmd = "maca-analyse -qs morfeusz-nkjp-official -o ccl";
 
 		if ( analyzer.equals("wcrft") )
-			cmd = "wcrft nkjp_s2.ini -d " + "/nlp/resources/model_nkjp10_wcrft_s2" + " -i text -o ccl - ";
+			cmd = "wcrft-app nkjp_e2.ini -i text -o ccl - ";
 				
 		Process tager = null;
 		try {
