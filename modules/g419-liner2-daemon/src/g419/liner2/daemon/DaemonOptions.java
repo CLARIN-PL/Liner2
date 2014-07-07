@@ -65,31 +65,31 @@ public class DaemonOptions extends LinerOptions {
     protected Options makeOptions(){
         Options options = super.makeOptions();
         options.addOption(OptionBuilder.withArgName("name").hasArg()
-                .withDescription("database host name (daemon mode)")
+                .withDescription("database host name")
                 .create(OPTION_DB_HOST));
         options.addOption(OptionBuilder.withArgName("name").hasArg()
-                .withDescription("database name (daemon mode)")
+                .withDescription("database name")
                 .create(OPTION_DB_NAME));
         options.addOption(OptionBuilder.withArgName("password").hasArg()
-                .withDescription("database password (daemon mode)")
+                .withDescription("database password")
                 .create(OPTION_DB_PASSWORD));
         options.addOption(OptionBuilder.withArgName("number").hasArg()
-                .withDescription("database port number (daemon mode)")
+                .withDescription("database port number")
                 .create(OPTION_DB_PORT));
         options.addOption(OptionBuilder.withArgName("address").hasArg()
-                .withDescription("database URI address (daemon mode)")
+                .withDescription("database URI address")
                 .create(OPTION_DB_URI));
         options.addOption(OptionBuilder.withArgName("username").hasArg()
-                .withDescription("database user name (daemon mode)")
+                .withDescription("database user name ")
                 .create(OPTION_DB_USER));
         options.addOption(OptionBuilder.withArgName("number").hasArg()
-                .withDescription("maximum number of processing threads (daemon mode)")
+                .withDescription("maximum number of processing threads")
                 .create(OPTION_MAX_THREADS));
         options.addOption(OptionBuilder.withArgName("address").hasArg()
                 .withDescription("IP address for daemon")
                 .create(OPTION_IP));
         options.addOption(OptionBuilder.withArgName("number").hasArg()
-                .withDescription("port to listen on (daemon mode)")
+                .withDescription("port to listen on")
                 .create(OPTION_PORT));
         options.addOption(OptionBuilder.withArgName("models").hasArg()
                 .withDescription("multiple models config for daemon")
@@ -99,7 +99,7 @@ public class DaemonOptions extends LinerOptions {
 
     protected void printModes(){
         System.out.println("Liner2 service daemon - listen and process requests from a given database");
-        System.out.println("Parameteres: -p, -db_*, -ini");
+        System.out.println("Parameteres: -ip, -p, -db_*, -models");
     }
 
     protected void checkMode(CommandLine line) throws ParameterException {

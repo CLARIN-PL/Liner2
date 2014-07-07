@@ -234,8 +234,7 @@ public class LinerOptions {
 	
     	// Parse parameters passed by command line
 		CommandLine line = new GnuParser().parse(options, args);
-
-        if (line.hasOption(OPTION_HELP) || line.getArgs().length == 0) {
+        if (line.hasOption(OPTION_HELP) || line.getOptions().length == 0) {
             printHelp();
             System.exit(0);
         }
@@ -348,7 +347,6 @@ public class LinerOptions {
 		
 		// sets boolean fields
 		if (line.hasOption(OPTION_VERBOSE)){
-            System.out.println("VERBOSE");
             this.verbose = true;
         }
 		if (line.hasOption(OPTION_VERBOSE_DETAILS))
