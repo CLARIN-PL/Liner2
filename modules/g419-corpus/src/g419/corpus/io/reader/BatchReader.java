@@ -61,7 +61,7 @@ public class BatchReader extends AbstractDocumentReader {
             	cclFile = new File(this.root, cclFile).getAbsolutePath();
 
             if (!new File(cclFile).exists())
-            	System.err.println("File not found while reading ccl-batch: " + cclFile);
+            	System.err.println("File not found while reading batch: " + cclFile);
             else{
             	this.files.add(name);
             }

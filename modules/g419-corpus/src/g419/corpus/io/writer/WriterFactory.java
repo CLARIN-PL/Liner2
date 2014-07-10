@@ -28,7 +28,7 @@ public class WriterFactory {
         }
         else if (outputFormat.startsWith("batch:")){
             String format = outputFormat.substring(6);
-            return new CclBatchWriter(outputFile, format);
+            return new BatchWriter(outputFile, format);
         }
         else{
             return getStreamWriter(getOutputStream(outputFile), outputFormat);

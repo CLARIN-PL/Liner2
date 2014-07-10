@@ -12,7 +12,7 @@ import java.io.FileOutputStream;
  * @author Michał Marcińczuk
  *
  */
-public class CclBatchWriter extends AbstractDocumentWriter {
+public class BatchWriter extends AbstractDocumentWriter {
 
 	private String outputRoot = null;
 	private String format;
@@ -22,7 +22,7 @@ public class CclBatchWriter extends AbstractDocumentWriter {
 	 * 
 	 * @param outputRoot -- path that will be appended to the document URI
 	 */
-	public CclBatchWriter(String outputRoot, String format) {
+	public BatchWriter(String outputRoot, String format) {
 		this.outputRoot = outputRoot;
         this.format = format;
         if(format.equals("ccl")){
