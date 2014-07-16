@@ -513,8 +513,6 @@ public class LinerOptions {
         System.out.println("                        Parameteres: -i, -o, -f, -t, -ini");
         System.out.println("  eval                - evaluate chunker on given input");
         System.out.println("                        Parameters: -i, -f, -ini");
-        System.out.println("  evalcv              - perform 10-fold cross validation");
-        System.out.println("                        Parameters: -i, -f, -ini");
         System.out.println("  pipe                - annotate data");
         System.out.println("                        Parameters: -i, (-f), -o, (-t), -ini");
         System.out.println("  train               - train CRFPP chunker");
