@@ -272,9 +272,9 @@ public class ChunkerEvaluatorMuc {
 			int fp = this.chunksFalsePositives.getChunkCount(type) * 2 + this.chunksTruePartially.getChunkCount(type);
 			int fn = this.chunksFalseNegatives.getChunkCount(type) * 2 + this.chunksFalsePartially.getChunkCount(type);
 			
-			float p = (float)tp / ((float)tp + (float)fp);
-			float r = (float)tp / ((float)tp + (float)fn);
-			float f = 2*p*r / ( p + r);
+			float p = (tp + fp == 0) ? 0 : (float)tp / ((float)tp + (float)fp);
+			float r = (tp + fn == 0) ? 0 :  (float)tp / ((float)tp + (float)fn);
+			float f = (p + r == 0) ? 0 :2*p*r / ( p + r);
 			
 			System.out.println(String.format("        %-20s & %4d & %4d & %4d &   %6.2f%% & %6.2f%% & %6.2f%% \\\\", 
 					type, tp, fp, fn, p*100, r*100, f*100));
@@ -288,7 +288,7 @@ public class ChunkerEvaluatorMuc {
 			float f = 2*p*r / ( p + r);
 
 			System.out.println(String.format("        *TOTAL*              & %4d & %4d & %4d &   %6.2f%% & %6.2f%% & %6.2f%%", 
-					this.globalTruePositives, this.globalFalsePositives, this.globalFalseNegatives, p*100, r*100, f*100));
+					this.globalTruePositives, this.globalFalsePositives, this.globalFalseNegatives, p*100 , r*100, f*100));
 		}		
 		System.out.println("\n");
 	}
