@@ -1,11 +1,13 @@
 package g419.corpus.io.writer;
 
+import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.structure.CrfTemplate;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 
 public class WriterFactory {
@@ -37,6 +39,10 @@ public class WriterFactory {
 
     public AbstractDocumentWriter getArffWriter(OutputStream out, CrfTemplate template){
         return new ArffStreamWriter(out, template);
+    }
+
+    public AnnotationArffWriter getArffAnnotationWriter(String outputFile, List<String> features) throws Exception {
+        return new AnnotationArffWriter(getOutputStream(outputFile), features);
     }
 
     public AbstractDocumentWriter getArffWriter(String outputFile, CrfTemplate template) throws Exception{

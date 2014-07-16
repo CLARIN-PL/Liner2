@@ -2,14 +2,7 @@ package g419.liner2.cli;
 
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.tools.ParameterException;
-import g419.liner2.cli.action.Action;
-import g419.liner2.cli.action.ActionConvert;
-import g419.liner2.cli.action.ActionEval;
-import g419.liner2.cli.action.ActionInteractive;
-import g419.liner2.cli.action.ActionNull;
-import g419.liner2.cli.action.ActionPipe;
-import g419.liner2.cli.action.ActionTime;
-import g419.liner2.cli.action.ActionTrain;
+import g419.liner2.cli.action.*;
 
 import org.apache.commons.cli.UnrecognizedOptionException;
 
@@ -76,7 +69,10 @@ public class Main {
             action = new ActionTrain();
         } else if (mode.equals("time") ) {
             action = new ActionTime();
+        } else if (mode.equals("annotations") ) {
+            action = new ActionAnnotations();
         }
+
 
 		LinerOptions.getGlobal().printConfigurationDescription();
 

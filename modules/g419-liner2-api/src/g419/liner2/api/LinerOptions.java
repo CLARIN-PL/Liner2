@@ -90,6 +90,7 @@ public class LinerOptions {
 	public static final String OPTION_VERBOSE_DETAILS = "verboseDetails";
     public static final String OPTION_CRFLIB = "CRFlib";
     public static final String OPTION_CONVERSION = "conversion";
+    public static final String OPTION_ANNOTATION_FEATURES = "annotation_features";
     // List of argument read from cmd
 	public String mode = "";
 
@@ -109,6 +110,7 @@ public class LinerOptions {
     public ArrayList<String> convertersDesciptions = new ArrayList<String>();
     public HashMap<String, LinerOptions> models = null;
     public String defaultModel = null;
+    public String annotationFeatures;
 	 
 	/**
 	 * Constructor
@@ -382,6 +384,11 @@ public class LinerOptions {
             }
         }
 
+        if (line.hasOption(OPTION_ANNOTATION_FEATURES)) {
+           this.annotationFeatures = line.getOptionValue(OPTION_ANNOTATION_FEATURES);
+
+        }
+
         // read template descriptions
         if (line.hasOption(OPTION_TEMPLATE)) {
             for (String td : line.getOptionValues(OPTION_TEMPLATE)) {
@@ -479,6 +486,9 @@ public class LinerOptions {
         options.addOption(OptionBuilder.withArgName("conversion").hasArg()
                 .withDescription("converter description")
                 .create(OPTION_CONVERSION));
+        options.addOption(OptionBuilder.withArgName("annotationFeatures").hasArg()
+                .withDescription("config file with features for annotation classifier")
+                .create(OPTION_ANNOTATION_FEATURES));
     	options.addOption(new Option(OPTION_SILENT, false, "does not print any additional text in interactive mode"));
     	options.addOption(new Option(OPTION_VERBOSE, false, "print brief information about processing"));
     	options.addOption(new Option(OPTION_VERBOSE_DETAILS, false, "print detailed information about processing"));
