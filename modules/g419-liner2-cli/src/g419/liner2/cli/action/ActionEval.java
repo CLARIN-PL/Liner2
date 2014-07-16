@@ -65,13 +65,14 @@ public class ActionEval extends Action{
             inputFormat = inputFormat.substring(3);
             ArrayList<List<String>> folds = loadFolds();
             for(int i=0; i < folds.size(); i++){
+                timer.startTimer("fold "+ (i + 1));
                 System.out.println("***************************************** FOLD " + (i + 1) + " *****************************************");
                 String trainSet = getTrainingSet(i, folds);
                 String testSet = getTestingSet(i, folds);
                 LinerOptions.getGlobal().setCvTrain(trainSet);
                 AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet), "", inputFormat);
-                evaluate(reader, gen, timer, globalEval, globalEvalMuc);
-
+                evaluate(reader, gen, globalEval, globalEvalMuc);
+                timer.stopTimer();
 
 
             }
@@ -89,15 +90,16 @@ public class ActionEval extends Action{
         else{
             evaluate(ReaderFactory.get().getStreamReader(LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FILE),
                     LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FORMAT)),
-                    gen, timer, null, null);
+                    gen, null, null);
         }
 
 
 	}
 
-    private void evaluate(AbstractDocumentReader dataReader, TokenFeatureGenerator gen, ProcessingTimer timer,
+    private void evaluate(AbstractDocumentReader dataReader, TokenFeatureGenerator gen,
                           ChunkerEvaluator globalEval, ChunkerEvaluatorMuc globalEvalMuc) throws Exception {
 
+        ProcessingTimer timer = new ProcessingTimer();
         timer.startTimer("Model loading");
         ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
         Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
