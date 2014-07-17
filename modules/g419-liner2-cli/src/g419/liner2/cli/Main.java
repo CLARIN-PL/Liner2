@@ -71,6 +71,8 @@ public class Main {
             action = new ActionTime();
         } else if (mode.equals("annotations") ) {
             action = new ActionAnnotations();
+        } else if (mode.equals("selection")) {
+            action = new ActionFeatureSelection();
         }
 
 
