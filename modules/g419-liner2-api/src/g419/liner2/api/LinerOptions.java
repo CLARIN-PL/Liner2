@@ -75,7 +75,7 @@ public class LinerOptions {
 	
 	public static final String OPTION_CHUNKER = "chunker";
 	public static final String OPTION_FEATURE = "feature";
-	public static final String OPTION_HELP = "help";
+	public static final String OPTION_HELP = "h";
 	public static final String OPTION_INI = "ini";
 	public static final String OPTION_INPUT_FILE = "f";
 	public static final String OPTION_INPUT_FORMAT = "i";
@@ -454,7 +454,7 @@ public class LinerOptions {
     	options.addOption(OptionBuilder.withArgName("description").hasArg()
 				.withDescription("recognized feature name")
 				.create(OPTION_FEATURE));
-		options.addOption(OptionBuilder.withLongOpt(OPTION_HELP).withDescription("print this help")
+		options.addOption(OptionBuilder.withLongOpt("help").withDescription("print this help")
 				.create(OPTION_HELP));
     	options.addOption(OptionBuilder
 				.withArgName("filename").hasArg().withDescription("name of file with configuration")
@@ -463,7 +463,7 @@ public class LinerOptions {
 				.withDescription("read input from file")
 				.create(OPTION_INPUT_FILE));
 		options.addOption(OptionBuilder.withArgName("format").hasArg()
-				.withDescription("input format [iob,ccl,plain,plain:maca,plain:wcrft,tei,batch:{format}]")
+				.withDescription("input format [iob, ccl, plain, plain:maca, plain:wcrft, tei, batch:{format}]")
 				.create(OPTION_INPUT_FORMAT));
     	options.addOption(OptionBuilder.withArgName("types").hasArg()
 				.withDescription("types of annotation to evaluate")
@@ -475,7 +475,7 @@ public class LinerOptions {
 				.withDescription("specify chunkers to use")
 				.create(OPTION_USE));
 		options.addOption(OptionBuilder.withArgName("format").hasArg()
-				.withDescription("output format [iob,ccl,tuples,tokens,arff,tei,batch:{format}]")
+				.withDescription("output format [iob, ccl, tuples, tokens, arff, tei, batch:{format}]")
 				.create(OPTION_OUTPUT_FORMAT));
 		options.addOption(OptionBuilder.withArgName("description").hasArg()
 				.withDescription("define feature template")
@@ -486,7 +486,7 @@ public class LinerOptions {
         options.addOption(OptionBuilder.withArgName("conversion").hasArg()
                 .withDescription("converter description")
                 .create(OPTION_CONVERSION));
-        options.addOption(OptionBuilder.withArgName("annotationFeatures").hasArg()
+        options.addOption(OptionBuilder.withArgName("file").hasArg()
                 .withDescription("config file with features for annotation classifier")
                 .create(OPTION_ANNOTATION_FEATURES));
     	options.addOption(new Option(OPTION_SILENT, false, "does not print any additional text in interactive mode"));
@@ -499,14 +499,19 @@ public class LinerOptions {
      * Prints program usage and description.
      */
     public void printHelp(){
-    	System.out.println("--------------------------------------------------*");
-    	System.out.println("* A tool for Named Entity Recognition for Polish. *");
-    	System.out.println("*       Authors: Michał Marcińczuk (2010–2014)    *");
-    	System.out.println("*                Maciej Janicki (2011)            *");
-    	System.out.println("*  Contributors: Dominik Piasecki (2013)          *");
-    	System.out.println("*                Michał Krautforst (2013-2014)    *");
-    	System.out.println("*   Institution: Wrocław University of Technology.*");
-    	System.out.println("--------------------------------------------------*");
+    	System.out.println("----------------------------------------------------------*");
+    	System.out.println("* A framework for multitask sequence labeling, including: *");
+    	System.out.println("*  named entities, temporal expressions.                  *");
+    	System.out.println("----------------------------------------------------------*");    	
+    	System.out.println("*  Authors: Michał Marcińczuk (2010–2014)                 *");
+    	System.out.println("*           Michał Krautforst (2013-2014)                 *");
+    	System.out.println("*           Jan Kocoń (2014)                              *");
+    	System.out.println("*           Dominik Piasecki (2013)                       *");
+    	System.out.println("*           Maciej Janicki (2011)                         *");
+    	System.out.println("----------------------------------------------------------*");    	
+    	System.out.println("*  Institution: Wrocław University of Technology.         *");
+    	System.out.println("*               G4.19 -- Language Technology Group        *");
+    	System.out.println("----------------------------------------------------------*");
     	System.out.println();
         printModes();
         new HelpFormatter().printHelp("java -jar liner.jar <mode> [options]", options);
