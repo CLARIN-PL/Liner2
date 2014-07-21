@@ -51,7 +51,9 @@ public abstract class Action {
 	}
 
 	public void printOptions(){
-        new HelpFormatter().printHelp(
+		HelpFormatter formatter = new HelpFormatter();
+		formatter.setWidth(98);
+        formatter.printHelp(
         		String.format("./liner2-cli %s [options]", this.getName()), this.options);
 	}
 	
