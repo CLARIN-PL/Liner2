@@ -499,42 +499,10 @@ public class LinerOptions {
      * Prints program usage and description.
      */
     public void printHelp(){
-    	System.out.println("----------------------------------------------------------*");
-    	System.out.println("* A framework for multitask sequence labeling, including: *");
-    	System.out.println("*  named entities, temporal expressions.                  *");
-    	System.out.println("----------------------------------------------------------*");    	
-    	System.out.println("*  Authors: Michał Marcińczuk (2010–2014)                 *");
-    	System.out.println("*           Michał Krautforst (2013-2014)                 *");
-    	System.out.println("*           Jan Kocoń (2014)                              *");
-    	System.out.println("*           Dominik Piasecki (2013)                       *");
-    	System.out.println("*           Maciej Janicki (2011)                         *");
-    	System.out.println("----------------------------------------------------------*");    	
-    	System.out.println("*  Institution: Wrocław University of Technology.         *");
-    	System.out.println("*               G4.19 -- Language Technology Group        *");
-    	System.out.println("----------------------------------------------------------*");
-    	System.out.println();
-        printModes();
         new HelpFormatter().printHelp("java -jar liner.jar <mode> [options]", options);
         System.out.println();
     	System.out.println("Chunker factory (patterns for `-chunker` parameter):");
     	System.out.println(ChunkerFactory.getDescription());
-    }
-
-    protected void printModes(){
-        System.out.println("Modes:");
-        System.out.println("  interactive         - interactive mode");
-        System.out.println("                        Parameters: -ini, -o");
-        System.out.println("  convert             - convert text from one format to another");
-        System.out.println("                        Parameteres: -i, -o, -f, -t, -ini");
-        System.out.println("  eval                - evaluate chunker on given input");
-        System.out.println("                        Parameters: -i, -f, -ini");
-        System.out.println("  pipe                - annotate data");
-        System.out.println("                        Parameters: -i, (-f), -o, (-t), -ini");
-        System.out.println("  train               - train CRFPP chunker");
-        System.out.println("                        Parameters: -ini");
-        System.out.println("  time                - measure processing time");
-        System.out.println("                        Parameters: -i, (-f), -o, (-t), -ini");
-        System.out.println();
     }
 
 	public void printConfigurationDescription(){

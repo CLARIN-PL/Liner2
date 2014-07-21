@@ -17,6 +17,14 @@ import g419.liner2.api.tools.ParameterException;
  */
 public class ActionPipe extends Action{
 
+	public ActionPipe(){
+		super("pipe");
+	}
+
+	@Override
+	public void parseOptions(String[] args) {
+	}
+	
 	/**
 	 * Module entry function.
 	 */

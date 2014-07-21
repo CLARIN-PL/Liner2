@@ -11,6 +11,14 @@ import g419.liner2.api.converter.ConverterFactory;
 import g419.liner2.api.features.TokenFeatureGenerator;
 
 public class ActionConvert extends Action {
+
+	public ActionConvert() {
+		super("convert");
+	}
+
+	@Override
+	public void parseOptions(String[] args) {
+	}
 	
 	@Override
 	public void run() throws Exception {

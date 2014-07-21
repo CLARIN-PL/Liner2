@@ -17,6 +17,14 @@ import g419.liner2.api.tools.ProcessingTimer;
  */
 public class ActionTime extends Action{
 
+	public ActionTime(){
+		super("time");
+	}
+
+	@Override
+	public void parseOptions(String[] args) {
+	}
+	
 	/**
 	 * Module entry function.
 	 */

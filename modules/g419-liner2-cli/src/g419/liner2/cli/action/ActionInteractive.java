@@ -49,6 +49,13 @@ public class ActionInteractive extends Action{
         validOutputFormats.add("tokens");
     }
 
+	public ActionInteractive() {
+		super("interactive");
+	}
+
+	@Override
+	public void parseOptions(String[] args) {
+	}
 
 	public void run() throws Exception {
         LinerOptions.getGlobal().setDefaultDataFormats("plain:maca", "ccl");

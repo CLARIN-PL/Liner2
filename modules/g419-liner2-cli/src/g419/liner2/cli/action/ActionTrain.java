@@ -10,6 +10,14 @@ import g419.liner2.api.chunker.factory.ChunkerFactory;
  */
 public class ActionTrain extends Action{
 
+	public ActionTrain(){
+		super("train");
+	}
+
+	@Override
+	public void parseOptions(String[] args) {
+	}
+	
 	/**
 	 * Module entry function.
 	 * 

@@ -34,6 +34,14 @@ import org.apache.commons.io.IOUtils;
  */
 public class ActionEval extends Action{
 
+	public ActionEval() {
+		super("eval");
+	}
+
+	@Override
+	public void parseOptions(String[] args) {
+	}
+	
 	/**
 	 * 
 	 */		
