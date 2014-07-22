@@ -1,10 +1,6 @@
 package g419.corpus.structure;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 
@@ -69,7 +65,7 @@ public class Sentence {
 	 * Zwraca chunk dla podanego indeksu tokenu.
 	 * TODO zmienić parametr na token?
 	 */
-	public Annotation getChunkAt(int idx, HashSet<Pattern> types) {
+	public Annotation getChunkAt(int idx, List<Pattern> types) {
 		Annotation returning = null;
 		Iterator<Annotation> i_chunk = chunks.iterator();
 		while (i_chunk.hasNext()) {

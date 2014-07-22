@@ -17,6 +17,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,13 +34,13 @@ public class CrfppChunker extends Chunker
 	private String model_filename = null;
 	private int threads = 1;
 	private static final int MAX_TOKENS = 1000;
-	private HashSet<Pattern> types = null;
+	private List<Pattern> types = null;
 	
     public CrfppChunker() {
-		this.types = new HashSet<Pattern>();
+		this.types = new ArrayList<Pattern>();
     }
     
-    public CrfppChunker(int threads, HashSet<Pattern> types){
+    public CrfppChunker(int threads, List<Pattern> types){
 		this.threads = threads;
 		this.types = types;    	
     }

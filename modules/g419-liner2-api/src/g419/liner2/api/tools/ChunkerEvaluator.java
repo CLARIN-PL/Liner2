@@ -54,10 +54,10 @@ public class ChunkerEvaluator {
 	private int sentenceNum = 0;
 	
 	private boolean quiet = false;		// print sentence results?
-	private HashSet<Pattern> patterns = new HashSet<Pattern>();
+	private List<Pattern> patterns = new ArrayList<Pattern>();
     private HashSet<String> types = new HashSet<String>();
 	
-	public ChunkerEvaluator(HashSet<Pattern> types) {
+	public ChunkerEvaluator(List<Pattern> types) {
 		this.patterns = types;
 	}
 	
@@ -261,8 +261,7 @@ public class ChunkerEvaluator {
 	}
 
 	/**
-	 * Kompletność dla rozpoznawania granic anotacji. 
-	 * @param type
+	 * Kompletność dla rozpoznawania granic anotacji.
 	 */
 	public float getSpanRecall(){
 		float tp = this.globalTruePositivesRangeOnly;
@@ -293,7 +292,6 @@ public class ChunkerEvaluator {
 
 	/**
 	 * Średnia harmoniczna dla rozpoznawania granic anotacji.
-	 * @param type
 	 * @return
 	 */
 	public float getSpanFMeasure(){

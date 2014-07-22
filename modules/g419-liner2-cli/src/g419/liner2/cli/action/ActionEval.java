@@ -23,6 +23,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import g419.liner2.cli.CommonOptions;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
 
 
@@ -34,51 +39,77 @@ import org.apache.commons.io.IOUtils;
  */
 public class ActionEval extends Action{
 
+    public static final String OPTION_VERBOSE_DETAILS = "d";
+    public static final String OPTION_VERBOSE_DETAILS_LONG = "details";
+
+    private String input_file = null;
+    private String input_format = null;
+
+    @SuppressWarnings("static-access")
 	public ActionEval() {
 		super("eval");
+        this.setDescription("data evaluation using given model, crossvalidaion mode included");
+
+        this.options.addOption(CommonOptions.getInputFileFormatOption());
+        this.options.addOption(CommonOptions.getInputFileNameOption());
+        this.options.addOption(CommonOptions.getModelFileOption());
+        this.options.addOption(OptionBuilder
+                .withArgName("verbose_details").hasArg()
+                .withDescription("verbose processed sentences data")
+                .withLongOpt(OPTION_VERBOSE_DETAILS_LONG)
+                .create(OPTION_VERBOSE_DETAILS));
+
+
 	}
 
 	@Override
-	public void parseOptions(String[] args) {
+	public void parseOptions(String[] args) throws ParseException {
+        CommandLine line = new GnuParser().parse(this.options, args);
+        parseDefault(line);
+        this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
+        this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
+        LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
+        if(line.hasOption(OPTION_VERBOSE_DETAILS)){
+            LinerOptions.getGlobal().verboseDetails = true;
+        }
 	}
 	
 	/**
 	 * 
 	 */		
 	public void run() throws Exception {
-        LinerOptions.getGlobal().setDefaultDataFormats("ccl", "ccl");
 
-		if ( !LinerOptions.isOption(LinerOptions.OPTION_USE) ){
-			throw new ParameterException("Parameter --use <chunker_pipe_desription> not set");
+		if ( !LinerOptions.isOption(LinerOptions.OPTION_USED_CHUNKER) ){
+            throw new ParameterException("Parameter 'chunker' in 'main' section of model configuration not set");
 		}
 		
     	ProcessingTimer timer = new ProcessingTimer();
     	TokenFeatureGenerator gen = null;
     	
     	System.out.print("Annotations to evaluate:");
-        if(LinerOptions.getGlobal().getTypes().isEmpty()){
+        if(LinerOptions.getGlobal().types.isEmpty()){
             System.out.print(" all");
         }
         else{
-            for (Pattern pattern : LinerOptions.getGlobal().getTypes())
+            for (Pattern pattern : LinerOptions.getGlobal().types)
                 System.out.print(" " + pattern);
         }
     	System.out.println();
 
-        String inputFormat = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FORMAT);
-        if (inputFormat.startsWith("cv:")){
-            ChunkerEvaluator globalEval = new ChunkerEvaluator(LinerOptions.getGlobal().getTypes());
-            ChunkerEvaluatorMuc globalEvalMuc = new ChunkerEvaluatorMuc(LinerOptions.getGlobal().getTypes());
+        if (this.input_format.startsWith("cv:")){
+            ChunkerEvaluator globalEval = new ChunkerEvaluator(LinerOptions.getGlobal().types);
+            ChunkerEvaluatorMuc globalEvalMuc = new ChunkerEvaluatorMuc(LinerOptions.getGlobal().types);
 
-            inputFormat = inputFormat.substring(3);
+            this.input_format = this.input_format.substring(3);
+            LinerOptions.getGlobal().setCVDataFormat(this.input_format);
             ArrayList<List<String>> folds = loadFolds();
             for(int i=0; i < folds.size(); i++){
                 timer.startTimer("fold "+ (i + 1));
                 System.out.println("***************************************** FOLD " + (i + 1) + " *****************************************");
                 String trainSet = getTrainingSet(i, folds);
                 String testSet = getTestingSet(i, folds);
-                LinerOptions.getGlobal().setCvTrain(trainSet);
-                AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet), "", inputFormat);
+                LinerOptions.getGlobal().setCVTrainData(trainSet);
+                AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet), "", this.input_format);
                 evaluate(reader, gen, globalEval, globalEvalMuc);
                 timer.stopTimer();
 
@@ -96,8 +127,7 @@ public class ActionEval extends Action{
 
         }
         else{
-            evaluate(ReaderFactory.get().getStreamReader(LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FILE),
-                    LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FORMAT)),
+            evaluate(ReaderFactory.get().getStreamReader(this.input_file, this.input_format),
                     gen, null, null);
         }
 
@@ -118,8 +148,8 @@ public class ActionEval extends Action{
 
 
     	/* Create all defined chunkers. */
-        ChunkerEvaluator eval = new ChunkerEvaluator(LinerOptions.getGlobal().getTypes());
-        ChunkerEvaluatorMuc evalMuc = new ChunkerEvaluatorMuc(LinerOptions.getGlobal().getTypes());
+        ChunkerEvaluator eval = new ChunkerEvaluator(LinerOptions.getGlobal().types);
+        ChunkerEvaluatorMuc evalMuc = new ChunkerEvaluatorMuc(LinerOptions.getGlobal().types);
 
         timer.startTimer("Data reading");
         Document ps = dataReader.nextDocument();
@@ -175,7 +205,7 @@ public class ActionEval extends Action{
     private ArrayList<List<String>> loadFolds() throws IOException {
         ArrayList<List<String>> folds = new ArrayList<List<String>>();
         /** Wczytaj listy plików */
-        File sourceFile = new File(LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FILE));
+        File sourceFile = new File(this.input_file);
         String root = sourceFile.getParentFile().getAbsolutePath();
         BufferedReader bf = new BufferedReader(new InputStreamReader(new FileInputStream(sourceFile)));
 

@@ -22,6 +22,10 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import g419.liner2.cli.CommonOptions;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -31,9 +35,9 @@ import org.apache.commons.io.IOUtils;
  */
 public class ActionInteractive extends Action{
 
-    /**
-	 * Module entry function.
-	 */
+    private String input_format = null;
+    private String output_format = null;
+    private boolean silent = false;
 
     private static HashSet<String> validInputFormats = new HashSet<String>();
     private static HashSet<String> validOutputFormats = new HashSet<String>();
@@ -51,33 +55,40 @@ public class ActionInteractive extends Action{
 
 	public ActionInteractive() {
 		super("interactive");
+        this.setDescription("interactive mode for processing data");
+
+        this.options.addOption(CommonOptions.getInputFileFormatOption());
+        this.options.addOption(CommonOptions.getOutputFileFormatOption());
+        this.options.addOption(CommonOptions.getModelFileOption());
 	}
 
 	@Override
-	public void parseOptions(String[] args) {
+	public void parseOptions(String[] args) throws ParseException {
+        CommandLine line = new GnuParser().parse(this.options, args);
+        parseDefault(line);
+        this.output_format = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT, "ccl");
+        this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "plain:wcrft");
+        LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
 	}
 
 	public void run() throws Exception {
-        LinerOptions.getGlobal().setDefaultDataFormats("plain:maca", "ccl");
         
-        if ( !LinerOptions.isOption(LinerOptions.OPTION_USE) ){
-			throw new ParameterException("Parameter --use <chunker_pipe_desription> not set");
+        if ( !LinerOptions.isOption(LinerOptions.OPTION_USED_CHUNKER) ){
+            throw new ParameterException("Parameter 'chunker' in 'main' section of model configuration not set");
 		}
 
         TokenFeatureGenerator gen = null;
-        String inputFormat = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FORMAT);
-        if(!validInputFormats.contains(inputFormat)){
-            throw new ParameterException("Input format " + inputFormat + " is not valid for interactive mode. Use one of: " + validInputFormats);
+        if(!validInputFormats.contains(input_format)){
+            throw new ParameterException("Input format " + input_format + " is not valid for interactive mode. Use one of: " + validInputFormats);
         }
-        String outputFormat = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_OUTPUT_FORMAT);
-        if(!validOutputFormats.contains(outputFormat)){
-            throw new ParameterException("Output format " + outputFormat + " is not valid for interactive mode. Use one of: " + validOutputFormats);
+        if(!validOutputFormats.contains(output_format)){
+            throw new ParameterException("Output format " + output_format + " is not valid for interactive mode. Use one of: " + validOutputFormats);
         }
-        AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(System.out, outputFormat);
+        AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(System.out, output_format);
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		String cSeq = "";
 		
-		if (!LinerOptions.getGlobal().silent){
+		if (!silent){
 			System.out.println("# Loading, please wait...");
 		}
         ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
@@ -87,14 +98,14 @@ public class ActionInteractive extends Action{
             gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
         }
 
-		if (!LinerOptions.getGlobal().silent){
+		if (!silent){
 			System.out.println("# Enter a sentence and press Enter.");
-			System.out.println("# Input format: " + inputFormat);
+			System.out.println("# Input format: " + input_format);
 			System.out.println("# To finish, enter 'EOF'.");
         }
 		
 		do {
-	        if (!LinerOptions.getGlobal().silent)
+	        if (!silent)
 	        	System.out.print("\n> ");
 			
 			// Get line of text to process
@@ -120,7 +131,7 @@ public class ActionInteractive extends Action{
 				AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(
 						"terminal input", 
 						IOUtils.toInputStream(cSeq), 
-						inputFormat);
+						input_format);
 				Document ps = reader.nextDocument();
 				reader.close();
 

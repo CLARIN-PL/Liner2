@@ -6,10 +6,7 @@ import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 import java.util.regex.Pattern;
 
 
@@ -100,11 +97,11 @@ public class ChunkerEvaluatorMuc {
 	private int sentenceNum = 0;
 	
 	private boolean quiet = false;		// print sentence results?
-    HashSet<Pattern> patterns = new HashSet<Pattern>();
+    List<Pattern> patterns = new ArrayList<Pattern>();
 	HashSet<String> types = new HashSet<String>();
 
 
-	public ChunkerEvaluatorMuc(HashSet<Pattern> patterns) {
+	public ChunkerEvaluatorMuc(List<Pattern> patterns) {
 		this.patterns = patterns;
 	}
 	

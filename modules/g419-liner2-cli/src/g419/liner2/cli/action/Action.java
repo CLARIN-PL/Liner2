@@ -1,8 +1,13 @@
 package g419.liner2.cli.action;
 
+import g419.liner2.api.LinerOptions;
+import g419.liner2.cli.CommonOptions;
+import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+
+import java.io.IOException;
 
 public abstract class Action {
 
@@ -15,6 +20,7 @@ public abstract class Action {
 	 */
 	public Action(String name){
 		this.name = name;
+        this.options.addOption(CommonOptions.getVerboseOption());
 	}
 
 	/**
@@ -32,11 +38,17 @@ public abstract class Action {
 	 * @param args
 	 * @return
 	 */
-	public abstract void parseOptions(String[] args) throws ParseException;
+	public abstract void parseOptions(String[] args) throws Exception;
 	
 	public Options getOptions(){
 		return this.options;
 	}
+
+    protected void parseDefault(CommandLine line){
+        if(line.hasOption(CommonOptions.OPTION_VERBOSE)){
+            LinerOptions.getGlobal().verbose = true;
+        }
+    }
 	
 	/**
 	 * Returns name of the mode.
