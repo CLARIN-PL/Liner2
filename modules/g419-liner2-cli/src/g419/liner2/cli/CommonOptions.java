@@ -50,4 +50,13 @@ public class CommonOptions {
 				.create(OPTION_INPUT_FORMAT);
 	}
 
+	@SuppressWarnings("static-access")
+	public static Option getInputFileFormatOptionWithAnnotations(){
+		return OptionBuilder
+				.withArgName("format").hasArg()
+				.withDescription("input format [iob, ccl, tei, batch:{format}]")
+				.withLongOpt(CommonOptions.OPTION_INPUT_FORMAT_LONG)
+				.create(OPTION_INPUT_FORMAT);
+	}
+
 }

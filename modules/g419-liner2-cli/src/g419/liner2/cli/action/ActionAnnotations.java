@@ -61,7 +61,7 @@ public class ActionAnnotations extends Action {
 				.withLongOpt(CommonOptions.OPTION_TYPES_LONG)
 				.isRequired()
 				.create(CommonOptions.OPTION_TYPES));	      
-        this.options.addOption(CommonOptions.getInputFileFormatOption());
+        this.options.addOption(CommonOptions.getInputFileFormatOptionWithAnnotations());
         this.options.addOption(CommonOptions.getInputFileNameOption());
 	}
 
