@@ -20,6 +20,7 @@ import g419.corpus.structure.CrfTemplate;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.IOUtils;
 
 /**
- * Perform feature selection using chunker on a specified corpus.
+ * Perform bottom-up feature selection using chunker on a specified corpus.
  * 
  * @author Jan Kocoń
  * 
@@ -46,31 +47,88 @@ public class ActionFeatureSelection extends Action {
 			throw new ParameterException(
 					"Parameter --use <chunker_pipe_desription> not set");
 		}
-		System.out.println("************************************************");
-		Iterator<Entry<String, String>> it = LinerOptions.getGlobal().features.entrySet().iterator();
-	    while (it.hasNext()) {
-	        Entry<String, String> pairs = it.next();
-	        //System.out.println(pairs.getKey() + " = " + pairs.getValue());
-	        it.remove(); 
-	    }
-	    Iterator<Entry<String, CrfTemplate>> it2 = LinerOptions.getGlobal().templates.entrySet().iterator();
-	    while (it2.hasNext()) {
-	        Entry<String, CrfTemplate> pairs = it2.next();	        
-	        CrfTemplate ct = pairs.getValue();
-	        System.out.println(pairs.getKey() + " = " + ct);
-	        for (String s : ct.getFeatureNames()){
-	        	System.out.println(s);
-	        }
-	        System.out.println("features");
-	        for (Entry<String, String[]> e : ct.getFeatures().entrySet()){
-	        	System.out.println(e.getKey());
-	        }
-	        it2.remove();
-	    }	    
+		
+		Iterator<Entry<String, CrfTemplate>> it = LinerOptions.getGlobal().templates
+				.entrySet().iterator();
+		System.out.println("#FS: begin");
+		while (it.hasNext()) {
+			Entry<String, CrfTemplate> pairs = it.next();
+			CrfTemplate ct = pairs.getValue();
+			System.out.println("#FS: current template: " + pairs.getKey());
+			selectFeatures(ct);		
+		}
+		System.out.println("#FS: end");
+	}
+	
+	private void selectFeatures(CrfTemplate ct) throws Exception{
+		ArrayList<String> featureNames = new ArrayList<String>();
+		Hashtable<String, String[]> features = new Hashtable<String, String[]>();
+		Iterator<String> it = ct.getFeatureNames().iterator();
+		System.out.println("#FS: initial features list");
+		while (it.hasNext()) {
+			String featureName = it.next();
+			System.out.println("#FS: >> " + featureName);
+			featureNames.add(featureName);
+			features.put(featureName, ct.getFeatures().get(featureName));
+		}
+		ct.getFeatureNames().clear();
+		ct.getFeatures().clear();
+		float globalBestFMeasure = 0.0f;
+		float localBestFMeasure = 0.0f;
+		String localBestFeatureName = null;
+		ChunkerEvaluator localEvaluator = null;
+		System.out.println("#FS: initial features list");		
+		int iterationNumber = 0;
+		while (localBestFMeasure >= globalBestFMeasure && !featureNames.isEmpty()){
+			iterationNumber ++;
+			System.out.println("#FS: iteration: " + iterationNumber);		
+			Iterator<String> localIt = featureNames.iterator();
+			localBestFeatureName = null;
+			localBestFMeasure = globalBestFMeasure;
+			while (localIt.hasNext()){
+				String currentFeatureName = localIt.next();
+				ct.getFeatureNames().add(currentFeatureName);
+				ct.getFeatures().put(currentFeatureName, features.get(currentFeatureName));
+				System.out.println("#FS: checking feature: " + currentFeatureName);
+				localEvaluator = eval();
+				float currentFMeasure = localEvaluator.getFMeasure();
+				if (currentFMeasure > localBestFMeasure){
+					System.out.println("#FS: current local best: " + currentFeatureName);
+					System.out.println("#FS: previous local FMeasure: " + localBestFMeasure);
+					System.out.println("#FS: current local FMeasure: " + currentFMeasure);
+					System.out.println("#FS: local gain: " + (currentFMeasure - localBestFMeasure));
+					localBestFMeasure = currentFMeasure;
+					localBestFeatureName = currentFeatureName;
+				}
+				ct.getFeatureNames().remove(currentFeatureName);
+				ct.getFeatures().remove(currentFeatureName);
+			}
+			if (localBestFMeasure > globalBestFMeasure){
+				System.out.println("#FS: local best: " + localBestFeatureName); 
+				System.out.println("#FS: previous FMeasure: " + globalBestFMeasure);
+				System.out.println("#FS: current FMeasure: " + localBestFMeasure);
+				System.out.println("#FS: gain: " + (localBestFMeasure - globalBestFMeasure));
+				globalBestFMeasure = localBestFMeasure;
+				ct.getFeatureNames().add(localBestFeatureName);
+				ct.getFeatures().put(localBestFeatureName, features.get(localBestFeatureName));
+				featureNames.remove(localBestFeatureName);
+				features.remove(localBestFeatureName);
+			}
+			else {
+				System.out.println("#FS: no gain, finishing");
+			}
+		}
+		System.out.println("#FS: summary");
+		System.out.println("#FS: selected features:");
+		Iterator<String> finalIt = ct.getFeatureNames().iterator();
+		while (finalIt.hasNext())
+			System.out.println("#FS: >> " + finalIt.next());		
+	}
+	
 
-	    
-	    System.exit(0);
+	private ChunkerEvaluator eval() throws Exception {
 
+		ChunkerEvaluator result = null;
 		ProcessingTimer timer = new ProcessingTimer();
 		TokenFeatureGenerator gen = null;
 
@@ -104,7 +162,7 @@ public class ActionFeatureSelection extends Action {
 				LinerOptions.getGlobal().setCvTrain(trainSet);
 				AbstractDocumentReader reader = new BatchReader(
 						IOUtils.toInputStream(testSet), "", inputFormat);
-				evaluate(reader, gen, globalEval, globalEvalMuc);
+				evaluate(reader, gen, globalEval);
 				timer.stopTimer();
 
 			}
@@ -115,22 +173,21 @@ public class ActionFeatureSelection extends Action {
 			globalEvalMuc.printResults();
 			System.out.println("");
 			timer.printStats();
-
-		} else {
-			evaluate(
+			result = globalEval;
+		} else
+			result = evaluate(
 					ReaderFactory.get().getStreamReader(
 							LinerOptions.getGlobal().getOption(
 									LinerOptions.OPTION_INPUT_FILE),
 							LinerOptions.getGlobal().getOption(
 									LinerOptions.OPTION_INPUT_FORMAT)), gen,
-					null, null);
-		}
-
+					null);
+		return result;
 	}
 
-	private void evaluate(AbstractDocumentReader dataReader,
-			TokenFeatureGenerator gen, ChunkerEvaluator globalEval,
-			ChunkerEvaluatorMuc globalEvalMuc) throws Exception {
+	private ChunkerEvaluator evaluate(AbstractDocumentReader dataReader,
+			TokenFeatureGenerator gen, ChunkerEvaluator globalEval)
+			throws Exception {
 
 		ProcessingTimer timer = new ProcessingTimer();
 		timer.startTimer("Model loading");
@@ -186,7 +243,7 @@ public class ActionFeatureSelection extends Action {
 			if (globalEval != null) {
 				globalEval.evaluate(ps.getSentences(), chunkings,
 						referenceChunks);
-				globalEvalMuc.evaluate(chunkings, referenceChunks);
+				// globalEvalMuc.evaluate(chunkings, referenceChunks);
 			}
 			eval.evaluate(ps.getSentences(), chunkings, referenceChunks);
 			evalMuc.evaluate(chunkings, referenceChunks);
@@ -200,6 +257,7 @@ public class ActionFeatureSelection extends Action {
 		eval.printResults();
 		evalMuc.printResults();
 		timer.printStats();
+		return eval;
 	}
 
 	private ArrayList<List<String>> loadFolds() throws IOException {
@@ -248,4 +306,5 @@ public class ActionFeatureSelection extends Action {
 			sbtrain.append(line + "\n");
 		return sbtrain.toString().trim();
 	}
+
 }
