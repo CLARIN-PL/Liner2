@@ -79,7 +79,7 @@ public class ActionFeatureSelection extends Action {
 		ChunkerEvaluator localEvaluator = null;
 		System.out.println("#FS: initial features list");		
 		int iterationNumber = 0;
-		while (localBestFMeasure >= globalBestFMeasure && !featureNames.isEmpty()){
+		while (!featureNames.isEmpty()){
 			iterationNumber ++;
 			System.out.println("#FS: iteration: " + iterationNumber);		
 			Iterator<String> localIt = featureNames.iterator();
@@ -116,6 +116,7 @@ public class ActionFeatureSelection extends Action {
 			}
 			else {
 				System.out.println("#FS: no gain, finishing");
+				break;
 			}
 		}
 		System.out.println("#FS: summary");
