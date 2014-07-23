@@ -56,9 +56,11 @@ public class ActionConvert extends Action {
         this.output_format = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT, "ccl");
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
-        String[] converters = line.getOptionValues(OPTION_CONVERSION);
-        for(String conv: converters){
-            this.convertersDesciptions.add(conv);
+        if(line.hasOption(OPTION_CONVERSION)) {
+            String[] converters = line.getOptionValues(OPTION_CONVERSION);
+            for(String conv: converters){
+                this.convertersDesciptions.add(conv);
+            }
         }
         String featuresFile = line.getOptionValue(CommonOptions.OPTION_FEATURES);
         if(featuresFile != null){
