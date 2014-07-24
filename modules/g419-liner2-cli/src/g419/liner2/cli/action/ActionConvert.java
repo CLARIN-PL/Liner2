@@ -83,6 +83,7 @@ public class ActionConvert extends Action {
             converter = ConverterFactory.createPipe(this.convertersDesciptions);
         }
 
+        AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(this.output_file, this.output_format);
         Document ps = reader.nextDocument();
         while(ps != null) {
             if(gen != null) {
@@ -92,10 +93,13 @@ public class ActionConvert extends Action {
             if (converter != null) {
                 converter.apply(ps);
             }
-            AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(this.output_file, this.output_format);
+            System.out.println(this.output_file+" | " +this.output_format);
             writer.writeDocument(ps);
             ps = reader.nextDocument();
         }
+
+        reader.close();
+        writer.close();
 	}
 
 }
