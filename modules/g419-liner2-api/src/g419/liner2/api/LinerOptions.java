@@ -1,22 +1,11 @@
 package g419.liner2.api;
 
-import g419.corpus.io.reader.AbstractDocumentReader;
-import g419.corpus.io.reader.ReaderFactory;
-import g419.corpus.io.writer.AbstractDocumentWriter;
-import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.CrfTemplate;
-import g419.liner2.api.chunker.factory.ChunkerFactory;
-import g419.liner2.api.tools.TemplateFactory;
 
 import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.Options;
 import org.ini4j.Ini;
 
 /**
