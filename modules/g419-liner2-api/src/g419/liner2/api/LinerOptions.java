@@ -121,8 +121,11 @@ public class LinerOptions {
 
     public LinkedHashMap<String, String> parseFeatures(String featuresFile) throws IOException {
         File iniFile = new File(featuresFile);
+        if(!iniFile.exists())     {
+            throw new FileNotFoundException("Error while parsing features:"+featuresFile+" is not an existing file!");
+        }
         String iniPath = iniFile.getAbsoluteFile().getParentFile().getAbsolutePath();
-        for(String feature: parseLines(featuresFile)){
+        for(String feature: parseLines(iniFile)){
             feature = feature.trim().replace("{INI_PATH}", iniPath);
             String[] splitted = feature.split(":");
             String featureName;
@@ -138,20 +141,24 @@ public class LinerOptions {
     }
 
     public List<Pattern> parseTypes(String typesFile) throws IOException {
-        for(String type: parseLines(typesFile)){
+        File iniFile = new File(typesFile);
+        if(!iniFile.exists())     {
+            throw new FileNotFoundException("Error while parsing types:"+typesFile+" is not an existing file!");
+        }
+        for(String type: parseLines(iniFile)){
             this.types.add(Pattern.compile("^"+type+"$"));
         }
         return this.types;
     }
 
-    private ArrayList<String> parseLines(String filepath) throws IOException {
+    private ArrayList<String> parseLines(File file) throws IOException {
         ArrayList<String> lines = new ArrayList<String>();
 
-        BufferedReader br = new BufferedReader(new FileReader(filepath));
+        BufferedReader br = new BufferedReader(new FileReader(file));
         StringBuffer sb = new StringBuffer();
         String line = br.readLine();
         while(line != null) {
-            if(!line.startsWith("#")){
+            if(line.isEmpty() || !line.startsWith("#")){
                 line = line.trim();
                 lines.add(line);
                 line = br.readLine();
