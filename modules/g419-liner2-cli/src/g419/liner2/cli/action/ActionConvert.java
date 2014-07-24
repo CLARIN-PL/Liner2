@@ -93,7 +93,6 @@ public class ActionConvert extends Action {
             if (converter != null) {
                 converter.apply(ps);
             }
-            System.out.println(this.output_file+" | " +this.output_format);
             writer.writeDocument(ps);
             ps = reader.nextDocument();
         }
