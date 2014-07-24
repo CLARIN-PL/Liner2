@@ -36,6 +36,7 @@ public class TuplesStreamWriter extends AbstractDocumentWriter {
 
 	@Override
 	public void writeDocument(Document document){
+        this.sentenceOffset = 0;
 		for (Paragraph paragraph : document.getParagraphs())
 			this.writeParagraph(paragraph);
 	}
