@@ -1,7 +1,5 @@
 package g419.corpus.io.writer;
 
-import g419.corpus.io.reader.AbstractDocumentReader;
-import g419.corpus.structure.CrfTemplate;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,16 +35,8 @@ public class WriterFactory {
         }
 	}
 
-    public AbstractDocumentWriter getArffWriter(OutputStream out, CrfTemplate template){
-        return new ArffStreamWriter(out, template);
-    }
-
     public AnnotationArffWriter getArffAnnotationWriter(String outputFile, List<String> features) throws Exception {
         return new AnnotationArffWriter(getOutputStream(outputFile), features);
-    }
-
-    public AbstractDocumentWriter getArffWriter(String outputFile, CrfTemplate template) throws Exception{
-        return getArffWriter(getOutputStream(outputFile), template);
     }
 	
 	public AbstractDocumentWriter getStreamWriter(OutputStream out, String outputFormat) throws Exception {
@@ -59,7 +49,7 @@ public class WriterFactory {
 		else if (outputFormat.equals("tokens"))
 			return new TokensStreamWriter(out);
         else if (outputFormat.equals("arff"))
-            throw new Exception("In order to write to arff format use getArffWriter instead of getStreamWriter");
+            return new ArffStreamWriter(out);
 		else		
 			throw new Exception("Output format " + outputFormat + " not recognized.");
 	}
