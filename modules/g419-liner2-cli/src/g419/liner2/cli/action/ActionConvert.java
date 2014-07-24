@@ -4,6 +4,8 @@ import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
+import g419.corpus.structure.Annotation;
+import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.converter.Converter;
@@ -93,6 +95,7 @@ public class ActionConvert extends Action {
             if (converter != null) {
                 converter.apply(ps);
             }
+
             writer.writeDocument(ps);
             ps = reader.nextDocument();
         }

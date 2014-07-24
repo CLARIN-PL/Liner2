@@ -2,13 +2,14 @@ package g419.liner2.api.converter;
 
 
 import g419.corpus.structure.Annotation;
-import g419.corpus.structure.AnnotationSet;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.regex.Pattern;
 
 /**
@@ -26,16 +27,21 @@ public class AnnotationMappingConverter extends Converter{
         }
     }
     @Override
-    public void apply(AnnotationSet sentenceAnnotations) {
-        for(Annotation ann: sentenceAnnotations.chunkSet()){
+    public void apply(LinkedHashSet<Annotation> sentenceAnnotations) {
+        LinkedHashMap<Annotation, String> toUpdate = new LinkedHashMap<Annotation, String>();
+        for(Annotation ann: sentenceAnnotations){
             for(Pattern patt: channelsMapping.keySet()){
                 if(patt.matcher(ann.getType()).find()){
-                    ann.setType(channelsMapping.get(patt));
-                }
-                else{
+                    toUpdate.put(ann, (channelsMapping.get(patt)));
+
                 }
 
             }
+        }
+        for(Annotation ann: toUpdate.keySet()){
+            sentenceAnnotations.remove(ann);
+            ann.setType(toUpdate.get(ann));
+            sentenceAnnotations.add(ann);
         }
     }
 

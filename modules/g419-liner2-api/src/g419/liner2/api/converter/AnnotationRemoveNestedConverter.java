@@ -5,13 +5,14 @@ import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationSet;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 /**
  * Created by michal on 6/3/14.
  */
 public class AnnotationRemoveNestedConverter extends Converter{
     @Override
-    public void apply(AnnotationSet sentenceAnnotations) {
+    public void apply(LinkedHashSet<Annotation> sentenceAnnotations) {
         HashSet<Annotation> to_remove = new HashSet<Annotation>();
         for(String type: getTypes(sentenceAnnotations)){
             HashSet<Annotation> oneType = getOneType(type, sentenceAnnotations);
@@ -26,13 +27,13 @@ public class AnnotationRemoveNestedConverter extends Converter{
             }
         }
         for(Annotation ann: to_remove){
-            sentenceAnnotations.removeChunk(ann);
+            sentenceAnnotations.remove(ann);
         }
     }
 
-    private HashSet<Annotation> getOneType(String type, AnnotationSet as){
+    private HashSet<Annotation> getOneType(String type, LinkedHashSet<Annotation> as){
         HashSet<Annotation> oneType = new HashSet<Annotation>();
-        for(Annotation ann: as.chunkSet()){
+        for(Annotation ann: as){
             if(ann.getType().equals(type)){
                 oneType.add(ann);
             }
@@ -40,9 +41,9 @@ public class AnnotationRemoveNestedConverter extends Converter{
         return oneType;
     }
 
-    private HashSet<String> getTypes(AnnotationSet as){
+    private HashSet<String> getTypes(LinkedHashSet<Annotation> as){
         HashSet<String> types = new HashSet<String>();
-        for(Annotation ann: as.chunkSet()){
+        for(Annotation ann: as){
             types.add(ann.getType());
         }
         return types;
