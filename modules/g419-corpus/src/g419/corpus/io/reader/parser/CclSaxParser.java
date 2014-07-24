@@ -15,6 +15,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -53,7 +54,7 @@ public class CclSaxParser extends DefaultHandler {
     Paragraph currentParagraph = null;
     Sentence currentSentence = null;
     HashMap<String,String> chunkMetaData;
-    Hashtable<String, Annotation> annotations;
+    LinkedHashMap<String, Annotation> annotations;
     Token currentToken = null;
     String tmpBase = null;
     String tmpCtag = null;
@@ -113,7 +114,7 @@ public class CclSaxParser extends DefaultHandler {
         }
         else if (elementName.equalsIgnoreCase(TAG_SENTENCE)) {
             currentSentence = new Sentence();
-            annotations = new Hashtable<String, Annotation>();
+            annotations = new LinkedHashMap<String, Annotation>();
             idx =0;
             currentSentence.setId(attributes.getValue(TAG_ID));
 
@@ -189,7 +190,7 @@ public class CclSaxParser extends DefaultHandler {
                 }
                 else {
                     annotations.put(ann.toString(),
-                            new Annotation(idx, ann.chan, Integer.parseInt(chanNumber), currentSentence));
+                            new Annotation(idx, ann.chan, currentSentence));
                 }
                 if(ann.head.equals("1"))
                     annotations.get(ann.toString()).setHead(idx);
