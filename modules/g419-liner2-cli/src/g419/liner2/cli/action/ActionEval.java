@@ -97,7 +97,7 @@ public class ActionEval extends Action{
     	System.out.println();
 
         if (this.input_format.startsWith("cv:")){
-            ChunkerEvaluator globalEval = new ChunkerEvaluator(LinerOptions.getGlobal().types);
+            ChunkerEvaluator globalEval = new ChunkerEvaluator(LinerOptions.getGlobal().types, true);
             ChunkerEvaluatorMuc globalEvalMuc = new ChunkerEvaluatorMuc(LinerOptions.getGlobal().types);
 
             this.input_format = this.input_format.substring(3);
@@ -136,7 +136,6 @@ public class ActionEval extends Action{
 
     private void evaluate(AbstractDocumentReader dataReader, TokenFeatureGenerator gen,
                           ChunkerEvaluator globalEval, ChunkerEvaluatorMuc globalEvalMuc) throws Exception {
-
         ProcessingTimer timer = new ProcessingTimer();
         timer.startTimer("Model loading");
         ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
@@ -186,10 +185,10 @@ public class ActionEval extends Action{
             timer.addTokens(ps);
             if(globalEval != null){
                 globalEval.evaluate(ps.getSentences(), chunkings, referenceChunks);
-                globalEvalMuc.evaluate(chunkings, referenceChunks);
+//                globalEvalMuc.evaluate(chunkings, referenceChunks);
             }
             eval.evaluate(ps.getSentences(), chunkings, referenceChunks);
-            evalMuc.evaluate(chunkings, referenceChunks);
+//            evalMuc.evaluate(chunkings, referenceChunks);
             timer.stopTimer();
 
             timer.startTimer("Data reading");
