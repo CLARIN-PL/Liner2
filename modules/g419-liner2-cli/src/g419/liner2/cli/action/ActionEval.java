@@ -185,10 +185,10 @@ public class ActionEval extends Action{
             timer.addTokens(ps);
             if(globalEval != null){
                 globalEval.evaluate(ps.getSentences(), chunkings, referenceChunks);
-//                globalEvalMuc.evaluate(chunkings, referenceChunks);
+                globalEvalMuc.evaluate(chunkings, referenceChunks);
             }
             eval.evaluate(ps.getSentences(), chunkings, referenceChunks);
-//            evalMuc.evaluate(chunkings, referenceChunks);
+            evalMuc.evaluate(chunkings, referenceChunks);
             timer.stopTimer();
 
             timer.startTimer("Data reading");
