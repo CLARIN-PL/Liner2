@@ -7,16 +7,45 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 /**
  * Created by michal on 6/3/14.
  */
 public class AnnotationMappingConverter extends Converter{
-    HashMap<Pattern, String> channelsMapping;
+	
+	private class PatternStringEntry implements Entry<Pattern, String>{
+
+		private Pattern pattern = null;
+		private String string = null;
+		
+		public PatternStringEntry(Pattern pattern, String string){
+			this.pattern = pattern;
+			this.string = string;		
+		}
+		
+		@Override
+		public Pattern getKey() {
+			return this.pattern;
+		}
+
+		@Override
+		public String getValue() {
+			return this.string;
+		}
+
+		@Override
+		public String setValue(String value) {
+			this.string = value;
+			return value;
+		}
+		
+	}
+	
+    ArrayList<PatternStringEntry> channelsMapping;
     public AnnotationMappingConverter(String mappingFile){
         try {
             parseMapping(mappingFile);
@@ -28,31 +57,24 @@ public class AnnotationMappingConverter extends Converter{
     }
     @Override
     public void apply(LinkedHashSet<Annotation> sentenceAnnotations) {
-        LinkedHashMap<Annotation, String> toUpdate = new LinkedHashMap<Annotation, String>();
         for(Annotation ann: sentenceAnnotations){
-            for(Pattern patt: channelsMapping.keySet()){
-                if(patt.matcher(ann.getType()).find()){
-                    toUpdate.put(ann, (channelsMapping.get(patt)));
-
+            for(Entry<Pattern, String> entry: channelsMapping){
+                if(entry.getKey().matcher(ann.getType()).find()){
+                	ann.setType(entry.getValue());
                 }
-
             }
-        }
-        for(Annotation ann: toUpdate.keySet()){
-            sentenceAnnotations.remove(ann);
-            ann.setType(toUpdate.get(ann));
-            sentenceAnnotations.add(ann);
         }
     }
 
     private void parseMapping(String mappingFile) throws IOException {
-        channelsMapping = new HashMap<Pattern, String>();
+        channelsMapping = new ArrayList<PatternStringEntry>();
         BufferedReader br = new BufferedReader(new FileReader(mappingFile));
+        
         try {
             String line = br.readLine();
             while (line != null) {
                 String [] pattern_val = line.split(" -> ");
-                channelsMapping.put(Pattern.compile("^"+pattern_val[0]+"$"), pattern_val[1]);
+                channelsMapping.add(new PatternStringEntry(Pattern.compile("^"+pattern_val[0]+"$"), pattern_val[1]));
                 line = br.readLine();
             }
         } catch (IOException e) {
