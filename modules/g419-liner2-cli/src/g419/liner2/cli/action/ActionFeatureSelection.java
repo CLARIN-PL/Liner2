@@ -15,6 +15,7 @@ import g419.liner2.api.tools.ChunkerEvaluator;
 import g419.liner2.api.tools.ChunkerEvaluatorMuc;
 import g419.liner2.api.tools.ParameterException;
 import g419.liner2.api.tools.ProcessingTimer;
+import g419.liner2.cli.CommonOptions;
 import g419.corpus.structure.CrfTemplate;
 
 import java.io.*;
@@ -27,6 +28,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -37,15 +41,36 @@ import org.apache.commons.io.IOUtils;
  */
 public class ActionFeatureSelection extends Action {
 
+    private String input_file = null;
+    private String input_format = null;
+
+    @SuppressWarnings("static-access")
+	public ActionFeatureSelection() {
+		super("selection");
+        this.setDescription("todo");
+
+        this.options.addOption(CommonOptions.getInputFileFormatOption());
+        this.options.addOption(CommonOptions.getInputFileNameOption());
+        this.options.addOption(CommonOptions.getModelFileOption());
+	}
+
+
+	@Override
+	public void parseOptions(String[] args) throws Exception {
+        CommandLine line = new GnuParser().parse(this.options, args);
+        parseDefault(line);
+        this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
+        this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
+        LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));	
+    }
+	
 	/**
 	 * 
 	 */
 	public void run() throws Exception {
-		LinerOptions.getGlobal().setDefaultDataFormats("ccl", "ccl");
 
-		if (!LinerOptions.isOption(LinerOptions.OPTION_USE)) {
-			throw new ParameterException(
-					"Parameter --use <chunker_pipe_desription> not set");
+		if (!LinerOptions.isOption(LinerOptions.OPTION_USED_CHUNKER)) {
+			throw new ParameterException("Parameter 'chunker' in 'main' section of model not set");
 		}
 		
 		Iterator<Entry<String, CrfTemplate>> it = LinerOptions.getGlobal().templates
@@ -143,7 +168,7 @@ public class ActionFeatureSelection extends Action {
 		System.out.println();
 
 		String inputFormat = LinerOptions.getGlobal().getOption(
-				LinerOptions.OPTION_INPUT_FORMAT);
+				CommonOptions.OPTION_INPUT_FORMAT);
 		if (inputFormat.startsWith("cv:")) {
 			ChunkerEvaluator globalEval = new ChunkerEvaluator(LinerOptions
 					.getGlobal().getTypes());
@@ -160,7 +185,7 @@ public class ActionFeatureSelection extends Action {
 								+ " *****************************************");
 				String trainSet = getTrainingSet(i, folds);
 				String testSet = getTestingSet(i, folds);
-				LinerOptions.getGlobal().setCvTrain(trainSet);
+				LinerOptions.getGlobal().setCVTrainData(trainSet);
 				AbstractDocumentReader reader = new BatchReader(
 						IOUtils.toInputStream(testSet), "", inputFormat);
 				evaluate(reader, gen, globalEval);
@@ -179,9 +204,9 @@ public class ActionFeatureSelection extends Action {
 			result = evaluate(
 					ReaderFactory.get().getStreamReader(
 							LinerOptions.getGlobal().getOption(
-									LinerOptions.OPTION_INPUT_FILE),
+									CommonOptions.OPTION_INPUT_FILE),
 							LinerOptions.getGlobal().getOption(
-									LinerOptions.OPTION_INPUT_FORMAT)), gen,
+									CommonOptions.OPTION_INPUT_FORMAT)), gen,
 					null);
 		return result;
 	}
@@ -265,7 +290,7 @@ public class ActionFeatureSelection extends Action {
 		ArrayList<List<String>> folds = new ArrayList<List<String>>();
 		/** Wczytaj listy plików */
 		File sourceFile = new File(LinerOptions.getGlobal().getOption(
-				LinerOptions.OPTION_INPUT_FILE));
+				CommonOptions.OPTION_INPUT_FILE));
 		String root = sourceFile.getParentFile().getAbsolutePath();
 		BufferedReader bf = new BufferedReader(new InputStreamReader(
 				new FileInputStream(sourceFile)));

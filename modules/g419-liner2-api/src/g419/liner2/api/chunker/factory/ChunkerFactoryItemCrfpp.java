@@ -15,8 +15,10 @@ import g419.liner2.api.tools.TemplateFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,25 +88,24 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         String modelFilename = main.get("store").replace("{INI_PATH}", iniDir);
 
         if(inputFile.equals("{CV_TRAIN}")){
-            inputFormat = LinerOptions.getGlobal().getOption(LinerOptions.OPTION_INPUT_FORMAT).substring(3);
-            reader = new BatchReader(IOUtils.toInputStream(LinerOptions.getGlobal().getCvTrain()), "", inputFormat);
+            inputFormat = LinerOptions.getGlobal().getOption("cvFormat");
+            reader = new BatchReader(IOUtils.toInputStream(LinerOptions.getGlobal().getOption("cvData")), "", inputFormat);
         }
         else{
             inputFormat = dataDesc.get("format");
             reader = ReaderFactory.get().getStreamReader(inputFile, inputFormat);
         }
-
-        HashSet<Pattern> types = new HashSet<Pattern>();
-        if ( dataDesc.containsKey("types") && dataDesc.get("types").length() > 0 )
-            for (String line : dataDesc.get("types").split(","))
-                types.add(Pattern.compile("^"+line+"$"));
+        List<Pattern> types = new ArrayList<Pattern>();
+        if ( dataDesc.containsKey("types")) {
+            types = LinerOptions.getGlobal().parseTypes(dataDesc.get("types").replace("{INI_PATH}", iniDir));
+        }
 
         Logger.log("--> Training on file=" + inputFile);
 
         TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
 
-        String templateName = main.get("template");
-        CrfTemplate template = cm.opts.getTemplate(templateName);
+        String templateData = main.get("template").replace("{INI_PATH}", iniDir);
+        CrfTemplate template = TemplateFactory.parseTemplate(templateData, cm.opts.features.keySet());
         File templateFile = File.createTempFile("template", ".tpl");
         CrfppChunker chunker = new CrfppChunker(threads, types);
         chunker.setTemplateFilename(templateFile.getAbsolutePath());

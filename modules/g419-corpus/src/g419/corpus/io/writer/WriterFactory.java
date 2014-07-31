@@ -1,12 +1,7 @@
 package g419.corpus.io.writer;
 
-import g419.corpus.io.reader.AbstractDocumentReader;
-import g419.corpus.structure.CrfTemplate;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.List;
 
 
@@ -37,16 +32,8 @@ public class WriterFactory {
         }
 	}
 
-    public AbstractDocumentWriter getArffWriter(OutputStream out, CrfTemplate template){
-        return new ArffStreamWriter(out, template);
-    }
-
     public AnnotationArffWriter getArffAnnotationWriter(String outputFile, List<String> features) throws Exception {
         return new AnnotationArffWriter(getOutputStream(outputFile), features);
-    }
-
-    public AbstractDocumentWriter getArffWriter(String outputFile, CrfTemplate template) throws Exception{
-        return getArffWriter(getOutputStream(outputFile), template);
     }
 	
 	public AbstractDocumentWriter getStreamWriter(OutputStream out, String outputFormat) throws Exception {
@@ -59,12 +46,18 @@ public class WriterFactory {
 		else if (outputFormat.equals("tokens"))
 			return new TokensStreamWriter(out);
         else if (outputFormat.equals("arff"))
-            throw new Exception("In order to write to arff format use getArffWriter instead of getStreamWriter");
+            return new ArffStreamWriter(out);
 		else		
 			throw new Exception("Output format " + outputFormat + " not recognized.");
 	}
 
     public AbstractDocumentWriter getTEIWriter(String outputFolder) throws Exception{
+        if(outputFolder == null){
+            throw new FileNotFoundException("TEI format requires existing folder as a target (-t) parameter value)");
+        }
+        else if(!new File(outputFolder).exists()){
+            throw new FileNotFoundException("Folder specified as target parameter does not exist:" + outputFolder);
+        }
         OutputStream text = getOutputStream(new File(outputFolder,"text.xml").getPath());
         OutputStream annSegmentation = getOutputStream(new File(outputFolder,"ann_segmentation.xml").getPath());
         OutputStream annMorphosyntax = getOutputStream(new File(outputFolder,"ann_morphosyntax.xml").getPath());

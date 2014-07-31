@@ -79,13 +79,8 @@ public class ChunkerFactory {
 	 */
 	public static ChunkerManager loadChunkers(LinerOptions opts) throws Exception {
         ChunkerManager cm = new ChunkerManager(opts);
-		for (String desc : opts.chunkersDescriptions) {
-			int pos = desc.indexOf(':');
-			if (pos == -1){
-				throw new Exception("Invalid chunker name.");
-            }
-			String chunkerName = desc.substring(0, pos);
-			String chunkerDesc = desc.substring(pos+1);
+		for (String chunkerName : opts.chunkersDescriptions.keySet()) {
+			String chunkerDesc = opts.chunkersDescriptions.get(chunkerName);
 			Chunker chunker = ChunkerFactory.createChunker(chunkerDesc, cm);
             cm.addChunker(chunkerName, chunker);
 		}

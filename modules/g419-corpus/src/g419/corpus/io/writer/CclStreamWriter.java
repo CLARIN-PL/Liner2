@@ -10,10 +10,7 @@ import g419.corpus.structure.Token;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -131,20 +128,13 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 		xmlw.writeCharacters("\n");
 		
 		// prepare annotation channels
-		HashSet<Annotation> chunks = sentence.getChunks();
+		LinkedHashSet<Annotation> chunks = sentence.getChunks();
 		ArrayList<String> channels = new ArrayList<String>();
 		for (Annotation chunk : chunks) {
-			if (chunk.getChannelIdx() == 0){
-				int lastIdx = 0;
-				for(Annotation a: chunks)
-					if (a.getType().equals(chunk.getType()) && a.getChannelIdx() > lastIdx)
-						lastIdx = a.getChannelIdx();
-				chunk.setChannelIdx(lastIdx+1);
-			}
 			if (!channels.contains(chunk.getType()))
 				channels.add(chunk.getType());
 		}
-		Collections.sort(channels);
+//		Collections.sort(channels);
 		
 		ArrayList<Token> tokens = sentence.getTokens();
 		for (int i = 0; i < tokens.size(); i++)
@@ -181,11 +171,19 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 			this.indent(4);
 			xmlw.writeStartElement(TAG_ANN);
 			Annotation ann = tokenchannels[chanIdx];
-			if (ann != null){
-				xmlw.writeAttribute(TAG_CHAN, ann.getType().toLowerCase());
+            if (ann != null){
+                int annIdx = 1;
+                for(Annotation a: chunks)
+                    if (a.getType().equals(ann.getType())){
+                        if(a == ann){
+                            break;
+                        }
+                        annIdx++;
+                    }
+                xmlw.writeAttribute(TAG_CHAN, ann.getType().toLowerCase());
 				if (ann.hasHead() && ann.getHead() == idx)
 					xmlw.writeAttribute(TAG_HEAD, "1");
-				xmlw.writeCharacters("" + ann.getChannelIdx());
+				xmlw.writeCharacters("" + annIdx);
 			}
 			else{
 				xmlw.writeAttribute(TAG_CHAN, channels.get(chanIdx).toLowerCase());

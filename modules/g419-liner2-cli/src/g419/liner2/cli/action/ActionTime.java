@@ -11,22 +11,37 @@ import g419.liner2.api.features.TokenFeatureGenerator;
 import g419.liner2.api.tools.Logger;
 import g419.liner2.api.tools.ParameterException;
 import g419.liner2.api.tools.ProcessingTimer;
+import g419.liner2.cli.CommonOptions;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.ParseException;
 
 /**
  * Measuring processing time.
  */
-public class ActionTime extends Action{
+public class ActionTime extends ActionPipe{
 
+    private String input_file = null;
+    private String input_format = null;
+    private String output_file = null;
+    private String output_format = null;
+
+	public ActionTime(){
+
+		super();
+        name = "time";
+        this.setDescription("eval mode with processing time logs");
+	}
+	
 	/**
 	 * Module entry function.
 	 */
 	public void run() throws Exception{
-        LinerOptions.getGlobal().setDefaultDataFormats("ccl", "ccl");
-	
-        if ( !LinerOptions.isOption(LinerOptions.OPTION_USE) ){
-			throw new ParameterException("Parameter --use <chunker_pipe_desription> not set");
-		}		
-        
+
+        if ( !LinerOptions.getGlobal().isOption(LinerOptions.OPTION_USED_CHUNKER) ){
+            throw new ParameterException("Parameter 'chunker' in 'main' section of model configuration not set");
+        }
+
         TokenFeatureGenerator gen = null;
     	ProcessingTimer timer = new ProcessingTimer();
 
@@ -39,11 +54,11 @@ public class ActionTime extends Action{
     	timer.stopTimer();
 
     	timer.startTimer("Data reading");
-    	AbstractDocumentReader reader = LinerOptions.getGlobal().getInputReader();        
+    	AbstractDocumentReader reader = getInputReader();
     	timer.stopTimer();
 
     	// Setup writing stream
-    	AbstractDocumentWriter writer = LinerOptions.getGlobal().getOutputWriter();
+    	AbstractDocumentWriter writer = getOutputWriter();
     	        
     	timer.startTimer("Data reading");
     	Document ps = reader.nextDocument();

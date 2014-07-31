@@ -52,14 +52,19 @@ public class ChunkerEvaluator {
     //>>>
 	
 	private int sentenceNum = 0;
-	
+
 	private boolean quiet = false;		// print sentence results?
-	private HashSet<Pattern> patterns = new HashSet<Pattern>();
+	private List<Pattern> patterns = new ArrayList<Pattern>();
     private HashSet<String> types = new HashSet<String>();
 	
-	public ChunkerEvaluator(HashSet<Pattern> types) {
+	public ChunkerEvaluator(List<Pattern> types) {
 		this.patterns = types;
 	}
+
+    public ChunkerEvaluator(List<Pattern> types, boolean quiet) {
+        this.patterns = types;
+        this.quiet = quiet;
+    }
 	
 	/**
 	 * Ocenia nerowanie całego dokumentu.
@@ -77,8 +82,7 @@ public class ChunkerEvaluator {
 
 		// tylko na potrzeby wyświetlania szczegółów
 		HashSet<Annotation> myTruePositives = new HashSet<Annotation>();
-		this.sentenceNum++;
-	
+        this.sentenceNum++;
 		// Wybierz anotacje do oceny jeżeli został określony ich typ
 		HashSet<Annotation> chunkingRefSet = new HashSet<Annotation>();
 		HashSet<Annotation> chunkingSet = new HashSet<Annotation>();
@@ -261,8 +265,7 @@ public class ChunkerEvaluator {
 	}
 
 	/**
-	 * Kompletność dla rozpoznawania granic anotacji. 
-	 * @param type
+	 * Kompletność dla rozpoznawania granic anotacji.
 	 */
 	public float getSpanRecall(){
 		float tp = this.globalTruePositivesRangeOnly;
@@ -293,7 +296,6 @@ public class ChunkerEvaluator {
 
 	/**
 	 * Średnia harmoniczna dla rozpoznawania granic anotacji.
-	 * @param type
 	 * @return
 	 */
 	public float getSpanFMeasure(){
@@ -425,7 +427,7 @@ public class ChunkerEvaluator {
 		HashSet<Annotation> truePositives, HashSet<Annotation> falsePositives, 
 		HashSet<Annotation> falseNegatives) {
 		
-		String sentenceHeader = "Sentence #" + this.sentenceNum;
+		String sentenceHeader = "(ChunkerEvaluator) Sentence #" + this.sentenceNum;
 		if (paragraphId != null)
 			sentenceHeader += " from " + paragraphId;
 		Logger.log(sentenceHeader);
@@ -448,7 +450,7 @@ public class ChunkerEvaluator {
 		Logger.log("Tokens: " + tokenNums.toString().trim());
 		Logger.log("");
 		Logger.log("Chunks:");
-		
+
 		for (Annotation chunk : Annotation.sortChunks(truePositives)) {
 			Logger.log(String.format("  TruePositive %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk)));

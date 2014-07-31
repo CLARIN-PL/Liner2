@@ -19,7 +19,7 @@ public class Liner2 extends Chunker {
 
     public Liner2(String ini){
         opts = new LinerOptions();
-        opts.loadIni(ini);
+        opts.parseModelIni(ini);
 
         ChunkerManager cm = new ChunkerManager(opts);
         chunker = cm.getChunkerByName(opts.getOptionUse());

@@ -4,9 +4,7 @@ package g419.liner2.api.tools;
 import g419.corpus.structure.CrfTemplate;
 import g419.corpus.structure.TokenAttributeIndex;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Set;
@@ -14,25 +12,21 @@ import java.util.Set;
 
 public class TemplateFactory {
 
-    public static void parseFeature(String description, HashMap<String, CrfTemplate> templates, Set<String> validFeatures) throws Exception{
+    public static CrfTemplate parseTemplate(String templateFile, Set<String> validFeatures) throws Exception{
 
-        Logger.log("TemplateFactory.parseFeature("+description+")");
-        int pos = description.indexOf(":");
-        if (pos == -1){
-            throw new Exception("Invalid template description: "+description);
+        Logger.log("TemplateFactory.parseTemplate("+templateFile+")");
+        CrfTemplate template = new CrfTemplate(validFeatures);
+        BufferedReader br = new BufferedReader(new FileReader(templateFile));
+        StringBuffer sb = new StringBuffer();
+        String feature = br.readLine();
+        while(feature != null) {
+            if(!feature.startsWith("#")){
+                feature = feature.trim();
+                template.addFeature(feature);
+                feature = br.readLine();
+            }
         }
-
-        String templateName = description.substring(0, pos);
-        String featureDesc = description.substring(pos+1);
-        if (templates.containsKey(templateName)) {
-            templates.get(templateName).addFeature(featureDesc);
-        }
-        else {
-            CrfTemplate template = new CrfTemplate(validFeatures);
-             template.addFeature(featureDesc);
-             templates.put(templateName, template);
-        }
-
+        return template;
     }
 
 	

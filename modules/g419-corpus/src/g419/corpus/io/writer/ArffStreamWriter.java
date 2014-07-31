@@ -1,7 +1,6 @@
 package g419.corpus.io.writer;
 
 import g419.corpus.structure.Annotation;
-import g419.corpus.structure.CrfTemplate;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
@@ -19,11 +18,9 @@ public class ArffStreamWriter extends AbstractDocumentWriter{
 
 	private BufferedWriter ow;
 	private boolean init = false;
-    private CrfTemplate template;
 
-	public ArffStreamWriter(OutputStream os, CrfTemplate template) {
+	public ArffStreamWriter(OutputStream os) {
 		this.ow = new BufferedWriter(new OutputStreamWriter(os));
-        this.template = template;
 	}
 
 	@Override
@@ -38,15 +35,13 @@ public class ArffStreamWriter extends AbstractDocumentWriter{
 		if (this.init)
 			return;
 		try {
-//			String line = "-DOCSTART CONFIG FEATURES orth base ctag";
-			TokenAttributeIndex newAttributeIndex = template.expandAttributeIndex(attributeIndex);
 			String line = "@relation rel";
 			ow.write(line, 0, line.length());
 			ow.newLine();
 			ow.newLine();
-			for (int i = 0; i < newAttributeIndex.getLength(); i++) {
-				String featureName = newAttributeIndex.getName(i);
-				line = "@attribute " + newAttributeIndex.getName(i) + " string";
+			for (int i = 0; i < attributeIndex.getLength(); i++) {
+				String featureName = attributeIndex.getName(i);
+				line = "@attribute " + attributeIndex.getName(i) + " string";
 				ow.write(line, 0, line.length());
 				ow.newLine();
 			}
@@ -88,7 +83,7 @@ public class ArffStreamWriter extends AbstractDocumentWriter{
 			if (!init)
 				init(paragraph.getAttributeIndex());
 			for (Sentence sentence : paragraph.getSentences())
-				writeSentence(template.expandAttributes(sentence));
+				writeSentence(sentence);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		} catch (Exception ex) {

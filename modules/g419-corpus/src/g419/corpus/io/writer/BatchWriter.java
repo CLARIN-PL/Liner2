@@ -2,9 +2,7 @@ package g419.corpus.io.writer;
 
 import g419.corpus.structure.Document;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.*;
 
 
 /**
@@ -14,16 +12,16 @@ import java.io.FileOutputStream;
  */
 public class BatchWriter extends AbstractDocumentWriter {
 
-	private String outputRoot = null;
+	private String outputIndex = null;
 	private String format;
     private String extension;
 
 	/**
 	 * 
-	 * @param outputRoot -- path that will be appended to the document URI
+	 * @param outputIndex -- path that will be appended to the document URI
 	 */
-	public BatchWriter(String outputRoot, String format) {
-		this.outputRoot = outputRoot;
+	public BatchWriter(String outputIndex, String format) {
+		this.outputIndex = outputIndex;
         this.format = format;
         if(format.equals("ccl")){
             extension = ".xml";
@@ -64,10 +62,11 @@ public class BatchWriter extends AbstractDocumentWriter {
 			System.err.println("Error: Document name is not specified (null value)");
 		}
 		else{
-			File uriRoot = new File(this.outputRoot);
+			File index = new File(this.outputIndex);
+            String rootDir = index.getAbsoluteFile().getParent();
             int dotIdx = name.lastIndexOf("."); // if input format is tei 'name' is directory, not file
             name = (dotIdx != -1 ? name.substring(0, dotIdx) : name)  + this.extension;
-            File file = new File(uriRoot, name);
+            File file = new File(rootDir, name);
 			try {
                 AbstractDocumentWriter writer;
                 if (this.format.equals("tei")){
@@ -80,6 +79,9 @@ public class BatchWriter extends AbstractDocumentWriter {
                 }
 				writer.writeDocument(document);
 				writer.close();
+                BufferedWriter indexWriter = new BufferedWriter(new FileWriter(index, true));
+                indexWriter.write(name+"\n");
+                indexWriter.close();
 			} catch (FileNotFoundException e) {
 				System.err.println("Error: FileNotFoundException " + e.getMessage());
 				e.printStackTrace();
