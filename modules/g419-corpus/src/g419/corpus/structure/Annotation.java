@@ -170,12 +170,4 @@ public class Annotation {
 		return sorted;
 	}
 
-    @Override
-    public int hashCode() {
-        int hash = 1;
-        hash += tokens.hashCode();
-        hash += sentence.hashCode();
-        hash += type.hashCode();
-        return hash;
-    }
 }

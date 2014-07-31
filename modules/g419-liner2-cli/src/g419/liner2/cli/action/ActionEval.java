@@ -121,10 +121,6 @@ public class ActionEval extends Action{
             globalEvalMuc.printResults();
             System.out.println("");
             timer.printStats();
-
-
-
-
         }
         else{
             evaluate(ReaderFactory.get().getStreamReader(this.input_file, this.input_format),

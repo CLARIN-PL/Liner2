@@ -6,6 +6,7 @@ import g419.corpus.structure.AnnotationSet;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Created by michal on 6/3/14.
@@ -27,8 +28,25 @@ public class AnnotationRemoveNestedConverter extends Converter{
             }
         }
         for(Annotation ann: to_remove){
-            sentenceAnnotations.remove(ann);
+        	if ( this.overlaps(ann, sentenceAnnotations) )
+        		sentenceAnnotations.remove(ann);
         }
+    }
+    
+    /**
+     * Checks if given annotation is nested with another annotation of the same type.
+     * @param ann -- annotation to check
+     * @param set -- set of annoations
+     * @return
+     */
+    private boolean overlaps(Annotation ann, Set<Annotation> set){
+    	for (Annotation ann2 : set){
+    		if ( ann != ann2 
+    				&& ann.getType().equals(ann2.getType())
+    				&& ann2.getTokens().containsAll(ann.getTokens()) )
+    		return true;
+    	}
+    	return false;
     }
 
     private HashSet<Annotation> getOneType(String type, LinkedHashSet<Annotation> as){
