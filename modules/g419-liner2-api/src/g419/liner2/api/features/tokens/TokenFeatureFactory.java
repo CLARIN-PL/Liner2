@@ -67,6 +67,8 @@ public class TokenFeatureFactory {
             return new IsNumberFeature(feature);
         else if (feature.equals("agr1"))
         	return new Agr1Feature(feature);
+        else if (feature.equals("nospace"))
+        	return new NoSpaceFeature();
         else if (feature.endsWith(".txt")){
     		String[] fData = feature.split(":");
     		if(fData.length != 3)
