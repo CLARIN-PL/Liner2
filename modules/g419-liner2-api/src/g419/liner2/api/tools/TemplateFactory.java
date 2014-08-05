@@ -58,7 +58,7 @@ public class TemplateFactory {
 					String wFixed = windowDesc[i];
 					if (!wFixed.startsWith("-"))
 						wFixed = "+" + wFixed;
-					pw.write("B" + featureIdFixed + wFixed + ":%x[" + windowDesc[i] + "," + featureId + "]\n");
+					pw.write("U" + featureIdFixed + wFixed + ":%x[" + windowDesc[i] + "," + featureId + "]\n");
 				}
 			}
 			// cecha złożona
@@ -82,8 +82,8 @@ public class TemplateFactory {
 			}
 			pw.write("\n");
 		}
-		//pw.write("# Bigram\n");
-		//pw.write("B\n");
+		pw.write("# Bigram\n");
+		pw.write("B\n");
 		pw.close();
 	}
 }
