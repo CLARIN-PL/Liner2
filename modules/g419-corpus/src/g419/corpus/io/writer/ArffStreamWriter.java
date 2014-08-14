@@ -27,7 +27,6 @@ public class ArffStreamWriter extends AbstractDocumentWriter{
     public void writeDocument(Document paragraphSet) {
         for (Paragraph p : paragraphSet.getParagraphs())
             writeParagraph(p);
-        close();
     }
 
 
