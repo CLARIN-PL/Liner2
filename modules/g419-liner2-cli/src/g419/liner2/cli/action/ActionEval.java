@@ -54,7 +54,6 @@ public class ActionEval extends Action{
         this.options.addOption(CommonOptions.getInputFileNameOption());
         this.options.addOption(CommonOptions.getModelFileOption());
         this.options.addOption(OptionBuilder
-                .withArgName("verbose_details").hasArg()
                 .withDescription("verbose processed sentences data")
                 .withLongOpt(OPTION_VERBOSE_DETAILS_LONG)
                 .create(OPTION_VERBOSE_DETAILS));
