@@ -15,7 +15,8 @@ public class Main {
      */
     public static void main(String[] args) throws Exception {
 
-        DaemonOptions.getGlobal().parse(args);
+        DaemonOptions options =  (DaemonOptions)DaemonOptions.getGlobal();
+        options.parse(args);
 		try {
 			new DaemonThread().run();
 		} catch (Exception ex) {

@@ -100,13 +100,7 @@ public class WorkingThread extends Thread {
 					
 		ByteArrayOutputStream ous = new ByteArrayOutputStream();
         AbstractDocumentWriter writer;
-        if (request.getOutputFormat().equals("arff")){
-            CrfTemplate arff_template = DaemonOptions.getGlobal().getArffTemplate();
-            writer = WriterFactory.get().getArffWriter(ous, arff_template);
-        }
-        else{
-            writer = WriterFactory.get().getStreamWriter(ous, request.getOutputFormat());
-        }
+        writer = WriterFactory.get().getStreamWriter(ous, request.getOutputFormat());
 
 		// process text and calculate stats
 		Document ps = reader.nextDocument();
