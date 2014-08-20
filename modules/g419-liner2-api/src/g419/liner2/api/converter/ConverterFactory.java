@@ -16,6 +16,9 @@ public class ConverterFactory {
             else if(desc.equals("annotation-remove-nested")){
                 pipe.add(new AnnotationRemoveNestedConverter());
             }
+            else if(desc.startsWith("annotation-filter-by-regex")){
+                pipe.add(new AnnotationFilterByRegexConverter(desc.split(":")[1]));
+            }
             else{
                 throw new Error(String.format("Converter description '%s' not recognized", desc));
             }
