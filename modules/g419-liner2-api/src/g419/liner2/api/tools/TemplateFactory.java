@@ -12,10 +12,10 @@ import java.util.Set;
 
 public class TemplateFactory {
 
-    public static CrfTemplate parseTemplate(String templateFile, Set<String> validFeatures) throws Exception{
+    public static CrfTemplate parseTemplate(String templateFile) throws Exception{
 
         Logger.log("TemplateFactory.parseTemplate("+templateFile+")");
-        CrfTemplate template = new CrfTemplate(validFeatures);
+        CrfTemplate template = new CrfTemplate();
         BufferedReader br = new BufferedReader(new FileReader(templateFile));
         StringBuffer sb = new StringBuffer();
         String feature = br.readLine();

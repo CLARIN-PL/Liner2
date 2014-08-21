@@ -19,6 +19,9 @@ public class ConverterFactory {
             else if(desc.startsWith("annotation-filter-by-regex")){
                 pipe.add(new AnnotationFilterByRegexConverter(desc.split(":")[1]));
             }
+            else if(desc.startsWith("expand-features")){
+                pipe.add(new TokenFeaturesConverter(desc.split(":")[1]));
+            }
             else{
                 throw new Error(String.format("Converter description '%s' not recognized", desc));
             }

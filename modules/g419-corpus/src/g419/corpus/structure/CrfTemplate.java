@@ -3,7 +3,9 @@ package g419.corpus.structure;
 
 import g419.corpus.io.DataFormatException;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Set;
 
@@ -11,11 +13,6 @@ import java.util.Set;
 public class CrfTemplate {
 	ArrayList<String> featureNames = new ArrayList<String>();
 	Hashtable<String, String[]> features = new Hashtable<String, String[]>();
-    Set<String> validFeatures;
-
-    public CrfTemplate(Set<String> validFeatures){
-        this.validFeatures = validFeatures;
-    }
 	
 	public void addFeature(String description) throws Exception {
 		String[] featureUnits = description.split("/");
@@ -27,9 +24,6 @@ public class CrfTemplate {
 			if (pos == -1)
 				throw new Exception("Invalid template description: " + description);
 			String featureName = featureUnits[0].substring(0, pos);
-			if(!validFeatures.contains(featureName))
-				throw new DataFormatException("Error while parsing template: "+featureName+" not specified in features");
-
 			String[] windowDesc = featureUnits[0].split(":");
 			if (this.features.containsKey(featureName))
 				throw new Exception("Duplicate feature definition in template description: "+description);
@@ -48,8 +42,6 @@ public class CrfTemplate {
 				String[] featureUnit = featureUnits[i].split(":");
 				if (featureUnit.length != 2)
 					throw new Exception("Invalid template description: " + description);
-                if (!validFeatures.contains(featureUnit[0]))
-                    throw new DataFormatException("Error while parsing template: "+featureUnit[0]+" not specified in features");
 				if (featureNameB.length() > 0)
 					featureNameB.append("/");
 				featureNameB.append(featureUnit[0] + "[" + featureUnit[1] + "]");
@@ -74,28 +66,41 @@ public class CrfTemplate {
 		return this.features;
 	}
 
-    public TokenAttributeIndex expandAttributeIndex(TokenAttributeIndex attributeIndex) {
+    public TokenAttributeIndex expandAttributeIndex(TokenAttributeIndex attributeIndex){
 
         TokenAttributeIndex result = new TokenAttributeIndex();
         // rozwija cechy: np. base:-1:0:1 -> base-1, base+0, base+1
-        for (int i = 0; i < attributeIndex.getLength(); i++) {
-            String featureName = attributeIndex.getName(i);
-            if (featureNames.contains(featureName)) {
-                String[] windowDesc = features.get(featureName);
 
-                for (int j = 1; j < windowDesc.length; j++) {
-                    String w = windowDesc[j];
-                    if (!w.startsWith("-")) w = "+" + w;
-                    result.addAttribute(featureName + w);
+        try {
+            for (String featureName : featureNames) { // cechy złożone
+                if (featureName.indexOf('/') > -1) {
+                    for(String atomicFeature: featureName.split("/")){
+                        if (attributeIndex.allAtributes().contains(atomicFeature.split("\\[")[0])) {
+                            result.addAttribute(featureName.replace('/', '_'));
+                        } else {
+                            throw new DataFormatException("Error while parsing template: " + atomicFeature + " not specified in data features");
+                        }
+                    }
+                }
+                else{ // cechy proste
+                    if (attributeIndex.allAtributes().contains(featureName)) {
+                        String[] windowDesc = features.get(featureName);
+
+                        for (int j = 1; j < windowDesc.length; j++) {
+                            String w = windowDesc[j];
+                            if (!w.startsWith("-")) w = "+" + w;
+                            result.addAttribute(featureName + w);
+                        }
+                    }
+                    else {
+                        throw new DataFormatException("Error while parsing template: " + featureName + " not specified in data features");
+                    }
                 }
             }
         }
-        // cechy złożone
-        for (String featureName : featureNames) {
-            if (featureName.indexOf('/') > -1) {
-                result.addAttribute(featureName.replace('/', '_'));
+        catch(DataFormatException e){
+            System.out.println(e);
             }
-        }
         return result;
     }
 
@@ -115,31 +120,8 @@ public class CrfTemplate {
                 newToken.addTag(tag);
             newToken.clearAttributes();
 
-            // cechy proste
-            for (int i = 0; i < attributeIndex.getLength(); i++) {
-                String featureName = attributeIndex.getName(i);
-                if (featureNames.contains(featureName)) {
-                    String[] windowDesc = features.get(featureName);
-
-                    for (int j = 1; j < windowDesc.length; j++) {
-                        String w = windowDesc[j];
-                        int idx = Integer.parseInt(w);
-                        if (!w.startsWith("-")) w = "+" + w;
-                        String newFeatureName = featureName + w;
-//						newAttributeIndex.addAttribute(newFeatureName);
-
-                        String featureValue = null;
-                        if ((k + idx >= 0) && (k + idx < tokens.size()))
-                            featureValue = tokens.get(k+idx).getAttributeValue(i);
-                        int newAttrIdx = newAttributeIndex.getIndex(newFeatureName);
-                        newToken.setAttributeValue(newAttrIdx, featureValue);
-                    }
-                }
-            }
-
-            // cechy złożone
             for (String featureName : featureNames) {
-                if (featureName.indexOf('/') > -1) {
+                if (featureName.indexOf('/') > -1) { // cechy złożone
                     String newFeatureName = featureName.replace('/', '_');
                     String[] windowDesc = features.get(featureName);
 
@@ -154,6 +136,22 @@ public class CrfTemplate {
                     }
                     int newAttrIdx = newAttributeIndex.getIndex(newFeatureName);
                     newToken.setAttributeValue(newAttrIdx, featureValue);
+                }
+                else{ // cechy proste
+                    String[] windowDesc = features.get(featureName);
+
+                    for (int j = 1; j < windowDesc.length; j++) {
+                        String w = windowDesc[j];
+                        int idx = Integer.parseInt(w);
+                        if (!w.startsWith("-")) w = "+" + w;
+                        String newFeatureName = featureName + w;
+
+                        String featureValue = null;
+                        if ((k + idx >= 0) && (k + idx < tokens.size()))
+                            featureValue = tokens.get(k+idx).getAttributeValue(attributeIndex.getIndex(featureName));
+                        int newAttrIdx = newAttributeIndex.getIndex(newFeatureName);
+                        newToken.setAttributeValue(newAttrIdx, featureValue);
+                    }
                 }
             }
 

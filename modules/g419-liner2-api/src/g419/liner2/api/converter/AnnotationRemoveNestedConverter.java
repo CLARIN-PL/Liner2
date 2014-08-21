@@ -3,6 +3,8 @@ package g419.liner2.api.converter;
 
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationSet;
+import g419.corpus.structure.Document;
+import g419.corpus.structure.Sentence;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -12,8 +14,15 @@ import java.util.Set;
  * Created by michal on 6/3/14.
  */
 public class AnnotationRemoveNestedConverter extends Converter{
+
     @Override
-    public void apply(LinkedHashSet<Annotation> sentenceAnnotations) {
+    public void finish(Document doc) {
+
+    }
+
+    @Override
+    public void apply(Sentence sentence) {
+        LinkedHashSet<Annotation> sentenceAnnotations = sentence.getChunks();
         HashSet<Annotation> to_remove = new HashSet<Annotation>();
         for(String type: getTypes(sentenceAnnotations)){
             HashSet<Annotation> oneType = getOneType(type, sentenceAnnotations);

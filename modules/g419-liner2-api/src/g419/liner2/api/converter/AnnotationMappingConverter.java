@@ -2,6 +2,8 @@ package g419.liner2.api.converter;
 
 
 import g419.corpus.structure.Annotation;
+import g419.corpus.structure.Document;
+import g419.corpus.structure.Sentence;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -55,9 +57,15 @@ public class AnnotationMappingConverter extends Converter{
             e.printStackTrace();
         }
     }
+
     @Override
-    public void apply(LinkedHashSet<Annotation> sentenceAnnotations) {
-        for(Annotation ann: sentenceAnnotations){
+    public void finish(Document doc) {
+
+    }
+
+    @Override
+    public void apply(Sentence sentence) {
+        for(Annotation ann: sentence.getChunks()){
             for(Entry<Pattern, String> entry: channelsMapping){
                 if(entry.getKey().matcher(ann.getType()).find()){
                 	ann.setType(entry.getValue());

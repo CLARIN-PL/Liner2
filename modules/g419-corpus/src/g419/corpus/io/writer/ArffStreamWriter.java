@@ -39,7 +39,6 @@ public class ArffStreamWriter extends AbstractDocumentWriter{
 			ow.newLine();
 			ow.newLine();
 			for (int i = 0; i < attributeIndex.getLength(); i++) {
-				String featureName = attributeIndex.getName(i);
 				line = "@attribute " + attributeIndex.getName(i) + " string";
 				ow.write(line, 0, line.length());
 				ow.newLine();
@@ -99,14 +98,8 @@ public class ArffStreamWriter extends AbstractDocumentWriter{
 	
 	private void writeToken(int idx, Token token, Sentence sentence) 
 		throws IOException {
-//		String line = token.getOrth();
-//		ArrayList<Tag> tags = token.getTags();
-//		Tag firstTag = tags.getGlobal(0);
-//		line += " " + firstTag.getBase() + " " + firstTag.getCtag();
 		String line = "";
-//		for (int i = 0; i < token.getNumAttributes(); i++)
-		for (int i = 0; i < sentence.getAttributeIndex().getLength(); i++) {
-//			System.out.println("" + i + ": " + sentence.getAttributeIndex().getName(i));
+		for (int i = 0; i < token.getNumAttributes(); i++){
 			String attrval = token.getAttributeValue(i);
 			if (attrval == null)
 				attrval = "?";

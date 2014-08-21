@@ -2,6 +2,8 @@ package g419.liner2.api.converter;
 
 
 import g419.corpus.structure.Annotation;
+import g419.corpus.structure.Document;
+import g419.corpus.structure.Sentence;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -15,10 +17,19 @@ public class PipeConverter extends Converter{
     public PipeConverter(ArrayList<Converter> converters){
         pipe = converters;
     }
+
     @Override
-    public void apply(LinkedHashSet<Annotation> sentenceAnnotations) {
+    public void finish(Document doc) {
         for(Converter c: pipe){
-            c.apply(sentenceAnnotations);
+            c.finish(doc);
+        }
+
+    }
+
+    @Override
+    public void apply(Sentence sentence) {
+        for(Converter c: pipe){
+            c.apply(sentence);
         }
     }
 }

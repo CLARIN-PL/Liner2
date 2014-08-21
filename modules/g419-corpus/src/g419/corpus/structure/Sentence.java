@@ -144,4 +144,8 @@ public class Sentence {
 		return sb.toString().trim();
 	}
 
+    public void setTokens(ArrayList<Token> newTokens){
+        tokens = newTokens;
+    }
+
 }

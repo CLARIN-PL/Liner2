@@ -1,16 +1,12 @@
 package g419.corpus.io.writer;
 
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Tag;
-import g419.corpus.structure.Token;
+import g419.corpus.structure.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.*;
+import java.util.zip.DataFormatException;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -38,6 +34,7 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 	private OutputStream os;
 	private XMLOutputFactory xmlof = null;
 	private boolean indent = true;
+    private final String[] requiredAttributes = new String[]{"orth", "base", "ctag"};
 	
 	public CclStreamWriter(OutputStream os) {
 		this.os = os;
@@ -91,11 +88,23 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 
 	@Override
 	public void writeDocument(Document document){
+        if(!hasRequiredAttributes(document.getAttributeIndex())){
+            try {
+                throw new DataFormatException("Document attribute index does not contain features required by ccl format: "+Arrays.toString(requiredAttributes));
+            } catch (DataFormatException e) {
+                e.printStackTrace();
+                System.exit(0);
+            }
+        }
 		this.openXml();
 		for (Paragraph paragraph : document.getParagraphs())
 			this.writeParagraph(paragraph);
 		this.closeXml();
-	}	
+	}
+
+    private boolean hasRequiredAttributes(TokenAttributeIndex attrs){
+        return attrs.allAtributes().containsAll(Arrays.asList(requiredAttributes));
+    }
 
 	private void writeParagraph(Paragraph paragraph) {
 		try {

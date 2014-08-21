@@ -13,14 +13,17 @@ import java.util.LinkedHashSet;
  */
 public abstract class Converter {
 
+    public abstract void finish(Document doc);
+
     public void apply(Document doc){
         for(Sentence sent: doc.getSentences()){
-            apply(sent.getChunks());
+            apply(sent);
         }
+        finish(doc);
 
     }
 
-    abstract public void apply(LinkedHashSet<Annotation> sentenceAnnotations);
+    abstract public void apply(Sentence sentence);
 
 
 }
