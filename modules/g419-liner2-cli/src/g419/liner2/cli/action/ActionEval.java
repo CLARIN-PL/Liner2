@@ -1,6 +1,7 @@
 package g419.liner2.cli.action;
 
 
+import g419.corpus.io.DataFormatException;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.BatchReader;
 import g419.corpus.io.reader.ReaderFactory;
@@ -196,7 +197,7 @@ public class ActionEval extends Action{
         timer.printStats();
     }
 
-    private ArrayList<List<String>> loadFolds() throws IOException {
+    private ArrayList<List<String>> loadFolds() throws IOException, DataFormatException {
         ArrayList<List<String>> folds = new ArrayList<List<String>>();
         /** Wczytaj listy plików */
         File sourceFile = new File(this.input_file);
@@ -206,6 +207,9 @@ public class ActionEval extends Action{
         String line = bf.readLine();
         while ( line != null ){
             String[] fileData = line.split("\t");
+            if(fileData.length != 2){
+                throw new DataFormatException("Incorrect line in folds file: "+line+"\nProper line format: {file_name}\\t{fold_nr}");
+            }
             String file = fileData[0];
             int fold = Integer.parseInt(fileData[1]);
             if (!file.startsWith("/")) {
