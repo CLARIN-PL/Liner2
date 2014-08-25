@@ -214,7 +214,7 @@ public class ChunkerEvaluatorMuc {
 	
 	private boolean existsPartialyMatched(HashSet<Annotation> chunks, Annotation chunk){
 		for ( Annotation test : chunks )
-			if ( test.getType().equals(chunk.getType()) && this.chunksOverlaps(test, chunk) )
+			if ( chunk != test && test.getType().equals(chunk.getType()) && this.chunksOverlaps(test, chunk) )
 				return true;
 		return false;
 	}
