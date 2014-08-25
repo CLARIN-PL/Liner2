@@ -18,6 +18,7 @@ import g419.liner2.api.tools.ParameterException;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,6 +26,7 @@ import java.util.regex.Pattern;
 import g419.liner2.cli.CommonOptions;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
 
@@ -57,8 +59,12 @@ public class ActionInteractive extends Action{
 		super("interactive");
         this.setDescription("interactive mode for processing data");
 
-        this.options.addOption(CommonOptions.getInputFileFormatOption());
-        this.options.addOption(CommonOptions.getOutputFileFormatOption());
+        Option inputFormat = CommonOptions.getInputFileFormatOption();
+        inputFormat.setDescription("input format " + validInputFormats);
+        this.options.addOption(inputFormat);
+        Option outputFormat = CommonOptions.getOutputFileFormatOption();
+        outputFormat.setDescription("output format "+ validOutputFormats);
+        this.options.addOption(outputFormat);
         this.options.addOption(CommonOptions.getModelFileOption());
 	}
 

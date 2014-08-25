@@ -48,7 +48,7 @@ public class CommonOptions {
     public static Option getOutputFileFormatOption(){
         return OptionBuilder
                 .withArgName("filename").hasArg()
-                .withDescription("output format")
+                .withDescription("output format [iob, ccl, arff, tokens, tuples, tei, batch:{format}]")
                 .withLongOpt(CommonOptions.OPTION_OUTPUT_FORMAT_LONG)
                 .create(CommonOptions.OPTION_OUTPUT_FORMAT);
     }
