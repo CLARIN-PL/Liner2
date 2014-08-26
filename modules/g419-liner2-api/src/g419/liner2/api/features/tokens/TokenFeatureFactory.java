@@ -108,6 +108,12 @@ public class TokenFeatureFactory {
         }		
         else if (sourceFeats.contains(feature))  //zwroci null dla orth, base i ctag bo sa pobierane z pliku zrodlowego wiec nie potrzebe sa dla nich generatory
         	return null;
+        else if(feature.equals("parenthesis")){
+            return new ParenthesisFeature(feature);
+        }
+        else if(feature.equals("quotation")){
+            return new QuotationFeature(feature);
+        }
         else 
 			throw new DataFormatException("Invalid feature: "+feature);
 	}
