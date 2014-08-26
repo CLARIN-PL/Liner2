@@ -49,7 +49,7 @@ public class ActionEval extends Action{
     @SuppressWarnings("static-access")
 	public ActionEval() {
 		super("eval");
-        this.setDescription("data evaluation using given model, crossvalidaion mode included");
+        this.setDescription("data evaluation using given model, crossvalidaion mode included (-f cv:{format})");
 
         this.options.addOption(CommonOptions.getInputFileFormatOption());
         this.options.addOption(CommonOptions.getInputFileNameOption());
