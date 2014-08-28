@@ -2,6 +2,7 @@ package g419.liner2.cli;
 
 import g419.liner2.cli.action.Action;
 import g419.liner2.cli.action.ActionAnnotations;
+import g419.liner2.cli.action.ActionAgreement;
 import g419.liner2.cli.action.ActionConvert;
 import g419.liner2.cli.action.ActionEval;
 import g419.liner2.cli.action.ActionFeatureSelection;
@@ -40,6 +41,7 @@ public class Main {
     	main.registerAction(new ActionFeatureSelection());
     	main.registerAction(new ActionTime());
     	main.registerAction(new ActionTrain());
+    	main.registerAction(new ActionAgreement());
     	
     	if ( args.length == 0 ){
     		main.printCredits();
