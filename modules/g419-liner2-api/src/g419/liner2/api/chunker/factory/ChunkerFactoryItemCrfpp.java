@@ -105,7 +105,14 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
 
         String templateData = main.get("template").replace("{INI_PATH}", iniDir);
-        CrfTemplate template = TemplateFactory.parseTemplate(templateData);
+        CrfTemplate template;
+        if(!LinerOptions.getGlobal().templates.containsKey(templateData)){
+            template = TemplateFactory.parseTemplate(templateData);
+            LinerOptions.getGlobal().templates.put(templateData, template);
+        }
+        else{
+            template =  LinerOptions.getGlobal().templates.get(templateData);
+        }
         File templateFile = File.createTempFile("template", ".tpl");
         CrfppChunker chunker = new CrfppChunker(threads, types);
         chunker.setTemplateFilename(templateFile.getAbsolutePath());
