@@ -174,4 +174,8 @@ public class LinerOptions {
     public void setCVDataFormat(String format){
         properties.setProperty("cvFormat", format);
     }
+    
+    public List<Pattern> getTypes(){
+    	return this.types;
+    }
 }
