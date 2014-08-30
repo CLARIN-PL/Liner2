@@ -16,6 +16,9 @@ public class Document {
 	TokenAttributeIndex attributeIndex = null;
 	ArrayList<Paragraph> paragraphs = new ArrayList<Paragraph>();
 	
+	/* Zbiór relacji */
+	RelationSet relations = new RelationSet();
+	
 	public Document(String name, TokenAttributeIndex attributeIndex){
 		this.name = name;
 		this.attributeIndex = attributeIndex;
@@ -27,6 +30,13 @@ public class Document {
 		this.attributeIndex = attributeIndex;
 	}
 	
+	public Document(String name, ArrayList<Paragraph> paragraphs, TokenAttributeIndex attributeIndex, RelationSet relations){
+		this.name = name;
+		this.paragraphs = paragraphs;
+		this.attributeIndex = attributeIndex;
+		this.relations = relations;
+	}
+	
 	/**
 	 * Get the name of document source. If the document was read from a file, 
 	 * it is a path to the file. 
@@ -35,7 +45,15 @@ public class Document {
 	public String getName(){
 		return this.name;
 	}
-		
+	
+	public RelationSet getRelations(){
+		return this.relations;
+	}
+	
+	public void setRelations(RelationSet relations){
+		this.relations = relations;
+	}
+	
 	public void addParagraph(Paragraph paragraph) {
 		paragraphs.add(paragraph);
 		if (paragraph.getAttributeIndex() == null)
@@ -120,4 +138,14 @@ public class Document {
 
     }
 
+    /**
+     * Retreives Annotation given sentence id, channel and annotation index in channel
+     */
+    public Annotation getAnnotation(String sentenceId, String channelName, int annotationIdx){
+    	for (Paragraph paragraph : this.paragraphs)
+			for (Sentence sentence : paragraph.getSentences())
+				if(sentence.getId().equals(sentenceId))
+					return sentence.getAnnotationInChannel(channelName, annotationIdx);
+    	return null;
+    }
 }

@@ -83,7 +83,7 @@ public class ActionFeatureSelection extends Action {
 		if (!LinerOptions.isOption(LinerOptions.OPTION_USED_CHUNKER)) {
 			throw new ParameterException("Parameter 'chunker' in 'main' section of model not set");
 		}
-		
+		//not nice solution - but initializes all objects with full feature set
 		eval();
 		Iterator<Entry<String, CrfTemplate>> it = LinerOptions.getGlobal().templates
 				.entrySet().iterator();
@@ -93,12 +93,80 @@ public class ActionFeatureSelection extends Action {
 			System.out.println(pairs.getKey());
 			CrfTemplate ct = pairs.getValue();
 			System.out.println("#FS: current template: " + pairs.getKey());
-			selectFeatures(ct);		
+			//selectFeaturesBottomUp(ct);		
+			selectFeaturesTopDown(ct);
 		}
 		System.out.println("#FS: end");
 	}
 	
-	private void selectFeatures(CrfTemplate ct) throws Exception{
+	private void selectFeaturesTopDown(CrfTemplate ct) throws Exception{
+		ArrayList<String> featureNames = new ArrayList<String>();
+		Hashtable<String, String[]> features = new Hashtable<String, String[]>();
+		Iterator<String> it = ct.getFeatureNames().iterator();
+		System.out.println("#FS: initial features list");
+		while (it.hasNext()) {
+			String featureName = it.next();
+			System.out.println("#FS: >> " + featureName);
+			featureNames.add(featureName);
+			features.put(featureName, ct.getFeatures().get(featureName));
+		}
+		//ct.getFeatureNames().clear();
+		//ct.getFeatures().clear();
+		float globalBestFMeasure = 0.0f;
+		float localBestFMeasure = 0.0f;
+		String localBestFeatureName = null;
+		ChunkerEvaluator localEvaluator = null;
+		System.out.println("#FS: initial features list");		
+		int iterationNumber = 0;
+		while (!featureNames.isEmpty()){
+			iterationNumber ++;
+			System.out.println("#FS: iteration: " + iterationNumber);		
+			Iterator<String> localIt = featureNames.iterator();
+			localBestFeatureName = null;
+			localBestFMeasure = globalBestFMeasure;
+			while (localIt.hasNext()){
+				String currentFeatureName = localIt.next();
+				ct.getFeatureNames().remove(currentFeatureName);
+				ct.getFeatures().remove(currentFeatureName);
+				System.out.println("#FS: checking feature: " + currentFeatureName);
+				localEvaluator = eval();
+				float currentFMeasure = localEvaluator.getFMeasure();
+				if (currentFMeasure > localBestFMeasure){
+					System.out.println("#FS: current local best to remove: " + currentFeatureName);
+					System.out.println("#FS: previous local FMeasure: " + localBestFMeasure);
+					System.out.println("#FS: current local FMeasure: " + currentFMeasure);
+					System.out.println("#FS: local gain: " + (currentFMeasure - localBestFMeasure));
+					localBestFMeasure = currentFMeasure;
+					localBestFeatureName = currentFeatureName;
+				}
+				ct.getFeatures().put(currentFeatureName, features.get(currentFeatureName));
+				ct.getFeatureNames().add(currentFeatureName);
+			}
+			if (localBestFMeasure > globalBestFMeasure){
+				System.out.println("#FS: local best to remove: " + localBestFeatureName); 
+				System.out.println("#FS: previous FMeasure: " + globalBestFMeasure);
+				System.out.println("#FS: current FMeasure: " + localBestFMeasure);
+				System.out.println("#FS: gain: " + (localBestFMeasure - globalBestFMeasure));
+				globalBestFMeasure = localBestFMeasure;
+				ct.getFeatureNames().remove(localBestFeatureName);
+				ct.getFeatures().remove(localBestFeatureName);
+				featureNames.remove(localBestFeatureName);
+				features.remove(localBestFeatureName);
+			}
+			else {
+				System.out.println("#FS: no gain, finishing");
+				break;
+			}
+		}
+		System.out.println("#FS: summary");
+		System.out.println("#FS: remaining features:");
+		Iterator<String> finalIt = ct.getFeatureNames().iterator();
+		while (finalIt.hasNext())
+			System.out.println("#FS: >> " + finalIt.next());		
+	}
+	
+	
+	private void selectFeaturesBottomUp(CrfTemplate ct) throws Exception{
 		ArrayList<String> featureNames = new ArrayList<String>();
 		Hashtable<String, String[]> features = new Hashtable<String, String[]>();
 		Iterator<String> it = ct.getFeatureNames().iterator();

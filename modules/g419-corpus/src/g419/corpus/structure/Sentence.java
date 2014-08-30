@@ -134,6 +134,13 @@ public class Sentence {
 		this.chunks.removeAll(toRemove);		
 	}
 	
+	public Annotation getAnnotationInChannel(String channelName, int annotationIdx){
+		for(Annotation annotation : this.chunks)
+			if(annotation.getType().equalsIgnoreCase(channelName) && annotation.getChannelIdx() == annotationIdx) return annotation;
+		
+		return null;
+	}
+	
 	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
@@ -144,8 +151,7 @@ public class Sentence {
 		return sb.toString().trim();
 	}
 
-    public void setTokens(ArrayList<Token> newTokens){
+	public void setTokens(ArrayList<Token> newTokens){
         tokens = newTokens;
     }
-
 }

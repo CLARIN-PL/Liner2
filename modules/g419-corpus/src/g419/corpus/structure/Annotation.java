@@ -29,12 +29,17 @@ public class Annotation {
 	 * Indeks głowy anotacji.
 	 */
 	private int head;
-
+	
+	/**
+	 * Indeks anotacji w kanale.
+	 */
+	private int channelIdx;
 	
 	/**
 	 * Informacja czy anotacja ma oznaczoną głowę.
 	 */
 	private boolean hasHead = false;
+	
 	
 	public Annotation(int begin, int end, String type, Sentence sentence){
 		for(int i = begin; i <= end; i++)
@@ -48,7 +53,21 @@ public class Annotation {
 		this.type = type.toLowerCase();
 		this.sentence = sentence;
 	}
-
+	
+	public Annotation(int begin, String type, int channelIdx, Sentence sentence){
+		this.tokens.add(begin);
+		this.type = type.toLowerCase();
+		this.sentence = sentence;
+		this.channelIdx = channelIdx;
+	}
+	
+	public void setChannelIdx(int idx){
+		this.channelIdx = idx;
+	}
+	
+	public int getChannelIdx(){
+		return this.channelIdx;
+	}
 	
 	public boolean hasHead(){
 		return this.hasHead;
