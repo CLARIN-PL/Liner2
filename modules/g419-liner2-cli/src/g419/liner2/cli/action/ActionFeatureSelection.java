@@ -21,6 +21,7 @@ import g419.corpus.structure.CrfTemplate;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -44,6 +45,9 @@ public class ActionFeatureSelection extends Action {
     private String input_file = null;
     private String input_format = null;
 
+    public static final String OPTION_VERBOSE_DETAILS = "d";
+    public static final String OPTION_VERBOSE_DETAILS_LONG = "details";    
+    
     @SuppressWarnings("static-access")
 	public ActionFeatureSelection() {
 		super("selection");
@@ -52,6 +56,10 @@ public class ActionFeatureSelection extends Action {
         this.options.addOption(CommonOptions.getInputFileFormatOption());
         this.options.addOption(CommonOptions.getInputFileNameOption());
         this.options.addOption(CommonOptions.getModelFileOption());
+        this.options.addOption(OptionBuilder
+                .withDescription("verbose processed sentences data")
+                .withLongOpt(OPTION_VERBOSE_DETAILS_LONG)
+                .create(OPTION_VERBOSE_DETAILS));        
 	}
 
 
@@ -61,7 +69,10 @@ public class ActionFeatureSelection extends Action {
         parseDefault(line);
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
-        LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));	
+        LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
+        if(line.hasOption(OPTION_VERBOSE_DETAILS)){
+            LinerOptions.getGlobal().verboseDetails = true;
+        }
     }
 	
 	/**
@@ -73,11 +84,13 @@ public class ActionFeatureSelection extends Action {
 			throw new ParameterException("Parameter 'chunker' in 'main' section of model not set");
 		}
 		
+		eval();
 		Iterator<Entry<String, CrfTemplate>> it = LinerOptions.getGlobal().templates
 				.entrySet().iterator();
 		System.out.println("#FS: begin");
 		while (it.hasNext()) {
 			Entry<String, CrfTemplate> pairs = it.next();
+			System.out.println(pairs.getKey());
 			CrfTemplate ct = pairs.getValue();
 			System.out.println("#FS: current template: " + pairs.getKey());
 			selectFeatures(ct);		
@@ -164,18 +177,26 @@ public class ActionFeatureSelection extends Action {
 		} else {
 			for (Pattern pattern : LinerOptions.getGlobal().getTypes())
 				System.out.print(" " + pattern);
+			System.out.println("\nDIRTY list-to-set CONVERSION");
+			HashMap<String, Pattern> s = new HashMap<String, Pattern>();
+			for (Pattern pattern : LinerOptions.getGlobal().getTypes())
+				s.put(pattern.pattern(), pattern);
+			LinerOptions.getGlobal().getTypes().clear();
+			for (Entry<String, Pattern> e : s.entrySet())
+				LinerOptions.getGlobal().getTypes().add(e.getValue());
+			for (Pattern pattern : LinerOptions.getGlobal().getTypes())
+				System.out.print(" " + pattern);
 		}
 		System.out.println();
 
-		String inputFormat = LinerOptions.getGlobal().getOption(
-				CommonOptions.OPTION_INPUT_FORMAT);
-		if (inputFormat.startsWith("cv:")) {
+		if (this.input_format.startsWith("cv:")) {
 			ChunkerEvaluator globalEval = new ChunkerEvaluator(LinerOptions
 					.getGlobal().getTypes());
 			ChunkerEvaluatorMuc globalEvalMuc = new ChunkerEvaluatorMuc(
 					LinerOptions.getGlobal().getTypes());
 
-			inputFormat = inputFormat.substring(3);
+			//this.input_format = this.input_format.substring(3);
+			LinerOptions.getGlobal().setCVDataFormat(this.input_format.substring(3));
 			ArrayList<List<String>> folds = loadFolds();
 			for (int i = 0; i < folds.size(); i++) {
 				timer.startTimer("fold " + (i + 1));
@@ -187,7 +208,7 @@ public class ActionFeatureSelection extends Action {
 				String testSet = getTestingSet(i, folds);
 				LinerOptions.getGlobal().setCVTrainData(trainSet);
 				AbstractDocumentReader reader = new BatchReader(
-						IOUtils.toInputStream(testSet), "", inputFormat);
+						IOUtils.toInputStream(testSet), "", this.input_format.substring(3));
 				evaluate(reader, gen, globalEval);
 				timer.stopTimer();
 
@@ -202,12 +223,8 @@ public class ActionFeatureSelection extends Action {
 			result = globalEval;
 		} else
 			result = evaluate(
-					ReaderFactory.get().getStreamReader(
-							LinerOptions.getGlobal().getOption(
-									CommonOptions.OPTION_INPUT_FILE),
-							LinerOptions.getGlobal().getOption(
-									CommonOptions.OPTION_INPUT_FORMAT)), gen,
-					null);
+					ReaderFactory.get().getStreamReader(this.input_file, this.input_format),
+                    gen, null);
 		return result;
 	}
 
@@ -289,8 +306,7 @@ public class ActionFeatureSelection extends Action {
 	private ArrayList<List<String>> loadFolds() throws IOException {
 		ArrayList<List<String>> folds = new ArrayList<List<String>>();
 		/** Wczytaj listy plików */
-		File sourceFile = new File(LinerOptions.getGlobal().getOption(
-				CommonOptions.OPTION_INPUT_FILE));
+		File sourceFile = new File(this.input_file);
 		String root = sourceFile.getParentFile().getAbsolutePath();
 		BufferedReader bf = new BufferedReader(new InputStreamReader(
 				new FileInputStream(sourceFile)));
