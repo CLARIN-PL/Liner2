@@ -1,12 +1,7 @@
 package g419.liner2.api.chunker;
 
 
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.AnnotationSet;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
+import g419.corpus.structure.*;
 import g419.liner2.api.tools.Logger;
 
 import java.io.BufferedReader;
@@ -21,6 +16,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import g419.liner2.api.tools.TemplateFactory;
 import org.chasen.crfpp.Tagger;
 
 public class CrfppChunker extends Chunker 
@@ -30,7 +26,7 @@ public class CrfppChunker extends Chunker
 	private PrintWriter trainingFileWriter = null;
 	private Tagger tagger = null;
 	private Pattern p = Pattern.compile("([IB])-(.*)");
-	private String template_filename = null;
+    private CrfTemplate template = null;
 	private String model_filename = null;
 	private int threads = 1;
 	private static final int MAX_TOKENS = 1000;
@@ -171,11 +167,20 @@ public class CrfppChunker extends Chunker
      * W przypadku CRF zostaje zamknięty tymczasowy plik z danymi treningowymi, po czym
      * zostaje uruchomiony crf_learn. Wynikiem przetwarzania jest plik z modelem.
      */
-    private void compileTagger() {
+    private void compileTagger() throws Exception {
     	this.trainingFileWriter.close();
-    	
+        if(this.template == null){
+            throw new Exception("Template for CrfppChunker not set. (required in train mode)");
+        }
     	CRFcmd cmd = new CRFcmd();
-    	cmd.file_template = this.template_filename;
+        File templateFile;
+        try {
+            templateFile = File.createTempFile("template", ".tpl");
+            TemplateFactory.store(this.template, templateFile.getAbsolutePath());
+        } catch (Exception e) {
+            throw new Exception("Error while creating template for CrfppChunker");
+        }
+        cmd.file_template = templateFile.getAbsolutePath();
     	cmd.file_model = this.model_filename;
     	cmd.file_iob = this.trainingFile.getAbsolutePath();
     	cmd.threads = this.threads;
@@ -245,8 +250,8 @@ public class CrfppChunker extends Chunker
 		}
 	}
 	
-	public void setTemplateFilename(String templateFilename) {
-		this.template_filename = templateFilename;		
+	public void setTemplate(CrfTemplate template) {
+		this.template = template;
 	}
 
 	public void setModelFilename(String modelFilename) {

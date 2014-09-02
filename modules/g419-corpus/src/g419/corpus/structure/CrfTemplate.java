@@ -13,6 +13,7 @@ import java.util.Set;
 public class CrfTemplate {
 	ArrayList<String> featureNames = new ArrayList<String>();
 	Hashtable<String, String[]> features = new Hashtable<String, String[]>();
+    TokenAttributeIndex attributeIndex;
 	
 	public void addFeature(String description) throws Exception {
 		String[] featureUnits = description.split("/");
@@ -159,5 +160,13 @@ public class CrfTemplate {
         }
 
         return newSentence;
+    }
+
+    public TokenAttributeIndex getAttributeIndex(){
+        return attributeIndex;
+    }
+
+    public void setAttributeIndex(TokenAttributeIndex attributeIndex){
+        this.attributeIndex = attributeIndex;
     }
 }

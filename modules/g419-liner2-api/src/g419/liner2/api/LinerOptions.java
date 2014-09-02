@@ -55,7 +55,6 @@ public class LinerOptions {
     public boolean libCRFPPLoaded = false;
 
     public LinkedHashMap<String, String> features = new LinkedHashMap<String, String>();
-    public HashMap<String, CrfTemplate> templates = new HashMap<String, CrfTemplate>();
 	public LinkedHashMap<String, String> chunkersDescriptions = new LinkedHashMap<String, String>();
     public List<Pattern> types = new ArrayList<Pattern>();
 

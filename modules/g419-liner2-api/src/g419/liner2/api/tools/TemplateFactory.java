@@ -30,7 +30,7 @@ public class TemplateFactory {
     }
 
 	
-	public static void store(CrfTemplate template, String filename, TokenAttributeIndex attributeIndex) throws Exception {
+	public static void store(CrfTemplate template, String filename) throws Exception {
 		
 		PrintWriter pw = null;
 		
@@ -41,6 +41,7 @@ public class TemplateFactory {
 		}
 		pw.write("# Unigram\n");
 		Hashtable<String, String[]> features = template.getFeatures();
+        TokenAttributeIndex attributeIndex = template.getAttributeIndex();
 		for (String featureName : template.getFeatureNames()) {
 			pw.write("# " + featureName + "\n");
 			String[] windowDesc = features.get(featureName);
