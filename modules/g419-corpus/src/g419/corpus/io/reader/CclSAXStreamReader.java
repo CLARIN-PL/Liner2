@@ -20,8 +20,13 @@ public class CclSAXStreamReader extends AbstractDocumentReader {
 		attributeIndex.addAttribute("base");
 		attributeIndex.addAttribute("ctag");
 		CclSaxParser parser_out = new CclSaxParser(uri, cclDocument, attributeIndex);
-		CclRelationSaxParser parser_rel = new CclRelationSaxParser(uri, cclRelations, parser_out.getDocument()); 
-		this.document = parser_rel.getDocument();		
+		if(cclRelations != null){
+			CclRelationSaxParser parser_rel = new CclRelationSaxParser(uri, cclRelations, parser_out.getDocument()); 
+			this.document = parser_rel.getDocument();
+		}
+		else{
+			this.document = parser_out.getDocument();
+		}
 	}
 	
 	@Override

@@ -51,8 +51,14 @@ public class ReaderFactory {
 	}
 
 	public AbstractDocumentReader getStreamReader(String uri, InputStream in, String root, String inputFormat) throws Exception {
-		if (inputFormat.equals("ccl"))
-			return new CclSAXStreamReader(uri, in, getInputStream(new File(uri.replace(".xml", ".rel.xml")).getPath()));
+		if (inputFormat.equals("ccl")){
+			InputStream rel = null;
+			try{
+				getInputStream(new File(uri.replace(".xml", ".rel.xml")).getPath());
+			}
+			catch(Exception e){}
+			return new CclSAXStreamReader(uri, in, rel);
+		}
 		else if (inputFormat.equals("iob"))
 			return new IobStreamReader(in);
 		else if (inputFormat.equals("plain"))
