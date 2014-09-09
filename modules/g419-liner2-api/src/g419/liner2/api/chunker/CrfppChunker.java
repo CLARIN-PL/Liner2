@@ -178,7 +178,7 @@ public class CrfppChunker extends Chunker
             templateFile = File.createTempFile("template", ".tpl");
             TemplateFactory.store(this.template, templateFile.getAbsolutePath());
         } catch (Exception e) {
-            throw new Exception("Error while creating template for CrfppChunker");
+            throw new Exception("Error while creating template for CrfppChunker:\n"+e);
         }
         cmd.file_template = templateFile.getAbsolutePath();
     	cmd.file_model = this.model_filename;
@@ -220,8 +220,6 @@ public class CrfppChunker extends Chunker
 
 	@Override
 	public void serialize(String filename) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
