@@ -106,5 +106,18 @@ public class Token {
 	
 	public void setId(String id){
 		this.id = id;
-	}	
+	}
+
+    public void setAttributeIndex(TokenAttributeIndex newIndex){
+        attrIdx = newIndex;
+    }
+
+    public Token clone(){
+        Token cloned = new Token(this.attrIdx.clone());
+        cloned.tags = (ArrayList<Tag>) this.tags.clone();
+        cloned.attributes = (ArrayList<String>) this.attributes.clone();
+        cloned.id = id;
+        cloned.noSpaceAfter = this.noSpaceAfter;
+        return cloned;
+    }
 }

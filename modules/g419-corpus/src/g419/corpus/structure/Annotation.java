@@ -170,4 +170,11 @@ public class Annotation {
 		return sorted;
 	}
 
+    public Annotation clone(){
+        Annotation cloned = new Annotation(getBegin(), getEnd(), getType(), this.sentence);
+        cloned.setId(this.id);
+        cloned.setHead(this.head);
+        return cloned;
+    }
+
 }
