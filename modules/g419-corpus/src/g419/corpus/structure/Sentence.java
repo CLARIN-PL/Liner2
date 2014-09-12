@@ -148,4 +148,16 @@ public class Sentence {
         tokens = newTokens;
     }
 
+    public Sentence clone(){
+        Sentence copy = new Sentence();
+        for(Token t: tokens){
+            copy.addToken(t.clone());
+        }
+        for(Annotation a: chunks){
+            copy.addChunk(a.clone());
+        }
+        return copy;
+    }
+
+
 }

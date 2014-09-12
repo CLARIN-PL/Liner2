@@ -1,5 +1,6 @@
 package g419.corpus.structure;
 
+import javax.print.Doc;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,7 +11,7 @@ import java.util.LinkedHashSet;
  * @author Michał Marcińczuk
  *
  */
-public class Document {
+public class Document{
 
 	String name = null;
 	TokenAttributeIndex attributeIndex = null;
@@ -118,6 +119,14 @@ public class Document {
             for (Sentence sentence : paragraph.getSentences())
                 sentence.chunks = new LinkedHashSet<Annotation>();
 
+    }
+
+    public Document clone(){
+        Document copy = new Document(name, attributeIndex.clone());
+        for(Paragraph p: paragraphs){
+            copy.addParagraph(p.clone());
+        }
+        return copy;
     }
 
 }

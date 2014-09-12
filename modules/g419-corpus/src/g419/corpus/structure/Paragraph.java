@@ -51,4 +51,14 @@ public class Paragraph {
 	public String getChunkMetaData(String key){
 		return this.chunkMetaData.get(key);
 	}
+
+    public Paragraph clone(){
+        Paragraph copy = new Paragraph(id);
+        copy.chunkMetaData = (HashMap<String, String>) chunkMetaData.clone();
+        copy.attributeIndex = attributeIndex.clone();
+        for(Sentence s: sentences){
+            copy.addSentence(s.clone());
+        }
+                return copy;
+    }
 }
