@@ -47,6 +47,8 @@ public class WriterFactory {
 			return new TokensStreamWriter(out);
         else if (outputFormat.equals("arff"))
             return new ArffStreamWriter(out);
+        else if (outputFormat.equals("verb_eval"))
+            return new MinosVerbEvalWriter(out);
 		else		
 			throw new Exception("Output format " + outputFormat + " not recognized.");
 	}

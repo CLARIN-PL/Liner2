@@ -2,8 +2,18 @@ package g419.liner2.api;
 
 import g419.corpus.structure.CrfTemplate;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.regex.Pattern;
 
 import org.ini4j.Ini;
@@ -111,7 +121,12 @@ public class LinerOptions {
             Collection<Ini.Section> chunkerSections = ini.values();
             chunkerSections.remove(main);
             for (Ini.Section chunker : chunkerSections) {
-                this.chunkersDescriptions.put(chunker.getName().substring(8), chunker.get(OPTION_CHUNKER_DESCRIPTION).replace("{INI_PATH}", iniPath));
+            	String chunkerName = chunker.getName().substring(8);
+                this.chunkersDescriptions.put(chunkerName, chunker.get(OPTION_CHUNKER_DESCRIPTION).replace("{INI_PATH}", iniPath));
+                for(Entry<String, String> propVal: chunker.entrySet()){
+                	if(propVal.getKey().equalsIgnoreCase(OPTION_CHUNKER_DESCRIPTION)) continue;
+                	this.properties.setProperty(chunkerName + "_" + propVal.getKey(), propVal.getValue().replace("{INI_PATH}", iniPath));
+                }
             }
         } catch (Exception e){
             e.printStackTrace();

@@ -9,7 +9,11 @@ import g419.corpus.structure.Relation;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
+import g419.liner2.api.LinerOptions;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 //import java.nio.file.Files;
@@ -45,14 +49,15 @@ public class MinosChunker extends Chunker {
 	public final static String MaltModel = "skladnica_liblinear_stackeager_final.mco";
 	private MaltParserService maltService = null;
 	
+	public final static String OPTION_MALT_MODEL_PATH = "minos_malt_model_path";
 	
 	public MinosChunker() {
-		
+		String maltModelPath = LinerOptions.getGlobal().getOption(OPTION_MALT_MODEL_PATH);
 		MaltParserService maltService;
 		try {
 			this.maltService = new MaltParserService();
 			// Inititalize the parser model 'model0' and sets the working directory to '.' and sets the logging file to 'parser.log'
-			this.maltService.initializeParserModel("-c " + MaltModel +" -m parse -w /home/adam/workspace/nlp/liner2/resources/ -lfi parser.log");
+			this.maltService.initializeParserModel("-c " + MaltModel +" -m parse -w " + maltModelPath + " -lfi parser.log");
 		} catch (MaltChainedException e) {
 			System.out.println("Malt parser could not be initialized.");
 			e.printStackTrace();
@@ -257,10 +262,13 @@ public class MinosChunker extends Chunker {
 		public final static boolean SETTINGS_NEUTER_INT = true;
 		// -------- Endof: Settings
 		
+		public final static String OPTION_NON_SUBJECT_VERBS = "minos_ns_verbs";
+		public final static String OPTION_NON_SUBJECT_VERBS_REFL = "minos_ns_verbs_refl";
+		public final static String OPTION_NON_SUBJECT_VERBS_RELF_INF = "minos_ns_verbs_refl_inf";
 		
 		public static final Set<String> PartsOfSpeech = new HashSet<String>(Arrays.asList(new String[]{"fin", "praet", "winien", "bedzie"}));
-		private static final String nonSubjectFile = "/home/adam/workspace/nlp/liner2/resources/non_subject_verbs";
-		private static final String nonSubjectReflexiveFile = "/home/adam/workspace/nlp/liner2/resources/non_subject_refl_verbs";
+		private String nonSubjectFile = null;
+		private String nonSubjectReflexiveFile = null;
 		private static Set<String> nonSubjectVerbs = null;
 		private static Set<String> nonSubjectReflexiveVerbs = null;
 		private static final int reflexiveRadius = 2;
@@ -315,6 +323,10 @@ public class MinosChunker extends Chunker {
 			this.graph = graph;
 			extractVerbInfo();
 			
+			
+			this.nonSubjectFile = LinerOptions.getGlobal().getOption(OPTION_NON_SUBJECT_VERBS);
+			this.nonSubjectReflexiveFile = LinerOptions.getGlobal().getOption(OPTION_NON_SUBJECT_VERBS_REFL);
+			//this.nonSubjectReflexiveInfFile = LinerOptions.getGlobal().getOption(OPTION_NON_SUBJECT_VERBS_REFL_INF);
 			// Load non-subject quasi verbs
 			if(nonSubjectVerbs == null || nonSubjectReflexiveVerbs == null){
 				System.out.println("LOADING QUASI VERBS");
@@ -460,9 +472,20 @@ public class MinosChunker extends Chunker {
 			return false;
 		}
 		
+		private HashSet<String> loadFileLines(String path) throws IOException{
+			HashSet<String> lines = new HashSet<String>();
+			BufferedReader br = new BufferedReader(new FileReader(path));
+			String line = null;
+			do{
+				line = br.readLine();
+				if(line != null) lines.add(line);
+			}while(line != null);
+			return lines;
+		}
+		
 		private void loadNonSubjectVerbs(String nonSubjectFile, String nonSubjectReflexiveFile) throws IOException{
-			nonSubjectVerbs = new HashSet<String>();//Files.readAllLines(Paths.get(nonSubjectFile)));
-			nonSubjectReflexiveVerbs = new HashSet<String>();//Files.readAllLines(Paths.get(nonSubjectFile)));
+			nonSubjectVerbs = loadFileLines(nonSubjectFile);
+			nonSubjectReflexiveVerbs = loadFileLines(nonSubjectReflexiveFile);
 		}
 		
 		public boolean isPriSec(){
