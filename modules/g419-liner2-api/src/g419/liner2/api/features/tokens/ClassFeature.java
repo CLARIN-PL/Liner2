@@ -5,21 +5,42 @@ import g419.corpus.structure.TokenAttributeIndex;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import org.maltparser.core.helper.HashMap;
+import org.maltparser.core.helper.HashSet;
 
 
 public class ClassFeature extends TokenFeature{
+	
+	@SuppressWarnings("serial")
+	private static final Map<String, Set<String>> BROAD_CLASSES = new HashMap<String, Set<String>>(){{
+		put("verb", new HashSet<String>(Arrays.asList(new String[]{"pact","ppas","winien","praet","bedzie","fin","impt","aglt","ger","imps","inf","pant","pcon"})));
+		put("noun", new HashSet<String>(Arrays.asList(new String[]{"subst", "depr", "xxs", "ger", "ppron12", "ppron3"})));
+		put("pron", new HashSet<String>(Arrays.asList(new String[]{"ppron12", "ppron3", "siebie"})));
+	}};
+	
+	private boolean broad = false;
 	
 	private ArrayList<String> possible_classes = new ArrayList<String>(Arrays.asList("subst", "depr", "num", "numcol", "adj", "adja", "adjp", "adv", "ppron12",
  			"ppron3", "siebie", "fin", "bedzie", "aglt", "praet", "impt", "imps",
  			"inf",  "pcon", "pant", "ger", "pact", "ppas",  "winien", "pred", "prep",
  			"conj", "qub", "xxs", "xxx", "ign", "interp"));
 	
+	
+	
 	public ClassFeature(String name){
 		super(name);
 	}
 	
+	public ClassFeature(String name, boolean broad){
+		super(name);
+		this.broad = broad;
+	}
 	
-	public String generate(Token token, TokenAttributeIndex index){
+	private String getTokenClass(Token token, TokenAttributeIndex index){
 		String ctag = token.getAttributeValue(index.getIndex("ctag"));
 		if(ctag != null)
 			for (String val: ctag.split(":")){
@@ -27,6 +48,19 @@ public class ClassFeature extends TokenFeature{
 					return val;
 			}
 		return null;
+	}
+	
+	public String generate(Token token, TokenAttributeIndex index){
+		String tokenClass = getTokenClass(token, index);
+		if(tokenClass != null && this.broad){
+			for(Entry<String, Set<String>> entry : BROAD_CLASSES.entrySet()){
+				if (entry.getValue().contains(tokenClass)){
+					tokenClass = entry.getKey();
+					break;
+				}
+			}
+		}
+		return tokenClass;
 	}
 	
 
