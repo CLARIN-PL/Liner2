@@ -21,7 +21,13 @@ public class Liner2 extends Chunker {
         opts = new LinerOptions();
         opts.parseModelIni(ini);
 
-        ChunkerManager cm = new ChunkerManager(opts);
+        ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
+        try {
+            cm.loadChunkers();
+        } catch (Exception e) {
+            System.out.println("Error while creating chunkers:\n");
+            e.printStackTrace();
+        }
         chunker = cm.getChunkerByName(opts.getOptionUse());
 
         gen = new TokenFeatureGenerator(opts.features);

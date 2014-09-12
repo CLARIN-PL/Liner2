@@ -30,6 +30,7 @@ public class ChunkerFactory {
 		this.items.add(new ChunkerFactoryItemPropagate());
 		this.items.add(new ChunkerFactoryItemWccl());
         this.items.add(new ChunkerFactoryItemAnnotationCRFClassifier());
+        this.items.add(new ChunkerFactoryItemMapping());
 	}
 	
 	/**
@@ -69,22 +70,6 @@ public class ChunkerFactory {
             }
         }
         throw new Error(String.format("Chunker description '%s' not recognized", description));
-	}
-	
-	/**
-	 * Creates a hash of chunkers according to the description
-	 * @param opts
-	 * @return
-	 * @throws Exception
-	 */
-	public static ChunkerManager loadChunkers(LinerOptions opts) throws Exception {
-        ChunkerManager cm = new ChunkerManager(opts);
-		for (String chunkerName : opts.chunkersDescriptions.keySet()) {
-			String chunkerDesc = opts.chunkersDescriptions.get(chunkerName);
-			Chunker chunker = ChunkerFactory.createChunker(chunkerDesc, cm);
-            cm.addChunker(chunkerName, chunker);
-		}
-        return cm;
 	}
 	
 	

@@ -97,7 +97,8 @@ public class ActionInteractive extends Action{
 		if (!silent){
 			System.out.println("# Loading, please wait...");
 		}
-        ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
+        ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
+        cm.loadChunkers();
         Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
 		
         if (!LinerOptions.getGlobal().features.isEmpty()){

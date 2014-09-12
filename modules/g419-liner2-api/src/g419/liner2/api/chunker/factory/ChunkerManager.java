@@ -2,10 +2,16 @@ package g419.liner2.api.chunker.factory;
 
 
 
+import g419.corpus.io.reader.AbstractDocumentReader;
+import g419.corpus.io.reader.ReaderFactory;
+import g419.corpus.structure.Document;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
+import g419.liner2.api.features.TokenFeatureGenerator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,9 +24,24 @@ public class ChunkerManager {
 
     private HashMap<String, Chunker> chunkers = new HashMap<String, Chunker>();
     public LinerOptions opts;
+    public ArrayList<Document> trainingData;
+    public ArrayList<Document> testData;
 
-    public ChunkerManager(LinerOptions opts){
-        this.opts = opts;
+    public ChunkerManager(LinerOptions config){
+        opts = config;
+    }
+
+    /**
+     * Creates a hash of chunkers according to the description
+     * @return
+     * @throws Exception
+     */
+    public void loadChunkers() throws Exception {
+        for (String chunkerName : opts.chunkersDescriptions.keySet()) {
+            String chunkerDesc = opts.chunkersDescriptions.get(chunkerName);
+            Chunker chunker = ChunkerFactory.createChunker(chunkerDesc, this);
+            addChunker(chunkerName, chunker);
+        }
     }
 
     public void addChunker(String name, Chunker chunker) {
@@ -42,4 +63,23 @@ public class ChunkerManager {
         return chunkers.get(name);
     }
 
+    public void loadTestData(AbstractDocumentReader reader, TokenFeatureGenerator gen) throws Exception {
+        testData = new ArrayList<Document>();
+        Document document = reader.nextDocument();
+        while ( document != null ){
+            gen.generateFeatures(document);
+            testData.add(document);
+            document = reader.nextDocument();
+        }
+    }
+
+    public void loadTrainData(AbstractDocumentReader reader, TokenFeatureGenerator gen) throws Exception {
+        trainingData = new ArrayList<Document>();
+        Document document = reader.nextDocument();
+        while ( document != null ){
+            gen.generateFeatures(document);
+            trainingData.add(document);
+            document = reader.nextDocument();
+        }
+    }
 }

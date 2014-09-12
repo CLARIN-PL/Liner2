@@ -2,6 +2,7 @@ package g419.liner2.cli.action;
 
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.factory.ChunkerFactory;
+import g419.liner2.api.chunker.factory.ChunkerManager;
 import g419.liner2.cli.CommonOptions;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
@@ -33,7 +34,8 @@ public class ActionTrain extends Action{
 	 * Loads annotation recognizers.
 	 */
 	public void run() throws Exception{
-        ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
+        ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
+        cm.loadChunkers();
 	}
 		
 }

@@ -124,7 +124,8 @@ public class DaemonThread extends Thread {
         try {
             for (String modelNam: DaemonOptions.getGlobal().models.keySet()){
                 LinerOptions modelConfig = DaemonOptions.getGlobal().models.get(modelNam);
-                ChunkerManager cm = ChunkerFactory.loadChunkers(modelConfig);
+                ChunkerManager cm = new ChunkerManager(modelConfig);
+                cm.loadChunkers();
                 this.chunkers.put(modelNam, cm.getChunkerByName(modelConfig.getOptionUse()));
                 TokenFeatureGenerator gen = null;
                 if (!modelConfig.features.isEmpty()) {

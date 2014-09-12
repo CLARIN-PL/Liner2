@@ -85,6 +85,9 @@ public class ActionEval extends Action{
 		
     	ProcessingTimer timer = new ProcessingTimer();
     	TokenFeatureGenerator gen = null;
+        if (!LinerOptions.getGlobal().features.isEmpty()){
+            gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
+        }
     	
     	System.out.print("Annotations to evaluate:");
         if(LinerOptions.getGlobal().types.isEmpty()){
@@ -108,9 +111,12 @@ public class ActionEval extends Action{
                 System.out.println("***************************************** FOLD " + (i + 1) + " *****************************************");
                 String trainSet = getTrainingSet(i, folds);
                 String testSet = getTestingSet(i, folds);
-                LinerOptions.getGlobal().setCVTrainData(trainSet);
+                ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
+                cm.loadTrainData(new BatchReader(IOUtils.toInputStream(trainSet), "", this.input_format), gen);
+                cm.loadTestData(new BatchReader(IOUtils.toInputStream(testSet), "", this.input_format), gen);
+                cm.loadChunkers();
                 AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet), "", this.input_format);
-                evaluate(reader, gen, globalEval, globalEvalMuc);
+                evaluate(reader, gen, cm, globalEval, globalEvalMuc);
                 timer.stopTimer();
 
 
@@ -123,22 +129,21 @@ public class ActionEval extends Action{
             timer.printStats();
         }
         else{
+            ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
+            cm.loadTestData(ReaderFactory.get().getStreamReader(this.input_file, this.input_format), gen);
+            cm.loadChunkers();
             evaluate(ReaderFactory.get().getStreamReader(this.input_file, this.input_format),
-                    gen, null, null);
+                    gen, cm, null, null);
         }
 
 
 	}
 
-    private void evaluate(AbstractDocumentReader dataReader, TokenFeatureGenerator gen,
+    private void evaluate(AbstractDocumentReader dataReader, TokenFeatureGenerator gen, ChunkerManager cm,
                           ChunkerEvaluator globalEval, ChunkerEvaluatorMuc globalEvalMuc) throws Exception {
         ProcessingTimer timer = new ProcessingTimer();
         timer.startTimer("Model loading");
-        ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
         Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
-        if (!LinerOptions.getGlobal().features.isEmpty()){
-            gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
-        }
         timer.stopTimer();
 
 

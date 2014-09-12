@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.IOUtils;
-
 import org.ini4j.Ini;
 
 public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
@@ -87,13 +85,20 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         AbstractDocumentReader reader;
         String modelFilename = main.get("store").replace("{INI_PATH}", iniDir);
 
+        TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
+        ArrayList<Document> trainData = new ArrayList<Document>();
         if(inputFile.equals("{CV_TRAIN}")){
-            inputFormat = LinerOptions.getGlobal().getOption("cvFormat");
-            reader = new BatchReader(IOUtils.toInputStream(LinerOptions.getGlobal().getOption("cvData")), "", inputFormat);
+            trainData = cm.trainingData;
         }
         else{
             inputFormat = dataDesc.get("format");
             reader = ReaderFactory.get().getStreamReader(inputFile, inputFormat);
+            Document document = reader.nextDocument();
+            while ( document != null ){
+                gen.generateFeatures(document);
+                trainData.add(document);
+                document = reader.nextDocument();
+            }
         }
         List<Pattern> types = new ArrayList<Pattern>();
         if ( dataDesc.containsKey("types")) {
@@ -102,7 +107,6 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
 
         Logger.log("--> Training on file=" + inputFile);
 
-        TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
 
         String templateData = main.get("template").replace("{INI_PATH}", iniDir);
         CrfppChunker chunker = new CrfppChunker(threads, types);
@@ -113,11 +117,8 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         }
         chunker.setModelFilename(modelFilename);
 
-        Document document = reader.nextDocument();
-        while ( document != null ){
-            gen.generateFeatures(document);
+        for(Document document: trainData){
              chunker.addTrainingData(document);
-            document = reader.nextDocument();
         }
         chunker.train();
 

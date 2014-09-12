@@ -46,7 +46,8 @@ public class ActionTime extends ActionPipe{
     	ProcessingTimer timer = new ProcessingTimer();
 
     	timer.startTimer("Model loading", false);
-        ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
+        ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
+        cm.loadChunkers();
         Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());    	
         if (!LinerOptions.getGlobal().features.isEmpty()){
             gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
