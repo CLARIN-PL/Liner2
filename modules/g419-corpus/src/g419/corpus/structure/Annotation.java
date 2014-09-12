@@ -83,7 +83,7 @@ public class Annotation {
        Annotation chunk = (Annotation) object;
 		if (!this.tokens.equals(chunk.getTokens()))
 			return false;
-		else if (!this.sentence.equals(chunk.getSentence()))
+		else if (!this.getText().equals(chunk.getText()))
 			return false;
 		else if (!this.type.equals(chunk.getType()))
 			return false;
