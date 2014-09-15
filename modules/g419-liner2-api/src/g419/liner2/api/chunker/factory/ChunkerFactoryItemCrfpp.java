@@ -82,7 +82,6 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         int threads = Integer.parseInt(main.get("threads"));
         String inputFile = dataDesc.get("source").replace("{INI_PATH}", iniDir);
         String inputFormat;
-        AbstractDocumentReader reader;
         String modelFilename = main.get("store").replace("{INI_PATH}", iniDir);
 
         TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
@@ -92,7 +91,7 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         }
         else{
             inputFormat = dataDesc.get("format");
-            reader = ReaderFactory.get().getStreamReader(inputFile, inputFormat);
+            AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFile, inputFormat);
             Document document = reader.nextDocument();
             while ( document != null ){
                 gen.generateFeatures(document);

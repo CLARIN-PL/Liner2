@@ -15,17 +15,14 @@ public class AnnotationCRFClassifierChunker extends Chunker {
     private CrfppChunker baseChunker;
 
     public AnnotationCRFClassifierChunker(List<Pattern> list, String base, CrfppChunker baseChunker){
-        System.out.println("BASE: " + base);
         this.list = list;
         this.base = base;
         this.baseChunker = baseChunker;
     }
     @Override
     public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
-
         Document wrapped = prepareData(ps, "classify");
         HashMap<Sentence, AnnotationSet> chunked = baseChunker.chunk(wrapped);
-
         HashMap<Sentence, AnnotationSet> result = new HashMap<Sentence, AnnotationSet>();
         HashMap<String, Sentence> sentences = sentencesById(ps.getSentences());
         for(AnnotationSet wrappedSet: chunked.values()){

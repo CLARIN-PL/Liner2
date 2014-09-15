@@ -28,13 +28,13 @@ public class MappingChunker extends Chunker {
     }
     @Override
     public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
-          System.out.println(ps.getName());
         HashMap<Sentence, AnnotationSet> chunking = new HashMap<Sentence, AnnotationSet>();
 //        //ToDo: rozwiązanie na szybko
         Document testDoc = testData.get(ps.getName());
         for(int i=0 ; i<ps.getSentences().size(); i++){
             Sentence testSent = testDoc.getSentences().get(i);
             converter.apply(testSent);
+            ps.getSentences().get(i).setAnnotations(new AnnotationSet(ps.getSentences().get(i), testSent.getChunks()));
             chunking.put(ps.getSentences().get(i), new AnnotationSet(ps.getSentences().get(i), testSent.getChunks()));
         }
         return chunking;

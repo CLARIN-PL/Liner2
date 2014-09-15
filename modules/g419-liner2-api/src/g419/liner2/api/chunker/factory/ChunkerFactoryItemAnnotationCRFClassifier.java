@@ -3,10 +3,7 @@ package g419.liner2.api.chunker.factory;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.BatchReader;
 import g419.corpus.io.reader.ReaderFactory;
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.AnnotationSet;
-import g419.corpus.structure.CrfTemplate;
-import g419.corpus.structure.Document;
+import g419.corpus.structure.*;
 import g419.liner2.api.Liner2;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.AnnotationCRFClassifierChunker;
@@ -84,18 +81,24 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
 
         String inputFile = dataDesc.get("source").replace("{INI_PATH}", iniDir);
         String inputFormat;
-        AbstractDocumentReader reader;
-        String modelFilename = main.get("store").replace("{INI_PATH}", iniDir);
 
+        String modelFilename = main.get("store").replace("{INI_PATH}", iniDir);
+        TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
+
+        ArrayList<Document> trainData = new ArrayList<Document>();
         if(inputFile.equals("{CV_TRAIN}")){
-            inputFormat = LinerOptions.getGlobal().getOption("cvFormat");
-            reader = new BatchReader(IOUtils.toInputStream(LinerOptions.getGlobal().getOption("cvData")), "", inputFormat);
+            trainData = cm.trainingData;
         }
         else{
             inputFormat = dataDesc.get("format");
-            reader = ReaderFactory.get().getStreamReader(inputFile, inputFormat);
+            AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFile, inputFormat);
+            Document document = reader.nextDocument();
+            while ( document != null ){
+                gen.generateFeatures(document);
+                trainData.add(document);
+                document = reader.nextDocument();
+            }
         }
-//        System.out.println("TYPES: "+dataDesc.get("types"));
         List<Pattern> list = LinerOptions.getGlobal().parseTypes(dataDesc.get("types").replace("{INI_PATH}", iniDir));
 
         CrfppChunker baseChunker = new CrfppChunker(Integer.parseInt(main.get("threads")), list);
@@ -105,31 +108,20 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
 
         AnnotationCRFClassifierChunker chunker = new AnnotationCRFClassifierChunker(list, main.get("base"), baseChunker);
 
-        TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
 
         CrfTemplate template = TemplateFactory.parseTemplate(templateData);
         template.addFeature("context:"+main.get("context"));
 
-        Document document = reader.nextDocument();
-        while ( document != null ){
+        for(Document document: trainData){
             gen.generateFeatures(document);
             Document wrapped = chunker.prepareData(document, "train");
-            System.out.println("DATA TO TRAIN");
-            for(AnnotationSet annset: wrapped.getChunkings().values()){
-                System.out.println("---------");
-                for(Annotation ann: annset.chunkSet()){
-                    System.out.println(ann.getType()+" "+ann.getText());
-                }
-            }
             baseChunker.addTrainingData(wrapped);
             if(template.getAttributeIndex() == null){
                 template.setAttributeIndex(wrapped.getAttributeIndex());
             }
-            document = reader.nextDocument();
         }
         baseChunker.setTemplate(template);
         baseChunker.train();
-        System.out.println("SERIALIZED");
 
         return chunker;
 
