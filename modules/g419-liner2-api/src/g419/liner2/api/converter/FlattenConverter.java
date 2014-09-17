@@ -28,7 +28,7 @@ public class FlattenConverter extends Converter {
 
         flattenConparator = new Comparator<Annotation>() {
             public int compare(Annotation a, Annotation b) {
-                if(Collections.disjoint(a.getTokens(), b.getTokens())){
+                if(a == b || Collections.disjoint(a.getTokens(), b.getTokens())){
                     return 0;
                 }
                 else {
@@ -39,7 +39,6 @@ public class FlattenConverter extends Converter {
                 }
             }
         };
-
     }
     @Override
     public void finish(Document doc) {
@@ -76,7 +75,11 @@ public class FlattenConverter extends Converter {
         BufferedReader br = new BufferedReader(new FileReader(file));
 
         try {
-            categories.add(br.readLine());
+            String line = br.readLine();
+            while (line != null) {
+                categories.add(line);
+                line = br.readLine();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
