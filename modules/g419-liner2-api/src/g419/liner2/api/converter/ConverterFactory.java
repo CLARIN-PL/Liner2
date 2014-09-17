@@ -22,6 +22,9 @@ public class ConverterFactory {
             else if(desc.startsWith("expand-features")){
                 pipe.add(new TokenFeaturesConverter(desc.split(":")[1]));
             }
+            else if(desc.startsWith("annotation-flatten")){
+                pipe.add(new FlattenConverter(desc.split(":")[1]));
+            }
             else{
                 throw new Error(String.format("Converter description '%s' not recognized", desc));
             }
