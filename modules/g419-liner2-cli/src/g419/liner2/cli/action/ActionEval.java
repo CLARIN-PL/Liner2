@@ -117,7 +117,6 @@ public class ActionEval extends Action{
                 ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
                 cm.loadTrainData(new BatchReader(IOUtils.toInputStream(trainSet), "", this.input_format), gen);
                 cm.loadTestData(new BatchReader(IOUtils.toInputStream(testSet), "", this.input_format), gen);
-                cm.loadChunkers();
                 AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet), "", this.input_format);
                 evaluate(reader, gen, cm, globalEval, globalEvalMuc);
                 timer.stopTimer();
@@ -134,7 +133,6 @@ public class ActionEval extends Action{
         else{
             ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
             cm.loadTestData(ReaderFactory.get().getStreamReader(this.input_file, this.input_format), gen);
-            cm.loadChunkers();
             evaluate(ReaderFactory.get().getStreamReader(this.input_file, this.input_format),
                     gen, cm, null, null);
         }
@@ -146,6 +144,7 @@ public class ActionEval extends Action{
                           ChunkerEvaluator globalEval, ChunkerEvaluatorMuc globalEvalMuc) throws Exception {
         ProcessingTimer timer = new ProcessingTimer();
         timer.startTimer("Model loading");
+        cm.loadChunkers();
         Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
         timer.stopTimer();
 
