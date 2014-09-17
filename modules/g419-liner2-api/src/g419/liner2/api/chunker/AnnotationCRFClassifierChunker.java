@@ -77,6 +77,9 @@ public class AnnotationCRFClassifierChunker extends Chunker {
         ArrayList<Token> wrappedTokens = new ArrayList<Token>();
         LinkedHashSet<Annotation> wrappedAnnotations = new LinkedHashSet<Annotation>();
 
+        wrappedSentence.setTokens(wrappedTokens);
+        wrappedSentence.setId(sentence.getId());
+
         for(int i=0; i < tokens.size(); i++){
             Token newToken;
             if(annotationsByStarts.containsKey(i)){
@@ -88,20 +91,20 @@ public class AnnotationCRFClassifierChunker extends Chunker {
                 newToken.setAttributeValue(index.getIndex("base"), chosen.getBaseText());
                 // -----------------------------------
                 int newIndex = wrappedTokens.size();
+                newToken.setAttributeIndex(index);
+                wrappedTokens.add(newToken);
                 wrappedAnnotations.add(new Annotation(newIndex, newIndex, chosen.getType(), wrappedSentence));
                 i = chosen.getEnd();
             }
             else{
                 newToken = tokens.get(i).clone();
                 newToken.setAttributeValue(index.getIndex("context"), "T");
+                newToken.setAttributeIndex(index);
+                wrappedTokens.add(newToken);
 
             }
-            newToken.setAttributeIndex(index);
-            wrappedTokens.add(newToken);
 
         }
-        wrappedSentence.setTokens(wrappedTokens);
-        wrappedSentence.setId(sentence.getId());
 
         wrappedSentence.setAnnotations(new AnnotationSet(wrappedSentence, wrappedAnnotations));
         return  wrappedSentence;
