@@ -83,6 +83,7 @@ public class Main {
 		System.out.println("*                                                                                               *");
 		System.out.println("* Authors: Michał Marcińczuk (2010–2014), Michał Krautforst (2013-2014), Jan Kocoń (2014)       *");
 		System.out.println("*          Dominik Piasecki (2013), Maciej Janicki (2011)                                       *");
+		System.out.println("* Contact: michal.marcinczuk@pwr.wroc.pl                                                        *");
 		System.out.println("*                                                                                               *");
 		System.out.println("*          G4.19 Research Group, Wrocław University of Technology                               *");
 		System.out.println("*-----------------------------------------------------------------------------------------------*");
@@ -107,8 +108,12 @@ public class Main {
     	
     	String lineFormat = " - %-" + maxLength + "s -- %s";
     	
+    	String newLine = String.format("   %"+maxLength+"s    ", " ");
+    	
 		for (Action action : this.actions.values()){
-			System.out.println(String.format(lineFormat, action.getName(),  action.getDescription()));
+			System.out.println(String.format(lineFormat, 
+					action.getName(),  
+					action.getDescription()).replaceAll("#", "\n" + newLine));
 		}    	
     }
     

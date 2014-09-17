@@ -57,7 +57,7 @@ public class ActionInteractive extends Action{
 
 	public ActionInteractive() {
 		super("interactive");
-        this.setDescription("interactive mode for processing data");
+        this.setDescription("processes text entered directly into the terminal");
 
         Option inputFormat = CommonOptions.getInputFileFormatOption();
         inputFormat.setDescription("input format " + validInputFormats);

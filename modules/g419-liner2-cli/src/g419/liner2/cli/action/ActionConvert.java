@@ -36,7 +36,7 @@ public class ActionConvert extends Action {
     @SuppressWarnings("static-access")
 	public ActionConvert() {
 		super("convert");
-        this.setDescription("converts file formats and annotation channels");
+        this.setDescription("converts documents from one format to another and applies defined converters");
 
         this.options.addOption(CommonOptions.getInputFileFormatOption());
         this.options.addOption(CommonOptions.getInputFileNameOption());

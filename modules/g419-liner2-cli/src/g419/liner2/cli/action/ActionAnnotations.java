@@ -42,7 +42,7 @@ public class ActionAnnotations extends Action {
 	@SuppressWarnings("static-access")
 	public ActionAnnotations() {
 		super("annotations");
-		this.setDescription("generates an arff file with a list of annotations with a defined set of features");
+		this.setDescription("generates an arff file with a list of annotations and their features");
 		
         this.options.addOption(OptionBuilder
         		.withArgName("annotation_features").hasArg()

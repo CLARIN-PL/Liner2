@@ -10,21 +10,24 @@ import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
-import g419.liner2.api.chunker.factory.ChunkerFactory;
 import g419.liner2.api.chunker.factory.ChunkerManager;
 import g419.liner2.api.features.TokenFeatureGenerator;
 import g419.liner2.api.tools.ChunkerEvaluator;
 import g419.liner2.api.tools.ChunkerEvaluatorMuc;
 import g419.liner2.api.tools.ParameterException;
 import g419.liner2.api.tools.ProcessingTimer;
+import g419.liner2.cli.CommonOptions;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import g419.liner2.cli.CommonOptions;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.OptionBuilder;
@@ -49,7 +52,7 @@ public class ActionEval extends Action{
     @SuppressWarnings("static-access")
 	public ActionEval() {
 		super("eval");
-        this.setDescription("data evaluation using given model, crossvalidaion mode included (-f cv:{format})");
+        this.setDescription("evaluates chunkers against a specific set of documents (-i batch:FORMAT, -i FORMAT) #or perform cross validation (-i cv:{format})");
 
         this.options.addOption(CommonOptions.getInputFileFormatOption());
         this.options.addOption(CommonOptions.getInputFileNameOption());
