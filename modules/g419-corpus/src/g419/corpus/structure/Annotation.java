@@ -28,8 +28,7 @@ public class Annotation {
 	/**
 	 * Indeks głowy anotacji.
 	 */
-	private int head;
-
+	private int head;	
 	
 	/**
 	 * Informacja czy anotacja ma oznaczoną głowę.
@@ -80,7 +79,7 @@ public class Annotation {
 
 	@Override
 	public boolean equals(Object object) {
-       Annotation chunk = (Annotation) object;
+		Annotation chunk = (Annotation) object;
 		if (!this.tokens.equals(chunk.getTokens()))
 			return false;
 		else if (!this.getText().equals(chunk.getText()))
@@ -89,7 +88,12 @@ public class Annotation {
 			return false;
 		return true;
 	}
-	
+
+    @Override
+    public int hashCode() {
+        return (this.getText() + this.tokens.toString() + this.getType()).hashCode();
+    }
+    
 	public String getId(){
 		return this.id;
 	}
@@ -175,6 +179,15 @@ public class Annotation {
         cloned.setId(this.id);
         cloned.setHead(this.head);
         return cloned;
+    }
+    
+    private boolean equalsIndices(ArrayList<Integer> tab1, ArrayList<Integer> tab2){
+    	if ( tab1.size() != tab2.size() )
+    		return false;
+    	for ( int i=0; i<tab1.size(); i++)
+    		if ( tab1.get(i) != tab2.get(i) )
+    			return false;
+    	return true;
     }
 
 }
