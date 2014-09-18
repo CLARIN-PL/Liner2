@@ -29,9 +29,9 @@ public class CrfppFix extends Chunker {
 		HashMap<Sentence, AnnotationSet> chunkings = this.chunker.chunk(ps);
 
 		for (Sentence sentence : chunkings.keySet()){
-				this.fixSentenceChunking(sentence, chunkings.get(sentence));
-				this.fixParanthesis(sentence, chunkings.get(sentence));
-				this.mergeSubstNomChunks(sentence, chunkings.get(sentence));				
+		    sentence.setAnnotations(fixSentenceChunking(sentence, chunkings.get(sentence)));
+            sentence.setAnnotations(fixParanthesis(sentence, chunkings.get(sentence)));
+            sentence.setAnnotations(mergeSubstNomChunks(sentence, chunkings.get(sentence)));
 		}
 		
 		return chunkings;
@@ -42,7 +42,8 @@ public class CrfppFix extends Chunker {
 	 * @param sentence
 	 * @param chunking
 	 */
-    private void mergeSubstNomChunks(Sentence sentence, AnnotationSet chunking) {
+    private AnnotationSet mergeSubstNomChunks(Sentence sentence, AnnotationSet chunking) {
+        AnnotationSet fixedChunking = new AnnotationSet(sentence);
 		ArrayList<ArrayList<Annotation>> orderedChunks = new ArrayList<ArrayList<Annotation>>();
 		for ( int i=0; i<sentence.getTokens().size(); i++ )
 			orderedChunks.add(new ArrayList<Annotation>());
@@ -71,17 +72,20 @@ public class CrfppFix extends Chunker {
 					orderedChunks.get(i+1).remove(c2);
 					chunking.removeChunk(c2);
 					c1.addToken(c2.getEnd());
+                    fixedChunking.addChunk(c1);
 				}
 			}
-		}		
+		}
+        return fixedChunking;
 	}
     
 	/**
 	 * @param sentence
 	 * @param chunking
 	 */
-    private void fixParanthesis(Sentence sentence, AnnotationSet chunking) {
-		
+    private AnnotationSet fixParanthesis(Sentence sentence, AnnotationSet chunking) {
+
+        AnnotationSet fixedChunking = new AnnotationSet(sentence);
 		int index_orth = sentence.getAttributeIndex().getIndex("orth");
 		
 		for ( Annotation chunk : chunking.chunkSet()){
@@ -96,7 +100,9 @@ public class CrfppFix extends Chunker {
 					chunk.addToken(chunk.getEnd()+1);
 				}
 			}
-    	}		
+            fixedChunking.addChunk(chunk);
+    	}
+        return fixedChunking;
 	}    
 
 	/**
@@ -105,12 +111,12 @@ public class CrfppFix extends Chunker {
      * @param cSeq --- text to tag
      * @return chunking with annotations
      */
-	private synchronized void fixSentenceChunking(Sentence sentence, AnnotationSet chunking){
+	private synchronized AnnotationSet fixSentenceChunking(Sentence sentence, AnnotationSet chunking){
 
 		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
 		ArrayList<Token> tokens = sentence.getTokens();
-		ArrayList<Annotation> newChunks = new ArrayList<Annotation>();
+        AnnotationSet fixedChunking = new AnnotationSet(sentence);
 		
 		for (Annotation chunk : chunking.chunkSet()){
 			
@@ -128,13 +134,16 @@ public class CrfppFix extends Chunker {
 					&& ai.getAttributeValue(tokens.get(end-1), "person_first_nam").equals("B") 
 					&& ai.getAttributeValue(tokens.get(end-2), "person_first_nam").equals("O")
 					&& ai.getAttributeValue(tokens.get(end-2), "pattern").equals("UPPER_INIT")){
-				chunk.replaceTokens(end-1, end);				
-				newChunks.add(new Annotation(start, end-2, "NAM", sentence));
-			}											
+                chunk.replaceTokens(end-1, end);
+                fixedChunking.addChunk(chunk);
+                fixedChunking.addChunk(new Annotation(start, end-2, "NAM", sentence));
+            }
+            else{
+                fixedChunking.addChunk(chunk);
+            }
 		}
 		
-		for (Annotation chunk : newChunks)
-			chunking.addChunk(chunk);		
+		return fixedChunking;
 	}
 
 	
