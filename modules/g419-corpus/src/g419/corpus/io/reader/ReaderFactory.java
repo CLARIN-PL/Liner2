@@ -54,7 +54,7 @@ public class ReaderFactory {
 		if (inputFormat.equals("ccl")){
 			InputStream rel = null;
 			try{
-				getInputStream(new File(uri.replace(".xml", ".rel.xml")).getPath());
+				rel = getInputStream(new File(root, uri.replace(".xml", ".rel.xml")).getPath());
 			}
 			catch(Exception e){}
 			return new CclSAXStreamReader(uri, in, rel);

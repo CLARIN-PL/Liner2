@@ -79,7 +79,7 @@ public class BatchReader extends AbstractDocumentReader {
                 reader = ReaderFactory.get().getTEIStreamReader(path, name);
             }
             else{
-                reader = ReaderFactory.get().getStreamReader(name, new FileInputStream(path), this.format);
+                reader = ReaderFactory.get().getStreamReader(name, new FileInputStream(path), this.root.getAbsolutePath(), this.format);
             }
     		Document document = reader.nextDocument();
             reader.close();

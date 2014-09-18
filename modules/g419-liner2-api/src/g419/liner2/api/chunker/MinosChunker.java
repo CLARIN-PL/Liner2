@@ -413,7 +413,7 @@ public class MinosChunker extends Chunker {
 			for(Integer i : subjectIndices){
 				int tokenIndex = startIndex + i;
 				if(this.checkNounVerbSeparation(i, interpsIndices, verbIndices)){
-					subjectCandidates.add(new MinosNoun(sentence.getTokens().get(tokenIndex), sentence));
+					subjectCandidates.add(new MinosNoun(sentence.getTokens().get(tokenIndex), sentence, true));
 				}
 			}
 			return subjectCandidates;
@@ -502,7 +502,7 @@ public class MinosChunker extends Chunker {
 			try{
 				preceedingNo = NO_ORTH.equalsIgnoreCase(this.ai.getAttributeValue(this.sentence.getTokens().get(this.positionInSentence - 1), "base"));
 			}
-			catch(ArrayIndexOutOfBoundsException ex){}
+			catch(IndexOutOfBoundsException ex){}
 			
 			try{
 				Token token = this.sentence.getTokens().get(this.positionInSentence + 1);
@@ -516,7 +516,7 @@ public class MinosChunker extends Chunker {
 						INF_CLASS.equalsIgnoreCase(this.ai.getAttributeValue(token, "class")) 
 						|| INF_CLASS.equalsIgnoreCase(this.ai.getAttributeValue(token, "pos"));
 			}
-			catch(ArrayIndexOutOfBoundsException ex){}
+			catch(IndexOutOfBoundsException ex){}
 			
 			try{
 				followingOGer = 
@@ -524,7 +524,7 @@ public class MinosChunker extends Chunker {
 						(GER_CLASS.equalsIgnoreCase(this.ai.getAttributeValue(this.sentence.getTokens().get(this.positionInSentence + 1), "class"))
 						|| GER_CLASS.equalsIgnoreCase(this.ai.getAttributeValue(this.sentence.getTokens().get(this.positionInSentence + 1), "pos")));
 			}
-			catch(ArrayIndexOutOfBoundsException ex){}
+			catch(IndexOutOfBoundsException ex){}
 			
 			return orthCondition && (preceedingNo || followingMr || followingInf || followingOGer);
 		}
@@ -646,6 +646,9 @@ public class MinosChunker extends Chunker {
 		}
 		
 		public boolean hasSubject(Document document) throws MaltChainedException{
+			if("mogły".equalsIgnoreCase(this.orth)){
+				int x = 0;
+			}
 			if (hasMaltSubject(SETTINGS_CHECK_MALT_SUBJ_AGREEMENT)) return true;
 			if (hasChunkrelSubject(document)) return true;
 			if (hasContextSubject()) return true;
@@ -730,6 +733,8 @@ public class MinosChunker extends Chunker {
 		public static final boolean SETTINGS_ALLOW_ACC_CASE = true;
 		public static final boolean SETTINGS_MASCULINUM_TOLERANCE = false;
 		public final static boolean SETTINGS_UNDEFINED_GENDER_ALWAYS_EQUAL = true;
+		public final static boolean SETTINGS_ALLOW_ADJ_POS = true;
+		
 		
 		public static final Set<String> ALLOWED_CLASSES = new HashSet<String>(Arrays.asList(new String[]{"subst", "ger", "depr", "num", "numcol", "ppron3", "ppron12", "xxs"}));
 		public static final Set<String> NUM_CLASSES = new HashSet<String>(Arrays.asList(new String[]{"num", "numcol"}));
@@ -739,7 +744,10 @@ public class MinosChunker extends Chunker {
 		public static final String CASE_GEN = "gen";
 		public static final String CASE_DAT = "dat";
 		
+		private static final String ADJ_CLASS = "adj";
+		
 		public static final String LO_ENDING = "ło";
+		
 		
 		private Token noun;
 		private Sentence sentence;
@@ -753,10 +761,12 @@ public class MinosChunker extends Chunker {
 		private String orth;
 		private String base;
 		private String grammarCase;
+		private boolean fromContext;
 		
-		public MinosNoun(Token token, Sentence sentence){
+		public MinosNoun(Token token, Sentence sentence, boolean fromContext){
 			this.noun = token;
 			this.sentence = sentence;
+			this.fromContext = fromContext;
 			this.ai = sentence.getAttributeIndex();
 			extractNounInfo();
 		}
@@ -778,7 +788,7 @@ public class MinosChunker extends Chunker {
 			int tokenIndex = node.getIndex() - 1;
 			Token subjToken = sentence.getTokens().get(tokenIndex);
 			TokenAttributeIndex ai = sentence.getAttributeIndex();
-			return new MinosNoun(subjToken, sentence);
+			return new MinosNoun(subjToken, sentence, false);
 		}
 		
 		public static boolean isNoun(Token t, Sentence s){
@@ -829,9 +839,13 @@ public class MinosChunker extends Chunker {
 		    return verbCondition && (genitiveNoun || dativeNoun) && preceedingNumerator;
 		}
 		
+		public boolean allowedUseOfAdj(){
+			return SETTINGS_ALLOW_ADJ_POS && !this.fromContext && (ADJ_CLASS.equalsIgnoreCase(this.posext) || ADJ_CLASS.equalsIgnoreCase(this.pos));
+		}
+		
 		public boolean checkAgreement(MinosVerb verb){
 			if(isNeuterNumeral(verb)) return true;
-			boolean correctPoS = hasProperPos();
+			boolean correctPoS = hasProperPos() || allowedUseOfAdj();
 			boolean correctCase = hasProperCase();
 			boolean numberAgreement = numberAgreement(verb);
 			boolean personAgreement = personAgreement(verb);
