@@ -100,16 +100,8 @@ public class IobTabStreamWriter extends AbstractDocumentWriter {
 			else
 				line += token.getAttributeValue(i);
 		}
-		
-		Annotation chunk = sentence.getChunkAt(idx);
-		if (chunk == null)
-			line += " O";
-		else {
-			if (idx == chunk.getBegin())
-				line += " B-" + chunk.getType();
-			else
-				line += " I-" + chunk.getType();
-		}
+
+		line += " " + sentence.getTokenClassLabel(idx, null);
 		ow.write(line, 0, line.length());
 		ow.newLine();
 	}

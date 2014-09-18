@@ -107,16 +107,8 @@ public class ArffStreamWriter extends AbstractDocumentWriter{
 				attrval = "\'" + attrval.replace("\'", "\\\'") + "\'";
 			line += (line.length() > 0 ? ",\t" : "") + attrval;
 		}
-		
-		Annotation chunk = sentence.getChunkAt(idx);
-		if (chunk == null)
-			line += ",\tO";
-		else {
-			if (idx == chunk.getBegin())
-				line += ",\tB-" + chunk.getType();
-			else
-				line += ",\tI-" + chunk.getType();
-		}
+
+        line += " " + sentence.getTokenClassLabel(idx, null);
 		ow.write(line, 0, line.length());
 		ow.newLine();
 	}

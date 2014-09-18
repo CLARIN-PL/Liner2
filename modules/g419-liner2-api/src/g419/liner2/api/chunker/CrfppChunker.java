@@ -9,10 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,12 +22,13 @@ public class CrfppChunker extends Chunker
 	private File trainingFile = null;
 	private PrintWriter trainingFileWriter = null;
 	private Tagger tagger = null;
-	private Pattern p = Pattern.compile("([IB])-(.*)");
+	private Pattern p = Pattern.compile("([IB])-([^#]*)");
     private CrfTemplate template = null;
 	private String model_filename = null;
 	private int threads = 1;
 	private static final int MAX_TOKENS = 1000;
 	private List<Pattern> types = null;
+    HashSet<String> classes = new HashSet<String>();
 	
     public CrfppChunker() {
 		this.types = new ArrayList<Pattern>();
@@ -76,26 +74,34 @@ public class CrfppChunker extends Chunker
 	
 	private AnnotationSet readTaggerOutput(Sentence sentence){
         AnnotationSet chunking = new AnnotationSet(sentence);
-        String type = null;
-        int from = 0;
+
+        HashMap<String, Annotation> annsByType = new HashMap<String, Annotation>();
 
         for (int i = 0; i < tagger.size(); ++i) {
-            Matcher m = p.matcher(tagger.y2(i));
-                                  
-            if ( type != null && ( !m.matches() || m.group(1).equals("B") ) ){
-            	chunking.addChunk(new Annotation(from, i-1, type, sentence));
-            	type = null;
-            	from = 0;
+            String label = tagger.y2(i);
+            if(label.equals("O")){
+                annsByType = new HashMap<String, Annotation>();
             }
-            
-            if ( m.matches() && m.group(1).toString().equals("B") ){
-            	from = i;
-            	type = m.group(2);
-            }
-        }    
+            else{
+                Matcher m = p.matcher(label);
 
-        if (type != null)
-        	chunking.addChunk(new Annotation(from, (int)tagger.size()-1, type, sentence));
+                while(m.find()){
+                    String annType = m.group(2);
+                    if(m.group(1).equals("B")){
+                        Annotation newAnn = new Annotation(i, annType, sentence);
+                        chunking.addChunk(newAnn);
+                        annsByType.put(annType, newAnn);
+                    }
+                    else if(m.group(1).equals("I")){
+                        if(annsByType.containsKey(annType))
+                            annsByType.get(annType).addToken(i);
+                    }
+                }
+            }
+        }
+        for(Annotation a: chunking.chunkSet()){
+            System.out.println(a.getText()+" | "+a.getTokens().toString()+" | "+a.getType());
+        }
 
         return chunking;
     }
@@ -104,7 +110,13 @@ public class CrfppChunker extends Chunker
     @Override
 	public void train() throws Exception {
     	this.trainingFileWriter.close();
+        System.out.println(classes.size() + " POSSIBLE CLASSES:");
+        for(String cl: classes){
+            System.out.println(cl);
+        }
+        System.out.println(classes.size() + " POSSIBLE CLASSES:");
 		this.compileTagger();
+        System.out.println("TRAINED");
     }
 
     @Override
@@ -136,23 +148,9 @@ public class CrfppChunker extends Chunker
     					}
     					oStr += " " + val;
     				}
-    				
-    				Annotation chunk = this.types.size() == 0 
-    						? sentence.getChunkAt(i)
-    						: sentence.getChunkAt(i, this.types);
-    				
-    				if (chunk == null)
-    					oStr += " O";
-    				else {
-    					if (chunk.getBegin() == i) {
-                            oStr += " B-";
-                        }
-    					else {
-                            oStr += " I-";
-                        }
-                        oStr += chunk.getType();
-                    }
-//    				System.out.println(oStr.trim());
+                    String tokClass = sentence.getTokenClassLabel(i, this.types);
+                    classes.add(tokClass);
+                    oStr += " " + tokClass;
     				this.trainingFileWriter.write(oStr.trim() + "\n");
     			}
     			this.trainingFileWriter.write("\n");
@@ -161,12 +159,15 @@ public class CrfppChunker extends Chunker
     	this.trainingFileWriter.flush();
     		
     }
-    
-    /**
-     * Kompilacja chunkera.
-     * W przypadku CRF zostaje zamknięty tymczasowy plik z danymi treningowymi, po czym
-     * zostaje uruchomiony crf_learn. Wynikiem przetwarzania jest plik z modelem.
-     */
+
+
+
+                /**
+                 * Kompilacja chunkera.
+                 * W przypadku CRF zostaje zamknięty tymczasowy plik z danymi treningowymi, po czym
+                 * zostaje uruchomiony crf_learn. Wynikiem przetwarzania jest plik z modelem.
+                 */
+
     private void compileTagger() throws Exception {
     	this.trainingFileWriter.close();
         if(this.template == null){
