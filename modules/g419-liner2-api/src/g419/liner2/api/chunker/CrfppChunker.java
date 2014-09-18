@@ -99,9 +99,6 @@ public class CrfppChunker extends Chunker
                 }
             }
         }
-        for(Annotation a: chunking.chunkSet()){
-            System.out.println(a.getText()+" | "+a.getTokens().toString()+" | "+a.getType());
-        }
 
         return chunking;
     }
