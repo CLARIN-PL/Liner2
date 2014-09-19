@@ -1,10 +1,9 @@
 package g419.liner2.api.chunker.factory;
 
-
 import g419.corpus.io.reader.AbstractDocumentReader;
-import g419.corpus.io.reader.BatchReader;
 import g419.corpus.io.reader.ReaderFactory;
-import g419.corpus.structure.*;
+import g419.corpus.structure.CrfTemplate;
+import g419.corpus.structure.Document;
 import g419.liner2.api.Liner2;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
@@ -18,8 +17,6 @@ import g419.liner2.api.tools.TemplateFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,6 +60,12 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
 			return null;
 	}
 
+	/**
+	 * Load the model from a file.
+	 * @param ini
+	 * @return
+	 * @throws IOException
+	 */
     private Chunker load(Ini ini) throws IOException {
         Ini.Section main = ini.get("main");
         String store = main.get("store").replace("{INI_PATH}", ini.getFile().getParent());
@@ -75,6 +78,13 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         return chunker;
     }
 
+    /**
+     * Train the chunker and serialize the model to a file.
+     * @param ini
+     * @param cm
+     * @return
+     * @throws Exception
+     */
     private Chunker train(Ini ini, ChunkerManager cm) throws Exception {
         Logger.log("--> CRFPP Chunker train");
         String iniDir = ini.getFile().getParent();
@@ -97,9 +107,15 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
 
         TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
         ArrayList<Document> trainData = new ArrayList<Document>();
+
+        // Setup training data 
         if(inputFile.equals("{CV_TRAIN}")){
         	if ( trainingDataConverter != null ){
-        		/////////////System.out.println();
+        		for ( Document doc : cm.trainingData ){
+        			Document docClone = doc.clone();
+        			trainingDataConverter.apply(docClone);
+        			trainData.add(docClone);
+        		}        			
         	}
         	else{
         		trainData = cm.trainingData;
@@ -107,7 +123,8 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         }
         else{
             inputFormat = dataDesc.get("format");
-            AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFile, inputFormat);
+            AbstractDocumentReader reader = 
+            		ReaderFactory.get().getStreamReader(inputFile, inputFormat);
             Document document = reader.nextDocument();
             while ( document != null ){
                 gen.generateFeatures(document);
@@ -117,13 +134,13 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
                 document = reader.nextDocument();
             }
         }
+        
         List<Pattern> types = new ArrayList<Pattern>();
         if ( dataDesc.containsKey("types")) {
             types = LinerOptions.getGlobal().parseTypes(dataDesc.get("types").replace("{INI_PATH}", iniDir));
         }
 
         Logger.log("--> Training on file=" + inputFile);
-
 
         String templateData = main.get("template").replace("{INI_PATH}", iniDir);
         CrfppChunker chunker = new CrfppChunker(threads, types);
@@ -134,9 +151,8 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         }
         chunker.setModelFilename(modelFilename);
 
-        for(Document document: trainData){
+        for(Document document: trainData)
              chunker.addTrainingData(document);
-        }
         chunker.train();
 
         return chunker;

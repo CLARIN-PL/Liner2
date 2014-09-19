@@ -1,19 +1,27 @@
 package g419.liner2.api.chunker;
 
-
-import g419.corpus.structure.*;
+import g419.corpus.structure.Annotation;
+import g419.corpus.structure.AnnotationSet;
+import g419.corpus.structure.CrfTemplate;
+import g419.corpus.structure.Document;
+import g419.corpus.structure.Paragraph;
+import g419.corpus.structure.Sentence;
+import g419.corpus.structure.Token;
 import g419.liner2.api.tools.Logger;
+import g419.liner2.api.tools.TemplateFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import g419.liner2.api.tools.TemplateFactory;
 import org.chasen.crfpp.Tagger;
 
 public class CrfppChunker extends Chunker 
@@ -48,12 +56,20 @@ public class CrfppChunker extends Chunker
 	private synchronized AnnotationSet chunkSentence(Sentence sentence){
 		if (sentence.getTokenNumber()>MAX_TOKENS)
 			return new AnnotationSet(sentence);
-		this.sendDataToTagger(sentence);
-		return this.readTaggerOutput(sentence);
+		return this.chunk(sentence);
 	}
 	
-	private void sendDataToTagger(Sentence sentence){
-		tagger.clear();
+	/**
+	 * Chunks the sentence using CRF++ API.
+	 * @param sentence
+	 * @return set of recognized chunks
+	 */
+	private AnnotationSet chunk(Sentence sentence){
+		AnnotationSet chunking = new AnnotationSet(sentence);
+        HashMap<String, Annotation> annsByType = new HashMap<String, Annotation>();
+
+        // Prepare date and send them to the API
+        tagger.clear();
 		int numAttrs = sentence.getAttributeIndexLength();
 		String val = null;
 		for (Token token : sentence.getTokens()) {
@@ -70,13 +86,8 @@ public class CrfppChunker extends Chunker
 			tagger.add(oStr.toString().trim());
 		}
 		tagger.parse();		
-	}
-	
-	private AnnotationSet readTaggerOutput(Sentence sentence){
-        AnnotationSet chunking = new AnnotationSet(sentence);
 
-        HashMap<String, Annotation> annsByType = new HashMap<String, Annotation>();
-
+		// Reads the output of parsing
         for (int i = 0; i < tagger.size(); ++i) {
             String label = tagger.y2(i);
             if(label.equals("O")){
@@ -102,8 +113,7 @@ public class CrfppChunker extends Chunker
 
         return chunking;
     }
-	
-	            
+		            
     @Override
 	public void train() throws Exception {
     	this.trainingFileWriter.close();
@@ -129,20 +139,16 @@ public class CrfppChunker extends Chunker
 			}			
     	}
     	
-    	String val = null;
     	for (Paragraph paragraph : paragraphSet.getParagraphs())
     		for (Sentence sentence : paragraph.getSentences()) {
     			int numAttrs = sentence.getAttributeIndexLength();
     			ArrayList<Token> tokens = sentence.getTokens();    			
     			for (int i = 0; i < tokens.size(); i++) {
-    				String oStr = "";
-    				
+    				String oStr = "";    				
     				for (int j = 0; j < numAttrs; j++){
-    					val = tokens.get(i).getAttributeValue(j);
-    					if ( val != null){
-    						val = val.replaceAll("\\s+", "_");
-    							val = val.length()==0 ? "NULL" : val;
-    					}
+    					String val = tokens.get(i).getAttributeValue(j);
+    					if ( val != null)
+    						val = val.length()==0 ? "NULL" : val.replaceAll("\\s+", "_");
     					oStr += " " + val;
     				}
                     String tokClass = sentence.getTokenClassLabel(i, this.types);
@@ -153,18 +159,15 @@ public class CrfppChunker extends Chunker
     			this.trainingFileWriter.write("\n");
     		}
     		
-    	this.trainingFileWriter.flush();
-    		
+    	this.trainingFileWriter.flush();    		
     }
 
 
-
-                /**
-                 * Kompilacja chunkera.
-                 * W przypadku CRF zostaje zamknięty tymczasowy plik z danymi treningowymi, po czym
-                 * zostaje uruchomiony crf_learn. Wynikiem przetwarzania jest plik z modelem.
-                 */
-
+	/**
+	 * Kompilacja chunkera.
+	 * W przypadku CRF zostaje zamknięty tymczasowy plik z danymi treningowymi, po czym
+	 * zostaje uruchomiony crf_learn. Wynikiem przetwarzania jest plik z modelem.
+	 */
     private void compileTagger() throws Exception {
     	this.trainingFileWriter.close();
         if(this.template == null){
@@ -227,7 +230,6 @@ public class CrfppChunker extends Chunker
 	}
 
 	
-	
 	/**
 	 * Klasa pomocnicza reprezentuje obiekt do generowania wywołania komendy crf
 	 */
@@ -238,11 +240,12 @@ public class CrfppChunker extends Chunker
 		public int threads = 1;
 		
 		public String get_crf_learn(){
-			String cmd = String.format("crf_learn %s %s %s -f 5 -c 1 -p %d", this.file_template, this.file_iob, this.file_model, this.threads);
-            //cmd += " -m 20";
-//            File iob = new File(file_iob);
-//            iob.delete();
-			return cmd;
+			String cmd = "crf_learn %s %s %s -f 5 -c 1 -p %d";
+			return String.format(cmd, 
+					this.file_template, 
+					this.file_iob, 
+					this.file_model, 
+					this.threads);
 		}
 	}
 	
