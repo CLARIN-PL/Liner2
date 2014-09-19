@@ -176,6 +176,7 @@ public class Sentence {
 
     public Sentence clone(){
         Sentence copy = new Sentence();
+        copy.setId(this.getId());
         for(Token t: tokens){
             copy.addToken(t.clone());
         }
