@@ -3,6 +3,7 @@ package g419.liner2.api.chunker.factory;
 
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
+import g419.liner2.api.chunker.ensemble.CascadeChunker;
 import g419.liner2.api.chunker.ensemble.MajorityVotingChunker;
 import g419.liner2.api.chunker.ensemble.UnionChunker;
 import g419.liner2.api.tools.Logger;
@@ -114,6 +115,19 @@ public class ChunkerFactory {
 
     private static Chunker getChunkerVotingPipe(String[] chunkerNames, ChunkerManager cm) {
         if (chunkerNames.length == 1){
+            return getChunkerCascadePipe(chunkerNames[0].split(">"), cm);
+        }
+        else {
+            ArrayList<Chunker> chunkers = new ArrayList<Chunker>();
+            for (String name: chunkerNames){
+                chunkers.add(getChunkerCascadePipe(name.split(">"), cm));
+            }
+            return new MajorityVotingChunker(chunkers);
+        }
+    }
+
+    private static Chunker getChunkerCascadePipe(String[] chunkerNames, ChunkerManager cm) {
+        if (chunkerNames.length == 1){
             return cm.getChunkerByName(chunkerNames[0]);
         }
         else {
@@ -121,7 +135,7 @@ public class ChunkerFactory {
             for (String name: chunkerNames){
                 chunkers.add(cm.getChunkerByName(name));
             }
-            return new MajorityVotingChunker(chunkers);
+            return new CascadeChunker(chunkers);
         }
     }
 }

@@ -9,6 +9,8 @@ import g419.liner2.api.Liner2;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.CrfppChunker;
+import g419.liner2.api.converter.Converter;
+import g419.liner2.api.converter.ConverterFactory;
 import g419.liner2.api.features.TokenFeatureGenerator;
 import g419.liner2.api.tools.Logger;
 import g419.liner2.api.tools.TemplateFactory;
@@ -79,6 +81,15 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         Ini.Section main = ini.get("main");
         Ini.Section dataDesc = ini.get("data");
 
+        Converter trainingDataConverter = null;
+        if ( dataDesc.containsKey("training-data-converter") ){
+        	System.out.println(dataDesc.get("training-data-converter"));
+        	ArrayList<String> converters = new ArrayList<String>();
+        	for ( String in : dataDesc.get("training-data-converter").replace("{INI_PATH}", iniDir).split(","))
+        		converters.add(in);
+        	trainingDataConverter = ConverterFactory.createPipe(converters);
+        }
+        
         int threads = Integer.parseInt(main.get("threads"));
         String inputFile = dataDesc.get("source").replace("{INI_PATH}", iniDir);
         String inputFormat;
@@ -87,7 +98,12 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
         ArrayList<Document> trainData = new ArrayList<Document>();
         if(inputFile.equals("{CV_TRAIN}")){
-            trainData = cm.trainingData;
+        	if ( trainingDataConverter != null ){
+        		/////////////System.out.println();
+        	}
+        	else{
+        		trainData = cm.trainingData;
+        	}
         }
         else{
             inputFormat = dataDesc.get("format");
@@ -95,6 +111,8 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
             Document document = reader.nextDocument();
             while ( document != null ){
                 gen.generateFeatures(document);
+                if ( trainingDataConverter != null )
+                	trainingDataConverter.apply(document);
                 trainData.add(document);
                 document = reader.nextDocument();
             }

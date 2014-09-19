@@ -1,5 +1,6 @@
 package g419.liner2.api.chunker.ensemble;
 
+import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Paragraph;
@@ -12,37 +13,37 @@ import java.util.HashMap;
 
 /**
  * TODO
- * 
- * Chunker stanowi sumę podanych chunkerów. Wynikiem jest zbiór chunków
- * rozpoznanych przez kolejne chunki z usunięciem duplikatów.
- * 
- * @author Maciej Janicki 
+ *  
  * @author Michał Marcińczuk
  *
  */
-public class UnionChunker extends Chunker {
+public class CascadeChunker extends Chunker {
 
 	private ArrayList<Chunker> chunkers;
 
-	public UnionChunker(ArrayList<Chunker> chunkers){
+	public CascadeChunker(ArrayList<Chunker> chunkers){
 		this.chunkers = chunkers;
 	}
 		
 	public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
 		HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
 		
-		for (Paragraph p : ps.getParagraphs())
-			for (Sentence sentence : p.getSentences())
-				chunkings.put(sentence, new AnnotationSet(sentence));
-		
+		Document document = ps.clone();
+				
 		for ( Chunker chunker : this.chunkers){
-			HashMap<Sentence, AnnotationSet> chunkingThis = chunker.chunk(ps);
-			for (Sentence sentence : chunkingThis.keySet())
-				chunkings.get(sentence).union(chunkingThis.get(sentence));				
+			chunker.chunkInPlace(document);
+		}
+		
+		for ( int i=0; i<document.getSentences().size(); i++ ){
+			Sentence sentence = ps.getSentences().get(i);
+			AnnotationSet set = new AnnotationSet(sentence);
+			for ( Annotation an : document.getSentences().get(i).getChunks() )
+				if ( !sentence.getChunks().contains(an) )
+					set.addChunk(an);
+			chunkings.put(sentence, set);
 		}
 		
 		return chunkings;
 	}	
-	
 	
 }

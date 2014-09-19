@@ -2,6 +2,7 @@ package g419.corpus.structure;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.TreeSet;
 
 /**
  * Klasa reprezentuje anotację jako ciągłą sekwencję tokenów w zdaniu.
@@ -23,7 +24,7 @@ public class Annotation {
 	/**
 	 * Indeksy tokenów.
 	 */
-	private ArrayList<Integer> tokens = new ArrayList<Integer>();
+	private TreeSet<Integer> tokens = new TreeSet<Integer>();
 	
 	/**
 	 * Indeks głowy anotacji.
@@ -63,16 +64,12 @@ public class Annotation {
 	}
 	
 	public void addToken(int idx){
-		if(idx > getEnd())
+		if ( !this.tokens.contains(idx) )
 			this.tokens.add(idx);
-		else
-			for(int i = 0; i < this.tokens.size(); i++)
-				if(this.tokens.get(i) < idx)
-					this.tokens.add(i,idx);
 	}
 	
 	public void replaceTokens(int begin, int end){
-		this.tokens = new ArrayList<Integer>();
+		this.tokens.clear();
 		for(int i = begin; i <= end; i++)
 			this.tokens.add(i);
 	}
@@ -99,14 +96,14 @@ public class Annotation {
 	}
 	
 	public int getBegin() {
-		return this.tokens.get(0);
+		return this.tokens.first();
 	}
 	
 	public int getEnd() {
-		return this.tokens.get(this.tokens.size()-1);
+		return this.tokens.last();
 	}
 	
-	public ArrayList<Integer> getTokens(){
+	public TreeSet<Integer> getTokens(){
 		return this.tokens;
 	}
 	

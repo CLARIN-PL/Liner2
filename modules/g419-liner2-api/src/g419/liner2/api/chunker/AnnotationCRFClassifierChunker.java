@@ -27,8 +27,10 @@ public class AnnotationCRFClassifierChunker extends Chunker {
         HashMap<String, Sentence> sentences = sentencesById(ps.getSentences());
         for(AnnotationSet wrappedSet: chunked.values()){
             Sentence sent = sentences.get(wrappedSet.getSentence().getId());
-            AnnotationSet newSet = new AnnotationSet(sent);
+            AnnotationSet newSet = new AnnotationSet(sent);            
             for(Annotation source: sent.getChunks()){
+                System.out.println(source.getText() + " " + source.getType());
+            	
                 Annotation newAnn = source.clone();
                 if(source.getType().equals(base)){
                     for(Annotation wrappedAnn: wrappedSet.chunkSet()){
