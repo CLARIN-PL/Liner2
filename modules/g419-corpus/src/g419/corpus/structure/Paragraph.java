@@ -54,7 +54,7 @@ public class Paragraph {
 
     public Paragraph clone(){
         Paragraph copy = new Paragraph(id);
-        copy.chunkMetaData = (HashMap<String, String>) chunkMetaData.clone();
+        copy.chunkMetaData = new HashMap<String, String>(chunkMetaData);
         copy.attributeIndex = attributeIndex.clone();
         for(Sentence s: sentences){
             copy.addSentence(s.clone());

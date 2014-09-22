@@ -114,8 +114,8 @@ public class Token {
 
     public Token clone(){
         Token cloned = new Token(this.attrIdx.clone());
-        cloned.tags = (ArrayList<Tag>) this.tags.clone();
-        cloned.attributes = (ArrayList<String>) this.attributes.clone();
+        cloned.tags = new ArrayList<Tag>(this.tags);
+        cloned.attributes = new ArrayList<String>(this.attributes);
         cloned.id = id;
         cloned.noSpaceAfter = this.noSpaceAfter;
         return cloned;
