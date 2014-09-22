@@ -215,7 +215,7 @@ public class ActionEval extends Action{
         while ( line != null ){
             String[] fileData = line.split("\t");
             if(fileData.length != 2){
-                throw new DataFormatException("Incorrect line in folds file: "+line+"\nProper line format: {file_name}\\t{fold_nr}");
+                throw new DataFormatException("Incorrect line in folds file: "+this.input_file+"\\"+line+"\nProper line format: {file_name}\\t{fold_nr}");
             }
             String file = fileData[0];
             int fold = Integer.parseInt(fileData[1]);
