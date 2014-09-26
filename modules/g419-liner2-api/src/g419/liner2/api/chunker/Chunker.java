@@ -4,13 +4,14 @@ import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
+import org.ini4j.Ini;
 
 import java.util.HashMap;
 
 
 public abstract class Chunker {
 
-    String description;
+    Ini.Section description;
 	abstract public HashMap<Sentence, AnnotationSet> chunk(Document ps);
 
 	public void chunkInPlace(Document ps){
@@ -22,11 +23,11 @@ public abstract class Chunker {
 	}
 
 
-    public void setDescription(String description){
+    public void setDescription(Ini.Section description){
         this.description = description;
     }
 
-    public String getDescription(){
+    public org.ini4j.Profile.Section getDescription(){
         return description;
     }
 

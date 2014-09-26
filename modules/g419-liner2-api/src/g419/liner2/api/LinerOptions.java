@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 import org.ini4j.Ini;
+import org.ini4j.Profile;
 
 /**
  * This class handles module parameters. The parameters are read from
@@ -54,7 +55,7 @@ public class LinerOptions {
     public boolean libCRFPPLoaded = false;
 
     public LinkedHashMap<String, String> features = new LinkedHashMap<String, String>();
-	public LinkedHashMap<String, String> chunkersDescriptions = new LinkedHashMap<String, String>();
+	public LinkedHashSet<Ini.Section> chunkersDescriptions = new LinkedHashSet<Ini.Section>();
     public List<Pattern> types = new ArrayList<Pattern>();
 
     public HashMap<String, LinerOptions> models = null;
@@ -109,7 +110,10 @@ public class LinerOptions {
             Collection<Ini.Section> chunkerSections = ini.values();
             chunkerSections.remove(main);
             for (Ini.Section chunker : chunkerSections) {
-                this.chunkersDescriptions.put(chunker.getName().substring(8), chunker.get(OPTION_CHUNKER_DESCRIPTION).replace("{INI_PATH}", iniPath));
+                for(String param: chunker.keySet()){
+                    chunker.put(param,chunker.get(param).replace("{INI_PATH}", iniPath));
+                }
+                this.chunkersDescriptions.add(chunker);
             }
         } catch (Exception e){
             e.printStackTrace();

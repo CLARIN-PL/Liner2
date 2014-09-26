@@ -2,6 +2,7 @@ package g419.liner2.api.chunker.factory;
 
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.MappingChunker;
+import org.ini4j.Ini;
 
 import java.util.regex.Matcher;
 
@@ -11,16 +12,10 @@ import java.util.regex.Matcher;
 public class ChunkerFactoryItemMapping extends ChunkerFactoryItem {
 
     public ChunkerFactoryItemMapping() {
-        super("mapping:([^:]*)");
+        super("mapping");
     }
     @Override
-    public Chunker getChunker(String description, ChunkerManager cm) throws Exception {
-        Matcher matcher = this.pattern.matcher(description);
-        if (matcher.find()){
-            return new MappingChunker(matcher.group(1), cm.testData);
-        }
-        else{
-            return null;
-        }
+    public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
+        return new MappingChunker(description.get("mapping"), cm.testData);
     }
 }

@@ -8,6 +8,8 @@ import g419.corpus.structure.Document;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.features.TokenFeatureGenerator;
+import org.ini4j.Ini;
+import org.ini4j.Profile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,10 +39,9 @@ public class ChunkerManager {
      * @throws Exception
      */
     public void loadChunkers() throws Exception {
-        for (String chunkerName : opts.chunkersDescriptions.keySet()) {
-            String chunkerDesc = opts.chunkersDescriptions.get(chunkerName);
+        for (Ini.Section chunkerDesc : opts.chunkersDescriptions) {
             Chunker chunker = ChunkerFactory.createChunker(chunkerDesc, this);
-            addChunker(chunkerName, chunker);
+            addChunker(chunkerDesc.getName(), chunker);
         }
     }
 
@@ -51,7 +52,7 @@ public class ChunkerManager {
         chunkers.put(name, chunker);
     }
 
-    public void addChunker(String name, String description){
+    public void addChunker(String name, Ini.Section description){
         try {
             addChunker(name, ChunkerFactory.createChunker(description, this));
         } catch (Exception e) {

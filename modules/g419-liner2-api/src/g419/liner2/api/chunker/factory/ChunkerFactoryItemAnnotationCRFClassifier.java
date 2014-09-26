@@ -1,7 +1,6 @@
 package g419.liner2.api.chunker.factory;
 
 import g419.corpus.io.reader.AbstractDocumentReader;
-import g419.corpus.io.reader.BatchReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.*;
 import g419.liner2.api.Liner2;
@@ -13,24 +12,20 @@ import g419.liner2.api.features.TokenFeatureGenerator;
 import g419.liner2.api.tools.Logger;
 import g419.liner2.api.tools.TemplateFactory;
 import org.ini4j.Ini;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.io.IOUtils;
+
 /**
  * Created by michal on 9/2/14.
  */
 public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryItem {
 
     public ChunkerFactoryItemAnnotationCRFClassifier() {
-        super("CRFclassifier:([^:]*)");
+        super("CRFclassifier");
     }
     @Override
-    public Chunker getChunker(String description, ChunkerManager cm) throws Exception {
+    public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
         if (!cm.opts.libCRFPPLoaded){
             try {
                 String linerJarPath = Liner2.class.getProtectionDomain().getCodeSource().getLocation().getPath();
@@ -40,49 +35,38 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
                 System.exit(1);
             }
         }
-        Matcher matcher = this.pattern.matcher(description);
-        if (matcher.find()){
-            String iniPath = matcher.group(1);
-            Ini ini = new Ini(new File(iniPath));
-            String mode = ini.get("main", "mode");
-            if(mode.equals("train")){
-                return train(ini, cm);
-            }
-            else if(mode.equals("load")){
-                return load(ini);
-            }
-            else{
-                throw new Exception("Unrecognized mode for CRFPP annotation classifier: " + mode + "(Valid: train/load)");
-            }
-
+        String mode = description.get("mode");
+        if(mode.equals("train")){
+            return train(description, cm);
         }
-        else
-            return null;
+        else if(mode.equals("load")){
+            return load(description);
+        }
+        else{
+            throw new Exception("Unrecognized mode for CRFPP annotation classifier: " + mode + "(Valid: train/load)");
+        }
     }
 
-    private Chunker load(Ini ini) {
+    private Chunker load(Ini.Section description) {
 
-        Ini.Section main = ini.get("main");
-        String store = main.get("store").replace("{INI_PATH}", ini.getFile().getParent());
+
+        String store = description.get("store");
 
         Logger.log("--> CRFPP Chunker deserialize from " + store);
         CrfppChunker baseChunker = new CrfppChunker();
         baseChunker.deserialize(store);
-        AnnotationCRFClassifierChunker chunker = new AnnotationCRFClassifierChunker(null, main.get("base"), baseChunker);
+        AnnotationCRFClassifierChunker chunker = new AnnotationCRFClassifierChunker(null, description.get("base"), baseChunker);
 
         return chunker;
     }
 
-    private Chunker train(Ini ini, ChunkerManager cm) throws Exception {
+    private Chunker train(Ini.Section description, ChunkerManager cm) throws Exception {
         Logger.log("--> CRFPP annotation classifier train");
-        String iniDir = ini.getFile().getParent();
-        Ini.Section main = ini.get("main");
-        Ini.Section dataDesc = ini.get("data");
 
-        String inputFile = dataDesc.get("source").replace("{INI_PATH}", iniDir);
+        String inputFile = description.get("training-data");
         String inputFormat;
 
-        String modelFilename = main.get("store").replace("{INI_PATH}", iniDir);
+        String modelFilename = description.get("store");
         TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
 
         ArrayList<Document> trainData = new ArrayList<Document>();
@@ -90,7 +74,7 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
             trainData = cm.trainingData;
         }
         else{
-            inputFormat = dataDesc.get("format");
+            inputFormat = description.get("format");
             AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFile, inputFormat);
             Document document = reader.nextDocument();
             while ( document != null ){
@@ -99,18 +83,18 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
                 document = reader.nextDocument();
             }
         }
-        List<Pattern> list = LinerOptions.getGlobal().parseTypes(dataDesc.get("types").replace("{INI_PATH}", iniDir));
+        List<Pattern> list = LinerOptions.getGlobal().parseTypes(description.get("types"));
 
-        CrfppChunker baseChunker = new CrfppChunker(Integer.parseInt(main.get("threads")), list);
+        CrfppChunker baseChunker = new CrfppChunker(Integer.parseInt(description.get("threads")), list);
         baseChunker.setModelFilename(modelFilename);
-        String templateData = main.get("template").replace("{INI_PATH}", iniDir);
+        String templateData = description.get("template");
         Logger.log("--> Training on file=" + inputFile);
 
-        AnnotationCRFClassifierChunker chunker = new AnnotationCRFClassifierChunker(list, main.get("base"), baseChunker);
+        AnnotationCRFClassifierChunker chunker = new AnnotationCRFClassifierChunker(list, description.get("base-chunker"), baseChunker);
 
 
         CrfTemplate template = TemplateFactory.parseTemplate(templateData);
-        template.addFeature("context:"+main.get("context"));
+        template.addFeature("context:"+description.get("context"));
 
         for(Document document: trainData){
             gen.generateFeatures(document);

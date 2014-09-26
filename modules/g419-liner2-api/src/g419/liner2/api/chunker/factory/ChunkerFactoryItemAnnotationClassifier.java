@@ -9,7 +9,9 @@ import g419.liner2.api.chunker.TrainableChunkerInterface;
 import g419.liner2.api.tools.Logger;
 import g419.liner2.api.tools.ParameterException;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,23 +26,10 @@ public class ChunkerFactoryItemAnnotationClassifier extends ChunkerFactoryItem {
 	}
 
 	@Override
-	public Chunker getChunker(String description, ChunkerManager cm) throws Exception {
+	public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
 		Logger.log("Training annotation classifier");
 
-		Matcher m = this.pattern.matcher(description);
-		
-		if ( !m.find() )
-			return null;
-        String iniPath = m.group(1);
-        String iniDir = new File(iniPath).getParent();
-
-        String inputClassifier = m.group(3);
-        Ini ini = new Ini(new FileReader(iniPath));
-        Ini.Section main = ini.get("main");
-        Ini.Section classifierDesc = ini.get("classifier");
-        Ini.Section dataDesc = ini.get("data");
-        Ini.Section featuresDesc = ini.get("features");
-
+        String inputClassifier = description.get("base-chunker");
         Chunker baseChunker = null;
 
 		if ( inputClassifier != null ){
@@ -50,34 +39,47 @@ public class ChunkerFactoryItemAnnotationClassifier extends ChunkerFactoryItem {
 		}
 
         List<String> features = new ArrayList<String>();
-        for(String featureName: featuresDesc.keySet())
-        features.add(featuresDesc.get(featureName).replace("{INI_DIR}",iniDir));
+
+        File featuresFile = new File(description.get("features"));
+        if(!featuresFile.exists())     {
+            throw new FileNotFoundException("Error while parsing features:" + description.get("features") + " is not an existing file!");
+        }
+        String iniPath = featuresFile.getAbsoluteFile().getParentFile().getAbsolutePath();
+        BufferedReader br = new BufferedReader(new FileReader(featuresFile));
+        StringBuffer sb = new StringBuffer();
+        String feature = br.readLine();
+        while(feature != null) {
+            feature = feature.trim().replace("{INI_PATH}", iniPath);
+            features.add(feature);
+            feature = br.readLine();
+        }
+
         String[] parameters;
-        if(classifierDesc.containsKey("parameters")){
-            parameters = classifierDesc.get("parameters").split(",");
+        if(description.containsKey("parameters")){
+            parameters = description.get("parameters").split(",");
         }
         else{
             parameters = new String[0];
         }
         for(String p: parameters)
         System.out.println(p);
-		AnnotationClassifierChunker chunker = new AnnotationClassifierChunker(baseChunker, features, classifierDesc.get("type"), parameters, classifierDesc.get("strategy"));
+		AnnotationClassifierChunker chunker = new AnnotationClassifierChunker(baseChunker, features, description.get("classifier"), parameters, description.get("strategy"));
 
-        String mode = main.get("mode");
-        String modelPath = main.get("store").replace("{INI_DIR}", iniDir);
+        String mode = description.get("mode");
+        String modelPath = description.get("store");
         File modelFile = new File(modelPath);
         if ( mode.equals("load") && modelFile.exists()){
             chunker.deserialize(modelPath);
         }
         else {
-            String inputFormat = dataDesc.get("format");
-            String inputFile = dataDesc.get("source").replace("{INI_DIR}",iniDir);
+            String inputFormat = description.get("format");
+            String inputFile = description.get("training-data");
 
             Logger.log("--> Training on file=" + inputFile);
             AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFile, inputFormat);
             // TODO
-            ((TrainableChunkerInterface)chunker).addTrainingData(reader.nextDocument());
-            ((TrainableChunkerInterface)chunker).train();
+            chunker.addTrainingData(reader.nextDocument());
+            chunker.train();
 
             modelFile.createNewFile();
             chunker.serialize(modelPath);
