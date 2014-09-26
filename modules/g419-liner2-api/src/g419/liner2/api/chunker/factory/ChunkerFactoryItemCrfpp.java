@@ -9,7 +9,7 @@ import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.CrfppChunker;
 import g419.liner2.api.converter.Converter;
-import g419.liner2.api.converter.ConverterFactory;
+import g419.liner2.api.converter.factory.ConverterFactory;
 import g419.liner2.api.features.TokenFeatureGenerator;
 import g419.liner2.api.tools.Logger;
 import g419.liner2.api.tools.TemplateFactory;

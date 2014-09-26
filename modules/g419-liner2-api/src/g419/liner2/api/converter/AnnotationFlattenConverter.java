@@ -14,17 +14,13 @@ import java.util.*;
 /**
  * Created by michal on 9/17/14.
  */
-public class FlattenConverter extends Converter {
+public class AnnotationFlattenConverter extends Converter {
 
     ArrayList<String> categories;
     private Comparator<Annotation> flattenConparator;
 
-    public FlattenConverter(String categoriesFile){
-        try {
-            parseCategories(categoriesFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public AnnotationFlattenConverter(ArrayList<String> cats){
+        this.categories = cats;
 
         flattenConparator = new Comparator<Annotation>() {
             public int compare(Annotation a, Annotation b) {
@@ -68,22 +64,5 @@ public class FlattenConverter extends Converter {
             }
         }
         return toRemove;
-    }
-
-    private void parseCategories(String file) throws IOException {
-        categories = new ArrayList<String>();
-        BufferedReader br = new BufferedReader(new FileReader(file));
-
-        try {
-            String line = br.readLine();
-            while (line != null) {
-                categories.add(line);
-                line = br.readLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            br.close();
-        }
     }
 }

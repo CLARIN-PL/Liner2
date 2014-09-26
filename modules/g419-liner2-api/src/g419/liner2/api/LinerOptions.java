@@ -1,6 +1,5 @@
 package g419.liner2.api;
 
-import g419.corpus.structure.CrfTemplate;
 
 import java.io.*;
 import java.util.*;
