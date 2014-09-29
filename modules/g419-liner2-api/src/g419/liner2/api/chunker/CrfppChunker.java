@@ -117,13 +117,7 @@ public class CrfppChunker extends Chunker
     @Override
 	public void train() throws Exception {
     	this.trainingFileWriter.close();
-        System.out.println(classes.size() + " POSSIBLE CLASSES:");
-        for(String cl: classes){
-            System.out.println(cl);
-        }
-        System.out.println(classes.size() + " POSSIBLE CLASSES:");
 		this.compileTagger();
-        System.out.println("TRAINED");
     }
 
     @Override
