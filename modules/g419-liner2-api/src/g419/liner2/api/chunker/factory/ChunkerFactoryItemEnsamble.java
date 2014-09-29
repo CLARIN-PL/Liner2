@@ -15,7 +15,7 @@ public class ChunkerFactoryItemEnsamble extends ChunkerFactoryItem {
 
 	@Override
 	public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
-	    return ChunkerFactory.getChunkerPipe(description.get("chunkers"), cm);
+	    return ChunkerFactory.getChunkerPipe(description.get("description"), cm);
 
 	}
 }
