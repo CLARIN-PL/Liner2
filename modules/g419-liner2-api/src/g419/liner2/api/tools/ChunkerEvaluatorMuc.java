@@ -264,7 +264,9 @@ public class ChunkerEvaluatorMuc {
 		System.out.println("        Annotation           &  COR &  ACT &  POS &"
 			+ " Precision & Recall  & F$_1$   \\\\");
 		System.out.println("\\hline");
-		for (String type : this.types) {
+        ArrayList<String> types = new ArrayList<String>(this.types);
+        Collections.sort(types);
+		for (String type : types) {
 			int tp = this.chunksTruePositives.getChunkCount(type) * 2 + this.chunksTruePartially.getChunkCount(type);
 			int fp = this.chunksFalsePositives.getChunkCount(type) * 2 + this.chunksTruePartially.getChunkCount(type);
 			int fn = this.chunksFalseNegatives.getChunkCount(type) * 2 + this.chunksFalsePartially.getChunkCount(type);
