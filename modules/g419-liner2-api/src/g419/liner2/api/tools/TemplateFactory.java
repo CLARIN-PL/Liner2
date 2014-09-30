@@ -14,7 +14,7 @@ public class TemplateFactory {
 
     public static CrfTemplate parseTemplate(String templateFile) throws Exception{
 
-        Logger.log("TemplateFactory.parseTemplate("+templateFile+")");
+        Logger.log("(TemplateFactory) parsing template: "+templateFile);
         CrfTemplate template = new CrfTemplate();
         BufferedReader br = new BufferedReader(new FileReader(templateFile));
         StringBuffer sb = new StringBuffer();
@@ -25,6 +25,10 @@ public class TemplateFactory {
                 template.addFeature(feature);
                 feature = br.readLine();
             }
+        }
+        Logger.log("(TemplateFactory) Loaded features:");
+        for(String feat: template.getFeatures().keySet()){
+
         }
         return template;
     }

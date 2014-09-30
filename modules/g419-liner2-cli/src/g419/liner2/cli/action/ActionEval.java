@@ -187,10 +187,10 @@ public class ActionEval extends Action{
             timer.startTimer("Evaluation", false);
             timer.addTokens(ps);
             if(globalEval != null){
-                globalEval.evaluate(ps.getSentences(), chunkings, referenceChunks);
+                globalEval.evaluate(ps, chunkings, referenceChunks);
                 globalEvalMuc.evaluate(chunkings, referenceChunks);
             }
-            eval.evaluate(ps.getSentences(), chunkings, referenceChunks);
+            eval.evaluate(ps, chunkings, referenceChunks);
             evalMuc.evaluate(chunkings, referenceChunks);
             timer.stopTimer();
 

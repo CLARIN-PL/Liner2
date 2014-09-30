@@ -36,7 +36,6 @@ public class CrfppChunker extends Chunker
 	private int threads = 1;
 	private static final int MAX_TOKENS = 1000;
 	private List<Pattern> types = null;
-    HashSet<String> classes = new HashSet<String>();
 	
     public CrfppChunker() {
 		this.types = new ArrayList<Pattern>();
@@ -122,7 +121,7 @@ public class CrfppChunker extends Chunker
 
     @Override
     public void addTrainingData(Document paragraphSet) {
-
+        Logger.log("Loading training data for CRF from document:" + paragraphSet.getName());
     	// Utwórz tymczasowy plik do zapisu danych treningowych
     	if ( this.trainingFileWriter == null ){
     		try {
@@ -135,6 +134,11 @@ public class CrfppChunker extends Chunker
     	
     	for (Paragraph paragraph : paragraphSet.getParagraphs())
     		for (Sentence sentence : paragraph.getSentences()) {
+                if(!sentence.getChunks().isEmpty()){
+                    for(Annotation a: sentence.getChunks())
+                    System.out.println(a.getTokens().size()+" | "+a.getTokens().toString()+" | "+a.getType());
+                    System.out.println("-------");
+                }
     			int numAttrs = sentence.getAttributeIndexLength();
     			ArrayList<Token> tokens = sentence.getTokens();    			
     			for (int i = 0; i < tokens.size(); i++) {
@@ -146,7 +150,6 @@ public class CrfppChunker extends Chunker
     					oStr += " " + val;
     				}
                     String tokClass = sentence.getTokenClassLabel(i, this.types);
-                    classes.add(tokClass);
                     oStr += " " + tokClass;
     				this.trainingFileWriter.write(oStr.trim() + "\n");
     			}
