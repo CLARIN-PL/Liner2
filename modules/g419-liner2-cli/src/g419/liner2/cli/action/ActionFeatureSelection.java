@@ -93,8 +93,8 @@ public class ActionFeatureSelection extends Action {
 			System.out.println(pairs.getKey());
 			CrfTemplate ct = pairs.getValue();
 			System.out.println("#FS: current template: " + pairs.getKey());
-			//selectFeaturesBottomUp(ct);		
-			selectFeaturesTopDown(ct);
+			selectFeaturesBottomUp(ct);		
+			//selectFeaturesTopDown(ct);
 		}
 		System.out.println("#FS: end");
 	}

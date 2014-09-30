@@ -7,6 +7,7 @@ import g419.liner2.cli.action.ActionConvert;
 import g419.liner2.cli.action.ActionEval;
 import g419.liner2.cli.action.ActionFeatureSelection;
 import g419.liner2.cli.action.ActionInteractive;
+import g419.liner2.cli.action.ActionLearningCurve;
 import g419.liner2.cli.action.ActionPipe;
 import g419.liner2.cli.action.ActionTime;
 import g419.liner2.cli.action.ActionTrain;
@@ -42,6 +43,7 @@ public class Main {
     	main.registerAction(new ActionTime());
     	main.registerAction(new ActionTrain());
     	main.registerAction(new ActionAgreement());
+    	main.registerAction(new ActionLearningCurve());
     	
     	if ( args.length == 0 ){
     		main.printCredits();

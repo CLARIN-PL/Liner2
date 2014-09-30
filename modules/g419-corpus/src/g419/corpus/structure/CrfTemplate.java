@@ -15,6 +15,7 @@ public class CrfTemplate {
 	Hashtable<String, String[]> features = new Hashtable<String, String[]>();
 	
 	public void addFeature(String description) throws Exception {
+		System.out.println(description);
 		String[] featureUnits = description.split("/");
 		if (featureUnits.length < 1)
 			throw new Exception("Invalid template description: " + description);
@@ -31,6 +32,19 @@ public class CrfTemplate {
 				this.featureNames.add(featureName);
 				this.features.put(featureName, windowDesc);
 			}
+		}
+		else if (description.startsWith("/")){
+			String[] featureUnit = featureUnits[1].split(":");
+			if (featureUnit.length != 2)
+				throw new Exception("Invalid template description: " + description);
+			String featureName = featureUnit[0] + "[" + featureUnit[1] + "]";
+			String[] windowDesc = {featureUnit[0], featureUnit[1]};
+			if (this.features.containsKey(featureName))
+				throw new Exception("Duplicate feature definition in template description: "+description);
+			else {
+				this.featureNames.add(featureName);
+				this.features.put(featureName, windowDesc);
+			}			
 		}
 		// cecha złożona:
 		// featureNames <= pełna nazwa cechy
