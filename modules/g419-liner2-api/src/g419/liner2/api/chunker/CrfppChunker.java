@@ -134,11 +134,6 @@ public class CrfppChunker extends Chunker
     	
     	for (Paragraph paragraph : paragraphSet.getParagraphs())
     		for (Sentence sentence : paragraph.getSentences()) {
-                if(!sentence.getChunks().isEmpty()){
-                    for(Annotation a: sentence.getChunks())
-                    System.out.println(a.getTokens().size()+" | "+a.getTokens().toString()+" | "+a.getType());
-                    System.out.println("-------");
-                }
     			int numAttrs = sentence.getAttributeIndexLength();
     			ArrayList<Token> tokens = sentence.getTokens();    			
     			for (int i = 0; i < tokens.size(); i++) {
