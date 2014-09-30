@@ -23,12 +23,9 @@ public class TemplateFactory {
             if(!feature.startsWith("#")){
                 feature = feature.trim();
                 template.addFeature(feature);
+                Logger.log("(TemplateFactory) feature:" + feature);
                 feature = br.readLine();
             }
-        }
-        Logger.log("(TemplateFactory) Loaded features:");
-        for(String feat: template.getFeatures().keySet()){
-
         }
         return template;
     }
