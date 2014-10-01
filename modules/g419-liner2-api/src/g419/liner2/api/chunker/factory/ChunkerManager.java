@@ -41,7 +41,7 @@ public class ChunkerManager {
     public void loadChunkers() throws Exception {
         for (Ini.Section chunkerDesc : opts.chunkersDescriptions) {
             Chunker chunker = ChunkerFactory.createChunker(chunkerDesc, this);
-            addChunker(chunkerDesc.getName(), chunker);
+            addChunker(chunkerDesc.getName().substring(8), chunker);
         }
     }
 
