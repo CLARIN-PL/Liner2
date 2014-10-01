@@ -90,7 +90,7 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
         String templateData = description.get("template");
         Logger.log("--> Training on file=" + inputFile);
 
-        AnnotationCRFClassifierChunker chunker = new AnnotationCRFClassifierChunker(list, description.get("base-chunker"), baseChunker);
+        AnnotationCRFClassifierChunker chunker = new AnnotationCRFClassifierChunker(list, description.get("base-annotation"), baseChunker);
 
 
         CrfTemplate template = TemplateFactory.parseTemplate(templateData);
