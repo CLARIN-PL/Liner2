@@ -89,10 +89,10 @@ public class LinerOptions {
             Ini.Section main = ini.get("main");
 
             if (main.containsKey(OPTION_FEATURES)) {
-                parseFeatures(main.get(OPTION_FEATURES).replace("{INI_PATH}", iniPath));
+                this.features = parseFeatures(main.get(OPTION_FEATURES).replace("{INI_PATH}", iniPath));
             }
             if (main.containsKey(OPTION_TYPES)) {
-                parseTypes(main.get(OPTION_TYPES).replace("{INI_PATH}", iniPath));
+                this.types = parseTypes(main.get(OPTION_TYPES).replace("{INI_PATH}", iniPath));
             }
             if (main.containsKey(OPTION_CRFLIB)) {
                 try {
@@ -122,6 +122,7 @@ public class LinerOptions {
     }
 
     public LinkedHashMap<String, String> parseFeatures(String featuresFile) throws IOException {
+        LinkedHashMap<String, String> features = new LinkedHashMap<String, String>();
         File iniFile = new File(featuresFile);
         if(!iniFile.exists())     {
             throw new FileNotFoundException("Error while parsing features:"+featuresFile+" is not an existing file!");
@@ -137,20 +138,21 @@ public class LinerOptions {
             else {
                 featureName = splitted[0];
             }
-            this.features.put(featureName, feature);
+            features.put(featureName, feature);
         }
-        return this.features;
+        return features;
     }
 
     public List<Pattern> parseTypes(String typesFile) throws IOException {
+        List<Pattern> types = new ArrayList<Pattern>();
         File iniFile = new File(typesFile);
         if(!iniFile.exists())     {
             throw new FileNotFoundException("Error while parsing types:"+typesFile+" is not an existing file!");
         }
         for(String type: parseLines(iniFile)){
-            this.types.add(Pattern.compile("^"+type+"$"));
+            types.add(Pattern.compile("^"+type+"$"));
         }
-        return this.types;
+        return types;
     }
 
     private ArrayList<String> parseLines(File file) throws IOException {
