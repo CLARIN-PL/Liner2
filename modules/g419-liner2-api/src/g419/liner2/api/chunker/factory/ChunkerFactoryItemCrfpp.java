@@ -11,14 +11,12 @@ import g419.liner2.api.chunker.CrfppChunker;
 import g419.liner2.api.converter.Converter;
 import g419.liner2.api.converter.factory.ConverterFactory;
 import g419.liner2.api.features.TokenFeatureGenerator;
-import g419.liner2.api.tools.Logger;
+import g419.corpus.Logger;
 import g419.liner2.api.tools.TemplateFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.ini4j.Ini;

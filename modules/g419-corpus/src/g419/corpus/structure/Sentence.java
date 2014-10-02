@@ -21,7 +21,7 @@ public class Sentence {
 	/* Zbiór anotacji */
 	LinkedHashSet<Annotation> chunks = new LinkedHashSet<Annotation>();
 	
-	/* Identyfikator zdania */
+	/* Identyfikator zdania (unikalny w obrębie paragrafu) */
 	String id = null;
 
     private static Comparator<Annotation> annotationComparator = new Comparator<Annotation>() {
@@ -53,6 +53,8 @@ public class Sentence {
 	public String getId(){
 		return this.id;
 	}
+
+    public boolean hasId(){ return id != null; }
 	
 	/*
 	 * Zwraca chunk dla podanego indeksu tokenu.

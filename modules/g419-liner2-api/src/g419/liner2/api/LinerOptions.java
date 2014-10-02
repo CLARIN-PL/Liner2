@@ -48,10 +48,7 @@ public class LinerOptions {
 	public static final String OPTION_TYPES = "types";
 	public static final String OPTION_USED_CHUNKER = "chunker";
     public static final String OPTION_CRFLIB = "crflib";
-    public static final String OPTION_CHUNKER_DESCRIPTION = "description";
 
-	public boolean verbose = false;
-	public boolean verboseDetails = false;
     public boolean libCRFPPLoaded = false;
 
     public LinkedHashMap<String, String> features = new LinkedHashMap<String, String>();

@@ -3,7 +3,7 @@ package g419.liner2.api.chunker.factory;
 
 import g419.liner2.api.chunker.AduChunker;
 import g419.liner2.api.chunker.Chunker;
-import g419.liner2.api.tools.Logger;
+import g419.corpus.Logger;
 import g419.liner2.api.tools.ParameterException;
 import org.ini4j.Ini;
 

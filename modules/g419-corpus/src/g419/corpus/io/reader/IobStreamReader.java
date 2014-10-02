@@ -135,6 +135,7 @@ public class IobStreamReader extends AbstractDocumentReader {
 			
 			if (line.trim().isEmpty()) {
 				if (currentSentence.getTokenNumber() > 0) {
+                    currentSentence.setId("sent" + paragraph.numSentences() + 1);
 					paragraph.addSentence(currentSentence);
 					currentSentence = new Sentence();
                     annsByType = new HashMap<String, Annotation>();

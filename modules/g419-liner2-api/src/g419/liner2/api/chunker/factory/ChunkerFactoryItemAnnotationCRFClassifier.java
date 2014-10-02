@@ -9,7 +9,7 @@ import g419.liner2.api.chunker.AnnotationCRFClassifierChunker;
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.CrfppChunker;
 import g419.liner2.api.features.TokenFeatureGenerator;
-import g419.liner2.api.tools.Logger;
+import g419.corpus.Logger;
 import g419.liner2.api.tools.TemplateFactory;
 import org.ini4j.Ini;
 import java.util.ArrayList;

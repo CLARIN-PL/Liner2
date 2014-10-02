@@ -61,4 +61,8 @@ public class Paragraph {
         }
                 return copy;
     }
+
+    public int numSentences(){
+        return sentences.size();
+    }
 }

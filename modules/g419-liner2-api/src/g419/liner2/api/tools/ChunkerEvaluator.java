@@ -1,6 +1,7 @@
 package g419.liner2.api.tools;
 
 
+import g419.corpus.Logger;
 import g419.corpus.structure.*;
 
 import java.util.ArrayList;

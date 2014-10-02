@@ -1,20 +1,19 @@
 package g419.liner2.api.tools;
 
 
+import g419.corpus.Logger;
 import g419.corpus.structure.CrfTemplate;
 import g419.corpus.structure.TokenAttributeIndex;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Set;
 
 
 public class TemplateFactory {
 
     public static CrfTemplate parseTemplate(String templateFile) throws Exception{
 
-        Logger.log("(TemplateFactory) parsing template: "+templateFile);
+        Logger.log("(TemplateFactory) parsing template: " + templateFile);
         CrfTemplate template = new CrfTemplate();
         BufferedReader br = new BufferedReader(new FileReader(templateFile));
         StringBuffer sb = new StringBuffer();

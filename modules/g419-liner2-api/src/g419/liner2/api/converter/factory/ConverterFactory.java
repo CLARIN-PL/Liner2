@@ -1,7 +1,7 @@
 package g419.liner2.api.converter.factory;
 
 import g419.liner2.api.converter.*;
-import g419.liner2.api.tools.Logger;
+import g419.corpus.Logger;
 
 import java.util.ArrayList;
 

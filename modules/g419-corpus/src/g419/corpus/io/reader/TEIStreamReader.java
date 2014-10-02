@@ -32,7 +32,7 @@ public class TEIStreamReader extends  AbstractDocumentReader{
         this.attributeIndex.addAttribute("ctag");
         this.attributeIndex.addAttribute("tagTool");
         
-        AnnMorphosyntaxSAXParser morphoParser = new AnnMorphosyntaxSAXParser(annMorphosyntax, this.attributeIndex);
+        AnnMorphosyntaxSAXParser morphoParser = new AnnMorphosyntaxSAXParser(docName, annMorphosyntax, this.attributeIndex);
         AnnSegmentationSAXParser segmentationParser = new AnnSegmentationSAXParser(annSegmentation, morphoParser.getParagraphs());
         AnnNamedSAXParser namedParser = new AnnNamedSAXParser(annNamed, segmentationParser.getParagraphs(), morphoParser.getTokenIdsMap());
         this.document = new Document(docName, namedParser.getParagraphs(), this.attributeIndex);

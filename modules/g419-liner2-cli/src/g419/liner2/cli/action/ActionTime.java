@@ -5,16 +5,11 @@ import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.structure.Document;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
-import g419.liner2.api.chunker.factory.ChunkerFactory;
 import g419.liner2.api.chunker.factory.ChunkerManager;
 import g419.liner2.api.features.TokenFeatureGenerator;
-import g419.liner2.api.tools.Logger;
+import g419.corpus.Logger;
 import g419.liner2.api.tools.ParameterException;
 import g419.liner2.api.tools.ProcessingTimer;
-import g419.liner2.cli.CommonOptions;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.ParseException;
 
 /**
  * Measuring processing time.

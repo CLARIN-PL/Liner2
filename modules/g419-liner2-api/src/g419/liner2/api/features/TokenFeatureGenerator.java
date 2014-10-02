@@ -9,7 +9,7 @@ import g419.liner2.api.features.tokens.Feature;
 import g419.liner2.api.features.tokens.TokenFeature;
 import g419.liner2.api.features.tokens.TokenFeatureFactory;
 import g419.liner2.api.features.tokens.TokenInSentenceFeature;
-import g419.liner2.api.tools.Logger;
+import g419.corpus.Logger;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

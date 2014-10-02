@@ -7,7 +7,7 @@ import g419.corpus.structure.Document;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
-import g419.liner2.api.tools.Logger;
+import g419.corpus.Logger;
 import g419.liner2.api.tools.TemplateFactory;
 
 import java.io.BufferedReader;
@@ -17,7 +17,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

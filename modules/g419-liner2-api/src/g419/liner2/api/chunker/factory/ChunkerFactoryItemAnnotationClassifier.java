@@ -5,8 +5,7 @@ import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.liner2.api.chunker.AnnotationClassifierChunker;
 import g419.liner2.api.chunker.Chunker;
-import g419.liner2.api.chunker.TrainableChunkerInterface;
-import g419.liner2.api.tools.Logger;
+import g419.corpus.Logger;
 import g419.liner2.api.tools.ParameterException;
 
 import java.io.BufferedReader;
@@ -15,7 +14,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 
 import org.ini4j.Ini;
 

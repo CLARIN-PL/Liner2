@@ -1,6 +1,7 @@
 package g419.liner2.cli.action;
 
 
+import g419.corpus.Logger;
 import g419.corpus.io.DataFormatException;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.BatchReader;
@@ -12,10 +13,7 @@ import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.factory.ChunkerManager;
 import g419.liner2.api.features.TokenFeatureGenerator;
-import g419.liner2.api.tools.ChunkerEvaluator;
-import g419.liner2.api.tools.ChunkerEvaluatorMuc;
-import g419.liner2.api.tools.ParameterException;
-import g419.liner2.api.tools.ProcessingTimer;
+import g419.liner2.api.tools.*;
 import g419.liner2.cli.CommonOptions;
 
 import java.io.BufferedReader;
@@ -73,7 +71,7 @@ public class ActionEval extends Action{
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
         LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
         if(line.hasOption(OPTION_VERBOSE_DETAILS)){
-            LinerOptions.getGlobal().verboseDetails = true;
+            Logger.verboseDetails = true;
         }
 	}
 	

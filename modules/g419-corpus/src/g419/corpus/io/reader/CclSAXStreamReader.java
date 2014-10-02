@@ -21,15 +21,6 @@ public class CclSAXStreamReader extends AbstractDocumentReader {
 		attributeIndex.addAttribute("ctag");
 		CclSaxParser parser_out = new CclSaxParser(uri, is, attributeIndex);
 		this.document = parser_out.getDocument();
-    	// TODO obejście zapewniające, że każde zdanie ma unikalny identyfikator
-		// Unikalny identyfikator jest potrzeby do poprawnego testowania dokumentów
-		// z użyciem klonowania. Trzeba pomyśleć, jak to zrobić, aby nie nadpisywać
-		// istniejących identyfikatorów, jeżeli zostały podane. Może trzeba by sprawdzić
-		// po wczytaniu, czy są ustawione uniklalne identyfikatory.
-        for(Sentence sent: this.document.getSentences()){
-            sent.setId("" + sent.hashCode());
-        }
-
 	}
 	
 	@Override
