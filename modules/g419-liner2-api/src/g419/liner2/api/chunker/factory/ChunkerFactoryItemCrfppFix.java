@@ -11,7 +11,7 @@ import org.ini4j.Ini;
 public class ChunkerFactoryItemCrfppFix extends ChunkerFactoryItem {
 
 	public ChunkerFactoryItemCrfppFix() {
-		super("crfpp-fix:(.*)");
+		super("crfpp-fix");
 	}
 
 	@Override

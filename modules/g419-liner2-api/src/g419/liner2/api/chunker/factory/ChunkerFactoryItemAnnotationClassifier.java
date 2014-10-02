@@ -20,7 +20,7 @@ import org.ini4j.Ini;
 public class ChunkerFactoryItemAnnotationClassifier extends ChunkerFactoryItem {
 
 	public ChunkerFactoryItemAnnotationClassifier() {
-		super("classifier:([^:]*)(:base=(.*))?");
+		super("classifier");
 	}
 
 	@Override

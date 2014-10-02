@@ -65,13 +65,13 @@ public class ChunkerFactory {
 	public static Chunker createChunker(Ini.Section description, ChunkerManager cm) throws Exception{
 		Logger.log("-> Setting up chunker: " + description.getName());
 		for (ChunkerFactoryItem item : ChunkerFactory.get().items) {
-			if ( item.getType().equals(description.get(CHUNKER_TYPE)) ) {
+            if ( item.getType().equals(description.get(CHUNKER_TYPE)) ) {
 				Chunker chunker =  item.getChunker(description, cm);
                 chunker.setDescription(description);
                 return chunker;
             }
         }
-        throw new Error(String.format("Chunker description '%s' not recognized", description));
+        throw new Error(String.format("Chunker description '%s' not recognized", description.get(CHUNKER_TYPE)));
 	}
 	
 	/**
