@@ -1,13 +1,10 @@
 package g419.liner2.cli.action;
 
-import g419.liner2.api.LinerOptions;
+import g419.corpus.Logger;
 import g419.liner2.cli.CommonOptions;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-
-import java.io.IOException;
 
 public abstract class Action {
 
@@ -46,7 +43,7 @@ public abstract class Action {
 
     protected void parseDefault(CommandLine line){
         if(line.hasOption(CommonOptions.OPTION_VERBOSE)){
-            LinerOptions.getGlobal().verbose = true;
+            Logger.verbose = true;
         }
     }
 	

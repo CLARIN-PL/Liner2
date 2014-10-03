@@ -20,6 +20,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import g419.corpus.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -66,8 +67,11 @@ public class CclSaxParser extends DefaultHandler {
     boolean foundDisamb;
     TokenAttributeIndex attributeIndex;
     Document document = null;
+    boolean foundSentenceId = false;
+    String uri;
 
     public CclSaxParser(String uri, InputStream is, TokenAttributeIndex attributeIndex) throws DataFormatException {
+        this.uri = uri;
         this.is = is;
         this.attributeIndex = attributeIndex;
         paragraphs = new ArrayList<Paragraph>();
@@ -150,6 +154,15 @@ public class CclSaxParser extends DefaultHandler {
         if (element.equalsIgnoreCase(TAG_SENTENCE)) {
             for (Annotation chunk : annotations.values())
                 currentSentence.addChunk(chunk);
+            if(!currentSentence.hasId()){
+                currentSentence.setId("sent" + (currentParagraph.numSentences() + 1));
+                if(foundSentenceId){
+                    System.out.println("Warning: missing sentence id in " + uri + ":" + currentParagraph.getId() + ":" + currentSentence.getId());
+                }
+            }
+            else{
+                foundSentenceId = true;
+            }
             currentParagraph.addSentence(currentSentence);
         }
         if (element.equalsIgnoreCase(TAG_TOKEN)) {
@@ -205,6 +218,7 @@ public class CclSaxParser extends DefaultHandler {
 
 
     public Document getDocument(){
+        if (!foundSentenceId) Logger.log("Generated sentence ids for document:" + uri);
         return this.document;
     }
 

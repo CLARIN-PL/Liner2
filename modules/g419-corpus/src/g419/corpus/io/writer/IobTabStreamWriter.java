@@ -14,45 +14,27 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 
-public class ArffStreamWriter extends AbstractDocumentWriter{
+public class IobTabStreamWriter extends AbstractDocumentWriter {
 
 	private BufferedWriter ow;
 	private boolean init = false;
+	private ArrayList<Integer> widths = new ArrayList<Integer>();
 
-	public ArffStreamWriter(OutputStream os) {
+	public IobTabStreamWriter(OutputStream os) {
 		this.ow = new BufferedWriter(new OutputStreamWriter(os));
 	}
-
-	@Override
-    public void writeDocument(Document paragraphSet) {
-        for (Paragraph p : paragraphSet.getParagraphs())
-            writeParagraph(p);
-    }
-
 
 	protected void init(TokenAttributeIndex attributeIndex) {
 		if (this.init)
 			return;
 		try {
-			String line = "@relation rel";
+			String line = "-DOCSTART CONFIG FEATURES";
+			for (int i = 0; i < attributeIndex.getLength(); i++)
+				line += " " + attributeIndex.getName(i);
 			ow.write(line, 0, line.length());
 			ow.newLine();
-			ow.newLine();
-			for (int i = 0; i < attributeIndex.getLength(); i++) {
-				line = "@attribute " + attributeIndex.getName(i) + " string";
-				ow.write(line, 0, line.length());
-				ow.newLine();
-			}
-			line = "@attribute iobtag string";
-			ow.write(line, 0, line.length());
-			ow.newLine();
-			ow.newLine();
-			line = "@data";
-			ow.write(line, 0, line.length());
-			ow.newLine();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		} catch (Exception ex) {
+		}
+		catch (IOException ex) {
 			ex.printStackTrace();
 		}
 		this.init = true;
@@ -75,16 +57,27 @@ public class ArffStreamWriter extends AbstractDocumentWriter{
 			ex.printStackTrace();
 		}
 	}
-	
+
+	@Override
+	public void writeDocument(Document document){
+		this.calcuateWidths(document);
+		for (Paragraph paragraph : document.getParagraphs())
+			this.writeParagraph(paragraph);
+	}
+
 	public void writeParagraph(Paragraph paragraph) {
 		try {
 			if (!init)
 				init(paragraph.getAttributeIndex());
+			String paragraphId = paragraph.getId();
+			if (paragraphId == null)
+				paragraphId = "";
+			String header = "-DOCSTART FILE "+ paragraphId;
+			ow.write(header, 0, header.length());
+			ow.newLine();
 			for (Sentence sentence : paragraph.getSentences())
 				writeSentence(sentence);
 		} catch (IOException ex) {
-			ex.printStackTrace();
-		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
@@ -94,25 +87,34 @@ public class ArffStreamWriter extends AbstractDocumentWriter{
 		for (int i = 0; i < tokens.size(); i++) {
 			writeToken(i, tokens.get(i), sentence);
 		}
+		ow.newLine();
 	}
 	
 	private void writeToken(int idx, Token token, Sentence sentence) 
 		throws IOException {
 		String line = "";
-		for (int i = 0; i < token.getNumAttributes(); i++){
-			String attrval = token.getAttributeValue(i);
-			if (attrval == null)
-				attrval = "?";
+		for (int i = 0; i < sentence.getAttributeIndex().getLength(); i++){
+			line += (line.length() > 0 ? " " : "");
+			if ( this.widths.size() > i )
+				line += String.format("%-"+this.widths.get(i)+"s", token.getAttributeValue(i));
 			else
-				attrval = "\'" + attrval.replace("\'", "\\\'") + "\'";
-			line += (line.length() > 0 ? ",\t" : "") + attrval;
+				line += token.getAttributeValue(i);
 		}
 
-        line += " " + sentence.getTokenClassLabel(idx, null);
+		line += " " + sentence.getTokenClassLabel(idx, null);
 		ow.write(line, 0, line.length());
 		ow.newLine();
 	}
-		
 	
-
+	private void calcuateWidths(Document document){
+		this.widths.clear();
+		for ( int i=0; i<document.getAttributeIndex().getLength(); i++ )
+			this.widths.add(0);
+		for (Paragraph paragraph : document.getParagraphs())
+			for (Sentence sentence : paragraph.getSentences())
+				for (Token token : sentence.getTokens())
+					for ( int i = 0; i<this.widths.size(); i++)
+						this.widths.set(i, Math.max(this.widths.get(i), (""+token.getAttributeValue(i)).length()));
+	}
+		
 }

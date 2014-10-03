@@ -1,22 +1,17 @@
 package g419.liner2.api;
 
-import g419.corpus.structure.CrfTemplate;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.regex.Pattern;
 
 import org.ini4j.Ini;
+import org.ini4j.Profile;
 
 /**
  * This class handles module parameters. The parameters are read from
@@ -58,15 +53,11 @@ public class LinerOptions {
 	public static final String OPTION_TYPES = "types";
 	public static final String OPTION_USED_CHUNKER = "chunker";
     public static final String OPTION_CRFLIB = "crflib";
-    public static final String OPTION_CHUNKER_DESCRIPTION = "description";
 
-	public boolean verbose = false;
-	public boolean verboseDetails = false;
     public boolean libCRFPPLoaded = false;
 
     public LinkedHashMap<String, String> features = new LinkedHashMap<String, String>();
-    public HashMap<String, CrfTemplate> templates = new HashMap<String, CrfTemplate>();
-	public LinkedHashMap<String, String> chunkersDescriptions = new LinkedHashMap<String, String>();
+	public LinkedHashSet<Ini.Section> chunkersDescriptions = new LinkedHashSet<Ini.Section>();
     public List<Pattern> types = new ArrayList<Pattern>();
 
     public HashMap<String, LinerOptions> models = null;
@@ -100,10 +91,10 @@ public class LinerOptions {
             Ini.Section main = ini.get("main");
 
             if (main.containsKey(OPTION_FEATURES)) {
-                parseFeatures(main.get(OPTION_FEATURES).replace("{INI_PATH}", iniPath));
+                this.features = parseFeatures(main.get(OPTION_FEATURES).replace("{INI_PATH}", iniPath));
             }
             if (main.containsKey(OPTION_TYPES)) {
-                parseTypes(main.get(OPTION_TYPES).replace("{INI_PATH}", iniPath));
+                this.types = parseTypes(main.get(OPTION_TYPES).replace("{INI_PATH}", iniPath));
             }
             if (main.containsKey(OPTION_CRFLIB)) {
                 try {
@@ -121,12 +112,10 @@ public class LinerOptions {
             Collection<Ini.Section> chunkerSections = ini.values();
             chunkerSections.remove(main);
             for (Ini.Section chunker : chunkerSections) {
-            	String chunkerName = chunker.getName().substring(8);
-                this.chunkersDescriptions.put(chunkerName, chunker.get(OPTION_CHUNKER_DESCRIPTION).replace("{INI_PATH}", iniPath));
-                for(Entry<String, String> propVal: chunker.entrySet()){
-                	if(propVal.getKey().equalsIgnoreCase(OPTION_CHUNKER_DESCRIPTION)) continue;
-                	this.properties.setProperty(chunkerName + "_" + propVal.getKey(), propVal.getValue().replace("{INI_PATH}", iniPath));
+                for(String param: chunker.keySet()){
+                    chunker.put(param,chunker.get(param).replace("{INI_PATH}", iniPath));
                 }
+                this.chunkersDescriptions.add(chunker);
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -135,6 +124,7 @@ public class LinerOptions {
     }
 
     public LinkedHashMap<String, String> parseFeatures(String featuresFile) throws IOException {
+        LinkedHashMap<String, String> features = new LinkedHashMap<String, String>();
         File iniFile = new File(featuresFile);
         if(!iniFile.exists())     {
             throw new FileNotFoundException("Error while parsing features:"+featuresFile+" is not an existing file!");
@@ -150,20 +140,21 @@ public class LinerOptions {
             else {
                 featureName = splitted[0];
             }
-            this.features.put(featureName, feature);
+            features.put(featureName, feature);
         }
-        return this.features;
+        return features;
     }
 
     public List<Pattern> parseTypes(String typesFile) throws IOException {
+        List<Pattern> types = new ArrayList<Pattern>();
         File iniFile = new File(typesFile);
         if(!iniFile.exists())     {
             throw new FileNotFoundException("Error while parsing types:"+typesFile+" is not an existing file!");
         }
         for(String type: parseLines(iniFile)){
-            this.types.add(Pattern.compile("^"+type+"$"));
+            types.add(Pattern.compile("^"+type+"$"));
         }
-        return this.types;
+        return types;
     }
 
     private ArrayList<String> parseLines(File file) throws IOException {

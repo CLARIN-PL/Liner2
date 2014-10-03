@@ -94,6 +94,7 @@ public class PlainTextStreamReader extends AbstractDocumentReader {
 		}
 		Paragraph paragraph = new Paragraph(null);
 		paragraph.setAttributeIndex(ai);
+        sentence.setId("sent" + paragraph.numSentences() + 1);
 		paragraph.addSentence(sentence);
 		Document document = new Document("terminal input", ai);
 		document.addParagraph(paragraph);

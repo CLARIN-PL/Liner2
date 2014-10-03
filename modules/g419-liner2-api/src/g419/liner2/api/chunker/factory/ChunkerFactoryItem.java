@@ -2,23 +2,21 @@ package g419.liner2.api.chunker.factory;
 
 
 import g419.liner2.api.chunker.Chunker;
-
-import java.util.regex.Pattern;
-
+import org.ini4j.Ini;
 
 
 public abstract class ChunkerFactoryItem {
 
-	protected Pattern pattern = null;
+	protected String type = null;
 	
-	public ChunkerFactoryItem(String stringPattern){
-		pattern = Pattern.compile("^"+stringPattern+"$");
+	public ChunkerFactoryItem(String chunkerType){
+		type = chunkerType;
 	}
 	
-	public Pattern getPattern(){
-		return this.pattern;
+	public String getType(){
+		return this.type;
 	}
 	
-	abstract public Chunker getChunker(String description, ChunkerManager cm) throws Exception ;
+	abstract public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception ;
 
 }
