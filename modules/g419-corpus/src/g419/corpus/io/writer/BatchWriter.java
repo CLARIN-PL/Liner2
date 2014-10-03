@@ -42,7 +42,7 @@ public class BatchWriter extends AbstractDocumentWriter {
             extension = "";
         }
         else if(format.equals("verb_eval")){
-            extension = ".azm";
+            extension = ".az";
         }
 
 	}

@@ -45,13 +45,29 @@ public class ConllStreamWriter extends AbstractDocumentWriter{
 		String posext = ai.getAttributeValue(t, "class");
 		String pos = ai.getAttributeValue(t, "pos");
 		String ctag = "";
+		String cpos = null;
 		
 		for(Tag tag : t.getTags()){
 			if(tag.getDisamb()){
+				int firstSep = Math.max(0, tag.getCtag().indexOf(":"));
+				if(firstSep > 0) cpos = tag.getCtag().substring(0, firstSep);
 				ctag = tag.getCtag().substring(tag.getCtag().indexOf(":") + 1).replace(":", "|");
+				if(ctag.equals(pos) || ctag.equals(posext)) ctag = "_";
+				if(pos == null && posext == null){
+					if(cpos != null){
+						pos = cpos;
+						posext = cpos;
+					}
+					else{
+						pos = ctag;
+						posext = ctag;
+						ctag = "_";
+					}
+				}
 			}
 		}
-		
+		//TODO: ctag dla interp conj, etc.
+		//TODO: iż -> dlaczego nie ma pos?
 		return String.format("%d\t%s\t%s\t%s\t%s\t%s\t_\t_\t_\t_\n", tokenIndex, orth, base, pos, posext, ctag);
 	};
 	

@@ -12,12 +12,8 @@ import g419.corpus.structure.TokenAttributeIndex;
 import g419.liner2.api.LinerOptions;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.ParseException;
-//import java.nio.file.Files;
-//import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -53,7 +49,6 @@ public class MinosChunker extends Chunker {
 	
 	public MinosChunker() {
 		String maltModelPath = LinerOptions.getGlobal().getOption(OPTION_MALT_MODEL_PATH);
-		MaltParserService maltService;
 		try {
 			this.maltService = new MaltParserService();
 			// Inititalize the parser model 'model0' and sets the working directory to '.' and sets the logging file to 'parser.log'
@@ -66,10 +61,6 @@ public class MinosChunker extends Chunker {
 		//maltService.terminateParserModel();
 	}
 	
-//	private boolean isVerb(Token t, int indexPos){
-//		return MinosVerb.PartsOfSpeech.contains(t.getAttributeValue(indexPos));
-//	}
-	
 	private String[] conllSentence(Sentence sentence){
 		return ConllStreamWriter.convertSentence(sentence);
 	}
@@ -77,7 +68,6 @@ public class MinosChunker extends Chunker {
 	private DependencyStructure parseMalt(Sentence sentence) throws MaltChainedException{
 		String[] conllSentence = conllSentence(sentence);
 		DependencyStructure graph = this.maltService.parse(conllSentence);
-//		System.out.println(graph);
 		return graph;
 	}
 	
@@ -92,27 +82,11 @@ public class MinosChunker extends Chunker {
 		ArrayList<Token> tokens = sentence.getTokens();
 		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
-		/* Get part of speech feature index */
-		int indexPos = ai.getIndex("class");
-//		int indexBase = ai.getIndex("base");
-//		int indexOrth = ai.getIndex("orth");
-//		int indexGender = ai.getIndex("gender");
-//		int indexNumber = ai.getIndex("number");
-//		int indexPerson = ai.getIndex("person");
-//		int indexIsNum = ai.getIndex("is_number");
-
 		/** Malt Parser **/
 		DependencyStructure maltGraph = parseMalt(sentence);
-		//maltService.terminateParserModel();
 		
-		/* Przykład nanoszenia anotacji.
-		 * Każde wystąpienie słowa o klasie "fin" zostaje oznaczone jako wyznacznik_null_verb.
-		 */
 		for (int i=0; i<tokens.size(); i++ ){
 			Token t = tokens.get(i);
-			String pos = t.getAttributeValue(indexPos);
-//			System.out.println(pos);
-			
 			if (MinosVerb.isVerb(t, sentence)){
 				MinosVerb vb = new MinosVerb(t, ai, sentence, maltGraph);
 				if (vb.isZeroAnaphora(document)){
@@ -188,13 +162,14 @@ public class MinosChunker extends Chunker {
 		}
 		
 		
-		public static Node getOutgoingRelationTargetNode(DependencyStructure graph, int nodeIndex, String relationName) throws MaltChainedException{
+		public static List<Node> getOutgoingRelationTargetNode(DependencyStructure graph, int nodeIndex, String relationName) throws MaltChainedException{
+			List<Node> subjNodes = new ArrayList<Node>();
 			Set<Edge> edges = getEdgesFromNode(graph, nodeIndex);
 			for(Edge e : edges)
 				for(SymbolTable t : e.getLabelTypes())
-					if(LABEL_TABLE_NAME.equals(t.getName()) && relationName.equals(e.getLabelSymbol(t))) return e.getTarget();
+					if(LABEL_TABLE_NAME.equals(t.getName()) && relationName.equals(e.getLabelSymbol(t))) subjNodes.add(e.getTarget());
 				
-			return null;
+			return subjNodes;
 		}
 	}
 	
@@ -247,7 +222,7 @@ public class MinosChunker extends Chunker {
 		// --------- Settings
 		private static final boolean SETTINGS_CHECK_MALT_SUBJ_AGREEMENT = true;
 		public static final int SETTINGS_SUBJECT_SEARCH_RANGE_BACK = 15;
-		public static final int SETTINGS_SUBJECT_SEARCH_RANGE_FWD = 7;
+		public static final int SETTINGS_SUBJECT_SEARCH_RANGE_FWD = 9;
 		public static final Set<String> SETTINGS_INTERPS_POS = new HashSet<String>(Arrays.asList(new String[]{"interp", "conj"}));
 		public static final Set<String> SETTINGS_IGNORE_INTERPS_ORTH = new HashSet<String>(Arrays.asList(new String[]{}));
 		public final static boolean SETTINGS_INTERP_SEPARATION = true;
@@ -314,9 +289,9 @@ public class MinosChunker extends Chunker {
 		private String partOfSpeech;
 		private String orth;
 		private String base;
-		private Boolean isReflexive = null;
+		private boolean reflexive;
 		
-		public MinosVerb(Token v, TokenAttributeIndex ai, Sentence s, DependencyStructure graph){
+		public MinosVerb(Token v, TokenAttributeIndex ai, Sentence s, DependencyStructure graph) throws MaltChainedException{
 			this.verb = v;
 			this.ai = ai;
 			this.sentence = s;
@@ -425,8 +400,8 @@ public class MinosChunker extends Chunker {
 				Token agltCandidate = this.sentence.getTokens().get(this.positionInSentence + 1);
 				if(AGLT_CLASS.equalsIgnoreCase(ai.getAttributeValue(agltCandidate, "class"))){
 					this.person = ai.getAttributeValue(agltCandidate, "person");
+					return;
 				}
-				return;
 			}
 			// 2. verb + qub + aglt
 			if(this.positionInSentence + 2 < this.sentence.getTokens().size()){
@@ -435,8 +410,8 @@ public class MinosChunker extends Chunker {
 				if(AGLT_CLASS.equalsIgnoreCase(ai.getAttributeValue(agltCandidate, "class")) && 
 						QUB_CLASS.equalsIgnoreCase(ai.getAttributeValue(qubCandidate, "class"))){
 					this.person = ai.getAttributeValue(agltCandidate, "person");
+					return;
 				}
-				return;
 			}
 			// 3. aglt + ... + verb
 //			if(){
@@ -444,7 +419,7 @@ public class MinosChunker extends Chunker {
 //			}
 		}
 		
-		private void extractVerbInfo(){
+		private void extractVerbInfo() throws MaltChainedException{
 			this.positionInSentence = this.sentence.getTokens().indexOf(this.verb);
 			this.orth 			= ai.getAttributeValue(this.verb, "orth");
 			this.base 			= ai.getAttributeValue(this.verb, "base");
@@ -452,21 +427,16 @@ public class MinosChunker extends Chunker {
 			this.person 		= ai.getAttributeValue(this.verb, "person");
 			this.gender 		= Gender.fromValue(ai.getAttributeValue(this.verb, "gender"));
 			this.number 		= ai.getAttributeValue(this.verb, "number");
+			this.reflexive 		= _isReflexiveScan(reflexiveRadius) || _isReflexiveMalt();
 			
 			extractAgltInfo();
 			if(this.person == null) this.person = "ter";
-			
-			if(this.orth.equals("powinny")){
-				int x = 0;
-			}
-//			System.out.println(ai.getAttributeValue(verb, "ctag"));
-//			System.out.println(String.format("Verb: %s %s %s %s %s %s", this.orth, this.base, this.partOfSpeech, this.person, this.gender, this.number));
 		}
 		
 		private boolean attributeLookup(int radius, String attributeName, String attributeValue){
 			int start = Math.max(0, this.positionInSentence - radius);
 			int end = Math.min(this.sentence.getTokenNumber() - 1, this.positionInSentence + radius);
-			for (int i = start; i < end; i++)
+			for (int i = start; i <= end; i++)
 				if(attributeValue.equalsIgnoreCase(this.ai.getAttributeValue(this.sentence.getTokens().get(i), attributeName))) return true;
 				
 			return false;
@@ -532,12 +502,25 @@ public class MinosChunker extends Chunker {
 		public boolean preceedingPersonPriSec(){
 			if("pri".equalsIgnoreCase(this.person)){
 				try{
+					if("ja".equalsIgnoreCase(this.ai.getAttributeValue(this.sentence.getTokens().get(this.positionInSentence - 2), "base")) 
+						&& "nie".equalsIgnoreCase(this.ai.getAttributeValue(this.sentence.getTokens().get(this.positionInSentence - 1), "base"))) return true;
+				}
+				catch(ArrayIndexOutOfBoundsException ex){}
+				
+				try{
 					if("ja".equalsIgnoreCase(this.ai.getAttributeValue(this.sentence.getTokens().get(this.positionInSentence - 1), "base"))) return true;
 				}
 				catch(ArrayIndexOutOfBoundsException ex){}
+				
 				return false;
 			}
 			else if ("sec".equalsIgnoreCase(this.person)){
+				try{
+					if("ty".equalsIgnoreCase(this.ai.getAttributeValue(this.sentence.getTokens().get(this.positionInSentence - 2), "base")) 
+						&& "nie".equalsIgnoreCase(this.ai.getAttributeValue(this.sentence.getTokens().get(this.positionInSentence - 1), "base"))) return true;
+				}
+				catch(ArrayIndexOutOfBoundsException ex){}
+				
 				try{
 					if("ty".equalsIgnoreCase(this.ai.getAttributeValue(this.sentence.getTokens().get(this.positionInSentence - 1), "base"))) return true;
 				}
@@ -547,18 +530,37 @@ public class MinosChunker extends Chunker {
 			return false;
 		}
 		
+		public boolean hasMaltSubjectPriSec() throws MaltChainedException{
+			List<MinosNoun> subjects = _getMaltSubject();
+			if(subjects == null || subjects.size() <= 0) return false;
+			
+			for(MinosNoun subject : subjects)
+				if(this.person.equalsIgnoreCase(subject.person)) return true;
+			
+			return false;
+		}
+		
 		public boolean preceedingPredicate(int radius){
 			return attributeLookup(predicateRadius, "class", PRED_CLASS);
 		}
 		
 		public boolean mooseCriterion() throws MaltChainedException{
 			boolean endingCondtion = this.orth.toLowerCase().endsWith("ło");
-			boolean reflCondition = isReflexive(reflexiveRadius);
-			return endingCondtion && reflCondition;
+			return endingCondtion && this.reflexive;
 		}
 		
 		public boolean auxiliaryIt() throws MaltChainedException{
-			return MaltGraphUtil.hasOutgoingRelation(this.graph, this.positionInSentence + 1, AUX_RELATION) || MaltGraphUtil.hasIncomingRelation(this.graph, this.positionInSentence + 2, AUX_RELATION);
+			boolean outgoing = MaltGraphUtil.hasOutgoingRelation(this.graph, this.positionInSentence + 1, AUX_RELATION);
+			boolean incoming = MaltGraphUtil.hasIncomingRelation(this.graph, this.positionInSentence + 1, AUX_RELATION);
+			boolean toBase = false;
+			
+			try{
+				toBase = "to".equalsIgnoreCase(this.ai.getAttributeValue(this.sentence.getTokens().get(this.positionInSentence + 1), "orth"));
+			}catch(IndexOutOfBoundsException ex){}
+			
+			boolean toout = incoming && toBase;
+			
+			return outgoing || toout;//incoming;
 		}
 		
 		public boolean advBetterWorse(){
@@ -568,7 +570,7 @@ public class MinosChunker extends Chunker {
 			boolean preceeding = false;
 			boolean following = false;
 			
-			if(precIndex > 0){
+			if(precIndex >= 0){
 				String preceedingBase = this.ai.getAttributeValue(this.sentence.getTokens().get(precIndex), "base");
 				String preceedingPos = this.ai.getAttributeValue(this.sentence.getTokens().get(precIndex), "class");
 				preceeding = (BETTER.equals(preceedingBase) || WORSE.equals(preceedingBase)) && ADV_CLASS.equals(preceedingPos);
@@ -590,9 +592,10 @@ public class MinosChunker extends Chunker {
 		    return sieCondition && takCondition;
 		}
 		
-		public boolean isNonAnaphoricVerbPriSec(){
+		public boolean isNonAnaphoricVerbPriSec() throws MaltChainedException{
 			if(please()) return true;
 			if(preceedingPersonPriSec()) return true;
+			if(hasMaltSubjectPriSec()) return true;
 			return false;
 		}
 		
@@ -628,7 +631,7 @@ public class MinosChunker extends Chunker {
 			int end = Math.min(this.sentence.getTokenNumber() - 1, this.positionInSentence + neuterRadius);
 			for (int i = start; i < end; i++){
 				try{
-					int val = Integer.parseInt(this.ai.getAttributeValue(this.sentence.getTokens().get(i), "orth"));
+					Integer.parseInt(this.ai.getAttributeValue(this.sentence.getTokens().get(i), "orth"));
 					integer = true;
 					break;
 				}
@@ -646,9 +649,6 @@ public class MinosChunker extends Chunker {
 		}
 		
 		public boolean hasSubject(Document document) throws MaltChainedException{
-			if("mogły".equalsIgnoreCase(this.orth)){
-				int x = 0;
-			}
 			if (hasMaltSubject(SETTINGS_CHECK_MALT_SUBJ_AGREEMENT)) return true;
 			if (hasChunkrelSubject(document)) return true;
 			if (hasContextSubject()) return true;
@@ -657,6 +657,10 @@ public class MinosChunker extends Chunker {
 		}
 		
 		public boolean isZeroAnaphora(Document document) throws MaltChainedException{
+			if("ma".equalsIgnoreCase(this.orth)){
+				int x = 0;
+			}
+			
 			if(isPriSec()){
 				if(isNonAnaphoricVerbPriSec()) return false;
 			}
@@ -676,29 +680,31 @@ public class MinosChunker extends Chunker {
 			return attributeLookup(radius, "orth", REFL_ORTH);
 		}
 		
-		public boolean isReflexive(int radius) throws MaltChainedException{
-			if(this.isReflexive == null) this.isReflexive = _isReflexiveScan(radius) || _isReflexiveMalt();
-			return this.isReflexive;
-		}
-		
 		public boolean isNonSubjectVerb() throws MaltChainedException{
 			String base = this.verb.getAttributeValue(this.ai.getIndex("base"));
 			boolean simpleNonSubject = nonSubjectVerbs.contains(base);
-			boolean reflexiveNonSubject = nonSubjectReflexiveVerbs.contains(base) && this.isReflexive(this.reflexiveRadius);
+			boolean reflexiveNonSubject = nonSubjectReflexiveVerbs.contains(base) && this.reflexive;
 			return simpleNonSubject || reflexiveNonSubject;
 		}
 		
-		private MinosNoun _getMaltSubject() throws MaltChainedException{
-			Node subjectNode = MaltGraphUtil.getOutgoingRelationTargetNode(graph, positionInSentence + 1, SUBJ_RELATION);
-			return MinosNoun.fromNode(subjectNode, this.sentence);
+		private List<MinosNoun> _getMaltSubject() throws MaltChainedException{
+			List<Node> subjectNodes = MaltGraphUtil.getOutgoingRelationTargetNode(graph, positionInSentence + 1, SUBJ_RELATION);
+			List<MinosChunker.MinosNoun> minosSubjects = new ArrayList<MinosChunker.MinosNoun>();
+			for(Node subjectNode : subjectNodes) 
+				minosSubjects.add(MinosNoun.fromNode(subjectNode, this.sentence));
+			return minosSubjects;
 		}
 		
 		
 		public boolean hasMaltSubject(boolean checkSubjectAgreement) throws MaltChainedException{
-			MinosNoun maltSubject = _getMaltSubject();
-			if(maltSubject == null) return false;
-			if(checkSubjectAgreement) return maltSubject.checkAgreement(this); 
-			return true;
+			List<MinosNoun> maltSubjects = _getMaltSubject();
+			if(maltSubjects == null || maltSubjects.size() <= 0) return false;
+			if(!checkSubjectAgreement) return true; 
+				
+			for(MinosNoun subject : maltSubjects)
+				if(subject.checkAgreement(this)) return true;
+				
+			return false;
 		}
 		
 		public boolean hasChunkrelSubject(Document document){
@@ -709,13 +715,20 @@ public class MinosChunker extends Chunker {
 				if(SUBJ_RELATION.equalsIgnoreCase(relation.getType())){
 					System.out.println("CHUNKREL_SUBJECT");
 					return true;
+//					List<MinosNoun> chunkrelSubjects = new ArrayList<MinosChunker.MinosNoun>();
+//					for(int tokenId : relation.getAnnotationTo().getTokens())
+//						chunkrelSubjects.add(new MinosNoun(this.sentence.getTokens().get(tokenId), this.sentence, false, true));
+//					
+//					for(MinosNoun chunkrelSubject : chunkrelSubjects)
+//						if(chunkrelSubject.checkAgreement(this)) return true;
+					//@TODO add flag to settings
+					//if(chunkrelSubject.checkAgreement(this)) return true; 
 				}
 			
 			return false;
 		}
 		
 		public boolean hasContextSubject(){
-			// @TODO: uporządkowane przeglądanie kandydatów na podmiot
 			List<MinosNoun> subjectCandidates = findSubjectCandidates();
 			for(MinosNoun noun: subjectCandidates)
 				if (noun.checkAgreement(this)) return true;
@@ -738,7 +751,7 @@ public class MinosChunker extends Chunker {
 		
 		public static final Set<String> ALLOWED_CLASSES = new HashSet<String>(Arrays.asList(new String[]{"subst", "ger", "depr", "num", "numcol", "ppron3", "ppron12", "xxs"}));
 		public static final Set<String> NUM_CLASSES = new HashSet<String>(Arrays.asList(new String[]{"num", "numcol"}));
-		public static final Set<String> ADDITIONAL_NOUN_ORTHS = new HashSet<String>(Arrays.asList(new String[]{"wszyscy", "który", "któryś"}));
+		public static final Set<String> ADDITIONAL_NOUN_ORTHS = new HashSet<String>(Arrays.asList(new String[]{"wszystek", "wszyscy", "który", "któryś"}));
 		public static final String CASE_NOM = "nom";
 		public static final String CASE_ACC = "acc";
 		public static final String CASE_GEN = "gen";
@@ -748,6 +761,9 @@ public class MinosChunker extends Chunker {
 		
 		public static final String LO_ENDING = "ło";
 		
+		private static final String BE_ORTH = "było";
+		private static final String HAVE_ORTH = "ma";
+		public static final String NEG_ORTH = "nie";
 		
 		private Token noun;
 		private Sentence sentence;
@@ -762,6 +778,16 @@ public class MinosChunker extends Chunker {
 		private String base;
 		private String grammarCase;
 		private boolean fromContext;
+		private boolean fromChunkrel = false;
+		
+		public MinosNoun(Token token, Sentence sentence, boolean fromContext, boolean fromChunkrel){
+			this.noun = token;
+			this.sentence = sentence;
+			this.fromContext = fromContext;
+			this.fromChunkrel = fromChunkrel;
+			this.ai = sentence.getAttributeIndex();
+			extractNounInfo();
+		}
 		
 		public MinosNoun(Token token, Sentence sentence, boolean fromContext){
 			this.noun = token;
@@ -773,8 +799,8 @@ public class MinosChunker extends Chunker {
 		
 		
 		private void extractNounInfo(){
-			this.base 	= this.ai.getAttributeValue(this.noun, "orth"); 
-			this.orth 	= this.ai.getAttributeValue(this.noun, "base");
+			this.base 	= this.ai.getAttributeValue(this.noun, "base"); 
+			this.orth 	= this.ai.getAttributeValue(this.noun, "orth");
 			this.pos 	= this.ai.getAttributeValue(this.noun, "pos");
 			this.posext = this.ai.getAttributeValue(this.noun, "class");
 			this.person = this.ai.getAttributeValue(this.noun, "person");
@@ -787,22 +813,26 @@ public class MinosChunker extends Chunker {
 			if(node == null) return null;
 			int tokenIndex = node.getIndex() - 1;
 			Token subjToken = sentence.getTokens().get(tokenIndex);
-			TokenAttributeIndex ai = sentence.getAttributeIndex();
+//			TokenAttributeIndex ai = sentence.getAttributeIndex();
 			return new MinosNoun(subjToken, sentence, false);
 		}
 		
 		public static boolean isNoun(Token t, Sentence s){
 			TokenAttributeIndex ai = s.getAttributeIndex();
-			return ALLOWED_CLASSES.contains(ai.getAttributeValue(t, "class")) || ADDITIONAL_NOUN_ORTHS.contains(ai.getAttributeValue(t, "orth").toLowerCase());
+			return ALLOWED_CLASSES.contains(ai.getAttributeValue(t, "class")) || ADDITIONAL_NOUN_ORTHS.contains(ai.getAttributeValue(t, "base").toLowerCase());
 		}
 		
 		private boolean hasProperPos(){
 			return ALLOWED_CLASSES.contains(this.pos) || ALLOWED_CLASSES.contains(this.posext);
 		}
 		
+		private boolean hasWhichBase(){
+			return ADDITIONAL_NOUN_ORTHS.contains(this.base);
+		}
+		
 		private boolean hasProperCase(){
 			boolean nom = CASE_NOM.equals(this.grammarCase);
-			boolean acc = CASE_ACC.equals(this.grammarCase) && SETTINGS_ALLOW_ACC_CASE;
+			boolean acc = CASE_ACC.equals(this.grammarCase) && SETTINGS_ALLOW_ACC_CASE && "subst".equalsIgnoreCase(this.posext);
 			
 			return nom || acc;
 		}
@@ -843,9 +873,25 @@ public class MinosChunker extends Chunker {
 			return SETTINGS_ALLOW_ADJ_POS && !this.fromContext && (ADJ_CLASS.equalsIgnoreCase(this.posext) || ADJ_CLASS.equalsIgnoreCase(this.pos));
 		}
 		
+		public boolean nieMaGen(MinosVerb verb){
+			boolean be = BE_ORTH.equalsIgnoreCase(verb.orth);
+			boolean have = HAVE_ORTH.equalsIgnoreCase(verb.orth);
+			boolean genitiveCase = CASE_GEN.equalsIgnoreCase(this.grammarCase);
+			boolean negation = false;
+			try{
+				negation = NEG_ORTH.equalsIgnoreCase(this.ai.getAttributeValue(this.sentence.getTokens().get(verb.positionInSentence - 1), "orth"));
+			}
+			catch(IndexOutOfBoundsException ex){}
+			
+			
+			return negation && (have || be) && genitiveCase;
+		}
+		
 		public boolean checkAgreement(MinosVerb verb){
 			if(isNeuterNumeral(verb)) return true;
-			boolean correctPoS = hasProperPos() || allowedUseOfAdj();
+			if(nieMaGen(verb)) return true;
+			if(this.fromChunkrel) return true;
+			boolean correctPoS = hasProperPos() || hasWhichBase() || allowedUseOfAdj();
 			boolean correctCase = hasProperCase();
 			boolean numberAgreement = numberAgreement(verb);
 			boolean personAgreement = personAgreement(verb);
@@ -869,5 +915,8 @@ public class MinosChunker extends Chunker {
 			return this.gender.equals(verb.gender, SETTINGS_MASCULINUM_TOLERANCE, SETTINGS_UNDEFINED_GENDER_ALWAYS_EQUAL);
 		}
 		
+		public String toString(){
+			return this.orth;
+		}
 	}
 }
