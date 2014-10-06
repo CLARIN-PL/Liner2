@@ -1,5 +1,6 @@
 package g419.liner2.cli.action;
 
+import g419.corpus.Logger;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.BatchReader;
 import g419.corpus.io.reader.ReaderFactory;
@@ -11,10 +12,7 @@ import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.factory.ChunkerFactory;
 import g419.liner2.api.chunker.factory.ChunkerManager;
 import g419.liner2.api.features.TokenFeatureGenerator;
-import g419.liner2.api.tools.ChunkerEvaluator;
-import g419.liner2.api.tools.ChunkerEvaluatorMuc;
-import g419.liner2.api.tools.ParameterException;
-import g419.liner2.api.tools.ProcessingTimer;
+import g419.liner2.api.tools.*;
 import g419.liner2.cli.CommonOptions;
 import g419.corpus.structure.CrfTemplate;
 
@@ -42,11 +40,12 @@ import org.apache.commons.io.IOUtils;
  */
 public class ActionFeatureSelection extends Action {
 
+    public static final String OPTION_TEMPLATES = "T";
+    public static final String OPTION_TEMPLATES_LONG = "templates";
+
     private String input_file = null;
     private String input_format = null;
-
-    public static final String OPTION_VERBOSE_DETAILS = "d";
-    public static final String OPTION_VERBOSE_DETAILS_LONG = "details";    
+    private HashMap<String, CrfTemplate> templates = new HashMap<String, CrfTemplate>();
     
     @SuppressWarnings("static-access")
 	public ActionFeatureSelection() {
@@ -56,10 +55,13 @@ public class ActionFeatureSelection extends Action {
         this.options.addOption(CommonOptions.getInputFileFormatOption());
         this.options.addOption(CommonOptions.getInputFileNameOption());
         this.options.addOption(CommonOptions.getModelFileOption());
+        this.options.addOption(CommonOptions.getVerboseDeatilsOption());
         this.options.addOption(OptionBuilder
-                .withDescription("verbose processed sentences data")
-                .withLongOpt(OPTION_VERBOSE_DETAILS_LONG)
-                .create(OPTION_VERBOSE_DETAILS));        
+                .withArgName("templates").hasArg()
+                .withDescription("file with paths to template files")
+                .withLongOpt(OPTION_TEMPLATES_LONG)
+                .isRequired()
+                .create(OPTION_TEMPLATES));
 	}
 
 
@@ -67,11 +69,25 @@ public class ActionFeatureSelection extends Action {
 	public void parseOptions(String[] args) throws Exception {
         CommandLine line = new GnuParser().parse(this.options, args);
         parseDefault(line);
+        loadTemplates(line.getOptionValue(OPTION_TEMPLATES));
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
         LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
-        if(line.hasOption(OPTION_VERBOSE_DETAILS)){
-            LinerOptions.getGlobal().verboseDetails = true;
+        if(line.hasOption(CommonOptions.OPTION_VERBOSE_DETAILS)){
+            Logger.verboseDetails = true;
+        }
+    }
+
+    private void loadTemplates(String file) throws Exception {
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        StringBuffer sb = new StringBuffer();
+        String line = br.readLine();
+        while(line != null) {
+            if(line.isEmpty() || !line.startsWith("#")){
+                line = line.trim();
+                templates.put(line, TemplateFactory.parseTemplate(line));
+                line = br.readLine();
+            }
         }
     }
 	
@@ -85,8 +101,7 @@ public class ActionFeatureSelection extends Action {
 		}
 		//not nice solution - but initializes all objects with full feature set
 		eval();
-		Iterator<Entry<String, CrfTemplate>> it = LinerOptions.getGlobal().templates
-				.entrySet().iterator();
+		Iterator<Entry<String, CrfTemplate>> it = templates.entrySet().iterator();
 		System.out.println("#FS: begin");
 		while (it.hasNext()) {
 			Entry<String, CrfTemplate> pairs = it.next();
@@ -302,8 +317,8 @@ public class ActionFeatureSelection extends Action {
 
 		ProcessingTimer timer = new ProcessingTimer();
 		timer.startTimer("Model loading");
-		ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions
-				.getGlobal());
+		ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
+        cm.loadChunkers();
 		Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal()
 				.getOptionUse());
 		if (!LinerOptions.getGlobal().features.isEmpty()) {
@@ -352,12 +367,12 @@ public class ActionFeatureSelection extends Action {
 			timer.startTimer("Evaluation", false);
 			timer.addTokens(ps);
 			if (globalEval != null) {
-				globalEval.evaluate(ps.getSentences(), chunkings,
+				globalEval.evaluate(ps, chunkings,
 						referenceChunks);
 				// globalEvalMuc.evaluate(chunkings, referenceChunks);
 			}
-			eval.evaluate(ps.getSentences(), chunkings, referenceChunks);
-			evalMuc.evaluate(chunkings, referenceChunks);
+			eval.evaluate(ps, chunkings, referenceChunks);
+			evalMuc.evaluate(ps, chunkings, referenceChunks);
 			timer.stopTimer();
 
 			timer.startTimer("Data reading");

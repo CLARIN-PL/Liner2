@@ -41,9 +41,6 @@ import org.apache.commons.io.IOUtils;
  */
 public class ActionEval extends Action{
 
-    public static final String OPTION_VERBOSE_DETAILS = "d";
-    public static final String OPTION_VERBOSE_DETAILS_LONG = "details";
-
     private String input_file = null;
     private String input_format = null;
 
@@ -55,10 +52,7 @@ public class ActionEval extends Action{
         this.options.addOption(CommonOptions.getInputFileFormatOption());
         this.options.addOption(CommonOptions.getInputFileNameOption());
         this.options.addOption(CommonOptions.getModelFileOption());
-        this.options.addOption(OptionBuilder
-                .withDescription("verbose processed sentences data")
-                .withLongOpt(OPTION_VERBOSE_DETAILS_LONG)
-                .create(OPTION_VERBOSE_DETAILS));
+        this.options.addOption(CommonOptions.getVerboseDeatilsOption());
 
 
 	}
@@ -70,7 +64,7 @@ public class ActionEval extends Action{
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
         LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
-        if(line.hasOption(OPTION_VERBOSE_DETAILS)){
+        if(line.hasOption(CommonOptions.OPTION_VERBOSE_DETAILS)){
             Logger.verboseDetails = true;
         }
 	}
