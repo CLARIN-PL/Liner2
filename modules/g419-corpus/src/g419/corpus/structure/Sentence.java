@@ -82,9 +82,16 @@ public class Sentence {
         return returning;
     }
 
+    public ArrayList<Annotation> getChunksAt(int idx, List<Pattern> types, boolean sorted){
+        ArrayList<Annotation> result = getChunksAt(idx, types);
+        if(sorted){
+            sortTokenAnnotations(result);
+        }
+        return result;
+    }
+
     public String getTokenClassLabel(int tokenIdx, List<Pattern> types){
-        ArrayList<Annotation> tokenAnnotations = getChunksAt(tokenIdx, types);
-        sortTokenAnnotations(tokenAnnotations);
+        ArrayList<Annotation> tokenAnnotations = getChunksAt(tokenIdx, types, true);
 
         if (tokenAnnotations.isEmpty())
             return "O";

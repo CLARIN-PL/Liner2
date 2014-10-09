@@ -5,10 +5,7 @@ import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -31,12 +28,12 @@ public class AnnotationFeatureNeFirstBase extends AnnotationSentenceFeature {
     }
 
     @Override
-    public HashMap<Annotation, String> generate(Sentence sent, HashSet<Annotation> sentenceAnnotations) {
+    public HashMap<Annotation, String> generate(Sentence sent, LinkedHashSet<Annotation> sentenceAnnotations) {
         HashMap<Annotation, String> features = new HashMap<Annotation, String>();
         int posIndex = sent.getAttributeIndex().getIndex("ctag");
         for(Annotation ann: sentenceAnnotations){
             List<Token> candidateTokens;
-            candidateTokens =  sent.getTokens().subList(ann.getBegin(), ann.getEnd()+1);
+            candidateTokens =  new ArrayList<Token>(sent.getTokens().subList(ann.getBegin(), ann.getEnd()+1));
             if(!searchForward)
                 Collections.reverse(candidateTokens);
 

@@ -197,12 +197,17 @@ public class ChunkerEvaluatorMuc {
     private void updateTypes(HashSet<String> newTypes){
         for(String newType: newTypes){
             if(!this.types.contains(newType)){
-                for(Pattern patt: this.patterns){
-                    if(patt.matcher(newType).find()){
-                        this.types.add(newType);
-                        break;
-                    }
+                if(this.patterns != null && !this.patterns.isEmpty()){
+                    for(Pattern patt: this.patterns){
+                        if(patt.matcher(newType).find()){
+                            this.types.add(newType);
+                            break;
+                        }
 
+                    }
+                }
+                else{
+                    this.types.add(newType);
                 }
             }
         }

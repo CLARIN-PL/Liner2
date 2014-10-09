@@ -5,10 +5,7 @@ import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -31,15 +28,15 @@ public class AnnotationFeatureClosestBase extends AnnotationSentenceFeature {
     }
 
     @Override
-    public HashMap<Annotation, String> generate(Sentence sent, HashSet<Annotation> sentenceAnnotations) {
+    public HashMap<Annotation, String> generate(Sentence sent, LinkedHashSet<Annotation> sentenceAnnotations) {
         HashMap<Annotation, String> features = new HashMap<Annotation, String>();
         int posIndex = sent.getAttributeIndex().getIndex("ctag");
         for(Annotation ann: sentenceAnnotations){
             List<Token> candidateTokens;
             if(searchForward)
-                candidateTokens =  sent.getTokens().subList(ann.getEnd(), sent.getTokenNumber());
+                candidateTokens =  new ArrayList<Token>(sent.getTokens().subList(ann.getEnd(), sent.getTokenNumber()));
             else{
-                candidateTokens = sent.getTokens().subList(0, ann.getBegin());
+                candidateTokens = new ArrayList<Token>(sent.getTokens().subList(0, ann.getBegin()));
                 Collections.reverse(candidateTokens);
             }
             int currentDistance = 0;

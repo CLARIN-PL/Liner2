@@ -194,17 +194,27 @@ public class ChunkerEvaluator {
     private void updateTypes(HashSet<String> newTypes){
         for(String newType: newTypes){
             if(!this.types.contains(newType)){
-                for(Pattern patt: this.patterns){
-                    if(patt.matcher(newType).find()){
-                        this.chunksTruePositives.put(newType,  new ArrayList<Annotation>());
-                        this.chunksFalsePositives.put(newType,  new ArrayList<Annotation>());
-                        this.chunksFalseNegatives.put(newType,  new ArrayList<Annotation>());
-                        this.precisionExistingRangeOnly.put(newType,  0.0f);
-                        this.fMeasureExistingRangeOnly.put(newType, 0.0f);
-                        this.types.add(newType);
-                        break;
-                    }
+                if(this.patterns != null && !this.patterns.isEmpty()){
+                    for(Pattern patt: this.patterns){
+                        if(patt.matcher(newType).find()){
+                            this.chunksTruePositives.put(newType,  new ArrayList<Annotation>());
+                            this.chunksFalsePositives.put(newType,  new ArrayList<Annotation>());
+                            this.chunksFalseNegatives.put(newType,  new ArrayList<Annotation>());
+                            this.precisionExistingRangeOnly.put(newType,  0.0f);
+                            this.fMeasureExistingRangeOnly.put(newType, 0.0f);
+                            this.types.add(newType);
+                            break;
+                        }
 
+                    }
+                }
+                else{
+                    this.chunksTruePositives.put(newType,  new ArrayList<Annotation>());
+                    this.chunksFalsePositives.put(newType,  new ArrayList<Annotation>());
+                    this.chunksFalseNegatives.put(newType,  new ArrayList<Annotation>());
+                    this.precisionExistingRangeOnly.put(newType,  0.0f);
+                    this.fMeasureExistingRangeOnly.put(newType, 0.0f);
+                    this.types.add(newType);
                 }
             }
         }
