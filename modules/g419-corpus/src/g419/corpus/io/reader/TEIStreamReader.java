@@ -1,6 +1,8 @@
 package g419.corpus.io.reader;
 
 import g419.corpus.io.DataFormatException;
+import g419.corpus.io.reader.parser.tei.AnnCoreferenceSAXParser;
+import g419.corpus.io.reader.parser.tei.AnnMentionsSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnMorphosyntaxSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnNamedSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnSegmentationSAXParser;
@@ -24,7 +26,10 @@ public class TEIStreamReader extends  AbstractDocumentReader{
     private int currIndex=0;
     private Document document;
 
-    public TEIStreamReader(InputStream annMorphosyntax, InputStream annSegmentation, InputStream annNamed, String docName) throws DataFormatException {
+    
+    // Tylko adres pliku zamiast strumieni
+    // Warunkowe tworzenie strumieni - bez System.in
+    public TEIStreamReader(InputStream annMorphosyntax, InputStream annSegmentation, InputStream annNamed, InputStream annMentions, InputStream annCoreference, String docName) throws DataFormatException {
         
     	this.attributeIndex = new TokenAttributeIndex();
         this.attributeIndex.addAttribute("orth");
@@ -32,10 +37,12 @@ public class TEIStreamReader extends  AbstractDocumentReader{
         this.attributeIndex.addAttribute("ctag");
         this.attributeIndex.addAttribute("tagTool");
         
-        AnnMorphosyntaxSAXParser morphoParser = new AnnMorphosyntaxSAXParser(annMorphosyntax, this.attributeIndex);
+        AnnMorphosyntaxSAXParser morphoParser = new AnnMorphosyntaxSAXParser(docName, annMorphosyntax, this.attributeIndex);
         AnnSegmentationSAXParser segmentationParser = new AnnSegmentationSAXParser(annSegmentation, morphoParser.getParagraphs());
         AnnNamedSAXParser namedParser = new AnnNamedSAXParser(annNamed, segmentationParser.getParagraphs(), morphoParser.getTokenIdsMap());
-        this.document = new Document(docName, namedParser.getParagraphs(), this.attributeIndex);
+        AnnMentionsSAXParser mentionsParser = new AnnMentionsSAXParser(annMentions, segmentationParser.getParagraphs(), morphoParser.getTokenIdsMap());
+        AnnCoreferenceSAXParser coreferenceParser = new AnnCoreferenceSAXParser(annCoreference, mentionsParser.getParagraphs(), mentionsParser.getMentions());
+        this.document = new Document(docName, namedParser.getParagraphs(), this.attributeIndex, coreferenceParser.getRelations());
     }
 
     @Override

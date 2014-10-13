@@ -7,7 +7,7 @@ import g419.corpus.structure.Document;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
-import g419.liner2.api.tools.Logger;
+import g419.corpus.Logger;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

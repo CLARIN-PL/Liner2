@@ -14,8 +14,8 @@ public class AnnotationFilterByRegexConverter extends Converter{
 
     private Pattern pattern = null;
 
-    public AnnotationFilterByRegexConverter(String pattern){
-        this.pattern = Pattern.compile("^"+pattern+"$");
+    public AnnotationFilterByRegexConverter(Pattern pattern){
+        this.pattern = pattern;
     }
 
     @Override

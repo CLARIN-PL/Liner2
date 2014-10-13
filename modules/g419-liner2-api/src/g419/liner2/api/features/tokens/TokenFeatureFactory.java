@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.zip.DataFormatException;
 
+
 public class TokenFeatureFactory {
 
 	/**
@@ -17,12 +18,16 @@ public class TokenFeatureFactory {
 	public static Feature create(String feature) throws Exception{
 		if (feature.equals("class"))
 			return new ClassFeature(feature);
+		else if (feature.equals("pos"))
+			return new ClassFeature(feature, true);
 		else if (feature.equals("case")) 
 			return new CaseFeature(feature);
 		else if (feature.equals("number"))
 			return new NumberFeature(feature);
 		else if (feature.equals("gender"))
 			return new GenderFeature(feature);
+		else if (feature.equals("person"))
+			return new PersonFeature(feature);
 		else if (feature.equals("pattern"))
 			return new PatternFeature(feature);
 		else if (feature.startsWith("prefix"))

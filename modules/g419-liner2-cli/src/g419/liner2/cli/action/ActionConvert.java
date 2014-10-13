@@ -4,12 +4,10 @@ import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.converter.Converter;
-import g419.liner2.api.converter.ConverterFactory;
+import g419.liner2.api.converter.factory.ConverterFactory;
 import g419.liner2.api.features.TokenFeatureGenerator;
 import g419.liner2.cli.CommonOptions;
 import org.apache.commons.cli.CommandLine;
@@ -36,7 +34,7 @@ public class ActionConvert extends Action {
     @SuppressWarnings("static-access")
 	public ActionConvert() {
 		super("convert");
-        this.setDescription("converts file formats and annotation channels");
+        this.setDescription("converts documents from one format to another and applies defined converters");
 
         this.options.addOption(CommonOptions.getInputFileFormatOption());
         this.options.addOption(CommonOptions.getInputFileNameOption());
@@ -103,5 +101,13 @@ public class ActionConvert extends Action {
         reader.close();
         writer.close();
 	}
+
+    @Override
+    public void printOptions(){
+        super.printOptions();
+        System.out.println();
+        ConverterFactory.printAvailableConverters();
+
+    }
 
 }

@@ -41,7 +41,9 @@ public class BatchWriter extends AbstractDocumentWriter {
         else if(format.equals("tei")){
             extension = "";
         }
-
+        else if(format.equals("verb_eval")){
+            extension = ".az";
+        }
 
 	}
 	

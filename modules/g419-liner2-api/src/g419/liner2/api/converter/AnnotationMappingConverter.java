@@ -2,6 +2,7 @@ package g419.liner2.api.converter;
 
 
 import g419.corpus.structure.Annotation;
+import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 
@@ -65,13 +66,16 @@ public class AnnotationMappingConverter extends Converter{
 
     @Override
     public void apply(Sentence sentence) {
+        LinkedHashSet<Annotation> result = new LinkedHashSet<Annotation>();
         for(Annotation ann: sentence.getChunks()){
             for(Entry<Pattern, String> entry: channelsMapping){
                 if(entry.getKey().matcher(ann.getType()).find()){
-                	ann.setType(entry.getValue());
+                    ann.setType(entry.getValue());
                 }
             }
+            result.add(ann);
         }
+        sentence.setAnnotations(new AnnotationSet(sentence, result));
     }
 
     private void parseMapping(String mappingFile) throws IOException {
@@ -81,9 +85,11 @@ public class AnnotationMappingConverter extends Converter{
         try {
             String line = br.readLine();
             while (line != null) {
-                String [] pattern_val = line.split(" -> ");
-                channelsMapping.add(new PatternStringEntry(Pattern.compile("^"+pattern_val[0]+"$"), pattern_val[1]));
-                line = br.readLine();
+                if(line.isEmpty() || !line.startsWith("#")) {
+                    String[] pattern_val = line.split(" -> ");
+                    channelsMapping.add(new PatternStringEntry(Pattern.compile("^" + pattern_val[0] + "$"), pattern_val[1]));
+                    line = br.readLine();
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

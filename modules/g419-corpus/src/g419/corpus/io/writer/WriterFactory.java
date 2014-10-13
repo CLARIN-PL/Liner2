@@ -41,12 +41,16 @@ public class WriterFactory {
 			return new CclStreamWriter(out);
 		else if (outputFormat.equals("iob"))
 			return new IobStreamWriter(out);
+		else if (outputFormat.equals("iob-tab"))
+			return new IobTabStreamWriter(out);
 		else if (outputFormat.equals("tuples"))
 			return new TuplesStreamWriter(out);
 		else if (outputFormat.equals("tokens"))
 			return new TokensStreamWriter(out);
         else if (outputFormat.equals("arff"))
             return new ArffStreamWriter(out);
+        else if (outputFormat.equals("verb_eval"))
+            return new MinosVerbEvalWriter(out);
 		else		
 			throw new Exception("Output format " + outputFormat + " not recognized.");
 	}

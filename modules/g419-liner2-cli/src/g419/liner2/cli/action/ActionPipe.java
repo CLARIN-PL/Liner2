@@ -69,7 +69,9 @@ public class ActionPipe extends Action{
         }
 		
 		/* Create all defined chunkers. */
-        ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
+        ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
+        cm.loadChunkers();
+
         Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
 
 		Document ps = reader.nextDocument();

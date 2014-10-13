@@ -15,12 +15,8 @@ public class TokenFeaturesConverter extends Converter {
 
     CrfTemplate template;
 
-    public TokenFeaturesConverter(String templateFile){
-        try {
-            this.template = TemplateFactory.parseTemplate(templateFile);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+    public TokenFeaturesConverter(CrfTemplate template){
+        this.template = template;
     }
 
     @Override

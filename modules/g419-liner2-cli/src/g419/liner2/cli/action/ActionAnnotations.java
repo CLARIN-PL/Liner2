@@ -32,6 +32,9 @@ public class ActionAnnotations extends Action {
 
 	public static final String OPTION_ANNOTATION_FEATURE = "a";
 	public static final String OPTION_ANNOTATION_FEATURE_LONG = "annotation_features";
+
+    public static final String OPTION_TYPES = "T";
+    public static final String OPTION_TYPES_LONG = "types";
 	
 	private String output_file = null;
 	private String input_file = null;
@@ -42,7 +45,7 @@ public class ActionAnnotations extends Action {
 	@SuppressWarnings("static-access")
 	public ActionAnnotations() {
 		super("annotations");
-		this.setDescription("generates an arff file with a list of annotations with a defined set of features");
+		this.setDescription("generates an arff file with a list of annotations and their features");
 		
         this.options.addOption(OptionBuilder
         		.withArgName("annotation_features").hasArg()
@@ -50,7 +53,11 @@ public class ActionAnnotations extends Action {
                 .withLongOpt(ActionAnnotations.OPTION_ANNOTATION_FEATURE_LONG)
         		.isRequired()
                 .create(ActionAnnotations.OPTION_ANNOTATION_FEATURE));
-        this.options.addOption(CommonOptions.getTypesOption());
+        this.options.addOption(OptionBuilder
+                .withArgName("types").hasArg()
+                .withDescription("a file with a list of annotation name patterns")
+                .withLongOpt(OPTION_TYPES_LONG)
+                .create(OPTION_TYPES));
         this.options.addOption(CommonOptions.getOutputFileNameOption());
         this.options.addOption(CommonOptions.getInputFileFormatOption());
         this.options.addOption(CommonOptions.getInputFileNameOption());
@@ -64,7 +71,7 @@ public class ActionAnnotations extends Action {
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
         this.output_file = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
         this.features_file = line.getOptionValue(ActionAnnotations.OPTION_ANNOTATION_FEATURE);
-        String typesFile = line.getOptionValue(CommonOptions.OPTION_TYPES);
+        String typesFile = line.getOptionValue(OPTION_TYPES);
         if(typesFile != null){
             this.types = LinerOptions.getGlobal().parseTypes(typesFile);
         }

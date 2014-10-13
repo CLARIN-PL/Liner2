@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import g419.corpus.Logger;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.OptionBuilder;
@@ -42,9 +43,6 @@ import g419.liner2.api.tools.ProcessingTimer;
 import g419.liner2.cli.CommonOptions;
 
 public class ActionAgreement extends Action {
-
-	public static final String OPTION_VERBOSE_DETAILS = "d";
-    public static final String OPTION_VERBOSE_DETAILS_LONG = "details";
     
     boolean debug_flag = false;
 	
@@ -57,11 +55,7 @@ public class ActionAgreement extends Action {
 		this.options.addOption(CommonOptions.getInputFileFormatOption());
         this.options.addOption(CommonOptions.getInputFileNameOption());
         this.options.addOption(CommonOptions.getModelFileOption());
-        this.options.addOption(OptionBuilder
-                .withArgName("verbose_details").hasArg()
-                .withDescription("verbose processed sentences data")
-                .withLongOpt(OPTION_VERBOSE_DETAILS_LONG)
-                .create(OPTION_VERBOSE_DETAILS));
+        this.options.addOption(CommonOptions.getVerboseDeatilsOption());
                 
 	}
 
@@ -73,8 +67,8 @@ public class ActionAgreement extends Action {
 	            
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
         LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
-        if(line.hasOption(OPTION_VERBOSE_DETAILS)){
-            LinerOptions.getGlobal().verboseDetails = true;
+        if(line.hasOption(CommonOptions.OPTION_VERBOSE_DETAILS)){
+            Logger.verboseDetails = true;
         }
         
 	}
@@ -129,7 +123,7 @@ public class ActionAgreement extends Action {
             	/* Get set of annotations (original and translated reference in one package), meanwhile checking if documents are the same */
                 translatedChunkings = getTranslatedChunkings(document,referenceDocument);
                 /* Evaluate */
-            	eval.evaluate(document.getSentences(), translatedChunkings.original, translatedChunkings.translated);
+            	eval.evaluate(document, translatedChunkings.original, translatedChunkings.translated);
             }
             catch(Exception e)
             {

@@ -1,13 +1,12 @@
 package g419.liner2.daemon;
 
 import g419.liner2.api.LinerOptions;
-import g419.liner2.api.tools.ParameterException;
+import g419.corpus.Logger;
 import org.apache.commons.cli.*;
 import org.ini4j.Ini;
 import org.ini4j.Profile;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -79,7 +78,7 @@ public class DaemonOptions extends LinerOptions {
         while (i_options.hasNext()) {
             Option o = (Option) i_options.next();
             if(o.getOpt().equals(OPTION_VERBOSE)){
-                DaemonOptions.getGlobal().verbose = true;
+                Logger.verbose = true;
             }
             else if(o.getOpt().equals(OPTION_MODELS)){
                 parseModelsIni(o.getValue());
@@ -88,9 +87,6 @@ public class DaemonOptions extends LinerOptions {
                 this.properties.setProperty(o.getOpt(), o.getValue());
             }
         }
-
-
-        LinerOptions.getGlobal().verbose = DaemonOptions.getGlobal().verbose;
     }
 
 

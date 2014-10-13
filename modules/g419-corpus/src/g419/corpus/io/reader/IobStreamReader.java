@@ -1,27 +1,24 @@
 package g419.corpus.io.reader;
 
 import g419.corpus.io.DataFormatException;
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Tag;
-import g419.corpus.structure.Token;
-import g419.corpus.structure.TokenAttributeIndex;
+import g419.corpus.structure.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
 
-
 public class IobStreamReader extends AbstractDocumentReader {
-	
 	private BufferedReader ir;
-	private TokenAttributeIndex attributeIndex = null;
+
+    static private Pattern annotationPattern = Pattern.compile("([IB])-([^#]*)");
+    private TokenAttributeIndex attributeIndex = null;
 	private String nextParagraphId = null;
 	private boolean nextParagraph = false;
 	private boolean init = false;
@@ -119,7 +116,7 @@ public class IobStreamReader extends AbstractDocumentReader {
 		this.nextParagraphId = null;
 		this.nextParagraph = false;
 		Sentence currentSentence = new Sentence();
-		Annotation currentChunk = null;
+        HashMap<String, Annotation> annsByType = new HashMap<String, Annotation>();
 
 		while (true) {
 			String line = null;
@@ -138,8 +135,10 @@ public class IobStreamReader extends AbstractDocumentReader {
 			
 			if (line.trim().isEmpty()) {
 				if (currentSentence.getTokenNumber() > 0) {
+                    currentSentence.setId("sent" + paragraph.numSentences() + 1);
 					paragraph.addSentence(currentSentence);
 					currentSentence = new Sentence();
+                    annsByType = new HashMap<String, Annotation>();
 				}
 			}
 			else {
@@ -165,20 +164,26 @@ public class IobStreamReader extends AbstractDocumentReader {
 					}
 					
 					// add or update chunk if I/B tag present
-					int last = words.length - 1;
-					if (words[last].startsWith("B")) {
-						int idx = currentSentence.getTokenNumber() - 1;
-						String type = words[last].length() >= 3 ? words[last].substring(2) : "";
-						currentChunk = new Annotation(idx, type, currentSentence);
-						currentSentence.addChunk(currentChunk);
-					}
-					else if (words[last].startsWith("I")) {
-						if (currentChunk != null) {
-							int idx = currentSentence.getTokenNumber() - 1;
-							
-							currentChunk.addToken(idx);
-						}
-					}
+                    String label = words[words.length - 1];
+                    if(label.equals("O")){
+                        annsByType = new HashMap<String, Annotation>();
+                    }
+                    else{
+                        Matcher m = annotationPattern.matcher(label);
+                        int idx = currentSentence.getTokenNumber() - 1;
+                        while(m.find()){
+                            String annType = m.group(2);
+                            if(m.group(1).equals("B")){
+                                Annotation newAnn = new Annotation(idx, annType, currentSentence);
+                                currentSentence.addChunk(newAnn);
+                                annsByType.put(annType, newAnn);
+                            }
+                            else if(m.group(1).equals("I")){
+                                if(annsByType.containsKey(annType))
+                                    annsByType.get(annType).addToken(idx);
+                            }
+                        }
+                    }
 				}
 			}
 		}

@@ -37,8 +37,9 @@ public class AnnotationRemoveNestedConverter extends Converter{
             }
         }
         for(Annotation ann: to_remove){
-        	if ( this.overlaps(ann, sentenceAnnotations) )
-        		sentenceAnnotations.remove(ann);
+        	if ( this.overlaps(ann, sentenceAnnotations) ){
+                sentenceAnnotations.remove(ann);
+            }
         }
     }
     

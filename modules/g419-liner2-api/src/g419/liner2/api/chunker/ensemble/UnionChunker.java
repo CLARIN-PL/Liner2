@@ -38,8 +38,7 @@ public class UnionChunker extends Chunker {
 		for ( Chunker chunker : this.chunkers){
 			HashMap<Sentence, AnnotationSet> chunkingThis = chunker.chunk(ps);
 			for (Sentence sentence : chunkingThis.keySet())
-				chunkings.get(sentence).union(chunkingThis.get(sentence));
-				
+				chunkings.get(sentence).union(chunkingThis.get(sentence));				
 		}
 		
 		return chunkings;

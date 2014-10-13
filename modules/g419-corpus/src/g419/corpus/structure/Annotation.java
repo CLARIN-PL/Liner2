@@ -2,6 +2,7 @@ package g419.corpus.structure;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.TreeSet;
 
 /**
  * Klasa reprezentuje anotację jako ciągłą sekwencję tokenów w zdaniu.
@@ -23,18 +24,23 @@ public class Annotation {
 	/**
 	 * Indeksy tokenów.
 	 */
-	private ArrayList<Integer> tokens = new ArrayList<Integer>();
+	private TreeSet<Integer> tokens = new TreeSet<Integer>();
 	
 	/**
 	 * Indeks głowy anotacji.
 	 */
 	private int head;
-
+	
+	/**
+	 * Indeks anotacji w kanale.
+	 */
+	private int channelIdx;
 	
 	/**
 	 * Informacja czy anotacja ma oznaczoną głowę.
 	 */
 	private boolean hasHead = false;
+	
 	
 	public Annotation(int begin, int end, String type, Sentence sentence){
 		for(int i = begin; i <= end; i++)
@@ -48,7 +54,21 @@ public class Annotation {
 		this.type = type.toLowerCase();
 		this.sentence = sentence;
 	}
-
+	
+	public Annotation(int begin, String type, int channelIdx, Sentence sentence){
+		this.tokens.add(begin);
+		this.type = type.toLowerCase();
+		this.sentence = sentence;
+		this.channelIdx = channelIdx;
+	}
+	
+	public void setChannelIdx(int idx){
+		this.channelIdx = idx;
+	}
+	
+	public int getChannelIdx(){
+		return this.channelIdx;
+	}
 	
 	public boolean hasHead(){
 		return this.hasHead;
@@ -64,45 +84,46 @@ public class Annotation {
 	}
 	
 	public void addToken(int idx){
-		if(idx > getEnd())
+		if ( !this.tokens.contains(idx) )
 			this.tokens.add(idx);
-		else
-			for(int i = 0; i < this.tokens.size(); i++)
-				if(this.tokens.get(i) < idx)
-					this.tokens.add(i,idx);
 	}
 	
 	public void replaceTokens(int begin, int end){
-		this.tokens = new ArrayList<Integer>();
+		this.tokens.clear();
 		for(int i = begin; i <= end; i++)
 			this.tokens.add(i);
 	}
 
 	@Override
 	public boolean equals(Object object) {
-       Annotation chunk = (Annotation) object;
+		Annotation chunk = (Annotation) object;
 		if (!this.tokens.equals(chunk.getTokens()))
 			return false;
-		else if (!this.sentence.equals(chunk.getSentence()))
+		else if (!this.getText().equals(chunk.getText()))
 			return false;
 		else if (!this.type.equals(chunk.getType()))
 			return false;
 		return true;
 	}
-	
+
+    @Override
+    public int hashCode() {
+        return (this.getText() + this.tokens.toString() + this.getType()).hashCode();
+    }
+    
 	public String getId(){
 		return this.id;
 	}
 	
 	public int getBegin() {
-		return this.tokens.get(0);
+		return this.tokens.first();
 	}
 	
 	public int getEnd() {
-		return this.tokens.get(this.tokens.size()-1);
+		return this.tokens.last();
 	}
 	
-	public ArrayList<Integer> getTokens(){
+	public TreeSet<Integer> getTokens(){
 		return this.tokens;
 	}
 	
@@ -169,5 +190,21 @@ public class Annotation {
 	    		}
 		return sorted;
 	}
+
+    public Annotation clone(){
+        Annotation cloned = new Annotation(getBegin(), getEnd(), getType(), this.sentence);
+        cloned.setId(this.id);
+        cloned.setHead(this.head);
+        return cloned;
+    }
+    
+    private boolean equalsIndices(ArrayList<Integer> tab1, ArrayList<Integer> tab2){
+    	if ( tab1.size() != tab2.size() )
+    		return false;
+    	for ( int i=0; i<tab1.size(); i++)
+    		if ( tab1.get(i) != tab2.get(i) )
+    			return false;
+    	return true;
+    }
 
 }

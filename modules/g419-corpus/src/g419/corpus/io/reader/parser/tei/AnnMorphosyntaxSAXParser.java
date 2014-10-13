@@ -17,6 +17,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import g419.corpus.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -55,10 +56,12 @@ public class AnnMorphosyntaxSAXParser extends DefaultHandler{
     String tmpValue;
     String disambTagId;
     int idx =0;
-    boolean foundDisamb;
+    boolean foundSentenceId = false;
     TokenAttributeIndex attributeIndex;
+    String docName;
 
-    public AnnMorphosyntaxSAXParser(InputStream is, TokenAttributeIndex attributeIndex) throws DataFormatException {
+    public AnnMorphosyntaxSAXParser(String docName, InputStream is, TokenAttributeIndex attributeIndex) throws DataFormatException {
+        this.docName = docName;
         this.is = is;
         this.attributeIndex = attributeIndex;
         paragraphs = new ArrayList<Paragraph>();
@@ -70,6 +73,7 @@ public class AnnMorphosyntaxSAXParser extends DefaultHandler{
         try {
             SAXParser parser = factory.newSAXParser();
             parser.parse(is,this);
+            if (!foundSentenceId) Logger.log("Generated sentence ids for document:" + docName);
         } catch (ParserConfigurationException e) {
             throw new DataFormatException("Parse error (ParserConfigurationException)");
         } catch (SAXException e) {
@@ -101,6 +105,7 @@ public class AnnMorphosyntaxSAXParser extends DefaultHandler{
             currentTokenTags = new HashMap<String, Tag>();
             tokenIdsMap.put(attributes.getValue(TAG_ID),idx++);
             currentToken.setId(attributes.getValue(TAG_ID));
+            foundSentenceId = true;
 
         }
         else if (elementName.equalsIgnoreCase(TAG_FEATURE)) {
@@ -133,6 +138,12 @@ public class AnnMorphosyntaxSAXParser extends DefaultHandler{
             paragraphs.add(currentParagraph);
         }
         else if (element.equalsIgnoreCase(TAG_SENTENCE)) {
+            if(!currentSentence.hasId()){
+                currentSentence.setId("sent" + currentParagraph.numSentences() + 1);
+                if(foundSentenceId){
+                    System.out.println("Warning: missing sentence id in " + docName + ":" + currentParagraph.getId() + ":" + currentSentence.getId());
+                }
+            }
             currentParagraph.addSentence(currentSentence);
         }
         else if (element.equals(TAG_SEGMENT)) {

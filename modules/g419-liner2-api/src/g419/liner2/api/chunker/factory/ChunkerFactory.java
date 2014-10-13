@@ -1,18 +1,20 @@
 package g419.liner2.api.chunker.factory;
 
 
-import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
+import g419.liner2.api.chunker.ensemble.CascadeChunker;
 import g419.liner2.api.chunker.ensemble.MajorityVotingChunker;
 import g419.liner2.api.chunker.ensemble.UnionChunker;
-import g419.liner2.api.tools.Logger;
+import g419.corpus.Logger;
+import org.ini4j.Ini;
 
 import java.util.ArrayList;
 
 
 public class ChunkerFactory {
 
-	private static ChunkerFactory factory = null;
+    private static final String CHUNKER_TYPE = "type";
+    private static ChunkerFactory factory = null;
 	
 	private ArrayList<ChunkerFactoryItem> items = new ArrayList<ChunkerFactoryItem>();
 	
@@ -30,6 +32,8 @@ public class ChunkerFactory {
 		this.items.add(new ChunkerFactoryItemPropagate());
 		this.items.add(new ChunkerFactoryItemWccl());
 		this.items.add(new ChunkerFactoryItemMinos());
+        this.items.add(new ChunkerFactoryItemAnnotationCRFClassifier());
+        this.items.add(new ChunkerFactoryItemMapping());
 	}
 	
 	/**
@@ -49,7 +53,7 @@ public class ChunkerFactory {
 	public static String getDescription(){
 		StringBuilder sb = new StringBuilder();
 		for (ChunkerFactoryItem item : ChunkerFactory.get().items)
-			sb.append("  " + item.getPattern() + "\n");
+			sb.append("  " + item.getType() + "\n");
 		return sb.toString();
 	}
 	
@@ -59,45 +63,16 @@ public class ChunkerFactory {
 	 * @return
 	 * @throws Exception 
 	 */
-	public static Chunker createChunker(String description, ChunkerManager cm) throws Exception{
-		Logger.log("-> Setting up chunker: " + description);
+	public static Chunker createChunker(Ini.Section description, ChunkerManager cm) throws Exception{
+		Logger.log("-> Setting up chunker: " + description.getName());
 		for (ChunkerFactoryItem item : ChunkerFactory.get().items) {
-			if ( item.getPattern().matcher(description).find() ) {
+            if ( item.getType().equals(description.get(CHUNKER_TYPE)) ) {
 				Chunker chunker =  item.getChunker(description, cm);
                 chunker.setDescription(description);
                 return chunker;
             }
         }
-        throw new Error(String.format("Chunker description '%s' not recognized", description));
-	}
-	
-	/**
-	 * Creates a hash of chunkers according to the description
-	 * @param opts
-	 * @return
-	 * @throws Exception
-	 */
-	public static ChunkerManager loadChunkers(LinerOptions opts) throws Exception {
-        ChunkerManager cm = new ChunkerManager(opts);
-		for (String chunkerName : opts.chunkersDescriptions.keySet()) {
-			String chunkerDesc = opts.chunkersDescriptions.get(chunkerName);
-			Chunker chunker = ChunkerFactory.createChunker(chunkerDesc, cm);
-            cm.addChunker(chunkerName, chunker);
-		}
-        return cm;
-	}
-	
-	
-	/**
-	 * Validate a chunker description.
-	 * @param description
-	 * @return
-	 */
-	public boolean parse(String description){
-		for (ChunkerFactoryItem item : this.items)
-			if (item.getPattern().matcher(description).find())
-				return true;
-		return false;
+        throw new Error(String.format("Chunker description '%s' not recognized", description.get(CHUNKER_TYPE)));
 	}
 	
 	/**
@@ -129,6 +104,19 @@ public class ChunkerFactory {
 
     private static Chunker getChunkerVotingPipe(String[] chunkerNames, ChunkerManager cm) {
         if (chunkerNames.length == 1){
+            return getChunkerCascadePipe(chunkerNames[0].split(">"), cm);
+        }
+        else {
+            ArrayList<Chunker> chunkers = new ArrayList<Chunker>();
+            for (String name: chunkerNames){
+                chunkers.add(getChunkerCascadePipe(name.split(">"), cm));
+            }
+            return new MajorityVotingChunker(chunkers);
+        }
+    }
+
+    private static Chunker getChunkerCascadePipe(String[] chunkerNames, ChunkerManager cm) {
+        if (chunkerNames.length == 1){
             return cm.getChunkerByName(chunkerNames[0]);
         }
         else {
@@ -136,7 +124,7 @@ public class ChunkerFactory {
             for (String name: chunkerNames){
                 chunkers.add(cm.getChunkerByName(name));
             }
-            return new MajorityVotingChunker(chunkers);
+            return new CascadeChunker(chunkers);
         }
     }
 }

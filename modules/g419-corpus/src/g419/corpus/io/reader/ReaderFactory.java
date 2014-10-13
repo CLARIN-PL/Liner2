@@ -51,8 +51,14 @@ public class ReaderFactory {
 	}
 
 	public AbstractDocumentReader getStreamReader(String uri, InputStream in, String root, String inputFormat) throws Exception {
-		if (inputFormat.equals("ccl"))
-			return new CclSAXStreamReader(uri, in);
+		if (inputFormat.equals("ccl")){
+			InputStream rel = null;
+			try{
+				rel = getInputStream(new File(root, uri.replace(".xml", ".rel.xml")).getPath());
+			}
+			catch(Exception e){}
+			return new CclSAXStreamReader(uri, in, rel);
+		}
 		else if (inputFormat.equals("iob"))
 			return new IobStreamReader(in);
 		else if (inputFormat.equals("plain"))
@@ -69,7 +75,9 @@ public class ReaderFactory {
         InputStream annMorphosyntax = getInputStream(new File(inputFolder,"ann_morphosyntax.xml").getPath());
         InputStream annSegmentation = getInputStream(new File(inputFolder,"ann_segmentation.xml").getPath());
         InputStream annNamed = getInputStream(new File(inputFolder,"ann_named.xml").getPath());
-        return new TEIStreamReader(annMorphosyntax, annSegmentation, annNamed, docname);
+        InputStream annMentions = getInputStream(new File(inputFolder,"ann_mentions.xml").getPath());
+        InputStream annCoreference = getInputStream(new File(inputFolder,"ann_coreference.xml").getPath());
+        return new TEIStreamReader(annMorphosyntax, annSegmentation, annNamed, annMentions, annCoreference, docname);
     }
 	
 	private InputStream getInputStream(String inputFile) throws Exception {
