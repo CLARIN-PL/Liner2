@@ -121,7 +121,16 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
 
         CrfTemplate template = TemplateFactory.parseTemplate(templateData);
         template.addFeature("context:"+description.get("context"));
+        for(String feature: new ArrayList<String>(template.getFeatureNames())){
+            if(!(feature.contains("/") || feature.equals("context"))){
+                String[] windowDesc = template.getFeatures().get(feature);
+                for(int i=1; i < windowDesc.length; i++){
+                    template.addFeature(feature+":"+windowDesc[i]+"/context:0");
+                }
+            }
+        }
 
+        baseChunker.setTemplate(template);
         for(Document document: trainData){
             gen.generateFeatures(document);
             Document wrapped = chunker.prepareData(document, "train");
@@ -130,7 +139,7 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
                 template.setAttributeIndex(wrapped.getAttributeIndex());
             }
         }
-        baseChunker.setTemplate(template);
+        System.out.println("TRAINING CRF CLASSFIER");
         baseChunker.train();
 
         return chunker;
