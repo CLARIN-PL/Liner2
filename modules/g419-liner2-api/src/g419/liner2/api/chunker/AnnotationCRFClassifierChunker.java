@@ -1,6 +1,8 @@
 package g419.liner2.api.chunker;
 
 import g419.corpus.structure.*;
+import g419.liner2.api.features.AnnotationFeatureGenerator;
+import g419.liner2.api.features.TokenFeatureGenerator;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -13,15 +15,26 @@ public class AnnotationCRFClassifierChunker extends Chunker {
     private List<Pattern> list;
     private String base;
     private CrfppChunker baseChunker;
+    private TokenFeatureGenerator tokenFeatureGenerator;
+    private AnnotationFeatureGenerator annotationFeatureGenerator;
 
-    public AnnotationCRFClassifierChunker(List<Pattern> list, String base, CrfppChunker baseChunker){
+    public AnnotationCRFClassifierChunker(List<Pattern> list, String base, CrfppChunker baseChunker, TokenFeatureGenerator gen, List<String> features){
         this.list = list;
         this.base = base;
         this.baseChunker = baseChunker;
+        this.tokenFeatureGenerator = gen;
+        System.out.println("ANNOTATION FEATS:" + features.toString());
+        this.annotationFeatureGenerator = new AnnotationFeatureGenerator(features);
     }
     @Override
     public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
-        Document wrapped = prepareData(ps, "classify");
+        Document wrapped = null;
+        try {
+            wrapped = prepareData(ps, "classify");
+        } catch (Exception e) {
+            System.out.println("AnnotationCRFClassifier: Error while preparing training data");
+            System.exit(1);
+        }
         HashMap<Sentence, AnnotationSet> chunked = baseChunker.chunk(wrapped);
         HashMap<Sentence, AnnotationSet> result = new HashMap<Sentence, AnnotationSet>();
         HashMap<String, Sentence> sentences = sentencesById(ps.getSentences());
@@ -54,7 +67,7 @@ public class AnnotationCRFClassifierChunker extends Chunker {
         return mapped;
     }
 
-    public Document prepareData(Document doc, String mode){
+    public Document prepareData(Document doc, String mode) throws Exception {
         Paragraph whole = new Paragraph("wholeDoc");
         TokenAttributeIndex index = doc.getAttributeIndex().clone();
         index.addAttribute("context");
@@ -71,7 +84,7 @@ public class AnnotationCRFClassifierChunker extends Chunker {
 
     }
 
-    private Sentence wrapAnnotations(HashMap<Integer, Annotation> annotationsByStarts, Sentence sentence, TokenAttributeIndex index){
+    private Sentence wrapAnnotations(HashMap<Integer, Annotation> annotationsByStarts, Sentence sentence, TokenAttributeIndex index) throws Exception {
         List<Token> tokens = sentence.getTokens();
         Sentence wrappedSentence = new Sentence();
         ArrayList<Token> wrappedTokens = new ArrayList<Token>();
@@ -86,10 +99,8 @@ public class AnnotationCRFClassifierChunker extends Chunker {
                 Annotation chosen = annotationsByStarts.get(i);
                 newToken = findHead(chosen, sentence).clone();
                 newToken.setAttributeValue(index.getIndex("context"), "A");
-                // Chwilowe rozwiazanie dla cechy orth i base
                 newToken.setAttributeValue(index.getIndex("orth"), chosen.getText());
                 newToken.setAttributeValue(index.getIndex("base"), chosen.getBaseText());
-                // -----------------------------------
                 int newIndex = wrappedTokens.size();
                 newToken.setAttributeIndex(index);
                 wrappedTokens.add(newToken);
@@ -106,6 +117,25 @@ public class AnnotationCRFClassifierChunker extends Chunker {
 
         }
 
+        wrappedSentence.setAttributeIndex(index);
+        this.tokenFeatureGenerator.generateFeatures(wrappedSentence);
+        List<HashMap<Annotation,String>> annotationFeatures = this.annotationFeatureGenerator.generate(wrappedSentence, wrappedAnnotations);
+        int featIdx = 1;
+        for(HashMap<Annotation, String> feature: annotationFeatures){
+            String newFeature = "annotation-" + featIdx;
+            if(index.getIndex(newFeature) == -1){
+                index.addAttribute(newFeature);
+            }
+            for(Annotation ann: feature.keySet()){
+                wrappedSentence.getTokens().get(ann.getBegin()).setAttributeValue(index.getIndex(newFeature), feature.get(ann));
+            }
+            for(Token t: wrappedSentence.getTokens()){
+                if(t.getAttributeValue(index.getIndex("context")).equals("T")){
+                    t.setAttributeValue(index.getIndex(newFeature), "null");
+                }
+            }
+            featIdx++;
+        }
         wrappedSentence.setAnnotations(new AnnotationSet(wrappedSentence, wrappedAnnotations));
         return  wrappedSentence;
 

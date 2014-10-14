@@ -21,7 +21,7 @@ public class Token {
         addTag(firstTag);
     }
     /* Indeks atrybutów */
-    TokenAttributeIndex attrIdx;
+    public TokenAttributeIndex attrIdx;
 
 	/* Uporządkowana lista atrybutów */
 	ArrayList<String> attributes = new ArrayList<String>();

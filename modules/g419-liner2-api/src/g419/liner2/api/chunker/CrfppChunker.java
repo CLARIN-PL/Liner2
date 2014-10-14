@@ -121,6 +121,7 @@ public class CrfppChunker extends Chunker
     @Override
     public void addTrainingData(Document paragraphSet) {
         Logger.log("Loading training data for CRF from document:" + paragraphSet.getName());
+//        System.out.println(paragraphSet.getAttributeIndex().allAtributes().toString());
     	// Utwórz tymczasowy plik do zapisu danych treningowych
     	if ( this.trainingFileWriter == null ){
     		try {
@@ -145,6 +146,7 @@ public class CrfppChunker extends Chunker
     				}
                     String tokClass = sentence.getTokenClassLabel(i, this.types);
                     oStr += " " + tokClass;
+//                    System.out.println(oStr);
     				this.trainingFileWriter.write(oStr.trim() + "\n");
     			}
     			this.trainingFileWriter.write("\n");

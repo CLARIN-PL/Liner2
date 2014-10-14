@@ -16,6 +16,30 @@ import java.util.regex.Pattern;
 
 public class AnnotationFeatureGenerator {
 
+    // Cechy tokenów których wartość przy rzutowaniu na anotacje jest przepisywana z głowy anotacji
+    private static ArrayList<String> headFeatures = new ArrayList<String>(){{
+        add("ctag");
+        add("class");
+        add("case");
+        add("number");
+        add("gender");
+        add("synonym");
+        add("hypernym");
+        add("top4hyper");
+    }};
+
+    private static ArrayList<String> regenerateFeatures = new ArrayList<String>(){{
+        add("pattern");
+        add("prefix");
+        add("suffix");
+        add("struct");
+        add("regex");
+
+        
+        add("paranthesis");
+        add("quotation");
+    }};
+
 	private List<AnnotationFeature> features = new ArrayList<AnnotationFeature>();
     private List<AnnotationFeatureMalt> maltFeatures = new ArrayList<AnnotationFeatureMalt>();
     private List<AnnotationSentenceFeature> sentenceFeatures = new ArrayList<AnnotationSentenceFeature>();
@@ -109,6 +133,27 @@ public class AnnotationFeatureGenerator {
             tokens.add(tokData);
         }
         return tokens;
+    }
+
+//    public void projectFeatures(Sentence sent){
+//        int contextIdx = sent.getAttributeIndex().getIndex("context");
+//        for(Token tok: sent.getTokens()){
+//            if(tok.getAttributeValue(contextIdx).equals("A")){
+//                Annotation ann = sent.getChunksAt(tok.ge)
+//                projectFeatures(tok, sent.getAttributeIndex());
+//            }
+//        }
+//    }
+
+    public void projectFeatures(Token token, Annotation ann, TokenAttributeIndex index){
+        for(String attribute: index.allAtributes()){
+            if(attribute.equals("orth")){
+                token.setAttributeValue(index.getIndex("orth"), ann.getText());
+            }
+            else if(attribute.equals("base")){
+                token.setAttributeValue(index.getIndex("base"), ann.getBaseText());
+            }
+        }
     }
 
     public MaltFeatureSentence prepareSentenceForMaltparser(Sentence sent, LinkedHashSet<Annotation> sentenceAnnotations){
