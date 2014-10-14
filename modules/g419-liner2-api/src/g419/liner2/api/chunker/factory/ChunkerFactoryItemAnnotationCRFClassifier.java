@@ -139,7 +139,6 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
                 template.setAttributeIndex(wrapped.getAttributeIndex());
             }
         }
-        System.out.println("TRAINING CRF CLASSFIER");
         baseChunker.train();
 
         return chunker;
