@@ -81,7 +81,7 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
         CrfppChunker baseChunker = new CrfppChunker();
         baseChunker.deserialize(store);
         TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
-        AnnotationCRFClassifierChunker chunker = new AnnotationCRFClassifierChunker(null, description.get("base"), baseChunker, gen, parseAnnotationFeatures(description.get("features")));
+        AnnotationCRFClassifierChunker chunker = new AnnotationCRFClassifierChunker(null, description.get("base-annotation"), baseChunker, gen, parseAnnotationFeatures(description.get("features")));
 
         return chunker;
     }
