@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<project name="g419-liner2-relations -- biblioteka dla relacji pomiędzy annotatcjami" default="compile" basedir=".">
+
+	<property name="build_path" value="build" />
+	
+	<target name="clean">
+		<delete dir="${build_path}"/>
+	</target>
+
+	<path id="classpath.standard">
+		<pathelement location="../g419-corpus/g419-corpus.jar"/>
+		<pathelement location="../g419-liner2-api/g419-liner2-api.jar"/>
+	</path>
+	
+	<target name="compile" depends="clean">
+		<mkdir dir="${build_path}"/>
+		<mkdir dir="${build_path}/lib"/>					
+		<mkdir dir="${build_path}/classes"/>
+				
+		<javac 
+				srcdir="src"
+				optimize="on" 
+				debug="yes" 
+				debuglevel="source,lines,vars" 
+				destdir="build/classes" 
+				includeantruntime="false">
+    		<compilerarg value="-Xlint:all"/>
+    		<classpath refid="classpath.standard"/>
+  		</javac>
+	</target>
+
+	<target name="jar" depends="compile">
+		<manifest file="MANIFEST.MF">
+    		<attribute name="Built-By" value="${user.name}"/>
+   		</manifest>
+
+		<jar destfile="g419-liner2-relations.jar" manifest="MANIFEST.MF">
+    		<fileset dir="${build_path}/classes" includes="**/*.class"/>
+  		</jar>
+                
+		<delete file="MANIFEST.MF"/>
+		<delete dir="bin"/>
+		<delete dir="build"/>
+	</target>
+			
+</project>

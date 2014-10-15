@@ -148,4 +148,17 @@ public class Document {
 					return sentence.getAnnotationInChannel(channelName, annotationIdx);
     	return null;
     }
+    
+    public ArrayList<Annotation> getAnnotations(){
+    	ArrayList<Annotation> annotations = new ArrayList<Annotation>();
+    	
+    	for(Sentence sentence: getSentences()){
+    		AnnotationSet sentenceAnnotations = new AnnotationSet(sentence);
+    		for(Annotation sentenceAnnotation: sentenceAnnotations.chunkSet()){
+    			annotations.add(sentenceAnnotation);
+    		}
+    	}
+    	
+    	return annotations;
+    }
 }

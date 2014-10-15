@@ -1,5 +1,7 @@
 package g419.corpus.structure;
 
+import g419.corpus.structure.RelationCluster.ReturningStrategy;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -54,5 +56,22 @@ public class RelationClusterSet {
 	
 	public Set<RelationCluster> getClusters(){
 		return this.relationClusters;
+	}
+
+	public Set<RelationCluster> getClustersWithAnnotations(Set<Annotation> annotations){
+		Set<RelationCluster> clustersWithAnnotations = new HashSet<RelationCluster>();
+		for(Annotation annotation: annotations)
+			clustersWithAnnotations.add(annotationInCluster.get(annotation));
+		
+		return clustersWithAnnotations;
+	}
+
+	public static RelationClusterSet fromRelationSet(RelationSet relations) {
+		RelationClusterSet relationClusterSet = new RelationClusterSet();
+		
+		for(Relation relation: relations.getRelations())
+			relationClusterSet.addRelation(relation);
+		
+		return relationClusterSet;
 	}
 }

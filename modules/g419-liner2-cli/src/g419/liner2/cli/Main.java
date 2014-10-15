@@ -5,6 +5,7 @@ import g419.liner2.cli.action.ActionAnnotations;
 import g419.liner2.cli.action.ActionAgreement;
 import g419.liner2.cli.action.ActionConvert;
 import g419.liner2.cli.action.ActionEval;
+import g419.liner2.cli.action.ActionEvalParent;
 import g419.liner2.cli.action.ActionFeatureSelection;
 import g419.liner2.cli.action.ActionInteractive;
 import g419.liner2.cli.action.ActionPipe;
@@ -42,6 +43,7 @@ public class Main {
     	main.registerAction(new ActionTime());
     	main.registerAction(new ActionTrain());
     	main.registerAction(new ActionAgreement());
+    	main.registerAction(new ActionEvalParent());
     	
     	if ( args.length == 0 ){
     		main.printCredits();
@@ -86,7 +88,7 @@ public class Main {
 		System.out.println("* A framework for multitask sequence labeling, including: named entities, temporal expressions. *");
 		System.out.println("*                                                                                               *");
 		System.out.println("* Authors: Michał Marcińczuk (2010–2014), Michał Krautforst (2013-2014), Jan Kocoń (2014)       *");
-		System.out.println("*          Dominik Piasecki (2013), Maciej Janicki (2011)                                       *");
+		System.out.println("*          Adam Kaczmarek (2014) Dominik Piasecki (2013), Maciej Janicki (2011)                 *");
 		System.out.println("*                                                                                               *");
 		System.out.println("*          G4.19 Research Group, Wrocław University of Technology                               *");
 		System.out.println("*-----------------------------------------------------------------------------------------------*");

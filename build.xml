@@ -9,6 +9,11 @@
         <exec dir="modules/g419-corpus" executable="ant"><arg line="jar"/></exec>
 		<copy file="modules/g419-corpus/g419-corpus.jar" todir="./lib"></copy>
 	</target>
+	
+	<target name="jar-liner2-relations">
+        <exec dir="modules/g419-liner2-relations" executable="ant"><arg line="jar"/></exec>
+		<copy file="modules/g419-liner2-relations/g419-liner2-relations.jar" todir="./lib"></copy>
+	</target>
 
 	<target name="jar-liner2-api">
         <exec dir="modules/g419-liner2-api" executable="ant"><arg line="jar"/></exec>
@@ -31,7 +36,7 @@
 
     <target name="jar-liner2-daemon-all" depends="jar-corpus,jar-liner2-api,jar-liner2-daemon"></target>
 		
-	<target name="jar" depends="jar-corpus,jar-liner2-api,jar-liner2-cli,jar-liner2-daemon"></target>
+	<target name="jar" depends="jar-corpus,jar-liner2-relations,jar-liner2-api,jar-liner2-cli,jar-liner2-daemon"></target>
 
 	
 	<target name="deploy" depends="jar">
@@ -54,6 +59,7 @@
 				<include name="weka-3.6.9.jar"/>
 				<include name="g419-corpus.jar"/>
 				<include name="g419-liner2-api.jar"/>
+				<include name="g419-liner2-relations.jar"/>
 			</fileset>
 		</copy>
 		
