@@ -8,6 +8,7 @@ import g419.liner2.cli.action.ActionEval;
 import g419.liner2.cli.action.ActionEvalParent;
 import g419.liner2.cli.action.ActionFeatureSelection;
 import g419.liner2.cli.action.ActionInteractive;
+import g419.liner2.cli.action.ActionLearningCurve;
 import g419.liner2.cli.action.ActionPipe;
 import g419.liner2.cli.action.ActionTime;
 import g419.liner2.cli.action.ActionTrain;
@@ -44,6 +45,7 @@ public class Main {
     	main.registerAction(new ActionTrain());
     	main.registerAction(new ActionAgreement());
     	main.registerAction(new ActionEvalParent());
+    	main.registerAction(new ActionLearningCurve());
     	
     	if ( args.length == 0 ){
     		main.printCredits();
@@ -77,7 +79,6 @@ public class Main {
 				}
                 catch (Exception e) {
                     System.out.println(e);
-                    e.printStackTrace();
                 }
     		}
     	}
@@ -89,6 +90,7 @@ public class Main {
 		System.out.println("*                                                                                               *");
 		System.out.println("* Authors: Michał Marcińczuk (2010–2014), Michał Krautforst (2013-2014), Jan Kocoń (2014)       *");
 		System.out.println("*          Adam Kaczmarek (2014) Dominik Piasecki (2013), Maciej Janicki (2011)                 *");
+		System.out.println("* Contact: michal.marcinczuk@pwr.wroc.pl                                                        *");
 		System.out.println("*                                                                                               *");
 		System.out.println("*          G4.19 Research Group, Wrocław University of Technology                               *");
 		System.out.println("*-----------------------------------------------------------------------------------------------*");
@@ -113,8 +115,12 @@ public class Main {
     	
     	String lineFormat = " - %-" + maxLength + "s -- %s";
     	
+    	String newLine = String.format("   %"+maxLength+"s    ", " ");
+    	
 		for (Action action : this.actions.values()){
-			System.out.println(String.format(lineFormat, action.getName(),  action.getDescription()));
+			System.out.println(String.format(lineFormat, 
+					action.getName(),  
+					action.getDescription()).replaceAll("#", "\n" + newLine));
 		}    	
     }
     

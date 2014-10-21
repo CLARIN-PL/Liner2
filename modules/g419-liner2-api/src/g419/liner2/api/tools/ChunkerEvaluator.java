@@ -1,10 +1,8 @@
 package g419.liner2.api.tools;
 
 
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.AnnotationSet;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
+import g419.corpus.Logger;
+import g419.corpus.structure.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,6 +50,7 @@ public class ChunkerEvaluator {
     //>>>
 	
 	private int sentenceNum = 0;
+    private String currentDocId = "";
 
 	private boolean quiet = false;		// print sentence results?
 	private List<Pattern> patterns = new ArrayList<Pattern>();
@@ -69,8 +68,9 @@ public class ChunkerEvaluator {
 	/**
 	 * Ocenia nerowanie całego dokumentu.
 	 */
-	public void evaluate(List<Sentence> order, HashMap<Sentence, AnnotationSet> chunkings, HashMap<Sentence, AnnotationSet> chunkigsRef){
-		for ( Sentence sentence : order){
+	public void evaluate(Document document, HashMap<Sentence, AnnotationSet> chunkings, HashMap<Sentence, AnnotationSet> chunkigsRef){
+        currentDocId = document.getName();
+		for ( Sentence sentence : document.getSentences()){
 			this.evaluate(sentence, chunkings.get(sentence), chunkigsRef.get(sentence));
 		}
 	}
@@ -427,7 +427,7 @@ public class ChunkerEvaluator {
 		HashSet<Annotation> truePositives, HashSet<Annotation> falsePositives, 
 		HashSet<Annotation> falseNegatives) {
 		
-		String sentenceHeader = "(ChunkerEvaluator) Sentence #" + this.sentenceNum;
+		String sentenceHeader = "(ChunkerEvaluator) Sentence #" + this.sentenceNum + " from " + currentDocId;
 		if (paragraphId != null)
 			sentenceHeader += " from " + paragraphId;
 		Logger.log(sentenceHeader);

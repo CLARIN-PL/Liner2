@@ -1,6 +1,7 @@
 package g419.liner2.cli.action;
 
 
+import g419.corpus.Logger;
 import g419.corpus.io.DataFormatException;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.BatchReader;
@@ -10,21 +11,21 @@ import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
-import g419.liner2.api.chunker.factory.ChunkerFactory;
 import g419.liner2.api.chunker.factory.ChunkerManager;
 import g419.liner2.api.features.TokenFeatureGenerator;
-import g419.liner2.api.tools.ChunkerEvaluator;
-import g419.liner2.api.tools.ChunkerEvaluatorMuc;
-import g419.liner2.api.tools.ParameterException;
-import g419.liner2.api.tools.ProcessingTimer;
+import g419.liner2.api.tools.*;
+import g419.liner2.cli.CommonOptions;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import g419.liner2.cli.CommonOptions;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.OptionBuilder;
@@ -40,24 +41,18 @@ import org.apache.commons.io.IOUtils;
  */
 public class ActionEval extends Action{
 
-    public static final String OPTION_VERBOSE_DETAILS = "d";
-    public static final String OPTION_VERBOSE_DETAILS_LONG = "details";
-
     private String input_file = null;
     private String input_format = null;
 
     @SuppressWarnings("static-access")
 	public ActionEval() {
 		super("eval");
-        this.setDescription("data evaluation using given model, crossvalidaion mode included (-f cv:{format})");
+        this.setDescription("evaluates chunkers against a specific set of documents (-i batch:FORMAT, -i FORMAT) #or perform cross validation (-i cv:{format})");
 
         this.options.addOption(CommonOptions.getInputFileFormatOption());
         this.options.addOption(CommonOptions.getInputFileNameOption());
         this.options.addOption(CommonOptions.getModelFileOption());
-        this.options.addOption(OptionBuilder
-                .withDescription("verbose processed sentences data")
-                .withLongOpt(OPTION_VERBOSE_DETAILS_LONG)
-                .create(OPTION_VERBOSE_DETAILS));
+        this.options.addOption(CommonOptions.getVerboseDeatilsOption());
 
 
 	}
@@ -69,8 +64,8 @@ public class ActionEval extends Action{
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
         LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
-        if(line.hasOption(OPTION_VERBOSE_DETAILS)){
-            LinerOptions.getGlobal().verboseDetails = true;
+        if(line.hasOption(CommonOptions.OPTION_VERBOSE_DETAILS)){
+            Logger.verboseDetails = true;
         }
 	}
 	
@@ -85,6 +80,9 @@ public class ActionEval extends Action{
 		
     	ProcessingTimer timer = new ProcessingTimer();
     	TokenFeatureGenerator gen = null;
+        if (!LinerOptions.getGlobal().features.isEmpty()){
+            gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
+        }
     	
     	System.out.print("Annotations to evaluate:");
         if(LinerOptions.getGlobal().types.isEmpty()){
@@ -108,9 +106,11 @@ public class ActionEval extends Action{
                 System.out.println("***************************************** FOLD " + (i + 1) + " *****************************************");
                 String trainSet = getTrainingSet(i, folds);
                 String testSet = getTestingSet(i, folds);
-                LinerOptions.getGlobal().setCVTrainData(trainSet);
+                ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
+                cm.loadTrainData(new BatchReader(IOUtils.toInputStream(trainSet), "", this.input_format), gen);
+                cm.loadTestData(new BatchReader(IOUtils.toInputStream(testSet), "", this.input_format), gen);
                 AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet), "", this.input_format);
-                evaluate(reader, gen, globalEval, globalEvalMuc);
+                evaluate(reader, gen, cm, globalEval, globalEvalMuc);
                 timer.stopTimer();
 
 
@@ -123,22 +123,21 @@ public class ActionEval extends Action{
             timer.printStats();
         }
         else{
+            ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
+            cm.loadTestData(ReaderFactory.get().getStreamReader(this.input_file, this.input_format), gen);
             evaluate(ReaderFactory.get().getStreamReader(this.input_file, this.input_format),
-                    gen, null, null);
+                    gen, cm, null, null);
         }
 
 
 	}
 
-    private void evaluate(AbstractDocumentReader dataReader, TokenFeatureGenerator gen,
+    private void evaluate(AbstractDocumentReader dataReader, TokenFeatureGenerator gen, ChunkerManager cm,
                           ChunkerEvaluator globalEval, ChunkerEvaluatorMuc globalEvalMuc) throws Exception {
         ProcessingTimer timer = new ProcessingTimer();
         timer.startTimer("Model loading");
-        ChunkerManager cm = ChunkerFactory.loadChunkers(LinerOptions.getGlobal());
+        cm.loadChunkers();
         Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
-        if (!LinerOptions.getGlobal().features.isEmpty()){
-            gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
-        }
         timer.stopTimer();
 
 
@@ -180,11 +179,11 @@ public class ActionEval extends Action{
             timer.startTimer("Evaluation", false);
             timer.addTokens(ps);
             if(globalEval != null){
-                globalEval.evaluate(ps.getSentences(), chunkings, referenceChunks);
-                globalEvalMuc.evaluate(chunkings, referenceChunks);
+                globalEval.evaluate(ps, chunkings, referenceChunks);
+                globalEvalMuc.evaluate(ps, chunkings, referenceChunks);
             }
-            eval.evaluate(ps.getSentences(), chunkings, referenceChunks);
-            evalMuc.evaluate(chunkings, referenceChunks);
+            eval.evaluate(ps, chunkings, referenceChunks);
+            evalMuc.evaluate(ps, chunkings, referenceChunks);
             timer.stopTimer();
 
             timer.startTimer("Data reading");
@@ -208,7 +207,7 @@ public class ActionEval extends Action{
         while ( line != null ){
             String[] fileData = line.split("\t");
             if(fileData.length != 2){
-                throw new DataFormatException("Incorrect line in folds file: "+line+"\nProper line format: {file_name}\\t{fold_nr}");
+                throw new DataFormatException("Incorrect line in folds file: "+this.input_file+"\\"+line+"\nProper line format: {file_name}\\t{fold_nr}");
             }
             String file = fileData[0];
             int fold = Integer.parseInt(fileData[1]);

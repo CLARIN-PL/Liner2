@@ -64,7 +64,6 @@ public class AnnotationFeatureMalt {
             return getParentBase(annotation, maltData);
         else if(this.type.equals("relation"))
             return getRelation(annotation);
-        System.out.println("lollllol zaraz jebnie nulem");
         return null;
     }
 

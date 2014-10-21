@@ -1,20 +1,19 @@
 package g419.liner2.api.tools;
 
 
+import g419.corpus.Logger;
 import g419.corpus.structure.CrfTemplate;
 import g419.corpus.structure.TokenAttributeIndex;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Set;
 
 
 public class TemplateFactory {
 
     public static CrfTemplate parseTemplate(String templateFile) throws Exception{
 
-        Logger.log("TemplateFactory.parseTemplate("+templateFile+")");
+        Logger.log("(TemplateFactory) parsing template: " + templateFile);
         CrfTemplate template = new CrfTemplate();
         BufferedReader br = new BufferedReader(new FileReader(templateFile));
         StringBuffer sb = new StringBuffer();
@@ -23,6 +22,7 @@ public class TemplateFactory {
             if(!feature.startsWith("#")){
                 feature = feature.trim();
                 template.addFeature(feature);
+                Logger.log("(TemplateFactory) feature:" + feature);
                 feature = br.readLine();
             }
         }
@@ -30,7 +30,7 @@ public class TemplateFactory {
     }
 
 	
-	public static void store(CrfTemplate template, String filename, TokenAttributeIndex attributeIndex) throws Exception {
+	public static void store(CrfTemplate template, String filename) throws Exception {
 		
 		PrintWriter pw = null;
 		
@@ -41,6 +41,7 @@ public class TemplateFactory {
 		}
 		pw.write("# Unigram\n");
 		Hashtable<String, String[]> features = template.getFeatures();
+        TokenAttributeIndex attributeIndex = template.getAttributeIndex();
 		for (String featureName : template.getFeatureNames()) {
 			pw.write("# " + featureName + "\n");
 			String[] windowDesc = features.get(featureName);

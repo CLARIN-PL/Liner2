@@ -3,10 +3,9 @@ package g419.liner2.daemon;
 
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
-import g419.liner2.api.chunker.factory.ChunkerFactory;
 import g419.liner2.api.chunker.factory.ChunkerManager;
 import g419.liner2.api.features.TokenFeatureGenerator;
-import g419.liner2.api.tools.Logger;
+import g419.corpus.Logger;
 import g419.liner2.api.tools.ParameterException;
 
 import java.io.BufferedReader;
@@ -124,7 +123,8 @@ public class DaemonThread extends Thread {
         try {
             for (String modelNam: DaemonOptions.getGlobal().models.keySet()){
                 LinerOptions modelConfig = DaemonOptions.getGlobal().models.get(modelNam);
-                ChunkerManager cm = ChunkerFactory.loadChunkers(modelConfig);
+                ChunkerManager cm = new ChunkerManager(modelConfig);
+                cm.loadChunkers();
                 this.chunkers.put(modelNam, cm.getChunkerByName(modelConfig.getOptionUse()));
                 TokenFeatureGenerator gen = null;
                 if (!modelConfig.features.isEmpty()) {

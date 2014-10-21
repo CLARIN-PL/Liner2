@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * @author Michał Marcińczuk
  *
  */
-public class Document {
+public class Document{
 
 	String name = null;
 	TokenAttributeIndex attributeIndex = null;
@@ -169,12 +169,20 @@ public class Document {
     	ArrayList<Annotation> annotations = new ArrayList<Annotation>();
     	
     	for(Sentence sentence: getSentences()){
-//    		AnnotationSet sentenceAnnotations = new AnnotationSet(sentence);
     		for(Annotation sentenceAnnotation: sentence.getChunks()){
     			annotations.add(sentenceAnnotation);
     		}
     	}
     	
     	return annotations;
+    }
+
+    public Document clone(){
+        Document copy = new Document(name, attributeIndex.clone());
+        for(Paragraph p: paragraphs){
+            copy.addParagraph(p.clone());
+        }
+        return copy;
+
     }
 }

@@ -1,8 +1,9 @@
-package g419.liner2.api.tools;
-
-import g419.liner2.api.LinerOptions;
+package g419.corpus;
 
 public class Logger {
+
+    public static boolean verbose = false;
+    public static boolean verboseDetails = false;
 
 	/**
 	 * Messages are print to std.out only with -verbose parameter.
@@ -18,7 +19,7 @@ public class Logger {
 	 * @param details
 	 */
 	public static void log(String text, boolean details){
-		if (LinerOptions.getGlobal().verboseDetails || (!details && LinerOptions.getGlobal().verbose) )
+		if (verboseDetails || (!details && verbose) )
 			System.out.println(text);
 	}
 

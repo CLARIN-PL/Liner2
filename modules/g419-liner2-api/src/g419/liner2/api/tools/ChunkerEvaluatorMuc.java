@@ -1,10 +1,8 @@
 package g419.liner2.api.tools;
 
 
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.AnnotationSet;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
+import g419.corpus.Logger;
+import g419.corpus.structure.*;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -95,6 +93,7 @@ public class ChunkerEvaluatorMuc {
 	private int globalFalseNegatives = 0;
 	
 	private int sentenceNum = 0;
+    private String currentDocId = "";
 	
 	private boolean quiet = false;		// print sentence results?
     List<Pattern> patterns = new ArrayList<Pattern>();
@@ -108,10 +107,11 @@ public class ChunkerEvaluatorMuc {
 	/**
 	 * Ocenia nerowanie całego dokumentu.
 	 */
-	public void evaluate(HashMap<Sentence, AnnotationSet> chunkings, HashMap<Sentence, AnnotationSet> chunkigsRef){
-		for ( Sentence sentence : chunkings.keySet()){
-			this.evaluate(sentence, chunkings.get(sentence), chunkigsRef.get(sentence));
-		}
+	public void evaluate(Document document, HashMap<Sentence, AnnotationSet> chunkings, HashMap<Sentence, AnnotationSet> chunkigsRef){
+        currentDocId = document.getName();
+        for ( Sentence sentence : document.getSentences()){
+            this.evaluate(sentence, chunkings.get(sentence), chunkigsRef.get(sentence));
+        }
 	}
 		
 	/**
@@ -264,7 +264,9 @@ public class ChunkerEvaluatorMuc {
 		System.out.println("        Annotation           &  COR &  ACT &  POS &"
 			+ " Precision & Recall  & F$_1$   \\\\");
 		System.out.println("\\hline");
-		for (String type : this.types) {
+        ArrayList<String> types = new ArrayList<String>(this.types);
+        Collections.sort(types);
+		for (String type : types) {
 			int tp = this.chunksTruePositives.getChunkCount(type) * 2 + this.chunksTruePartially.getChunkCount(type);
 			int fp = this.chunksFalsePositives.getChunkCount(type) * 2 + this.chunksTruePartially.getChunkCount(type);
 			int fn = this.chunksFalseNegatives.getChunkCount(type) * 2 + this.chunksFalsePartially.getChunkCount(type);
@@ -307,8 +309,8 @@ public class ChunkerEvaluatorMuc {
 	private void printSentenceResults(Sentence sentence, String paragraphId, 
 		HashSet<Annotation> truePositives, HashSet<Annotation> falsePositives, 
 		HashSet<Annotation> falseNegatives) {
-		
-		String sentenceHeader = "Sentence #" + this.sentenceNum;
+
+        String sentenceHeader = "(ChunkerEvaluatorMuc) Sentence #" + this.sentenceNum + " from " + currentDocId;
 		if (paragraphId != null)
 			sentenceHeader += " from " + paragraphId;
 		Logger.log(sentenceHeader);

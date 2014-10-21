@@ -13,6 +13,9 @@ public class CommonOptions {
     public static final String OPTION_VERBOSE = "v";
     public static final String OPTION_VERBOSE_LONG = "verbose";
 
+    public static final String OPTION_VERBOSE_DETAILS = "d";
+    public static final String OPTION_VERBOSE_DETAILS_LONG = "details";
+
     public static final String OPTION_OUTPUT_FORMAT = "o";
     public static final String OPTION_OUTPUT_FORMAT_LONG = "output_format";
 	
@@ -24,9 +27,6 @@ public class CommonOptions {
 
 	public static final String OPTION_INPUT_FILE = "f";
 	public static final String OPTION_INPUT_FILE_LONG = "input_file";
-
-	public static final String OPTION_TYPES = "T";
-	public static final String OPTION_TYPES_LONG = "types";
 
     public static final String OPTION_FEATURES = "F";
     public static final String OPTION_FEATURES_LONG = "features";
@@ -73,15 +73,6 @@ public class CommonOptions {
 	}
 
     @SuppressWarnings("static-access")
-    public static Option getTypesOption(){
-        return OptionBuilder
-                .withArgName("types").hasArg()
-                .withDescription("a file with a list of annotation name patterns")
-                .withLongOpt(CommonOptions.OPTION_TYPES_LONG)
-                .create(CommonOptions.OPTION_TYPES);
-    }
-
-    @SuppressWarnings("static-access")
     public static Option getFeaturesOption(){
         return OptionBuilder
                 .withArgName("features").hasArg()
@@ -105,6 +96,13 @@ public class CommonOptions {
         return OptionBuilder
                 .withLongOpt(OPTION_VERBOSE_LONG).withDescription("print help")
                 .create(OPTION_VERBOSE);
+    }
+
+    public static Option getVerboseDeatilsOption(){
+        return OptionBuilder
+                .withDescription("verbose processed sentences data")
+                .withLongOpt(OPTION_VERBOSE_DETAILS_LONG)
+                .create(OPTION_VERBOSE_DETAILS);
     }
 
 	public static Option getInputFileFormatOptionWithAnnotations(){

@@ -4,6 +4,7 @@ import g419.corpus.io.DataFormatException;
 import g419.corpus.io.reader.parser.CclRelationSaxParser;
 import g419.corpus.io.reader.parser.CclSaxParser;
 import g419.corpus.structure.Document;
+import g419.corpus.structure.Sentence;
 import g419.corpus.structure.TokenAttributeIndex;
 
 import java.io.IOException;

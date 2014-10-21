@@ -1,39 +1,35 @@
 package g419.liner2.api.chunker.factory;
 
-
 import g419.corpus.io.reader.AbstractDocumentReader;
-import g419.corpus.io.reader.BatchReader;
 import g419.corpus.io.reader.ReaderFactory;
-import g419.corpus.structure.*;
+import g419.corpus.structure.CrfTemplate;
+import g419.corpus.structure.Document;
 import g419.liner2.api.Liner2;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.CrfppChunker;
+import g419.liner2.api.converter.Converter;
+import g419.liner2.api.converter.factory.ConverterFactory;
 import g419.liner2.api.features.TokenFeatureGenerator;
-import g419.liner2.api.tools.Logger;
+import g419.corpus.Logger;
 import g419.liner2.api.tools.TemplateFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.IOUtils;
-
 import org.ini4j.Ini;
+import org.ini4j.Profile;
 
 public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
 
 	public ChunkerFactoryItemCrfpp() {
-		super("crfpp:([^:]*)");
+		super("crfpp");
 	}
 
 	@Override
-	public Chunker getChunker(String description, ChunkerManager cm) throws Exception {
+	public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
         if (!cm.opts.libCRFPPLoaded){
             try {
                 String linerJarPath = Liner2.class.getProtectionDomain().getCodeSource().getLocation().getPath();
@@ -43,29 +39,26 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
                 System.exit(1);
             }
         }
-       	Matcher matcherCRFPP = this.pattern.matcher(description);
-		if (matcherCRFPP.find()){
-            String iniPath = matcherCRFPP.group(1);
-            Ini ini = new Ini(new File(iniPath));
-            String mode = ini.get("main", "mode");
-            if(mode.equals("train")){
-                return train(ini, cm);
-            }
-            else if(mode.equals("load")){
-                return load(ini);
-            }
-            else{
-                throw new Exception("Unrecognized mode for CRFPP chunker: " + mode + "(Valid: train/load)");
-            }
-
-		}
-		else		
-			return null;
+        String mode = description.get("mode");
+        if(mode.equals("train")){
+            return train(description, cm);
+        }
+        else if(mode.equals("load")){
+            return load(description);
+        }
+        else{
+            throw new Exception("Unrecognized mode for CRFPP chunker: " + mode + "(Valid: train/load)");
+        }
 	}
 
-    private Chunker load(Ini ini) throws IOException {
-        Ini.Section main = ini.get("main");
-        String store = main.get("store").replace("{INI_PATH}", ini.getFile().getParent());
+	/**
+	 * Load the model from a file.
+	 * @param description
+	 * @return
+	 * @throws IOException
+	 */
+    private Chunker load(Profile.Section description) throws IOException {
+        String store = description.get("store");
 
         Logger.log("--> CRFPP Chunker deserialize from " + store);
 
@@ -75,56 +68,77 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         return chunker;
     }
 
-    private Chunker train(Ini ini, ChunkerManager cm) throws Exception {
+    /**
+     * Train the chunker and serialize the model to a file.
+     * @param description
+     * @param cm
+     * @return
+     * @throws Exception
+     */
+    private Chunker train(Profile.Section description, ChunkerManager cm) throws Exception {
         Logger.log("--> CRFPP Chunker train");
-        String iniDir = ini.getFile().getParent();
-        Ini.Section main = ini.get("main");
-        Ini.Section dataDesc = ini.get("data");
 
-        int threads = Integer.parseInt(main.get("threads"));
-        String inputFile = dataDesc.get("source").replace("{INI_PATH}", iniDir);
+        Converter trainingDataConverter = null;
+        if ( description.containsKey("training-data-converter") ){
+        	ArrayList<String> converters = new ArrayList<String>();
+        	for ( String in : description.get("training-data-converter").split(","))
+        		converters.add(in);
+        	trainingDataConverter = ConverterFactory.createPipe(converters);
+        }
+        
+        int threads = Integer.parseInt(description.get("threads"));
+        String inputFile = description.get("training-data");
         String inputFormat;
-        AbstractDocumentReader reader;
-        String modelFilename = main.get("store").replace("{INI_PATH}", iniDir);
+        String modelFilename = description.get("store");
 
+        TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
+        ArrayList<Document> trainData = new ArrayList<Document>();
+
+        // Setup training data 
         if(inputFile.equals("{CV_TRAIN}")){
-            inputFormat = LinerOptions.getGlobal().getOption("cvFormat");
-            reader = new BatchReader(IOUtils.toInputStream(LinerOptions.getGlobal().getOption("cvData")), "", inputFormat);
+        	if ( trainingDataConverter != null ){
+        		for ( Document doc : cm.trainingData ){
+        			Document docClone = doc.clone();
+        			trainingDataConverter.apply(docClone);
+        			trainData.add(docClone);
+        		}        			
+        	}
+        	else{
+        		trainData = cm.trainingData;
+        	}
         }
         else{
-            inputFormat = dataDesc.get("format");
-            reader = ReaderFactory.get().getStreamReader(inputFile, inputFormat);
+            inputFormat = description.get("format");
+            AbstractDocumentReader reader = 
+            		ReaderFactory.get().getStreamReader(inputFile, inputFormat);
+            Document document = reader.nextDocument();
+            while ( document != null ){
+                gen.generateFeatures(document);
+                if ( trainingDataConverter != null )
+                	trainingDataConverter.apply(document);
+                trainData.add(document);
+                document = reader.nextDocument();
+            }
         }
+        
         List<Pattern> types = new ArrayList<Pattern>();
-        if ( dataDesc.containsKey("types")) {
-            types = LinerOptions.getGlobal().parseTypes(dataDesc.get("types").replace("{INI_PATH}", iniDir));
+        if ( description.containsKey("types")) {
+            types = LinerOptions.getGlobal().parseTypes(description.get("types"));
         }
 
         Logger.log("--> Training on file=" + inputFile);
 
-        TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
-
-        String templateData = main.get("template").replace("{INI_PATH}", iniDir);
-        CrfTemplate template;
-        if(!LinerOptions.getGlobal().templates.containsKey(templateData)){
-            template = TemplateFactory.parseTemplate(templateData);
-            LinerOptions.getGlobal().templates.put(templateData, template);
-        }
-        else{
-            template =  LinerOptions.getGlobal().templates.get(templateData);
-        }
-        File templateFile = File.createTempFile("template", ".tpl");
+        String templateData = description.get("template");
         CrfppChunker chunker = new CrfppChunker(threads, types);
-        chunker.setTemplateFilename(templateFile.getAbsolutePath());
+        if(!templateData.equals("null")){
+            CrfTemplate template = TemplateFactory.parseTemplate(templateData);
+            template.setAttributeIndex(gen.getAttributeIndex());
+            chunker.setTemplate(template);
+        }
         chunker.setModelFilename(modelFilename);
 
-        Document document = reader.nextDocument();
-        while ( document != null ){
-            gen.generateFeatures(document);
+        for(Document document: trainData)
              chunker.addTrainingData(document);
-            document = reader.nextDocument();
-        }
-        TemplateFactory.store(template, templateFile.getAbsolutePath(), gen.getAttributeIndex());
         chunker.train();
 
         return chunker;

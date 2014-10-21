@@ -2,6 +2,7 @@ package g419.corpus.structure;
 
 import java.util.*;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -20,10 +21,20 @@ public class Sentence {
 	/* Zbiór anotacji */
 	LinkedHashSet<Annotation> chunks = new LinkedHashSet<Annotation>();
 	
-	/* Identyfikator zdania */
+	/* Identyfikator zdania (unikalny w obrębie paragrafu) */
 	String id = null;
-	
-	public Sentence()	{}
+
+    private static Comparator<Annotation> annotationComparator = new Comparator<Annotation>() {
+        public int compare(Annotation a, Annotation b) {
+            if (a.getTokens().size() == b.getTokens().size()) {
+                return String.CASE_INSENSITIVE_ORDER.compare(a.getType(), b.getType());
+            }
+
+            return Integer.signum(b.getTokens().size() - a.getTokens().size());
+        }
+    };
+
+    public Sentence()	{}
 	
 	public void addChunk(Annotation chunk) {
 		chunks.add(chunk);
@@ -42,47 +53,64 @@ public class Sentence {
 	public String getId(){
 		return this.id;
 	}
+
+    public boolean hasId(){ return id != null; }
 	
 	/*
 	 * Zwraca chunk dla podanego indeksu tokenu.
 	 * TODO zmienić parametr na token?
 	 */
-	public Annotation getChunkAt(int idx) {
-		Annotation returning = null;
-		Iterator<Annotation> i_chunk = chunks.iterator();
-		while (i_chunk.hasNext()) {
-			Annotation currentChunk = i_chunk.next();
-			if ((currentChunk.getBegin() <= idx) &&
-				(currentChunk.getEnd() >= idx)) {
-				returning = currentChunk;
-				break;
-			}
-		}
-		return returning;
-	}
-	
-	/*
-	 * Zwraca chunk dla podanego indeksu tokenu.
-	 * TODO zmienić parametr na token?
-	 */
-	public Annotation getChunkAt(int idx, List<Pattern> types) {
-		Annotation returning = null;
-		Iterator<Annotation> i_chunk = chunks.iterator();
-		while (i_chunk.hasNext()) {
-			Annotation currentChunk = i_chunk.next();
-			if ( currentChunk.getBegin() <= idx 
-					&& currentChunk.getEnd() >= idx
-				) {
-                for(Pattern patt: types){
-                    if(patt.matcher(currentChunk.getType()).find()){
-                        returning = currentChunk;
-                        break;
+	public ArrayList<Annotation> getChunksAt(int idx, List<Pattern> types) {
+        ArrayList<Annotation> returning = new ArrayList<Annotation>();
+        Iterator<Annotation> i_chunk = chunks.iterator();
+        while (i_chunk.hasNext()) {
+            Annotation currentChunk = i_chunk.next();
+            if (currentChunk.getTokens().contains(idx)) {
+                if(types != null && !types.isEmpty()) {
+                    for (Pattern patt : types) {
+                        if (patt.matcher(currentChunk.getType()).find()) {
+                            returning.add(currentChunk);
+                            break;
+                        }
                     }
                 }
-			}
-		}
-		return returning;
-	}	
+                else{
+                    returning.add(currentChunk);
+                }
+            }
+        }
+        return returning;
+    }
+
+    public String getTokenClassLabel(int tokenIdx, List<Pattern> types){
+        ArrayList<Annotation> tokenAnnotations = getChunksAt(tokenIdx, types);
+        sortTokenAnnotations(tokenAnnotations);
+
+        if (tokenAnnotations.isEmpty())
+            return "O";
+        else {
+            ArrayList<String> classLabels = new ArrayList<String>();
+            sortTokenAnnotations(tokenAnnotations);
+            for(Annotation ann: tokenAnnotations){
+                String classLabel = "";
+                if (ann.getBegin() == tokenIdx) {
+                    classLabel += "B-";
+                }
+                else {
+                    classLabel += "I-";
+                }
+                classLabel += ann.getType();
+                classLabels.add(classLabel);
+
+            }
+            return  StringUtils.join(classLabels, "#");
+        }
+
+    }
+
+    private void sortTokenAnnotations(ArrayList<Annotation> tokenAnnotations){
+        Collections.sort(tokenAnnotations, annotationComparator);
+    }
 	
 	public LinkedHashSet<Annotation> getAnnotations(List<Pattern> types){
 		LinkedHashSet<Annotation> annotationsForTypes = new LinkedHashSet<Annotation>();
@@ -165,4 +193,17 @@ public class Sentence {
 	public void setTokens(ArrayList<Token> newTokens){
         tokens = newTokens;
     }
+
+    public Sentence clone(){
+        Sentence copy = new Sentence();
+        copy.setId(this.getId());
+        for(Token t: tokens){
+            copy.addToken(t.clone());
+        }
+        for(Annotation a: chunks){
+            copy.addChunk(a.clone());
+        }
+        return copy;
+    }
+
 }
