@@ -188,5 +188,9 @@ public class Annotation {
 	    		}
 		return sorted;
 	}
+	
+	public String toString(){
+		return "[" + getText() + "]_"+getSentence().getId()+"|"+getType();
+	}
 
 }

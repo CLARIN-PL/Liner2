@@ -6,7 +6,8 @@ package g419.corpus.structure;
  *
  */
 public class Relation {
-	public static final String COREFERENCE = "coreference";
+	public static final String COREFERENCE = "Coreference";
+	public static final AnnotationPositionComparator annPosComparator = new AnnotationPositionComparator();
 	/**
 	 * Typ relacji
 	 */
@@ -28,7 +29,6 @@ public class Relation {
 		this.setAnnotationTo(to);
 		this.setType(type);
 	}
-
 
 	public Annotation getAnnotationFrom() {
 		return annotationFrom;
@@ -57,6 +57,10 @@ public class Relation {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+	
+	public String toString(){
+		return annotationFrom.toString() + " >-- " + type + " --> " + annotationTo.toString();
 	}
 	
 }

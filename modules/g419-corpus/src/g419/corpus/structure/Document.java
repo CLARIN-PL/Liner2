@@ -2,8 +2,9 @@ package g419.corpus.structure;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 
@@ -48,6 +49,10 @@ public class Document {
 	
 	public RelationSet getRelations(){
 		return this.relations;
+	}
+	
+	public RelationSet getRelations(String type){
+		return this.relations.filterByType(type);
 	}
 	
 	public void setRelations(RelationSet relations){
@@ -149,12 +154,23 @@ public class Document {
     	return null;
     }
     
+    public ArrayList<Annotation> getAnnotations(List<Pattern> types){
+    	ArrayList<Annotation> annotations = new ArrayList<Annotation>();
+    	for(Sentence sentence: getSentences()){
+    		for(Annotation sentenceAnnotation: sentence.getAnnotations(types)){
+    			annotations.add(sentenceAnnotation);
+    		}
+    	}
+    	
+    	return annotations;
+    }
+    
     public ArrayList<Annotation> getAnnotations(){
     	ArrayList<Annotation> annotations = new ArrayList<Annotation>();
     	
     	for(Sentence sentence: getSentences()){
-    		AnnotationSet sentenceAnnotations = new AnnotationSet(sentence);
-    		for(Annotation sentenceAnnotation: sentenceAnnotations.chunkSet()){
+//    		AnnotationSet sentenceAnnotations = new AnnotationSet(sentence);
+    		for(Annotation sentenceAnnotation: sentence.getChunks()){
     			annotations.add(sentenceAnnotation);
     		}
     	}

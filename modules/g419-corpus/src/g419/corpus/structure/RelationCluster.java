@@ -75,14 +75,12 @@ public class RelationCluster {
 	
 	
 	public String toString(){
-		String[] annotationTexts = new String[this.annotations.size()];
-		annotationTexts[0] = "{" + this.headAnnotation.getText() + "(H)}";
-		int i = 0;
+		String out = this.headAnnotation != null ? "{" + this.headAnnotation.getText() + "(H)}" : "";
 		for(Annotation annotation : this.annotations)
-			if(!annotation.equals(this.headAnnotation))
-				annotationTexts[++i] = "{" + this.headAnnotation.getText() + "}";
+			if(this.headAnnotation == null || !annotation.equals(this.headAnnotation))
+				out += "{" + annotation.getText() + "}";
 			
-		return "[" + StringUtils.join(" ", annotationTexts) + "]";
+		return "[" + out + "]";
 			
 	}
 	

@@ -1,5 +1,6 @@
 package g419.liner2.cli.action;
 
+import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationTokenListComparator;
@@ -40,11 +41,12 @@ public class ActionEvalParent extends Action {
 		
 		RelationUnitCriterion identifyingUnitsCriterion = new NamedEntityCriterion();
 		RelationUnitCriterion referencingUnitsCriterion = new AgpPronounAndZeroCriterion();
-		Comparator<Annotation> matcher = new AnnotationTokenListComparator();
+		Comparator<Annotation> matcher = new AnnotationTokenListComparator(true);
 		ParentEvaluator evaluator = new ParentEvaluator(identifyingUnitsCriterion, referencingUnitsCriterion, matcher);
 		
-		Document referenceDocument = ReaderFactory.get().getStreamReader(this.input_file, this.input_format).nextDocument();
-		Document systemResponseDocument = ReaderFactory.get().getStreamReader(this.input_file, this.input_format).nextDocument();
+		AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(this.input_file, this.input_format);
+		Document referenceDocument = reader.nextDocument();
+		Document systemResponseDocument = reader.nextDocument();
 		
 		evaluator.evaluate(systemResponseDocument, referenceDocument);
 

@@ -30,7 +30,7 @@ public class CclRelationSaxParser extends DefaultHandler {
     private final String TAG_FROM 			= "from";
     private final String TAG_TO 			= "to";
     
-    private final String ATTR_REL_NAME		= "name";
+    private final String ATTR_REL_NAME		= "set";
     private final String ATTR_CHAN_NAME		= "chan";
     private final String ATTR_SENT_ID		= "sent";
 

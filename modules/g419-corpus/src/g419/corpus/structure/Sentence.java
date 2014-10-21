@@ -84,6 +84,17 @@ public class Sentence {
 		return returning;
 	}	
 	
+	public LinkedHashSet<Annotation> getAnnotations(List<Pattern> types){
+		LinkedHashSet<Annotation> annotationsForTypes = new LinkedHashSet<Annotation>();
+		for(Annotation annotation : this.chunks){
+			for(Pattern type : types)
+				if(type.matcher(annotation.getType()).find())
+					annotationsForTypes.add(annotation);
+		}
+		
+		return annotationsForTypes;
+	}
+	
 	public LinkedHashSet<Annotation> getChunks() {
 		return this.chunks;
 	}
