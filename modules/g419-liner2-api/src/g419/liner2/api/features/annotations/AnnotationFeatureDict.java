@@ -16,8 +16,7 @@ import java.util.HashSet;
  * Time: 10:53 AM
  * To change this template use File | Settings | File Templates.
  */
-public class AnnotationFeatureDict extends AnnotationFeature {
-
+public class AnnotationFeatureDict extends AnnotationAtomicFeature {
 
     private HashSet<String> entries;
     private String form;

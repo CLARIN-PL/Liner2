@@ -17,13 +17,13 @@ public class AnnotationCRFClassifierChunker extends Chunker {
     private CrfppChunker baseChunker;
     private TokenFeatureGenerator tokenFeatureGenerator;
     private AnnotationFeatureGenerator annotationFeatureGenerator;
+    private String featuresContext;
 
     public AnnotationCRFClassifierChunker(List<Pattern> list, String base, CrfppChunker baseChunker, TokenFeatureGenerator gen, List<String> features){
         this.list = list;
         this.base = base;
         this.baseChunker = baseChunker;
         this.tokenFeatureGenerator = gen;
-        System.out.println("ANNOTATION FEATS:" + features.toString());
         this.annotationFeatureGenerator = new AnnotationFeatureGenerator(features);
     }
     @Override
@@ -119,22 +119,29 @@ public class AnnotationCRFClassifierChunker extends Chunker {
 
         wrappedSentence.setAttributeIndex(index);
         this.tokenFeatureGenerator.generateFeatures(wrappedSentence);
-        List<HashMap<Annotation,String>> annotationFeatures = this.annotationFeatureGenerator.generate(wrappedSentence, wrappedAnnotations);
-        int featIdx = 1;
-        for(HashMap<Annotation, String> feature: annotationFeatures){
-            String newFeature = "annotation-" + featIdx;
-            if(index.getIndex(newFeature) == -1){
-                index.addAttribute(newFeature);
+        LinkedHashMap<String, HashMap<Annotation, String>> annotationFeatures = this.annotationFeatureGenerator.generate(wrappedSentence, wrappedAnnotations);
+        for(String featureName: annotationFeatures.keySet()){
+            HashMap<Annotation, String> feature = annotationFeatures.get(featureName);
+            if(index.getIndex(featureName) == -1){
+                index.addAttribute(featureName);
+                if(!baseChunker.getTemplate().getFeatures().containsKey(featureName)){
+                    baseChunker.getTemplate().addFeature(featureName+ ":" + featuresContext);
+//                    ToDo: Zdecydować czy warto generować cechy złożone z context dla cech anotacji
+//                    String[] windowDesc = baseChunker.getTemplate().getFeatures().get(featureName);
+//                    for(int i=1; i < windowDesc.length; i++){
+//                        System.out.println("ADDING: "+featureName+":"+windowDesc[i]+"/context:0");
+//                        baseChunker.getTemplate().addFeature(featureName+":"+windowDesc[i]+"/context:0");
+//                    }
+                }
             }
             for(Annotation ann: feature.keySet()){
-                wrappedSentence.getTokens().get(ann.getBegin()).setAttributeValue(index.getIndex(newFeature), feature.get(ann));
+                wrappedSentence.getTokens().get(ann.getBegin()).setAttributeValue(index.getIndex(featureName), feature.get(ann));
             }
             for(Token t: wrappedSentence.getTokens()){
                 if(t.getAttributeValue(index.getIndex("context")).equals("T")){
-                    t.setAttributeValue(index.getIndex(newFeature), "null");
+                    t.setAttributeValue(index.getIndex(featureName), "null");
                 }
             }
-            featIdx++;
         }
         wrappedSentence.setAnnotations(new AnnotationSet(wrappedSentence, wrappedAnnotations));
         return  wrappedSentence;
@@ -193,5 +200,9 @@ public class AnnotationCRFClassifierChunker extends Chunker {
             annotationsByStart.put(ann.getBegin(), ann);
         }
         return annotationsByStart;
+    }
+
+    public void setContext(String context) {
+        this.featuresContext = context;
     }
 }

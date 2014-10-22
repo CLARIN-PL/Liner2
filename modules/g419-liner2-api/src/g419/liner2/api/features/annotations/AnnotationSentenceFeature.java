@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 
-public abstract class AnnotationSentenceFeature {
+public abstract class AnnotationSentenceFeature extends AnnotationFeature{
 
 	public abstract HashMap<Annotation,String> generate(Sentence sent, LinkedHashSet<Annotation> sentenceAnnotations);
 	

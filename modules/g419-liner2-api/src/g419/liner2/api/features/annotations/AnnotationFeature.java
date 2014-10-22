@@ -1,9 +1,14 @@
 package g419.liner2.api.features.annotations;
 
-import g419.corpus.structure.Annotation;
-
+/**
+ * Created by michal on 10/20/14.
+ */
 public abstract class AnnotationFeature {
 
-	public abstract String generate(Annotation an);
-	
+    public String name;
+
+    public void setFeatureName(String featureDesc){
+        name = featureDesc.replace("/", ">");
+        name = name.replace(":", "-");
+    }
 }

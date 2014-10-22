@@ -1,13 +1,8 @@
 package g419.liner2.api.features;
 
 import g419.corpus.structure.*;
-import g419.liner2.api.features.annotations.AnnotationFeature;
-import g419.liner2.api.features.annotations.AnnotationFeatureClosestBase;
-import g419.liner2.api.features.annotations.AnnotationFeatureContextBase;
-import g419.liner2.api.features.annotations.AnnotationFeatureDict;
-import g419.liner2.api.features.annotations.AnnotationFeatureMalt;
-import g419.liner2.api.features.annotations.AnnotationFeatureNeFirstBase;
-import g419.liner2.api.features.annotations.AnnotationSentenceFeature;
+import g419.liner2.api.features.annotations.*;
+import g419.liner2.api.features.annotations.AnnotationAtomicFeature;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -34,13 +29,11 @@ public class AnnotationFeatureGenerator {
         add("suffix");
         add("struct");
         add("regex");
-
-        
         add("paranthesis");
         add("quotation");
     }};
 
-	private List<AnnotationFeature> features = new ArrayList<AnnotationFeature>();
+	private List<AnnotationAtomicFeature> features = new ArrayList<AnnotationAtomicFeature>();
     private List<AnnotationFeatureMalt> maltFeatures = new ArrayList<AnnotationFeatureMalt>();
     private List<AnnotationSentenceFeature> sentenceFeatures = new ArrayList<AnnotationSentenceFeature>();
     private HashMap<String, String> nkjpToCoNLLPos = getnkjpToCoNLLPos();
@@ -59,48 +52,66 @@ public class AnnotationFeatureGenerator {
 		for ( String feature : features ){
 			Matcher matcherBase = this.patternBase.matcher(feature);
 			if ( matcherBase.find() ){
-				this.features.add(new AnnotationFeatureContextBase(Integer.parseInt(matcherBase.group(1))));
+                AnnotationFeatureContextBase f = new AnnotationFeatureContextBase(Integer.parseInt(matcherBase.group(1)));
+                f.setFeatureName(feature);
+				this.features.add(f);
                 continue;
 			}
             Matcher matcherDict = this.patternDict.matcher(feature);
             if ( matcherDict.find() ){
-                this.features.add(new AnnotationFeatureDict(matcherDict.group(2), matcherDict.group(1)));
+                AnnotationFeatureDict f = new AnnotationFeatureDict(matcherDict.group(2), matcherDict.group(1));
+                f.setFeatureName(feature);
+                this.features.add(f);
                 continue;
             }
             Matcher matcherMalt = this.patternMalt.matcher(feature);
             if ( matcherMalt.find() ){
-                this.maltFeatures.add(new AnnotationFeatureMalt(matcherMalt.group(1), Integer.parseInt(matcherMalt.group(2)), matcherMalt.group(3)));
+                AnnotationFeatureMalt f =new AnnotationFeatureMalt(matcherMalt.group(1), Integer.parseInt(matcherMalt.group(2)), matcherMalt.group(3));
+                f.setFeatureName(feature);
+                this.maltFeatures.add(f);
                 continue;
             }
             Matcher matcherClosestBase = this.patternClosestBase.matcher(feature);
             if ( matcherClosestBase.find() ){
-                this.sentenceFeatures.add(new AnnotationFeatureClosestBase(matcherClosestBase.group(2), Integer.parseInt(matcherClosestBase.group(1))));
+                AnnotationFeatureClosestBase f = new AnnotationFeatureClosestBase(matcherClosestBase.group(2), Integer.parseInt(matcherClosestBase.group(1)));
+                f.setFeatureName(feature);
+                this.sentenceFeatures.add(f);
                 continue;
             }
             Matcher matcherNeFirstBase = this.patternNeFirstBase.matcher(feature);
             if ( matcherNeFirstBase.find() ){
-                this.sentenceFeatures.add(new AnnotationFeatureNeFirstBase(matcherNeFirstBase.group(2), Integer.parseInt(matcherNeFirstBase.group(1))));
+                AnnotationFeatureNeFirstBase f = new AnnotationFeatureNeFirstBase(matcherNeFirstBase.group(2), Integer.parseInt(matcherNeFirstBase.group(1)));
+                f.setFeatureName(feature);
+                this.sentenceFeatures.add(f);
             }
 		}
 	}
 
 	public List<String> generate(Annotation ann){
 		List<String> features = new ArrayList<String>();
-		for (AnnotationFeature afg : this.features)
+		for (AnnotationAtomicFeature afg : this.features)
 			features.add(afg.generate(ann));
 		return features;
 	}
 
-    public List<HashMap<Annotation,String>> generate(Sentence sent, LinkedHashSet<Annotation> sentenceAnnotations){
-        List<HashMap<Annotation,String>> features = new ArrayList<HashMap<Annotation, String>>();
+    public LinkedHashMap<String, HashMap<Annotation, String>> generate(Sentence sent, LinkedHashSet<Annotation> sentenceAnnotations){
+        LinkedHashMap<String, HashMap<Annotation, String>> features = new LinkedHashMap<String, HashMap<Annotation, String>>();
+        for (AnnotationAtomicFeature afg : this.features){
+            HashMap<Annotation, String> atomicFeatureVals = new HashMap<Annotation, String>();
+            for(Annotation ann: sentenceAnnotations){
+                atomicFeatureVals.put(ann, afg.generate(ann));
+            }
+            features.put(afg.name, atomicFeatureVals);
+        }
+
         MaltFeatureSentence maltSent;
         if(!this.maltFeatures.isEmpty()){
             maltSent = prepareSentenceForMaltparser(sent, sentenceAnnotations);
             for (AnnotationFeatureMalt afg : this.maltFeatures)
-                features.add(afg.generate(maltSent.getMaltData(), maltSent.getAnnotationIndices()));
+            features.put(afg.name, afg.generate(maltSent.getMaltData(), maltSent.getAnnotationIndices()));
         }
         for (AnnotationSentenceFeature afg : this.sentenceFeatures)
-            features.add(afg.generate(sent, sentenceAnnotations));
+        features.put(afg.name, afg.generate(sent, sentenceAnnotations));
         return features;
     }
 
@@ -133,27 +144,6 @@ public class AnnotationFeatureGenerator {
             tokens.add(tokData);
         }
         return tokens;
-    }
-
-//    public void projectFeatures(Sentence sent){
-//        int contextIdx = sent.getAttributeIndex().getIndex("context");
-//        for(Token tok: sent.getTokens()){
-//            if(tok.getAttributeValue(contextIdx).equals("A")){
-//                Annotation ann = sent.getChunksAt(tok.ge)
-//                projectFeatures(tok, sent.getAttributeIndex());
-//            }
-//        }
-//    }
-
-    public void projectFeatures(Token token, Annotation ann, TokenAttributeIndex index){
-        for(String attribute: index.allAtributes()){
-            if(attribute.equals("orth")){
-                token.setAttributeValue(index.getIndex("orth"), ann.getText());
-            }
-            else if(attribute.equals("base")){
-                token.setAttributeValue(index.getIndex("base"), ann.getBaseText());
-            }
-        }
     }
 
     public MaltFeatureSentence prepareSentenceForMaltparser(Sentence sent, LinkedHashSet<Annotation> sentenceAnnotations){

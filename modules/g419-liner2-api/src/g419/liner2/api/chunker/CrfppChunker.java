@@ -222,6 +222,9 @@ public class CrfppChunker extends Chunker
 		
 	}
 
+    public CrfTemplate getTemplate(){
+        return template;
+    }
 	
 	/**
 	 * Klasa pomocnicza reprezentuje obiekt do generowania wywołania komendy crf

@@ -120,6 +120,7 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
 
 
         CrfTemplate template = TemplateFactory.parseTemplate(templateData);
+        chunker.setContext(description.get("context"));
         template.addFeature("context:"+description.get("context"));
         for(String feature: new ArrayList<String>(template.getFeatureNames())){
             if(!(feature.contains("/") || feature.equals("context"))){

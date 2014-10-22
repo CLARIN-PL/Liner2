@@ -217,22 +217,20 @@ public class AnnotationClassifierChunker extends Chunker
         List<Annotation> allAnnotations = new ArrayList<Annotation>();
         for ( Sentence sentence : annotationsBySentence.keySet() ){
 
-            List<HashMap<Annotation,String>> sentenceFeatures = this.featureGenerator.generate(sentence, annotationsBySentence.get(sentence).chunkSet());
+            LinkedHashMap<String, HashMap<Annotation, String>> allFeatures = this.featureGenerator.generate(sentence, annotationsBySentence.get(sentence).chunkSet());
 
             instanceLoop:
             for (Annotation ann : annotationsBySentence.get(sentence).chunkSet()){
-                List<String> annotationFeatures = this.featureGenerator.generate(ann);
                 Instance instance = new Instance(this.featureGenerator.getFeaturesCount() + 1);
 
-                for (int i=0; i<annotationFeatures.size(); i++){
-                    instance.setValue((Attribute)fva.elementAt(i), annotationFeatures.get(i));
-                }
-                for (int i=0; i<sentenceFeatures.size(); i++){
-                    if(!sentenceFeatures.get(i).containsKey(ann)){
+                int featureIndex = 0;
+                for(HashMap<Annotation, String> featureValues: allFeatures.values()){
+                    if(!featureValues.containsKey(ann)){
                         continue instanceLoop;
                     }
                     allAnnotations.add(ann);
-                    instance.setValue((Attribute)fva.elementAt(i+annotationFeatures.size()), sentenceFeatures.get(i).get(ann));
+                    instance.setValue((Attribute)fva.elementAt(featureIndex), featureValues.get(ann));
+                    featureIndex++;
                 }
                 instances.add(instance);
             }
@@ -260,22 +258,20 @@ public class AnnotationClassifierChunker extends Chunker
         Logger.log("AnnoatationClassifier: Loading training data for from document:" + document.getName());
         updateClassDomain(document);
         for ( Sentence sentence : document.getSentences() ){
-            List<HashMap<Annotation,String>> sentenceFeatures = this.featureGenerator.generate(sentence, sentence.getChunks());
+            LinkedHashMap<String, HashMap<Annotation, String>> allFeatures = this.featureGenerator.generate(sentence, sentence.getChunks());
             instanceLoop:
             for (Annotation ann : sentence.getChunks()){
                 if(this.classes.contains(ann.getType())){
-                    List<String> annotationFeatures = this.featureGenerator.generate(ann);
                     Instance instance = new Instance(this.featureGenerator.getFeaturesCount() + 1);
                     instance.setDataset(instances);
 
-                    for (int i=0; i<annotationFeatures.size(); i++){
-                        instance.setValue((Attribute) fva.elementAt(i), annotationFeatures.get(i));
-                    }
-                    for (int i=0; i<sentenceFeatures.size(); i++){
-                        if(!sentenceFeatures.get(i).containsKey(ann)){
+                    int featureIndex = 0;
+                    for(HashMap<Annotation, String> featureValues: allFeatures.values()){
+                        if(!featureValues.containsKey(ann)){
                             continue instanceLoop;
                         }
-                        instance.setValue((Attribute) fva.elementAt(i + annotationFeatures.size()), sentenceFeatures.get(i).get(ann));
+                        instance.setValue((Attribute)fva.elementAt(featureIndex), featureValues.get(ann));
+                        featureIndex++;
                     }
                     instance.setClassValue(ann.getType());
                     instances.add(instance);
