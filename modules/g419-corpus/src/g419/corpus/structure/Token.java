@@ -111,6 +111,13 @@ public class Token {
     public void setAttributeIndex(TokenAttributeIndex newIndex){
         attrIdx = newIndex;
     }
+    
+    public String getAttributesAsString(){
+    	StringBuilder sb = new StringBuilder();
+    	for ( String attr : this.attributes )
+    		sb.append((sb.length() == 0 ? "" : ", ") + attr);
+    	return sb.toString();
+    }
 
     public Token clone(){
         Token cloned = new Token(this.attrIdx.clone());

@@ -107,8 +107,8 @@ public class TokenFeatureGenerator {
 	public void generateFeatures(Token t) throws Exception {
 		for (TokenFeature f : this.tokenGenerators){
 			t.setAttributeValue(
-					this.attributeIndex.getIndex(f.getName()), 
-					f.generate(t, this.attributeIndex));
+				this.attributeIndex.getIndex(f.getName()), 
+				f.generate(t, this.attributeIndex));
 		}
 	}
 

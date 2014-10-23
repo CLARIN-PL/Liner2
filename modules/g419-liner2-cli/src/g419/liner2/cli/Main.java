@@ -1,5 +1,6 @@
 package g419.liner2.cli;
 
+import g419.corpus.TerminateException;
 import g419.liner2.cli.action.Action;
 import g419.liner2.cli.action.ActionAnnotations;
 import g419.liner2.cli.action.ActionConvert;
@@ -62,6 +63,9 @@ public class Main {
     			try{
     				action.parseOptions(args);
     				action.run();
+    			}
+    			catch (TerminateException e){
+    				System.out.println(e.getMessage());
     			}
     			catch (ParseException e) {
     				main.printCredits();
