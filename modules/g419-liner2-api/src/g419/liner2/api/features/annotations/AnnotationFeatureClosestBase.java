@@ -56,6 +56,10 @@ public class AnnotationFeatureClosestBase extends AnnotationSentenceFeature {
                     }
                 }
             }
+            if(!features.containsKey(ann)) {
+                features.put(ann, "NULL");
+            }
+
         }
         return features;
     }
