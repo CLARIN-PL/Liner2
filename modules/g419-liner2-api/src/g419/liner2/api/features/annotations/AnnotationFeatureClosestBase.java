@@ -30,11 +30,19 @@ public class AnnotationFeatureClosestBase extends AnnotationSentenceFeature {
     @Override
     public HashMap<Annotation, String> generate(Sentence sent, LinkedHashSet<Annotation> sentenceAnnotations) {
         HashMap<Annotation, String> features = new HashMap<Annotation, String>();
+        if(!sentenceAnnotations.isEmpty()){
+            System.out.println("DISTANCE: " + distance + "FORWARD: " + searchForward);
+            for(Token t: sent.getTokens()){
+                System.out.println(t.getAttributeValue("orth") + " | " + t.getAttributeValue("base") + " | " + t.getAttributeValue("ctag"));
+            }
+        }
         int posIndex = sent.getAttributeIndex().getIndex("ctag");
         for(Annotation ann: sentenceAnnotations){
+            System.out.println(ann.getText());
             List<Token> candidateTokens;
-            if(searchForward)
+            if(searchForward) {
                 candidateTokens =  new ArrayList<Token>(sent.getTokens().subList(ann.getEnd(), sent.getTokenNumber()));
+            }
             else{
                 candidateTokens = new ArrayList<Token>(sent.getTokens().subList(0, ann.getBegin()));
                 Collections.reverse(candidateTokens);
@@ -43,16 +51,27 @@ public class AnnotationFeatureClosestBase extends AnnotationSentenceFeature {
             for(Token tok: candidateTokens){
                 String posVal = tok.getAttributeValue(posIndex).split(":")[0];
                 if(posVal.equals(this.pos)){
-                    currentDistance++;
+                    if(!searchForward){
+                        currentDistance++;
+                    }
                     if(currentDistance == distance){
-                        features.put(ann, tok.getOrth());
+                        System.out.println("CHOSEN: " + tok.getAttributeValue("base"));
+                        features.put(ann, tok.getAttributeValue("base"));
                         break;
+                    }
+                    if(searchForward){
+                        currentDistance++;
                     }
                 }
             }
-            if(!features.containsKey(ann))
+            if(!features.containsKey(ann)) {
                 features.put(ann, "NULL");
+                System.out.println("CHOSEN: NOT FOUND");
+            }
 
+        }
+        if(!sentenceAnnotations.isEmpty()){
+            System.out.println("------------------");
         }
         return features;
     }

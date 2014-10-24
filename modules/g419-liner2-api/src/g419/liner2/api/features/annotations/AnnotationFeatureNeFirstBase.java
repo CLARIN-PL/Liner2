@@ -41,10 +41,15 @@ public class AnnotationFeatureNeFirstBase extends AnnotationSentenceFeature {
             for(Token tok: candidateTokens){
                 String posVal = tok.getAttributeValue(posIndex).split(":")[0];
                 if(posVal.equals(this.pos)){
-                    currentDistance++;
+                    if(!searchForward){
+                        currentDistance++;
+                    }
                     if(currentDistance == distance){
-                        features.put(ann, tok.getOrth());
+                        features.put(ann, tok.getAttributeValue("base"));
                         break;
+                    }
+                    if(searchForward){
+                        currentDistance++;
                     }
                 }
             }
