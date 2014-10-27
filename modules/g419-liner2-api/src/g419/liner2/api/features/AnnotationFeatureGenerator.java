@@ -11,28 +11,6 @@ import java.util.regex.Pattern;
 
 public class AnnotationFeatureGenerator {
 
-    // Cechy tokenów których wartość przy rzutowaniu na anotacje jest przepisywana z głowy anotacji
-    private static ArrayList<String> headFeatures = new ArrayList<String>(){{
-        add("ctag");
-        add("class");
-        add("case");
-        add("number");
-        add("gender");
-        add("synonym");
-        add("hypernym");
-        add("top4hyper");
-    }};
-
-    private static ArrayList<String> regenerateFeatures = new ArrayList<String>(){{
-        add("pattern");
-        add("prefix");
-        add("suffix");
-        add("struct");
-        add("regex");
-        add("paranthesis");
-        add("quotation");
-    }};
-
 	private List<AnnotationAtomicFeature> features = new ArrayList<AnnotationAtomicFeature>();
     private List<AnnotationFeatureMalt> maltFeatures = new ArrayList<AnnotationFeatureMalt>();
     private List<AnnotationSentenceFeature> sentenceFeatures = new ArrayList<AnnotationSentenceFeature>();
@@ -43,6 +21,8 @@ public class AnnotationFeatureGenerator {
     private Pattern patternMalt = Pattern.compile("malt:([^:]*):([0-9]*):(base|relation)$");
     private Pattern patternClosestBase = Pattern.compile("closest-base:(-?[0-9]*):([a-z]+)$");
     private Pattern patternNeFirstBase = Pattern.compile("ne-first-base:(-?[0-9]*):([a-z]+)$");
+
+    public ArrayList<String> fetureNames = new ArrayList<String>();
 
 	/**
 	 *
@@ -55,6 +35,7 @@ public class AnnotationFeatureGenerator {
                 AnnotationFeatureContextBase f = new AnnotationFeatureContextBase(Integer.parseInt(matcherBase.group(1)));
                 f.setFeatureName(feature);
 				this.features.add(f);
+                fetureNames.add(f.name);
                 continue;
 			}
             Matcher matcherDict = this.patternDict.matcher(feature);
@@ -62,6 +43,7 @@ public class AnnotationFeatureGenerator {
                 AnnotationFeatureDict f = new AnnotationFeatureDict(matcherDict.group(2), matcherDict.group(1));
                 f.setFeatureName(feature);
                 this.features.add(f);
+                fetureNames.add(f.name);
                 continue;
             }
             Matcher matcherMalt = this.patternMalt.matcher(feature);
@@ -69,6 +51,7 @@ public class AnnotationFeatureGenerator {
                 AnnotationFeatureMalt f =new AnnotationFeatureMalt(matcherMalt.group(1), Integer.parseInt(matcherMalt.group(2)), matcherMalt.group(3));
                 f.setFeatureName(feature);
                 this.maltFeatures.add(f);
+                fetureNames.add(f.name);
                 continue;
             }
             Matcher matcherClosestBase = this.patternClosestBase.matcher(feature);
@@ -76,6 +59,7 @@ public class AnnotationFeatureGenerator {
                 AnnotationFeatureClosestBase f = new AnnotationFeatureClosestBase(matcherClosestBase.group(2), Integer.parseInt(matcherClosestBase.group(1)));
                 f.setFeatureName(feature);
                 this.sentenceFeatures.add(f);
+                fetureNames.add(f.name);
                 continue;
             }
             Matcher matcherNeFirstBase = this.patternNeFirstBase.matcher(feature);
@@ -83,6 +67,7 @@ public class AnnotationFeatureGenerator {
                 AnnotationFeatureNeFirstBase f = new AnnotationFeatureNeFirstBase(matcherNeFirstBase.group(2), Integer.parseInt(matcherNeFirstBase.group(1)));
                 f.setFeatureName(feature);
                 this.sentenceFeatures.add(f);
+                fetureNames.add(f.name);
             }
 		}
 	}

@@ -139,6 +139,7 @@ public class CrfppChunker extends Chunker
     			for (int i = 0; i < tokens.size(); i++) {
     				String oStr = "";    				
     				for (int j = 0; j < numAttrs; j++){
+//                        System.out.println(tokens.get(i).getOrth() + ": " + tokens.get(i).attrIdx.getName(j));
     					String val = tokens.get(i).getAttributeValue(j);
     					if ( val != null)
     						val = val.length()==0 ? "NULL" : val.replaceAll("\\s+", "_");

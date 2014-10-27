@@ -144,6 +144,9 @@ public class Sentence {
 	
 	public void setAttributeIndex(TokenAttributeIndex attributeIndex) {
 		this.attributeIndex = attributeIndex;
+        for(Token t: tokens){
+            t.setAttributeIndex(attributeIndex);
+        }
 	}
 
 	public void setAnnotations(AnnotationSet chunking) {
@@ -185,6 +188,7 @@ public class Sentence {
 
     public Sentence clone(){
         Sentence copy = new Sentence();
+        copy.attributeIndex = attributeIndex.clone();
         copy.setId(this.getId());
         for(Token t: tokens){
             copy.addToken(t.clone());

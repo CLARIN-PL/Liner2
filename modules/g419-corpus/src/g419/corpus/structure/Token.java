@@ -51,6 +51,11 @@ public class Token {
 	public String getAttributeValue(int index){
 		return attributes.get(index);
 	}
+
+    public String getAttributeValue(String attr){
+        int index = this.attrIdx.getIndex(attr);
+        return getAttributeValue(index);
+    }
 	
 	public int getNumAttributes() {
 		return attributes.size();
@@ -99,6 +104,11 @@ public class Token {
 		else if (index == attributes.size())
 			attributes.add(value);
 	}
+
+    public void setAttributeValue(String attr, String value) {
+        int index = this.attrIdx.getIndex(attr);
+        setAttributeValue(index, value);
+    }
 	
 	public void setNoSpaceAfter(boolean noSpaceAfter) {
 		this.noSpaceAfter = noSpaceAfter;
@@ -107,10 +117,6 @@ public class Token {
 	public void setId(String id){
 		this.id = id;
 	}
-
-    public void setAttributeIndex(TokenAttributeIndex newIndex){
-        attrIdx = newIndex;
-    }
     
     public String getAttributesAsString(){
     	StringBuilder sb = new StringBuilder();
@@ -126,5 +132,15 @@ public class Token {
         cloned.id = id;
         cloned.noSpaceAfter = this.noSpaceAfter;
         return cloned;
+    }
+
+    public void setAttributeIndex(TokenAttributeIndex newAttrIdx){
+        ArrayList<String> newAttributes = new ArrayList<String>();
+        for(String feature: newAttrIdx.allAtributes()){
+            String value = attrIdx.getIndex(feature) == -1 ? null : getAttributeValue(feature);
+            newAttributes.add(value);
+        }
+        attrIdx = newAttrIdx;
+        attributes = newAttributes;
     }
 }

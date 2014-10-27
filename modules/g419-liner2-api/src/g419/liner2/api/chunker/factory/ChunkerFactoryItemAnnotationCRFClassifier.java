@@ -72,7 +72,7 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
         return features;
     }
 
-    private Chunker load(Ini.Section description, ChunkerManager cm) throws IOException {
+    private Chunker load(Ini.Section description, ChunkerManager cm) throws Exception {
 
 
         String store = description.get("store");
@@ -81,7 +81,7 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
         CrfppChunker baseChunker = new CrfppChunker();
         baseChunker.deserialize(store);
         TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
-        AnnotationCRFClassifierChunker chunker = new AnnotationCRFClassifierChunker(null, description.get("base-annotation"), baseChunker, gen, parseAnnotationFeatures(description.get("features")));
+        AnnotationCRFClassifierChunker chunker = new AnnotationCRFClassifierChunker(null, description.get("base-annotation"), baseChunker, gen, parseAnnotationFeatures(description.get("annotationFeatures")), description.get("context"));
 
         return chunker;
     }
@@ -116,22 +116,22 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
         String templateData = description.get("template");
         Logger.log("--> Training on file=" + inputFile);
 
-        AnnotationCRFClassifierChunker chunker = new AnnotationCRFClassifierChunker(list, description.get("base-annotation"), baseChunker, gen, parseAnnotationFeatures(description.get("features")));
 
 
         CrfTemplate template = TemplateFactory.parseTemplate(templateData);
-        chunker.setContext(description.get("context"));
-        template.addFeature("context:"+description.get("context"));
+        template.addFeature("context:" + description.get("context"));
         for(String feature: new ArrayList<String>(template.getFeatureNames())){
             if(!(feature.contains("/") || feature.equals("context"))){
                 String[] windowDesc = template.getFeatures().get(feature);
                 for(int i=1; i < windowDesc.length; i++){
-                    template.addFeature(feature+":"+windowDesc[i]+"/context:0");
+                    template.addFeature(feature + ":" + windowDesc[i] + "/context:0");
                 }
             }
         }
 
         baseChunker.setTemplate(template);
+        AnnotationCRFClassifierChunker chunker = new AnnotationCRFClassifierChunker(list, description.get("base-annotation"), baseChunker, gen, parseAnnotationFeatures(description.get("annotation-features")), description.get("context"));
+
         for(Document document: trainData){
             gen.generateFeatures(document);
             Document wrapped = chunker.prepareData(document, "train");
