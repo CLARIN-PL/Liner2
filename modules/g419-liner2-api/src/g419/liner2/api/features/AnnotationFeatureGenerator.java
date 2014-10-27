@@ -21,6 +21,7 @@ public class AnnotationFeatureGenerator {
     private Pattern patternMalt = Pattern.compile("malt:([^:]*):([0-9]*):(base|relation)$");
     private Pattern patternClosestBase = Pattern.compile("closest-base:(-?[0-9]*):([a-z]+)$");
     private Pattern patternNeFirstBase = Pattern.compile("ne-first-base:(-?[0-9]*):([a-z]+)$");
+    private Pattern patternHead = Pattern.compile("head:(.+)$");
 
     public ArrayList<String> fetureNames = new ArrayList<String>();
 
@@ -41,6 +42,14 @@ public class AnnotationFeatureGenerator {
             Matcher matcherDict = this.patternDict.matcher(feature);
             if ( matcherDict.find() ){
                 AnnotationFeatureDict f = new AnnotationFeatureDict(matcherDict.group(2), matcherDict.group(1));
+                f.setFeatureName(feature);
+                this.features.add(f);
+                fetureNames.add(f.name);
+                continue;
+            }
+            Matcher matcherHead = this.patternHead.matcher(feature);
+            if(matcherHead.find()){
+                AnnotationFeatureHeadValue f = new AnnotationFeatureHeadValue(matcherHead.group(1));
                 f.setFeatureName(feature);
                 this.features.add(f);
                 fetureNames.add(f.name);
