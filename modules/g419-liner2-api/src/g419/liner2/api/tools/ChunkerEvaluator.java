@@ -366,8 +366,8 @@ public class ChunkerEvaluator {
 	 * 
 	 */
 	public void printResults(){
-		String header = "        Annotation           &   TP &   FP &   FN & Precision & Recall  & F$_1$   \\\\";
-		String line = "        %-20s & %4d & %4d & %4d &   %6.2f%% & %6.2f%% & %6.2f%% \\\\";
+		String header = "        Annotation                     &      TP &      FP &      FN & Precision & Recall  & F$_1$   \\\\";
+		String line = "        %-30s & %7d & %7d & %7d &   %6.2f%% & %6.2f%% & %6.2f%% \\\\";
 		
 		this.printHeader("Exact match evaluation -- annotation span and types evaluation");
 		System.out.println(header);
