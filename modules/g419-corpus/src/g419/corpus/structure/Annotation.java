@@ -110,6 +110,10 @@ public class Annotation {
 	public Sentence getSentence() {
 		return this.sentence;
 	}
+
+    public void setSentence(Sentence sentence){
+        this.sentence = sentence;
+    }
 	
 	public String getType() {
 		return this.type;
