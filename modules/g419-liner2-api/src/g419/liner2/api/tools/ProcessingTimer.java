@@ -94,7 +94,7 @@ public class ProcessingTimer {
 	}
 	
 	public void printStats(){
-		float milisec = 1000000000f;
+		float nanosec = 1000000000f;
 		System.out.println("====================================================");
 		System.out.println("Processing time");
 		System.out.println("====================================================");
@@ -107,22 +107,22 @@ public class ProcessingTimer {
 			else
 				suffix = "(not in total time)";
 			
-			System.out.println(String.format("%d) %-20s : %10s %s", i++, task.getLabel(), timetoString((long) (task.getTime()/milisec)), suffix));
+			System.out.println(String.format("%d) %-20s : %10s %s", i++, task.getLabel(), timetoString(task.getTime()), suffix));
 		}
 		
 		System.out.println("----------------------------------------------------");
-		System.out.println(String.format("## %-20s   %10s", "Total time", timetoString((long) (totalTime/milisec))));
+		System.out.println(String.format("## %-20s   %10s", "Total time", timetoString(totalTime)));
 		System.out.println("----------------------------------------------------");
 		System.out.println(String.format("Tokens           : %8d", this.tokensNumber));
 		System.out.println(String.format("Text kB          : %11.2f", (float)this.textSize / 1024f ));
-		System.out.println(String.format("Tokens  / second : %11.2f", (float)this.tokensNumber / (totalTime/milisec) ));
-		System.out.println(String.format("Text kB / second : %11.2f", (float)this.textSize / 1024f / (totalTime/milisec) ));
+		System.out.println(String.format("Tokens  / second : %11.2f", (float)this.tokensNumber / (totalTime/nanosec) ));
+		System.out.println(String.format("Text kB / second : %11.2f", (float)this.textSize / 1024f / (totalTime/nanosec) ));
 		System.out.println("----------------------------------------------------");
 	}
 
     private String timetoString(long time){
-        long secondsInMilli = 1000;
-        long minutesInMilli = secondsInMilli * 60;
+        long secondsInNano = 1000000000;
+        long minutesInMilli = secondsInNano * 60;
         long hoursInMilli = minutesInMilli * 60;
 
         long elapsedHours = time / hoursInMilli;
@@ -131,7 +131,7 @@ public class ProcessingTimer {
         long elapsedMinutes = time / minutesInMilli;
         time = time % minutesInMilli;
 
-        long elapsedSeconds = time / secondsInMilli;
+        long elapsedSeconds = time / secondsInNano;
 
         String hours = elapsedHours > 0 ? String.format("%02d", elapsedHours) : "--";
         String minutes = elapsedHours > 0 || elapsedMinutes > 0 ? String.format("%02d", elapsedMinutes) : "--";
