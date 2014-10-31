@@ -7,6 +7,7 @@ import g419.liner2.cli.action.ActionConvert;
 import g419.liner2.cli.action.ActionEval;
 import g419.liner2.cli.action.ActionInteractive;
 import g419.liner2.cli.action.ActionPipe;
+import g419.liner2.cli.action.ActionStats;
 import g419.liner2.cli.action.ActionTime;
 import g419.liner2.cli.action.ActionTrain;
 
@@ -39,6 +40,7 @@ public class Main {
     	main.registerAction(new ActionPipe());
     	main.registerAction(new ActionTime());
     	main.registerAction(new ActionTrain());
+    	main.registerAction(new ActionStats());
     	
     	if ( args.length == 0 ){
     		main.printCredits();
