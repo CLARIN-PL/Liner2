@@ -68,6 +68,18 @@ public class AnnotationCRFClassifierChunker extends Chunker {
             }
             result.put(sent, newSet);
         }
+
+        for(Sentence sent: ps.getSentences()){
+            LinkedHashSet<Annotation> originalAnns = sent.getChunks();
+            for(Annotation newAnn: result.get(sent).chunkSet()){
+                for(Annotation oldAnn: originalAnns){
+                    if(newAnn.getTokens().equals(oldAnn.getTokens()) && !newAnn.getType().equals("nam") && oldAnn.getType().equals("nam")){
+                        originalAnns.remove(oldAnn);
+                        break;
+                    }
+                }
+            }
+        }
         return result;
     }
 
@@ -90,11 +102,6 @@ public class AnnotationCRFClassifierChunker extends Chunker {
         for(Sentence sentence: doc.getSentences()){
             Sentence workCopySent = sentence.clone();
             workCopySent.setAttributeIndex(index);
-//            System.out.println("WORK COPY ATTRS: " + workCopySent.getAttributeIndex().allAtributes());
-//            for(Token t: workCopySent.getTokens()){
-//                System.out.println("TOKEN ATTRS: " + t.attrIdx.allAtributes());
-////                t.attrIdx = workCopy.getAttributeIndex();
-//            }
             generateAnnotationFeatures(workCopySent);
             HashMap<Integer, Annotation> annotationsByStart = filterAnnotations(workCopySent.getChunks(), mode);
             Sentence prepared = wrapAnnotations(annotationsByStart, workCopySent, index);
@@ -142,28 +149,7 @@ public class AnnotationCRFClassifierChunker extends Chunker {
 
         wrappedSentence.setAttributeIndex(index);
         wrappedSentence.setAnnotations(new AnnotationSet(wrappedSentence, wrappedAnnotations));
-//        System.out.println("SENT: " + wrappedSentence.getId());
-//        for(Token t: wrappedSentence.getTokens()){
-//            if(t.getAttributeValue("context").equals("A")){
-//                for(String attr: t.attrIdx.allAtributes()){
-//                    System.out.print(attr+ ": ");
-//                    System.out.print(t.getAttributeValue(attr) + " | ");
-//                }
-//                System.out.println("\n");
-//            }
-//        }
-//        System.out.println("----------------");
         this.tokenToAnnotationFeatureGenerator.mapFeatures(wrappedSentence, oldAnnotationData);
-//        for(Token t: wrappedSentence.getTokens()){
-//            if(t.getAttributeValue("context").equals("A")){
-//                for(String attr: t.attrIdx.allAtributes()){
-//
-//                    System.out.print(attr + ": " + t.getAttributeValue(attr) + " | ");
-//                }
-//                System.out.println("\n");
-//            }
-//        }
-//        System.out.println("----------------");
 
         return  wrappedSentence;
 
@@ -178,34 +164,16 @@ public class AnnotationCRFClassifierChunker extends Chunker {
             }
 
         }
-//        System.out.println("NUM TOKENS: " + sent.getTokenNumber());
-//        for(Annotation ann: annotations){
-//            System.out.println(ann.getTokens());
-//        }
         LinkedHashMap<String, HashMap<Annotation, String>> annotationFeatures = this.annotationFeatureGenerator.generate(sent, annotations);
         ArrayList<Token> tokens = sent.getTokens();
         for(String featureName: annotationFeatures.keySet()){
             HashMap<Annotation, String> feature = annotationFeatures.get(featureName);
             for(Annotation ann: feature.keySet()){
-//                System.out.println("setting val for ann tokens: " + ann.getTokens());
                 for(int tokenIdx: ann.getTokens()){
                     tokens.get(tokenIdx).setAttributeValue(index.getIndex(featureName), feature.get(ann));
                 }
             }
         }
-
-//        for(Token t: tokens){
-//            for(String attr: t.attrIdx.allAtributes()){
-//                if(!attr.equals("context")){
-//                    System.out.print(attr + ": ");
-//                    System.out.print(t.getAttributeValue(attr) + " | ");
-//                }
-//            }
-//            System.out.println("\n");
-//        }
-//
-//    System.out.println("----------------");
-
     }
 
 

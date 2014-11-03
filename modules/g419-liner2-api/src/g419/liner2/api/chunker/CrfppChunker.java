@@ -114,6 +114,7 @@ public class CrfppChunker extends Chunker
 		            
     @Override
 	public void train() throws Exception {
+        Logger.log("Training CRF classifer using features:\n" + this.template.printFeatures());
     	this.trainingFileWriter.close();
 		this.compileTagger();
     }
