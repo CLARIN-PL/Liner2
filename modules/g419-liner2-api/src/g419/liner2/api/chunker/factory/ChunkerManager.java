@@ -68,7 +68,9 @@ public class ChunkerManager {
         testData = new ArrayList<Document>();
         Document document = reader.nextDocument();
         while ( document != null ){
-            gen.generateFeatures(document);
+            if(gen != null){
+                gen.generateFeatures(document);
+            }
             testData.add(document);
             document = reader.nextDocument();
         }
@@ -78,7 +80,9 @@ public class ChunkerManager {
         trainingData = new ArrayList<Document>();
         Document document = reader.nextDocument();
         while ( document != null ){
-            gen.generateFeatures(document);
+            if(gen != null){
+                gen.generateFeatures(document);
+            }
             trainingData.add(document);
             document = reader.nextDocument();
         }
