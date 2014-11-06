@@ -114,6 +114,7 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
         List<Pattern> list = LinerOptions.getGlobal().parseTypes(description.get("types"));
 
         CrfppChunker baseChunker = new CrfppChunker(Integer.parseInt(description.get("threads")), list);
+        baseChunker.setTrainingDataFilename(description.get("store-training-data"));
         baseChunker.setModelFilename(modelFilename);
         Logger.log("--> Training on file=" + inputFile);
 

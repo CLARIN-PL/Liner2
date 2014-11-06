@@ -35,6 +35,7 @@ public class CrfppChunker extends Chunker
 	private int threads = 1;
 	private static final int MAX_TOKENS = 1000;
 	private List<Pattern> types = null;
+    private String trainingDataFileName = null;
 	
     public CrfppChunker() {
 		this.types = new ArrayList<Pattern>();
@@ -126,7 +127,13 @@ public class CrfppChunker extends Chunker
     	// Utwórz tymczasowy plik do zapisu danych treningowych
     	if ( this.trainingFileWriter == null ){
     		try {
-    			this.trainingFile = new File("crf_iob.txt");
+                if(trainingDataFileName != null){
+                    this.trainingFile = new File(trainingDataFileName);
+                }
+                else{
+                    this.trainingFile = File.createTempFile("crf_iob", ".txt");
+                }
+                System.out.println("STORE TRAINING DATA IN: " + trainingFile.getAbsolutePath());
 				this.trainingFileWriter = new PrintWriter(this.trainingFile);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -254,6 +261,10 @@ public class CrfppChunker extends Chunker
 	public void setModelFilename(String modelFilename) {
 		this.model_filename = modelFilename;		
 	}
+
+    public void setTrainingDataFilename(String trainingDataFilename) {
+        this.trainingDataFileName = trainingDataFilename;
+    }
 
 	@Override
 	public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
