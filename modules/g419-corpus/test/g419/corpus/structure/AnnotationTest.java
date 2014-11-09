@@ -89,7 +89,7 @@ public class AnnotationTest {
 		int begin = 0;
 		String type = "";
 		Annotation annotation = new Annotation(begin, type, sentence);
-		
+
 		Assert.assertFalse(annotation.hasHead());
 		annotation.setHead(begin);
 		Assert.assertTrue(annotation.hasHead());
@@ -101,10 +101,10 @@ public class AnnotationTest {
 		int begin = 0;
 		String type = "";
 		Annotation annotation = new Annotation(begin, type, sentence);
-		
+
 		int head = 10;
 		annotation.setHead(head);
-		Assert.assertEquals("annotation.setHead did not caused annotation.getHead to return proper value.", head, annotation.getHead());
+		Assert.assertEquals("annotation.setHead did not caused annotation.getHead to return proper value", head, annotation.getHead());
 	}
 
 	@Test
@@ -113,65 +113,101 @@ public class AnnotationTest {
 		int begin = 0;
 		String type = "";
 		Annotation annotation = new Annotation(begin, type, sentence);
-		
+
 		annotation.setHead(begin);
-		Assert.assertTrue("annotation.setHead did not caused annotation.hasHead to return true",annotation.hasHead());
-		
-		
+		Assert.assertTrue("annotation.setHead did not caused annotation.hasHead to return true", annotation.hasHead());
 	}
 
 	@Test
 	public void testAddToken() {
-		// TODO Implement
-		fail("Not yet implemented");
+		Sentence sentence = new Sentence();
+		int begin = 0;
+		String type = "";
+		Annotation annotation = new Annotation(begin, type, sentence);
+
+		int token = 123;
+		annotation.addToken(token);
+		Assert.assertTrue("annotation.getTokens() does not contain prievously added token", annotation.getTokens().contains(token));
 	}
 
 	@Test
 	public void testReplaceTokens() {
-		// TODO Implement
-		fail("Not yet implemented");
-	}
+		Sentence sentence = new Sentence();
+		int begin = 0;
+		String type = "";
+		Annotation annotation = new Annotation(begin, type, sentence);
 
-	@Test
-	public void testEqualsObject() {
-		// TODO Implement
-		fail("Not yet implemented");
+		int tokensBegin = 10;
+		int tokensEnd = 30;
+		annotation.replaceTokens(tokensBegin, tokensEnd);
+
+		for (int token = tokensBegin; token <= tokensEnd; token++)
+			Assert.assertTrue("annotation.getTokens() does not contain prievously added token", annotation.getTokens().contains(token));
 	}
 
 	@Test
 	public void testGetId() {
-		// TODO Implement
-		fail("Not yet implemented");
+		Sentence sentence = new Sentence();
+		int begin = 0;
+		String type = "";
+		Annotation annotation = new Annotation(begin, type, sentence);
+
+		String id = "test_id";
+		annotation.setId(id);
+		Assert.assertEquals("The id of annotation is diffrent than prievously set one", id, annotation.getId());
 	}
 
 	@Test
 	public void testGetBegin() {
-		// TODO Implement
-		fail("Not yet implemented");
+		Sentence sentence = new Sentence();
+		int begin = 0;
+		String type = "";
+		Annotation annotation = new Annotation(begin, type, sentence);
+
+		Assert.assertEquals("The begin of annotation is diffrent than prievously set one", begin, annotation.getBegin());
 	}
 
 	@Test
 	public void testGetEnd() {
-		// TODO Implement
-		fail("Not yet implemented");
+		Sentence sentence = new Sentence();
+		int begin = 0;
+		int end = 1;
+		String type = "";
+		Annotation annotation = new Annotation(begin, end, type, sentence);
+
+		Assert.assertEquals("The end of annotation is diffrent than prievously set one", end, annotation.getEnd());
 	}
 
 	@Test
 	public void testGetTokens() {
-		// TODO Implement
-		fail("Not yet implemented");
+		Sentence sentence = new Sentence();
+		int begin = 0;
+		int end = 10;
+		String type = "";
+		Annotation annotation = new Annotation(begin, end, type, sentence);
+
+		for (int token = begin; token <= end; token++)
+			Assert.assertTrue("annotation.getTokens() does not contain prievously added token", annotation.getTokens().contains(token));
 	}
 
 	@Test
 	public void testGetSentence() {
-		// TODO Implement
-		fail("Not yet implemented");
+		Sentence sentence = new Sentence();
+		int begin = 0;
+		String type = "";
+		Annotation annotation = new Annotation(begin, type, sentence);
+
+		Assert.assertEquals("Sentence returned from annotation is diffrent than one used to construct this annotation", sentence, annotation.getSentence());
 	}
 
 	@Test
 	public void testGetType() {
-		// TODO Implement
-		fail("Not yet implemented");
+		Sentence sentence = new Sentence();
+		int begin = 0;
+		String type = "test_type";
+		Annotation annotation = new Annotation(begin, type, sentence);
+
+		Assert.assertEquals("Type returned from annotation is diffrent than one used to construct this annotation", type, annotation.getType());
 	}
 
 	@Test
@@ -188,6 +224,9 @@ public class AnnotationTest {
 			Assert.assertEquals("Text for the same object is diffrent", text1, text1);
 			Assert.assertEquals("Text for the same object is diffrent", text2, text2);
 			Assert.assertEquals("Text for two same object is diffrent", text1, text2);
+
+			// TODO Check if text is the same as it supposed to be
+
 		} catch (IndexOutOfBoundsException e) {
 			fail("Annotation expect that sentence have at least one token");
 		}
@@ -195,20 +234,48 @@ public class AnnotationTest {
 
 	@Test
 	public void testGetBaseText() {
-		// TODO Implement
-		fail("Not yet implemented");
+		Sentence sentence1 = new Sentence();
+
+		Annotation annotation1 = new Annotation(0, "", sentence1);
+		Annotation annotation2 = new Annotation(0, "", sentence1);
+
+		try {
+			String baseText1 = annotation1.getBaseText();
+			String baseText2 = annotation2.getBaseText();
+
+			Assert.assertEquals("Text for the same object is diffrent", baseText1, baseText1);
+			Assert.assertEquals("Text for the same object is diffrent", baseText2, baseText2);
+			Assert.assertEquals("Text for two same object is diffrent", baseText1, baseText2);
+
+			// TODO Check if baseText is the same as it supposed to be
+
+		} catch (IndexOutOfBoundsException e) {
+			fail("Annotation expect that sentence have at least one token");
+		}
 	}
 
 	@Test
 	public void testSetId() {
-		// TODO Implement
-		fail("Not yet implemented");
+		Sentence sentence = new Sentence();
+		int begin = 0;
+		String type = "";
+		Annotation annotation = new Annotation(begin, type, sentence);
+
+		String id = "test_id";
+		annotation.setId(id);
+		Assert.assertEquals("The id of annotation remain unchanged", id, annotation.getId());
 	}
 
 	@Test
 	public void testSetType() {
-		// TODO Implement
-		fail("Not yet implemented");
+		Sentence sentence = new Sentence();
+		int begin = 0;
+		String type = "test_type";
+		Annotation annotation = new Annotation(begin, type, sentence);
+
+		String newType = "new_test_type";
+		annotation.setType(newType);
+		Assert.assertEquals("Type returned from annotation is diffrent than prievously set one", newType, annotation.getType());
 	}
 
 	@Test
@@ -225,8 +292,14 @@ public class AnnotationTest {
 
 	@Test
 	public void testClone() {
-		// TODO Implement
-		fail("Not yet implemented");
+		Sentence sentence = new Sentence();
+		int begin = 0;
+		String type = "";
+		Annotation annotation = new Annotation(begin, type, sentence);
+
+		Annotation clonedAnnotation = annotation.clone();
+		Assert.assertFalse("annotation and its clone are the same object (references are equal)", clonedAnnotation == annotation);
+		Assert.assertEquals("annotation and its clone are not equal", annotation, clonedAnnotation);
 	}
 
 	@Test
