@@ -3,19 +3,20 @@ package g419.liner2.api.chunker.factory;
 
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
+import g419.corpus.structure.Document;
+import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.AnnotationClassifierChunker;
 import g419.liner2.api.chunker.Chunker;
 import g419.corpus.Logger;
 import g419.liner2.api.tools.ParameterException;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.ini4j.Ini;
+import org.ini4j.Profile;
 
 public class ChunkerFactoryItemAnnotationClassifier extends ChunkerFactoryItem {
 
@@ -47,21 +48,14 @@ public class ChunkerFactoryItemAnnotationClassifier extends ChunkerFactoryItem {
         StringBuffer sb = new StringBuffer();
         String feature = br.readLine();
         while(feature != null) {
-            feature = feature.trim().replace("{INI_PATH}", iniPath);
-            features.add(feature);
+            if(!feature.isEmpty() && !feature.startsWith("#")) {
+                feature = feature.trim().replace("{INI_PATH}", iniPath);
+                features.add(feature);
+            }
             feature = br.readLine();
         }
 
-        String[] parameters;
-        if(description.containsKey("parameters")){
-            parameters = description.get("parameters").split(",");
-        }
-        else{
-            parameters = new String[0];
-        }
-        for(String p: parameters)
-        System.out.println(p);
-		AnnotationClassifierChunker chunker = new AnnotationClassifierChunker(baseChunker, features, description.get("classifier"), parameters, description.get("strategy"));
+		AnnotationClassifierChunker chunker = new AnnotationClassifierChunker(baseChunker, features);
 
         String mode = description.get("mode");
         String modelPath = description.get("store");
@@ -69,20 +63,59 @@ public class ChunkerFactoryItemAnnotationClassifier extends ChunkerFactoryItem {
         if ( mode.equals("load") && modelFile.exists()){
             chunker.deserialize(modelPath);
         }
-        else {
-            String inputFormat = description.get("format");
-            String inputFile = description.get("training-data");
-
-            Logger.log("--> Training on file=" + inputFile);
-            AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFile, inputFormat);
-            // TODO
-            chunker.addTrainingData(reader.nextDocument());
-            chunker.train();
-
+        else if(mode.equals("train")){
+            train(description, chunker, cm);
             modelFile.createNewFile();
             chunker.serialize(modelPath);
         }
+        else{
+            throw new Exception("Unrecognized mode for annotation classifier chunker: " + mode + "(Valid: train/load)");
+        }
 		return chunker;
 	}
+
+    private void train(Profile.Section description, AnnotationClassifierChunker chunker, ChunkerManager cm) throws Exception {
+        String[] parameters;
+        if(description.containsKey("parameters")){
+            parameters = description.get("parameters").split(",");
+        }
+        else{
+            parameters = new String[0];
+        }
+        List<Pattern> types = new ArrayList<Pattern>();
+        if ( description.containsKey("types")) {
+            types = LinerOptions.getGlobal().parseTypes(description.get("types"));
+        }
+
+        String inputFile = description.get("training-data");
+
+        // Setup training data
+        ArrayList<Document> trainData = new ArrayList<Document>();
+        if(inputFile.equals("{CV_TRAIN}")){
+            trainData = cm.trainingData;
+        }
+        else{
+            String inputFormat = description.get("format");
+            AbstractDocumentReader reader =
+                    ReaderFactory.get().getStreamReader(inputFile, inputFormat);
+            Document document = reader.nextDocument();
+            while ( document != null ){
+                trainData.add(document);
+                document = reader.nextDocument();
+            }
+        }
+
+
+        Logger.log("--> Training on file=" + inputFile);
+        chunker.setTypes(types);
+        for(Document document: trainData) {
+            chunker.updateClassDomain(document);
+        }
+        chunker.initializeTraining(description.get("classifier"), parameters, description.get("strategy"));
+        for(Document document: trainData) {
+            chunker.addTrainingData(document);
+        }
+        chunker.train();
+    }
 
 }

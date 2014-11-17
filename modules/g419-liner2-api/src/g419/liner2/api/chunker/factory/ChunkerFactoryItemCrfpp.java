@@ -131,6 +131,7 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         String templateData = description.get("template");
 
         CrfppChunker chunker = new CrfppChunker(threads, types);
+
         String chunkerName = description.getName().substring(8);
         CrfTemplate template = cm.getChunkerTemplate(chunkerName);
         if(template != null){
@@ -139,6 +140,9 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         }
         else if(!templateData.equals("null")){
             template = TemplateFactory.parseTemplate(templateData);
+
+        chunker.setTrainingDataFilename(description.get("store-training-data"));
+
             template.setAttributeIndex(gen.getAttributeIndex());
             chunker.setTemplate(template);
         }

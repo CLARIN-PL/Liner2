@@ -18,12 +18,17 @@ import java.util.LinkedList;
 
 public class TokenFeatureGenerator {
 
-	private ArrayList<TokenFeature> tokenGenerators = new ArrayList<TokenFeature>();
-	private ArrayList<TokenInSentenceFeature> sentenceGenerators 
+    public static final ArrayList<String> sourceFeatures = new ArrayList<String>(){{
+        add("orth");
+        add("base");
+        add("ctag");
+    }};
+
+    protected ArrayList<TokenFeature> tokenGenerators = new ArrayList<TokenFeature>();
+    protected ArrayList<TokenInSentenceFeature> sentenceGenerators
 		= new ArrayList<TokenInSentenceFeature>();
-	private TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
-	private String[] sourceFeatures = new String[]{"orth", "base", "ctag"};
-	private ArrayList<String> featureNames;
+    private TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
+	protected ArrayList<String> featureNames;
 	/**
 	 * 
 	 * @param features — array with feature definitions
@@ -107,8 +112,10 @@ public class TokenFeatureGenerator {
 	public void generateFeatures(Token t) throws Exception {
 		for (TokenFeature f : this.tokenGenerators){
 			t.setAttributeValue(
-					this.attributeIndex.getIndex(f.getName()), 
-					f.generate(t, this.attributeIndex));
+				this.attributeIndex.getIndex(f.getName()), 
+				f.generate(t, this.attributeIndex));
 		}
 	}
+
+
 }

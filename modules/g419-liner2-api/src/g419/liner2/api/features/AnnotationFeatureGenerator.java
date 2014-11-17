@@ -1,93 +1,114 @@
 package g419.liner2.api.features;
 
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-import g419.corpus.structure.TokenAttributeIndex;
-import g419.liner2.api.features.annotations.AnnotationFeature;
-import g419.liner2.api.features.annotations.AnnotationFeatureClosestBase;
-import g419.liner2.api.features.annotations.AnnotationFeatureContextBase;
-import g419.liner2.api.features.annotations.AnnotationFeatureDict;
-import g419.liner2.api.features.annotations.AnnotationFeatureMalt;
-import g419.liner2.api.features.annotations.AnnotationFeatureNeFirstBase;
-import g419.liner2.api.features.annotations.AnnotationSentenceFeature;
+import g419.corpus.structure.*;
+import g419.liner2.api.features.annotations.*;
+import g419.liner2.api.features.annotations.AnnotationAtomicFeature;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class AnnotationFeatureGenerator {
 
-	private List<AnnotationFeature> features = new ArrayList<AnnotationFeature>();
+	private List<AnnotationAtomicFeature> features = new ArrayList<AnnotationAtomicFeature>();
     private List<AnnotationFeatureMalt> maltFeatures = new ArrayList<AnnotationFeatureMalt>();
     private List<AnnotationSentenceFeature> sentenceFeatures = new ArrayList<AnnotationSentenceFeature>();
     private HashMap<String, String> nkjpToCoNLLPos = getnkjpToCoNLLPos();
-	
+
 	private Pattern patternBase = Pattern.compile("base:(-?[0-9]*)$");
     private Pattern patternDict = Pattern.compile("dict:([^:]*):([^:]*)$");
     private Pattern patternMalt = Pattern.compile("malt:([^:]*):([0-9]*):(base|relation)$");
     private Pattern patternClosestBase = Pattern.compile("closest-base:(-?[0-9]*):([a-z]+)$");
     private Pattern patternNeFirstBase = Pattern.compile("ne-first-base:(-?[0-9]*):([a-z]+)$");
-	
+    private Pattern patternHead = Pattern.compile("head:(.+)$");
+
+    public ArrayList<String> fetureNames = new ArrayList<String>();
+
 	/**
-	 * 
+	 *
 	 * @param features — array with feature definitions
 	 */
 	public AnnotationFeatureGenerator(List<String> features){
 		for ( String feature : features ){
 			Matcher matcherBase = this.patternBase.matcher(feature);
 			if ( matcherBase.find() ){
-				this.features.add(new AnnotationFeatureContextBase(Integer.parseInt(matcherBase.group(1))));
+                AnnotationFeatureContextBase f = new AnnotationFeatureContextBase(Integer.parseInt(matcherBase.group(1)));
+                f.setFeatureName(feature);
+				this.features.add(f);
+                fetureNames.add(f.name);
                 continue;
 			}
             Matcher matcherDict = this.patternDict.matcher(feature);
             if ( matcherDict.find() ){
-                this.features.add(new AnnotationFeatureDict(matcherDict.group(2), matcherDict.group(1)));
+                AnnotationFeatureDict f = new AnnotationFeatureDict(matcherDict.group(2), matcherDict.group(1));
+                f.setFeatureName(feature);
+                this.features.add(f);
+                fetureNames.add(f.name);
+                continue;
+            }
+            Matcher matcherHead = this.patternHead.matcher(feature);
+            if(matcherHead.find()){
+                AnnotationFeatureHeadValue f = new AnnotationFeatureHeadValue(matcherHead.group(1));
+                f.setFeatureName(feature);
+                this.features.add(f);
+                fetureNames.add(f.name);
                 continue;
             }
             Matcher matcherMalt = this.patternMalt.matcher(feature);
             if ( matcherMalt.find() ){
-                this.maltFeatures.add(new AnnotationFeatureMalt(matcherMalt.group(1), Integer.parseInt(matcherMalt.group(2)), matcherMalt.group(3)));
+                AnnotationFeatureMalt f =new AnnotationFeatureMalt(matcherMalt.group(1), Integer.parseInt(matcherMalt.group(2)), matcherMalt.group(3));
+                f.setFeatureName(feature);
+                this.maltFeatures.add(f);
+                fetureNames.add(f.name);
                 continue;
             }
             Matcher matcherClosestBase = this.patternClosestBase.matcher(feature);
             if ( matcherClosestBase.find() ){
-                this.sentenceFeatures.add(new AnnotationFeatureClosestBase(matcherClosestBase.group(2), Integer.parseInt(matcherClosestBase.group(1))));
+                AnnotationFeatureClosestBase f = new AnnotationFeatureClosestBase(matcherClosestBase.group(2), Integer.parseInt(matcherClosestBase.group(1)));
+                f.setFeatureName(feature);
+                this.sentenceFeatures.add(f);
+                fetureNames.add(f.name);
                 continue;
             }
             Matcher matcherNeFirstBase = this.patternNeFirstBase.matcher(feature);
             if ( matcherNeFirstBase.find() ){
-                this.sentenceFeatures.add(new AnnotationFeatureNeFirstBase(matcherNeFirstBase.group(2), Integer.parseInt(matcherNeFirstBase.group(1))));
+                AnnotationFeatureNeFirstBase f = new AnnotationFeatureNeFirstBase(matcherNeFirstBase.group(2), Integer.parseInt(matcherNeFirstBase.group(1)));
+                f.setFeatureName(feature);
+                this.sentenceFeatures.add(f);
+                fetureNames.add(f.name);
             }
 		}
 	}
 
 	public List<String> generate(Annotation ann){
 		List<String> features = new ArrayList<String>();
-		for (AnnotationFeature afg : this.features)
+		for (AnnotationAtomicFeature afg : this.features)
 			features.add(afg.generate(ann));
-		return features;		
+		return features;
 	}
 
-    public List<HashMap<Annotation,String>> generate(Sentence sent, HashSet<Annotation> sentenceAnnotations){
-        List<HashMap<Annotation,String>> features = new ArrayList<HashMap<Annotation, String>>();
+    public LinkedHashMap<String, HashMap<Annotation, String>> generate(Sentence sent, LinkedHashSet<Annotation> sentenceAnnotations){
+        LinkedHashMap<String, HashMap<Annotation, String>> features = new LinkedHashMap<String, HashMap<Annotation, String>>();
+        for (AnnotationAtomicFeature afg : this.features){
+            HashMap<Annotation, String> atomicFeatureVals = new HashMap<Annotation, String>();
+            for(Annotation ann: sentenceAnnotations){
+                atomicFeatureVals.put(ann, afg.generate(ann));
+            }
+            features.put(afg.name, atomicFeatureVals);
+        }
+
         MaltFeatureSentence maltSent;
         if(!this.maltFeatures.isEmpty()){
             maltSent = prepareSentenceForMaltparser(sent, sentenceAnnotations);
             for (AnnotationFeatureMalt afg : this.maltFeatures)
-                features.add(afg.generate(maltSent.getMaltData(), maltSent.getAnnotationIndices()));
+            features.put(afg.name, afg.generate(maltSent.getMaltData(), maltSent.getAnnotationIndices()));
         }
         for (AnnotationSentenceFeature afg : this.sentenceFeatures)
-            features.add(afg.generate(sent, sentenceAnnotations));
+        features.put(afg.name, afg.generate(sent, sentenceAnnotations));
         return features;
     }
-	
+
 	public int getFeaturesCount(){
 		return this.features.size()+this.maltFeatures.size()+this.sentenceFeatures.size();
 	}
@@ -119,26 +140,24 @@ public class AnnotationFeatureGenerator {
         return tokens;
     }
 
-    public MaltFeatureSentence prepareSentenceForMaltparser(Sentence sent, HashSet<Annotation> sentenceAnnotations){
+    public MaltFeatureSentence prepareSentenceForMaltparser(Sentence sent, LinkedHashSet<Annotation> sentenceAnnotations){
+        //ToDo: zagnieżdżone anotacje są pomijane
         List<String[]> coNLLTokens = convertToCoNLL(sent);
-        HashMap<Integer, Annotation> annotatedTokens = new HashMap<Integer, Annotation>();
-        for( Annotation ann: sentenceAnnotations)
-            annotatedTokens.put(ann.getBegin(), ann);
-
+        Sentence tmpSent = sent.clone();
+        tmpSent.setAnnotations(new AnnotationSet(tmpSent, sentenceAnnotations));
         int newIdx = 1;
         HashMap<Annotation, Integer> wrappedAnnotationsIndexes = new HashMap<Annotation, Integer>();
         List<String[]> wrappedTokens = new ArrayList<String[]>();
         for(int tokIdx=0; tokIdx<coNLLTokens.size(); tokIdx++){
-            if(annotatedTokens.containsKey(tokIdx)){
-                Annotation ann =  annotatedTokens.get(tokIdx);
+            ArrayList<Annotation> tokenAnnotations = tmpSent.getChunksAt(tokIdx, null, true);
+            if(!tokenAnnotations.isEmpty()){
+                Annotation ann =  tokenAnnotations.get(0);
                 if(ann.getEnd() != tokIdx){
-                    List<String> tokens = new ArrayList<String>();
-                    boolean foundHead = false;
                     int headIdx = tokIdx;
                     for(Integer annTokIdx: ann.getTokens())
-                        if(!foundHead && coNLLTokens.get(annTokIdx)[4].equals("subst")){
+                        if(coNLLTokens.get(annTokIdx)[4].equals("subst")){
                             headIdx = tokIdx;
-                            foundHead =true;
+                            break;
                         }
                     tokIdx = ann.getEnd();
 
@@ -167,7 +186,6 @@ public class AnnotationFeatureGenerator {
         String[] dataForMalt = new String[wrappedTokens.size()];
         for(int i=0; i<wrappedTokens.size(); i++)
             dataForMalt[i] = join(Arrays.asList(wrappedTokens.get(i)), "\t");
-
         return new MaltFeatureSentence(dataForMalt, wrappedAnnotationsIndexes);
     }
 

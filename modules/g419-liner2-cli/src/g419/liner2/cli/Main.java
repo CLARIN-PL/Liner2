@@ -1,5 +1,6 @@
 package g419.liner2.cli;
 
+import g419.corpus.TerminateException;
 import g419.liner2.cli.action.Action;
 import g419.liner2.cli.action.ActionAnnotations;
 import g419.liner2.cli.action.ActionAgreement;
@@ -10,6 +11,7 @@ import g419.liner2.cli.action.ActionFeatureSelection;
 import g419.liner2.cli.action.ActionInteractive;
 import g419.liner2.cli.action.ActionLearningCurve;
 import g419.liner2.cli.action.ActionPipe;
+import g419.liner2.cli.action.ActionStats;
 import g419.liner2.cli.action.ActionTime;
 import g419.liner2.cli.action.ActionTrain;
 
@@ -46,6 +48,7 @@ public class Main {
     	main.registerAction(new ActionAgreement());
     	main.registerAction(new ActionEvalParent());
     	main.registerAction(new ActionLearningCurve());
+    	main.registerAction(new ActionStats());
     	
     	if ( args.length == 0 ){
     		main.printCredits();
@@ -71,6 +74,9 @@ public class Main {
     				action.parseOptions(args);
     				action.run();
     			}
+    			catch (TerminateException e){
+    				System.out.println(e.getMessage());
+    			}
     			catch (ParseException e) {
     				main.printCredits();
     				System.out.println(String.format("[Options parse error] %s\n", e.getMessage()));
@@ -79,6 +85,7 @@ public class Main {
 				}
                 catch (Exception e) {
                     System.out.println(e);
+                    e.printStackTrace();
                 }
     		}
     	}

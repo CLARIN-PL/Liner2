@@ -15,7 +15,7 @@ import org.maltparser.core.exception.MaltChainedException;
  * Time: 2:17 PM
  * To change this template use File | Settings | File Templates.
  */
-public class AnnotationFeatureMalt {
+public class AnnotationFeatureMalt extends AnnotationFeature{
 
     private MaltParserService malt;
     private String type;

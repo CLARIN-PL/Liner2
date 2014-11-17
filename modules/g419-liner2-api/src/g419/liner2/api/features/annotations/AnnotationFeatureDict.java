@@ -2,12 +2,16 @@ package g419.liner2.api.features.annotations;
 
 
 import g419.corpus.structure.Annotation;
+import g419.corpus.structure.Sentence;
+import g419.corpus.structure.Token;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.zip.DataFormatException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,8 +20,7 @@ import java.util.HashSet;
  * Time: 10:53 AM
  * To change this template use File | Settings | File Templates.
  */
-public class AnnotationFeatureDict extends AnnotationFeature {
-
+public class AnnotationFeatureDict extends AnnotationAtomicFeature {
 
     private HashSet<String> entries;
     private String form;
@@ -48,11 +51,25 @@ public class AnnotationFeatureDict extends AnnotationFeature {
 
     @Override
     public String generate(Annotation an) {
-        String annotationText;
+        String annotationText = null;
         if(form.equals("orth"))
             annotationText = an.getText();
         else if(form.equals("base"))
-            an.getBaseText();
-       return entries.contains(an.getText().toLowerCase())? "1": "0";
+            annotationText = an.getBaseText();
+
+        if(entries.contains(annotationText.toLowerCase())){
+            return "E";
+        }
+        else{
+            ArrayList<Token> sentenceTokens = an.getSentence().getTokens();
+            for(int tokenIdx: an.getTokens()){
+                String tokenText = sentenceTokens.get(tokenIdx).getAttributeValue(form).toLowerCase();
+                if(entries.contains(tokenText)){
+                    return "C";
+                }
+            }
+            return "O";
+        }
+
     }
 }

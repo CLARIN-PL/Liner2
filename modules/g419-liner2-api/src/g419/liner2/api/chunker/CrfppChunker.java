@@ -35,6 +35,7 @@ public class CrfppChunker extends Chunker
 	private int threads = 1;
 	private static final int MAX_TOKENS = 1000;
 	private List<Pattern> types = null;
+    private String trainingDataFileName = null;
 	
     public CrfppChunker() {
 		this.types = new ArrayList<Pattern>();
@@ -114,6 +115,7 @@ public class CrfppChunker extends Chunker
 		            
     @Override
 	public void train() throws Exception {
+        Logger.log("Training CRF classifer using features:\n" + this.template.printFeatures());
     	this.trainingFileWriter.close();
 		this.compileTagger();
     }
@@ -121,10 +123,17 @@ public class CrfppChunker extends Chunker
     @Override
     public void addTrainingData(Document paragraphSet) {
         Logger.log("Loading training data for CRF from document:" + paragraphSet.getName());
+//        System.out.println(paragraphSet.getAttributeIndex().allAtributes().toString());
     	// Utwórz tymczasowy plik do zapisu danych treningowych
     	if ( this.trainingFileWriter == null ){
     		try {
-    			this.trainingFile = new File("crf_iob.txt");
+                if(trainingDataFileName != null){
+                    this.trainingFile = new File(trainingDataFileName);
+                }
+                else{
+                    this.trainingFile = File.createTempFile("crf_iob", ".txt");
+                }
+                System.out.println("STORE TRAINING DATA IN: " + trainingFile.getAbsolutePath());
 				this.trainingFileWriter = new PrintWriter(this.trainingFile);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -138,6 +147,7 @@ public class CrfppChunker extends Chunker
     			for (int i = 0; i < tokens.size(); i++) {
     				String oStr = "";    				
     				for (int j = 0; j < numAttrs; j++){
+//                        System.out.println(tokens.get(i).getOrth() + ": " + tokens.get(i).attrIdx.getName(j));
     					String val = tokens.get(i).getAttributeValue(j);
     					if ( val != null)
     						val = val.length()==0 ? "NULL" : val.replaceAll("\\s+", "_");
@@ -145,6 +155,7 @@ public class CrfppChunker extends Chunker
     				}
                     String tokClass = sentence.getTokenClassLabel(i, this.types);
                     oStr += " " + tokClass;
+//                    System.out.println(oStr);
     				this.trainingFileWriter.write(oStr.trim() + "\n");
     			}
     			this.trainingFileWriter.write("\n");
@@ -220,6 +231,9 @@ public class CrfppChunker extends Chunker
 		
 	}
 
+    public CrfTemplate getTemplate(){
+        return template;
+    }
 	
 	/**
 	 * Klasa pomocnicza reprezentuje obiekt do generowania wywołania komendy crf
@@ -247,6 +261,10 @@ public class CrfppChunker extends Chunker
 	public void setModelFilename(String modelFilename) {
 		this.model_filename = modelFilename;		
 	}
+
+    public void setTrainingDataFilename(String trainingDataFilename) {
+        this.trainingDataFileName = trainingDataFilename;
+    }
 
 	@Override
 	public HashMap<Sentence, AnnotationSet> chunk(Document ps) {

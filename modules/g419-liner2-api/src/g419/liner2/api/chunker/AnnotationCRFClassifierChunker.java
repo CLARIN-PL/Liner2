@@ -1,6 +1,9 @@
 package g419.liner2.api.chunker;
 
 import g419.corpus.structure.*;
+import g419.liner2.api.features.AnnotationFeatureGenerator;
+import g419.liner2.api.features.TokenFeatureGenerator;
+import g419.liner2.api.features.TokenToAnnotationFeatureGenerator;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -13,15 +16,37 @@ public class AnnotationCRFClassifierChunker extends Chunker {
     private List<Pattern> list;
     private String base;
     private CrfppChunker baseChunker;
+    private TokenToAnnotationFeatureGenerator tokenToAnnotationFeatureGenerator;
+    private AnnotationFeatureGenerator annotationFeatureGenerator;
+    private int contextFeatureIndex;
 
-    public AnnotationCRFClassifierChunker(List<Pattern> list, String base, CrfppChunker baseChunker){
+    public AnnotationCRFClassifierChunker(List<Pattern> list, String base, CrfppChunker baseChunker, TokenFeatureGenerator gen, List<String> annotationFeatures, String featuresContext) throws Exception {
         this.list = list;
         this.base = base;
         this.baseChunker = baseChunker;
+        this.annotationFeatureGenerator = new AnnotationFeatureGenerator(annotationFeatures);
+        this.tokenToAnnotationFeatureGenerator = new TokenToAnnotationFeatureGenerator(gen);
+
+        for(String featureName: this.annotationFeatureGenerator.fetureNames){
+            if(!baseChunker.getTemplate().getFeatures().containsKey(featureName)){
+                baseChunker.getTemplate().addFeature(featureName+ ":" + featuresContext);
+//                    ToDo: Zdecydować czy warto generować cechy złożone z context dla cech anotacji
+                    String[] windowDesc = baseChunker.getTemplate().getFeatures().get(featureName);
+                    for(int i=1; i < windowDesc.length; i++){
+                        baseChunker.getTemplate().addFeature(featureName+":"+windowDesc[i]+"/context:0");
+                    }
+            }
+        }
     }
     @Override
     public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
-        Document wrapped = prepareData(ps, "classify");
+        Document wrapped = null;
+        try {
+            wrapped = prepareData(ps, "classify");
+        } catch (Exception e) {
+            System.out.println("AnnotationCRFClassifier: Error while preparing training data");
+            System.exit(1);
+        }
         HashMap<Sentence, AnnotationSet> chunked = baseChunker.chunk(wrapped);
         HashMap<Sentence, AnnotationSet> result = new HashMap<Sentence, AnnotationSet>();
         HashMap<String, Sentence> sentences = sentencesById(ps.getSentences());
@@ -43,6 +68,18 @@ public class AnnotationCRFClassifierChunker extends Chunker {
             }
             result.put(sent, newSet);
         }
+
+        for(Sentence sent: ps.getSentences()){
+            LinkedHashSet<Annotation> originalAnns = sent.getChunks();
+            for(Annotation newAnn: result.get(sent).chunkSet()){
+                for(Annotation oldAnn: originalAnns){
+                    if(newAnn.getTokens().equals(oldAnn.getTokens()) && !newAnn.getType().equals("nam") && oldAnn.getType().equals("nam")){
+                        originalAnns.remove(oldAnn);
+                        break;
+                    }
+                }
+            }
+        }
         return result;
     }
 
@@ -54,28 +91,35 @@ public class AnnotationCRFClassifierChunker extends Chunker {
         return mapped;
     }
 
-    public Document prepareData(Document doc, String mode){
+    public Document prepareData(Document doc, String mode) throws Exception {
         Paragraph whole = new Paragraph("wholeDoc");
         TokenAttributeIndex index = doc.getAttributeIndex().clone();
         index.addAttribute("context");
+        this.contextFeatureIndex = index.getLength() - 1;
+        for(String featureName: this.annotationFeatureGenerator.fetureNames){
+            index.addAttribute(featureName);
+        }
         for(Sentence sentence: doc.getSentences()){
-            HashMap<Integer, Annotation> annotationsByStart = filterAnnotations(sentence.getChunks(), mode);
-            Sentence prepared = wrapAnnotations(annotationsByStart, sentence, index);
+            Sentence workCopySent = sentence.clone();
+            workCopySent.setAttributeIndex(index);
+            generateAnnotationFeatures(workCopySent);
+            HashMap<Integer, Annotation> annotationsByStart = filterAnnotations(workCopySent.getChunks(), mode);
+            Sentence prepared = wrapAnnotations(annotationsByStart, workCopySent, index);
             prepared.setAttributeIndex(index);
             whole.addSentence(prepared);
         }
         Document crfppData = new Document(doc.getName(), index);
         crfppData.addParagraph(whole);
-
         return crfppData;
 
     }
 
-    private Sentence wrapAnnotations(HashMap<Integer, Annotation> annotationsByStarts, Sentence sentence, TokenAttributeIndex index){
+    private Sentence wrapAnnotations(HashMap<Integer, Annotation> annotationsByStarts, Sentence sentence, TokenAttributeIndex index) throws Exception {
         List<Token> tokens = sentence.getTokens();
         Sentence wrappedSentence = new Sentence();
         ArrayList<Token> wrappedTokens = new ArrayList<Token>();
         LinkedHashSet<Annotation> wrappedAnnotations = new LinkedHashSet<Annotation>();
+        HashMap<Token, Annotation> oldAnnotationData = new HashMap<Token, Annotation>();
 
         wrappedSentence.setTokens(wrappedTokens);
         wrappedSentence.setId(sentence.getId());
@@ -86,13 +130,10 @@ public class AnnotationCRFClassifierChunker extends Chunker {
                 Annotation chosen = annotationsByStarts.get(i);
                 newToken = findHead(chosen, sentence).clone();
                 newToken.setAttributeValue(index.getIndex("context"), "A");
-                // Chwilowe rozwiazanie dla cechy orth i base
-                newToken.setAttributeValue(index.getIndex("orth"), chosen.getText());
-                newToken.setAttributeValue(index.getIndex("base"), chosen.getBaseText());
-                // -----------------------------------
                 int newIndex = wrappedTokens.size();
                 newToken.setAttributeIndex(index);
                 wrappedTokens.add(newToken);
+                oldAnnotationData.put(newToken, chosen);
                 wrappedAnnotations.add(new Annotation(newIndex, newIndex, chosen.getType(), wrappedSentence));
                 i = chosen.getEnd();
             }
@@ -106,10 +147,35 @@ public class AnnotationCRFClassifierChunker extends Chunker {
 
         }
 
+        wrappedSentence.setAttributeIndex(index);
         wrappedSentence.setAnnotations(new AnnotationSet(wrappedSentence, wrappedAnnotations));
+        this.tokenToAnnotationFeatureGenerator.mapFeatures(wrappedSentence, oldAnnotationData);
+
         return  wrappedSentence;
 
     }
+
+    private void generateAnnotationFeatures(Sentence sent) throws Exception {
+        TokenAttributeIndex index = sent.getAttributeIndex();
+        LinkedHashSet<Annotation> annotations = new LinkedHashSet<Annotation>(sent.getChunks());
+        for(int i = 0; i < sent.getTokenNumber(); i++){
+            if(sent.getChunksAt(i, null).isEmpty()){
+                annotations.add(new Annotation(i,i,"token", sent));
+            }
+
+        }
+        LinkedHashMap<String, HashMap<Annotation, String>> annotationFeatures = this.annotationFeatureGenerator.generate(sent, annotations);
+        ArrayList<Token> tokens = sent.getTokens();
+        for(String featureName: annotationFeatures.keySet()){
+            HashMap<Annotation, String> feature = annotationFeatures.get(featureName);
+            for(Annotation ann: feature.keySet()){
+                for(int tokenIdx: ann.getTokens()){
+                    tokens.get(tokenIdx).setAttributeValue(index.getIndex(featureName), feature.get(ann));
+                }
+            }
+        }
+    }
+
 
     private Token findHead(Annotation ann, Sentence sentence){
         List<Token> tokens = sentence.getTokens();
@@ -164,4 +230,5 @@ public class AnnotationCRFClassifierChunker extends Chunker {
         }
         return annotationsByStart;
     }
+
 }
