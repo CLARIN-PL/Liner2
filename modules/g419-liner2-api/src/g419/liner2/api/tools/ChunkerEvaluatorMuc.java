@@ -197,12 +197,17 @@ public class ChunkerEvaluatorMuc {
     private void updateTypes(HashSet<String> newTypes){
         for(String newType: newTypes){
             if(!this.types.contains(newType)){
-                for(Pattern patt: this.patterns){
-                    if(patt.matcher(newType).find()){
-                        this.types.add(newType);
-                        break;
-                    }
+                if(this.patterns != null && !this.patterns.isEmpty()){
+                    for(Pattern patt: this.patterns){
+                        if(patt.matcher(newType).find()){
+                            this.types.add(newType);
+                            break;
+                        }
 
+                    }
+                }
+                else{
+                    this.types.add(newType);
                 }
             }
         }
@@ -261,7 +266,7 @@ public class ChunkerEvaluatorMuc {
 	 */
 	public void printResults(){
 		this.printHeader("MUC match evaluation");
-		System.out.println("        Annotation           &  COR &  ACT &  POS &"
+		System.out.println("        Annotation                     &     COR &     ACT &     POS &"
 			+ " Precision & Recall  & F$_1$   \\\\");
 		System.out.println("\\hline");
         ArrayList<String> types = new ArrayList<String>(this.types);
@@ -275,7 +280,7 @@ public class ChunkerEvaluatorMuc {
 			float r = (tp + fn == 0) ? 0 :  (float)tp / ((float)tp + (float)fn);
 			float f = (p + r == 0) ? 0 :2*p*r / ( p + r);
 			
-			System.out.println(String.format("        %-20s & %4d & %4d & %4d &   %6.2f%% & %6.2f%% & %6.2f%% \\\\", 
+			System.out.println(String.format("        %-30s & %7d & %7d & %7d &   %6.2f%% & %6.2f%% & %6.2f%% \\\\",
 					type, tp, fp, fn, p*100, r*100, f*100));
 		}
 		System.out.println("\\hline");

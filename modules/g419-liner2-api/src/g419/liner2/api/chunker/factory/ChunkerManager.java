@@ -4,6 +4,7 @@ package g419.liner2.api.chunker.factory;
 
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
+import g419.corpus.structure.CrfTemplate;
 import g419.corpus.structure.Document;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
@@ -28,6 +29,7 @@ public class ChunkerManager {
     public LinerOptions opts;
     public ArrayList<Document> trainingData;
     public ArrayList<Document> testData;
+    private HashMap<String, CrfTemplate> chunkerTemplates = new HashMap<String, CrfTemplate>();
 
     public ChunkerManager(LinerOptions config){
         opts = config;
@@ -43,6 +45,19 @@ public class ChunkerManager {
             Chunker chunker = ChunkerFactory.createChunker(chunkerDesc, this);
             addChunker(chunkerDesc.getName().substring(8), chunker);
         }
+    }
+
+    public void resetChunkers(){
+        chunkers = new HashMap<String, Chunker>();
+    }
+
+
+    public void setChunkerTemplate(String chunkerName, CrfTemplate template){
+        chunkerTemplates.put(chunkerName, template);
+    }
+
+    public CrfTemplate getChunkerTemplate(String chunkerName){
+        return chunkerTemplates.containsKey(chunkerName) ? chunkerTemplates.get(chunkerName) : null;
     }
 
     public void addChunker(String name, Chunker chunker) {
@@ -68,7 +83,9 @@ public class ChunkerManager {
         testData = new ArrayList<Document>();
         Document document = reader.nextDocument();
         while ( document != null ){
-            gen.generateFeatures(document);
+            if(gen != null){
+                gen.generateFeatures(document);
+            }
             testData.add(document);
             document = reader.nextDocument();
         }
@@ -78,7 +95,9 @@ public class ChunkerManager {
         trainingData = new ArrayList<Document>();
         Document document = reader.nextDocument();
         while ( document != null ){
-            gen.generateFeatures(document);
+            if(gen != null){
+                gen.generateFeatures(document);
+            }
             trainingData.add(document);
             document = reader.nextDocument();
         }

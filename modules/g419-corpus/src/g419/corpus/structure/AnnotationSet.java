@@ -30,7 +30,7 @@ public class AnnotationSet {
 		this.chunks.remove(chunk);
 	}
 	
-	public HashSet<Annotation> chunkSet(){
+	public LinkedHashSet<Annotation> chunkSet(){
 		return chunks;
 	}
 

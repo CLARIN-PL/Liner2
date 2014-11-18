@@ -90,26 +90,26 @@ public class TokenFeatureFactory {
         else if (feature.startsWith("synonym")){
         	String[] fData = feature.split(":");
         	if(fData.length != 2)
-    			throw new DataFormatException("Invalid feaeture description: "+feature);
+    			throw new DataFormatException("Invalid feature description: "+feature);
         	if(database == null)
         		database = new WordnetLoader(fData[1]);
         	return new SynonymFeature(fData[0], database);
         }
         else if (feature.startsWith("hypernym")){
         	String[] fData = feature.split(":");
-        	if(fData.length != 3)
-    			throw new DataFormatException("Invalid feaeture description: "+feature);
+        	if(fData.length != 2)
+    			throw new DataFormatException("Invalid feature description: "+feature);
         	if(database == null)
-        		database = new WordnetLoader(fData[2]);
-        	return new HypernymFeature(fData[0]+fData[1], database, Integer.parseInt(fData[1]));
+        		database = new WordnetLoader(fData[1]);
+        	return new HypernymFeature(fData[0], database, Integer.parseInt(fData[0].split("-")[1]));
         }
         else if (feature.startsWith("top4hyper")){
         	String[] fData = feature.split(":");
-        	if(fData.length != 3)
-    			throw new DataFormatException("Invalid feaeture description: "+feature);
+        	if(fData.length != 2)
+    			throw new DataFormatException("Invalid feature description: "+feature);
         	if(database == null)
-        		database = new WordnetLoader(fData[2]);
-        	return new TopHyperFeature(fData[0]+fData[1], database, Integer.parseInt(fData[1]));
+        		database = new WordnetLoader(fData[1]);
+        	return new TopHyperFeature(fData[0], database, Integer.parseInt(fData[0].split("-")[1]));
         }		
         else if (sourceFeats.contains(feature))  //zwroci null dla orth, base i ctag bo sa pobierane z pliku zrodlowego wiec nie potrzebe sa dla nich generatory
         	return null;

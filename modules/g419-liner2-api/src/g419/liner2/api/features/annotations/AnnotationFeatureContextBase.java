@@ -2,7 +2,7 @@ package g419.liner2.api.features.annotations;
 
 import g419.corpus.structure.Annotation;
 
-public class AnnotationFeatureContextBase extends AnnotationFeature {
+public class AnnotationFeatureContextBase extends AnnotationAtomicFeature {
 
 	private int offset = 0;
 	

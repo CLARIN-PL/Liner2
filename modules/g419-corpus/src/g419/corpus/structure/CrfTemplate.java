@@ -1,13 +1,11 @@
 package g419.corpus.structure;
 
 
+import g419.corpus.Logger;
 import g419.corpus.io.DataFormatException;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Hashtable;
-import java.util.Set;
+import java.util.*;
 
 
 public class CrfTemplate {
@@ -16,7 +14,7 @@ public class CrfTemplate {
     TokenAttributeIndex attributeIndex;
 	
 	public void addFeature(String description) throws Exception {
-		System.out.println(description);
+        Logger.log("(TemplateFactory) Adding feature:" + description);
 		String[] featureUnits = description.split("/");
 		if (featureUnits.length < 1)
 			throw new Exception("Invalid template description: " + description);
@@ -182,5 +180,21 @@ public class CrfTemplate {
 
     public void setAttributeIndex(TokenAttributeIndex attributeIndex){
         this.attributeIndex = attributeIndex;
+    }
+
+    public String printFeatures(){
+        StringBuilder sb = new StringBuilder();
+        for (String featureName : featureNames){
+            if (featureName.indexOf('/') > -1) {
+                sb.append(featureName.replace('/', '_') + "\n");
+            }
+            else{
+                String[] windowDesc = features.get(featureName);
+                for (int j = 1; j < windowDesc.length; j++) {
+                    sb.append(String.format("%s[%s]\n",featureName, windowDesc[j]));
+                }
+            }
+        }
+        return  sb.toString();
     }
 }

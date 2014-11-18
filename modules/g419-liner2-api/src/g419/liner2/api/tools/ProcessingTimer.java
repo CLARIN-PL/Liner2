@@ -6,6 +6,7 @@ import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 
@@ -93,7 +94,7 @@ public class ProcessingTimer {
 	}
 	
 	public void printStats(){
-		float milisec = 1000000000f; 
+		float nanosec = 1000000000f;
 		System.out.println("====================================================");
 		System.out.println("Processing time");
 		System.out.println("====================================================");
@@ -106,16 +107,39 @@ public class ProcessingTimer {
 			else
 				suffix = "(not in total time)";
 			
-			System.out.println(String.format("%d) %-20s : %7.2f s %s", i++, task.getLabel(), (float)task.getTime()/milisec, suffix));
+			System.out.println(String.format("%d) %-20s : %10s %s", i++, task.getLabel(), timetoString(task.getTime()), suffix));
 		}
 		
 		System.out.println("----------------------------------------------------");
-		System.out.println(String.format("## %-20s   %7.2f s", "Total time", (float)totalTime/milisec));
+		System.out.println(String.format("## %-20s   %10s", "Total time", timetoString(totalTime)));
 		System.out.println("----------------------------------------------------");
 		System.out.println(String.format("Tokens           : %8d", this.tokensNumber));
 		System.out.println(String.format("Text kB          : %11.2f", (float)this.textSize / 1024f ));
-		System.out.println(String.format("Tokens  / second : %11.2f", (float)this.tokensNumber / (totalTime/milisec) ));
-		System.out.println(String.format("Text kB / second : %11.2f", (float)this.textSize / 1024f / (totalTime/milisec) ));
+		System.out.println(String.format("Tokens  / second : %11.2f", (float)this.tokensNumber / (totalTime/nanosec) ));
+		System.out.println(String.format("Text kB / second : %11.2f", (float)this.textSize / 1024f / (totalTime/nanosec) ));
 		System.out.println("----------------------------------------------------");
 	}
+
+    private String timetoString(long time){
+        long secondsInNano = 1000000000;
+        long minutesInMilli = secondsInNano * 60;
+        long hoursInMilli = minutesInMilli * 60;
+
+        long elapsedHours = time / hoursInMilli;
+        time = time % hoursInMilli;
+
+        long elapsedMinutes = time / minutesInMilli;
+        time = time % minutesInMilli;
+
+        long elapsedSeconds = time / secondsInNano;
+
+        String hours = elapsedHours > 0 ? String.format("%02d", elapsedHours) : "--";
+        String minutes = elapsedHours > 0 || elapsedMinutes > 0 ? String.format("%02d", elapsedMinutes) : "--";
+
+        return String.format(
+                "%sh %sm %02ds",
+                hours, minutes, elapsedSeconds);
+    }
+
+
 }

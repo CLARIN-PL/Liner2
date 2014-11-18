@@ -38,8 +38,10 @@ public class CascadeChunker extends Chunker {
 			Sentence sentence = ps.getSentences().get(i);
 			AnnotationSet set = new AnnotationSet(sentence);
 			for ( Annotation an : document.getSentences().get(i).getChunks() )
-				if ( !sentence.getChunks().contains(an) )
-					set.addChunk(an);
+				if ( !sentence.getChunks().contains(an) ){
+                    an.setSentence(sentence);
+                    set.addChunk(an);
+                }
 			chunkings.put(sentence, set);
 		}
 		

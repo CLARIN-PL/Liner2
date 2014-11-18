@@ -172,6 +172,8 @@ public class CclSaxParser extends DefaultHandler {
                 if (tag.getDisamb()) {
                     currentToken.setAttributeValue(attributeIndex.getIndex("base"), tag.getBase());
                     currentToken.setAttributeValue(attributeIndex.getIndex("ctag"), tag.getCtag());
+                    foundDisamb = true;
+                    break;
                 }
             }
             if (!foundDisamb){

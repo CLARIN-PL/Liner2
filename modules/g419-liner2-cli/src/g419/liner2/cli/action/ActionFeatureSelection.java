@@ -1,6 +1,7 @@
 package g419.liner2.cli.action;
 
 import g419.corpus.Logger;
+import g419.corpus.io.DataFormatException;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.BatchReader;
 import g419.corpus.io.reader.ReaderFactory;
@@ -40,9 +41,14 @@ public class ActionFeatureSelection extends Action {
 	public static final String OPTION_TEMPLATES = "T";
 	public static final String OPTION_TEMPLATES_LONG = "templates";
 
+    public static final String OPTION_CHUNKER = "C";
+    public static final String OPTION_CHUNKER_LONG = "chunker";
+
 	private String input_file = null;
 	private String input_format = null;
 	private HashMap<String, CrfTemplate> templates = new HashMap<String, CrfTemplate>();
+    private TokenFeatureGenerator gen;
+    private String chunker = null;
 
 	@SuppressWarnings("static-access")
 	public ActionFeatureSelection() {
@@ -57,6 +63,10 @@ public class ActionFeatureSelection extends Action {
 				.withDescription("file with paths to template files")
 				.withLongOpt(OPTION_TEMPLATES_LONG).isRequired()
 				.create(OPTION_TEMPLATES));
+        this.options.addOption(OptionBuilder.withArgName("chunker").hasArg()
+                .withDescription("chunker used for testing features")
+                .withLongOpt(OPTION_CHUNKER_LONG).isRequired()
+                .create(OPTION_CHUNKER));
 	}
 
 	@Override
@@ -64,6 +74,7 @@ public class ActionFeatureSelection extends Action {
 		CommandLine line = new GnuParser().parse(this.options, args);
 		parseDefault(line);
 		loadTemplates(line.getOptionValue(OPTION_TEMPLATES));
+        chunker = line.getOptionValue(OPTION_CHUNKER);
 		this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
 		this.input_format = line.getOptionValue(
 				CommonOptions.OPTION_INPUT_FORMAT, "ccl");
@@ -97,7 +108,6 @@ public class ActionFeatureSelection extends Action {
 					"Parameter 'chunker' in 'main' section of model not set");
 		}
 		// not nice solution - but initializes all objects with full feature set
-		eval();
 		Iterator<Entry<String, CrfTemplate>> it = templates.entrySet()
 				.iterator();
 		System.out.println("#FS: begin");
@@ -143,7 +153,9 @@ public class ActionFeatureSelection extends Action {
 				ct.getFeatures().remove(currentFeatureName);
 				System.out.println("#FS: checking feature: "
 						+ currentFeatureName);
-				localEvaluator = eval();
+                ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
+                cm.setChunkerTemplate(chunker, ct);
+                localEvaluator = eval(cm);
 				float currentFMeasure = localEvaluator.getFMeasure();
 				if (currentFMeasure > localBestFMeasure) {
 					System.out.println("#FS: current local best to remove: "
@@ -219,7 +231,10 @@ public class ActionFeatureSelection extends Action {
 						features.get(currentFeatureName));
 				System.out.println("#FS: checking feature: "
 						+ currentFeatureName);
-				localEvaluator = eval();
+                ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
+                cm.setChunkerTemplate(chunker, ct);
+				localEvaluator = eval(cm);
+
 				float currentFMeasure = localEvaluator.getFMeasure();
 				if (currentFMeasure > localBestFMeasure) {
 					System.out.println("#FS: current local best: "
@@ -262,11 +277,13 @@ public class ActionFeatureSelection extends Action {
 			System.out.println("#FS: >> " + finalIt.next());
 	}
 
-	private ChunkerEvaluator eval() throws Exception {
+	private ChunkerEvaluator eval(ChunkerManager cm) throws Exception {
 
 		ChunkerEvaluator result = null;
 		ProcessingTimer timer = new ProcessingTimer();
-		TokenFeatureGenerator gen = null;
+        if (!LinerOptions.getGlobal().features.isEmpty()){
+            this.gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
+        }
 
 		System.out.print("Annotations to evaluate:");
 		if (LinerOptions.getGlobal().getTypes().isEmpty()) {
@@ -286,163 +303,155 @@ public class ActionFeatureSelection extends Action {
 		}
 		System.out.println();
 
-		if (this.input_format.startsWith("cv:")) {
-			ChunkerEvaluator globalEval = new ChunkerEvaluator(LinerOptions
-					.getGlobal().getTypes());
-			ChunkerEvaluatorMuc globalEvalMuc = new ChunkerEvaluatorMuc(
-					LinerOptions.getGlobal().getTypes());
+        if (this.input_format.startsWith("cv:")){
+            ChunkerEvaluator globalEval = new ChunkerEvaluator(LinerOptions.getGlobal().types, true);
+            ChunkerEvaluatorMuc globalEvalMuc = new ChunkerEvaluatorMuc(LinerOptions.getGlobal().types);
 
-			// this.input_format = this.input_format.substring(3);
-			LinerOptions.getGlobal().setCVDataFormat(
-					this.input_format.substring(3));
-			ArrayList<List<String>> folds = loadFolds();
-			for (int i = 0; i < folds.size(); i++) {
-				timer.startTimer("fold " + (i + 1));
-				System.out
-						.println("***************************************** FOLD "
-								+ (i + 1)
-								+ " *****************************************");
-				String trainSet = getTrainingSet(i, folds);
-				String testSet = getTestingSet(i, folds);
-				LinerOptions.getGlobal().setCVTrainData(trainSet);
-				AbstractDocumentReader reader = new BatchReader(
-						IOUtils.toInputStream(testSet), "",
-						this.input_format.substring(3));
-				evaluate(reader, gen, globalEval);
-				timer.stopTimer();
+            String input_format = this.input_format.substring(3);
+            LinerOptions.getGlobal().setCVDataFormat(this.input_format);
+            ArrayList<List<String>> folds = loadFolds();
+            for(int i=0; i < folds.size(); i++){
+                timer.startTimer("fold "+ (i + 1));
+                System.out.println("***************************************** FOLD " + (i + 1) + " *****************************************");
+                String trainSet = getTrainingSet(i, folds);
+                String testSet = getTestingSet(i, folds);
+                cm.loadTrainData(new BatchReader(IOUtils.toInputStream(trainSet), "", input_format), this.gen);
+                cm.loadTestData(new BatchReader(IOUtils.toInputStream(testSet), "", input_format), this.gen);
+                AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet), "", input_format);
+                evaluate(reader, gen, cm, globalEval, globalEvalMuc);
+                timer.stopTimer();
 
-			}
 
-			System.out
-					.println("***************************************** SUMMARY *****************************************");
-			globalEval.printResults();
-			globalEvalMuc.printResults();
-			System.out.println("");
-			timer.printStats();
-			result = globalEval;
-		} else
-			result = evaluate(
-					ReaderFactory.get().getStreamReader(this.input_file,
-							this.input_format), gen, null);
+            }
+
+            System.out.println("***************************************** SUMMARY *****************************************");
+            globalEval.printResults();
+            globalEvalMuc.printResults();
+            System.out.println("");
+            timer.printStats();
+            result = globalEval;
+        }
+        else{
+            System.out.println("INPUT: " + this.input_file + " | " + this.input_format);
+            cm.loadTestData(ReaderFactory.get().getStreamReader(this.input_file, this.input_format), gen);
+            result = evaluate(ReaderFactory.get().getStreamReader(this.input_file, this.input_format),
+                    gen, cm, null, null);
+        }
 		return result;
 	}
 
-	private ChunkerEvaluator evaluate(AbstractDocumentReader dataReader,
-			TokenFeatureGenerator gen, ChunkerEvaluator globalEval)
-			throws Exception {
+    private ChunkerEvaluator evaluate(AbstractDocumentReader dataReader, TokenFeatureGenerator gen, ChunkerManager cm,
+                                      ChunkerEvaluator globalEval, ChunkerEvaluatorMuc globalEvalMuc) throws Exception {
+        ProcessingTimer timer = new ProcessingTimer();
+        timer.startTimer("Model loading");
+        cm.resetChunkers();
+        cm.loadChunkers();
+        Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
+        timer.stopTimer();
 
-		ProcessingTimer timer = new ProcessingTimer();
-		timer.startTimer("Model loading");
-		ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
-		cm.loadChunkers();
-		Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal()
-				.getOptionUse());
-		if (!LinerOptions.getGlobal().features.isEmpty()) {
-			gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
-		}
-		timer.stopTimer();
 
-		/* Create all defined chunkers. */
-		ChunkerEvaluator eval = new ChunkerEvaluator(LinerOptions.getGlobal()
-				.getTypes());
-		ChunkerEvaluatorMuc evalMuc = new ChunkerEvaluatorMuc(LinerOptions
-				.getGlobal().getTypes());
+    	/* Create all defined chunkers. */
+        ChunkerEvaluator eval = new ChunkerEvaluator(LinerOptions.getGlobal().types);
+        ChunkerEvaluatorMuc evalMuc = new ChunkerEvaluatorMuc(LinerOptions.getGlobal().types);
 
-		timer.startTimer("Data reading");
-		Document ps = dataReader.nextDocument();
-		timer.stopTimer();
+        timer.startTimer("Data reading");
+        Document ps = dataReader.nextDocument();
+        timer.stopTimer();
 
-		HashMap<Sentence, AnnotationSet> chunkings = null;
-		while (ps != null) {
+        HashMap<Sentence, AnnotationSet> chunkings = null;
+        while ( ps != null ){
 
-			/* Get reference set of annotations */
-			HashMap<Sentence, AnnotationSet> referenceChunks = ps
-					.getChunkings();
+    		/* Get reference set of annotations */
+            HashMap<Sentence, AnnotationSet> referenceChunks = ps.getChunkings();
 
-			/* Remove annotations from data */
-			ps.removeAnnotations();
+    		/* Remove annotations from data */
+            ps.removeAnnotations();
 
-			/* Generate features */
-			timer.startTimer("Feature generation");
-			if (gen != null)
-				gen.generateFeatures(ps);
-			timer.stopTimer();
+    		/* Generate features */
+            timer.startTimer("Feature generation");
+            if ( gen != null )
+                gen.generateFeatures(ps);
+            timer.stopTimer();
 
-			timer.startTimer("Chunking");
-			chunker.prepare(ps);
-			try {
-				chunkings = chunker.chunk(ps);
-			} catch (Exception ex) {
-				System.err.println("Failed to chunk a sentence in document "
-						+ ps.getName());
-				ex.printStackTrace(System.err);
-				chunkings = new HashMap<Sentence, AnnotationSet>();
-			}
-			timer.stopTimer();
+            timer.startTimer("Chunking");
+            chunker.prepare(ps);
+            try{
+                chunkings = chunker.chunk(ps);
+            }
+            catch(Exception ex){
+                System.err.println("Failed to chunk a sentence in document " + ps.getName());
+                ex.printStackTrace(System.err);
+                chunkings = new HashMap<Sentence, AnnotationSet>();
+            }
+            timer.stopTimer();
 
-			timer.startTimer("Evaluation", false);
-			timer.addTokens(ps);
-			if (globalEval != null)
-				globalEval.evaluate(ps, chunkings, referenceChunks);
-			eval.evaluate(ps, chunkings, referenceChunks);
-			evalMuc.evaluate(ps, chunkings, referenceChunks);
-			timer.stopTimer();
+            timer.startTimer("Evaluation", false);
+            timer.addTokens(ps);
+            if(globalEval != null){
+                globalEval.evaluate(ps, chunkings, referenceChunks);
+                globalEvalMuc.evaluate(ps, chunkings, referenceChunks);
+            }
+            eval.evaluate(ps, chunkings, referenceChunks);
+            evalMuc.evaluate(ps, chunkings, referenceChunks);
+            timer.stopTimer();
 
-			timer.startTimer("Data reading");
-			ps = dataReader.nextDocument();
-			timer.stopTimer();
-		}
+            timer.startTimer("Data reading");
+            ps = dataReader.nextDocument();
+            timer.stopTimer();
+        }
 
-		eval.printResults();
-		evalMuc.printResults();
-		timer.printStats();
-		return eval;
-	}
+        eval.printResults();
+        evalMuc.printResults();
+        timer.printStats();
+        return eval;
+    }
 
-	private ArrayList<List<String>> loadFolds() throws IOException {
-		ArrayList<List<String>> folds = new ArrayList<List<String>>();
-		/** Wczytaj listy plików */
-		File sourceFile = new File(this.input_file);
-		String root = sourceFile.getParentFile().getAbsolutePath();
-		BufferedReader bf = new BufferedReader(new InputStreamReader(
-				new FileInputStream(sourceFile)));
+    private ArrayList<List<String>> loadFolds() throws IOException, DataFormatException {
+        ArrayList<List<String>> folds = new ArrayList<List<String>>();
+        /** Wczytaj listy plików */
+        File sourceFile = new File(this.input_file);
+        String root = sourceFile.getParentFile().getAbsolutePath();
+        BufferedReader bf = new BufferedReader(new InputStreamReader(new FileInputStream(sourceFile)));
 
-		String line = bf.readLine();
-		while (line != null) {
-			String[] fileData = line.split("\t");
-			String file = fileData[0];
-			int fold = Integer.parseInt(fileData[1]);
-			if (!file.startsWith("/")) {
-				file = root + "/" + file;
-			}
-			while (folds.size() < (fold)) {
-				folds.add(new ArrayList<String>());
-			}
-			folds.get(fold - 1).add(file);
-			line = bf.readLine();
-		}
-		bf.close();
+        String line = bf.readLine();
+        while ( line != null ){
+            String[] fileData = line.split("\t");
+            if(fileData.length != 2){
+                throw new DataFormatException("Incorrect line in folds file: "+this.input_file+"\\"+line+"\nProper line format: {file_name}\\t{fold_nr}");
+            }
+            String file = fileData[0];
+            int fold = Integer.parseInt(fileData[1]);
+            if (!file.startsWith("/")) {
+                file = root + "/" + file;
+            }
+            while(folds.size() < (fold)) {
+                folds.add(new ArrayList<String>());
+            }
+            folds.get(fold - 1).add(file);
+            line = bf.readLine();
+        }
+        bf.close();
 
-		return folds;
+        return folds;
 
-	}
+    }
 
-	private String getTrainingSet(int fold, ArrayList<List<String>> folds) {
-		StringBuilder sbtrain = new StringBuilder();
+    private String getTrainingSet(int fold, ArrayList<List<String>> folds){
+        StringBuilder sbtrain = new StringBuilder();
 
-		for (int i = 0; i < folds.size(); i++) {
-			if (i != fold)
-				for (String line : folds.get(i))
-					sbtrain.append(line + "\n");
-		}
-		return sbtrain.toString().trim();
-	}
+        for ( int i = 0; i< folds.size(); i++){
+            if ( i != fold )
+                for ( String line : folds.get(i))
+                    sbtrain.append(line + "\n");
+        }
+        return sbtrain.toString().trim();
+    }
 
-	private String getTestingSet(int fold, ArrayList<List<String>> folds) {
-		StringBuilder sbtrain = new StringBuilder();
-		for (String line : folds.get(fold))
-			sbtrain.append(line + "\n");
-		return sbtrain.toString().trim();
-	}
+    private String getTestingSet(int fold, ArrayList<List<String>> folds){
+        StringBuilder sbtrain = new StringBuilder();
+        for ( String line : folds.get(fold))
+            sbtrain.append(line + "\n");
+        return sbtrain.toString().trim();
+    }
 
 }

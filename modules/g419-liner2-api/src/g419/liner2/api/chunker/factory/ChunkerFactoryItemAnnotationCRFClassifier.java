@@ -12,6 +12,8 @@ import g419.liner2.api.features.TokenFeatureGenerator;
 import g419.corpus.Logger;
 import g419.liner2.api.tools.TemplateFactory;
 import org.ini4j.Ini;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -36,18 +38,41 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
             }
         }
         String mode = description.get("mode");
+
         if(mode.equals("train")){
             return train(description, cm);
         }
         else if(mode.equals("load")){
-            return load(description);
+            return load(description, cm);
         }
         else{
             throw new Exception("Unrecognized mode for CRFPP annotation classifier: " + mode + "(Valid: train/load)");
         }
     }
 
-    private Chunker load(Ini.Section description) {
+    private List<String> parseAnnotationFeatures(String filePath) throws IOException {
+        List<String> features = new ArrayList<String>();
+        if(filePath != null) {
+            File featuresFile = new File(filePath);
+            if (!featuresFile.exists()) {
+                throw new FileNotFoundException("Error while parsing features:" + filePath + " is not an existing file!");
+            }
+            String iniPath = featuresFile.getAbsoluteFile().getParentFile().getAbsolutePath();
+            BufferedReader br = new BufferedReader(new FileReader(featuresFile));
+            StringBuffer sb = new StringBuffer();
+            String feature = br.readLine();
+            while (feature != null) {
+                if (!feature.isEmpty() && !feature.startsWith("#")) {
+                    feature = feature.trim().replace("{INI_PATH}", iniPath);
+                    features.add(feature);
+                }
+                feature = br.readLine();
+            }
+        }
+        return features;
+    }
+
+    private Chunker load(Ini.Section description, ChunkerManager cm) throws Exception {
 
 
         String store = description.get("store");
@@ -55,7 +80,10 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
         Logger.log("--> CRFPP Chunker deserialize from " + store);
         CrfppChunker baseChunker = new CrfppChunker();
         baseChunker.deserialize(store);
-        AnnotationCRFClassifierChunker chunker = new AnnotationCRFClassifierChunker(null, description.get("base"), baseChunker);
+        CrfTemplate template = createTemplate(description.get("template"), description.get("context"));
+        baseChunker.setTemplate(template);
+        TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
+        AnnotationCRFClassifierChunker chunker = new AnnotationCRFClassifierChunker(null, description.get("base-annotation"), baseChunker, gen, parseAnnotationFeatures(description.get("annotation-features")), description.get("context"));
 
         return chunker;
     }
@@ -86,15 +114,13 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
         List<Pattern> list = LinerOptions.getGlobal().parseTypes(description.get("types"));
 
         CrfppChunker baseChunker = new CrfppChunker(Integer.parseInt(description.get("threads")), list);
+        baseChunker.setTrainingDataFilename(description.get("store-training-data"));
         baseChunker.setModelFilename(modelFilename);
-        String templateData = description.get("template");
         Logger.log("--> Training on file=" + inputFile);
 
-        AnnotationCRFClassifierChunker chunker = new AnnotationCRFClassifierChunker(list, description.get("base-annotation"), baseChunker);
-
-
-        CrfTemplate template = TemplateFactory.parseTemplate(templateData);
-        template.addFeature("context:"+description.get("context"));
+        CrfTemplate template = createTemplate(description.get("template"), description.get("context"));
+        baseChunker.setTemplate(template);
+        AnnotationCRFClassifierChunker chunker = new AnnotationCRFClassifierChunker(list, description.get("base-annotation"), baseChunker, gen, parseAnnotationFeatures(description.get("annotation-features")), description.get("context"));
 
         for(Document document: trainData){
             gen.generateFeatures(document);
@@ -104,10 +130,23 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
                 template.setAttributeIndex(wrapped.getAttributeIndex());
             }
         }
-        baseChunker.setTemplate(template);
         baseChunker.train();
 
         return chunker;
 
+    }
+
+    private CrfTemplate createTemplate(String templateData, String context) throws Exception {
+        CrfTemplate template = TemplateFactory.parseTemplate(templateData);
+        template.addFeature("context:" + context);
+        for(String feature: new ArrayList<String>(template.getFeatureNames())){
+            if(!(feature.contains("/") || feature.equals("context"))){
+                String[] windowDesc = template.getFeatures().get(feature);
+                for(int i=1; i < windowDesc.length; i++){
+                    template.addFeature(feature + ":" + windowDesc[i] + "/context:0");
+                }
+            }
+        }
+        return  template;
     }
 }
