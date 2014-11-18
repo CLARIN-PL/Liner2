@@ -30,12 +30,17 @@
         <copy file="modules/g419-liner2-daemon/g419-liner2-daemon.jar" todir="./lib"></copy>
     </target>
 
+    <target name="jar-tools">
+        <exec dir="modules/g419-tools" executable="ant"><arg line="jar"/></exec>
+        <copy file="modules/g419-tools/g419-tools.jar" todir="./lib"></copy>
+    </target>
+
 	<target name="jar-liner2-api-all" depends="jar-corpus,jar-liner2-api"></target>
 	
 	<target name="jar-liner2-cli-all" depends="jar-corpus,jar-liner2-api,jar-liner2-cli"></target>
 
     <target name="jar-liner2-daemon-all" depends="jar-corpus,jar-liner2-api,jar-liner2-daemon"></target>
-		
+
 	<target name="jar" depends="jar-corpus,jar-liner2-relations,jar-liner2-api,jar-liner2-cli,jar-liner2-daemon"></target>
 
 	
