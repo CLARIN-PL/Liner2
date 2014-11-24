@@ -23,7 +23,7 @@ public class BatchWriter extends AbstractDocumentWriter {
 	public BatchWriter(String outputIndex, String format) {
 		this.outputIndex = outputIndex;
         this.format = format;
-        if(format.equals("ccl")){
+        if(format.equals("ccl") || format.equals("ccl_rel")){
             extension = ".xml";
         }
         else if(format.equals("iob")){
@@ -74,6 +74,10 @@ public class BatchWriter extends AbstractDocumentWriter {
                 if (this.format.equals("tei")){
                     file.mkdirs();
                     writer = WriterFactory.get().getTEIWriter(file.getAbsolutePath());
+                }
+                else if( this.format.equals("ccl_rel")){
+                	file.getParentFile().mkdirs();
+                	writer = WriterFactory.get().getCclRelWriter(file.getAbsolutePath());
                 }
                 else{
                     file.getParentFile().mkdirs();

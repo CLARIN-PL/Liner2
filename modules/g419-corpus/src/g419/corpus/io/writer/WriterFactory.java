@@ -54,6 +54,14 @@ public class WriterFactory {
 		else		
 			throw new Exception("Output format " + outputFormat + " not recognized.");
 	}
+	
+	public AbstractDocumentWriter getCclRelWriter(String outputFile) throws FileNotFoundException{
+		String outputXml = outputFile;
+		String outputRelXml = outputFile.replace(".xml", ".rel.xml");		
+		OutputStream out = new FileOutputStream(outputXml);
+		OutputStream outRel = new FileOutputStream(outputRelXml);
+		return new CclStreamWriter(out, outRel);
+	}
 
     public AbstractDocumentWriter getTEIWriter(String outputFolder) throws Exception{
         if(outputFolder == null){
@@ -66,7 +74,9 @@ public class WriterFactory {
         OutputStream annSegmentation = getOutputStream(new File(outputFolder,"ann_segmentation.xml").getPath());
         OutputStream annMorphosyntax = getOutputStream(new File(outputFolder,"ann_morphosyntax.xml").getPath());
         OutputStream annNamed = getOutputStream(new File(outputFolder,"ann_named.xml").getPath());
-        return new TEIStreamWriter(text, annSegmentation, annMorphosyntax, annNamed, new File(outputFolder).getName());
+        OutputStream annMentions = getOutputStream(new File(outputFolder,"ann_mentions.xml").getPath());
+        OutputStream annCoreference = getOutputStream(new File(outputFolder,"ann_coreference.xml").getPath());
+        return new TEIStreamWriter(text, annSegmentation, annMorphosyntax, annNamed, annMentions, annCoreference, new File(outputFolder).getName());
     }
 	
 	private OutputStream getOutputStream(String outputFile) throws Exception {

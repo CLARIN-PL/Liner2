@@ -1,7 +1,6 @@
 package g419.corpus.io.writer;
 
 import g419.corpus.structure.*;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -29,16 +28,57 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 	private final String TAG_TAG			= "lex";
 	private final String TAG_TOKEN 		= "tok";
 	private final String TAG_HEAD 			= "head";
+	
+	private final String TAG_RELATIONS 			= "relations";
+	private final String TAG_RELATION 			= "rel";
+	private final String TAG_FROM 			= "from";
+	private final String TAG_TO 			= "to";
+	private final String ATTR_SENT 			= "sent";
+	private final String ATTR_CHAN 			= "chan";
+	private final String ATTR_NAME 			= "name";
+	private final String ATTR_SET 			= "set";
 
 	private XMLStreamWriter xmlw;
+	private XMLStreamWriter xmlRelw;
 	private OutputStream os;
+	private OutputStream osRel;
+	private HashMap<Annotation, HashMap<String, Integer>> annotationSentChannelIdx;
 	private XMLOutputFactory xmlof = null;
 	private boolean indent = true;
     private final String[] requiredAttributes = new String[]{"orth", "base", "ctag"};
 	
-	public CclStreamWriter(OutputStream os) {
+    public CclStreamWriter(OutputStream os) {
 		this.os = os;
 		this.xmlof = XMLOutputFactory.newFactory();
+	}
+	
+    public CclStreamWriter(OutputStream os, OutputStream rel){
+    	this.os = os;
+    	this.osRel = rel;
+    	this.xmlof = XMLOutputFactory.newFactory();
+    	annotationSentChannelIdx = new HashMap<Annotation, HashMap<String, Integer>>();
+    }
+    
+	private void openRelXml(){
+		try {
+			this.xmlRelw = this.xmlof.createXMLStreamWriter(osRel);
+			xmlRelw.writeStartDocument("UTF-8", "1.0");
+			xmlRelw.writeCharacters("\n");
+			xmlRelw.writeStartElement(TAG_RELATIONS);
+			xmlRelw.writeCharacters("\n");
+		} catch (XMLStreamException ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	private void closeRelXml(){
+		try {
+			xmlRelw.writeEndDocument();
+			xmlRelw.close();
+		} catch (XMLStreamException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private void openXml() {
@@ -70,6 +110,8 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 		try {
 			if ( this.xmlw != null && !this.os.equals(System.out))
 				this.xmlw.flush();
+			if ( this.xmlRelw != null && !this.os.equals(System.out))
+				this.xmlRelw.flush();
 		} catch (XMLStreamException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -81,11 +123,52 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 		try {
             if(!(os instanceof PrintStream))
                 os.close();
+            if(!(osRel instanceof PrintStream))
+                osRel.close();
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
 	}
 
+	public void writeRelations(Document document) throws XMLStreamException{
+		for(Relation relation : document.getRelations().getRelations())
+			writeRelation(relation);
+	}
+	
+	public void writeRelation(Relation relation) throws XMLStreamException{
+		String fromSentenceId = relation.getAnnotationFrom().getSentence().getId();
+		String fromChannel = relation.getAnnotationFrom().getType().toLowerCase();
+				
+		String toSentenceId = relation.getAnnotationTo().getSentence().getId();
+		String toChannel = relation.getAnnotationTo().getType().toLowerCase();
+		
+		int fromAnnIdx = annotationSentChannelIdx.get(relation.getAnnotationFrom()).get(fromChannel);
+		int toAnnIdx = annotationSentChannelIdx.get(relation.getAnnotationTo()).get(toChannel);
+		
+		indentRel(2);
+		xmlRelw.writeStartElement(TAG_RELATION);
+		xmlRelw.writeAttribute(ATTR_NAME, "coref");
+		xmlRelw.writeAttribute(ATTR_SET, Relation.COREFERENCE);
+		xmlRelw.writeCharacters("\n");
+			indentRel(4);
+			xmlRelw.writeStartElement(TAG_FROM);
+				xmlRelw.writeAttribute(ATTR_SENT, fromSentenceId);
+				xmlRelw.writeAttribute(ATTR_CHAN, relation.getAnnotationFrom().getType());
+				xmlRelw.writeCharacters(fromAnnIdx+"");
+			xmlRelw.writeEndElement();
+			xmlRelw.writeCharacters("\n");
+			indentRel(4);
+			xmlRelw.writeStartElement(TAG_TO);
+				xmlRelw.writeAttribute(ATTR_SENT, toSentenceId);
+				xmlRelw.writeAttribute(ATTR_CHAN, relation.getAnnotationTo().getType());
+				xmlRelw.writeCharacters(toAnnIdx+"");
+			xmlRelw.writeEndElement();
+			xmlRelw.writeCharacters("\n");
+		indentRel(2);
+		xmlRelw.writeEndElement();
+		xmlRelw.writeCharacters("\n");
+	}
+	
 	@Override
 	public void writeDocument(Document document){
         if(!hasRequiredAttributes(document.getAttributeIndex())){
@@ -100,6 +183,16 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 		for (Paragraph paragraph : document.getParagraphs())
 			this.writeParagraph(paragraph);
 		this.closeXml();
+		
+		if(document.getRelations().getRelations().size() > 0 && this.osRel != null){
+			this.openRelXml();
+			try {
+				this.writeRelations(document);
+			} catch (XMLStreamException e) {
+				e.printStackTrace();
+			}
+			this.closeRelXml();
+		}
 	}
 
     private boolean hasRequiredAttributes(TokenAttributeIndex attrs){
@@ -175,7 +268,6 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 		}
 
 //		Collections.sort(sortedChannels);
-		
 		for (int chanIdx = 0; chanIdx < channels.size(); chanIdx++) {
 			this.indent(4);
 			xmlw.writeStartElement(TAG_ANN);
@@ -193,6 +285,15 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 				if (ann.hasHead() && ann.getHead() == idx)
 					xmlw.writeAttribute(TAG_HEAD, "1");
 				xmlw.writeCharacters("" + annIdx);
+				HashMap<String, Integer> sentChannelMap;
+				if(annotationSentChannelIdx.get(ann) != null){
+					sentChannelMap = annotationSentChannelIdx.get(ann);
+				}else{
+					sentChannelMap = new HashMap<String, Integer>();
+				}
+				sentChannelMap.put(ann.getType().toLowerCase(), annIdx);
+				annotationSentChannelIdx.put(ann, sentChannelMap);
+				
 			}
 			else{
 				xmlw.writeAttribute(TAG_CHAN, channels.get(chanIdx).toLowerCase());
@@ -239,6 +340,12 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 			xmlw.writeEntityRef("gt");
 		else 
 			xmlw.writeCharacters(text);
+	}
+	
+	private void indentRel(int repeat) throws XMLStreamException{
+		if (this.indent)
+			for (int i=0; i<repeat; i++)
+				xmlRelw.writeCharacters(" ");
 	}
 	
 	private void indent(int repeat) throws XMLStreamException{
