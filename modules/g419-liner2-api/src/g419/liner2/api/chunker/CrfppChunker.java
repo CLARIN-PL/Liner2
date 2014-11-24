@@ -132,6 +132,7 @@ public class CrfppChunker extends Chunker
                 }
                 else{
                     this.trainingFile = File.createTempFile("crf_iob", ".txt");
+					this.trainingFile.deleteOnExit();
                 }
                 System.out.println("STORE TRAINING DATA IN: " + trainingFile.getAbsolutePath());
 				this.trainingFileWriter = new PrintWriter(this.trainingFile);
@@ -179,6 +180,7 @@ public class CrfppChunker extends Chunker
         File templateFile;
         try {
             templateFile = File.createTempFile("template", ".tpl");
+			templateFile.deleteOnExit();
             TemplateFactory.store(this.template, templateFile.getAbsolutePath());
         } catch (Exception e) {
             throw new Exception("Error while creating template for CrfppChunker:\n"+e);
