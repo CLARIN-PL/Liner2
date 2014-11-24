@@ -7,6 +7,7 @@ import g419.corpus.structure.RelationCluster;
 import g419.corpus.structure.RelationCluster.ReturnRelationsToDistinctEntities;
 import g419.corpus.structure.RelationCluster.ReturningStrategy;
 import g419.corpus.structure.RelationClusterSet;
+import g419.corpus.structure.Sentence;
 import g419.corpus.structure.TokenAttributeIndex;
 import g419.liner2.api.tools.FscoreEvaluator;
 
@@ -22,6 +23,9 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 public class ParentEvaluator extends FscoreEvaluator{
+	
+	List<Pattern> personLastFirstNam;
+	List<Pattern> personNam;
 	
 	//TODO: Kryterium porównywania wzmianek pomiędzy dokumentami
 	// 
@@ -42,13 +46,36 @@ public class ParentEvaluator extends FscoreEvaluator{
 		
 	}
 	
+	public static class NonZeroCriterion implements RelationUnitCriterion{
+		public static final String name = "NonZero";
+
+		@Override
+		public boolean isSatisfied(Annotation annotation) {
+			if(!"anafora_wyznacznik".equalsIgnoreCase(annotation.getType())) return false; // Tylko anafora_wyznacznik (bez *_nam)
+			if(annotation.getTokens().size() > 1) return true; // Zał.: tylko AgP mają więcej niż 1 token
+			TokenAttributeIndex ai = annotation.getSentence().getAttributeIndex();
+			int headIndex = annotation.getTokens().first();
+			String headPos = "";
+			try{
+				headPos = ai.getAttributeValue(annotation.getSentence().getTokens().get(headIndex), "pos");
+			}
+			catch(IndexOutOfBoundsException ex){
+				headPos = ai.getAttributeValue(annotation.getSentence().getTokens().get(headIndex), "tagTool");
+			}
+			
+			
+			return !"verb".equals(headPos); //&& !"fin".equals(headPos) && !"praet".equals(headPos) && !"winien".equals(headPos) && !"bedzie".equals(headPos);
+		}
+	}
+	
 	public static class PronounAndZeroCriterion implements RelationUnitCriterion{
 		public static final String name = "PronZero";
 
 		@Override
 		public boolean isSatisfied(Annotation annotation) {
 			TokenAttributeIndex ai = annotation.getSentence().getAttributeIndex();
-			String headPos = ai.getAttributeValue(annotation.getSentence().getTokens().get(annotation.getHead()), "posext");
+			//TODO: uwagaa na getHead() -> może zwracać 0 co powoduje błędy
+			String headPos = ai.getAttributeValue(annotation.getSentence().getTokens().get(annotation.getHead()), "pos");
 			
 			return "pron".equals(headPos) || "verb".equals(headPos);
 		}
@@ -63,15 +90,38 @@ public class ParentEvaluator extends FscoreEvaluator{
 		}
 	}
 	
-	////
+	public static class ZeroCriterion implements RelationUnitCriterion{
+		public static final String name = "Zero";
+		public static final NonZeroCriterion nonZero = new NonZeroCriterion();
+		
+		@Override
+		public boolean isSatisfied(Annotation annotation) {
+			if(!"anafora_wyznacznik".equalsIgnoreCase(annotation.getType())) return false; // Tylko anafora_wyznacznik (bez *_nam)
+			if(annotation.getTokens().size() > 1) return false; // Zał.: tylko AgP mają więcej niż 1 token
+			TokenAttributeIndex ai = annotation.getSentence().getAttributeIndex();
+			int headIndex = annotation.getTokens().first();
+			String headPos = "";
+			try{
+				headPos = ai.getAttributeValue(annotation.getSentence().getTokens().get(headIndex), "pos");
+			}
+			catch(IndexOutOfBoundsException ex){
+				headPos = ai.getAttributeValue(annotation.getSentence().getTokens().get(headIndex), "tagTool");
+			}
+			
+			
+			return "verb".equals(headPos);
+		}
+	}
 	
 	public static class AnnotationMapper{
 		Comparator<Annotation> comparator;
 		List<Pattern> annotationTypes;
+		boolean teiRemap;
 		
 		public AnnotationMapper(Comparator<Annotation> comparator, List<Pattern> annotationTypes){
 			this.annotationTypes = annotationTypes;
 			this.comparator = comparator;
+			this.teiRemap = true;
 		}
 		
 		
@@ -84,8 +134,14 @@ public class ParentEvaluator extends FscoreEvaluator{
 			for(Annotation sysAnnotation: systemDocument.getAnnotations(annotationTypes)){
 				for(Annotation refAnnotation: referenceDocument.getAnnotations(annotationTypes)){
 					if(comparator.compare(refAnnotation, sysAnnotation) == 0){
-						mapping.put(sysAnnotation, refAnnotation);
-						break;
+						// Przeniesione porównanie zdań
+						if(systemDocument.getSentences().indexOf(sysAnnotation.getSentence()) == referenceDocument.getSentences().indexOf(refAnnotation.getSentence())){
+							if(this.teiRemap && refAnnotation.getType().endsWith("nam")){
+								sysAnnotation.setType(refAnnotation.getType());
+							}
+							mapping.put(sysAnnotation, refAnnotation);
+							break;
+						}
 					}
 				}
 			}
@@ -108,6 +164,14 @@ public class ParentEvaluator extends FscoreEvaluator{
 		annotationTypes.add(Pattern.compile(".*nam"));
 		annotationTypes.add(Pattern.compile("anafora_wyznacznik"));
 		this.mapper = new AnnotationMapper(annotationMatcher, annotationTypes);
+		
+		personNam = new ArrayList<Pattern>();
+		personNam.add(Pattern.compile("person_nam"));
+		
+		personLastFirstNam = new ArrayList<Pattern>();
+		personLastFirstNam.add(Pattern.compile("person_first_nam"));
+		personLastFirstNam.add(Pattern.compile("person_last_nam"));
+		personLastFirstNam.add(Pattern.compile("person_add_nam"));
 	}
 	
 	public Set<Annotation> extractUnits(Document document, RelationUnitCriterion criterion){
@@ -229,12 +293,13 @@ public class ParentEvaluator extends FscoreEvaluator{
 		return initialRelationClusterSet.getRelationSet(strategy).getRelations();
 	}
 	
+	
 	/**
 	 * 
 	 * @param systemRelations
 	 * @param referenceRelations
 	 */
-	private void calculateScore(Set<Relation> systemRelations, Set<Relation> referenceRelations, HashMap<Annotation, Annotation> systemToReferenceMapping){
+	private void calculateScore(Set<Relation> systemRelations, Set<Relation> referenceRelations, HashMap<Annotation, Annotation> systemToReferenceMapping, HashMap<Annotation, Integer> discourseEntityMapping, HashMap<Annotation, Integer> systemDiscourseEntityMapping){
 		int localTruePositives = 0;
 		int localFalsePositives = 0;
 		int localFalseNegatives = 0;
@@ -248,13 +313,17 @@ public class ParentEvaluator extends FscoreEvaluator{
 				localFalsePositives++;
 				continue;
 			}
-			
 			found = false;
+			
+			Integer systemToEntityId = systemDiscourseEntityMapping.get(systemRelation.getAnnotationTo());
+
 			for(Relation referenceRelation : referenceRelations){
-				if(referenceRelation.getAnnotationFrom().equals(systemFrom) && referenceRelation.getAnnotationTo().equals(systemTo)){
+				Integer referenceToEntityId = discourseEntityMapping.get(referenceRelation.getAnnotationTo());
+				if(referenceRelation.getAnnotationFrom().equals(systemFrom) && systemToEntityId == referenceToEntityId){
 					// Found
 					localTruePositives++;
 					found = true;
+					System.out.println(systemRelation);
 					break;
 				}
 			}
@@ -265,9 +334,9 @@ public class ParentEvaluator extends FscoreEvaluator{
 		
 		localFalseNegatives = referenceRelations.size() - localTruePositives;
 		
-		this.truePositives = localTruePositives;
-		this.falsePositives = localFalsePositives;
-		this.falseNegatives = localFalseNegatives;
+		this.truePositives += localTruePositives;
+		this.falsePositives += localFalsePositives;
+		this.falseNegatives += localFalseNegatives;
 		
 		float localPrecision = safeDiv(localTruePositives, localTruePositives + localFalsePositives, 0.0f);
 		float localRecall = safeDiv(localTruePositives, localTruePositives + localFalseNegatives, 0.0f);
@@ -277,11 +346,48 @@ public class ParentEvaluator extends FscoreEvaluator{
 	}
 	
 	/**
+	 * Naprawia nadmierne znakowanie person*_*nam
+	 * @param document
+	 */
+	public void completePersonNamRelations(Document document){
+		for(Sentence sentence : document.getSentences()){
+			Set<Annotation> lastFirstNam = sentence.getAnnotations(personLastFirstNam); 
+			Set<Annotation> persNam = sentence.getAnnotations(personNam);
+			
+			for(Annotation lfAnn : lastFirstNam){
+				for(Annotation pAnn : persNam){
+					boolean cross = false;
+					for(Integer tokenId : lfAnn.getTokens()){
+						if(pAnn.getTokens().contains(tokenId)){
+							cross = true;
+							break;
+						}
+					}
+					
+					if(cross){
+						Relation corefAdd = new Relation(lfAnn, pAnn, Relation.COREFERENCE);
+						document.addRelation(corefAdd);
+					}
+				}
+			}
+		}
+	}
+	
+	/**
 	 * 
 	 * @param systemResult
 	 * @param referenceDocument
 	 */
 	public void evaluate(Document systemResult, Document referenceDocument){
+
+		
+		/**
+		 *  Dodawanie koreferencji pomiędzy częściami i całościami nazw osób
+		 *  - dla zagnieżdżonych person_first_nam w person_nam
+		 *  - dla zagnieżdżonych person_last_nam w person_nam
+		 */
+		
+		completePersonNamRelations(referenceDocument);
 		
 		/**
 		 *  TODO: parallelization of mentions
@@ -292,7 +398,7 @@ public class ParentEvaluator extends FscoreEvaluator{
 		 */
 		
 		HashMap<Annotation, Annotation> systemToReferenceMapping = mapper.createMapping(referenceDocument, systemResult);
-
+		
 		/**
 		 * Dodawanie wzmianek twinless nie zmienia niczego w ocenie:
 		 * 1. Dodanie wzmianki referencyjnej w odpowiedzi ocenianego systemu
@@ -332,13 +438,13 @@ public class ParentEvaluator extends FscoreEvaluator{
 		Set<Relation> referenceDiscourseEntitiesRelations = extractDiscourseEntityRelations(referenceRelations, referenceIdentifyingUnits, referenceReferencingUnits, discourseEntityMapping);
 		
 		// 7. Create system result clustering
-		RelationClusterSet systemResultRelations = RelationClusterSet.fromRelationSet(systemResult.getRelations(Relation.COREFERENCE));
+		RelationClusterSet systemResultRelations = RelationClusterSet.fromRelationSet(systemResult.getRelations()); //Relation.COREFERENCE --ikar ustawia domyślnie pusty atrybut set=""
 		System.out.println(systemResultRelations);
 		// 8. Create system relation set from referencing units to identifying units
 		Set<Relation> systemDiscourseEntitiesRelations = extractDiscourseEntityRelations(systemResultRelations, systemIdentifyingUnits, systemReferencingUnits, systemDiscourseEntityMapping);
 		
 		// 9. Compare relations
-		calculateScore(systemDiscourseEntitiesRelations, referenceDiscourseEntitiesRelations, systemToReferenceMapping);
+		calculateScore(systemDiscourseEntitiesRelations, referenceDiscourseEntitiesRelations, systemToReferenceMapping, discourseEntityMapping, systemDiscourseEntityMapping);
 		
 		
 	}
