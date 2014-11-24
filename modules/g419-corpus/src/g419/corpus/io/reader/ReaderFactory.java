@@ -59,6 +59,22 @@ public class ReaderFactory {
 			catch(Exception e){}
 			return new CclSAXStreamReader(uri, in, rel);
 		}
+		else if (inputFormat.equals("ccl_relr")){
+			InputStream rel = null;
+			try{
+				rel = getInputStream(new File(root, uri.replace(".xml", ".rel_r")).getPath());
+			}
+			catch(Exception e){}
+			return new CclSAXStreamReader(uri, in, rel);
+		}
+		else if (inputFormat.equals("ccl_relcls")){
+			InputStream rel = null;
+			try{
+				rel = getInputStream(new File(root, uri.replace(".xml", ".rel_cls")).getPath());
+			}
+			catch(Exception e){}
+			return new CclSAXStreamReader(uri, in, rel);
+		}
 		else if (inputFormat.equals("iob"))
 			return new IobStreamReader(in);
 		else if (inputFormat.equals("plain"))
@@ -74,7 +90,7 @@ public class ReaderFactory {
     public AbstractDocumentReader getTEIStreamReader(String inputFolder, String docname) throws Exception{
         InputStream annMorphosyntax = getInputStream(new File(inputFolder,"ann_morphosyntax.xml").getPath());
         InputStream annSegmentation = getInputStream(new File(inputFolder,"ann_segmentation.xml").getPath());
-        InputStream annNamed = getInputStream(new File(inputFolder,"ann_named.xml").getPath());
+        InputStream annNamed = null;//getInputStream(new File(inputFolder,"ann_named.xml").getPath());
         InputStream annMentions = getInputStream(new File(inputFolder,"ann_mentions.xml").getPath());
         InputStream annCoreference = getInputStream(new File(inputFolder,"ann_coreference.xml").getPath());
         return new TEIStreamReader(annMorphosyntax, annSegmentation, annNamed, annMentions, annCoreference, docname);
