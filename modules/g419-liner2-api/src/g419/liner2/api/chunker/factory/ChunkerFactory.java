@@ -32,6 +32,10 @@ public class ChunkerFactory {
 		this.items.add(new ChunkerFactoryItemPropagate());
 		this.items.add(new ChunkerFactoryItemWccl());
 		this.items.add(new ChunkerFactoryItemMinos());
+		this.items.add(new ChunkerFactoryItemAnnotationAdder());
+		this.items.add(new ChunkerFactoryItemAnnotationAdderWithZero());
+		this.items.add(new ChunkerFactoryItemAnnotationAdderOnlyZero());
+		this.items.add(new ChunkerFactoryItemNullChunker());
         this.items.add(new ChunkerFactoryItemAnnotationCRFClassifier());
         this.items.add(new ChunkerFactoryItemMapping());
 	}
