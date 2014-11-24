@@ -17,6 +17,7 @@
 		<pathelement location="../../lib/maltparser-1.7.1.jar"/>
 		<pathelement location="../../lib/CRFPP.jar"/>
 		<pathelement location="../g419-corpus/g419-corpus.jar"/>
+		<pathelement location="../g419-corpus/g419-relations.jar"/>
 	</path>
 	
 	<target name="clean">
