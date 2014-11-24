@@ -74,6 +74,25 @@ public class Annotation {
 		return this.hasHead;
 	}
 	
+	/**
+	 * Przypisuje głowę do anotacji na podst. równoległej anotacji, lub jako pierwszy token.
+	 * Do użytku z anotacjami "anafora_wyznacznik" na potrzeby piśnika TEI
+	 * @return
+	 */
+	public void assignHead(){
+		if(hasHead()) return;
+		
+		this.setHead(this.tokens.first());
+		if(this.tokens.size() == 1) return;
+	
+		for(Annotation ann: this.sentence.getChunks()){
+			if(ann.hasHead() && this.tokens.equals(ann.tokens) && !this.type.equalsIgnoreCase(ann.type)){
+				this.setHead(ann.getHead());
+				return;
+			}
+		}
+	}
+	
 	public int getHead(){
 		return this.head;
 	}
@@ -108,7 +127,7 @@ public class Annotation {
 
     @Override
     public int hashCode() {
-        return (this.getText() + this.tokens.toString() + this.getType()).hashCode();
+        return (this.getText() + this.tokens.toString() + this.getType() + this.getSentence().getId()).hashCode();
     }
     
 	public String getId(){
