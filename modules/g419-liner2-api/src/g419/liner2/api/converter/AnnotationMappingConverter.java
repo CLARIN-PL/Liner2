@@ -85,11 +85,16 @@ public class AnnotationMappingConverter extends Converter{
         try {
             String line = br.readLine();
             while (line != null) {
-                if(line.isEmpty() || !line.startsWith("#")) {
-                    String[] pattern_val = line.split(" -> ");
-                    channelsMapping.add(new PatternStringEntry(Pattern.compile("^" + pattern_val[0] + "$"), pattern_val[1]));
-                    line = br.readLine();
+                if(!line.isEmpty() && !line.startsWith("#")) {
+                	if (line.contains("#")){
+	                	String[] parts = line.split("#");
+	                	if ( parts.length > 0 )
+	                		line = parts[0].trim();
+                	}
+                    String[] pattern_val = line.split("->");
+                    channelsMapping.add(new PatternStringEntry(Pattern.compile("^" + pattern_val[0].trim() + "$"), pattern_val[1].trim()));
                 }
+                line = br.readLine();
             }
         } catch (IOException e) {
             e.printStackTrace();

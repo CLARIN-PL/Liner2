@@ -19,12 +19,12 @@ public class TemplateFactory {
         StringBuffer sb = new StringBuffer();
         String feature = br.readLine();
         while(feature != null) {
-            if(!feature.startsWith("#")){
+            if(!feature.isEmpty() && !feature.startsWith("#")){
                 feature = feature.trim();
                 template.addFeature(feature);
                 Logger.log("(TemplateFactory) feature:" + feature);
-                feature = br.readLine();
             }
+            feature = br.readLine();
         }
         return template;
     }

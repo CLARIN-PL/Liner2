@@ -164,11 +164,11 @@ public class LinerOptions {
         StringBuffer sb = new StringBuffer();
         String line = br.readLine();
         while(line != null) {
-            if(line.isEmpty() || !line.startsWith("#")){
+            if(!line.isEmpty() && !line.startsWith("#")){
                 line = line.trim();
                 lines.add(line);
-                line = br.readLine();
             }
+            line = br.readLine();
         }
         return lines;
     }

@@ -4,6 +4,7 @@ import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
+import g419.corpus.Logger;
 import g419.corpus.structure.Document;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.converter.Converter;
@@ -64,7 +65,8 @@ public class ActionConvert extends Action {
         }
         String featuresFile = line.getOptionValue(CommonOptions.OPTION_FEATURES);
         if(featuresFile != null){
-            this.features = LinerOptions.getGlobal().parseFeatures(featuresFile);
+        	
+            this.features = LinerOptions.getGlobal().parseFeatures(featuresFile);            
         }
 
 	}
@@ -76,7 +78,7 @@ public class ActionConvert extends Action {
 
         TokenFeatureGenerator gen = null;
         if (!this.features.isEmpty()) {
-            gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
+            gen = new TokenFeatureGenerator(this.features);
         }
         Converter converter = null;
         if (!this.convertersDesciptions.isEmpty()) {
@@ -87,13 +89,18 @@ public class ActionConvert extends Action {
         Document ps = reader.nextDocument();
         while(ps != null) {
             if(gen != null) {
+            	if ( gen != null ){
+            		Logger.log("Generating features ...");
+            	}
                 gen.generateFeatures(ps);
             }
 
             if (converter != null) {
+        		Logger.log("Applying converter ...");
                 converter.apply(ps);
             }
 
+    		Logger.log("Writing ...");
             writer.writeDocument(ps);
             ps = reader.nextDocument();
         }

@@ -103,9 +103,16 @@ public class Sentence {
         return returning;
     }
 
+    public ArrayList<Annotation> getChunksAt(int idx, List<Pattern> types, boolean sorted){
+        ArrayList<Annotation> result = getChunksAt(idx, types);
+        if(sorted){
+            sortTokenAnnotations(result);
+        }
+        return result;
+    }
+
     public String getTokenClassLabel(int tokenIdx, List<Pattern> types){
-        ArrayList<Annotation> tokenAnnotations = getChunksAt(tokenIdx, types);
-        sortTokenAnnotations(tokenAnnotations);
+        ArrayList<Annotation> tokenAnnotations = getChunksAt(tokenIdx, types, true);
 
         if (tokenAnnotations.isEmpty())
             return "O";
@@ -169,6 +176,9 @@ public class Sentence {
 	
 	public void setAttributeIndex(TokenAttributeIndex attributeIndex) {
 		this.attributeIndex = attributeIndex;
+        for(Token t: tokens){
+            t.setAttributeIndex(attributeIndex);
+        }
 	}
 
 	public void setAnnotations(AnnotationSet chunking) {
@@ -217,6 +227,7 @@ public class Sentence {
 
     public Sentence clone(){
         Sentence copy = new Sentence();
+        copy.attributeIndex = attributeIndex.clone();
         copy.setId(this.getId());
         for(Token t: tokens){
             copy.addToken(t.clone());

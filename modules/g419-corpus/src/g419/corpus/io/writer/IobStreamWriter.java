@@ -1,5 +1,6 @@
 package g419.corpus.io.writer;
 
+import g419.corpus.TerminateException;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Paragraph;
@@ -92,7 +93,13 @@ public class IobStreamWriter extends AbstractDocumentWriter {
 		throws IOException {
 		String line = "";
 		for (int i = 0; i < sentence.getAttributeIndex().getLength(); i++)
-			line += (line.length() > 0 ? " " : "") + token.getAttributeValue(i);
+			try{
+				line += (line.length() > 0 ? " " : "") + token.getAttributeValue(i);
+			}
+			catch (IndexOutOfBoundsException e) {
+				throw new TerminateException(String.format(
+						"Token attribute with index %d not found in [%s]", i, token.getAttributesAsString()));
+			}
 
         line += " " + sentence.getTokenClassLabel(idx, null);
 		ow.write(line, 0, line.length());

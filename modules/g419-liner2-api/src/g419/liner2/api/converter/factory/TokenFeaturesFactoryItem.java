@@ -1,6 +1,5 @@
 package g419.liner2.api.converter.factory;
 
-//import com.sun.org.apache.xalan.internal.xsltc.compiler.Template;
 import g419.corpus.structure.CrfTemplate;
 import g419.liner2.api.converter.Converter;
 import g419.liner2.api.converter.TokenFeaturesConverter;

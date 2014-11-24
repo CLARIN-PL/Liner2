@@ -81,7 +81,7 @@ public class ActionAgreement extends Action {
 
 			this.input_format = this.input_format.substring(6);
 
-			NumberMixer numbers = new NumberMixer(input_files.length);
+			InputIndexMixer numbers = new InputIndexMixer(input_files.length);
 			for (NumberPair pair : numbers) {
 				AbstractDocumentReader originalDocument = new BatchReader(IOUtils.toInputStream(getBatch(pair.first)), "", this.input_format);
 				AbstractDocumentReader referenceDocument = new BatchReader(IOUtils.toInputStream(getBatch(pair.second)), "", this.input_format);
@@ -89,7 +89,7 @@ public class ActionAgreement extends Action {
 			}
 		} else {
 
-			NumberMixer numbers = new NumberMixer(input_files.length);
+			InputIndexMixer numbers = new InputIndexMixer(input_files.length);
 			for (NumberPair pair : numbers) {
 				AbstractDocumentReader originalDocument = ReaderFactory.get().getStreamReader(input_files[pair.first], this.input_format);
 				AbstractDocumentReader referenceDocument = ReaderFactory.get().getStreamReader(input_files[pair.second], this.input_format);
@@ -185,33 +185,6 @@ public class ActionAgreement extends Action {
 		return new TranslatedChunkings(originalChunkings, original.getChunkings());
 	}
 	
-	/* 
-	 * To have it working that way sentences must have UIDs to distinguish them, plus the evaluation method must
-	 * use those UIDs instead of sentence hashes from hash set.
-	 * 
-	private Document translateDocument(Document original, Document reference)
-	{
-		Document translated = original.clone();
-		
-		// Peel all original annotations from translated document (the translated annotations will be placed instead)
-		translated.removeAnnotations();
-		
-		Iterator<Paragraph> translatedParagraphs = translated.getParagraphs().iterator();
-		Iterator<Paragraph> referenceParagraphs = reference.getParagraphs().iterator();
-		
-		// Translate each paragraph
-		while (translatedParagraphs.hasNext() && referenceParagraphs.hasNext()) {
-			translateParagraphs(translatedParagraphs.next(), referenceParagraphs.next());
-		}
-
-		// If anything is left in translated or reference iterator than the number of paragraphs do not match
-		if (translatedParagraphs.hasNext() || referenceParagraphs.hasNext())
-			throw new RuntimeException("Number of paragraphs do not match.");
-		
-		return translated;
-	}
-	*/
-
 	private void translateParagraphs(Paragraph translated, Paragraph reference) {
 		Iterator<Sentence> originalSentences = translated.getSentences().iterator();
 		Iterator<Sentence> referenceSentences = reference.getSentences().iterator();
@@ -272,11 +245,11 @@ public class ActionAgreement extends Action {
 	 */
 	private static class ResultHolder {
 		int evaluationNumber;
-		float precision, spanPrecision, recall, spanRecall, fMeasure, spanFMeasure;
+		float precision, spanPrecision, recall, spanRecall;
 		int truePositive, falsePositive, falseNegative;
 
 		public ResultHolder() {
-			precision = spanPrecision = recall = spanRecall = fMeasure = spanFMeasure = 0.0f;
+			precision = spanPrecision = recall = spanRecall = 0.0f;
 			evaluationNumber = truePositive = falsePositive = falseNegative = 0;
 		}
 
@@ -287,8 +260,6 @@ public class ActionAgreement extends Action {
 			spanPrecision += eval.getSpanPrecision();
 			recall += eval.getRecall();
 			spanRecall += eval.getSpanRecall();
-			fMeasure += eval.getFMeasure();
-			spanFMeasure += eval.getSpanFMeasure();
 
 			truePositive += eval.getTruePositive();
 			falsePositive += eval.getFalsePositive();
@@ -312,11 +283,15 @@ public class ActionAgreement extends Action {
 		}
 
 		public float getFMeasure() {
-			return fMeasure / evaluationNumber;
+			float p = precision;
+			float r = recall;
+			return (p+r)==0 ? 0 : (2*p*r)/(p+r);
 		}
 
 		public float getSpanFMeasure() {
-			return spanFMeasure / evaluationNumber;
+			float p = spanPrecision;
+			float r = spanRecall;
+			return (p+r)==0 ? 0 : (2*p*r)/(p+r);
 		}
 
 		public int getTruePositive() {
@@ -339,7 +314,6 @@ public class ActionAgreement extends Action {
 			System.out.println(header);
 			System.out.println("\\hline");
 			ArrayList<String> keys = new ArrayList<String>();
-			// /
 			System.out.println("\\hline");
 			System.out.println(String.format(line, "*TOTAL*", this.getTruePositive(), this.getFalsePositive(), this.getFalseNegative(), this.getPrecision() * 100,
 					this.getRecall() * 100, this.getFMeasure() * 100));
@@ -377,10 +351,10 @@ public class ActionAgreement extends Action {
 	 * Eliminates redundancy (situation in which two data sets have been compared in different order)
 	 * ie. (a,b) has been checked already, so (b,a) is omitted.
 	 */
-	private class NumberMixer implements Iterable<NumberPair>, Iterator<NumberPair> {
+	private class InputIndexMixer implements Iterable<NumberPair>, Iterator<NumberPair> {
 		int firstIndex, secondIndex, max;
 
-		public NumberMixer(int max) {
+		public InputIndexMixer(int max) {
 			if (max < 2)
 				throw new RuntimeException("Cannot check agreement, too few documents to compare.");
 
