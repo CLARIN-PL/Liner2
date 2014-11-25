@@ -62,6 +62,13 @@ public class Annotation {
 		this.channelIdx = channelIdx;
 	}
 	
+	public Annotation(TreeSet<Integer> tokens, String type, Sentence sentence){
+		this.tokens = tokens;
+		this.type = type;
+		this.sentence = sentence;
+				
+	}
+	
 	public void setChannelIdx(int idx){
 		this.channelIdx = idx;
 	}

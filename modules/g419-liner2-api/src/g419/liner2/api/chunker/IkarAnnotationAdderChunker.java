@@ -93,7 +93,7 @@ public class IkarAnnotationAdderChunker extends Chunker {
 				// Dodaj wyznaczniki dla chunków AgP
 				for (Annotation annotation : sentence.getAnnotations(convertTypes)) {
 					if(mentionDoesNotExist(annotation) && containsNoun(annotation, ai) && !crossNamOrMention(annotation)){
-						Annotation mention = new Annotation(annotation.getBegin(), annotation.getEnd(), "anafora_wyznacznik", sentence);
+						Annotation mention = new Annotation(annotation.getTokens(), "anafora_wyznacznik", sentence);
 						sentence.addChunk(mention);
 						annotationSet.addChunk(mention);
 					}
