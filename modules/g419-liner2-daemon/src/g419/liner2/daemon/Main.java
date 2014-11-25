@@ -1,7 +1,5 @@
 package g419.liner2.daemon;
 
-import g419.liner2.api.LinerOptions;
-
 /**
  * Run the module. 
  * 
@@ -18,7 +16,13 @@ public class Main {
         DaemonOptions options =  (DaemonOptions)DaemonOptions.getGlobal();
         options.parse(args);
 		try {
-			new DaemonThread().run();
+            String db_type = options.getProperties().getProperty("db_type");
+            if(db_type.equals("sql")){
+                new SQLDaemonThread().run();
+            }
+            else if(db_type.equals("file")){
+                new FilebasedDaemonThread().run();
+            }
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

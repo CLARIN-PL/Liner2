@@ -31,25 +31,34 @@ public class DaemonOptions extends LinerOptions {
     public static final String OPTION_PORT = "p";
     public static final String OPTION_VERBOSE = "v";
     public static final String OPTION_VERBOSE_LONG = "verbose";
+    public static final String OPTION_DB_TYPE = "db_type";
+    public static final String OPTION_DB_PATH = "db_path";
 
     public DaemonOptions(){
+        options.addOption(OptionBuilder.withArgName("type").hasArg()
+                .withDescription("database type (file | sql )")
+                .isRequired()
+                .create(OPTION_DB_TYPE));
+        options.addOption(OptionBuilder.withArgName("db_path").hasArg()
+                .withDescription("path to file database folder")
+                .create(OPTION_DB_PATH));
         options.addOption(OptionBuilder.withArgName("name").hasArg()
-                .withDescription("database host name")
+                .withDescription("sql database host name")
                 .create(OPTION_DB_HOST));
         options.addOption(OptionBuilder.withArgName("name").hasArg()
-                .withDescription("database name")
+                .withDescription("sql database name")
                 .create(OPTION_DB_NAME));
         options.addOption(OptionBuilder.withArgName("password").hasArg()
-                .withDescription("database password")
+                .withDescription("sql database password")
                 .create(OPTION_DB_PASSWORD));
         options.addOption(OptionBuilder.withArgName("number").hasArg()
-                .withDescription("database port number")
+                .withDescription("sql database port number")
                 .create(OPTION_DB_PORT));
         options.addOption(OptionBuilder.withArgName("address").hasArg()
-                .withDescription("database URI address")
+                .withDescription("sql database URI address")
                 .create(OPTION_DB_URI));
         options.addOption(OptionBuilder.withArgName("username").hasArg()
-                .withDescription("database user name ")
+                .withDescription("sql database user name ")
                 .create(OPTION_DB_USER));
         options.addOption(OptionBuilder.withArgName("number").hasArg()
                 .withDescription("maximum number of processing threads")
