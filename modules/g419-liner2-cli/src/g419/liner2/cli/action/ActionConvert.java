@@ -61,9 +61,7 @@ public class ActionConvert extends Action {
             String[] converters = line.getOptionValues(OPTION_CONVERSION);
             for(String conv: converters){
                 this.convertersDesciptions.add(conv);
-                System.out.println("ADDING CONVERTER: " + conv);
             }
-            System.exit(1);
 
         }
         String featuresFile = line.getOptionValue(CommonOptions.OPTION_FEATURES);
