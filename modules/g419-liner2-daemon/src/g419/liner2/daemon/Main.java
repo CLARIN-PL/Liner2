@@ -26,7 +26,7 @@ public class Main {
                 new FilebasedDaemonThread().run();
             }
             else{
-                throw new ParameterException("Invalid daemon mode!");
+                throw new ParameterException("Invalid db_type: " + db_type);
             }
 		} catch (Exception ex) {
             System.out.println(ex);
