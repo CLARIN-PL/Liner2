@@ -50,6 +50,7 @@ public class CclStreamWriter extends AbstractDocumentWriter {
     public CclStreamWriter(OutputStream os) {
 		this.os = os;
 		this.xmlof = XMLOutputFactory.newFactory();
+		annotationSentChannelIdx = new HashMap<Annotation, HashMap<String, Integer>>();
 	}
 	
     public CclStreamWriter(OutputStream os, OutputStream rel){
@@ -123,7 +124,7 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 		try {
             if(!(os instanceof PrintStream))
                 os.close();
-            if(!(osRel instanceof PrintStream))
+            if(osRel != null && !(osRel instanceof PrintStream))
                 osRel.close();
 		} catch (IOException ex) {
 			ex.printStackTrace();
