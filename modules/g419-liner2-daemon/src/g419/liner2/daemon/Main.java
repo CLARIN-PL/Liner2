@@ -30,6 +30,7 @@ public class Main {
             }
 		} catch (Exception ex) {
             System.out.println(ex);
+            System.out.println("\n----------------------------------------HELP----------------------------------------");
             ((DaemonOptions) DaemonOptions.getGlobal()).printModes();
 		}
     }

@@ -2,12 +2,14 @@ package g419.liner2.daemon;
 
 import g419.liner2.api.LinerOptions;
 import g419.corpus.Logger;
+import g419.liner2.api.tools.ParameterException;
 import org.apache.commons.cli.*;
 import org.ini4j.Ini;
 import org.ini4j.Profile;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 /**
@@ -73,7 +75,7 @@ public class DaemonOptions extends LinerOptions {
                 .withDescription("multiple models config for daemon")
                 .create(OPTION_MODELS));
         options.addOption(OptionBuilder
-                .withLongOpt(OPTION_VERBOSE_LONG).withDescription("print help")
+                .withLongOpt(OPTION_VERBOSE_LONG).withDescription("verbose actions")
                 .create(OPTION_VERBOSE));
     }
 
@@ -83,6 +85,16 @@ public class DaemonOptions extends LinerOptions {
 
     public void parse(String[] args) throws Exception{
         CommandLine line = new GnuParser().parse(this.options, args);
+            HashSet<String> argNames = new HashSet<String>();
+            for(Option opt: line.getOptions()){
+                String argName = opt.getOpt();
+                if(argNames.contains(argName)){
+                    throw new ParameterException("Repeated argument:" + argName);
+                }
+                else{
+                    argNames.add(argName);
+                }
+            }
         Iterator<?> i_options = line.iterator();
         while (i_options.hasNext()) {
             Option o = (Option) i_options.next();
