@@ -84,6 +84,7 @@ public class Main {
     				System.out.println();    				
 				}
                 catch (Exception e) {
+                	e.printStackTrace();
                     System.out.println(e);
                     e.printStackTrace();
                 }

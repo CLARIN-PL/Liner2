@@ -38,7 +38,7 @@
    		</manifest>
 
 		<jar destfile="g419-corpus.jar" manifest="MANIFEST.MF">
-    		<fileset dir="${build_path}/classes" includes="**/*.class"/>
+			<fileset dir="${build_path}/classes" includes="**/*.class"/>
   		</jar>
                 
 		<delete file="MANIFEST.MF"/>

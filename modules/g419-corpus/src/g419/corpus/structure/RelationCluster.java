@@ -78,7 +78,7 @@ public class RelationCluster {
 		String out = this.headAnnotation != null ? "{" + this.headAnnotation.getText() + "(H)}" : "";
 		for(Annotation annotation : this.annotations)
 			if(this.headAnnotation == null || !annotation.equals(this.headAnnotation))
-				out += "{" + annotation.getText() + "}";
+				out += "{" + annotation + "}";
 			
 		return "[" + out + "]";
 			

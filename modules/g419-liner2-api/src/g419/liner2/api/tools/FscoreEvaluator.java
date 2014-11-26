@@ -55,4 +55,16 @@ public class FscoreEvaluator {
 		return safeDiv(2 * precision * recall, precision + recall, 0.0f); 
 	}
 	
+	public void printTotal(){
+		print(precision(), recall(), f(), truePositives, falsePositives, falseNegatives);
+	}
+	
+	public void print(float precision, float recall, float f, int tp, int fp, int fn){
+		System.out.println(
+			String.format(
+				"Score: Precision=%.2f (%d/%d), Recall=%.2f (%d/%d), F=%.2f",
+				precision * 100, tp, tp + fp, recall * 100, tp, tp + fn, f * 100
+			)
+		);
+	}
 }

@@ -23,8 +23,13 @@ public class AnnotationPositionComparator implements Comparator<Annotation>{
 		if(sentenceId.startsWith("s")){
 			return Integer.parseInt(sentenceId.substring(1));
 		}
-		
-		return Integer.parseInt(sentenceId);
+		try{
+			return Integer.parseInt(sentenceId);
+		}
+		catch(NumberFormatException ex){
+			String sentenceNumId = sentenceId.split("-")[1].split("\\.")[0];
+			return Integer.parseInt(sentenceNumId);
+		}
 	}
 	
 	
@@ -34,13 +39,16 @@ public class AnnotationPositionComparator implements Comparator<Annotation>{
 	@Override
 	public int compare(Annotation ann1, Annotation ann2) {
 		// Różnica zdań
-		int sentDiff = Integer.signum(parseSentenceId(ann1.getSentence().getId()) - parseSentenceId(ann2.getSentence().getId()));
+		int sentDiff = parseSentenceId(ann1.getSentence().getId()) - parseSentenceId(ann2.getSentence().getId());
 		if(sentDiff != 0) return sentDiff;
 		// Różnica pozycji wewnątrz zdania
-		int result = Integer.signum(ann1.getBegin() - ann2.getBegin());
-		if(result != 0) return result;
+		int posDiff = ann1.getBegin() - ann2.getBegin();
+		if(posDiff != 0) return posDiff;
 		
-		return Integer.signum(ann1.getTokens().size() - ann2.getTokens().size());
+		int sizeDiff = ann1.getTokens().size() - ann2.getTokens().size();
+		if(sizeDiff != 0) return sizeDiff;
+		
+		return ann1.getType().compareTo(ann2.getType());
 	}
 	
 }

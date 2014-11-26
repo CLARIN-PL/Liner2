@@ -23,6 +23,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
+import org.ini4j.Ini;
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
 import org.maltparser.core.helper.HashSet;
@@ -45,10 +46,16 @@ public class MinosChunker extends Chunker {
 	public final static String MaltModel = "skladnica_liblinear_stackeager_final.mco";
 	private MaltParserService maltService = null;
 	
-	public final static String OPTION_MALT_MODEL_PATH = "minos_malt_model_path";
+	public final static String OPTION_TYPE = "type";
+	public final static String CHUNKER_NAME = "minos";
+	public final static String OPTION_MALT_MODEL_PATH = "malt_model_path";
 	
 	public MinosChunker() {
-		String maltModelPath = LinerOptions.getGlobal().getOption(OPTION_MALT_MODEL_PATH);
+		String maltModelPath = "";
+		for(Ini.Section section : LinerOptions.getGlobal().chunkersDescriptions)
+			if(CHUNKER_NAME.equals(section.get(OPTION_TYPE))) maltModelPath = section.get(OPTION_MALT_MODEL_PATH);
+		
+		
 		try {
 			this.maltService = new MaltParserService();
 			// Inititalize the parser model 'model0' and sets the working directory to '.' and sets the logging file to 'parser.log'
@@ -237,9 +244,9 @@ public class MinosChunker extends Chunker {
 		public final static boolean SETTINGS_NEUTER_INT = true;
 		// -------- Endof: Settings
 		
-		public final static String OPTION_NON_SUBJECT_VERBS = "minos_ns_verbs";
-		public final static String OPTION_NON_SUBJECT_VERBS_REFL = "minos_ns_verbs_refl";
-		public final static String OPTION_NON_SUBJECT_VERBS_RELF_INF = "minos_ns_verbs_refl_inf";
+		public final static String OPTION_NON_SUBJECT_VERBS = "ns_verbs";
+		public final static String OPTION_NON_SUBJECT_VERBS_REFL = "ns_verbs_refl";
+		public final static String OPTION_NON_SUBJECT_VERBS_RELF_INF = "ns_verbs_refl_inf";
 		
 		public static final Set<String> PartsOfSpeech = new HashSet<String>(Arrays.asList(new String[]{"fin", "praet", "winien", "bedzie"}));
 		private String nonSubjectFile = null;
@@ -299,11 +306,18 @@ public class MinosChunker extends Chunker {
 			extractVerbInfo();
 			
 			
-			this.nonSubjectFile = LinerOptions.getGlobal().getOption(OPTION_NON_SUBJECT_VERBS);
-			this.nonSubjectReflexiveFile = LinerOptions.getGlobal().getOption(OPTION_NON_SUBJECT_VERBS_REFL);
+//			this.nonSubjectFile = LinerOptions.getGlobal().getOption(OPTION_NON_SUBJECT_VERBS);
+//			this.nonSubjectReflexiveFile = LinerOptions.getGlobal().getOption(OPTION_NON_SUBJECT_VERBS_REFL);
 			//this.nonSubjectReflexiveInfFile = LinerOptions.getGlobal().getOption(OPTION_NON_SUBJECT_VERBS_REFL_INF);
 			// Load non-subject quasi verbs
 			if(nonSubjectVerbs == null || nonSubjectReflexiveVerbs == null){
+				for(Ini.Section section : LinerOptions.getGlobal().chunkersDescriptions){
+					if(CHUNKER_NAME.equals(section.get(OPTION_TYPE))){
+						this.nonSubjectFile = section.get(OPTION_NON_SUBJECT_VERBS);
+						this.nonSubjectReflexiveFile = section.get(OPTION_NON_SUBJECT_VERBS_REFL);
+					}
+				}
+				
 				System.out.println("LOADING QUASI VERBS");
 				try {
 					loadNonSubjectVerbs(this.nonSubjectFile, this.nonSubjectReflexiveFile);

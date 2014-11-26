@@ -83,7 +83,7 @@ public class AnnCoreferenceSAXParser extends DefaultHandler {
 	            currentRelationCluster = new RelationCluster(Relation.COREFERENCE);
 	        }
 	        else if (elementName.equalsIgnoreCase(TAG_POINTER)) {
-	            String target = attributes.getValue("target");
+	            String target = attributes.getValue("target").split("#")[1];
 	            currentRelationCluster.addAnnotation(annotationsMap.get(target));
 	        }
 	    }
