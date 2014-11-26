@@ -40,7 +40,7 @@ public class DaemonOptions extends LinerOptions {
                 .isRequired()
                 .create(OPTION_DB_TYPE));
         options.addOption(OptionBuilder.withArgName("db_path").hasArg()
-                .withDescription("path to file database folder")
+                .withDescription("path to database directory (with following folders created within: requests, processing, errors, results")
                 .create(OPTION_DB_PATH));
         options.addOption(OptionBuilder.withArgName("name").hasArg()
                 .withDescription("sql database host name")
@@ -115,9 +115,14 @@ public class DaemonOptions extends LinerOptions {
 
     protected void printModes(){
         System.out.println("Liner2 service daemon - listen and process requests from a given database");
-        System.out.println("Daemon works in 2 modes: with sql or filebased badabase, you must specify parameter -db_type (sql|file)");
-        System.out.println("Required parameteres for file mode: -db_path, -models");
-        System.out.println("Required parameteres for sql mode: -ip, -p, -db_*, -models");
+        System.out.println("Daemon works in 2 modes: with sql or filebased badabase.");
+        System.out.println("Required parameteres: -db_type, -models");
+        System.out.println("Required parameteres for file mode: -db_path");
+        System.out.println("Required parameteres for sql mode: -ip, -p, -db_*");
+        System.out.println();
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.setWidth(98);
+        formatter.printHelp("./liner2-daemon [options]", this.options);
     }
 
 }
