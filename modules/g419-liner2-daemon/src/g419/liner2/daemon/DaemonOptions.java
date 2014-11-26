@@ -115,7 +115,9 @@ public class DaemonOptions extends LinerOptions {
 
     protected void printModes(){
         System.out.println("Liner2 service daemon - listen and process requests from a given database");
-        System.out.println("Parameteres: -ip, -p, -db_*, -models");
+        System.out.println("Daemon works in 2 modes: with sql or filebased badabase, you must specify parameter -db_type (sql|file)");
+        System.out.println("Required parameteres for file mode: -db_path, -models");
+        System.out.println("Required parameteres for sql mode: -ip, -p, -db_*, -models");
     }
 
 }

@@ -1,5 +1,7 @@
 package g419.liner2.daemon;
 
+import g419.liner2.api.tools.ParameterException;
+
 /**
  * Run the module. 
  * 
@@ -14,8 +16,8 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         DaemonOptions options =  (DaemonOptions)DaemonOptions.getGlobal();
-        options.parse(args);
 		try {
+            options.parse(args);
             String db_type = options.getProperties().getProperty("db_type");
             if(db_type.equals("sql")){
                 new SQLDaemonThread().run();
@@ -23,8 +25,12 @@ public class Main {
             else if(db_type.equals("file")){
                 new FilebasedDaemonThread().run();
             }
+            else{
+                throw new ParameterException("Invalid daemon mode!");
+            }
 		} catch (Exception ex) {
-			ex.printStackTrace();
+            System.out.println(ex);
+            ((DaemonOptions) DaemonOptions.getGlobal()).printModes();
 		}
     }
     
