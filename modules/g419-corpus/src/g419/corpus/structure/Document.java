@@ -185,4 +185,8 @@ public class Document{
         return copy;
 
     }
+    
+    public void addRelation(Relation relation){
+    	this.relations.addRelation(relation);
+    }
 }
