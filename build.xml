@@ -20,6 +20,11 @@
 		<copy file="modules/g419-liner2-api/g419-liner2-api.jar" todir="./lib"></copy>
 	</target>
 
+	<target name="jar-lib-cli">
+		<exec dir="modules/g419-lib-cli" executable="ant"><arg line="jar"/></exec>
+		<copy file="modules/g419-lib-cli/g419-lib-cli.jar" todir="./lib"></copy>
+	</target>
+
 	<target name="jar-liner2-cli">
         <exec dir="modules/g419-liner2-cli" executable="ant"><arg line="jar"/></exec>
 		<copy file="modules/g419-liner2-cli/g419-liner2-cli.jar" todir="./lib"></copy>
@@ -37,11 +42,11 @@
 
 	<target name="jar-liner2-api-all" depends="jar-corpus,jar-liner2-api"></target>
 	
-	<target name="jar-liner2-cli-all" depends="jar-corpus,jar-liner2-api,jar-liner2-cli"></target>
+	<target name="jar-liner2-cli-all" depends="jar-corpus,jar-liner2-api,jar-lib-cli,jar-liner2-cli"></target>
 
-    <target name="jar-liner2-daemon-all" depends="jar-corpus,jar-liner2-api,jar-liner2-daemon"></target>
+    <target name="jar-liner2-daemon-all" depends="jar-corpus,jar-liner2-api,jar-lib-cli,jar-liner2-daemon"></target>
 
-	<target name="jar" depends="jar-corpus,jar-liner2-relations,jar-liner2-api,jar-liner2-cli,jar-liner2-daemon"></target>
+	<target name="jar" depends="jar-corpus,jar-liner2-api,jar-liner2-relations,jar-lib-cli,jar-liner2-cli,jar-liner2-daemon"></target>
 
 	
 	<target name="deploy" depends="jar">
