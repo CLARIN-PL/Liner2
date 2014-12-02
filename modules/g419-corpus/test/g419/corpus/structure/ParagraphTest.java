@@ -2,6 +2,8 @@ package g419.corpus.structure;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 
 public class ParagraphTest {
@@ -13,7 +15,13 @@ public class ParagraphTest {
 
 	@Test
 	public void testAddSentence() {
-		fail("Not yet implemented"); // TODO
+		String id1 = "id1";
+
+		Paragraph paragraph1 = new Paragraph(id1);
+		Sentence sentence1 = new Sentence();
+		paragraph1.addSentence(sentence1);
+
+		assertTrue(paragraph1.getSentences().contains(sentence1));
 	}
 
 	@Test
@@ -23,16 +31,32 @@ public class ParagraphTest {
 
 	@Test
 	public void testGetId() {
-		fail("Not yet implemented"); // TODO
+		String id1 = "id1";
+
+		Paragraph paragraph1 = new Paragraph(id1);
+
+		assertEquals(id1, paragraph1.getId());
 	}
 
 	@Test
 	public void testGetSentences() {
-		fail("Not yet implemented"); // TODO
+		String id1 = "id1";
+
+		Paragraph paragraph1 = new Paragraph(id1);
+		Sentence sentence1 = new Sentence();
+		Sentence sentence2 = new Sentence();
+		paragraph1.addSentence(sentence1);
+		paragraph1.addSentence(sentence2);
+
+		ArrayList<Sentence> sentencesFromParagraph = paragraph1.getSentences();
+
+		assertTrue(sentencesFromParagraph.contains(sentence1));
+		assertTrue(sentencesFromParagraph.contains(sentence2));
 	}
 
 	@Test
 	public void testSetAttributeIndex() {
+		TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
 		fail("Not yet implemented"); // TODO
 	}
 
@@ -53,7 +77,13 @@ public class ParagraphTest {
 
 	@Test
 	public void testClone() {
-		fail("Not yet implemented"); // TODO
+		String id1 = "id1";
+		
+		Paragraph paragraph1 = new Paragraph(id1);
+		
+		Paragraph paragraph2 = paragraph1.clone();
+		
+		assertEquals(paragraph1,paragraph2);
 	}
 
 	@Test
