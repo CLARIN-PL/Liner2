@@ -2,12 +2,14 @@ package g419.liner2.daemon;
 
 import g419.liner2.api.LinerOptions;
 import g419.corpus.Logger;
+import g419.liner2.api.tools.ParameterException;
 import org.apache.commons.cli.*;
 import org.ini4j.Ini;
 import org.ini4j.Profile;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 /**
@@ -31,25 +33,34 @@ public class DaemonOptions extends LinerOptions {
     public static final String OPTION_PORT = "p";
     public static final String OPTION_VERBOSE = "v";
     public static final String OPTION_VERBOSE_LONG = "verbose";
+    public static final String OPTION_DB_TYPE = "db_type";
+    public static final String OPTION_DB_PATH = "db_path";
 
     public DaemonOptions(){
+        options.addOption(OptionBuilder.withArgName("type").hasArg()
+                .withDescription("database type (file | sql )")
+                .isRequired()
+                .create(OPTION_DB_TYPE));
+        options.addOption(OptionBuilder.withArgName("db_path").hasArg()
+                .withDescription("path to database directory (with following folders created within: requests, processing, errors, results")
+                .create(OPTION_DB_PATH));
         options.addOption(OptionBuilder.withArgName("name").hasArg()
-                .withDescription("database host name")
+                .withDescription("sql database host name")
                 .create(OPTION_DB_HOST));
         options.addOption(OptionBuilder.withArgName("name").hasArg()
-                .withDescription("database name")
+                .withDescription("sql database name")
                 .create(OPTION_DB_NAME));
         options.addOption(OptionBuilder.withArgName("password").hasArg()
-                .withDescription("database password")
+                .withDescription("sql database password")
                 .create(OPTION_DB_PASSWORD));
         options.addOption(OptionBuilder.withArgName("number").hasArg()
-                .withDescription("database port number")
+                .withDescription("sql database port number")
                 .create(OPTION_DB_PORT));
         options.addOption(OptionBuilder.withArgName("address").hasArg()
-                .withDescription("database URI address")
+                .withDescription("sql database URI address")
                 .create(OPTION_DB_URI));
         options.addOption(OptionBuilder.withArgName("username").hasArg()
-                .withDescription("database user name ")
+                .withDescription("sql database user name ")
                 .create(OPTION_DB_USER));
         options.addOption(OptionBuilder.withArgName("number").hasArg()
                 .withDescription("maximum number of processing threads")
@@ -64,7 +75,7 @@ public class DaemonOptions extends LinerOptions {
                 .withDescription("multiple models config for daemon")
                 .create(OPTION_MODELS));
         options.addOption(OptionBuilder
-                .withLongOpt(OPTION_VERBOSE_LONG).withDescription("print help")
+                .withLongOpt(OPTION_VERBOSE_LONG).withDescription("verbose actions")
                 .create(OPTION_VERBOSE));
     }
 
@@ -74,6 +85,16 @@ public class DaemonOptions extends LinerOptions {
 
     public void parse(String[] args) throws Exception{
         CommandLine line = new GnuParser().parse(this.options, args);
+            HashSet<String> argNames = new HashSet<String>();
+            for(Option opt: line.getOptions()){
+                String argName = opt.getOpt();
+                if(argNames.contains(argName)){
+                    throw new ParameterException("Repeated argument:" + argName);
+                }
+                else{
+                    argNames.add(argName);
+                }
+            }
         Iterator<?> i_options = line.iterator();
         while (i_options.hasNext()) {
             Option o = (Option) i_options.next();
@@ -106,7 +127,14 @@ public class DaemonOptions extends LinerOptions {
 
     protected void printModes(){
         System.out.println("Liner2 service daemon - listen and process requests from a given database");
-        System.out.println("Parameteres: -ip, -p, -db_*, -models");
+        System.out.println("Daemon works in 2 modes: with sql or filebased badabase.");
+        System.out.println("Required parameteres: -db_type, -models");
+        System.out.println("Required parameteres for file mode: -db_path");
+        System.out.println("Required parameteres for sql mode: -ip, -p, -db_*");
+        System.out.println();
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.setWidth(98);
+        formatter.printHelp("./liner2-daemon [options]", this.options);
     }
 
 }

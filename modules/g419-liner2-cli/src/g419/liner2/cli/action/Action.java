@@ -1,16 +1,21 @@
 package g419.liner2.cli.action;
 
 import g419.corpus.Logger;
+import g419.liner2.api.tools.ParameterException;
 import g419.liner2.cli.CommonOptions;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+
+import java.util.HashSet;
 
 public abstract class Action {
 
 	String name = null;
 	String description = null;
 	Options options = new Options();
+	HashSet<String> multipleValueOptions = new HashSet<String>();
 	
 	/**
 	 * @param name -- nazwa trybu pracy.
@@ -42,6 +47,7 @@ public abstract class Action {
 	}
 
     protected void parseDefault(CommandLine line){
+		checkOptionRepetition(line);
         if(line.hasOption(CommonOptions.OPTION_VERBOSE)){
             Logger.verbose = true;
         }
@@ -67,5 +73,23 @@ public abstract class Action {
 	}
 	
 	abstract public void run() throws Exception;
+
+	public void checkOptionRepetition(CommandLine line){
+		try {
+			HashSet<String> argNames = new HashSet<String>();
+			for(Option opt: line.getOptions()){
+				String argName = opt.getOpt();
+				if(!multipleValueOptions.contains(argName) && argNames.contains(argName)){
+					throw new ParameterException("Repeated argument: " + argName);
+				}
+				else{
+					argNames.add(argName);
+				}
+			}
+		} catch (ParameterException e) {
+			System.out.println(e);
+			System.exit(1);
+		}
+	}
 	
 }

@@ -36,7 +36,7 @@ public class ActionConvert extends Action {
 	public ActionConvert() {
 		super("convert");
         this.setDescription("converts documents from one format to another and applies defined converters");
-
+        this.multipleValueOptions.add(OPTION_CONVERSION);
         this.options.addOption(CommonOptions.getInputFileFormatOption());
         this.options.addOption(CommonOptions.getInputFileNameOption());
         this.options.addOption(CommonOptions.getOutputFileFormatOption());
@@ -62,6 +62,7 @@ public class ActionConvert extends Action {
             for(String conv: converters){
                 this.convertersDesciptions.add(conv);
             }
+
         }
         String featuresFile = line.getOptionValue(CommonOptions.OPTION_FEATURES);
         if(featuresFile != null){
