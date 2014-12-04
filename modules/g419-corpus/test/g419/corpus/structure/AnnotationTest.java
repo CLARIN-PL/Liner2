@@ -226,6 +226,8 @@ public class AnnotationTest {
 			Assert.assertEquals("Text for two same object is diffrent", text1, text2);
 
 			// TODO Check if text is the same as it supposed to be
+			
+			// FIXME Tak zdanie musi mieć tokeny
 
 		} catch (IndexOutOfBoundsException e) {
 			fail("Annotation expect that sentence have at least one token");

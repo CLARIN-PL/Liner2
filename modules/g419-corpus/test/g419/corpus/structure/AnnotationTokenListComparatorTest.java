@@ -8,12 +8,20 @@ public class AnnotationTokenListComparatorTest {
 
 	@Test
 	public void testAnnotationTokenListComparator() {
-		fail("Not yet implemented");
+		AnnotationTokenListComparator annotationTokenListComparator = new AnnotationTokenListComparator();
+		assertNotNull(annotationTokenListComparator);
 	}
 
 	@Test
 	public void testAnnotationTokenListComparatorBoolean() {
-		fail("Not yet implemented");
+		AnnotationTokenListComparator annotationTokenListComparator;
+		
+		// Scenario 1 (true)
+		annotationTokenListComparator = new AnnotationTokenListComparator(true);
+		assertNotNull(annotationTokenListComparator);
+		// Scenario 2 (false)
+		annotationTokenListComparator = new AnnotationTokenListComparator(false);
+		assertNotNull(annotationTokenListComparator);
 	}
 
 	@Test
