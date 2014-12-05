@@ -75,7 +75,7 @@ public class SQLWorkingThread extends WorkingThread {
 		daemon.finishWorkingThread(this);
 	}
 
-	//TODO porzucić żądanie w przypadku przerwania wątku
+	//TODO porzucic zadanie w przypadku przerwania watku
 	//@Override
 	//public void interrupt() {
 	//}
@@ -84,11 +84,11 @@ public class SQLWorkingThread extends WorkingThread {
 		Logger.log("Processing request with id: " + request.getId(), false);
 
         String model = request.getModelName();
+        if(model.equals("default")){
+            model = DaemonOptions.getGlobal().defaultModel;
+        }
         if(!chunkers.containsKey(model)){
             throw new Exception("Unrecognized model in request: "+model);
-        }
-        if(model.equals("default")){
-            model = DaemonOptions.getGlobal().getOption(DaemonOptions.getGlobal().defaultModel);
         }
         TokenFeatureGenerator gen = featureGenerators.get(model);
         Chunker chunker = chunkers.get(model);
