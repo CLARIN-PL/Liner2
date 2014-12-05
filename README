@@ -94,3 +94,9 @@ E. Uruchomienie modułów
 
    Moduły g419-corpus i g419-liner2-api mają postać bibliotek, które moża wykorzystać
    z poziomu kodu.
+
+F. Instalacja komendy liner2-cli w systemie
+--------------------------------------
+
+   Aby móc uruchomić linera z dowolnej lokalizacji należy zainstalować go używając komendy:
+   sudo ant install
