@@ -2,14 +2,24 @@
 <project name="Create a single package with all modules" default="jar" basedir=".">
 
 	<property name="target_path" value="deploy" />
-	<property name="version" value="liner2.4" />	
+	<property name="version" value="liner2.5" />	
 	<property name="version_path" value="${target_path}/${version}" />
 
 	<target name="jar-corpus">
         <exec dir="modules/g419-corpus" executable="ant"><arg line="jar"/></exec>
 		<copy file="modules/g419-corpus/g419-corpus.jar" todir="./lib"></copy>
 	</target>
-	
+
+	<target name="jar-tools">
+        <exec dir="modules/g419-tools" executable="ant"><arg line="jar"/></exec>
+        <copy file="modules/g419-tools/g419-tools.jar" todir="./lib"></copy>
+    </target>
+
+	<target name="jar-lib-cli">
+		<exec dir="modules/g419-lib-cli" executable="ant"><arg line="jar"/></exec>
+		<copy file="modules/g419-lib-cli/g419-lib-cli.jar" todir="./lib"></copy>
+	</target>
+
 	<target name="jar-liner2-relations">
         <exec dir="modules/g419-liner2-relations" executable="ant"><arg line="jar"/></exec>
 		<copy file="modules/g419-liner2-relations/g419-liner2-relations.jar" todir="./lib"></copy>
@@ -18,11 +28,6 @@
 	<target name="jar-liner2-api">
         <exec dir="modules/g419-liner2-api" executable="ant"><arg line="jar"/></exec>
 		<copy file="modules/g419-liner2-api/g419-liner2-api.jar" todir="./lib"></copy>
-	</target>
-
-	<target name="jar-lib-cli">
-		<exec dir="modules/g419-lib-cli" executable="ant"><arg line="jar"/></exec>
-		<copy file="modules/g419-lib-cli/g419-lib-cli.jar" todir="./lib"></copy>
 	</target>
 
 	<target name="jar-liner2-cli">
@@ -35,10 +40,15 @@
         <copy file="modules/g419-liner2-daemon/g419-liner2-daemon.jar" todir="./lib"></copy>
     </target>
 
-    <target name="jar-tools">
-        <exec dir="modules/g419-tools" executable="ant"><arg line="jar"/></exec>
-        <copy file="modules/g419-tools/g419-tools.jar" todir="./lib"></copy>
-    </target>
+	<target name="jar-crete-api">
+        <exec dir="modules/g419-crete-api" executable="ant"><arg line="jar"/></exec>
+		<copy file="modules/g419-crete-api/g419-crete-api.jar" todir="./lib"></copy>
+	</target>
+
+	<target name="jar-crete-cli">
+        <exec dir="modules/g419-crete-cli" executable="ant"><arg line="jar"/></exec>
+		<copy file="modules/g419-crete-cli/g419-crete-cli.jar" todir="./lib"></copy>
+	</target>
 
 	<target name="jar-liner2-api-all" depends="jar-corpus,jar-liner2-api"></target>
 	
@@ -46,8 +56,9 @@
 
     <target name="jar-liner2-daemon-all" depends="jar-corpus,jar-liner2-api,jar-lib-cli,jar-liner2-daemon"></target>
 
-	<target name="jar" depends="jar-corpus,jar-liner2-api,jar-liner2-relations,jar-lib-cli,jar-liner2-cli,jar-liner2-daemon"></target>
-
+	<target name="jar-crete-cli-all" depends="jar-corpus,jar-lib-cli,jar-crete-api"></target>
+	
+	<target name="jar" depends="jar-corpus,jar-liner2-api,jar-liner2-relations,jar-lib-cli,jar-liner2-cli,jar-liner2-daemon,jar-crete-api,jar-crete-cli"></target>
 	
 	<target name="deploy" depends="jar">
 		<delete dir="${version_path}"/>
@@ -68,7 +79,10 @@
 				<include name="princetonAdapter.jar"/>
 				<include name="weka-3.6.9.jar"/>
 				<include name="g419-corpus.jar"/>
+				<include name="g419-lib-cli.jar"/>
+				<include name="g419-tools.jar"/>
 				<include name="g419-liner2-api.jar"/>
+				<include name="g419-crete-api.jar"/>
 				<include name="g419-liner2-relations.jar"/>
 			</fileset>
 		</copy>
