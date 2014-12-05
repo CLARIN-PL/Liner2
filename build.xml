@@ -81,5 +81,15 @@
 			</fileset>
 		</copy>
 	</target>
+	        <!-- Create command liner2 linking to current instance of Liner2. -->
+        <target name="install">
+                <property name="liner2-cli" location="liner2-cli"/>
+                <echo file="/usr/local/bin/liner2-cli">#!/bin/bash
+${liner2-cli} $@
+                </echo>
+                <chmod file="/usr/local/bin/liner2-cli" perm="ugo+x"/>
+                <echo message="/usr/local/bin/liner2-cli was created"/>
+                <echo message="Now you can use `liner2-cli [parameters]`."/>
+        </target>
 
 </project>
