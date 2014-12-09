@@ -1,8 +1,8 @@
-package g419.liner2.cli.action;
+package g419.lib.cli.action;
 
 import g419.corpus.Logger;
+import g419.lib.cli.CommonOptions;
 import g419.liner2.api.tools.ParameterException;
-import g419.liner2.cli.CommonOptions;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
@@ -14,7 +14,7 @@ public abstract class Action {
 
 	String name = null;
 	String description = null;
-	Options options = new Options();
+	protected Options options = new Options();
 	HashSet<String> multipleValueOptions = new HashSet<String>();
 	
 	/**

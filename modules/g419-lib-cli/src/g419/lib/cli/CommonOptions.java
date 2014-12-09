@@ -1,4 +1,4 @@
-package g419.liner2.cli;
+package g419.lib.cli;
 
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;

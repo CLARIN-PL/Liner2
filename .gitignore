@@ -1,6 +1,12 @@
+bin
 lib/CRFPP.jar
 lib/libCRFPP.so
 lib/g419-corpus.jar
+lib/g419-lib-cli.jar
 lib/g419-liner2-api.jar
 lib/g419-liner2-cli.jar
+lib/g419-liner2-daemon.jar
+lib/g419-liner2-relations.jar
+lib/g419-crete-api.jar
+lib/g419-crete-cli.jar
 modules/**/*.jar

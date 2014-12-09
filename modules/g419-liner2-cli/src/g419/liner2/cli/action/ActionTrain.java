@@ -1,8 +1,9 @@
 package g419.liner2.cli.action;
 
+import g419.lib.cli.CommonOptions;
+import g419.lib.cli.action.Action;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.factory.ChunkerManager;
-import g419.liner2.cli.CommonOptions;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
