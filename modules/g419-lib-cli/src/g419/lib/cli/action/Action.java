@@ -12,10 +12,10 @@ import java.util.HashSet;
 
 public abstract class Action {
 
-	String name = null;
-	String description = null;
+	protected String name = null;
+	protected String description = null;
 	protected Options options = new Options();
-	HashSet<String> multipleValueOptions = new HashSet<String>();
+	protected HashSet<String> multipleValueOptions = new HashSet<String>();
 	
 	/**
 	 * @param name -- nazwa trybu pracy.
