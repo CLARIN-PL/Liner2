@@ -119,7 +119,7 @@ public class SQLWorkingThread extends WorkingThread {
 			numParagraphs++;
 		}
 		writer.writeDocument(ps);
-		writer.flush();
+		writer.close();
 		// save results
 		request.setStats(numTokens, numSentences, numParagraphs, numChunks);
 		request.setText(ous.toString());
