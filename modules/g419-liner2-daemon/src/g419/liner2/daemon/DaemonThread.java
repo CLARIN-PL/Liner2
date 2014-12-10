@@ -21,17 +21,9 @@ public abstract class DaemonThread extends Thread{
     protected HashMap<String, TokenFeatureGenerator> featureGenerators;
     protected  HashMap<String, Chunker> chunkers;
 
-    public DaemonThread() throws ParameterException {
+    public DaemonThread(int maxThreads) throws ParameterException {
         // setup maximum threads number
         this.maxThreads = DEFAULT_MAX_THREADS;
-        String optMaxThreads = DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_MAX_THREADS);
-        if (optMaxThreads != null) {
-            try {
-                this.maxThreads = Integer.parseInt(optMaxThreads);
-            } catch (NumberFormatException ex) {
-                throw new ParameterException("Incorrect maximum threads number: " + optMaxThreads);
-            }
-        }
         // setup working threads
         this.workingThreads = new Vector<WorkingThread>();
 

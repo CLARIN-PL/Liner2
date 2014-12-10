@@ -24,9 +24,9 @@ public class FilebasedDaemonThread extends DaemonThread {
     protected TokenFeatureGenerator gen;
     protected Chunker chunker;
 
-    public FilebasedDaemonThread() throws ParameterException {
-        super();
-        db_path = new File(DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_PATH));
+    public FilebasedDaemonThread(File db_path, int max_threads) throws ParameterException {
+        super(max_threads);
+        this.db_path = db_path;
         String model = DaemonOptions.getGlobal().defaultModel;
         gen = featureGenerators.get(model);
         chunker = chunkers.get(model);
