@@ -13,6 +13,8 @@
 		<pathelement location="../../lib/commons-cli-1.2.jar"/>
 		<pathelement location="../../lib/commons-io-2.4.jar"/>
 		<pathelement location="../g419-corpus/g419-corpus.jar"/>
+		<pathelement location="../g419-tools/g419-tools.jar"/>
+		<pathelement location="../g419-liner2-api/g419-liner2-api.jar"/>
 		<pathelement location="../g419-lib-cli/g419-lib-cli.jar"/>
 		<pathelement location="../g419-crete-api/g419-crete-api.jar"/>
 	</path>

@@ -51,6 +51,8 @@ public class WriterFactory {
             return new ArffStreamWriter(out);
         else if (outputFormat.equals("verb_eval"))
             return new MinosVerbEvalWriter(out);
+        else if (outputFormat.equals("simple_rel"))
+        	return new SimpleRelationClusterSetWriter(out);
 		else		
 			throw new Exception("Output format " + outputFormat + " not recognized.");
 	}

@@ -11,8 +11,10 @@
 	
 	<path id="classpath.standard">
         <pathelement location="../../lib/commons-io-2.4.jar"/>
+		<pathelement location="../../lib/ini4j-0.5.0.jar"/>
 		<pathelement location="../g419-corpus/g419-corpus.jar"/>
-		<pathelement location="../g419-corpus/g419-tools.jar"/>
+		<pathelement location="../g419-tools/g419-tools.jar"/>
+		<pathelement location="../g419-liner2-api/g419-liner2-api.jar"/>
 	</path>
 	
 	<target name="clean">
