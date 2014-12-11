@@ -48,7 +48,7 @@ public class ConllStreamWriter extends AbstractDocumentWriter{
 		String cpos = null;
 		
 		for(Tag tag : t.getTags()){
-			if(tag.getDisamb()){
+			if(tag.getDisamb() || t.getTags().size() == 1){
 				int firstSep = Math.max(0, tag.getCtag().indexOf(":"));
 				if(firstSep > 0) cpos = tag.getCtag().substring(0, firstSep);
 				ctag = tag.getCtag().substring(tag.getCtag().indexOf(":") + 1).replace(":", "|");
