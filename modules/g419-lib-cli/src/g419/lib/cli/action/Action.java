@@ -13,7 +13,7 @@ import java.util.HashSet;
 public abstract class Action {
 
 	protected String name = null;
-	String description = null;
+	protected String description = null;
 	protected Options options = new Options();
 	protected HashSet<String> multipleValueOptions = new HashSet<String>();
 	

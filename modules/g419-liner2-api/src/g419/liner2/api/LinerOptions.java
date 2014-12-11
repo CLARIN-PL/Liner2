@@ -59,9 +59,6 @@ public class LinerOptions {
     public LinkedHashMap<String, String> features = new LinkedHashMap<String, String>();
 	public LinkedHashSet<Ini.Section> chunkersDescriptions = new LinkedHashSet<Ini.Section>();
     public List<Pattern> types = new ArrayList<Pattern>();
-
-    public HashMap<String, LinerOptions> models = null;
-    public String defaultModel = null;
 	 
 	/**
 	 * Constructor

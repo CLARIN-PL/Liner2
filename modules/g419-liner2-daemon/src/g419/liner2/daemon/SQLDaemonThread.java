@@ -28,43 +28,8 @@ public class SQLDaemonThread extends DaemonThread {
 	Database db;
 	ServerSocket serverSocket;
 
-	public SQLDaemonThread() throws ParameterException {
-        super();
-
-		// setup database address
-		String db_host = null, db_port = "3306", db_user = null,
-			db_pass = "", db_name = null;
-
-		// getGlobal access data from db_uri parameter
-		String db_uri = DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_URI);
-		if (db_uri != null) {
-			Pattern dbUriPattern = Pattern.compile("([^:@]*)(:([^:@]*))?@([^:@]*)(:([^:@]*))?/(.*)");
-			Matcher dbUriMatcher = dbUriPattern.matcher(db_uri);
-			if (dbUriMatcher.find()) {
-				db_user = dbUriMatcher.group(1);
-				if (dbUriMatcher.group(3) != null)
-					db_pass = dbUriMatcher.group(3);
-				db_host = dbUriMatcher.group(4);
-				if (dbUriMatcher.group(6) != null)
-					db_port = dbUriMatcher.group(6);
-				db_name = dbUriMatcher.group(7);
-			}
-		}
-
-		// overwrite with access data from db_* parameters
-		if (DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_HOST) != null)
-			db_host = DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_HOST);
-		if (DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_PORT) != null)
-			db_port = DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_PORT);
-		if (DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_USER) != null)
-			db_user = DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_USER);
-		if (DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_PASSWORD) != null)
-			db_pass = DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_PASSWORD);
-		if (DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_NAME) != null)
-			db_name = DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_DB_NAME);
-
-		if ((db_host == null) || (db_user == null) || (db_name == null))
-			throw new ParameterException("Daemon mode: database access data required!");
+	public SQLDaemonThread(String db_host, String db_port, String db_user, String db_pass, String db_name, String ip, int port, int max_threads) throws ParameterException {
+        super(max_threads);
 
 		this.db_addr = "jdbc:mysql://" + db_host; 
 		if (db_port != null)
@@ -81,17 +46,9 @@ public class SQLDaemonThread extends DaemonThread {
 		this.db = new Database(this.db_addr);
 
 		// setup ip address and port number
-		this.ip = DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_IP);
-		if (this.ip == null)
-			throw new ParameterException("Daemon mode: -ip (IP address) option is obligatory!");
-		String optPort = DaemonOptions.getGlobal().getOption(DaemonOptions.OPTION_PORT);
-		if (optPort == null)
-			throw new ParameterException("Daemon mode: -p (port) option is obligatory!");
-    	try {
-			this.port = Integer.parseInt(optPort);
-		} catch (NumberFormatException ex) {
-			throw new ParameterException("Incorrect port number: " + optPort);
-		}
+		this.ip = ip;
+		this.port = port;
+
 	}
 
 	@Override

@@ -74,8 +74,13 @@ public class MinosChunker extends Chunker {
 	
 	private DependencyStructure parseMalt(Sentence sentence) throws MaltChainedException{
 		String[] conllSentence = conllSentence(sentence);
-		DependencyStructure graph = this.maltService.parse(conllSentence);
-		return graph;
+		try{
+			DependencyStructure graph = this.maltService.parse(conllSentence);
+			return graph;
+		}catch(Exception ex){
+			System.out.println(ex.getMessage());
+		}
+		return null;
 	}
 	
 	/**
