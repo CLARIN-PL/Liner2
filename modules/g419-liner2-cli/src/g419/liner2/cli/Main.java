@@ -1,7 +1,6 @@
 package g419.liner2.cli;
 
 import g419.corpus.TerminateException;
-import g419.crete.cli.action.ActionEvalParent;
 import g419.lib.cli.action.Action;
 import g419.liner2.cli.action.ActionAnnotations;
 import g419.liner2.cli.action.ActionAgreement;
@@ -46,7 +45,6 @@ public class Main {
     	main.registerAction(new ActionTime());
     	main.registerAction(new ActionTrain());
     	main.registerAction(new ActionAgreement());
-    	main.registerAction(new ActionEvalParent());
     	main.registerAction(new ActionLearningCurve());
     	main.registerAction(new ActionStats());
     	
