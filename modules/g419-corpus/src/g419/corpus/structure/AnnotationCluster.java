@@ -19,14 +19,14 @@ import org.apache.commons.lang3.StringUtils;
  * @author Adam Kaczmarek<adamjankaczmarek@gmail.com>
  *
  */
-public class RelationCluster {
+public class AnnotationCluster {
 	private SortedSet<Annotation> annotations;
 	private String type;
 	private Annotation headAnnotation;
 	private ReheadingStrategy defaultReheadStrategy = new ReheadToFirst();
 	private ReturningStrategy defaultReturningStrategy  = new ReturnRelationsToPredecessor();
 	
-	public RelationCluster(String type){
+	public AnnotationCluster(String type){
 		this.annotations = new TreeSet<Annotation>(new AnnotationPositionComparator());
 		this.type = type;
 	}
