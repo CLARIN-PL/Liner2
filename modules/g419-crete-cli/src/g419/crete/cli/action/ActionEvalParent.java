@@ -1,15 +1,15 @@
-package g419.liner2.cli.action;
+package g419.crete.cli.action;
 
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationTokenListComparator;
 import g419.corpus.structure.Document;
+import g419.crete.api.evaluation.ParentEvaluator;
+import g419.crete.api.evaluation.ParentEvaluator.*;
 import g419.lib.cli.CommonOptions;
 import g419.lib.cli.action.Action;
 import g419.liner2.api.features.TokenFeatureGenerator;
-import g419.liner2.relations.evaluation.ParentEvaluator;
-import g419.liner2.relations.evaluation.ParentEvaluator.*;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

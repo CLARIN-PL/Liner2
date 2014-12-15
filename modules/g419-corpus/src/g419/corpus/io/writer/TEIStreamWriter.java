@@ -4,8 +4,8 @@ import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Relation;
-import g419.corpus.structure.RelationCluster;
-import g419.corpus.structure.RelationClusterSet;
+import g419.corpus.structure.AnnotationCluster;
+import g419.corpus.structure.AnnotationClusterSet;
 import g419.corpus.structure.RelationSet;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Tag;
@@ -352,7 +352,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     }
 
     
-    private void writeRelationCluster(RelationCluster cluster, int clusterId) throws XMLStreamException{
+    private void writeRelationCluster(AnnotationCluster cluster, int clusterId) throws XMLStreamException{
     	int annCoreferenceIndent = 6;
     	this.indent(annCoreferenceIndent, annCoreferenceWriter);
     	String mentions = "";
@@ -411,9 +411,9 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     	annCoreferenceWriter.writeStartElement(TAG_PARAGRAPH);
     	annCoreferenceWriter.writeCharacters("\n");
     	
-    	RelationClusterSet documentRelations = RelationClusterSet.fromRelationSet(relations);
+    	AnnotationClusterSet documentRelations = AnnotationClusterSet.fromRelationSet(relations);
     	int clusterId = 0;
-    	for(RelationCluster cluster: documentRelations.getClusters()){
+    	for(AnnotationCluster cluster: documentRelations.getClusters()){
     		this.writeRelationCluster(cluster, ++clusterId);
     	}
     	

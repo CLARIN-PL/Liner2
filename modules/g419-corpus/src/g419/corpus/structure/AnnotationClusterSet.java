@@ -1,6 +1,6 @@
 package g419.corpus.structure;
 
-import g419.corpus.structure.RelationCluster.ReturningStrategy;
+import g419.corpus.structure.AnnotationCluster.ReturningStrategy;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,39 +15,40 @@ import java.util.Set;
  *
  * Opisuje relacje na poziomie dokumentu
  */
-public class RelationClusterSet {
+
+public class AnnotationClusterSet {
 
 	private String relationType;
-	private Map<Annotation, RelationCluster> annotationInCluster;
-	private Set<RelationCluster> relationClusters;
+	private Map<Annotation, AnnotationCluster> annotationInCluster;
+	private Set<AnnotationCluster> relationClusters;
 	
-	public RelationClusterSet(){
-		this.annotationInCluster = new HashMap<Annotation, RelationCluster>();
-		this.relationClusters = new HashSet<RelationCluster>();
+	public AnnotationClusterSet(){
+		this.annotationInCluster = new HashMap<Annotation, AnnotationCluster>();
+		this.relationClusters = new HashSet<AnnotationCluster>();
 	}
 	
-	public void addRelationCluster(RelationCluster cluster){
+	public void addRelationCluster(AnnotationCluster cluster){
 		this.relationClusters.add(cluster);
 		for(Annotation annotation : cluster.getAnnotations())
 			this.annotationInCluster.put(annotation, cluster);
 	}
 	
 	public void addRelation(Relation r){
-		RelationCluster cluster = getCreateCluster(r.getAnnotationFrom(), r.getAnnotationTo());
+		AnnotationCluster cluster = getCreateCluster(r.getAnnotationFrom(), r.getAnnotationTo());
 		cluster.addRelation(r); 
 		this.annotationInCluster.put(r.getAnnotationFrom(), cluster);
 		this.annotationInCluster.put(r.getAnnotationTo(), cluster);
 		this.relationClusters.add(cluster);
 	}
 	
-	private RelationCluster getCreateCluster(Annotation ann1, Annotation ann2){
-		RelationCluster cluster1 = annotationInCluster.get(ann1);
-		RelationCluster cluster2 = annotationInCluster.get(ann2);
+	private AnnotationCluster getCreateCluster(Annotation ann1, Annotation ann2){
+		AnnotationCluster cluster1 = annotationInCluster.get(ann1);
+		AnnotationCluster cluster2 = annotationInCluster.get(ann2);
 		
 		if(cluster1 != null && cluster2 == null) return cluster1;
 		if(cluster1 == null && cluster2 != null) return cluster2;
 		
-		if(cluster1 == null && cluster2 == null) return new RelationCluster(this.relationType);
+		if(cluster1 == null && cluster2 == null) return new AnnotationCluster(this.relationType);
 		
 		for(Annotation annotation : cluster2.getAnnotations()){
 			this.annotationInCluster.remove(annotation);
@@ -61,7 +62,7 @@ public class RelationClusterSet {
 	
 	public RelationSet getRelationSet(ReturningStrategy strategy){
 		RelationSet relationSet = new RelationSet();
-		for(RelationCluster cluster : this.relationClusters){
+		for(AnnotationCluster cluster : this.relationClusters){
 			for(Relation relation : cluster.getRelations(strategy)){
 				relationSet.addRelation(relation);
 			}
@@ -69,20 +70,20 @@ public class RelationClusterSet {
 		return relationSet;
 	}
 	
-	public Set<RelationCluster> getClusters(){
+	public Set<AnnotationCluster> getClusters(){
 		return this.relationClusters;
 	}
 
-	public Set<RelationCluster> getClustersWithAnnotations(Set<Annotation> annotations){
-		Set<RelationCluster> clustersWithAnnotations = new HashSet<RelationCluster>();
+	public Set<AnnotationCluster> getClustersWithAnnotations(Set<Annotation> annotations){
+		Set<AnnotationCluster> clustersWithAnnotations = new HashSet<AnnotationCluster>();
 		for(Annotation annotation: annotations)
 			clustersWithAnnotations.add(annotationInCluster.get(annotation));
 		
 		return clustersWithAnnotations;
 	}
 
-	public static RelationClusterSet fromRelationSet(RelationSet relations) {
-		RelationClusterSet relationClusterSet = new RelationClusterSet();
+	public static AnnotationClusterSet fromRelationSet(RelationSet relations) {
+		AnnotationClusterSet relationClusterSet = new AnnotationClusterSet();
 		
 		for(Relation relation: relations.getRelations())
 			relationClusterSet.addRelation(relation);
@@ -92,7 +93,7 @@ public class RelationClusterSet {
 	
 	public String toString(){
 		String out = "{";
-		for(RelationCluster cluster : relationClusters)
+		for(AnnotationCluster cluster : relationClusters)
 			out += cluster +"\n";
 		out += "}";
 		return out;
