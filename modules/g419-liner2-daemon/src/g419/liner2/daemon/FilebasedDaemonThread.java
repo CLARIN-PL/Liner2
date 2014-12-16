@@ -37,7 +37,7 @@ public class FilebasedDaemonThread extends DaemonThread {
         super.run();
         while (true) {
             assigning_requests:
-            for(File request: new File(db_path, "requests").listFiles()){
+            for(File request: new File(db_path, "queue").listFiles()){
                 FileBasedWorkingThread freeThread = null;
                 for(WorkingThread thread: workingThreads){
                     if(!((FileBasedWorkingThread)thread).isBusy()){
