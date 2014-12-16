@@ -45,7 +45,7 @@ public class FileBasedWorkingThread extends WorkingThread {
     }
 
     public void assignJob(File request){
-        File next_job = new File(String.format("%s/processing/%s", daemon.db_path.getAbsolutePath(), request.getName()));
+        File next_job = new File(String.format("%s/progress/%s", daemon.db_path.getAbsolutePath(), request.getName()));
         request.renameTo(next_job);
         this.request = next_job;
     }
@@ -73,12 +73,12 @@ public class FileBasedWorkingThread extends WorkingThread {
                 numParagraphs++;
             }
 
-            AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(to_process.getAbsolutePath().replace("processing", "results"), "ccl");
+            AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(to_process.getAbsolutePath().replace("progress", "done"), "ccl");
             writer.writeDocument(ps);
             writer.close();
 
         } catch (Exception e) {
-            to_process.renameTo(new File(to_process.getAbsolutePath().replace("processing", "errors")));
+            to_process.renameTo(new File(to_process.getAbsolutePath().replace("progress", "errors")));
             Logger.log("Error while processing request: " + to_process.getName(), false);
             e.printStackTrace();
         }

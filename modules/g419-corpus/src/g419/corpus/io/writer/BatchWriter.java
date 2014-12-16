@@ -12,16 +12,19 @@ import java.io.*;
  */
 public class BatchWriter extends AbstractDocumentWriter {
 
-	private String outputIndex = null;
+	private String outputRootFolder = null;
 	private String format;
     private String extension;
+    private BufferedWriter indexWriter;
 
 	/**
 	 * 
 	 * @param outputIndex -- path that will be appended to the document URI
 	 */
-	public BatchWriter(String outputIndex, String format) {
-		this.outputIndex = outputIndex;
+	public BatchWriter(String outputIndex, String format) throws IOException {
+        File index = new File(outputIndex);
+        this.outputRootFolder = index.getAbsoluteFile().getParent();
+        indexWriter = new BufferedWriter(new FileWriter(index, false));
         this.format = format;
         if(format.equals("ccl") || format.equals("ccl_rel")){
             extension = ".xml";
@@ -54,8 +57,12 @@ public class BatchWriter extends AbstractDocumentWriter {
 	
 	@Override
 	public void close() {
-		/** Nothing to do for this writer. */
-	}
+        try {
+            indexWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 	@Override
 	public void writeDocument(Document document){
@@ -64,11 +71,9 @@ public class BatchWriter extends AbstractDocumentWriter {
 			System.err.println("Error: Document name is not specified (null value)");
 		}
 		else{
-			File index = new File(this.outputIndex);
-            String rootDir = index.getAbsoluteFile().getParent();
             int dotIdx = name.lastIndexOf("."); // if input format is tei 'name' is directory, not file
             name = (dotIdx != -1 ? name.substring(0, dotIdx) : name)  + this.extension;
-            File file = new File(rootDir, name);
+            File file = new File(this.outputRootFolder, name);
 			try {
                 AbstractDocumentWriter writer;
                 if (this.format.equals("tei")){
@@ -85,9 +90,7 @@ public class BatchWriter extends AbstractDocumentWriter {
                 }
 				writer.writeDocument(document);
 				writer.close();
-                BufferedWriter indexWriter = new BufferedWriter(new FileWriter(index, true));
                 indexWriter.write(name+"\n");
-                indexWriter.close();
 			} catch (FileNotFoundException e) {
 				System.err.println("Error: FileNotFoundException " + e.getMessage());
 				e.printStackTrace();

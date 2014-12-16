@@ -24,7 +24,7 @@ public class ActionFileBased extends ActionDaemon {
         this.setDescription("Starts daemon with file database.");
 
         options.addOption(OptionBuilder.withArgName("db_path").hasArg().isRequired()
-                .withDescription("path to database directory (with following folders created within: requests, processing, errors, results")
+                .withDescription("path to database directory (with following folders created within: queue, progress, errors, done")
                 .create(OPTION_DB_PATH));
     }
 
