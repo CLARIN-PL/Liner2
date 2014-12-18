@@ -148,8 +148,8 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 		
 		indentRel(2);
 		xmlRelw.writeStartElement(TAG_RELATION);
-		xmlRelw.writeAttribute(ATTR_NAME, "coref");
-		xmlRelw.writeAttribute(ATTR_SET, Relation.COREFERENCE);
+		xmlRelw.writeAttribute(ATTR_NAME, relation.getType());
+		xmlRelw.writeAttribute(ATTR_SET, relation.getSet());
 		xmlRelw.writeCharacters("\n");
 			indentRel(4);
 			xmlRelw.writeStartElement(TAG_FROM);

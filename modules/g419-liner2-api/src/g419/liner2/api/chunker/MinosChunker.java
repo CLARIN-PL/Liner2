@@ -279,7 +279,7 @@ public class MinosChunker extends Chunker {
 		private static final String REFL_ORTH = "się";
 		private static final String TAK_ORTH = "tak";
 		private static final String PLEASE_ORTH = "proszę";
-		private static final String SUBJ_RELATION = "subj";
+//		private static final String SUBJ_RELATION = "subj";
 		
 		private static final String JUZ_ORTH = "już";
 		private static final String MAY_ORTH = "może";
@@ -707,7 +707,7 @@ public class MinosChunker extends Chunker {
 		}
 		
 		private List<MinosNoun> _getMaltSubject() throws MaltChainedException{
-			List<Node> subjectNodes = MaltGraphUtil.getOutgoingRelationTargetNode(graph, positionInSentence + 1, SUBJ_RELATION);
+			List<Node> subjectNodes = MaltGraphUtil.getOutgoingRelationTargetNode(graph, positionInSentence + 1, Relation.SUBJECT);
 			List<MinosChunker.MinosNoun> minosSubjects = new ArrayList<MinosChunker.MinosNoun>();
 			for(Node subjectNode : subjectNodes) 
 				minosSubjects.add(MinosNoun.fromNode(subjectNode, this.sentence));
@@ -731,7 +731,7 @@ public class MinosChunker extends Chunker {
 			if(chunkVP.isEmpty()) return false;
 			Set<Relation> relationsFromChunkVP = document.getRelations().getOutgoingRelations(chunkVP.get(0));
 			for(Relation relation : relationsFromChunkVP)
-				if(SUBJ_RELATION.equalsIgnoreCase(relation.getType())){
+				if(Relation.SUBJECT.equalsIgnoreCase(relation.getType())){
 					System.out.println("CHUNKREL_SUBJECT");
 					return true;
 //					List<MinosNoun> chunkrelSubjects = new ArrayList<MinosChunker.MinosNoun>();

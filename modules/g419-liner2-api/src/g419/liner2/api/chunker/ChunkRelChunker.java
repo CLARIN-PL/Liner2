@@ -7,16 +7,38 @@ import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
+import g419.liner2.api.LinerOptions;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
+
+import org.apache.commons.io.IOUtils;
+import org.ini4j.Ini;
 
 public class ChunkRelChunker extends Chunker {
 
-	private final String TMP_OUTPUT_FOLDER = "/home/adam/Desktop/crtmp/";
-	private final String PYTHON_PATH = "/home/adam/anaconda/envs/nlppwr/bin/python";
-	private final String CHUNKREL_PATH = "/home/adam/workspace/nlp/chunkrel/trainer/";
-	private final String CHUNKREL_CONFIG_PATH = "/home/adam/workspace/nlp/ikar/chunkrel_config/";
-	private final String CHUNKREL_MODEL_PATH = "/home/adam/workspace/nlp/chunkrel/trainer/model/";
+	public final static String CHUNKER_NAME = "chunkrel";
+	public final static String OPTION_TYPE = "type";
+	
+	private String TMP_OUTPUT_FOLDER;
+	private String PYTHON_PATH;
+	private String CHUNKREL_PATH;
+	private String CHUNKREL_CONFIG_PATH;
+	private String CHUNKREL_MODEL_PATH ;
+	
+	public ChunkRelChunker() {
+		for(Ini.Section section : LinerOptions.getGlobal().chunkersDescriptions)
+			if(CHUNKER_NAME.equals(section.get(OPTION_TYPE))){
+				TMP_OUTPUT_FOLDER = section.get("tmp_output_folder");
+				PYTHON_PATH = section.get("python_path");
+				CHUNKREL_PATH = section.get("chunkrel_path");
+				CHUNKREL_CONFIG_PATH = section.get("chunkrel_config_path");
+				CHUNKREL_MODEL_PATH = section.get("chunkrel_model_path");
+			}
+	}
 	
 	@Override
 	public HashMap<Sentence, AnnotationSet> chunk(Document document) {
@@ -42,7 +64,7 @@ public class ChunkRelChunker extends Chunker {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
+				
 		try {
 			AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(tmpFileName, "ccl");
 			Document relationsDocument = reader.nextDocument();
@@ -51,8 +73,19 @@ public class ChunkRelChunker extends Chunker {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		finally{
+			deleteFile(tmpFileName);
+		}
 
 		return new HashMap<Sentence, AnnotationSet>();
+	}
+	
+	private void deleteFile(String filename){
+		if(filename == null || "".equals(filename)) return;
+		File f = new File(filename);
+		f.delete();
+		File fRel = new File(filename.replace(".xml", ".rel.xml"));
+		fRel.delete();
 	}
 
 }

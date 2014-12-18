@@ -7,44 +7,40 @@ import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
+import g419.liner2.api.LinerOptions;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.HashMap;
 
-import org.apache.commons.io.IOUtils;
+import org.ini4j.Ini;
 
 public class IobberChunker extends Chunker {
 
-	private String filePath;
-
-	private final String IOBBER_PATH;
-	private final String IOBBER_MODEL;
-	private final String IOBBER_INI_PATH;
+	private final static String CHUNKER_NAME = "iobber";
+	public final static String OPTION_TYPE = "type";
+	
+	private String IOBBER_PATH;
+	private String IOBBER_MODEL;
+	private String IOBBER_INI_PATH;
 	private final String IOBBER_HYPHEN_OF_STDIN_PROCESSING = "-";
 
 	public IobberChunker() {
-		IOBBER_PATH = "/home/adam/anaconda/envs/nlppwr/bin/";
-		IOBBER_MODEL = "model-kpwr11-H";
-		IOBBER_INI_PATH = "/home/adam/workspace/nlp/ikar/settings/kpwr.ini";
+		for(Ini.Section section : LinerOptions.getGlobal().chunkersDescriptions)
+			if(CHUNKER_NAME.equals(section.get(OPTION_TYPE))){
+				IOBBER_PATH = section.get("iobber_path");
+				IOBBER_MODEL = section.get("iobber_model");
+				IOBBER_INI_PATH = section.get("iobber_ini_path");
+			}
 	}
-
-	public void setPath(String path) {
-		filePath = path;
-	}
-
+	
 	@Override
 	public HashMap<Sentence, AnnotationSet> chunk(Document document) {
 		String cmd = IOBBER_PATH + "iobber " + IOBBER_INI_PATH + " -d " + IOBBER_MODEL + " -i ccl " + IOBBER_HYPHEN_OF_STDIN_PROCESSING;
 		Process p = null;
-		String[] activateEnvCmd = new String[]{IOBBER_PATH + "iobber", IOBBER_INI_PATH + " -d " + IOBBER_MODEL + " -i ccl " + IOBBER_HYPHEN_OF_STDIN_PROCESSING};
-		ProcessBuilder pb = new ProcessBuilder(activateEnvCmd);
 		try {
-//			p = pb.start();
-			System.out.println(cmd);
 			p = Runtime.getRuntime().exec(cmd);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -70,7 +66,7 @@ public class IobberChunker extends Chunker {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-//		
+		
 		return new HashMap<Sentence, AnnotationSet>();
 	}
 

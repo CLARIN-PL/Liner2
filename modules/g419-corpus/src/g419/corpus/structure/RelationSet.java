@@ -1,9 +1,7 @@
 package g419.corpus.structure;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
 
@@ -27,11 +25,11 @@ public class RelationSet {
 		
 	}
 	
-	public RelationSet filterByType(String type){
-		if(type == null) return null;
+	public RelationSet filterBySet(String set){
+		if(set == null) return null;
 		RelationSet result = new RelationSet();
 		for(Relation relation : relations)
-			if(type.equals(relation.getType()))
+			if(set.equals(relation.getSet()))
 				result.addRelation(relation);
 		return result;
 	}
