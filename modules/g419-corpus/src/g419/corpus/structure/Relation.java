@@ -35,6 +35,13 @@ public class Relation {
 	private Annotation annotationTo;
 	
 	
+	public Relation(Annotation from, Annotation to, String type){
+		this.setAnnotationFrom(from);
+		this.setAnnotationTo(to);
+		this.setSet(type);
+		this.setType(type);
+	}
+	
 	public Relation(Annotation from, Annotation to, String type, String set){
 		this.setAnnotationFrom(from);
 		this.setAnnotationTo(to);
