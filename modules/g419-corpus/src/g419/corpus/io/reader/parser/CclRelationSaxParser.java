@@ -30,7 +30,8 @@ public class CclRelationSaxParser extends DefaultHandler {
     private final String TAG_FROM 			= "from";
     private final String TAG_TO 			= "to";
     
-    private final String ATTR_REL_NAME		= "set";
+    private final String ATTR_REL_SET		= "set";
+    private final String ATTR_REL_NAME		= "name";
     private final String ATTR_CHAN_NAME		= "chan";
     private final String ATTR_SENT_ID		= "sent";
 
@@ -40,6 +41,7 @@ public class CclRelationSaxParser extends DefaultHandler {
     Document document = null;
 	RelationSet relations;
 	String currentRelationType;
+	String currentRelationSet;
 
 	String currentFromAnnotationSent;
 	String currentFromAnnotationChan;
@@ -78,7 +80,8 @@ public class CclRelationSaxParser extends DefaultHandler {
     @Override
     public void startElement(String s, String s1, String elementName, Attributes attributes) throws SAXException {
         if(TAG_RELATION.equalsIgnoreCase(elementName)){
-        	currentRelationType = attributes.getValue(ATTR_REL_NAME);
+        	currentRelationSet = attributes.getValue(ATTR_REL_SET);
+    		currentRelationType = attributes.getValue(ATTR_REL_NAME);
         }
         else if(TAG_FROM.equalsIgnoreCase(elementName)){
         	tmpValue = "";
@@ -100,7 +103,7 @@ public class CclRelationSaxParser extends DefaultHandler {
         if(TAG_RELATION.equalsIgnoreCase(element)){
         	Annotation annotationFrom = this.document.getAnnotation(currentFromAnnotationSent, currentFromAnnotationChan, currentFromAnnotationId);
         	Annotation annotationTo = this.document.getAnnotation(currentToAnnotationSent, currentToAnnotationChan, currentToAnnotationId);
-        	if(annotationFrom != null && annotationTo != null) this.relations.addRelation(new Relation(annotationFrom, annotationTo, currentRelationType));
+        	if(annotationFrom != null && annotationTo != null) this.relations.addRelation(new Relation(annotationFrom, annotationTo, currentRelationType, currentRelationType));
         }
         else if(TAG_FROM.equalsIgnoreCase(element)){
         	currentFromAnnotationId = Integer.parseInt(tmpValue);

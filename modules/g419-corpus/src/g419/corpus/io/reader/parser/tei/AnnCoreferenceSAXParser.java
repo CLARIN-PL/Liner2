@@ -4,8 +4,8 @@ import g419.corpus.io.DataFormatException;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Relation;
-import g419.corpus.structure.RelationCluster;
-import g419.corpus.structure.RelationClusterSet;
+import g419.corpus.structure.AnnotationCluster;
+import g419.corpus.structure.AnnotationClusterSet;
 import g419.corpus.structure.RelationSet;
 import g419.corpus.structure.Sentence;
 
@@ -46,15 +46,15 @@ public class AnnCoreferenceSAXParser extends DefaultHandler {
 	    String annotationType;
 	    String currentFeatureName;
 	    Map<String, Annotation> annotationsMap;
-	    RelationClusterSet coreferenceClusters;
-	    RelationCluster currentRelationCluster;
+	    AnnotationClusterSet coreferenceClusters;
+	    AnnotationCluster currentRelationCluster;
 
 
 	    public AnnCoreferenceSAXParser(InputStream is, ArrayList<Paragraph> paragraphs, Map<String, Annotation> annotationsMap) throws DataFormatException {
 	        this.is = is;
 	        this.paragraphs = paragraphs;
 	        this.annotationsMap = annotationsMap;
-	        this.coreferenceClusters = new RelationClusterSet();
+	        this.coreferenceClusters = new AnnotationClusterSet();
 	        parseDocument();
 	    }
 
@@ -80,7 +80,7 @@ public class AnnCoreferenceSAXParser extends DefaultHandler {
 	    @Override
 	    public void startElement(String s, String s1, String elementName, Attributes attributes) throws SAXException {
 	        if (elementName.equalsIgnoreCase(TAG_SEGMENT)) {
-	            currentRelationCluster = new RelationCluster(Relation.COREFERENCE);
+	            currentRelationCluster = new AnnotationCluster(Relation.COREFERENCE);
 	        }
 	        else if (elementName.equalsIgnoreCase(TAG_POINTER)) {
 	            String target = attributes.getValue("target").split("#")[1];

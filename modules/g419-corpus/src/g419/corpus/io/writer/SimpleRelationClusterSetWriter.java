@@ -6,8 +6,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import g419.corpus.structure.Document;
-import g419.corpus.structure.RelationCluster;
-import g419.corpus.structure.RelationClusterSet;
+import g419.corpus.structure.AnnotationCluster;
+import g419.corpus.structure.AnnotationClusterSet;
 
 public class SimpleRelationClusterSetWriter extends AbstractDocumentWriter {
 
@@ -20,7 +20,7 @@ public class SimpleRelationClusterSetWriter extends AbstractDocumentWriter {
 	
 	@Override
 	public void writeDocument(Document document) {
-		for(RelationCluster cluster : RelationClusterSet.fromRelationSet(document.getRelations()).getClusters())
+		for(AnnotationCluster cluster : AnnotationClusterSet.fromRelationSet(document.getRelations()).getClusters())
 			try {
 				writer.write(cluster.toString() + "\n");
 			} catch (IOException e) {

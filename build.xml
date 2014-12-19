@@ -20,11 +20,6 @@
 		<copy file="modules/g419-lib-cli/g419-lib-cli.jar" todir="./lib"></copy>
 	</target>
 
-	<target name="jar-liner2-relations">
-        <exec dir="modules/g419-liner2-relations" executable="ant"><arg line="jar"/></exec>
-		<copy file="modules/g419-liner2-relations/g419-liner2-relations.jar" todir="./lib"></copy>
-	</target>
-
 	<target name="jar-liner2-api">
         <exec dir="modules/g419-liner2-api" executable="ant"><arg line="jar"/></exec>
 		<copy file="modules/g419-liner2-api/g419-liner2-api.jar" todir="./lib"></copy>
@@ -58,7 +53,7 @@
 
 	<target name="jar-crete-cli-all" depends="jar-corpus,jar-lib-cli,jar-crete-api,jar-crete-cli"></target>
 	
-	<target name="jar" depends="jar-corpus,jar-liner2-api,jar-liner2-relations,jar-lib-cli,jar-liner2-cli,jar-liner2-daemon,jar-crete-api,jar-crete-cli"></target>
+	<target name="jar" depends="jar-corpus,jar-liner2-api,jar-lib-cli,jar-liner2-cli,jar-liner2-daemon,jar-crete-api,jar-crete-cli"></target>
 	
 	<target name="deploy" depends="jar">
 		<delete dir="${version_path}"/>
@@ -83,7 +78,6 @@
 				<include name="g419-tools.jar"/>
 				<include name="g419-liner2-api.jar"/>
 				<include name="g419-crete-api.jar"/>
-				<include name="g419-liner2-relations.jar"/>
 			</fileset>
 		</copy>
 		

@@ -1,12 +1,12 @@
-package g419.liner2.relations.evaluation;
+package g419.crete.api.evaluation;
 
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Relation;
-import g419.corpus.structure.RelationCluster;
-import g419.corpus.structure.RelationCluster.ReturnRelationsToDistinctEntities;
-import g419.corpus.structure.RelationCluster.ReturningStrategy;
-import g419.corpus.structure.RelationClusterSet;
+import g419.corpus.structure.AnnotationCluster;
+import g419.corpus.structure.AnnotationCluster.ReturnRelationsToDistinctEntities;
+import g419.corpus.structure.AnnotationCluster.ReturningStrategy;
+import g419.corpus.structure.AnnotationClusterSet;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.TokenAttributeIndex;
 import g419.liner2.api.tools.FscoreEvaluator;
@@ -221,8 +221,8 @@ public class ParentEvaluator extends FscoreEvaluator{
 	 * @param document
 	 * @return
 	 */
-	private Set<RelationCluster> clusterIdentifyingUnits(Set<Annotation> identifyingUnits, Document document){
-		RelationClusterSet documentRelationClusters = RelationClusterSet.fromRelationSet(document.getRelations(Relation.COREFERENCE));
+	private Set<AnnotationCluster> clusterIdentifyingUnits(Set<Annotation> identifyingUnits, Document document){
+		AnnotationClusterSet documentRelationClusters = AnnotationClusterSet.fromRelationSet(document.getRelations(Relation.COREFERENCE));
 		return documentRelationClusters.getClustersWithAnnotations(identifyingUnits);
 	}
 	
@@ -231,12 +231,12 @@ public class ParentEvaluator extends FscoreEvaluator{
 	 * @param referenceIdentifyingUnitsClusters
 	 * @return
 	 */
-	private HashMap<Annotation, Integer> createDiscourseEntityMappingForIdentifyingUnits(Set<RelationCluster> referenceIdentifyingUnitsClusters, Set<Annotation> referenceIdentifyingUnits){
+	private HashMap<Annotation, Integer> createDiscourseEntityMappingForIdentifyingUnits(Set<AnnotationCluster> referenceIdentifyingUnitsClusters, Set<Annotation> referenceIdentifyingUnits){
 		HashMap<Annotation, Integer> discourseEntityMapping = new HashMap<Annotation, Integer>();
 		int discourseEntityIndex = 0;
 		
 		// Encje dla klastrów C t.że |C| >= 2
-		for(RelationCluster identifyingUnitCluster: referenceIdentifyingUnitsClusters){
+		for(AnnotationCluster identifyingUnitCluster: referenceIdentifyingUnitsClusters){
 			if(identifyingUnitCluster == null) continue;
 //			System.out.println(identifyingUnitCluster);
 			discourseEntityIndex++;
@@ -288,7 +288,7 @@ public class ParentEvaluator extends FscoreEvaluator{
 	 * @param discourseEntityMapping
 	 * @return
 	 */
-	private Set<Relation> extractDiscourseEntityRelations(RelationClusterSet initialRelationClusterSet, Set<Annotation> entities, Set<Annotation> mentions, HashMap<Annotation, Integer> discourseEntityMapping){
+	private Set<Relation> extractDiscourseEntityRelations(AnnotationClusterSet initialRelationClusterSet, Set<Annotation> entities, Set<Annotation> mentions, HashMap<Annotation, Integer> discourseEntityMapping){
 		ReturningStrategy strategy = new ReturnRelationsToDistinctEntities(entities, mentions, discourseEntityMapping);
 		return initialRelationClusterSet.getRelationSet(strategy).getRelations();
 	}
@@ -423,7 +423,7 @@ public class ParentEvaluator extends FscoreEvaluator{
 		Set<Annotation> systemReferencingUnits = extractReferencingUnits(systemResult);
 		
 		// 2. Create reference clustering of identifying units
-		Set<RelationCluster> referenceIdentifyingUnitsClusters = clusterIdentifyingUnits(referenceIdentifyingUnits, referenceDocument);
+		Set<AnnotationCluster> referenceIdentifyingUnitsClusters = clusterIdentifyingUnits(referenceIdentifyingUnits, referenceDocument);
 		
 		// 3. Create reference mapping from identifying units to discourse entities
 		HashMap<Annotation, Integer> discourseEntityMapping = createDiscourseEntityMappingForIdentifyingUnits(referenceIdentifyingUnitsClusters, referenceIdentifyingUnits);
@@ -432,13 +432,13 @@ public class ParentEvaluator extends FscoreEvaluator{
 		HashMap<Annotation, Integer> systemDiscourseEntityMapping = createDiscourseEntityMappingForSystemResponse(discourseEntityMapping, systemToReferenceMapping, systemIdentifyingUnits);
 		
 		// 5. Create reference clustering
-		RelationClusterSet referenceRelations = RelationClusterSet.fromRelationSet(referenceDocument.getRelations(Relation.COREFERENCE));
+		AnnotationClusterSet referenceRelations = AnnotationClusterSet.fromRelationSet(referenceDocument.getRelations(Relation.COREFERENCE));
 		System.out.println(referenceRelations);
 		// 6. Create reference relation set from referencing units to identifying units (discourse entities)
 		Set<Relation> referenceDiscourseEntitiesRelations = extractDiscourseEntityRelations(referenceRelations, referenceIdentifyingUnits, referenceReferencingUnits, discourseEntityMapping);
 		
 		// 7. Create system result clustering
-		RelationClusterSet systemResultRelations = RelationClusterSet.fromRelationSet(systemResult.getRelations()); //Relation.COREFERENCE --ikar ustawia domyślnie pusty atrybut set=""
+		AnnotationClusterSet systemResultRelations = AnnotationClusterSet.fromRelationSet(systemResult.getRelations()); //Relation.COREFERENCE --ikar ustawia domyślnie pusty atrybut set=""
 		System.out.println(systemResultRelations);
 		// 8. Create system relation set from referencing units to identifying units
 		Set<Relation> systemDiscourseEntitiesRelations = extractDiscourseEntityRelations(systemResultRelations, systemIdentifyingUnits, systemReferencingUnits, systemDiscourseEntityMapping);

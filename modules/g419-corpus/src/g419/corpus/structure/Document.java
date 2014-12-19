@@ -51,8 +51,8 @@ public class Document{
 		return this.relations;
 	}
 	
-	public RelationSet getRelations(String type){
-		return this.relations.filterByType(type);
+	public RelationSet getRelations(String set){
+		return this.relations.filterBySet(set);
 	}
 	
 	public void setRelations(RelationSet relations){

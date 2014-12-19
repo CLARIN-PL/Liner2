@@ -27,6 +27,9 @@ public class WriterFactory {
             String format = outputFormat.substring(6);
             return new BatchWriter(outputFile, format);
         }
+        else if("ccl_rel".equals(outputFormat)){
+        	return getCclRelWriter(outputFile);
+        }
         else{
             return getStreamWriter(getOutputStream(outputFile), outputFormat);
         }
@@ -39,7 +42,7 @@ public class WriterFactory {
 	public AbstractDocumentWriter getStreamWriter(OutputStream out, String outputFormat) throws Exception {
         if (outputFormat.equals("ccl"))
 			return new CclStreamWriter(out);
-		else if (outputFormat.equals("iob"))
+        else if (outputFormat.equals("iob"))
 			return new IobStreamWriter(out);
 		else if (outputFormat.equals("iob-tab"))
 			return new IobTabStreamWriter(out);

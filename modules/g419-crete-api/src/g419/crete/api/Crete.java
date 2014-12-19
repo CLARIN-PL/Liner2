@@ -2,7 +2,7 @@ package g419.crete.api;
 
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Relation;
-import g419.corpus.structure.RelationClusterSet;
+import g419.corpus.structure.AnnotationClusterSet;
 import g419.crete.api.annotation.AbstractAnnotationSelector;
 import g419.crete.api.annotation.AnnotationDescription;
 import g419.crete.api.annotation.AnnotationSelectorFactory;
@@ -28,7 +28,7 @@ public class Crete {
     
     public void processDocument(Document document){
     	// Process
-    	RelationClusterSet relations = clusterer.resolveRelations(document, selector);
+    	AnnotationClusterSet relations = clusterer.resolveRelations(document, selector);
     	// Post-process
     	for(Relation relation : relations.getRelationSet(null).getRelations())
     		document.addRelation(relation);

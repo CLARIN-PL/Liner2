@@ -38,6 +38,8 @@ public class ChunkerFactory {
 		this.items.add(new ChunkerFactoryItemNullChunker());
         this.items.add(new ChunkerFactoryItemAnnotationCRFClassifier());
         this.items.add(new ChunkerFactoryItemMapping());
+        this.items.add(new ChunkerFactoryItemIobber());
+        this.items.add(new ChunkerFactoryItemChunkRel());
 	}
 	
 	/**

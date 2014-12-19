@@ -6,7 +6,6 @@ import g419.liner2.cli.action.ActionAnnotations;
 import g419.liner2.cli.action.ActionAgreement;
 import g419.liner2.cli.action.ActionConvert;
 import g419.liner2.cli.action.ActionEval;
-import g419.liner2.cli.action.ActionEvalParent;
 import g419.liner2.cli.action.ActionFeatureSelection;
 import g419.liner2.cli.action.ActionInteractive;
 import g419.liner2.cli.action.ActionLearningCurve;
@@ -46,7 +45,6 @@ public class Main {
     	main.registerAction(new ActionTime());
     	main.registerAction(new ActionTrain());
     	main.registerAction(new ActionAgreement());
-    	main.registerAction(new ActionEvalParent());
     	main.registerAction(new ActionLearningCurve());
     	main.registerAction(new ActionStats());
     	

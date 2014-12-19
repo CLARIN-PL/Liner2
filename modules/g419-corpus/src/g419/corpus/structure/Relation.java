@@ -7,11 +7,22 @@ package g419.corpus.structure;
  */
 public class Relation {
 	public static final String COREFERENCE = "Coreference";
+	public static final String SUBJECT = "subj";
+	public static final String OBJECT="obj";
+	public static final String COPULA = "cop";
+
+	public static final String EMPTY = "";
+	
 	public static final AnnotationPositionComparator annPosComparator = new AnnotationPositionComparator();
 	/**
 	 * Typ relacji
 	 */
 	private String type;
+	
+	/**
+	 * Podzbiór relacji
+	 */
+	private String set;
 	
 	/**
 	 * Anotacja źródłowa relacji
@@ -24,9 +35,10 @@ public class Relation {
 	private Annotation annotationTo;
 	
 	
-	public Relation(Annotation from, Annotation to, String type){
+	public Relation(Annotation from, Annotation to, String type, String set){
 		this.setAnnotationFrom(from);
 		this.setAnnotationTo(to);
+		this.setSet(set);
 		this.setType(type);
 	}
 
@@ -57,6 +69,15 @@ public class Relation {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+	
+	public void setSet(String set){
+		this.set = set;
+	}
+
+	public String getSet() {
+		if(this.set == null) return Relation.EMPTY;
+		return this.set;
 	}
 	
 	public String toString(){
