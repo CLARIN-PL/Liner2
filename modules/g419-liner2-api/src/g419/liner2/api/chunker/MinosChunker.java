@@ -50,15 +50,10 @@ public class MinosChunker extends Chunker {
 	public final static String CHUNKER_NAME = "minos";
 	public final static String OPTION_MALT_MODEL_PATH = "malt_model_path";
 	
-	public MinosChunker() {
-		String maltModelPath = "";
-		for(Ini.Section section : LinerOptions.getGlobal().chunkersDescriptions)
-			if(CHUNKER_NAME.equals(section.get(OPTION_TYPE))) maltModelPath = section.get(OPTION_MALT_MODEL_PATH);
-		
+	public MinosChunker(String maltModelPath) {
 		
 		try {
 			this.maltService = new MaltParserService();
-			// Inititalize the parser model 'model0' and sets the working directory to '.' and sets the logging file to 'parser.log'
 			this.maltService.initializeParserModel("-c " + MaltModel +" -m parse -w " + maltModelPath + " -lfi parser.log");
 		} catch (MaltChainedException e) {
 			System.out.println("Malt parser could not be initialized.");

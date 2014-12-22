@@ -7,16 +7,9 @@ import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
-import g419.liner2.api.LinerOptions;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashMap;
-
-import org.apache.commons.io.IOUtils;
-import org.ini4j.Ini;
 
 public class ChunkRelChunker extends Chunker {
 
@@ -29,15 +22,12 @@ public class ChunkRelChunker extends Chunker {
 	private String CHUNKREL_CONFIG_PATH;
 	private String CHUNKREL_MODEL_PATH ;
 	
-	public ChunkRelChunker() {
-		for(Ini.Section section : LinerOptions.getGlobal().chunkersDescriptions)
-			if(CHUNKER_NAME.equals(section.get(OPTION_TYPE))){
-				TMP_OUTPUT_FOLDER = section.get("tmp_output_folder");
-				PYTHON_PATH = section.get("python_path");
-				CHUNKREL_PATH = section.get("chunkrel_path");
-				CHUNKREL_CONFIG_PATH = section.get("chunkrel_config_path");
-				CHUNKREL_MODEL_PATH = section.get("chunkrel_model_path");
-			}
+	public ChunkRelChunker(String pythonPath, String chunkrelPath, String chunkrelConfigPath, String chunkrelModelPath, String tmpOut) {
+		PYTHON_PATH = pythonPath;
+		CHUNKREL_PATH = chunkrelPath;
+		CHUNKREL_CONFIG_PATH = chunkrelConfigPath;
+		CHUNKREL_MODEL_PATH = chunkrelModelPath;
+		TMP_OUTPUT_FOLDER = tmpOut;
 	}
 	
 	@Override

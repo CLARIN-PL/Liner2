@@ -7,15 +7,12 @@ import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
-import g419.liner2.api.LinerOptions;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.HashMap;
-
-import org.ini4j.Ini;
 
 public class IobberChunker extends Chunker {
 
@@ -27,13 +24,10 @@ public class IobberChunker extends Chunker {
 	private String IOBBER_INI_PATH;
 	private final String IOBBER_HYPHEN_OF_STDIN_PROCESSING = "-";
 
-	public IobberChunker() {
-		for(Ini.Section section : LinerOptions.getGlobal().chunkersDescriptions)
-			if(CHUNKER_NAME.equals(section.get(OPTION_TYPE))){
-				IOBBER_PATH = section.get("iobber_path");
-				IOBBER_MODEL = section.get("iobber_model");
-				IOBBER_INI_PATH = section.get("iobber_ini_path");
-			}
+	public IobberChunker(String iobberPath, String iobberModel, String iobberIni) {
+		IOBBER_PATH = iobberPath;
+		IOBBER_MODEL = iobberModel;
+		IOBBER_INI_PATH = iobberIni;
 	}
 	
 	@Override

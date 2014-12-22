@@ -58,7 +58,7 @@ public class ReaderFactory {
 				rel = getInputStream(new File(relFile).getPath());
 			}
 			catch(Exception e){
-				System.out.println(e.getMessage());
+				System.out.println("Warning: Unable to load relations(.rel.xml) file");
 			}
 			return new CclSAXStreamReader(uri, in, rel);
 		}

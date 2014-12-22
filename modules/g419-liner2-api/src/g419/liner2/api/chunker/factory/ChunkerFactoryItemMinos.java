@@ -16,6 +16,6 @@ public class ChunkerFactoryItemMinos extends ChunkerFactoryItem {
 
     @Override
     public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
-        return new MinosChunker();
+        return new MinosChunker(description.get(MinosChunker.OPTION_MALT_MODEL_PATH));
     }
 }

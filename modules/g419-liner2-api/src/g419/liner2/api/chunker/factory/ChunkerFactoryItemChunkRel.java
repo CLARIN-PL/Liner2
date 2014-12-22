@@ -13,7 +13,7 @@ public class ChunkerFactoryItemChunkRel extends ChunkerFactoryItem {
 
 	@Override
 	public Chunker getChunker(Section description, ChunkerManager cm) throws Exception {
-		return new ChunkRelChunker();
+		return new ChunkRelChunker(description.get("python_path"), description.get("chunkrel_path"), description.get("chunkrel_config_path"), description.get("chunkrel_model_path"), description.get("tmp_output_folder"));
 	}
 
 }
