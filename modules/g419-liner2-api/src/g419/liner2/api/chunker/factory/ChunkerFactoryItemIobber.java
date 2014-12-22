@@ -13,7 +13,7 @@ public class ChunkerFactoryItemIobber extends ChunkerFactoryItem {
 
 	@Override
 	public Chunker getChunker(Section description, ChunkerManager cm) throws Exception {
-		return new IobberChunker();
+		return new IobberChunker(description.get("iobber_path"), description.get("iobber_model"), description.get("iobber_ini_path"));
 	}
 
 }
