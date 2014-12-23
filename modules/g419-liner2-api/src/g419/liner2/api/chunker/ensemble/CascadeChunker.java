@@ -45,6 +45,9 @@ public class CascadeChunker extends Chunker {
 			chunkings.put(sentence, set);
 		}
 		
+		// Dodaj relacje - dla np. ChunkRel'a
+		ps.setRelations(document.getRelations());
+		
 		return chunkings;
 	}	
 	

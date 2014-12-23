@@ -4,6 +4,7 @@ import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
+import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
@@ -32,6 +33,7 @@ public class IobberChunker extends Chunker {
 	
 	@Override
 	public HashMap<Sentence, AnnotationSet> chunk(Document document) {
+		HashMap<Sentence, AnnotationSet> chunking = new HashMap<Sentence, AnnotationSet>();
 		String cmd = IOBBER_PATH + "iobber " + IOBBER_INI_PATH + " -d " + IOBBER_MODEL + " -i ccl " + IOBBER_HYPHEN_OF_STDIN_PROCESSING;
 		Process p = null;
 		try {
@@ -50,9 +52,28 @@ public class IobberChunker extends Chunker {
             writer.writeDocument(document);
             writer.close();
             
-			AbstractDocumentReader reader = ReaderFactory.get().getStreamReader("ccl", in, "ccl");
-			document = reader.nextDocument();
+            AbstractDocumentReader reader = ReaderFactory.get().getStreamReader("ccl", in, "ccl");
+			
+			Document documentIobbed = reader.nextDocument();
 			reader.close();
+			
+			for(Annotation an : documentIobbed.getAnnotations()){
+				for(Sentence origSentence : document.getSentences()){
+					if(origSentence.getId().equals(an.getSentence().getId())){
+						AnnotationSet aSet;
+						if(chunking.get(origSentence) == null){
+							aSet = new AnnotationSet(origSentence);
+							chunking.put(origSentence, aSet);
+						}
+						else{
+							aSet = chunking.get(origSentence);
+						}
+						
+						aSet.addChunk(new Annotation(an.getBegin(), an.getEnd(), an.getType(), origSentence)); 
+					}
+				}
+			}
+			
 			String error = err.readLine();
 			if (error != null) {
 				throw new Exception(error);
@@ -61,7 +82,7 @@ public class IobberChunker extends Chunker {
 			ex.printStackTrace();
 		}
 		
-		return new HashMap<Sentence, AnnotationSet>();
+		return chunking; 
 	}
 
 }
