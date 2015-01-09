@@ -2,6 +2,8 @@ package g419.liner2.api.chunker.factory;
 
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.MinosChunker;
+import g419.liner2.api.chunker.MinosChunker.MinosVerb;
+
 import org.ini4j.Ini;
 
 /*
@@ -16,6 +18,6 @@ public class ChunkerFactoryItemMinos extends ChunkerFactoryItem {
 
     @Override
     public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
-        return new MinosChunker(description.get(MinosChunker.OPTION_MALT_MODEL_PATH));
+        return new MinosChunker(description.get(MinosChunker.OPTION_MALT_MODEL_PATH), description.get(MinosVerb.OPTION_NON_SUBJECT_VERBS), description.get(MinosVerb.OPTION_NON_SUBJECT_VERBS_REFL));
     }
 }
