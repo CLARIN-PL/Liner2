@@ -143,4 +143,8 @@ public class Token {
         attrIdx = newAttrIdx;
         attributes = newAttributes;
     }
+
+	public boolean isWrapped(){
+		return this.getClass().isInstance(WrappedToken.class);
+	}
 }

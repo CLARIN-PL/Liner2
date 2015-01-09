@@ -9,7 +9,6 @@ import g419.corpus.structure.Relation;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
-import g419.liner2.api.LinerOptions;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -23,7 +22,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
-import org.ini4j.Ini;
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
 import org.maltparser.core.helper.HashSet;
@@ -44,13 +42,17 @@ public class MinosChunker extends Chunker {
 	public final static String Annotation = "wyznacznik_null_verb";
 	public final static String NegativeAnnotation = "wyznacznik_notnull_verb";
 	public final static String MaltModel = "skladnica_liblinear_stackeager_final.mco";
+	protected final String nonSubjectFile;
+	protected final String nonSubjectReflexiveFile;
 	private MaltParserService maltService = null;
 	
 	public final static String OPTION_TYPE = "type";
 	public final static String CHUNKER_NAME = "minos";
 	public final static String OPTION_MALT_MODEL_PATH = "malt_model_path";
 	
-	public MinosChunker(String maltModelPath) {
+	public MinosChunker(String maltModelPath, String nonSubjectFile, String nonSubjectReflexiveFile) {
+		this.nonSubjectFile = nonSubjectFile;
+		this.nonSubjectReflexiveFile = nonSubjectReflexiveFile;
 		
 		try {
 			this.maltService = new MaltParserService();
@@ -95,7 +97,7 @@ public class MinosChunker extends Chunker {
 		for (int i=0; i<tokens.size(); i++ ){
 			Token t = tokens.get(i);
 			if (MinosVerb.isVerb(t, sentence)){
-				MinosVerb vb = new MinosVerb(t, ai, sentence, maltGraph);
+				MinosVerb vb = new MinosVerb(t, ai, sentence, maltGraph, nonSubjectFile, nonSubjectReflexiveFile);
 				if (vb.isZeroAnaphora(document)){
 					chunking.addChunk(new Annotation(i, MinosChunker.Annotation, sentence));
 				}
@@ -298,7 +300,7 @@ public class MinosChunker extends Chunker {
 		private String base;
 		private boolean reflexive;
 		
-		public MinosVerb(Token v, TokenAttributeIndex ai, Sentence s, DependencyStructure graph) throws MaltChainedException{
+		public MinosVerb(Token v, TokenAttributeIndex ai, Sentence s, DependencyStructure graph, String nonSubjectFile, String nonSubjectReflexiveFile) throws MaltChainedException{
 			this.verb = v;
 			this.ai = ai;
 			this.sentence = s;
@@ -306,21 +308,11 @@ public class MinosChunker extends Chunker {
 			extractVerbInfo();
 			
 			
-//			this.nonSubjectFile = LinerOptions.getGlobal().getOption(OPTION_NON_SUBJECT_VERBS);
-//			this.nonSubjectReflexiveFile = LinerOptions.getGlobal().getOption(OPTION_NON_SUBJECT_VERBS_REFL);
-			//this.nonSubjectReflexiveInfFile = LinerOptions.getGlobal().getOption(OPTION_NON_SUBJECT_VERBS_REFL_INF);
 			// Load non-subject quasi verbs
 			if(nonSubjectVerbs == null || nonSubjectReflexiveVerbs == null){
-				for(Ini.Section section : LinerOptions.getGlobal().chunkersDescriptions){
-					if(CHUNKER_NAME.equals(section.get(OPTION_TYPE))){
-						this.nonSubjectFile = section.get(OPTION_NON_SUBJECT_VERBS);
-						this.nonSubjectReflexiveFile = section.get(OPTION_NON_SUBJECT_VERBS_REFL);
-					}
-				}
-				
 				System.out.println("LOADING QUASI VERBS");
 				try {
-					loadNonSubjectVerbs(this.nonSubjectFile, this.nonSubjectReflexiveFile);
+					loadNonSubjectVerbs(nonSubjectFile, nonSubjectReflexiveFile);
 				} catch (IOException e) {
 					System.out.println("Cannot load non-subject verb files - omitting this feature.");
 				}
@@ -464,6 +456,7 @@ public class MinosChunker extends Chunker {
 				line = br.readLine();
 				if(line != null) lines.add(line);
 			}while(line != null);
+			br.close();
 			return lines;
 		}
 		
@@ -671,10 +664,6 @@ public class MinosChunker extends Chunker {
 		}
 		
 		public boolean isZeroAnaphora(Document document) throws MaltChainedException{
-			if("ma".equalsIgnoreCase(this.orth)){
-				int x = 0;
-			}
-			
 			if(isPriSec()){
 				if(isNonAnaphoricVerbPriSec()) return false;
 			}
