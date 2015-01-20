@@ -76,6 +76,7 @@ public class MinosChunker extends Chunker {
 			return graph;
 		}catch(Exception ex){
 			System.out.println(ex.getMessage());
+			ex.printStackTrace();
 		}
 		return null;
 	}
@@ -307,16 +308,8 @@ public class MinosChunker extends Chunker {
 			this.graph = graph;
 			extractVerbInfo();
 			
-			
 			// Load non-subject quasi verbs
-			if(nonSubjectVerbs == null || nonSubjectReflexiveVerbs == null){
-				System.out.println("LOADING QUASI VERBS");
-				try {
-					loadNonSubjectVerbs(nonSubjectFile, nonSubjectReflexiveFile);
-				} catch (IOException e) {
-					System.out.println("Cannot load non-subject verb files - omitting this feature.");
-				}
-			}
+			if(nonSubjectVerbs == null || nonSubjectReflexiveVerbs == null) loadNonSubjectVerbs(nonSubjectFile, nonSubjectReflexiveFile);
 		}
 		
 		public static boolean isVerb(Token t, Sentence s){
@@ -448,19 +441,24 @@ public class MinosChunker extends Chunker {
 			return false;
 		}
 		
-		private HashSet<String> loadFileLines(String path) throws IOException{
+		private HashSet<String> loadFileLines(String path){
 			HashSet<String> lines = new HashSet<String>();
-			BufferedReader br = new BufferedReader(new FileReader(path));
-			String line = null;
-			do{
-				line = br.readLine();
-				if(line != null) lines.add(line);
-			}while(line != null);
-			br.close();
+			try{
+				BufferedReader br = new BufferedReader(new FileReader(path));
+				String line = null;
+				do{
+					line = br.readLine();
+					if(line != null) lines.add(line);
+				}while(line != null);
+				br.close();
+			}
+			catch(IOException ex){
+				System.out.println("Cannot load non-subject verb file: " + path + " - omitting this feature.");
+			}
 			return lines;
 		}
 		
-		private void loadNonSubjectVerbs(String nonSubjectFile, String nonSubjectReflexiveFile) throws IOException{
+		private void loadNonSubjectVerbs(String nonSubjectFile, String nonSubjectReflexiveFile){
 			nonSubjectVerbs = loadFileLines(nonSubjectFile);
 			nonSubjectReflexiveVerbs = loadFileLines(nonSubjectReflexiveFile);
 		}
@@ -716,7 +714,7 @@ public class MinosChunker extends Chunker {
 			Set<Relation> relationsFromChunkVP = document.getRelations().getOutgoingRelations(chunkVP.get(0));
 			for(Relation relation : relationsFromChunkVP)
 				if(Relation.SUBJECT.equalsIgnoreCase(relation.getType())){
-					System.out.println("CHUNKREL_SUBJECT");
+//					System.out.println("CHUNKREL_SUBJECT");
 					return true;
 //					List<MinosNoun> chunkrelSubjects = new ArrayList<MinosChunker.MinosNoun>();
 //					for(int tokenId : relation.getAnnotationTo().getTokens())
