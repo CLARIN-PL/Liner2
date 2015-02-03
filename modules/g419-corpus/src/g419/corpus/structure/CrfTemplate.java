@@ -4,8 +4,8 @@ package g419.corpus.structure;
 import g419.corpus.Logger;
 import g419.corpus.io.DataFormatException;
 
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Hashtable;
 
 
 public class CrfTemplate {

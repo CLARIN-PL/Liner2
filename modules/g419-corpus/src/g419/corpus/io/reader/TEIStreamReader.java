@@ -4,7 +4,6 @@ import g419.corpus.io.DataFormatException;
 import g419.corpus.io.reader.parser.tei.AnnCoreferenceSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnMentionsSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnMorphosyntaxSAXParser;
-import g419.corpus.io.reader.parser.tei.AnnNamedSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnSegmentationSAXParser;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.TokenAttributeIndex;

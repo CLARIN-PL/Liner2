@@ -1,5 +1,6 @@
 package g419.corpus.io.reader.parser.tei;
 
+import g419.corpus.Logger;
 import g419.corpus.io.DataFormatException;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
@@ -17,7 +18,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import g419.corpus.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

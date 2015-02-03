@@ -1,7 +1,6 @@
 package g419.corpus.io.writer;
 
 import g419.corpus.TerminateException;
-import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;

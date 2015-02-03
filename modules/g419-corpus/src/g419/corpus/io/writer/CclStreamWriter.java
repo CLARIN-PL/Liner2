@@ -1,10 +1,24 @@
 package g419.corpus.io.writer;
 
-import g419.corpus.structure.*;
+import g419.corpus.structure.Annotation;
+import g419.corpus.structure.AnnotationMetadataKey;
+import g419.corpus.structure.Document;
+import g419.corpus.structure.Paragraph;
+import g419.corpus.structure.Relation;
+import g419.corpus.structure.Sentence;
+import g419.corpus.structure.Tag;
+import g419.corpus.structure.Token;
+import g419.corpus.structure.TokenAttributeIndex;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.zip.DataFormatException;
 
 import javax.xml.stream.XMLOutputFactory;

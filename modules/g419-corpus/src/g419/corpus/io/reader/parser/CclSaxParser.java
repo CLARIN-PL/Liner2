@@ -1,7 +1,15 @@
 package g419.corpus.io.reader.parser;
 
+import g419.corpus.Logger;
 import g419.corpus.io.DataFormatException;
-import g419.corpus.structure.*;
+import g419.corpus.structure.Annotation;
+import g419.corpus.structure.AnnotationMetadataKey;
+import g419.corpus.structure.Document;
+import g419.corpus.structure.Paragraph;
+import g419.corpus.structure.Sentence;
+import g419.corpus.structure.Tag;
+import g419.corpus.structure.Token;
+import g419.corpus.structure.TokenAttributeIndex;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +23,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import g419.corpus.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
