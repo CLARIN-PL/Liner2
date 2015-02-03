@@ -316,6 +316,7 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 					xmlw.writeAttribute(ATTR_KEY, a.getType() + ":" + cclKey);
 					xmlw.writeCharacters(a.getMetadata().get(key));
 					xmlw.writeEndElement();
+					xmlw.writeCharacters("\n");
 				}
 			}
 		}

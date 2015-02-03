@@ -78,16 +78,16 @@ public class CclSaxParser extends DefaultHandler {
         parseDocument();
         this.document = new Document(uri, this.paragraphs, this.attributeIndex);
     }
-    
+
     private void parseDocument() throws DataFormatException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
             SAXParser parser = factory.newSAXParser();
             parser.parse(is,this);
-        } catch (ParserConfigurationException e) {        	
+        } catch (ParserConfigurationException e) {
             throw new DataFormatException("Parse error (ParserConfigurationException)");
         } catch (SAXException e) {
-        	e.printStackTrace();
+            e.printStackTrace();
             throw new DataFormatException("Parse error (SAXException)");
         } catch (IOException e) {
             throw new DataFormatException("Parse error (IOException)");
@@ -125,6 +125,8 @@ public class CclSaxParser extends DefaultHandler {
         else if (elementName.equalsIgnoreCase(TAG_TOKEN)) {
             currentToken = new Token(attributeIndex);
             currentToken.setId(attributes.getValue(TAG_ID));
+            tmpProps = new HashMap<String, String>();
+            annotationsPerToken = new HashMap<String, Annotation>();
         }
         else if(elementName.equalsIgnoreCase(TAG_TAG)){
             if (attributes.getValue(TAG_DISAMB) == null)
@@ -154,7 +156,7 @@ public class CclSaxParser extends DefaultHandler {
         if (element.equals(TAG_PARAGRAPH)) {
             paragraphs.add(currentParagraph);
         }
-        if (element.equalsIgnoreCase(TAG_SENTENCE)) {
+        else if (element.equalsIgnoreCase(TAG_SENTENCE)) {
             for (Annotation chunk : annotations.values())
                 currentSentence.addChunk(chunk);
             if(!currentSentence.hasId()){
@@ -168,7 +170,7 @@ public class CclSaxParser extends DefaultHandler {
             }
             currentParagraph.addSentence(currentSentence);
         }
-        if (element.equalsIgnoreCase(TAG_TOKEN)) {
+        else if (element.equalsIgnoreCase(TAG_TOKEN)) {
             ArrayList<Tag> tags = currentToken.getTags();
             foundDisamb = false;
             for (Tag tag : tags) {
@@ -193,33 +195,36 @@ public class CclSaxParser extends DefaultHandler {
                 annotationsPerToken.get(channel).setMetadata(key, tmpProps.get(propertyKey));
             }
         }
-        if(element.equalsIgnoreCase(TAG_ORTH)){
-            currentToken.setAttributeValue(attributeIndex.getIndex("orth"),tmpValue);
+        else if(element.equalsIgnoreCase(TAG_ORTH)){
+            currentToken.setAttributeValue(attributeIndex.getIndex("orth"), tmpValue);
         }
-        if(element.equalsIgnoreCase(TAG_TAG)){
+        else if(element.equalsIgnoreCase(TAG_TAG)){
             currentToken.addTag(new Tag(tmpBase,tmpCtag,tmpDisamb));
         }
-        if(element.equalsIgnoreCase(TAG_BASE)){
+        else if(element.equalsIgnoreCase(TAG_BASE)){
             tmpBase = tmpValue;
         }
-        if(element.equalsIgnoreCase(TAG_CTAG)){
+        else if(element.equalsIgnoreCase(TAG_CTAG)){
             tmpCtag = tmpValue;
         }
-        if(element.equalsIgnoreCase(TAG_ANN)){
+        else if(element.equalsIgnoreCase(TAG_ANN)){
             String chanNumber = tmpValue.trim();
+            Annotation annotation = null;
             if (!chanNumber.equals("0")){
                 AnnChan ann = new AnnChan(chanName, chanNumber, chanHead);
                 if (annotations.containsKey(ann.toString())){
-                    annotations.get(ann.toString()).addToken(idx);
+                    annotation = annotations.get(ann.toString());
+                    annotation.addToken(idx);
                 }
                 else {
-                    annotations.put(ann.toString(),
-                            new Annotation(idx, ann.chan, Integer.parseInt(chanNumber), currentSentence));
+                    annotation = new Annotation(idx, ann.chan, Integer.parseInt(chanNumber), currentSentence);
+                    annotations.put(ann.toString(), annotation);
                 }
                 if(ann.head.equals("1"))
                     annotations.get(ann.toString()).setHead(idx);
-
+                annotationsPerToken.put(chanName, annotation);
             }
+
         }
         else if (element.equalsIgnoreCase(TAG_PROP)){
             tmpProps.put(propKey, tmpValue);
