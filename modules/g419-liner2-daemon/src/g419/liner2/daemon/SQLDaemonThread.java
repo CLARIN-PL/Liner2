@@ -2,7 +2,7 @@ package g419.liner2.daemon;
 
 
 import g419.corpus.Logger;
-import g419.liner2.api.tools.ParameterException;
+import g419.lib.cli.ParameterException;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

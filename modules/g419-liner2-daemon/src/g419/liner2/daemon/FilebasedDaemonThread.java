@@ -8,9 +8,9 @@ import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
+import g419.lib.cli.ParameterException;
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.features.TokenFeatureGenerator;
-import g419.liner2.api.tools.ParameterException;
 
 import java.io.*;
 import java.net.Socket;

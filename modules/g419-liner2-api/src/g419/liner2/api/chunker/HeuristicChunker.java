@@ -7,7 +7,7 @@ import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
-import g419.liner2.api.tools.ParameterException;
+import g419.lib.cli.ParameterException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
