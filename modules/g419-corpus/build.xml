@@ -31,10 +31,6 @@
 	<target name="jar" depends="compile">
 		<manifest file="MANIFEST.MF">
     		<attribute name="Built-By" value="${user.name}"/>
-<!--			<attribute name="Class-Path" value="
-				./lib/commons-lang3-3.3.2.jar
-				"/>
--->			
    		</manifest>
 
 		<jar destfile="g419-corpus.jar" manifest="MANIFEST.MF">
