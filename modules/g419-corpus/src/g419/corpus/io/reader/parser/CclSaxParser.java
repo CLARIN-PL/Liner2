@@ -1,13 +1,7 @@
 package g419.corpus.io.reader.parser;
 
 import g419.corpus.io.DataFormatException;
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Tag;
-import g419.corpus.structure.Token;
-import g419.corpus.structure.TokenAttributeIndex;
+import g419.corpus.structure.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +9,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -49,6 +44,8 @@ public class CclSaxParser extends DefaultHandler {
     private final String TAG_TAG			= "lex";
     private final String TAG_TOKEN 			= "tok";
     private final String TAG_HEAD 			= "head";
+    private final String TAG_PROP           = "prop";
+    private final String ATTR_KEY           = "key";
 
     ArrayList<Paragraph> paragraphs;
     Paragraph currentParagraph = null;
@@ -69,6 +66,9 @@ public class CclSaxParser extends DefaultHandler {
     Document document = null;
     boolean foundSentenceId = false;
     String uri;
+    Map<String, String> tmpProps;
+    Map<String, Annotation> annotationsPerToken;
+    String propKey;
 
     public CclSaxParser(String uri, InputStream is, TokenAttributeIndex attributeIndex) throws DataFormatException {
         this.uri = uri;
@@ -145,6 +145,9 @@ public class CclSaxParser extends DefaultHandler {
                 currentToken.setNoSpaceAfter(true);
             }
         }
+        else if (elementName.equalsIgnoreCase(TAG_PROP)){
+            propKey = attributes.getValue(ATTR_KEY);
+        }
     }
     @Override
     public void endElement(String s, String s1, String element) throws SAXException {
@@ -182,6 +185,13 @@ public class CclSaxParser extends DefaultHandler {
             }
             currentSentence.addToken(currentToken);
             idx++;
+            for (String propertyKey: tmpProps.keySet()){
+                // todo: assert parts.length==2
+                String[] parts = propertyKey.split("[:]");
+                String channel = parts[0];
+                AnnotationMetadataKey key = AnnotationMetadataKey.findForCclKey(parts[1]);
+                annotationsPerToken.get(channel).setMetadata(key, tmpProps.get(propertyKey));
+            }
         }
         if(element.equalsIgnoreCase(TAG_ORTH)){
             currentToken.setAttributeValue(attributeIndex.getIndex("orth"),tmpValue);
@@ -210,6 +220,9 @@ public class CclSaxParser extends DefaultHandler {
                     annotations.get(ann.toString()).setHead(idx);
 
             }
+        }
+        else if (element.equalsIgnoreCase(TAG_PROP)){
+            tmpProps.put(propKey, tmpValue);
         }
     }
     @Override

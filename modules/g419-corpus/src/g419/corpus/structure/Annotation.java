@@ -1,8 +1,6 @@
 package g419.corpus.structure;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Klasa reprezentuje anotację jako ciągłą sekwencję tokenów w zdaniu.
@@ -14,73 +12,77 @@ public class Annotation {
 	 * Typ oznakowania.
 	 */
 	private String type = null;
-	
+
 	/**
 	 * Zdanie, do którego należy chunk.
 	 */
 	private Sentence sentence = null;
-	
+
 	private String id = null;
 	/**
 	 * Indeksy tokenów.
 	 */
 	private TreeSet<Integer> tokens = new TreeSet<Integer>();
-	
+
 	/**
 	 * Indeks głowy anotacji.
 	 */
 	private int head;
-	
+
 	/**
 	 * Indeks anotacji w kanale.
 	 */
 	private int channelIdx;
-	
+
 	/**
 	 * Informacja czy anotacja ma oznaczoną głowę.
 	 */
 	private boolean hasHead = false;
-	
-	
+
+	private Map<String, String> metadata;
+
 	public Annotation(int begin, int end, String type, Sentence sentence){
 		for(int i = begin; i <= end; i++)
 			this.tokens.add(i);
 		this.type = type.toLowerCase();
 		this.sentence = sentence;
+		this.metadata = new HashMap<String, String>();
 	}
-	
+
 	public Annotation(int begin, String type, Sentence sentence){
 		this.tokens.add(begin);
 		this.type = type.toLowerCase();
 		this.sentence = sentence;
+		this.metadata = new HashMap<String, String>();
 	}
-	
+
 	public Annotation(int begin, String type, int channelIdx, Sentence sentence){
 		this.tokens.add(begin);
 		this.type = type.toLowerCase();
 		this.sentence = sentence;
 		this.channelIdx = channelIdx;
+		this.metadata = new HashMap<String, String>();
 	}
-	
+
 	public Annotation(TreeSet<Integer> tokens, String type, Sentence sentence){
 		this.tokens = tokens;
 		this.type = type;
 		this.sentence = sentence;
-				
+
 	}
-	
+
 	public void setChannelIdx(int idx){
 		this.channelIdx = idx;
 	}
-	
+
 	public int getChannelIdx(){
 		return this.channelIdx;
 	}
-	
+
 	public boolean hasHead(){
 		return this.hasHead;
 	}
-	
+
 	/**
 	 * Przypisuje głowę do anotacji na podst. równoległej anotacji, lub jako pierwszy token.
 	 * Do użytku z anotacjami "anafora_wyznacznik" na potrzeby piśnika TEI
@@ -88,10 +90,10 @@ public class Annotation {
 	 */
 	public void assignHead(){
 		if(hasHead()) return;
-		
+
 		this.setHead(this.tokens.first());
 		if(this.tokens.size() == 1) return;
-	
+
 		for(Annotation ann: this.sentence.getChunks()){
 			if(ann.hasHead() && this.tokens.equals(ann.tokens) && !this.type.equalsIgnoreCase(ann.type)){
 				this.setHead(ann.getHead());
@@ -99,21 +101,21 @@ public class Annotation {
 			}
 		}
 	}
-	
+
 	public int getHead(){
 		return this.head;
 	}
-	
+
 	public void setHead(int idx){
 		this.hasHead = true;
 		this.head = idx;
 	}
-	
+
 	public void addToken(int idx){
 		if ( !this.tokens.contains(idx) )
 			this.tokens.add(idx);
 	}
-	
+
 	public void replaceTokens(int begin, int end){
 		this.tokens.clear();
 		for(int i = begin; i <= end; i++)
@@ -136,23 +138,39 @@ public class Annotation {
     public int hashCode() {
         return (this.getText() + this.tokens.toString() + this.getType() + this.getSentence().getId()).hashCode();
     }
-    
+
+	public Map<String, String> getMetadata() {
+		return metadata;
+	}
+
+	public String getMetadata(AnnotationMetadataKey key) {
+		return metadata.get(key.modelKey);
+	}
+
+	public void setMetadata(AnnotationMetadataKey key, String val) {
+		metadata.put(key.modelKey, val);
+	}
+
+	public boolean metaDataMatches(Annotation other){
+		return this.metadata.equals(other.metadata);
+	}
+
 	public String getId(){
 		return this.id;
 	}
-	
+
 	public int getBegin() {
 		return this.tokens.first();
 	}
-	
+
 	public int getEnd() {
 		return this.tokens.last();
 	}
-	
+
 	public TreeSet<Integer> getTokens(){
 		return this.tokens;
 	}
-	
+
 	public Sentence getSentence() {
 		return this.sentence;
 	}
@@ -160,11 +178,11 @@ public class Annotation {
     public void setSentence(Sentence sentence){
         this.sentence = sentence;
     }
-	
+
 	public String getType() {
 		return this.type;
 	}
-	
+
 	/**
 	 * Zwraca treść chunku, jako konkatenację wartości pierwszych atrybutów.
 	 * @return
@@ -193,16 +211,16 @@ public class Annotation {
         }
         return text.toString();
     }
-	
+
 	public void setId(String id){
 		this.id = id;
 	}
-	
+
 
 	public void setType(String type){
 		this.type = type.toLowerCase();
 	}
-	
+
 	public static Annotation[] sortChunks(HashSet<Annotation> chunkSet) {
 		int size = chunkSet.size();
 		Annotation[] sorted = new Annotation[size];
@@ -220,7 +238,7 @@ public class Annotation {
 	    		}
 		return sorted;
 	}
-	
+
 	public String toString(){
 		return "[" + getText() + "]_"+getSentence().getId()+"|"+getType();
 	}
@@ -231,7 +249,7 @@ public class Annotation {
         cloned.setHead(this.head);
         return cloned;
     }
-    
+
     private boolean equalsIndices(ArrayList<Integer> tab1, ArrayList<Integer> tab2){
     	if ( tab1.size() != tab2.size() )
     		return false;

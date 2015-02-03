@@ -38,6 +38,9 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 	private final String ATTR_NAME 			= "name";
 	private final String ATTR_SET 			= "set";
 
+	private final String TAG_PROP			= "prop";
+	private final String ATTR_KEY			= "key";
+
 	private XMLStreamWriter xmlw;
 	private XMLStreamWriter xmlRelw;
 	private OutputStream os;
@@ -302,6 +305,19 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 			}
 			xmlw.writeEndElement();
 			xmlw.writeCharacters("\n");
+		}
+
+		for (Annotation a: chunks){
+			if (a.getSentence().getTokens().get(a.getBegin()) == token){
+				for (String key: a.getMetadata().keySet()) {
+					this.indent(4);
+					String cclKey = AnnotationMetadataKey.findForModelKey(key).cclKey;
+					xmlw.writeStartElement(TAG_PROP);
+					xmlw.writeAttribute(ATTR_KEY, a.getType() + ":" + cclKey);
+					xmlw.writeCharacters(a.getMetadata().get(key));
+					xmlw.writeEndElement();
+				}
+			}
 		}
 		
 		this.indent(3);
