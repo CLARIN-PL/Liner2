@@ -56,6 +56,8 @@ public class WriterFactory {
             return new MinosVerbEvalWriter(out);
         else if (outputFormat.equals("simple_rel"))
         	return new SimpleRelationClusterSetWriter(out);
+        else if (outputFormat.equals("relation-tuples"))
+        	return new RelationTuplesWriter(out);
 		else		
 			throw new Exception("Output format " + outputFormat + " not recognized.");
 	}
