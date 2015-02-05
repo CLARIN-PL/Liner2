@@ -198,7 +198,6 @@ public class CclSaxParser extends DefaultHandler {
                 // todo: assert parts.length==2
                 String[] parts = propertyKey.split("[:]");
                 String channel = parts[0];
-                AnnotationMetadataKey key = null;
                 annotationsPerToken.get(channel).setMetadata(parts[1], tmpProps.get(propertyKey));
             }
         }
