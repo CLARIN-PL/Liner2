@@ -197,7 +197,16 @@ public class CclSaxParser extends DefaultHandler {
                 // todo: assert parts.length==2
                 String[] parts = propertyKey.split("[:]");
                 String channel = parts[0];
-                annotationsPerToken.get(channel).setMetadata(parts[1], tmpProps.get(propertyKey));
+                if(annotationsPerToken.keySet().contains(channel)){
+                    annotationsPerToken.get(channel).setMetadata(parts[1], tmpProps.get(propertyKey));
+                }
+                else{
+                    String sentId = currentSentence.getId();
+                    if(sentId == null){
+                        sentId = "unknown_sentence_id";
+                    }
+                    System.out.println(uri + ":" +  sentId + ":t" + idx + " | Warning: Invalid annotation category in property: " + propertyKey + " - property has been skipped");
+                }
             }
         }
         else if(element.equalsIgnoreCase(TAG_ORTH)){
