@@ -27,14 +27,19 @@ public abstract class ActionDaemon extends Action{
     public ActionDaemon(String name){
         super(name);
 
-        options.addOption(OptionBuilder.withArgName("models").hasArg().isRequired()
-                .withLongOpt(OPTION_MODELS_LONG).withDescription("multiple models config for daemon")
-                .create(OPTION_MODELS));
-        options.addOption(OptionBuilder.withArgName("number").hasArg()
-                    .withDescription("maximum number of processing threads")
-                    .create(OPTION_MAX_THREADS));
-
+        OptionBuilder.withArgName("models");
+        OptionBuilder.hasArg();
+        OptionBuilder.isRequired();
+        OptionBuilder.withLongOpt(OPTION_MODELS_LONG);
+        OptionBuilder.withDescription("multiple models config for daemon");
+        options.addOption(OptionBuilder.create(OPTION_MODELS));
+        
+        OptionBuilder.withArgName("number");
+        OptionBuilder.hasArg();
+        OptionBuilder.withDescription("maximum number of processing threads");
+        options.addOption(OptionBuilder.create(OPTION_MAX_THREADS));
     }
+    
     @Override
     public void parseOptions(String[] args) throws Exception {
         CommandLine line = new GnuParser().parse(this.options, args);

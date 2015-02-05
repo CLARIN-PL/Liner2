@@ -16,11 +16,6 @@ import g419.liner2.api.tools.ProcessingTimer;
  */
 public class ActionTime extends ActionPipe{
 
-    private String input_file = null;
-    private String input_format = null;
-    private String output_file = null;
-    private String output_format = null;
-
 	public ActionTime(){
 
 		super();
@@ -33,7 +28,7 @@ public class ActionTime extends ActionPipe{
 	 */
 	public void run() throws Exception{
 
-        if ( !LinerOptions.getGlobal().isOption(LinerOptions.OPTION_USED_CHUNKER) ){
+        if ( !LinerOptions.isOption(LinerOptions.OPTION_USED_CHUNKER) ){
             throw new ParameterException("Parameter 'chunker' in 'main' section of model configuration not set");
         }
 
