@@ -147,12 +147,12 @@ public class Annotation {
 		return metadata;
 	}
 
-	public String getMetadata(AnnotationMetadataKey key) {
-		return metadata.get(key.modelKey);
+	public String getMetadata(String key) {
+		return metadata.get(key);
 	}
 
-	public void setMetadata(AnnotationMetadataKey key, String val) {
-		metadata.put(key.modelKey, val);
+	public void setMetadata(String key, String val) {
+		metadata.put(key, val);
 	}
 
 	public boolean metaDataMatches(Annotation other){

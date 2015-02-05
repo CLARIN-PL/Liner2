@@ -325,9 +325,8 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 			if (a.getSentence().getTokens().get(a.getBegin()) == token){
 				for (String key: a.getMetadata().keySet()) {
 					this.indent(4);
-					String cclKey = AnnotationMetadataKey.findForModelKey(key).cclKey;
 					xmlw.writeStartElement(TAG_PROP);
-					xmlw.writeAttribute(ATTR_KEY, a.getType() + ":" + cclKey);
+					xmlw.writeAttribute(ATTR_KEY, a.getType() + ":" + key);
 					xmlw.writeCharacters(a.getMetadata().get(key));
 					xmlw.writeEndElement();
 					xmlw.writeCharacters("\n");
