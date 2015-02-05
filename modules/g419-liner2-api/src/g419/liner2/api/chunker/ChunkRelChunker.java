@@ -43,10 +43,10 @@ public class ChunkRelChunker extends Chunker {
 		}   
 		
 		String cmd = PYTHON_PATH + " " + CHUNKREL_PATH + "markchunkrel.py -c " + CHUNKREL_CONFIG_PATH + "chunkrel.ini -w " + CHUNKREL_MODEL_PATH+ " -s --in " + tmpFileName + " " + tmpFileName; 
-
+		System.out.println(cmd);	
 		Process p = null;
 		try {
-			System.out.println(cmd);
+//			System.out.println(cmd);
 			p = Runtime.getRuntime().exec(cmd);
 			System.out.println("Waiting for ChunkRel");
 			p.waitFor();
@@ -56,7 +56,7 @@ public class ChunkRelChunker extends Chunker {
 		}
 				
 		try {
-			AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(tmpFileName, "ccl");
+			AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(tmpFileName, "ccl_rel");
 			Document relationsDocument = reader.nextDocument();
 			document.setRelations(relationsDocument.getRelations());
 			reader.close();

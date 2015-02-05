@@ -1,7 +1,15 @@
 package g419.corpus.structure;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
+
 import org.apache.commons.lang3.StringUtils;
 
 
@@ -182,7 +190,7 @@ public class Sentence {
 	}
 
 	public void setAnnotations(AnnotationSet chunking) {
-		this.chunks = (LinkedHashSet<Annotation>) chunking.chunkSet();
+		this.chunks = chunking.chunkSet();
 	}
 	
 	public void setId(String id){

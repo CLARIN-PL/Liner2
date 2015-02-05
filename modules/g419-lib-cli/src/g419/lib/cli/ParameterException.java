@@ -1,4 +1,4 @@
-package g419.liner2.api.tools;
+package g419.lib.cli;
 
 public class ParameterException extends Exception {
 

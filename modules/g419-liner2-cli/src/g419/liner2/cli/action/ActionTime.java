@@ -3,12 +3,12 @@ package g419.liner2.cli.action;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.structure.Document;
+import g419.lib.cli.ParameterException;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.factory.ChunkerManager;
 import g419.liner2.api.features.TokenFeatureGenerator;
 import g419.corpus.Logger;
-import g419.liner2.api.tools.ParameterException;
 import g419.liner2.api.tools.ProcessingTimer;
 
 /**

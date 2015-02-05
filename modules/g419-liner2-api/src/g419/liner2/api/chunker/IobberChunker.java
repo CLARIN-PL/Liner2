@@ -10,10 +10,14 @@ import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.HashMap;
+
+import org.apache.commons.io.IOUtils;
 
 public class IobberChunker extends Chunker {
 
@@ -23,7 +27,7 @@ public class IobberChunker extends Chunker {
 	private String IOBBER_PATH;
 	private String IOBBER_MODEL;
 	private String IOBBER_INI_PATH;
-	private final String IOBBER_HYPHEN_OF_STDIN_PROCESSING = "-";
+	private String TMP_OUTPUT_FOLDER = "/tmp/";
 
 	public IobberChunker(String iobberPath, String iobberModel, String iobberIni) {
 		IOBBER_PATH = iobberPath;
@@ -34,10 +38,32 @@ public class IobberChunker extends Chunker {
 	@Override
 	public HashMap<Sentence, AnnotationSet> chunk(Document document) {
 		HashMap<Sentence, AnnotationSet> chunking = new HashMap<Sentence, AnnotationSet>();
-		String cmd = IOBBER_PATH + "iobber " + IOBBER_INI_PATH + " -d " + IOBBER_MODEL + " -i ccl " + IOBBER_HYPHEN_OF_STDIN_PROCESSING;
+		
+		String tmpFileName = TMP_OUTPUT_FOLDER + document.hashCode() + ".xml";
+		try {
+			AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(tmpFileName, "ccl");
+	        writer.writeDocument(document);
+	        writer.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		String batchFileName = TMP_OUTPUT_FOLDER + "iobber_batch.txt";
+		try{
+			BufferedWriter bw = new BufferedWriter(new FileWriter(batchFileName));
+			bw.write(tmpFileName);
+			bw.close();
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+						
+		String cmd = IOBBER_PATH + "iobber " + IOBBER_INI_PATH + " -d " + IOBBER_MODEL + " -i ccl --batch " + batchFileName;
 		Process p = null;
 		try {
 			p = Runtime.getRuntime().exec(cmd);
+			System.out.println("Waiting for Iobber");
+			p.waitFor();
+			System.out.println("Iobber finished!");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -48,13 +74,12 @@ public class IobberChunker extends Chunker {
 
 		
 		try {
-			AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(out, "ccl");
-            writer.writeDocument(document);
-            writer.close();
-            
-            AbstractDocumentReader reader = ReaderFactory.get().getStreamReader("ccl", in, "ccl");
-			
-			Document documentIobbed = reader.nextDocument();
+//			AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(out, "ccl");
+//            writer.writeDocument(document);
+//            writer.close();
+
+            AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(tmpFileName+".chunked", "ccl");
+            Document documentIobbed = reader.nextDocument();
 			reader.close();
 			
 			for(Annotation an : documentIobbed.getAnnotations()){

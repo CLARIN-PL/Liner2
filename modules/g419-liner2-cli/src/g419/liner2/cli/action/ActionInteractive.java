@@ -10,13 +10,13 @@ import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.lib.cli.CommonOptions;
+import g419.lib.cli.ParameterException;
 import g419.lib.cli.action.Action;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.factory.ChunkerFactory;
 import g419.liner2.api.chunker.factory.ChunkerManager;
 import g419.liner2.api.features.TokenFeatureGenerator;
-import g419.liner2.api.tools.ParameterException;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

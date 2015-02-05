@@ -1,13 +1,13 @@
 package g419.corpus.io.writer;
 
+import g419.corpus.structure.AnnotationCluster;
+import g419.corpus.structure.AnnotationClusterSet;
+import g419.corpus.structure.Document;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-
-import g419.corpus.structure.Document;
-import g419.corpus.structure.AnnotationCluster;
-import g419.corpus.structure.AnnotationClusterSet;
 
 public class SimpleRelationClusterSetWriter extends AbstractDocumentWriter {
 

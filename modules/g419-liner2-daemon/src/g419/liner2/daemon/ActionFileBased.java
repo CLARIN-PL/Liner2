@@ -1,7 +1,8 @@
 package g419.liner2.daemon;
 
+import g419.lib.cli.ParameterException;
 import g419.lib.cli.action.Action;
-import g419.liner2.api.tools.ParameterException;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Option;

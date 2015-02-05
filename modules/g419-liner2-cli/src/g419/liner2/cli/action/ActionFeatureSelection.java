@@ -9,6 +9,7 @@ import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 import g419.lib.cli.CommonOptions;
+import g419.lib.cli.ParameterException;
 import g419.lib.cli.action.Action;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
