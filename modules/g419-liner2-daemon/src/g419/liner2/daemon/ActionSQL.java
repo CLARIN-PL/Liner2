@@ -37,32 +37,47 @@ public class ActionSQL extends ActionDaemon{
         super("sql");
         this.setDescription("Starts daemon with sql database.");
 
-        options.addOption(OptionBuilder.withArgName("name").hasArg()
-                .withDescription("sql database host name")
-                .create(OPTION_DB_HOST));
-        options.addOption(OptionBuilder.withArgName("name").hasArg()
-                .withDescription("sql database name")
-                .create(OPTION_DB_NAME));
-        options.addOption(OptionBuilder.withArgName("password").hasArg()
-                .withDescription("sql database password")
-                .create(OPTION_DB_PASSWORD));
-        options.addOption(OptionBuilder.withArgName("db_port").hasArg()
-                .withDescription("sql database port number")
-                .create(OPTION_DB_PORT));
-        options.addOption(OptionBuilder.withArgName("address").hasArg()
-                .withDescription("sql database URI address")
-                .create(OPTION_DB_URI));
-        options.addOption(OptionBuilder.withArgName("username").hasArg()
-                .withDescription("sql database user name ")
-                .create(OPTION_DB_USER));
-        options.addOption(OptionBuilder.withArgName("address").hasArg().isRequired()
-                .withDescription("IP address for daemon")
-                .create(OPTION_IP));
-        options.addOption(OptionBuilder.withArgName("wsdl_port").hasArg().isRequired()
-                .withDescription("port to listen on")
-                .create(OPTION_PORT));
-
-
+        OptionBuilder.withArgName("name");
+        OptionBuilder.hasArg();
+        OptionBuilder.withDescription("sql database host name");        
+        options.addOption(OptionBuilder.create(OPTION_DB_HOST));
+        
+        OptionBuilder.withArgName("name");
+        OptionBuilder.hasArg();
+        OptionBuilder.withDescription("sql database name");        
+        options.addOption(OptionBuilder.create(OPTION_DB_NAME));
+        
+        OptionBuilder.withArgName("password");
+        OptionBuilder.hasArg();
+        OptionBuilder.withDescription("sql database password");        
+        options.addOption(OptionBuilder.create(OPTION_DB_PASSWORD));
+        
+        OptionBuilder.withArgName("db_port");
+        OptionBuilder.hasArg();
+        OptionBuilder.withDescription("sql database port number");
+        options.addOption(OptionBuilder.create(OPTION_DB_PORT));
+        
+        OptionBuilder.withArgName("address");
+        OptionBuilder.hasArg();
+        OptionBuilder.withDescription("sql database URI address");        
+        options.addOption(OptionBuilder.create(OPTION_DB_URI));
+        
+        OptionBuilder.withArgName("username");
+        OptionBuilder.hasArg();
+        OptionBuilder.withDescription("sql database user name ");
+        options.addOption(OptionBuilder.create(OPTION_DB_USER));
+        
+        OptionBuilder.withArgName("address");
+        OptionBuilder.hasArg();
+        OptionBuilder.isRequired();
+        OptionBuilder.withDescription("IP address for daemon");
+        options.addOption(OptionBuilder.create(OPTION_IP));
+        
+        OptionBuilder.withArgName("wsdl_port");
+        OptionBuilder.hasArg();
+        OptionBuilder.isRequired();
+        OptionBuilder.withDescription("port to listen on");        
+        options.addOption(OptionBuilder.create(OPTION_PORT));
     }
 
     @Override
