@@ -33,7 +33,6 @@ public class ActionConvert extends Action {
     public ArrayList<String> convertersDesciptions = new ArrayList<String>();
     LinkedHashMap<String, String> features = new LinkedHashMap<String, String>();
 
-    @SuppressWarnings("static-access")
 	public ActionConvert() {
 		super("convert");
         this.setDescription("converts documents from one format to another and applies defined converters");
@@ -43,11 +42,12 @@ public class ActionConvert extends Action {
         this.options.addOption(CommonOptions.getOutputFileFormatOption());
         this.options.addOption(CommonOptions.getOutputFileNameOption());
         this.options.addOption(CommonOptions.getFeaturesOption());
-        this.options.addOption(OptionBuilder
-                .withArgName("file").hasArg()
-                .withDescription("converter description")
-                .withLongOpt(OPTION_CONVERSION_LONG)
-                .create(OPTION_CONVERSION));
+        
+        OptionBuilder.withArgName("file");
+        OptionBuilder.hasArg();
+        OptionBuilder.withDescription("converter description");
+        OptionBuilder.withLongOpt(OPTION_CONVERSION_LONG);
+        this.options.addOption(OptionBuilder.create(OPTION_CONVERSION));
 	}
 
 	@Override

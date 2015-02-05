@@ -52,7 +52,6 @@ public class ActionFeatureSelection extends Action {
     private TokenFeatureGenerator gen;
     private String chunker = null;
 
-	@SuppressWarnings("static-access")
 	public ActionFeatureSelection() {
 		super("selection");
 		this.setDescription("todo");
@@ -61,14 +60,20 @@ public class ActionFeatureSelection extends Action {
 		this.options.addOption(CommonOptions.getInputFileNameOption());
 		this.options.addOption(CommonOptions.getModelFileOption());
 		this.options.addOption(CommonOptions.getVerboseDeatilsOption());
-		this.options.addOption(OptionBuilder.withArgName("templates").hasArg()
-				.withDescription("file with paths to template files")
-				.withLongOpt(OPTION_TEMPLATES_LONG).isRequired()
-				.create(OPTION_TEMPLATES));
-        this.options.addOption(OptionBuilder.withArgName("chunker").hasArg()
-                .withDescription("chunker used for testing features")
-                .withLongOpt(OPTION_CHUNKER_LONG).isRequired()
-                .create(OPTION_CHUNKER));
+		
+		OptionBuilder.withArgName("templates");
+		OptionBuilder.hasArg();
+		OptionBuilder.withDescription("file with paths to template files");
+		OptionBuilder.withLongOpt(OPTION_TEMPLATES_LONG);
+		OptionBuilder.isRequired();
+		this.options.addOption(OptionBuilder.create(OPTION_TEMPLATES));
+		
+		OptionBuilder.withArgName("chunker");
+		OptionBuilder.hasArg();
+		OptionBuilder.withDescription("chunker used for testing features");
+		OptionBuilder.withLongOpt(OPTION_CHUNKER_LONG);
+		OptionBuilder.isRequired();		
+        this.options.addOption(OptionBuilder.create(OPTION_CHUNKER));
 	}
 
 	@Override

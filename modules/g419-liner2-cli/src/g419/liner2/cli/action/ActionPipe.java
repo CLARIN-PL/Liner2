@@ -4,14 +4,12 @@ import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
-import g419.corpus.structure.CrfTemplate;
 import g419.corpus.structure.Document;
 import g419.lib.cli.CommonOptions;
 import g419.lib.cli.ParameterException;
 import g419.lib.cli.action.Action;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
-import g419.liner2.api.chunker.factory.ChunkerFactory;
 import g419.liner2.api.chunker.factory.ChunkerManager;
 import g419.liner2.api.features.TokenFeatureGenerator;
 
@@ -58,7 +56,7 @@ public class ActionPipe extends Action{
 	 */
 	public void run() throws Exception{
 	
-        if ( !LinerOptions.getGlobal().isOption(LinerOptions.OPTION_USED_CHUNKER) ){
+        if ( !LinerOptions.isOption(LinerOptions.OPTION_USED_CHUNKER) ){
 			throw new ParameterException("Parameter 'chunker' in 'main' section of model not set");
 		}		
 	

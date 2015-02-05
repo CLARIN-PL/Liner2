@@ -832,7 +832,8 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
 
         public boolean equals(Object other) {
             if (other instanceof Pair) {
-                Pair otherPair = (Pair) other;
+                @SuppressWarnings("unchecked")
+				Pair<A, B> otherPair = (Pair<A, B>) other;
                 return
                         ((  this.first == otherPair.first ||
                                 ( this.first != null && otherPair.first != null &&
