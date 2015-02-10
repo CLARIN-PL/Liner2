@@ -2,7 +2,8 @@ package g419.lib.cli.action;
 
 import g419.corpus.Logger;
 import g419.lib.cli.CommonOptions;
-import g419.liner2.api.tools.ParameterException;
+import g419.lib.cli.ParameterException;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;

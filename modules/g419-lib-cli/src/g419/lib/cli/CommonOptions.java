@@ -35,82 +35,74 @@ public class CommonOptions {
     public static final String OPTION_MODEL_LONG = "model";
 
 
-	@SuppressWarnings("static-access")
 	public static Option getOutputFileNameOption(){
-		return OptionBuilder
-				.withArgName("filename").hasArg()
-				.withDescription("path to an output file")
-				.withLongOpt(CommonOptions.OPTION_OUTPUT_FILE_LONG)
-				.create(CommonOptions.OPTION_OUTPUT_FILE);		
+		OptionBuilder.withArgName("filename");
+		OptionBuilder.hasArg();
+		OptionBuilder.withDescription("path to an output file");
+		OptionBuilder.withLongOpt(CommonOptions.OPTION_OUTPUT_FILE_LONG);
+		return OptionBuilder.create(CommonOptions.OPTION_OUTPUT_FILE);		
 	}
 
-    @SuppressWarnings("static-access")
-    public static Option getOutputFileFormatOption(){
-        return OptionBuilder
-                .withArgName("filename").hasArg()
-                .withDescription("output format [iob, ccl, arff, tokens, tuples, tei, batch:{format}]")
-                .withLongOpt(CommonOptions.OPTION_OUTPUT_FORMAT_LONG)
-                .create(CommonOptions.OPTION_OUTPUT_FORMAT);
+    public static Option getOutputFileFormatOption(){       
+        OptionBuilder.withArgName("filename");
+        OptionBuilder.hasArg();
+        OptionBuilder.withDescription("output format [iob, ccl, arff, tokens, tuples, tei, batch:{format}]");
+        OptionBuilder.withLongOpt(CommonOptions.OPTION_OUTPUT_FORMAT_LONG);
+        return OptionBuilder.create(CommonOptions.OPTION_OUTPUT_FORMAT);
     }
 
-	@SuppressWarnings("static-access")
 	public static Option getInputFileNameOption(){
-		return OptionBuilder
-				.withArgName("filename").hasArg()
-				.withDescription("read input from file")
-				.withLongOpt(CommonOptions.OPTION_INPUT_FILE_LONG)
-				.isRequired()
-				.create(OPTION_INPUT_FILE);
+		OptionBuilder.withArgName("filename");
+		OptionBuilder.hasArg();
+		OptionBuilder.withDescription("read input from file");
+		OptionBuilder.withLongOpt(CommonOptions.OPTION_INPUT_FILE_LONG);
+		OptionBuilder.isRequired();
+		return OptionBuilder.create(OPTION_INPUT_FILE);
 	}
 	
-	@SuppressWarnings("static-access")
 	public static Option getInputFileFormatOption(){
-		return OptionBuilder
-				.withArgName("format").hasArg()
-				.withDescription("input format [iob, ccl, plain, plain:maca, plain:wcrft, tei, batch:{format}]")
-				.withLongOpt(CommonOptions.OPTION_INPUT_FORMAT_LONG)
-				.create(OPTION_INPUT_FORMAT);
+		OptionBuilder.withArgName("format");
+		OptionBuilder.hasArg();
+		OptionBuilder.withDescription("input format [iob, ccl, plain, plain:maca, plain:wcrft, tei, batch:{format}]");
+		OptionBuilder.withLongOpt(CommonOptions.OPTION_INPUT_FORMAT_LONG);
+		return OptionBuilder.create(OPTION_INPUT_FORMAT);
 	}
 
-    @SuppressWarnings("static-access")
     public static Option getFeaturesOption(){
-        return OptionBuilder
-                .withArgName("features").hasArg()
-                .withDescription("a file with a list of features")
-                .withLongOpt(CommonOptions.OPTION_FEATURES_LONG)
-                .create(CommonOptions.OPTION_FEATURES);
+        OptionBuilder.withArgName("features");
+        OptionBuilder.hasArg();
+        OptionBuilder.withDescription("a file with a list of features");
+        OptionBuilder.withLongOpt(CommonOptions.OPTION_FEATURES_LONG);
+        return OptionBuilder.create(CommonOptions.OPTION_FEATURES);
     }
 
-    @SuppressWarnings("static-access")
     public static Option getModelFileOption(){
-        return OptionBuilder
-                .withArgName("model").hasArg()
-                .withDescription("file with model configuration")
-                .withLongOpt(CommonOptions.OPTION_MODEL_LONG)
-                .isRequired()
-                .create(CommonOptions.OPTION_MODEL);
+    	OptionBuilder.withArgName("model");
+    	OptionBuilder.hasArg();
+        OptionBuilder.withDescription("file with model configuration");
+        OptionBuilder.withLongOpt(CommonOptions.OPTION_MODEL_LONG);
+        OptionBuilder.isRequired();
+        return OptionBuilder.create(CommonOptions.OPTION_MODEL);
     }
 
-    @SuppressWarnings("static-access")
     public static Option getVerboseOption(){
-        return OptionBuilder
-                .withLongOpt(OPTION_VERBOSE_LONG).withDescription("print help")
-                .create(OPTION_VERBOSE);
+        OptionBuilder.withLongOpt(OPTION_VERBOSE_LONG);
+        OptionBuilder.withDescription("print help");
+        return OptionBuilder.create(OPTION_VERBOSE);
     }
 
     public static Option getVerboseDeatilsOption(){
-        return OptionBuilder
-                .withDescription("verbose processed sentences data")
-                .withLongOpt(OPTION_VERBOSE_DETAILS_LONG)
-                .create(OPTION_VERBOSE_DETAILS);
+    	OptionBuilder.withDescription("verbose processed sentences data");
+        OptionBuilder.withLongOpt(OPTION_VERBOSE_DETAILS_LONG);
+        return OptionBuilder.create(OPTION_VERBOSE_DETAILS);
     }
 
 	public static Option getInputFileFormatOptionWithAnnotations(){
-		return OptionBuilder
-				.withArgName("format").hasArg()
-				.withDescription("input format [iob, ccl, tei, batch:{format}]")
-				.withLongOpt(CommonOptions.OPTION_INPUT_FORMAT_LONG)
-				.create(OPTION_INPUT_FORMAT);
+		OptionBuilder.withArgName("format");
+		OptionBuilder.hasArg();
+		OptionBuilder.withDescription("input format [iob, ccl, tei, batch:{format}]");
+		OptionBuilder.withLongOpt(CommonOptions.OPTION_INPUT_FORMAT_LONG);
+		return OptionBuilder.create(OPTION_INPUT_FORMAT);
 	}
 
 

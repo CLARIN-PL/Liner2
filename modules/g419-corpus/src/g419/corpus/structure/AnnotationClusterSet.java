@@ -2,8 +2,6 @@ package g419.corpus.structure;
 
 import g419.corpus.structure.AnnotationCluster.ReturningStrategy;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

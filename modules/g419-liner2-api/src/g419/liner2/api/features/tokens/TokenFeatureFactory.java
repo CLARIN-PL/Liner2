@@ -13,7 +13,7 @@ public class TokenFeatureFactory {
 	 * @return
 	 */
 	static WordnetLoader database = null;
-	private static List sourceFeats = Arrays.asList("orth", "base", "ctag");
+	private static List<String> sourceFeats = Arrays.asList("orth", "base", "ctag");
 	
 	public static Feature create(String feature) throws Exception{
 		if (feature.equals("class"))

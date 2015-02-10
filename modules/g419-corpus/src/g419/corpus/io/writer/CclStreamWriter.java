@@ -1,10 +1,23 @@
 package g419.corpus.io.writer;
 
-import g419.corpus.structure.*;
+import g419.corpus.structure.Annotation;
+import g419.corpus.structure.Document;
+import g419.corpus.structure.Paragraph;
+import g419.corpus.structure.Relation;
+import g419.corpus.structure.Sentence;
+import g419.corpus.structure.Tag;
+import g419.corpus.structure.Token;
+import g419.corpus.structure.TokenAttributeIndex;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.zip.DataFormatException;
 
 import javax.xml.stream.XMLOutputFactory;
@@ -37,6 +50,9 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 	private final String ATTR_CHAN 			= "chan";
 	private final String ATTR_NAME 			= "name";
 	private final String ATTR_SET 			= "set";
+
+	private final String TAG_PROP			= "prop";
+	private final String ATTR_KEY			= "key";
 
 	private XMLStreamWriter xmlw;
 	private XMLStreamWriter xmlRelw;
@@ -302,6 +318,19 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 			}
 			xmlw.writeEndElement();
 			xmlw.writeCharacters("\n");
+		}
+
+		for (Annotation a: chunks){
+			if (a.getSentence().getTokens().get(a.getBegin()) == token){
+				for (String key: a.getMetadata().keySet()) {
+					this.indent(4);
+					xmlw.writeStartElement(TAG_PROP);
+					xmlw.writeAttribute(ATTR_KEY, a.getType() + ":" + key);
+					xmlw.writeCharacters(a.getMetadata().get(key));
+					xmlw.writeEndElement();
+					xmlw.writeCharacters("\n");
+				}
+			}
 		}
 		
 		this.indent(3);

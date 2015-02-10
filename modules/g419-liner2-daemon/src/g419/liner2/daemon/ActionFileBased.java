@@ -1,7 +1,8 @@
 package g419.liner2.daemon;
 
+import g419.lib.cli.ParameterException;
 import g419.lib.cli.action.Action;
-import g419.liner2.api.tools.ParameterException;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Option;
@@ -23,9 +24,11 @@ public class ActionFileBased extends ActionDaemon {
         super("file");
         this.setDescription("Starts daemon with file database.");
 
-        options.addOption(OptionBuilder.withArgName("db_path").hasArg().isRequired()
-                .withDescription("path to database directory (with following folders created within: queue, progress, errors, done")
-                .create(OPTION_DB_PATH));
+        OptionBuilder.withArgName("db_path");
+        OptionBuilder.hasArg();
+        OptionBuilder.isRequired();
+        OptionBuilder.withDescription("path to database directory (with following folders created within: queue, progress, errors, done");
+        options.addOption(OptionBuilder.create(OPTION_DB_PATH));
     }
 
     @Override

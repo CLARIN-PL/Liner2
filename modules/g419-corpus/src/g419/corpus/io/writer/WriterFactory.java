@@ -1,7 +1,11 @@
 package g419.corpus.io.writer;
 
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 
@@ -56,6 +60,8 @@ public class WriterFactory {
             return new MinosVerbEvalWriter(out);
         else if (outputFormat.equals("simple_rel"))
         	return new SimpleRelationClusterSetWriter(out);
+        else if (outputFormat.equals("relation-tuples"))
+        	return new RelationTuplesWriter(out);
 		else		
 			throw new Exception("Output format " + outputFormat + " not recognized.");
 	}

@@ -7,7 +7,6 @@ import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
-import g419.liner2.api.tools.ParameterException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +26,7 @@ public class HeuristicChunker extends Chunker {
 	
 	public HeuristicChunker() {}
 	
-	public HeuristicChunker(String[] rules) throws ParameterException {
+	public HeuristicChunker(String[] rules) throws Exception {
 		this.rules = new ArrayList<String>();
 		for (String r : rules) {
 			if ((r.equals("general-ign-dict")) ||
@@ -40,7 +39,7 @@ public class HeuristicChunker extends Chunker {
 				)
 				this.rules.add(r);
 			else
-				throw new ParameterException("HeuristicChunker: unknown heuristic " + r);
+				throw new Exception("HeuristicChunker: unknown heuristic " + r);
 		}
 	}
 	

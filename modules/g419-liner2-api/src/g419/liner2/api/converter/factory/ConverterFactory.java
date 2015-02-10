@@ -12,9 +12,12 @@ import java.util.ArrayList;
 
 public class ConverterFactory {
 
+    private static ArrayList<ConverterFactoryItem> items = new ArrayList<ConverterFactoryItem>(){/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
-
-    private static ArrayList<ConverterFactoryItem> items = new ArrayList<ConverterFactoryItem>(){{
+	{
         add(new AnnotationFilterByRegexFactoryItem());
         add(new AnnotationFlattenFactoryItem());
         add(new AnnotationMappingFactoryItem());

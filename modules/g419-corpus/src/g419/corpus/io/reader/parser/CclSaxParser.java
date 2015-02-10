@@ -1,5 +1,6 @@
 package g419.corpus.io.reader.parser;
 
+import g419.corpus.Logger;
 import g419.corpus.io.DataFormatException;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
@@ -15,12 +16,12 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import g419.corpus.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -49,6 +50,8 @@ public class CclSaxParser extends DefaultHandler {
     private final String TAG_TAG			= "lex";
     private final String TAG_TOKEN 			= "tok";
     private final String TAG_HEAD 			= "head";
+    private final String TAG_PROP           = "prop";
+    private final String ATTR_KEY           = "key";
 
     ArrayList<Paragraph> paragraphs;
     Paragraph currentParagraph = null;
@@ -69,6 +72,9 @@ public class CclSaxParser extends DefaultHandler {
     Document document = null;
     boolean foundSentenceId = false;
     String uri;
+    Map<String, String> tmpProps;
+    Map<String, Annotation> annotationsPerToken;
+    String propKey;
 
     public CclSaxParser(String uri, InputStream is, TokenAttributeIndex attributeIndex) throws DataFormatException {
         this.uri = uri;
@@ -78,16 +84,16 @@ public class CclSaxParser extends DefaultHandler {
         parseDocument();
         this.document = new Document(uri, this.paragraphs, this.attributeIndex);
     }
-    
+
     private void parseDocument() throws DataFormatException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
             SAXParser parser = factory.newSAXParser();
             parser.parse(is,this);
-        } catch (ParserConfigurationException e) {        	
+        } catch (ParserConfigurationException e) {
             throw new DataFormatException("Parse error (ParserConfigurationException)");
         } catch (SAXException e) {
-        	e.printStackTrace();
+            e.printStackTrace();
             throw new DataFormatException("Parse error (SAXException)");
         } catch (IOException e) {
             throw new DataFormatException("Parse error (IOException)");
@@ -125,6 +131,8 @@ public class CclSaxParser extends DefaultHandler {
         else if (elementName.equalsIgnoreCase(TAG_TOKEN)) {
             currentToken = new Token(attributeIndex);
             currentToken.setId(attributes.getValue(TAG_ID));
+            tmpProps = new HashMap<String, String>();
+            annotationsPerToken = new HashMap<String, Annotation>();
         }
         else if(elementName.equalsIgnoreCase(TAG_TAG)){
             if (attributes.getValue(TAG_DISAMB) == null)
@@ -145,13 +153,16 @@ public class CclSaxParser extends DefaultHandler {
                 currentToken.setNoSpaceAfter(true);
             }
         }
+        else if (elementName.equalsIgnoreCase(TAG_PROP)){
+            propKey = attributes.getValue(ATTR_KEY);
+        }
     }
     @Override
     public void endElement(String s, String s1, String element) throws SAXException {
         if (element.equals(TAG_PARAGRAPH)) {
             paragraphs.add(currentParagraph);
         }
-        if (element.equalsIgnoreCase(TAG_SENTENCE)) {
+        else if (element.equalsIgnoreCase(TAG_SENTENCE)) {
             for (Annotation chunk : annotations.values())
                 currentSentence.addChunk(chunk);
             if(!currentSentence.hasId()){
@@ -165,7 +176,7 @@ public class CclSaxParser extends DefaultHandler {
             }
             currentParagraph.addSentence(currentSentence);
         }
-        if (element.equalsIgnoreCase(TAG_TOKEN)) {
+        else if (element.equalsIgnoreCase(TAG_TOKEN)) {
             ArrayList<Tag> tags = currentToken.getTags();
             foundDisamb = false;
             for (Tag tag : tags) {
@@ -182,34 +193,55 @@ public class CclSaxParser extends DefaultHandler {
             }
             currentSentence.addToken(currentToken);
             idx++;
+            for (String propertyKey: tmpProps.keySet()){
+                // todo: assert parts.length==2
+                String[] parts = propertyKey.split("[:]");
+                String channel = parts[0];
+                if(annotationsPerToken.keySet().contains(channel)){
+                    annotationsPerToken.get(channel).setMetadata(parts[1], tmpProps.get(propertyKey));
+                }
+                else{
+                    String sentId = currentSentence.getId();
+                    if(sentId == null){
+                        sentId = "unknown_sentence_id";
+                    }
+                    System.out.println(uri + ":" +  sentId + ":t" + idx + " | Warning: Invalid annotation category in property: " + propertyKey + " - property has been skipped");
+                }
+            }
         }
-        if(element.equalsIgnoreCase(TAG_ORTH)){
-            currentToken.setAttributeValue(attributeIndex.getIndex("orth"),tmpValue);
+        else if(element.equalsIgnoreCase(TAG_ORTH)){
+            currentToken.setAttributeValue(attributeIndex.getIndex("orth"), tmpValue);
         }
-        if(element.equalsIgnoreCase(TAG_TAG)){
+        else if(element.equalsIgnoreCase(TAG_TAG)){
             currentToken.addTag(new Tag(tmpBase,tmpCtag,tmpDisamb));
         }
-        if(element.equalsIgnoreCase(TAG_BASE)){
+        else if(element.equalsIgnoreCase(TAG_BASE)){
             tmpBase = tmpValue;
         }
-        if(element.equalsIgnoreCase(TAG_CTAG)){
+        else if(element.equalsIgnoreCase(TAG_CTAG)){
             tmpCtag = tmpValue;
         }
-        if(element.equalsIgnoreCase(TAG_ANN)){
+        else if(element.equalsIgnoreCase(TAG_ANN)){
             String chanNumber = tmpValue.trim();
+            Annotation annotation = null;
             if (!chanNumber.equals("0")){
                 AnnChan ann = new AnnChan(chanName, chanNumber, chanHead);
                 if (annotations.containsKey(ann.toString())){
-                    annotations.get(ann.toString()).addToken(idx);
+                    annotation = annotations.get(ann.toString());
+                    annotation.addToken(idx);
                 }
                 else {
-                    annotations.put(ann.toString(),
-                            new Annotation(idx, ann.chan, Integer.parseInt(chanNumber), currentSentence));
+                    annotation = new Annotation(idx, ann.chan, Integer.parseInt(chanNumber), currentSentence);
+                    annotations.put(ann.toString(), annotation);
                 }
                 if(ann.head.equals("1"))
                     annotations.get(ann.toString()).setHead(idx);
-
+                annotationsPerToken.put(chanName, annotation);
             }
+
+        }
+        else if (element.equalsIgnoreCase(TAG_PROP)){
+            tmpProps.put(propKey, tmpValue);
         }
     }
     @Override

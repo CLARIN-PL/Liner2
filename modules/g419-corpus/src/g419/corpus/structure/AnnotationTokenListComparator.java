@@ -1,6 +1,5 @@
 package g419.corpus.structure;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 
 public class AnnotationTokenListComparator implements Comparator<Annotation> {

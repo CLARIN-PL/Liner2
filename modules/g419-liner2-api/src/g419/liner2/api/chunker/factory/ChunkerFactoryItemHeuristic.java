@@ -1,9 +1,10 @@
 package g419.liner2.api.chunker.factory;
 
 
+import g419.lib.cli.ParameterException;
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.HeuristicChunker;
-import g419.liner2.api.tools.ParameterException;
+
 import org.ini4j.Ini;
 
 import java.util.regex.Matcher;

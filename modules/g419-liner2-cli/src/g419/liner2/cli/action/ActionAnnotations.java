@@ -43,22 +43,23 @@ public class ActionAnnotations extends Action {
 	private String features_file = null;
 	private List<Pattern> types = new ArrayList<Pattern>();
 		
-	@SuppressWarnings("static-access")
 	public ActionAnnotations() {
 		super("annotations");
 		this.setDescription("generates an arff file with a list of annotations and their features");
 		
-        this.options.addOption(OptionBuilder
-        		.withArgName("annotation_features").hasArg()
-                .withDescription("a file with a list of annotation features")
-                .withLongOpt(ActionAnnotations.OPTION_ANNOTATION_FEATURE_LONG)
-        		.isRequired()
-                .create(ActionAnnotations.OPTION_ANNOTATION_FEATURE));
-        this.options.addOption(OptionBuilder
-                .withArgName("types").hasArg()
-                .withDescription("a file with a list of annotation name patterns")
-                .withLongOpt(OPTION_TYPES_LONG)
-                .create(OPTION_TYPES));
+		OptionBuilder.withArgName("annotation_features");
+		OptionBuilder.hasArg();
+		OptionBuilder.withDescription("a file with a list of annotation features");
+		OptionBuilder.withLongOpt(ActionAnnotations.OPTION_ANNOTATION_FEATURE_LONG);
+		OptionBuilder.isRequired();
+        this.options.addOption(OptionBuilder.create(ActionAnnotations.OPTION_ANNOTATION_FEATURE));
+		
+        OptionBuilder.withArgName("types");
+        OptionBuilder.hasArg();
+        OptionBuilder.withDescription("a file with a list of annotation name patterns");
+        OptionBuilder.withLongOpt(OPTION_TYPES_LONG);
+        this.options.addOption(OptionBuilder.create(OPTION_TYPES));
+        
         this.options.addOption(CommonOptions.getOutputFileNameOption());
         this.options.addOption(CommonOptions.getInputFileFormatOption());
         this.options.addOption(CommonOptions.getInputFileNameOption());

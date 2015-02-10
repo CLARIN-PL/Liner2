@@ -1,11 +1,11 @@
 package g419.corpus.io.writer;
 
 import g419.corpus.structure.Annotation;
+import g419.corpus.structure.AnnotationCluster;
+import g419.corpus.structure.AnnotationClusterSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Relation;
-import g419.corpus.structure.AnnotationCluster;
-import g419.corpus.structure.AnnotationClusterSet;
 import g419.corpus.structure.RelationSet;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Tag;
@@ -832,7 +832,8 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
 
         public boolean equals(Object other) {
             if (other instanceof Pair) {
-                Pair otherPair = (Pair) other;
+                @SuppressWarnings("unchecked")
+				Pair<A, B> otherPair = (Pair<A, B>) other;
                 return
                         ((  this.first == otherPair.first ||
                                 ( this.first != null && otherPair.first != null &&

@@ -1,8 +1,9 @@
 package g419.liner2.daemon;
 
 import g419.corpus.TerminateException;
+import g419.lib.cli.ParameterException;
 import g419.lib.cli.action.Action;
-import g419.liner2.api.tools.ParameterException;
+
 import org.apache.commons.cli.ParseException;
 
 import java.util.HashMap;
