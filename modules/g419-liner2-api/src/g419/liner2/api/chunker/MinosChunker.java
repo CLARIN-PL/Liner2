@@ -188,7 +188,7 @@ public class MinosChunker extends Chunker {
 	 * @author Adam Kaczmarek<adamjankaczmarek@gmail.com>
 	 *
 	 */
-	enum Gender{
+	public enum Gender{
 		UNDEFINED(""),
 		NEUTER("n"), 
 		FEMINUM("f"),
