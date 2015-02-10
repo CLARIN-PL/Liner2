@@ -34,6 +34,11 @@ public class Relation {
 	 */
 	private Annotation annotationTo;
 	
+	/**
+	 * Dokument zawierający relację
+	 */
+	private Document document;
+	public Document getDocument(){return document;}
 	
 	public Relation(Annotation from, Annotation to, String type){
 		this.setAnnotationFrom(from);
@@ -42,13 +47,21 @@ public class Relation {
 		this.setType(type);
 	}
 	
-	public Relation(Annotation from, Annotation to, String type, String set){
+//	public Relation(Annotation from, Annotation to, String type, String set){
+//		this.setAnnotationFrom(from);
+//		this.setAnnotationTo(to);
+//		this.setSet(set);
+//		this.setType(type);
+//	}
+
+	public Relation(Annotation from, Annotation to, String type, String set, Document document){
+		this.document = document;
 		this.setAnnotationFrom(from);
 		this.setAnnotationTo(to);
 		this.setSet(set);
 		this.setType(type);
 	}
-
+	
 	public Annotation getAnnotationFrom() {
 		return annotationFrom;
 	}

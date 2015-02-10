@@ -20,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  */
 public class AnnotationCluster {
+	private Document document;
 	private SortedSet<Annotation> annotations;
 	private String type;
 	private Annotation headAnnotation;
@@ -31,12 +32,30 @@ public class AnnotationCluster {
 		this.type = type;
 	}
 	
+	public Document getDocument(){
+		return document;
+	}
+	
+	public AnnotationCluster clusterPreceedingMention(Annotation mention){
+		AnnotationCluster preceedingCluster = new AnnotationCluster(this.type);
+		preceedingCluster.document = this.document;
+		for(Annotation annotation : annotations)
+			// Sprawdź czy anotacja występuje przed wzmianką -- dodatkowo usuwaj tylko wzmianki tego samego typu
+			// Zakładamy bowiem, że wzmianki innych typów pochodzą z wcześniejszych etapów klasyfikacji
+			if(annotation.getBegin() < mention.getBegin() || annotation.getChannelIdx() != mention.getChannelIdx())
+				preceedingCluster.addAnnotation(annotation);
+			
+		return preceedingCluster;
+	}
+	
 	public void addRelation(Relation relation){
 		Annotation source = relation.getAnnotationFrom();
 		Annotation target = relation.getAnnotationTo();
 		
 		this.annotations.add(target);
 		this.annotations.add(source);
+		
+		this.document = relation.getDocument();
 	}
 	
 	public void addAnnotation(Annotation annotation){

@@ -35,7 +35,7 @@ public class AnnotationClusterSet {
 	
 	public void addRelation(Relation r){
 		AnnotationCluster cluster = getCreateCluster(r.getAnnotationFrom(), r.getAnnotationTo());
-		cluster.addRelation(r); 
+		cluster.addRelation(r);
 		this.annotationInCluster.put(r.getAnnotationFrom(), cluster);
 		this.annotationInCluster.put(r.getAnnotationTo(), cluster);
 		this.relationClusters.add(cluster);

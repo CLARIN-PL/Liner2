@@ -69,7 +69,6 @@ public class TuplesStreamWriter extends AbstractDocumentWriter {
 		end = begin;
 		for (int i = c.getBegin(); i <= c.getEnd(); i++)
 			end += tokens.get(i).getOrth().length();
-
 		this.ow.write("(" + begin + "," + (end-1) + "," + c.getType() + ",\"" + c.getText() + "\")\n");
 	}
 
