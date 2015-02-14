@@ -16,9 +16,8 @@ public class SvmRankingModel extends Model<BinaryModel<Integer, SparseVector>>{
 	}
 
 	@Override
-	public BinaryModel<Integer, SparseVector> load(String path) {
-		// TODO Auto-generated method stub
-		return null;
+	public void load(String path) {
+		
 	}
 
 }

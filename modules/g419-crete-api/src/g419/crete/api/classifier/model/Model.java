@@ -8,7 +8,11 @@ public abstract class Model<T> {
 		this.model = model;
 	}
 	
+	public T getModel(){
+		return this.model;
+	}
+	
 	// ----------------------- ABSTRACT METHODS ----------------------------
 	public abstract void persist(String path);
-	public abstract T load(String path);
+	public abstract void load(String path);
 }

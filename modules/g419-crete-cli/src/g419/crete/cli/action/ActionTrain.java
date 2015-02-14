@@ -4,6 +4,7 @@ import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
+import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
 import g419.crete.api.CreteOptions;
 import g419.crete.api.annotation.AbstractAnnotationSelector;
@@ -38,6 +39,11 @@ public class ActionTrain extends Action {
 	public static final String ANNOTATIONS = "annotation";
 	public static final String CLUSTERS = "cluster";
 	public static final String CLUSTER_MENTION_PAIRS = "annotation_cluster";
+	
+	public static final String PRE_FILTER_SELECTOR = "prefilter_selector";
+	public static final String BASIC_SELECTOR = "selector";
+	
+	public static final String MODEL_PATH = "model_path";
 	
 	private String input_file = null;
     private String input_format = null;
@@ -99,23 +105,27 @@ public class ActionTrain extends Action {
         initializeTrainers(features);
         AbstractCreteTrainer<?, ?, ?, ?> trainer = CreteTrainerFactory.getFactory().getTrainer("j48_cluster_classify", "j48_cluster", "mention_cluster_generator", "mention_cluster_to_weka_instance", features);
         
-        AbstractAnnotationSelector selector = AnnotationSelectorFactory.getFactory().getInitializedSelector("zero_mention_selector");
+
+        AbstractAnnotationSelector preFilterSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(PRE_FILTER_SELECTOR));
+        AbstractAnnotationSelector selector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(BASIC_SELECTOR));
         
         Document ps = reader.nextDocument();
-		while ( ps != null ){
+        while ( ps != null ){
 			if ( gen != null ) gen.generateFeatures(ps);
+			ps.removeAnnotations(preFilterSelector.selectAnnotations(ps));
 			trainer.addDocumentTrainingInstances(ps, selector);
 			ps = reader.nextDocument();
 		}
         
 		trainer.train();
 		Model trainedModel = trainer.getTrainedModel();
-		trainedModel.persist(output_file);
+		String modelPath = CreteOptions.getOptions().getProperties().getProperty(MODEL_PATH);
+		trainedModel.persist(modelPath);
 		
 		reader.close();
 		writer.close();
 		
-		System.out.println("Hello world");
+//		System.out.println("Hello world");
 	}
 	
 	

@@ -18,6 +18,9 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class ClusterClassificationInstance extends AbstractCreteInstance<Integer>{
 	
+	protected Integer POSITIVE_LABEL = 1;
+	protected Integer NEGATIVE_LABEL = -1;
+	
 	private Mention mention;
 	public Mention getMention(){return mention;}
 	

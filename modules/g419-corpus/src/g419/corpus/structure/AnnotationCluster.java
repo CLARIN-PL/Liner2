@@ -1,6 +1,7 @@
 package g419.corpus.structure;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
@@ -29,19 +30,43 @@ public class AnnotationCluster {
 		this.type = type;
 	}
 	
+	public String getType(){return this.type;}
+	
 	public Document getDocument(){
 		return document;
 	}
 	
-	public AnnotationCluster clusterPreceedingMention(Annotation mention){
+	public AnnotationCluster getFilteredCluster(List<Annotation> removeMentions){
+		AnnotationCluster filteredCluster = new AnnotationCluster(this.type);
+		filteredCluster.setDocument(this.document);
+		
+		for(Annotation annotation : getAnnotations())
+			if(!removeMentions.contains(annotation))
+				filteredCluster.addAnnotation(annotation);
+		
+		return filteredCluster;
+	}
+	
+	public AnnotationCluster getPreceedingCluster(Annotation mention, List<Annotation> selectedAnnotations){
+		AnnotationPositionComparator comparator = new AnnotationPositionComparator();
 		AnnotationCluster preceedingCluster = new AnnotationCluster(this.type);
-		preceedingCluster.document = this.document;
-		for(Annotation annotation : annotations)
+		preceedingCluster.setDocument(this.document);
+		
+		for(Annotation annotation : getAnnotations()){
 			// Sprawdź czy anotacja występuje przed wzmianką -- dodatkowo usuwaj tylko wzmianki tego samego typu
 			// Zakładamy bowiem, że wzmianki innych typów pochodzą z wcześniejszych etapów klasyfikacji
-			if(annotation.getBegin() < mention.getBegin() || annotation.getChannelIdx() != mention.getChannelIdx())
+			if(selectedAnnotations.contains(annotation)){
+				// Jeśli anotacja jest tego samego typu co wzmianka, to sprawdź pozycję
+				if(comparator.compare(annotation, mention) < 0){
+					preceedingCluster.addAnnotation(annotation);
+				}
+			}
+			else{
+				// W p. p. dodaj wzmiankę do klastra
 				preceedingCluster.addAnnotation(annotation);
-			
+			}
+		}
+		
 		return preceedingCluster;
 	}
 	
@@ -221,5 +246,9 @@ public class AnnotationCluster {
 			
 			return relationsToEntities;
 		}
+	}
+
+	public void setDocument(Document document2) {
+		this.document = document2;
 	}
 }

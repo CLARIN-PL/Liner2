@@ -1,4 +1,4 @@
-package g419.crete.api.classifier;
+package g419.crete.api.resolver;
 
 import java.util.List;
 
@@ -6,6 +6,7 @@ import edu.berkeley.compbio.jlibsvm.binary.BinaryModel;
 import edu.berkeley.compbio.jlibsvm.util.SparseVector;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
+import g419.crete.api.classifier.AbstractCreteClassifier;
 import g419.crete.api.instance.ClusterRankingInstance;
 import g419.crete.api.instance.converter.AbstractCreteInstanceConverter;
 import g419.crete.api.instance.generator.AbstractCreteInstanceGenerator;
@@ -20,21 +21,18 @@ public class SvmClusterRankingResolver extends AbstractCreteResolver<BinaryModel
 		super.setUp(clas, gen, conv);
 	}
 
-	@Override
-	protected List<ClusterRankingInstance> extractClassifiedAsCorrect(List<ClusterRankingInstance> instances, List<Integer> labels) {
-		
-		return null;
-	}
-
-	@Override
-	protected Document resolveMention(Document document, Annotation mention) {
-		
-		return null;
-	}
-
+	
+	
 	@SuppressWarnings("unchecked")
 	@Override public Class<BinaryModel<Integer, SparseVector>> getModelClass() {return (Class<BinaryModel<Integer, SparseVector>>) (new BinaryModel<Integer, SparseVector>()).getClass();}
 	@Override public Class<ClusterRankingInstance> getAbstractInstanceClass() {return ClusterRankingInstance.class;}
 	@Override public Class<SparseVector> getClassifierInstanceClass() {return SparseVector.class;}
 	@Override public Class<Integer> getLabelClass() {return Integer.class;}
+
+	@Override
+	protected Document resolveMention(Document document, Annotation mention,
+			List<ClusterRankingInstance> instancesForMention) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

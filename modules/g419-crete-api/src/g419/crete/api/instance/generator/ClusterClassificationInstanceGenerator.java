@@ -6,11 +6,13 @@ import g419.corpus.structure.AnnotationClusterSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Relation;
 import g419.crete.api.annotation.AbstractAnnotationSelector;
+import g419.crete.api.annotation.AnnotationSelectorFactory;
 import g419.crete.api.instance.ClusterClassificationInstance;
-import g419.crete.api.instance.ClusterRankingInstance;
+import g419.crete.api.structure.AnnotationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class ClusterClassificationInstanceGenerator extends AbstractCreteInstanceGenerator<ClusterClassificationInstance, Integer>{
 
@@ -20,39 +22,28 @@ public class ClusterClassificationInstanceGenerator extends AbstractCreteInstanc
 	@Override
 	public List<ClusterClassificationInstance> generateInstances(Document document, AbstractAnnotationSelector selector) {
 		ArrayList<ClusterClassificationInstance> instances = new ArrayList<ClusterClassificationInstance>();
+		List<Annotation> mentions = selector.selectAnnotations(document);
 		
-		for(Annotation mention : selector.selectAnnotations(document)){
-			ArrayList<ClusterClassificationInstance> mentionInstances = new ArrayList<ClusterClassificationInstance>();
-			boolean hasOneNeg = false;
-			for(AnnotationCluster cluster : AnnotationClusterSet.fromRelationSet(document.getRelations(Relation.COREFERENCE)).getClusters()){
-				AnnotationCluster preceedingCluster = cluster.clusterPreceedingMention(mention);
-				if(preceedingCluster.getAnnotations().size() > 0){
-//					Integer label = cluster.getAnnotations().contains(mention) ? POSITIVE_LABEL : NEGATIVE_LABEL;
-					if(cluster.getAnnotations().contains(mention)){
-						mentionInstances.add(new ClusterClassificationInstance(mention, preceedingCluster, POSITIVE_LABEL, this.featureNames));
-					}
-					else if(!hasOneNeg){
-						hasOneNeg = true;
-						mentionInstances.add(new ClusterClassificationInstance(mention, preceedingCluster, NEGATIVE_LABEL, this.featureNames));
-					}
-				}
-				
-//				double negativeWeight = 1.0 / (mentionInstances.size() - 1);
-//				for(ClusterClassificationInstance instance : mentionInstances) 
-//					if(POSITIVE_LABEL.equals(instance.getLabel()))
-//						instance.setWeight(negativeWeight);
-//					else
-//						instance.setWeight(1.0);
-						
-			}
-			
-			instances.addAll(mentionInstances);
-		}
-		
+		for(Annotation mention : mentions)
+			instances.addAll(generateInstancesForMention(document, mention, mentions));
 		
 		return instances;
 	}
-
 	
-
+	
+	@Override
+	public List<ClusterClassificationInstance> generateInstancesForMention(Document document, Annotation mention, List<Annotation> mentions) {
+		Set<AnnotationCluster> clusters = AnnotationClusterSet.fromRelationSet(document.getRelations(Relation.COREFERENCE)).getClusters();
+		ArrayList<ClusterClassificationInstance> mentionInstances = new ArrayList<ClusterClassificationInstance>();
+		for(AnnotationCluster cluster : clusters){
+			AnnotationCluster preceedingCluster = cluster.getPreceedingCluster(mention, mentions); 
+			if(preceedingCluster.getAnnotations().size() > 0){
+				Integer label = cluster.getAnnotations().contains(mention) ? POSITIVE_LABEL : NEGATIVE_LABEL;
+				mentionInstances.add(new ClusterClassificationInstance(mention, preceedingCluster, label, this.featureNames));
+			}
+		}
+		
+		return mentionInstances;
+	}
+		
 }

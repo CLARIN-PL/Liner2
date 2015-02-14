@@ -1,10 +1,11 @@
 package g419.crete.api.classifier;
 
-import g419.crete.api.classifier.model.Model;
 import g419.crete.api.classifier.model.WekaModel;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
@@ -25,11 +26,35 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 
 	@Override
 	public List<Integer> classify(List<Instance> instances) {
-		return null;
+		
+		Instances clasInst = new Instances(this.instances); 
+		for(Instance instance : instances) clasInst.add(instance);
+		clasInst.setClass(attributes.get(attributes.size() - 1));
+		
+		ArrayList<Integer> labels = new ArrayList<Integer>();
+		
+		Classifier cls = this.model.getModel();
+		
+		for(int i = 0; i < clasInst.numInstances(); i++){
+			Instance instance = clasInst.instance(i);
+			try {
+				labels.add((int)Math.round(cls.classifyInstance(instance)));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return labels;
 	}
 
 	@Override
 	public void train() {
+//		try {
+//			crossValidate(10);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		Instances tInstances = instances;
 		for(Instance instance : trainingInstances) tInstances.add(instance);
 		tInstances.setClass(attributes.get(attributes.size() - 1));
@@ -57,15 +82,60 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 		this.model = new WekaModel(cModel);
 	}
 	
+	public void crossValidate(int folds) throws Exception{
+		Random rand = new Random();   // create seeded number generator
+		Instances randData = new Instances(this.instances);   // create copy of original data
+		for(Instance instance : trainingInstances) randData.add(instance);
+		randData.setClass(attributes.get(attributes.size() - 1));
+		
+		try {
+			NumericToNominal numToNom =  new NumericToNominal();
+			numToNom.setInputFormat(randData);
+			numToNom.setAttributeIndicesArray(new int[]{attributes.size() - 1});
+			numToNom.setInputFormat(randData);
+			randData = Filter.useFilter(randData, numToNom);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		
+		randData.randomize(rand);
+		
+		randData.stratify(folds);
+		
+		Evaluation eval = new Evaluation(randData);
+		   
+		for (int n = 0; n < folds; n++) {
+		   Instances train = randData.trainCV(folds, n);
+		   Instances test = randData.testCV(folds, n);
+		   Evaluation evalLocal = new Evaluation(test);
+		   
+		   J48graft j48 = new J48graft();
+		   Classifier cls = (Classifier) j48;
+		   
+		   	Classifier clsCopy = Classifier.makeCopy(cls);
+	        clsCopy.buildClassifier(train);
+	        eval.evaluateModel(clsCopy, test);
+		    evalLocal.evaluateModel(clsCopy, test);
+		    System.out.println(evalLocal.toSummaryString());
+		    System.out.println(evalLocal.toMatrixString());
+		    System.out.println(clsCopy);
+		    
+		    this.model = new  WekaModel(clsCopy);
+		 }
+		
+		System.out.println(eval.toSummaryString("=== " + folds + "-fold Cross-validation ===", false));
+		System.out.println(eval.toMatrixString());
+		
+	}
+	
 	private void displayDebugInfo(Classifier cModel, Instances tInstances) throws Exception{
 		Evaluation eTest = new Evaluation(tInstances);
 		eTest.evaluateModel(cModel, tInstances);
 		String strSummary = eTest.toSummaryString();
 		System.out.println(strSummary);
-		System.out.println(cModel.toString());
+//		System.out.println(cModel.toString());
 		// Get the confusion matrix
-		double[][] cmMatrix = eTest.confusionMatrix();
-		System.out.println(cmMatrix);
+		 System.out.println(eTest.toMatrixString());
 	}
 	
 	private void display(J48graft tree) throws Exception{

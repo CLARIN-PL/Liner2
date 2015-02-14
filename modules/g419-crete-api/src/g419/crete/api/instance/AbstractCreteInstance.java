@@ -16,7 +16,10 @@ import java.util.List;
  *
  */
 public abstract class AbstractCreteInstance<LabelType> {
-	
+
+//	protected LabelType POSITIVE_LABEL;
+//	protected LabelType NEGATIVE_LABEL;
+//	
 	protected LabelType label;
 	protected List<String> featureNames;
 	
@@ -38,6 +41,13 @@ public abstract class AbstractCreteInstance<LabelType> {
 		return label;
 	}
 	
+//	public boolean hasPositiveLabel(){
+//		return POSITIVE_LABEL.equals(label);
+//	}
+//	
+//	public LabelType getPositiveLabel(){return POSITIVE_LABEL;}
+//	public LabelType getNegativeLabel(){return NEGATIVE_LABEL;}
+//	
 	// Populate features
 	protected abstract void extractFeatures();
 	

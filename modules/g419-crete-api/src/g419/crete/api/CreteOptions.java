@@ -33,6 +33,7 @@ public class CreteOptions {
 	}
 	
 	protected Properties properties;
+	public Properties getProperties(){return properties;}
 	
 	protected HashMap<String, LinkedHashMap<String, String>> features;
 	public HashMap<String, LinkedHashMap<String, String>> getFeatures(){return features;}
@@ -72,7 +73,7 @@ public class CreteOptions {
             Ini.Section main = ini.get(SECTION_MAIN);
             
             for(Entry<String, String> entry : main.entrySet())
-            	properties.setProperty(entry.getKey(), entry.getValue());
+            	properties.setProperty(entry.getKey(), entry.getValue().replace("{INI_PATH}", filename));
             
             Ini.Section include = ini.get(SECTION_INCLUDE);
             if (include.containsKey(OPTION_ANNOTATIONS)) this.annotations = parseAnnotations(include.get(OPTION_ANNOTATIONS).replace("{INI_PATH}", filename));

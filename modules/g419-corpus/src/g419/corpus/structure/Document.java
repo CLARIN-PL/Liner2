@@ -121,6 +121,11 @@ public class Document{
 			sentences.addAll(paragraph.getSentences());
 		return sentences;
 	}
+	
+	public void removeAnnotations(List<Annotation> annotations){
+		for(Annotation annotation : annotations)
+			annotation.getSentence().getChunks().remove(annotation);
+	}
 
 	/**
 	 * Removes all anotation with given name.

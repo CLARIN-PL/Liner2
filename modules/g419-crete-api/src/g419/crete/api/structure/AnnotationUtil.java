@@ -9,6 +9,8 @@ import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
 
+import java.util.List;
+
 public class AnnotationUtil {
 	
 	public static String getAnnotationHeadAttribute(Annotation annotation, String attribute){
