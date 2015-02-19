@@ -67,7 +67,7 @@ public final class MaltSentence {
 
         String[] dataForMalt = new String[wrappedTokens.size()];
         for(int i=0; i<wrappedTokens.size(); i++)
-            dataForMalt[i] = join(Arrays.asList(wrappedTokens.get(i)), "\t");
+            dataForMalt[i] = String.join("\t", Arrays.asList(wrappedTokens.get(i)));
 
 
         this.maltData = dataForMalt;
@@ -99,7 +99,7 @@ public final class MaltSentence {
 
             tokData[3] = nkjpToCoNLLPos.get(nkjpPos);
             tokData[4] = nkjpPos;
-            String feats = join(ctag_elements.subList(1,ctag_elements.size()), "|");
+            String feats = String.join("|", ctag_elements.subList(1, ctag_elements.size()));
             tokData[5] = feats.length() != 0 ? feats.toString() : "_";
             tokData[6] = "_";
             tokData[7] = "_";
@@ -109,18 +109,6 @@ public final class MaltSentence {
         return tokens;
     }
 
-    private String join(List<String> sequence, String delimiter){
-        StringBuilder out = new StringBuilder();
-        boolean first = true;
-        for(String el: sequence){
-            if(first)
-                first = false;
-            else
-                out.append(delimiter);
-            out.append(el);
-        }
-        return out.toString();
-    }
 
     private static HashMap<String, String> getnkjpToCoNLLPos(){
         HashMap<String, String> nkjpToCoNLLPos = new HashMap<String, String>();
