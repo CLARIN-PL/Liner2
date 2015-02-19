@@ -4,29 +4,35 @@ import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
-import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
-import g419.corpus.structure.Relation;
 import g419.crete.api.CreteOptions;
 import g419.crete.api.annotation.AbstractAnnotationSelector;
 import g419.crete.api.annotation.AnnotationSelectorFactory;
 import g419.crete.api.classifier.factory.ClassifierFactory;
 import g419.crete.api.classifier.factory.item.WekaJ48ClassifierItem;
 import g419.crete.api.classifier.model.Model;
+import g419.crete.api.classifier.model.WekaModel;
 import g419.crete.api.instance.ClusterClassificationInstance;
 import g419.crete.api.instance.converter.factory.CreteInstanceConverterFactory;
 import g419.crete.api.instance.converter.factory.item.ClusterClassificationWekaInstanceConverterItem;
+import g419.crete.api.instance.generator.AbstractCreteInstanceGenerator;
 import g419.crete.api.instance.generator.ClusterClassificationInstanceGenerator;
 import g419.crete.api.instance.generator.CreteInstanceGeneratorFactory;
+import g419.crete.api.resolver.AbstractCreteResolver;
+import g419.crete.api.resolver.factory.CreteResolverFactory;
+import g419.crete.api.resolver.factory.WekaJ48ResolverItem;
 import g419.crete.api.trainer.AbstractCreteTrainer;
 import g419.crete.api.trainer.factory.CreteTrainerFactory;
-import g419.crete.api.trainer.factory.WekaJ48TrainerItem;
 import g419.lib.cli.CommonOptions;
 import g419.lib.cli.action.Action;
 import g419.liner2.api.features.TokenFeatureGenerator;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import org.apache.commons.cli.CommandLine;
@@ -34,8 +40,16 @@ import org.apache.commons.cli.GnuParser;
 
 import weka.core.Instance;
 
-public class ActionTrain extends Action {
-
+/**
+ * Akcja klasyfikacji koreferencji w dokumentach.
+ * Dla zadanego dokumentu tworzy relacje pomiędzy wzmiankami - frazami oznaczonymi jako odnoszące się do nazwy własnej 
+ * oraz nazwami własnymi. Dodatkowo klasyfikuje także powiązania koreferencyjne pomiędzy samymi nazwami własnymi.
+ * 
+ * @author Adam Kaczmarek
+ *
+ */
+public class ActionCrossValidate extends Action {
+	
 	public static final String TOKENS = "token";
 	public static final String ANNOTATIONS = "annotation";
 	public static final String CLUSTERS = "cluster";
@@ -43,7 +57,6 @@ public class ActionTrain extends Action {
 	
 	public static final String PRE_FILTER_SELECTOR = "prefilter_selector";
 	public static final String BASIC_SELECTOR = "selector";
-	public static final String OVERRIDE_SELECTOR = "override_selector";
 	
 	public static final String MODEL_PATH = "model_path";
 	
@@ -52,10 +65,10 @@ public class ActionTrain extends Action {
     private String output_file = null;
     private String output_format = null;
 	
-	
-	public ActionTrain() {
-		super("train");
-		
+    
+    public ActionCrossValidate() {
+		super("cv");
+
 		this.options.addOption(CommonOptions.getInputFileFormatOption());
         this.options.addOption(CommonOptions.getInputFileNameOption());
         this.options.addOption(CommonOptions.getOutputFileFormatOption());
@@ -77,8 +90,8 @@ public class ActionTrain extends Action {
 		
 	}
 
-	public void initializeTrainers(List<String> features){
-		CreteTrainerFactory.getFactory().register("j48_cluster_classify", new WekaJ48TrainerItem());
+	public void initializeResolvers(){
+		CreteResolverFactory.getFactory().register("j48_cluster_classify", new WekaJ48ResolverItem());
 		// --------------- CLASSIFIERS -----------------------------------
 		ClassifierFactory.getFactory().register("j48_cluster", new WekaJ48ClassifierItem());
 		// ------------------ GENERATORS -------------------------------
@@ -87,6 +100,14 @@ public class ActionTrain extends Action {
 		// ----------------- CONVERTERS --------------------------------
 		CreteInstanceConverterFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Instance.class, "mention_cluster_to_weka_instance", new ClusterClassificationWekaInstanceConverterItem());
 	}
+	
+	
+	/**
+	 * Przebieg klasyfikacji wszystkich relacji koreferencyjnych dla wszystkich dokumentów
+	 * @pattern TemplateMethod
+	 * 
+	 */
+	
 	
 	
 	@Override
@@ -104,47 +125,30 @@ public class ActionTrain extends Action {
         features.addAll(CreteOptions.getOptions().getFeatures().get(CLUSTERS).values());
         features.addAll(CreteOptions.getOptions().getFeatures().get(CLUSTER_MENTION_PAIRS).values());
         
-        initializeTrainers(features);
-        AbstractCreteTrainer<?, ?, ?, ?> trainer = CreteTrainerFactory.getFactory().getTrainer("j48_cluster_classify", "j48_cluster", "mention_cluster_generator", "mention_cluster_to_weka_instance", features);
-        
-
-        AbstractAnnotationSelector preFilterSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(PRE_FILTER_SELECTOR));
+        initializeResolvers();
+		
+        String modelPath = CreteOptions.getOptions().getProperties().getProperty(MODEL_PATH);
+        WekaModel model = new WekaModel(null);
+        model.load(modelPath);
+		// Instantiate resolver
+		
+		AbstractAnnotationSelector preFilterSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(PRE_FILTER_SELECTOR));
         AbstractAnnotationSelector selector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(BASIC_SELECTOR));
-        AbstractAnnotationSelector overrideSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(OVERRIDE_SELECTOR));
         
+        List<Document> documents = new ArrayList<Document>();
         Document ps = reader.nextDocument();
         while ( ps != null ){
 			if ( gen != null ) gen.generateFeatures(ps);
 			ps.removeAnnotations(preFilterSelector.selectAnnotations(ps));
-			if(overrideSelector != null) ps = rewireRelations(ps, selector, overrideSelector);
-			trainer.addDocumentTrainingInstances(ps, overrideSelector);
+			documents.add(ps);
 			ps = reader.nextDocument();
 		}
         
-		trainer.train();
-		Model trainedModel = trainer.getTrainedModel();
-		String modelPath = CreteOptions.getOptions().getProperties().getProperty(MODEL_PATH);
-		trainedModel.persist(modelPath);
-		
+        AbstractCreteInstanceGenerator<?, ?> generator = CreteInstanceGeneratorFactory.getFactory().getInstance(ClusterClassificationInstance.class, Integer.class, "mention_cluster_generator", new ArrayList<String>());
+        this.generateFolds(10, documents, selector, generator);
+        
 		reader.close();
 		writer.close();
-		
-//		System.out.println("Hello world");
-	}
-	
-	private Document rewireRelations(Document document, AbstractAnnotationSelector relationalAnnotations, AbstractAnnotationSelector nonrelationalAnnotations){
-		List<Annotation> relAnnotations = relationalAnnotations.selectAnnotations(document);
-		List<Annotation> targetAnnotations = nonrelationalAnnotations.selectAnnotations(document);
-		
-		for(Annotation rAnn : relAnnotations){
-			for(Annotation potentialTarget : rAnn.getSentence().getChunks()){
-				if(potentialTarget.getTokens().equals(rAnn.getTokens()) && targetAnnotations.contains(potentialTarget)){
-					document.rewireSingleRelations(rAnn, potentialTarget);
-				}
-			}
-		}
-		
-		return document;
 	}
 	
 	/**
@@ -181,5 +185,86 @@ public class ActionTrain extends Action {
     protected AbstractDocumentReader getInputReader() throws Exception{
         return ReaderFactory.get().getStreamReader(this.input_file, this.input_format);
     }
+    
 
+    public ArrayList<ArrayList<Document>> generateFolds(int foldNumber,  List<Document> documents, AbstractAnnotationSelector selector, AbstractCreteInstanceGenerator<?, ?> generator){
+    	ArrayList<ArrayList<Document>> folds = new ArrayList<ArrayList<Document>>(foldNumber);
+    	HashMap<Integer, Set<Document>> docsByCount = new HashMap<Integer, Set<Document>>();
+    	HashMap<Document, Integer> countByDocs = new  HashMap<Document, Integer>(documents.size());
+    	int totalInstances = 0;
+    	
+    	// Prepare data
+    	for(Document document : documents){
+    		int docInstances = generator.generateInstances(document, selector).size();
+    		totalInstances += docInstances;
+    		countByDocs.put(document, docInstances);
+    		
+    		if(docsByCount.get(docInstances) == null){
+    			docsByCount.put(docInstances, new HashSet<Document>());
+    		}
+    		docsByCount.get(docInstances).add(document);
+    		
+//    		Set<Document> currentSet = docsByCount.get(docInstances);
+//    		currentSet.add(document);
+//    		docsByCount.put(docInstances, currentSet);
+    	}
+    	
+    	// Fill folds
+    	double averageFoldSize = ((double) totalInstances) / ((double) foldNumber);
+    	// Shuffle documents list
+    	long seed = System.nanoTime();
+    	Collections.shuffle(documents, new Random(seed));
+    	
+    	// Fill folds
+    	int currentFoldCount = 0;
+    	int currentFoldIndex = 0;
+    	folds.add(new ArrayList<Document>());
+    	for(Document document : documents){
+    		int documentInstanceCount = countByDocs.get(document);
+    		// Check for overflow
+    		if(currentFoldCount + documentInstanceCount > averageFoldSize){
+    			// Stop if filled all folds
+    			if(currentFoldIndex + 1 >= foldNumber) break;
+    			// Switch to next fold
+    			currentFoldIndex++;
+    			currentFoldCount = 0;
+    			folds.add(new ArrayList<Document>());
+    		}
+    		currentFoldCount += documentInstanceCount;
+    		folds.get(currentFoldIndex).add(document);
+    	}
+    	
+    	// Distribute rest of documents
+    	// Sort folds by count - reverse
+    	// Sort documents by count
+    	
+    	
+    	return folds;
+    }
+    
+    public List<Document> crossValidate(ArrayList<ArrayList<Document>> folds){
+    	List<Document> classifiedDocuments = null;    	
+    	
+    	
+    	return classifiedDocuments;
+    }
+    
+//    public List<Document> cvSingleFold(List<Document> train, List<Document> test, List<String> features, AbstractAnnotationSelector selector){
+//    	List<Document> classifiedTest = new ArrayList<Document>();
+//    	
+//    	// TRAINING PART
+//    	AbstractCreteTrainer<?, ?, ?, ?> trainer = CreteTrainerFactory.getFactory().getTrainer("j48_cluster_classify", "j48_cluster", "mention_cluster_generator", "mention_cluster_to_weka_instance", features);
+//    	
+//    	for(Document document: train) trainer.addDocumentTrainingInstances(document, selector);
+//    	
+//    	trainer.train();
+//    	Model mdl = trainer.getTrainedModel();
+//    	
+//    	// CLASSIFICATION PART
+//    	AbstractCreteResolver<?, ?, ?, ?> resolver = CreteResolverFactory.getFactory().getResolver("j48_cluster_classify", "j48_cluster", "mention_cluster_generator", "mention_cluster_to_weka_instance", features, mdl); 
+//		
+////    	for(Document document : test) classifiedTest.add(resolver.resolveDocument(document, selector));
+//    }
+    
+    
 }

@@ -4,6 +4,7 @@ import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
+import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
 import g419.crete.api.CreteOptions;
 import g419.crete.api.annotation.AbstractAnnotationSelector;
@@ -24,6 +25,7 @@ import g419.lib.cli.action.Action;
 import g419.liner2.api.features.TokenFeatureGenerator;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
@@ -47,6 +49,7 @@ public class ActionClassify extends Action {
 	
 	public static final String PRE_FILTER_SELECTOR = "prefilter_selector";
 	public static final String BASIC_SELECTOR = "selector";
+	public static final String OVERRIDE_SELECTOR = "override_selector";
 	
 	public static final String MODEL_PATH = "model_path";
 	
@@ -125,11 +128,14 @@ public class ActionClassify extends Action {
 		
 		AbstractAnnotationSelector preFilterSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(PRE_FILTER_SELECTOR));
         AbstractAnnotationSelector selector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(BASIC_SELECTOR));
+        AbstractAnnotationSelector overrideSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(OVERRIDE_SELECTOR));
         
         Document ps = reader.nextDocument();
         while ( ps != null ){
 			if ( gen != null ) gen.generateFeatures(ps);
 			ps.removeAnnotations(preFilterSelector.selectAnnotations(ps));
+			if(overrideSelector != null) ps = rewireRelations(ps, selector, overrideSelector);
+			ps.filterAnnotationClusters(selector.selectAnnotations(ps));
 			resolver.resolveDocument(ps, selector);
 			writer.writeDocument(ps);
 			ps = reader.nextDocument();
@@ -165,6 +171,21 @@ public class ActionClassify extends Action {
         return writer;
     }
 
+    private Document rewireRelations(Document document, AbstractAnnotationSelector relationalAnnotations, AbstractAnnotationSelector nonrelationalAnnotations){
+		List<Annotation> relAnnotations = relationalAnnotations.selectAnnotations(document);
+		List<Annotation> targetAnnotations = nonrelationalAnnotations.selectAnnotations(document);
+		
+		for(Annotation rAnn : relAnnotations){
+			for(Annotation potentialTarget : rAnn.getSentence().getChunks()){
+				if(potentialTarget.getTokens().equals(rAnn.getTokens()) && targetAnnotations.contains(potentialTarget)){
+					document.rewireSingleRelations(rAnn, potentialTarget);
+				}
+			}
+		}
+		
+		return document;
+	}
+    
     /**
      * Get document reader defined with the -i and -f options.
      * @return

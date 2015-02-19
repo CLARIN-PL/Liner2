@@ -13,6 +13,8 @@ import weka.classifiers.trees.J48graft;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.filters.Filter;
+import weka.filters.supervised.instance.Resample;
+import weka.filters.supervised.instance.SMOTE;
 import weka.filters.unsupervised.attribute.NumericToNominal;
 import weka.gui.treevisualizer.PlaceNode2;
 import weka.gui.treevisualizer.TreeVisualizer;
@@ -64,7 +66,14 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 			numToNom.setInputFormat(tInstances);
 			numToNom.setAttributeIndicesArray(new int[]{attributes.size() - 1});
 			numToNom.setInputFormat(tInstances);
+			
 			tInstances = Filter.useFilter(tInstances, numToNom);
+			
+			SMOTE smote = new SMOTE();
+			smote.setInputFormat(tInstances);
+			smote.setClassValue("2");
+			
+			tInstances = Filter.useFilter(tInstances, smote);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -83,10 +92,13 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 	}
 	
 	public void crossValidate(int folds) throws Exception{
-		Random rand = new Random();   // create seeded number generator
-		Instances randData = new Instances(this.instances);   // create copy of original data
+		Instances randData = new Instances(this.instances); 
 		for(Instance instance : trainingInstances) randData.add(instance);
 		randData.setClass(attributes.get(attributes.size() - 1));
+		
+		Random rand = new Random();   // create seeded number generator
+//		Instances randData = new Instances(this.instances);   // create copy of original data
+		
 		
 		try {
 			NumericToNominal numToNom =  new NumericToNominal();
@@ -97,6 +109,19 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
+		
+		
+		SMOTE smote = new SMOTE();
+		smote.setInputFormat(randData);
+		smote.setClassValue("2");
+		randData = Filter.useFilter(randData, smote);
+		
+//		Resample resample = new Resample();
+//		resample.setInputFormat(randData);
+//		resample.setBiasToUniformClass(1.0);
+//		
+//		randData  = Filter.useFilter(randData, resample);
+//		
 		
 		randData.randomize(rand);
 		
