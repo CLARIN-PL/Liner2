@@ -1,6 +1,7 @@
 package g419.corpus.structure;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
@@ -17,15 +18,59 @@ import java.util.TreeSet;
  *
  */
 public class AnnotationCluster {
+	private Document document;
 	private SortedSet<Annotation> annotations;
 	private String type;
+	private String set;
 	private Annotation headAnnotation;
 	private ReheadingStrategy defaultReheadStrategy = new ReheadToFirst();
 	private ReturningStrategy defaultReturningStrategy  = new ReturnRelationsToPredecessor();
 	
-	public AnnotationCluster(String type){
+	public AnnotationCluster(String type, String set){
 		this.annotations = new TreeSet<Annotation>(new AnnotationPositionComparator());
 		this.type = type;
+		this.set = set;
+	}
+	
+	public String getType(){return this.type;}
+	public String getSet(){return this.set;}
+	
+	public Document getDocument(){
+		return document;
+	}
+	
+	public AnnotationCluster getFilteredCluster(List<Annotation> removeMentions){
+		AnnotationCluster filteredCluster = new AnnotationCluster(this.type, this.set);
+		filteredCluster.setDocument(this.document);
+		
+		for(Annotation annotation : getAnnotations())
+			if(!removeMentions.contains(annotation))
+				filteredCluster.addAnnotation(annotation);
+		
+		return filteredCluster;
+	}
+	
+	public AnnotationCluster getPreceedingCluster(Annotation mention, List<Annotation> selectedAnnotations){
+		AnnotationPositionComparator comparator = new AnnotationPositionComparator();
+		AnnotationCluster preceedingCluster = new AnnotationCluster(this.type, this.set);
+		preceedingCluster.setDocument(this.document);
+		
+		for(Annotation annotation : getAnnotations()){
+			// Sprawdź czy anotacja występuje przed wzmianką -- dodatkowo usuwaj tylko wzmianki tego samego typu
+			// Zakładamy bowiem, że wzmianki innych typów pochodzą z wcześniejszych etapów klasyfikacji
+			if(selectedAnnotations.contains(annotation)){
+				// Jeśli anotacja jest tego samego typu co wzmianka, to sprawdź pozycję
+				if(comparator.compare(annotation, mention) < 0){
+					preceedingCluster.addAnnotation(annotation);
+				}
+			}
+			else{
+				// W p. p. dodaj wzmiankę do klastra
+				preceedingCluster.addAnnotation(annotation);
+			}
+		}
+		
+		return preceedingCluster;
 	}
 	
 	public void addRelation(Relation relation){
@@ -34,6 +79,8 @@ public class AnnotationCluster {
 		
 		this.annotations.add(target);
 		this.annotations.add(source);
+		
+		this.document = relation.getDocument();
 	}
 	
 	public void addAnnotation(Annotation annotation){
@@ -54,12 +101,12 @@ public class AnnotationCluster {
 	}
 	
 	public Set<Relation> getRelations(){
-		return this.defaultReturningStrategy.returnRelations(getHead(), this.annotations, this.type);
+		return this.defaultReturningStrategy.returnRelations(getHead(), this.annotations, this.type, this.set, this.document);
 	}
 	
 	public Set<Relation> getRelations(ReturningStrategy strategy){
 		if(strategy == null) return getRelations();
-		return strategy.returnRelations(getHead(), this.annotations, this.type);
+		return strategy.returnRelations(getHead(), this.annotations, this.type, this.set, this.document);
 	}
 	
 	public Set<Relation> getRelationsToHead(){
@@ -123,7 +170,7 @@ public class AnnotationCluster {
 	 *
 	 */
 	public static interface ReturningStrategy{
-		Set<Relation> returnRelations(Annotation headAnnotation, SortedSet<Annotation> annotationSet, String relationType);
+		Set<Relation> returnRelations(Annotation headAnnotation, SortedSet<Annotation> annotationSet, String relationType, String relationSet, Document relDocument);
 	}
 
 	/**
@@ -134,11 +181,11 @@ public class AnnotationCluster {
 	 */
 	public static class ReturnRelationsToHead implements ReturningStrategy{
 		
-		public Set<Relation> returnRelations(Annotation headAnnotation, SortedSet<Annotation> annotationSet, String relationType){
+		public Set<Relation> returnRelations(Annotation headAnnotation, SortedSet<Annotation> annotationSet, String relationType, String relationSet, Document relDocument){
 			Set<Relation> relationsToHead = new HashSet<Relation>();
 			for(Annotation ann : annotationSet)
 				if(!ann.equals(headAnnotation)) 
-					relationsToHead.add(new Relation(ann, headAnnotation, relationType));
+					relationsToHead.add(new Relation(ann, headAnnotation, relationType, relationSet, relDocument));
 			return relationsToHead;
 		}
 	}
@@ -146,11 +193,11 @@ public class AnnotationCluster {
 	public static class ReturnRelationsToPredecessor implements ReturningStrategy{
 
 		@Override
-		public Set<Relation> returnRelations(Annotation headAnnotation, SortedSet<Annotation> annotationSet, String relationType) {
+		public Set<Relation> returnRelations(Annotation headAnnotation, SortedSet<Annotation> annotationSet, String relationType, String relationSet, Document relDocument) {
 			Set<Relation> relationsToPredecessor = new HashSet<Relation>();
 			Annotation predecessor = null;
 			for(Annotation ann : annotationSet){
-				if(predecessor != null) relationsToPredecessor.add(new Relation(ann, predecessor, relationType));
+				if(predecessor != null) relationsToPredecessor.add(new Relation(ann, predecessor, relationType, relationSet, relDocument));
 				predecessor = ann;
 			}
 				
@@ -175,7 +222,7 @@ public class AnnotationCluster {
 		
 		
 		@Override
-		public Set<Relation> returnRelations(Annotation headAnnotation, SortedSet<Annotation> annotationSet, String relationType) {
+		public Set<Relation> returnRelations(Annotation headAnnotation, SortedSet<Annotation> annotationSet, String relationType, String relationSet, Document relDocument) {
 			Set<Relation> relationsToEntities = new HashSet<Relation>();
 			Set<Integer> entitiesFound = new HashSet<Integer>();
 //			boolean[] entitiesFound = new boolean[this.numEntities];
@@ -202,5 +249,13 @@ public class AnnotationCluster {
 			
 			return relationsToEntities;
 		}
+	}
+
+	public void setDocument(Document document2) {
+		this.document = document2;
+	}
+
+	public void removeAnnotations(List<Annotation> toRemove) {
+		annotations.removeAll(toRemove);
 	}
 }

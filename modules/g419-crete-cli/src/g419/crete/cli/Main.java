@@ -1,7 +1,11 @@
 package g419.crete.cli;
 
 import g419.corpus.TerminateException;
+import g419.crete.cli.action.ActionClassify;
+import g419.crete.cli.action.ActionCrossValidate;
+import g419.crete.cli.action.ActionEvalParent;
 import g419.crete.cli.action.ActionPipe;
+import g419.crete.cli.action.ActionTrain;
 import g419.lib.cli.action.Action;
 
 import java.util.HashMap;
@@ -20,6 +24,9 @@ public class Main {
     	
     	Main main = new Main();
     	main.registerAction(new ActionPipe());
+    	main.registerAction(new ActionTrain());
+    	main.registerAction(new ActionClassify());
+    	main.registerAction(new ActionEvalParent());
     	
     	if ( args.length == 0 ){
     		main.printCredits();

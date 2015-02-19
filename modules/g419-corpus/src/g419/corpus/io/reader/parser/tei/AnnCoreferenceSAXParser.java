@@ -80,7 +80,7 @@ public class AnnCoreferenceSAXParser extends DefaultHandler {
 	    @Override
 	    public void startElement(String s, String s1, String elementName, Attributes attributes) throws SAXException {
 	        if (elementName.equalsIgnoreCase(TAG_SEGMENT)) {
-	            currentRelationCluster = new AnnotationCluster(Relation.COREFERENCE);
+	            currentRelationCluster = new AnnotationCluster(Relation.COREFERENCE, Relation.COREFERENCE);
 	        }
 	        else if (elementName.equalsIgnoreCase(TAG_POINTER)) {
 	            String target = attributes.getValue("target").split("#")[1];

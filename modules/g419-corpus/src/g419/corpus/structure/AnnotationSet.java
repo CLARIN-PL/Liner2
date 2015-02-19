@@ -8,11 +8,12 @@ import java.util.LinkedHashSet;
  * Opakowanie na zbiór chunków przypisanych do jednego zdania.
  *
  */
-public class AnnotationSet {
+public class AnnotationSet{
 
 	LinkedHashSet<Annotation> chunks = new LinkedHashSet<Annotation>();
 	Sentence sentence = null;
-
+//	List<IFeature<AnnotationSet, ?>> features;
+	
 	public AnnotationSet(Sentence sentence, LinkedHashSet<Annotation> chunks){
 		this.chunks = chunks;
 		this.sentence = sentence;
@@ -21,6 +22,11 @@ public class AnnotationSet {
 	public AnnotationSet(Sentence sentence){
 		this.sentence = sentence;
 	}
+	
+//	public void calculateFeatures(){
+//		for(IFeature<AnnotationSet, ?> feature : features) feature.generateFeature(this);
+//	}
+	
 	
 	public void addChunk(Annotation chunk){
 		this.chunks.add(chunk);

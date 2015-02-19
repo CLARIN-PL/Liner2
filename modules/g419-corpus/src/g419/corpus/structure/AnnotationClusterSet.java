@@ -4,6 +4,7 @@ import g419.corpus.structure.AnnotationCluster.ReturningStrategy;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,6 +18,7 @@ import java.util.Set;
 public class AnnotationClusterSet {
 
 	private String relationType;
+	private String relationSet;
 	private Map<Annotation, AnnotationCluster> annotationInCluster;
 	private Set<AnnotationCluster> relationClusters;
 	
@@ -26,14 +28,20 @@ public class AnnotationClusterSet {
 	}
 	
 	public void addRelationCluster(AnnotationCluster cluster){
+		this.relationType = cluster.getType();
+		this.relationSet = cluster.getSet();
+		
 		this.relationClusters.add(cluster);
 		for(Annotation annotation : cluster.getAnnotations())
 			this.annotationInCluster.put(annotation, cluster);
 	}
 	
 	public void addRelation(Relation r){
+		this.relationType = r.getType();
+		this.relationSet = r.getSet();
+		
 		AnnotationCluster cluster = getCreateCluster(r.getAnnotationFrom(), r.getAnnotationTo());
-		cluster.addRelation(r); 
+		cluster.addRelation(r);
 		this.annotationInCluster.put(r.getAnnotationFrom(), cluster);
 		this.annotationInCluster.put(r.getAnnotationTo(), cluster);
 		this.relationClusters.add(cluster);
@@ -46,7 +54,7 @@ public class AnnotationClusterSet {
 		if(cluster1 != null && cluster2 == null) return cluster1;
 		if(cluster1 == null && cluster2 != null) return cluster2;
 		
-		if(cluster1 == null && cluster2 == null) return new AnnotationCluster(this.relationType);
+		if(cluster1 == null && cluster2 == null) return new AnnotationCluster(this.relationType, this.relationSet);
 		
 		for(Annotation annotation : cluster2.getAnnotations()){
 			this.annotationInCluster.remove(annotation);
@@ -95,5 +103,11 @@ public class AnnotationClusterSet {
 			out += cluster +"\n";
 		out += "}";
 		return out;
+	}
+
+	public void removeAnnotations(List<Annotation> toRemove) {
+		for(AnnotationCluster cluster : relationClusters)
+			cluster.removeAnnotations(toRemove);
+		
 	}
 }

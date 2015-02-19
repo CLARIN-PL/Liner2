@@ -72,8 +72,6 @@ public class ActionPipe extends Action{
 
 		reader.close();
 		writer.close();
-		
-		System.out.println("Hello world");
 	}
 	
 	/**

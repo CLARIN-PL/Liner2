@@ -121,6 +121,11 @@ public class Document{
 			sentences.addAll(paragraph.getSentences());
 		return sentences;
 	}
+	
+	public void removeAnnotations(List<Annotation> annotations){
+		for(Annotation annotation : annotations)
+			annotation.getSentence().getChunks().remove(annotation);
+	}
 
 	/**
 	 * Removes all anotation with given name.
@@ -189,4 +194,35 @@ public class Document{
     public void addRelation(Relation relation){
     	this.relations.addRelation(relation);
     }
+    
+    public void filterAnnotationClusters(List<Annotation> annotations){
+    	AnnotationClusterSet clusterSet = AnnotationClusterSet.fromRelationSet(relations);
+    	clusterSet.removeAnnotations(annotations);
+    	this.relations = clusterSet.getRelationSet(new AnnotationCluster.ReturnRelationsToHead());
+    }
+
+	public void rewireSingleRelations(Annotation source, Annotation dest) {
+			List<Relation> rewired = new ArrayList<Relation>();
+		
+			if(this.relations.incomingRelations.containsKey(source)){
+				for(Relation incoming : this.relations.incomingRelations.get(source)){
+					Relation rwRel = new Relation(incoming.getAnnotationFrom(), dest, incoming.getType(), incoming.getSet(), this);
+					rewired.add(rwRel);
+					this.relations.relations.remove(incoming);
+				}
+				this.relations.incomingRelations.remove(source);
+			}
+				
+			if(this.relations.outgoingRelations.containsKey(source)){
+				for(Relation outgoing : this.relations.outgoingRelations.get(source)){
+					Relation rwRel = new Relation(dest, outgoing.getAnnotationTo(), outgoing.getType(), outgoing.getSet(), this);
+					rewired.add(rwRel);
+					this.relations.relations.remove(outgoing);
+				}
+				this.relations.outgoingRelations.remove(source);
+			}
+			
+			for(Relation relation : rewired) this.relations.addRelation(relation);
+	}
+    
 }

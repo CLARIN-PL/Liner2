@@ -103,7 +103,7 @@ public class CclRelationSaxParser extends DefaultHandler {
         if(TAG_RELATION.equalsIgnoreCase(element)){
         	Annotation annotationFrom = this.document.getAnnotation(currentFromAnnotationSent, currentFromAnnotationChan, currentFromAnnotationId);
         	Annotation annotationTo = this.document.getAnnotation(currentToAnnotationSent, currentToAnnotationChan, currentToAnnotationId);
-        	if(annotationFrom != null && annotationTo != null) this.relations.addRelation(new Relation(annotationFrom, annotationTo, currentRelationType, currentRelationType));
+        	if(annotationFrom != null && annotationTo != null) this.relations.addRelation(new Relation(annotationFrom, annotationTo, currentRelationType, currentRelationSet, this.document));
         }
         else if(TAG_FROM.equalsIgnoreCase(element)){
         	currentFromAnnotationId = Integer.parseInt(tmpValue);
