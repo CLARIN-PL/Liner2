@@ -229,6 +229,15 @@ public class Sentence {
 		return sb.toString().trim();
 	}
 
+	public String toBaseString(){
+		StringBuilder sb = new StringBuilder();
+		for (Token t : this.tokens){
+			sb.append(t.getAttributeValue("base"));
+			sb.append(t.getNoSpaceAfter() ? "" : " ");
+		}
+		return sb.toString().trim();
+	}
+
 	public void setTokens(ArrayList<Token> newTokens){
         tokens = newTokens;
     }
