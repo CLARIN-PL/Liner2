@@ -201,12 +201,16 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 			this.writeParagraph(paragraph);
 		this.closeXml();
 		
-		if(document.getRelations().getRelations().size() > 0 && this.osRel != null){
+		
+		
+		if(this.osRel != null){
 			this.openRelXml();
-			try {
-				this.writeRelations(document);
-			} catch (XMLStreamException e) {
-				e.printStackTrace();
+			if(document.getRelations().getRelations().size() > 0){
+				try {
+					this.writeRelations(document);
+				} catch (XMLStreamException e) {
+					e.printStackTrace();
+				}
 			}
 			this.closeRelXml();
 		}

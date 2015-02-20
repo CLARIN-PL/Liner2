@@ -135,8 +135,8 @@ public class ActionClassify extends Action {
 			if ( gen != null ) gen.generateFeatures(ps);
 			ps.removeAnnotations(preFilterSelector.selectAnnotations(ps));
 			if(overrideSelector != null) ps = rewireRelations(ps, selector, overrideSelector);
-			ps.filterAnnotationClusters(selector.selectAnnotations(ps));
-			resolver.resolveDocument(ps, selector);
+			ps.filterAnnotationClusters(overrideSelector.selectAnnotations(ps));
+			resolver.resolveDocument(ps, overrideSelector);
 			writer.writeDocument(ps);
 			ps = reader.nextDocument();
 		}

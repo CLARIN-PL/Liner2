@@ -56,7 +56,7 @@ public class WekaJ48SequentialResolver extends AbstractCreteResolver<Classifier,
 		Collections.sort(correctPairs, new BestClosestClusterMentionComparator(document));
 		AnnotationCluster bestCluster = correctPairs.get(0).getCluster().getHolder();
 		 
-		Relation mentionRelation = new Relation(mention, bestCluster.getHead(), Relation.COREFERENCE);
+		Relation mentionRelation = new Relation(mention, bestCluster.getHead(), Relation.COREFERENCE, Relation.COREFERENCE, document);
 		document.addRelation(mentionRelation);
 		return document;
 	}

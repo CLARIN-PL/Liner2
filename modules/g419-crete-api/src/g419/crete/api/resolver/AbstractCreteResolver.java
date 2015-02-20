@@ -28,7 +28,7 @@ public abstract class AbstractCreteResolver<M, T extends AbstractCreteInstance<L
 	
 	public AnnotationClusterSet resolveDocument(Document document, AbstractAnnotationSelector selector){
 		List<Annotation> mentions = selector.selectAnnotations(document);
-		
+	   
 		for(Annotation mention : mentions){
 			List<T> instancesForMention = this.generator.generateInstancesForMention(document, mention, mentions);
 			document = resolveMention(document, mention, instancesForMention);

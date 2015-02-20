@@ -40,7 +40,7 @@ public class ParentEvaluator extends FscoreEvaluator{
 
 		@Override
 		public boolean isSatisfied(Annotation annotation) {
-			return annotation.getType().endsWith("nam");
+			return annotation.getType().startsWith("nam");
 		}
 		
 		
@@ -96,21 +96,27 @@ public class ParentEvaluator extends FscoreEvaluator{
 		
 		@Override
 		public boolean isSatisfied(Annotation annotation) {
-			if(!"anafora_wyznacznik".equalsIgnoreCase(annotation.getType())) return false; // Tylko anafora_wyznacznik (bez *_nam)
-			if(annotation.getTokens().size() > 1) return false; // Zał.: tylko AgP mają więcej niż 1 token
-			TokenAttributeIndex ai = annotation.getSentence().getAttributeIndex();
-			int headIndex = annotation.getTokens().first();
-			String headPos = "";
-			try{
-				headPos = ai.getAttributeValue(annotation.getSentence().getTokens().get(headIndex), "pos");
-			}
-			catch(IndexOutOfBoundsException ex){
-				headPos = ai.getAttributeValue(annotation.getSentence().getTokens().get(headIndex), "tagTool");
-			}
+			if(Pattern.matches("anafora_verb_null.*", annotation.getType())) return true;
 			
-			
-			return "verb".equals(headPos);
+//			
+//			if(!"anafora_wyznacznik".equalsIgnoreCase(annotation.getType())) return false; // Tylko anafora_wyznacznik (bez *_nam)
+//			if(annotation.getTokens().size() > 1) return false; // Zał.: tylko AgP mają więcej niż 1 token
+//			TokenAttributeIndex ai = annotation.getSentence().getAttributeIndex();
+//			int headIndex = annotation.getTokens().first();
+//			String headPos = "";
+//			try{
+//				headPos = ai.getAttributeValue(annotation.getSentence().getTokens().get(headIndex), "pos");
+//			}
+//			catch(IndexOutOfBoundsException ex){
+//				headPos = ai.getAttributeValue(annotation.getSentence().getTokens().get(headIndex), "tagTool");
+//			}
+//			
+//			
+//			return "verb".equals(headPos);
+			return false;
 		}
+			
+		
 	}
 	
 	public static class AnnotationMapper{
@@ -161,8 +167,9 @@ public class ParentEvaluator extends FscoreEvaluator{
 		this.identifyingUnitsCriteria = identifyingUnitsCriteria;
 		this.referencingUnitsCriteria = referencingUnitsCriteria;
 		ArrayList<Pattern> annotationTypes = new ArrayList<Pattern>();
-		annotationTypes.add(Pattern.compile(".*nam"));
+		annotationTypes.add(Pattern.compile("nam.*"));
 		annotationTypes.add(Pattern.compile("anafora_wyznacznik"));
+		annotationTypes.add(Pattern.compile("anafora_verb_null.*"));
 		this.mapper = new AnnotationMapper(annotationMatcher, annotationTypes);
 		
 		personNam = new ArrayList<Pattern>();

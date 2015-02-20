@@ -14,7 +14,7 @@ public class ClusterClassificationWekaInstanceConverter extends AbstractCreteIns
 	@Override
 	public Instance convertSingleInstance(ClusterClassificationInstance instance) {
 		Instance converted = csi(instance);
-				converted.setValue(((WekaClassifier<?, ?>)this.classifier).getAttributeIndex("CLASS"), instance.getLabel() + 1);
+//		converted.setValue(((WekaClassifier<?, ?>)this.classifier).getAttributeIndex("CLASS"), instance.getLabel() + 1);
 //		converted.setWeight(instance.getWeigth());
 		return converted;
 	}

@@ -14,6 +14,7 @@ import weka.core.Instances;
 
 public abstract class WekaClassifier<T, L> extends AbstractCreteClassifier<T, Instance, L>{
 	protected Instances instances;
+	public Instances getInstancesCopy(){return new Instances(instances);}
 	
 	protected ArrayList<Attribute> attributes;
 	public ArrayList<Attribute> getAttributes(){
@@ -42,7 +43,11 @@ public abstract class WekaClassifier<T, L> extends AbstractCreteClassifier<T, In
 			attributes.add(attr);
 			attributesByNames.put(feature.getName(), attrIndex++);
 		}
-		Attribute classAttr = new Attribute("CLASS");
+		
+		FastVector fvClassVal = new FastVector(2);
+		fvClassVal.addElement("NON_COREF");
+		fvClassVal.addElement("COREF");
+		Attribute classAttr = new Attribute("CLASS", fvClassVal);
 		attributes.add(classAttr);
 		attributesByNames.put("CLASS", attributes.size() - 1);
 	}
