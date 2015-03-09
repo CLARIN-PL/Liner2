@@ -2,17 +2,7 @@ package g419.liner2.cli;
 
 import g419.corpus.TerminateException;
 import g419.lib.cli.action.Action;
-import g419.liner2.cli.action.ActionAnnotations;
-import g419.liner2.cli.action.ActionAgreement;
-import g419.liner2.cli.action.ActionConvert;
-import g419.liner2.cli.action.ActionEval;
-import g419.liner2.cli.action.ActionFeatureSelection;
-import g419.liner2.cli.action.ActionInteractive;
-import g419.liner2.cli.action.ActionLearningCurve;
-import g419.liner2.cli.action.ActionPipe;
-import g419.liner2.cli.action.ActionStats;
-import g419.liner2.cli.action.ActionTime;
-import g419.liner2.cli.action.ActionTrain;
+import g419.liner2.cli.action.*;
 
 import java.util.HashMap;
 
@@ -47,6 +37,7 @@ public class Main {
     	main.registerAction(new ActionAgreement());
     	main.registerAction(new ActionLearningCurve());
     	main.registerAction(new ActionStats());
+		main.registerAction(new ActionLemmatize());
     	
     	if ( args.length == 0 ){
     		main.printCredits();
