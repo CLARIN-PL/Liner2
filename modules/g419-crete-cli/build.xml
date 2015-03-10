@@ -33,13 +33,23 @@
 	    <if>
 	        <available file="../g419-crete-api/g419-crete-api.jar"/>
 	    	<else>
-	    		<echo message="Compiling g419-liner2-api.jar ..."/>
+	    		<echo message="Compiling g419-crete-api.jar ..."/>
 	            <exec dir="../g419-crete-api" executable="ant">
 	        		<arg line="jar"/>
 	        	</exec>
 	        </else>
 	    </if>
 
+    	<if>
+	        <available file="../g419-liner2-api/g419-liner2-api.jar"/>
+	    	<else>
+	    		<echo message="Compiling g419-liner2-api.jar ..."/>
+	            <exec dir="../g419-liner2-api" executable="ant">
+	        		<arg line="jar"/>
+	        	</exec>
+	        </else>
+	    </if>
+		
 	    <if>
 	        <available file="../g419-lib-cli/g419-lib-cli.jar"/>
 	    	<else>
@@ -71,8 +81,10 @@
 				./commons-lang3-3.3.2.jar
 				./commons-io-2.4.jar
 				./ini4j-0.5.0.jar
+				./weka-3.6.9.jar
 				./g419-corpus.jar
 				./g419-lib-cli.jar
+				./g419-liner2-api.jar
 				./g419-crete-api.jar"/>			
    		</manifest>
 
