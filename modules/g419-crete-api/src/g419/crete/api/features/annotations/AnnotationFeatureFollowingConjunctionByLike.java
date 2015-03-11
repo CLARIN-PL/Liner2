@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AnnotationFeaturePreceedingConjunctionByLike extends AbstractFeature<Annotation, Boolean>{
+public class AnnotationFeatureFollowingConjunctionByLike extends AbstractFeature<Annotation, Boolean>{
 
 	public static final Set<String> byLikeConjunctions = new HashSet<String>(Arrays.asList("by", "aby", "ażeby", "żeby", "coby"));
 	private final int lookupDistance = 2;
@@ -23,10 +23,10 @@ public class AnnotationFeaturePreceedingConjunctionByLike extends AbstractFeatur
 		TokenAttributeIndex ai  = input.getSentence().getAttributeIndex();
 		ArrayList<Token> tokens = input.getSentence().getTokens();
 		
-		int inputIndex = input.getBegin();
-		int searchStart = Math.max(0, inputIndex - lookupDistance);
+		int inputIndex = input.getEnd();
+		int searchEnd = Math.min(inputIndex + lookupDistance, input.getSentence().getTokens().size());
 		
-		for(int i = searchStart; i < inputIndex; i++)
+		for(int i = inputIndex; i < searchEnd; i++)
 			if(byLikeConjunctions.contains(ai.getAttributeValue(tokens.get(i), "base")))
 				this.value = true;
 		

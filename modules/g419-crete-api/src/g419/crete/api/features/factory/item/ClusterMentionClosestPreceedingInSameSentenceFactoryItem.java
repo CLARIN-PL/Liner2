@@ -3,7 +3,7 @@ package g419.crete.api.features.factory.item;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationCluster;
 import g419.crete.api.features.AbstractFeature;
-import g419.crete.api.features.clustermention.ClusterMentionClosestPreceedingInSameSentence;
+import g419.crete.api.features.clustermention.preceeding.ClusterMentionClosestPreceedingInSameSentence;
 
 import org.apache.commons.lang3.tuple.Pair;
 

@@ -1,4 +1,4 @@
-package g419.crete.api.features.clustermention;
+package g419.crete.api.features.clustermention.following;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,6 +7,7 @@ import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationCluster;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
+import g419.crete.api.features.clustermention.AbstractClusterMentionFeature;
 import g419.crete.api.features.enumvalues.Gender;
 import g419.crete.api.features.enumvalues.Number;
 import g419.crete.api.structure.AnnotationUtil;

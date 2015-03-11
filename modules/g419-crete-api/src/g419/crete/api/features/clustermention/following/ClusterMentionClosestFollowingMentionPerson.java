@@ -1,4 +1,4 @@
-package g419.crete.api.features.clustermention;
+package g419.crete.api.features.clustermention.following;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,12 +7,14 @@ import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationCluster;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
+import g419.crete.api.features.clustermention.AbstractClusterMentionFeature;
 import g419.crete.api.features.enumvalues.Gender;
+import g419.crete.api.features.enumvalues.Person;
 import g419.crete.api.structure.AnnotationUtil;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-public class ClusterMentionClosestFollowingMentionGender extends AbstractClusterMentionFeature<Gender>{
+public class ClusterMentionClosestFollowingMentionPerson extends AbstractClusterMentionFeature<Person>{
 
 	@Override
 	public void generateFeature(Pair<Annotation, AnnotationCluster> input) {
@@ -25,28 +27,28 @@ public class ClusterMentionClosestFollowingMentionGender extends AbstractCluster
 		
 		TokenAttributeIndex ai = closestFollowing.getSentence().getAttributeIndex();
 				
-		this.value = Gender.valueOf(ai.getAttributeValue(headToken, "gender"));
+		this.value = Person.valueOf(ai.getAttributeValue(headToken, "person"));
 		
 	}
 
 	@Override
 	public String getName() {
-		return "clustermention_closest_preceeding_gender";
+		return "clustermention_closest_following_person";
 	}
 
 	@Override
-	public Class<Gender> getReturnTypeClass() {
-		return Gender.class;
+	public Class<Person> getReturnTypeClass() {
+		return Person.class;
 	}
 
 	@Override
 	public int getSize() {
-		return Gender.values().length;
+		return Person.values().length;
 	}
 
 	@Override
-	public List<Gender> getAllValues(){
-		return Arrays.asList(Gender.values());
+	public List<Person> getAllValues(){
+		return Arrays.asList(Person.values());
 	}
 	
 }

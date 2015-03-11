@@ -1,7 +1,8 @@
-package g419.crete.api.features.clustermention;
+package g419.crete.api.features.clustermention.following;
 
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationCluster;
+import g419.crete.api.features.clustermention.AbstractClusterMentionFeature;
 import g419.crete.api.structure.AnnotationUtil;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -16,7 +17,7 @@ public class ClusterMentionClosestFollowingTokenDistance extends AbstractCluster
 		Annotation closestFollowing = AnnotationUtil.getClosestFollowing(mention, cluster);
 			
 		if(closestFollowing != null)
-			this.value = AnnotationUtil.annotationTokenDistance(closestFollowing, mention, cluster.getDocument());
+			this.value = AnnotationUtil.annotationTokenDistance(mention, closestFollowing, cluster.getDocument());
 		else
 			this.value = 10000;
 	}
