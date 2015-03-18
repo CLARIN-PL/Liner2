@@ -21,18 +21,23 @@ public class ClusterMentionClosestFollowingMentionGender extends AbstractCluster
 		AnnotationCluster cluster = input.getRight();
 		
 		Annotation closestFollowing = AnnotationUtil.getClosestFollowing(mention, cluster);
+		if(closestFollowing == null){
+			this.value = Gender.UNDEFINED;
+			return;
+		}
+		
 		closestFollowing.assignHead();
 		Token headToken = closestFollowing.getSentence().getTokens().get(closestFollowing.getHead());
 		
 		TokenAttributeIndex ai = closestFollowing.getSentence().getAttributeIndex();
 				
-		this.value = Gender.valueOf(ai.getAttributeValue(headToken, "gender"));
+		this.value = Gender.fromValue(ai.getAttributeValue(headToken, "gender"));
 		
 	}
 
 	@Override
 	public String getName() {
-		return "clustermention_closest_preceeding_gender";
+		return "clustermention_closest_following_gender";
 	}
 
 	@Override

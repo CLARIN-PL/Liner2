@@ -15,6 +15,10 @@ public class ClusterMentionClosestFollowingInSameSentence extends AbstractCluste
 		AnnotationCluster cluster = input.getRight();
 		
 		Annotation closestFollowing = AnnotationUtil.getClosestFollowing(mention, cluster);
+		if(closestFollowing == null){
+			this.value = false;
+			return;
+		}
 		
 		this.value = mention.getSentence().getOrd() == closestFollowing.getSentence().getOrd();
 	}

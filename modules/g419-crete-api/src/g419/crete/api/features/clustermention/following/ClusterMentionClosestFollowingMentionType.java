@@ -1,5 +1,8 @@
 package g419.crete.api.features.clustermention.following;
 
+import java.util.Arrays;
+import java.util.List;
+
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationCluster;
 import g419.crete.api.features.clustermention.AbstractClusterMentionFeature;
@@ -16,13 +19,17 @@ public class ClusterMentionClosestFollowingMentionType extends AbstractClusterMe
 		AnnotationCluster cluster = input.getRight();
 		
 		Annotation closestFollowing = AnnotationUtil.getClosestFollowing(mention, cluster);
+		if(closestFollowing == null){
+			this.value = MentionType.NONE;
+			return;
+		}
 		
 		this.value = AnnotationUtil.getMentionType(closestFollowing);
 	}
 
 	@Override
 	public String getName() {
-		return "clustermention_closest_following_in_same_sentence";
+		return "clustermention_closest_following_mention_type";
 	}
 
 	@Override
@@ -30,4 +37,8 @@ public class ClusterMentionClosestFollowingMentionType extends AbstractClusterMe
 		return MentionType.class;
 	}
 
+	@Override
+	public List<MentionType> getAllValues(){
+		return Arrays.asList(MentionType.values());
+	}
 }

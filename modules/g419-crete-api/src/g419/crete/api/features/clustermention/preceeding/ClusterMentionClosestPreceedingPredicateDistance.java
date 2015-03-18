@@ -18,7 +18,11 @@ public class ClusterMentionClosestPreceedingPredicateDistance extends AbstractCl
 		AnnotationCluster cluster = input.getRight();
 		
 		Annotation closestPreceeding = AnnotationUtil.getClosestPreceeding(mention, cluster);
-			
+		if(closestPreceeding == null){
+			this.value = 10000;
+			return;
+		}
+		
 		List<Token> tokensPreceeding = AnnotationUtil.tokensBetweenAnnotations(closestPreceeding, mention, cluster.getDocument());
 		
 		int count = 0;

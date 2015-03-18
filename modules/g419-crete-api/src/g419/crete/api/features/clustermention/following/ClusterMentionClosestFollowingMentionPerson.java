@@ -22,12 +22,17 @@ public class ClusterMentionClosestFollowingMentionPerson extends AbstractCluster
 		AnnotationCluster cluster = input.getRight();
 		
 		Annotation closestFollowing = AnnotationUtil.getClosestFollowing(mention, cluster);
+		if(closestFollowing == null){
+			this.value = Person.UNDEFINED;
+			return;
+		}
+		
 		closestFollowing.assignHead();
 		Token headToken = closestFollowing.getSentence().getTokens().get(closestFollowing.getHead());
 		
 		TokenAttributeIndex ai = closestFollowing.getSentence().getAttributeIndex();
 				
-		this.value = Person.valueOf(ai.getAttributeValue(headToken, "person"));
+		this.value = Person.fromValue(ai.getAttributeValue(headToken, "person"));
 		
 	}
 

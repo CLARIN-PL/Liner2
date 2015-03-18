@@ -2,6 +2,7 @@ package g419.crete.api.resolver;
 
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationClusterSet;
+import g419.corpus.structure.AnnotationPositionComparator;
 import g419.corpus.structure.Document;
 import g419.crete.api.annotation.AbstractAnnotationSelector;
 import g419.crete.api.classifier.AbstractCreteClassifier;
@@ -10,6 +11,7 @@ import g419.crete.api.instance.AbstractCreteInstance;
 import g419.crete.api.instance.converter.AbstractCreteInstanceConverter;
 import g419.crete.api.instance.generator.AbstractCreteInstanceGenerator;
 
+import java.util.Collections;
 import java.util.List;
 
 
@@ -28,7 +30,8 @@ public abstract class AbstractCreteResolver<M, T extends AbstractCreteInstance<L
 	
 	public AnnotationClusterSet resolveDocument(Document document, AbstractAnnotationSelector selector){
 		List<Annotation> mentions = selector.selectAnnotations(document);
-	   
+	   Collections.sort(mentions, new AnnotationPositionComparator());
+		
 		for(Annotation mention : mentions){
 			List<T> instancesForMention = this.generator.generateInstancesForMention(document, mention, mentions);
 			document = resolveMention(document, mention, instancesForMention);

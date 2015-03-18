@@ -18,6 +18,10 @@ public class ClusterMentionClosestFollowingPredicateDistance extends AbstractClu
 		AnnotationCluster cluster = input.getRight();
 		
 		Annotation closestFollowing = AnnotationUtil.getClosestFollowing(mention, cluster);
+		if(closestFollowing == null){
+			this.value = 10000;
+			return;
+		}
 			
 		List<Token> tokensFollowing = AnnotationUtil.tokensBetweenAnnotations(mention, closestFollowing, cluster.getDocument());
 		

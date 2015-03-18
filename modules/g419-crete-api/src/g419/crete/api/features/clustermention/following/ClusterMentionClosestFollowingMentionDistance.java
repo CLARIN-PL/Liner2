@@ -21,6 +21,10 @@ public class ClusterMentionClosestFollowingMentionDistance extends AbstractClust
 		AnnotationCluster cluster = input.getRight();
 		
 		Annotation closestFollowing = AnnotationUtil.getClosestFollowing(mention, cluster);
+		if(closestFollowing == null){
+			this.value = 10000;
+			return;
+		}
 		
 		List<Pattern> patterns = new ArrayList<Pattern>();
 		patterns.add(Pattern.compile("anafora_wyznacznik"));

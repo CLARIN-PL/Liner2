@@ -1,11 +1,15 @@
 package g419.crete.api.features.clustermention.following;
 
+import java.util.Arrays;
+import java.util.List;
+
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationCluster;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
 import g419.crete.api.features.clustermention.AbstractClusterMentionFeature;
 import g419.crete.api.features.enumvalues.Case;
+import g419.crete.api.features.enumvalues.MentionType;
 import g419.crete.api.structure.AnnotationUtil;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -18,6 +22,10 @@ public class ClusterMentionClosestFollowingMentionCase extends AbstractClusterMe
 		AnnotationCluster cluster = input.getRight();
 		
 		Annotation closestFollowing = AnnotationUtil.getClosestFollowing(mention, cluster);
+		if(closestFollowing == null){
+			this.value = Case.OTHER;
+			return;
+		}
 		
 		if(!closestFollowing.hasHead()) closestFollowing.assignHead();
 		
@@ -29,7 +37,7 @@ public class ClusterMentionClosestFollowingMentionCase extends AbstractClusterMe
 
 	@Override
 	public String getName() {
-		return "clustermention_closest_following_mention_case";
+		return "clustermention_closest_following_case";
 	}
 
 	@Override
@@ -37,4 +45,9 @@ public class ClusterMentionClosestFollowingMentionCase extends AbstractClusterMe
 		return Case.class;
 	}
 
+	@Override
+	public List<Case> getAllValues(){
+		return Arrays.asList(Case.values());
+	}
+	
 }

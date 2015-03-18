@@ -4,7 +4,8 @@ public enum MentionType {
 	NAMED_ENTITY,
 	AGP,
 	PRONOUN,
-	NULL_VERB;
+	NULL_VERB,
+	NONE;
 	
 	public static MentionType fromValue(String val){
 		if("ne".equals(val)) return NAMED_ENTITY;

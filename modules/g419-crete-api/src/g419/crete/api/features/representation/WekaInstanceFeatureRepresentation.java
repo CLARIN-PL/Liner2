@@ -6,6 +6,7 @@ import g419.crete.api.features.AbstractFeature;
 import weka.core.Attribute;
 import weka.core.Instance;
 
+
 public class WekaInstanceFeatureRepresentation extends IFeatureRepresentation<Instance>{
 
 	WekaDecisionTreesClassifier classifier;

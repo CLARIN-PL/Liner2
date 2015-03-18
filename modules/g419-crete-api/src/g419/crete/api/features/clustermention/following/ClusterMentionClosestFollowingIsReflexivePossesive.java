@@ -18,6 +18,10 @@ public class ClusterMentionClosestFollowingIsReflexivePossesive extends Abstract
 		AnnotationCluster cluster = input.getRight();
 		
 		Annotation closestFollowing = AnnotationUtil.getClosestFollowing(mention, cluster);
+		if(closestFollowing == null){
+			this.value = false;
+			return;
+		}
 		
 		if(!closestFollowing.hasHead()) closestFollowing.assignHead();
 		Token head = closestFollowing.getSentence().getTokens().get(closestFollowing.getHead());

@@ -32,7 +32,10 @@ public class ClusterMentionClosestPreceedingFollowedByCoordConj extends Abstract
 		AnnotationCluster cluster = input.getRight();
 		
 		Annotation closestPreceeding = AnnotationUtil.getClosestPreceeding(mention, cluster);
-		
+		if(closestPreceeding == null){
+			this.value = false;
+			return;
+		}
 		TokenAttributeIndex ai  = closestPreceeding.getSentence().getAttributeIndex();
 		ArrayList<Token> tokens = closestPreceeding.getSentence().getTokens();
 		
@@ -46,7 +49,7 @@ public class ClusterMentionClosestPreceedingFollowedByCoordConj extends Abstract
 
 	@Override
 	public String getName() {
-		return "clustermention_closest_preceeding_preceeded_by_coord_conj";
+		return "clustermention_closest_preceeding_followed_by_coordinate_conj";
 	}
 
 	@Override

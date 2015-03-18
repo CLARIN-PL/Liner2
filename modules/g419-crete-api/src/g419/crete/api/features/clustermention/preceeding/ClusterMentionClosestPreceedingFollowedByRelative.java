@@ -17,10 +17,16 @@ public class ClusterMentionClosestPreceedingFollowedByRelative extends AbstractC
 	
 	@Override
 	public void generateFeature(Pair<Annotation, AnnotationCluster> input) {
+		this.value = false;
+		
 		Annotation mention = input.getLeft();
 		AnnotationCluster cluster = input.getRight();
 		
 		Annotation closestPreceeding = AnnotationUtil.getClosestPreceeding(mention, cluster);
+		if(closestPreceeding == null){
+			this.value = false;
+			return;
+		}
 		
 		TokenAttributeIndex ai  = closestPreceeding.getSentence().getAttributeIndex();
 		ArrayList<Token> tokens = closestPreceeding.getSentence().getTokens();

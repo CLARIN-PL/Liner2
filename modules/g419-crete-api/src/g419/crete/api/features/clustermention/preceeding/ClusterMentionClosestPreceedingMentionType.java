@@ -1,5 +1,8 @@
 package g419.crete.api.features.clustermention.preceeding;
 
+import java.util.Arrays;
+import java.util.List;
+
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationCluster;
 import g419.crete.api.features.clustermention.AbstractClusterMentionFeature;
@@ -16,13 +19,17 @@ public class ClusterMentionClosestPreceedingMentionType extends AbstractClusterM
 		AnnotationCluster cluster = input.getRight();
 		
 		Annotation closestPreceeding = AnnotationUtil.getClosestPreceeding(mention, cluster);
+		if(closestPreceeding == null){
+			this.value = MentionType.NONE;
+			return;
+		}
 		
 		this.value = AnnotationUtil.getMentionType(closestPreceeding);
 	}
 
 	@Override
 	public String getName() {
-		return "clustermention_closest_preceeding_in_same_sentence";
+		return "clustermention_closest_preceeding_mention_type";
 	}
 
 	@Override
@@ -30,4 +37,8 @@ public class ClusterMentionClosestPreceedingMentionType extends AbstractClusterM
 		return MentionType.class;
 	}
 
+	@Override
+	public List<MentionType> getAllValues(){
+		return Arrays.asList(MentionType.values());
+	}
 }

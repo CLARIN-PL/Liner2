@@ -34,7 +34,7 @@ public class AnnotationFeatureFollowingConjunctionByLike extends AbstractFeature
 
 	@Override
 	public String getName() {
-		return "annotation_preceeding_by_like_conjunction";
+		return "annotation_following_by_like_conjunction";
 	}
 
 	@Override

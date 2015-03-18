@@ -29,11 +29,15 @@ public class WekaJ48SequentialResolver extends AbstractCreteResolver<Classifier,
 		public int compare(ClusterClassificationInstance clusterFirst, ClusterClassificationInstance clusterSecond) {
 			Annotation m1 = clusterFirst.getMention().getHolder();
 			Annotation m2 = clusterSecond.getMention().getHolder();
+			// ASSERT m1 == m2
 			AnnotationCluster ac1 = clusterFirst.getCluster().getHolder();
 			AnnotationCluster ac2 = clusterSecond.getCluster().getHolder();
 			
-			int m1dist = AnnotationUtil.annotationTokenDistance(m1, AnnotationUtil.getClosestPreceeding(m1, ac1), this.document);
-			int m2dist = AnnotationUtil.annotationTokenDistance(m1, AnnotationUtil.getClosestPreceeding(m2, ac2), this.document);
+			Annotation ac1p = AnnotationUtil.getClosestPreceeding(m1, ac1);
+			Annotation ac2p = AnnotationUtil.getClosestPreceeding(m2, ac2);
+			
+			int m1dist = ac1p != null ? AnnotationUtil.annotationTokenDistance(ac1p, m1, this.document) : 10000;
+			int m2dist = ac2p != null ?AnnotationUtil.annotationTokenDistance(ac2p, m2, this.document) : 10000;
 			
 			
 			return m1dist - m2dist;
@@ -51,6 +55,7 @@ public class WekaJ48SequentialResolver extends AbstractCreteResolver<Classifier,
 			if(labels.get(i) > 0)
 				correctPairs.add(instancesForMention.get(i));
 		
+		if(instancesForMention.size() > 0) System.out.println(instancesForMention.get(0).getMention().getHolder());
 		if(correctPairs.size() <= 0) return document; // Return unchanged document (mention does not have coreferential cluster)
 		
 		Collections.sort(correctPairs, new BestClosestClusterMentionComparator(document));

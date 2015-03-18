@@ -1,4 +1,4 @@
-package g419.crete.api.features.clustermention.preceeding;
+package g419.crete.api.features.clustermention.following;
 
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationCluster;
@@ -41,6 +41,10 @@ public class ClusterMentionClosestFollowingPreceededBySubordConj extends Abstrac
 		AnnotationCluster cluster = input.getRight();
 		
 		Annotation closestFollowing = AnnotationUtil.getClosestFollowing(mention, cluster);
+		if(closestFollowing == null){
+			this.value = false;
+			return;
+		}
 		
 		TokenAttributeIndex ai  = closestFollowing.getSentence().getAttributeIndex();
 		ArrayList<Token> tokens = closestFollowing.getSentence().getTokens();
@@ -55,7 +59,7 @@ public class ClusterMentionClosestFollowingPreceededBySubordConj extends Abstrac
 
 	@Override
 	public String getName() {
-		return "clustermention_closest_preceeding_preceeded_by_subord_conj";
+		return "clustermention_closest_following_preceeded_by_subordinate_conj";
 	}
 
 	@Override

@@ -41,6 +41,10 @@ public class ClusterMentionClosestPreceedingFollowedBySubordConj extends Abstrac
 		AnnotationCluster cluster = input.getRight();
 		
 		Annotation closestPreceeding = AnnotationUtil.getClosestPreceeding(mention, cluster);
+		if(closestPreceeding == null){
+			this.value = false;
+			return;
+		}
 		
 		TokenAttributeIndex ai  = closestPreceeding.getSentence().getAttributeIndex();
 		ArrayList<Token> tokens = closestPreceeding.getSentence().getTokens();
@@ -55,7 +59,7 @@ public class ClusterMentionClosestPreceedingFollowedBySubordConj extends Abstrac
 
 	@Override
 	public String getName() {
-		return "clustermention_closest_preceeding_followed_by_subord_conj";
+		return "clustermention_closest_preceeding_followed_by_subordinate_conj";
 	}
 
 	@Override

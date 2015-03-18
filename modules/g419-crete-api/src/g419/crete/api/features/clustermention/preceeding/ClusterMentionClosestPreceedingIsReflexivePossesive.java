@@ -18,6 +18,10 @@ public class ClusterMentionClosestPreceedingIsReflexivePossesive extends Abstrac
 		AnnotationCluster cluster = input.getRight();
 		
 		Annotation closestPreceeding = AnnotationUtil.getClosestPreceeding(mention, cluster);
+		if(closestPreceeding == null){
+			this.value = false;
+			return;
+		}
 		
 		if(!closestPreceeding.hasHead()) closestPreceeding.assignHead();
 		Token head = closestPreceeding.getSentence().getTokens().get(closestPreceeding.getHead());

@@ -21,6 +21,10 @@ public class ClusterMentionClosestPreceedingMentionDistance extends AbstractClus
 		AnnotationCluster cluster = input.getRight();
 		
 		Annotation closestPreceeding = AnnotationUtil.getClosestPreceeding(mention, cluster);
+		if(closestPreceeding == null){
+			this.value = 10000;
+			return;
+		}
 		
 		List<Pattern> patterns = new ArrayList<Pattern>();
 		patterns.add(Pattern.compile("anafora_wyznacznik"));
@@ -34,7 +38,7 @@ public class ClusterMentionClosestPreceedingMentionDistance extends AbstractClus
 
 	@Override
 	public String getName() {
-		return "clustermention_closest_following_mention_distance";
+		return "clustermention_closest_preceeding_mention_distance";
 	}
 
 	@Override
