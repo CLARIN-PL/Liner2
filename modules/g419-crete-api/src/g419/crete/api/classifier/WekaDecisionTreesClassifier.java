@@ -10,10 +10,11 @@ import java.util.Random;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.trees.J48graft;
+import weka.core.Attribute;
+import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.filters.Filter;
-import weka.filters.supervised.instance.Resample;
 import weka.filters.supervised.instance.SMOTE;
 import weka.filters.unsupervised.attribute.NumericToNominal;
 import weka.gui.treevisualizer.PlaceNode2;
@@ -31,15 +32,18 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 		
 		Instances clasInst = new Instances(this.instances); 
 		for(Instance instance : instances) clasInst.add(instance);
+		
 		clasInst.setClass(attributes.get(attributes.size() - 1));
 		
 		ArrayList<Integer> labels = new ArrayList<Integer>();
 		
 		Classifier cls = this.model.getModel();
+
 		
 		for(int i = 0; i < clasInst.numInstances(); i++){
 			Instance instance = clasInst.instance(i);
 			try {
+				System.out.println(cls.classifyInstance(instance));
 				labels.add((int)Math.round(cls.classifyInstance(instance)));
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -58,8 +62,18 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 //			e.printStackTrace();
 //		}
 		Instances tInstances = instances;
-		for(Instance instance : trainingInstances) tInstances.add(instance);
 		tInstances.setClass(attributes.get(attributes.size() - 1));
+		
+		for(int i = 0; i < this.trainingInstances.size(); i++){
+			Instance instance = this.trainingInstances.get(i);
+			instance.setDataset(tInstances);
+			Integer oldLabel = this.trainingInstanceLabels.get(i);
+			String newLabel = oldLabel > 0 ? "COREF" : "NON_COREF";
+			instance.setClassValue(newLabel);
+			tInstances.add(instance);
+		}
+		
+		
 		
 		try {
 			NumericToNominal numToNom =  new NumericToNominal();
@@ -71,7 +85,7 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 			
 			SMOTE smote = new SMOTE();
 			smote.setInputFormat(tInstances);
-			smote.setClassValue("2");
+			smote.setClassValue("0");
 			
 			tInstances = Filter.useFilter(tInstances, smote);
 		} catch (Exception e1) {

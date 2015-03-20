@@ -6,11 +6,18 @@ import g419.corpus.structure.TokenAttributeIndex;
 import g419.crete.api.features.AbstractFeature;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 public class AnnotationFeaturePreceedingCoordinateConjunction extends AbstractFeature<Annotation, Boolean>{
 
-	public static final Set<String> coordinateConjunctions = null;
+	public static final Set<String> coordinateConjunctions = new HashSet<String>(Arrays.asList(
+			"a", "aczkolwiek", "albo", "ale", "ani", "bądź", "czy", "czyli",
+		    "dlatego", "i", "jednak", "lecz", "lub", "mianowicie", "natomiast", "ni",
+		    "oraz", "przeto", "tedy", "toteż", "tudzież", "więc", "zatem", "zaś"
+	    ));
+	
 	private final int lookupDistance = 2;
 	
 	

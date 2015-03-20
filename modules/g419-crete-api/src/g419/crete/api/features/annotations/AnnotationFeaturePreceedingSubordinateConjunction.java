@@ -6,11 +6,27 @@ import g419.corpus.structure.TokenAttributeIndex;
 import g419.crete.api.features.AbstractFeature;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 public class AnnotationFeaturePreceedingSubordinateConjunction extends AbstractFeature<Annotation, Boolean>{
 
-	public static final Set<String> subordinateConjunctions = null;
+	public static final Set<String> subordinateConjunctions = new HashSet<String>(Arrays.asList("aby", "ażeby", "aniżeli",
+		    "bo", "bowiem", "by", "byle",
+		    "choć", "chociaż", "choćby", "czy", "czego",
+		    "dlatego że", "dopóki",
+		    "iżby", "ilekroć",
+		    "jak", "jak gdyby", "jakby", "jako że", "jeżeli", "jeśli", "jakkolwiek",
+		    "gdy", "gdyby", "gdyż",
+		    "kiedy", "który", "którego", "które", "która", "którą",
+		    "mimo że",
+		    "niż", "niżeli", "niźli",
+		    "odkąd",
+		    "ponieważ", "podczas gdy", "pomimo że",
+		    "skoro",
+		    "że", "żeby"));
+	
 	private final int lookupDistance = 2;
 	
 	

@@ -5,6 +5,9 @@ import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationTokenListComparator;
 import g419.corpus.structure.Document;
+import g419.crete.api.CreteOptions;
+import g419.crete.api.annotation.AbstractAnnotationSelector;
+import g419.crete.api.annotation.AnnotationSelectorFactory;
 import g419.crete.api.evaluation.ParentEvaluator;
 import g419.crete.api.evaluation.ParentEvaluator.*;
 import g419.lib.cli.CommonOptions;
@@ -17,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
@@ -24,6 +28,11 @@ import org.apache.commons.cli.GnuParser;
 
 public class ActionEvalParent extends Action {
 
+
+	public static final String BASIC_SELECTOR = "selector";
+	public static final String OVERRIDE_SELECTOR = "override_selector";
+	
+	
 	private String input_file = null;
     private String input_format = null;
     
@@ -31,6 +40,9 @@ public class ActionEvalParent extends Action {
 		super("eval-parent");
 		this.options.addOption(CommonOptions.getInputFileFormatOption());
         this.options.addOption(CommonOptions.getInputFileNameOption());
+        this.options.addOption(CommonOptions.getFeaturesOption());
+        this.options.addOption(CommonOptions.getFeaturesOption());
+        this.options.addOption(CommonOptions.getModelFileOption());
 	}
 
 	@Override
@@ -39,6 +51,7 @@ public class ActionEvalParent extends Action {
 		parseDefault(line);
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
+        CreteOptions.getOptions().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
 	}
 
 	private String[] getBatchFiles() throws IOException{
@@ -63,7 +76,8 @@ public class ActionEvalParent extends Action {
 		
 		boolean sysTEI = sysInputFormat.contains("tei");
 		RelationUnitCriterion identifyingUnitsCriterion = new NamedEntityCriterion();
-		RelationUnitCriterion referencingUnitsCriterion =  new AgpPronounAndZeroCriterion();
+		RelationUnitCriterion referencingUnitsCriterion =  new ZeroCriterion();
+		//!sysTEI
 		Comparator<Annotation> matcher = new AnnotationTokenListComparator(!sysTEI); // for ccl -> true, for tei -> false
 		ParentEvaluator evaluator = new ParentEvaluator(identifyingUnitsCriterion, referencingUnitsCriterion, matcher);
 		
@@ -79,7 +93,9 @@ public class ActionEvalParent extends Action {
 		features.put("pos", "pos");
 		TokenFeatureGenerator gen = new TokenFeatureGenerator(features);
 		
-		
+		AbstractAnnotationSelector selector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(BASIC_SELECTOR));
+        AbstractAnnotationSelector overrideSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(OVERRIDE_SELECTOR));
+        
 		// TODO: porównywanie z uwzględnieniem relacji dla "wyznacznik_null_verb"
 		
 		while(referenceDocument != null && systemResponseDocument != null){
@@ -89,8 +105,12 @@ public class ActionEvalParent extends Action {
 //				System.out.println(referenceDocument.getName() + " vs. " + systemResponseDocument.getName());
 //				return;
 //			}
+			
 			gen.generateFeatures(referenceDocument);
 			gen.generateFeatures(systemResponseDocument);
+			
+			referenceDocument = rewireRelations(referenceDocument, selector, overrideSelector);
+			
 			evaluator.evaluate(systemResponseDocument, referenceDocument);
 			referenceDocument = goldReader.nextDocument();
 			systemResponseDocument = sysReader.nextDocument();
@@ -99,6 +119,20 @@ public class ActionEvalParent extends Action {
 		evaluator.printTotal();
 
 	}
-
+	
+	private Document rewireRelations(Document document, AbstractAnnotationSelector relationalAnnotations, AbstractAnnotationSelector nonrelationalAnnotations){
+		List<Annotation> relAnnotations = relationalAnnotations.selectAnnotations(document);
+		List<Annotation> targetAnnotations = nonrelationalAnnotations.selectAnnotations(document);
+		
+		for(Annotation rAnn : relAnnotations){
+			for(Annotation potentialTarget : rAnn.getSentence().getChunks()){
+				if(potentialTarget.getTokens().equals(rAnn.getTokens()) && targetAnnotations.contains(potentialTarget)){
+					document.rewireSingleRelations(rAnn, potentialTarget);
+				}
+			}
+		}
+		
+		return document;
+	}
 }
 

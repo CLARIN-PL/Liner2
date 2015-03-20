@@ -91,14 +91,14 @@ public class ActionCrossValidate extends Action {
 	}
 
 	public void initializeResolvers(){
-		CreteResolverFactory.getFactory().register("j48_cluster_classify", new WekaJ48ResolverItem());
-		// --------------- CLASSIFIERS -----------------------------------
-		ClassifierFactory.getFactory().register("j48_cluster", new WekaJ48ClassifierItem());
-		// ------------------ GENERATORS -------------------------------
-		CreteInstanceGeneratorFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Integer.class, "mention_cluster_generator", new ClusterClassificationInstanceGenerator());
-		CreteInstanceGeneratorFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Integer.class, "mention_cluster_classify_generator", new ClusterClassificationInstanceGenerator());
-		// ----------------- CONVERTERS --------------------------------
-		CreteInstanceConverterFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Instance.class, "mention_cluster_to_weka_instance", new ClusterClassificationWekaInstanceConverterItem());
+//		CreteResolverFactory.getFactory().register("j48_cluster_classify", new WekaJ48ResolverItem());
+//		// --------------- CLASSIFIERS -----------------------------------
+//		ClassifierFactory.getFactory().register("j48_cluster", new WekaJ48ClassifierItem());
+//		// ------------------ GENERATORS -------------------------------
+//		CreteInstanceGeneratorFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Integer.class, "mention_cluster_generator", new ClusterClassificationInstanceGenerator());
+//		CreteInstanceGeneratorFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Integer.class, "mention_cluster_classify_generator", new ClusterClassificationInstanceGenerator());
+//		// ----------------- CONVERTERS --------------------------------
+//		CreteInstanceConverterFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Instance.class, "mention_cluster_to_weka_instance", new ClusterClassificationWekaInstanceConverterItem());
 	}
 	
 	
@@ -112,43 +112,43 @@ public class ActionCrossValidate extends Action {
 	
 	@Override
 	public void run() throws Exception {
-		AbstractDocumentReader reader = getInputReader();
-		AbstractDocumentWriter writer = getOutputWriter();
-        TokenFeatureGenerator gen = null;
-        
-        if(!CreteOptions.getOptions().getFeatures().get("token").isEmpty()){
-        	gen = new TokenFeatureGenerator(CreteOptions.getOptions().getFeatures().get(TOKENS));
-        }
-
-        ArrayList<String> features = new ArrayList<String>();
-        features.addAll(CreteOptions.getOptions().getFeatures().get(ANNOTATIONS).values());
-        features.addAll(CreteOptions.getOptions().getFeatures().get(CLUSTERS).values());
-        features.addAll(CreteOptions.getOptions().getFeatures().get(CLUSTER_MENTION_PAIRS).values());
-        
-        initializeResolvers();
-		
-        String modelPath = CreteOptions.getOptions().getProperties().getProperty(MODEL_PATH);
-        WekaModel model = new WekaModel(null);
-        model.load(modelPath);
-		// Instantiate resolver
-		
-		AbstractAnnotationSelector preFilterSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(PRE_FILTER_SELECTOR));
-        AbstractAnnotationSelector selector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(BASIC_SELECTOR));
-        
-        List<Document> documents = new ArrayList<Document>();
-        Document ps = reader.nextDocument();
-        while ( ps != null ){
-			if ( gen != null ) gen.generateFeatures(ps);
-			ps.removeAnnotations(preFilterSelector.selectAnnotations(ps));
-			documents.add(ps);
-			ps = reader.nextDocument();
-		}
-        
-        AbstractCreteInstanceGenerator<?, ?> generator = CreteInstanceGeneratorFactory.getFactory().getInstance(ClusterClassificationInstance.class, Integer.class, "mention_cluster_generator", new ArrayList<String>());
-        this.generateFolds(10, documents, selector, generator);
-        
-		reader.close();
-		writer.close();
+//		AbstractDocumentReader reader = getInputReader();
+//		AbstractDocumentWriter writer = getOutputWriter();
+//        TokenFeatureGenerator gen = null;
+//        
+//        if(!CreteOptions.getOptions().getFeatures().get("token").isEmpty()){
+//        	gen = new TokenFeatureGenerator(CreteOptions.getOptions().getFeatures().get(TOKENS));
+//        }
+//
+//        ArrayList<String> features = new ArrayList<String>();
+//        features.addAll(CreteOptions.getOptions().getFeatures().get(ANNOTATIONS).values());
+//        features.addAll(CreteOptions.getOptions().getFeatures().get(CLUSTERS).values());
+//        features.addAll(CreteOptions.getOptions().getFeatures().get(CLUSTER_MENTION_PAIRS).values());
+//        
+//        initializeResolvers();
+//		
+//        String modelPath = CreteOptions.getOptions().getProperties().getProperty(MODEL_PATH);
+//        WekaModel model = new WekaModel(null);
+//        model.load(modelPath);
+//		// Instantiate resolver
+//		
+//		AbstractAnnotationSelector preFilterSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(PRE_FILTER_SELECTOR));
+//        AbstractAnnotationSelector selector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(BASIC_SELECTOR));
+//        
+//        List<Document> documents = new ArrayList<Document>();
+//        Document ps = reader.nextDocument();
+//        while ( ps != null ){
+//			if ( gen != null ) gen.generateFeatures(ps);
+//			ps.removeAnnotations(preFilterSelector.selectAnnotations(ps));
+//			documents.add(ps);
+//			ps = reader.nextDocument();
+//		}
+//        
+//        AbstractCreteInstanceGenerator<?, ?> generator = CreteInstanceGeneratorFactory.getFactory().getInstance(ClusterClassificationInstance.class, Integer.class, "mention_cluster_generator", new ArrayList<String>());
+//        this.generateFolds(10, documents, selector, generator);
+//        
+//		reader.close();
+//		writer.close();
 	}
 	
 	/**
@@ -187,67 +187,67 @@ public class ActionCrossValidate extends Action {
     }
     
 
-    public ArrayList<ArrayList<Document>> generateFolds(int foldNumber,  List<Document> documents, AbstractAnnotationSelector selector, AbstractCreteInstanceGenerator<?, ?> generator){
-    	ArrayList<ArrayList<Document>> folds = new ArrayList<ArrayList<Document>>(foldNumber);
-    	HashMap<Integer, Set<Document>> docsByCount = new HashMap<Integer, Set<Document>>();
-    	HashMap<Document, Integer> countByDocs = new  HashMap<Document, Integer>(documents.size());
-    	int totalInstances = 0;
-    	
-    	// Prepare data
-    	for(Document document : documents){
-    		int docInstances = generator.generateInstances(document, selector).size();
-    		totalInstances += docInstances;
-    		countByDocs.put(document, docInstances);
-    		
-    		if(docsByCount.get(docInstances) == null){
-    			docsByCount.put(docInstances, new HashSet<Document>());
-    		}
-    		docsByCount.get(docInstances).add(document);
-    		
-//    		Set<Document> currentSet = docsByCount.get(docInstances);
-//    		currentSet.add(document);
-//    		docsByCount.put(docInstances, currentSet);
-    	}
-    	
-    	// Fill folds
-    	double averageFoldSize = ((double) totalInstances) / ((double) foldNumber);
-    	// Shuffle documents list
-    	long seed = System.nanoTime();
-    	Collections.shuffle(documents, new Random(seed));
-    	
-    	// Fill folds
-    	int currentFoldCount = 0;
-    	int currentFoldIndex = 0;
-    	folds.add(new ArrayList<Document>());
-    	for(Document document : documents){
-    		int documentInstanceCount = countByDocs.get(document);
-    		// Check for overflow
-    		if(currentFoldCount + documentInstanceCount > averageFoldSize){
-    			// Stop if filled all folds
-    			if(currentFoldIndex + 1 >= foldNumber) break;
-    			// Switch to next fold
-    			currentFoldIndex++;
-    			currentFoldCount = 0;
-    			folds.add(new ArrayList<Document>());
-    		}
-    		currentFoldCount += documentInstanceCount;
-    		folds.get(currentFoldIndex).add(document);
-    	}
-    	
-    	// Distribute rest of documents
-    	// Sort folds by count - reverse
-    	// Sort documents by count
-    	
-    	
-    	return folds;
-    }
-    
-    public List<Document> crossValidate(ArrayList<ArrayList<Document>> folds){
-    	List<Document> classifiedDocuments = null;    	
-    	
-    	
-    	return classifiedDocuments;
-    }
+//    public ArrayList<ArrayList<Document>> generateFolds(int foldNumber,  List<Document> documents, AbstractAnnotationSelector selector, AbstractCreteInstanceGenerator<?, ?> generator){
+//    	ArrayList<ArrayList<Document>> folds = new ArrayList<ArrayList<Document>>(foldNumber);
+//    	HashMap<Integer, Set<Document>> docsByCount = new HashMap<Integer, Set<Document>>();
+//    	HashMap<Document, Integer> countByDocs = new  HashMap<Document, Integer>(documents.size());
+//    	int totalInstances = 0;
+//    	
+//    	// Prepare data
+//    	for(Document document : documents){
+//    		int docInstances = generator.generateInstances(document, selector).size();
+//    		totalInstances += docInstances;
+//    		countByDocs.put(document, docInstances);
+//    		
+//    		if(docsByCount.get(docInstances) == null){
+//    			docsByCount.put(docInstances, new HashSet<Document>());
+//    		}
+//    		docsByCount.get(docInstances).add(document);
+//    		
+////    		Set<Document> currentSet = docsByCount.get(docInstances);
+////    		currentSet.add(document);
+////    		docsByCount.put(docInstances, currentSet);
+//    	}
+//    	
+//    	// Fill folds
+//    	double averageFoldSize = ((double) totalInstances) / ((double) foldNumber);
+//    	// Shuffle documents list
+//    	long seed = System.nanoTime();
+//    	Collections.shuffle(documents, new Random(seed));
+//    	
+//    	// Fill folds
+//    	int currentFoldCount = 0;
+//    	int currentFoldIndex = 0;
+//    	folds.add(new ArrayList<Document>());
+//    	for(Document document : documents){
+//    		int documentInstanceCount = countByDocs.get(document);
+//    		// Check for overflow
+//    		if(currentFoldCount + documentInstanceCount > averageFoldSize){
+//    			// Stop if filled all folds
+//    			if(currentFoldIndex + 1 >= foldNumber) break;
+//    			// Switch to next fold
+//    			currentFoldIndex++;
+//    			currentFoldCount = 0;
+//    			folds.add(new ArrayList<Document>());
+//    		}
+//    		currentFoldCount += documentInstanceCount;
+//    		folds.get(currentFoldIndex).add(document);
+//    	}
+//    	
+//    	// Distribute rest of documents
+//    	// Sort folds by count - reverse
+//    	// Sort documents by count
+//    	
+//    	
+//    	return folds;
+//    }
+//    
+//    public List<Document> crossValidate(ArrayList<ArrayList<Document>> folds){
+//    	List<Document> classifiedDocuments = null;    	
+//    	
+//    	
+//    	return classifiedDocuments;
+//    }
     
 //    public List<Document> cvSingleFold(List<Document> train, List<Document> test, List<String> features, AbstractAnnotationSelector selector){
 //    	List<Document> classifiedTest = new ArrayList<Document>();

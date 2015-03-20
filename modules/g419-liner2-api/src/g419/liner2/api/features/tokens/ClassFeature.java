@@ -5,12 +5,13 @@ import g419.corpus.structure.TokenAttributeIndex;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.maltparser.core.helper.HashMap;
-import org.maltparser.core.helper.HashSet;
+
 
 
 public class ClassFeature extends TokenFeature{

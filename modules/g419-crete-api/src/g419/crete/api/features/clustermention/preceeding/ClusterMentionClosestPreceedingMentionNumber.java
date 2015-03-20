@@ -1,4 +1,4 @@
-package g419.crete.api.features.clustermention;
+package g419.crete.api.features.clustermention.preceeding;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,12 +7,14 @@ import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationCluster;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
+import g419.crete.api.features.clustermention.AbstractClusterMentionFeature;
 import g419.crete.api.features.enumvalues.Gender;
+import g419.crete.api.features.enumvalues.Number;
 import g419.crete.api.structure.AnnotationUtil;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-public class ClusterMentionClosestPreceedingMentionGender extends AbstractClusterMentionFeature<Gender>{
+public class ClusterMentionClosestPreceedingMentionNumber extends AbstractClusterMentionFeature<Number>{
 
 	@Override
 	public void generateFeature(Pair<Annotation, AnnotationCluster> input) {
@@ -20,9 +22,8 @@ public class ClusterMentionClosestPreceedingMentionGender extends AbstractCluste
 		AnnotationCluster cluster = input.getRight();
 		
 		Annotation closestPreceeding = AnnotationUtil.getClosestPreceeding(mention, cluster);
-		
 		if(closestPreceeding == null){
-			this.value = Gender.UNDEFINED;
+			this.value = Number.UNDEFINED;
 		}
 		else{
 			closestPreceeding.assignHead();
@@ -30,29 +31,30 @@ public class ClusterMentionClosestPreceedingMentionGender extends AbstractCluste
 			
 			TokenAttributeIndex ai = closestPreceeding.getSentence().getAttributeIndex();
 					
-			this.value = Gender.fromValue(ai.getAttributeValue(headToken, "gender"));
+			this.value = Number.fromValue(ai.getAttributeValue(headToken, "number"));
 		}
-		
 	}
 
 	@Override
 	public String getName() {
-		return "clustermention_closest_preceeding_gender";
+		return "clustermention_closest_preceeding_number";
 	}
 
 	@Override
-	public Class<Gender> getReturnTypeClass() {
-		return Gender.class;
+	public Class<Number> getReturnTypeClass() {
+		return Number.class;
 	}
 	
 	@Override
 	public int getSize() {
-		return Gender.values().length;
+		return Number.values().length;
 	}
 
 	@Override
-	public List<Gender> getAllValues(){
-		return Arrays.asList(Gender.values());
+	public List<Number> getAllValues(){
+		return Arrays.asList(Number.values());
 	}
+
+	
 	
 }
