@@ -15,9 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,14 +34,17 @@ public class CrfppChunker extends Chunker
 	private static final int MAX_TOKENS = 1000;
 	private List<Pattern> types = null;
     private String trainingDataFileName = null;
+	private ArrayList<String> usedFeatures;
 	
-    public CrfppChunker() {
+    public CrfppChunker(ArrayList<String> usedFeatures) {
 		this.types = new ArrayList<Pattern>();
+		this.usedFeatures = usedFeatures;
     }
     
-    public CrfppChunker(int threads, List<Pattern> types){
+    public CrfppChunker(int threads, List<Pattern> types, ArrayList<String> usedFeatures){
 		this.threads = threads;
-		this.types = types;    	
+		this.types = types;
+		this.usedFeatures = usedFeatures;
     }
 
     /**
@@ -69,18 +70,24 @@ public class CrfppChunker extends Chunker
 
         // Prepare date and send them to the API
         tagger.clear();
-		int numAttrs = sentence.getAttributeIndexLength();
 		String val = null;
 		for (Token token : sentence.getTokens()) {
 			StringBuilder oStr = new StringBuilder();
-			for (int i = 0; i < numAttrs; i++){
+			for (String feature: usedFeatures){
 				oStr.append(" ");
-				val = token.getAttributeValue(i);
+				try {
+					val = token.getAttributeValue(feature);
+				}
+				catch (ArrayIndexOutOfBoundsException e){
+					System.out.println("Error: Feature used by CRF chunker not in attribute index: " + feature);
+					System.exit(1);
+				}
 				if ( val != null){
 					val = val.replaceAll("\\s+", "_");
-                    val = val.length()==0 ? "NULL" : val;
-                                }
+					val = val.length()==0 ? "NULL" : val;
+				}
 				oStr.append(val);
+
 			}
 			tagger.add(oStr.toString().trim());
 		}
@@ -143,20 +150,23 @@ public class CrfppChunker extends Chunker
     	
     	for (Paragraph paragraph : paragraphSet.getParagraphs())
     		for (Sentence sentence : paragraph.getSentences()) {
-    			int numAttrs = sentence.getAttributeIndexLength();
     			ArrayList<Token> tokens = sentence.getTokens();    			
     			for (int i = 0; i < tokens.size(); i++) {
     				String oStr = "";    				
-    				for (int j = 0; j < numAttrs; j++){
-//                        System.out.println(tokens.get(i).getOrth() + ": " + tokens.get(i).attrIdx.getName(j));
-    					String val = tokens.get(i).getAttributeValue(j);
-    					if ( val != null)
-    						val = val.length()==0 ? "NULL" : val.replaceAll("\\s+", "_");
-    					oStr += " " + val;
+    				for (String feature: usedFeatures){
+						try {
+							String val = tokens.get(i).getAttributeValue(feature);
+							if ( val != null)
+								val = val.length()==0 ? "NULL" : val.replaceAll("\\s+", "_");
+							oStr += " " + val;
+						}
+						catch (ArrayIndexOutOfBoundsException e){
+							System.out.println("Error: Feature used by CRF chunker not in attribute index: " + feature);
+							System.exit(1);
+						}
     				}
                     String tokClass = sentence.getTokenClassLabel(i, this.types);
                     oStr += " " + tokClass;
-//                    System.out.println(oStr);
     				this.trainingFileWriter.write(oStr.trim() + "\n");
     			}
     			this.trainingFileWriter.write("\n");

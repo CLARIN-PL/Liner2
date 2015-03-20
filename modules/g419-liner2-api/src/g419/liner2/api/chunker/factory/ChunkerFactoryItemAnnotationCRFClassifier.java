@@ -15,6 +15,7 @@ import org.ini4j.Ini;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -78,7 +79,7 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
         String store = description.get("store");
 
         Logger.log("--> CRFPP Chunker deserialize from " + store);
-        CrfppChunker baseChunker = new CrfppChunker();
+        CrfppChunker baseChunker = new CrfppChunker(loadUsedFeatures(description.get("crf-features")));
         baseChunker.deserialize(store);
         CrfTemplate template = createTemplate(description.get("template"), description.get("context"));
         baseChunker.setTemplate(template);
@@ -113,7 +114,7 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
         }
         List<Pattern> list = LinerOptions.getGlobal().parseTypes(description.get("types"));
 
-        CrfppChunker baseChunker = new CrfppChunker(Integer.parseInt(description.get("threads")), list);
+        CrfppChunker baseChunker = new CrfppChunker(Integer.parseInt(description.get("threads")), list, loadUsedFeatures(description.get("crf-features")));
         baseChunker.setTrainingDataFilename(description.get("store-training-data"));
         baseChunker.setModelFilename(modelFilename);
         Logger.log("--> Training on file=" + inputFile);
@@ -148,5 +149,18 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
             }
         }
         return  template;
+    }
+
+    private ArrayList<String> loadUsedFeatures(String file) throws IOException {
+        ArrayList<String> usedFeatures = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String line = reader.readLine();
+        while(line != null){
+            if(!(line.isEmpty() || line.startsWith("#"))){
+                usedFeatures.add(line.trim());
+            }
+            line = reader.readLine();
+        }
+        return usedFeatures;
     }
 }

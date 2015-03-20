@@ -14,8 +14,12 @@ import g419.liner2.api.features.TokenFeatureGenerator;
 import g419.corpus.Logger;
 import g419.liner2.api.tools.TemplateFactory;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -62,7 +66,7 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
 
         Logger.log("--> CRFPP Chunker deserialize from " + store);
 
-        CrfppChunker chunker = new CrfppChunker();
+        CrfppChunker chunker = new CrfppChunker(loadUsedFeatures(description.get("features")));
         chunker.deserialize(store);
 
         return chunker;
@@ -130,7 +134,7 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
 
         String templateData = description.get("template");
 
-        CrfppChunker chunker = new CrfppChunker(threads, types);
+        CrfppChunker chunker = new CrfppChunker(threads, types, loadUsedFeatures(description.get("features")));
 
         String chunkerName = description.getName().substring(8);
         CrfTemplate template = cm.getChunkerTemplate(chunkerName);
@@ -153,6 +157,19 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         chunker.train();
 
         return chunker;
+    }
+
+    private ArrayList<String> loadUsedFeatures(String file) throws IOException {
+        ArrayList<String> usedFeatures = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String line = reader.readLine();
+        while(line != null){
+            if(!(line.isEmpty() || line.startsWith("#"))){
+                usedFeatures.add(line.trim());
+            }
+            line = reader.readLine();
+        }
+        return usedFeatures;
     }
 
 }
