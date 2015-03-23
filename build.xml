@@ -47,7 +47,7 @@
 
 	<target name="jar-liner2-api-all" depends="jar-corpus,jar-liner2-api"></target>
 	
-	<target name="jar-liner2-cli-all" depends="jar-corpus,jar-liner2-api,jar-lib-cli,jar-liner2-cli"></target>
+	<target name="jar-liner2-cli-all" depends="jar-corpus,jar-lib-cli,jar-liner2-api,jar-liner2-cli"></target>
 
     <target name="jar-liner2-daemon-all" depends="jar-corpus,jar-liner2-api,jar-lib-cli,jar-liner2-daemon"></target>
 
