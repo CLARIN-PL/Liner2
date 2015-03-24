@@ -56,7 +56,7 @@ public class FileBasedWorkingThread extends WorkingThread {
             TokenFeatureGenerator gen = daemon.featureGenerators.get(model);
             Chunker chunker = daemon.chunkers.get(model);
 
-            Logger.log("Processing request with id: " + to_process.getName(), false);
+            Logger.log("Processing request with id: " + to_process.getName() + "with model: " + model, false);
             // process text and calculate stats
             Document ps = reader.nextDocument();
             reader.close();

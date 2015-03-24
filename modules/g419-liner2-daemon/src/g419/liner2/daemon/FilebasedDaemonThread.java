@@ -89,9 +89,6 @@ public class FilebasedDaemonThread extends DaemonThread {
             osw.flush();
             osw.close();
             int responseCode = conn.getResponseCode();
-            System.out.println("\nSending 'POST' request to URL : " + url);
-            System.out.println("Response Code : " + responseCode);
-            System.out.println("Response Msg : " + conn.getResponseMessage());
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(conn.getInputStream()));
             String inputLine;
