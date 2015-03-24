@@ -42,7 +42,7 @@ public class FilebasedDaemonThread extends DaemonThread {
                 JSONObject response = checkForJob();
                 String task = response.getString("task");
                 if(!task.isEmpty()){
-                    File request = new File((String.format("%s/progress/%s", db_path.getAbsolutePath(), task + ".xml")));
+                    File request = new File((String.format("%s/progress/%s", db_path.getAbsolutePath(), task)));
                     JSONObject options = new JSONObject(response.getString("options"));
                     boolean job_assigned = false;
                     while(!job_assigned){
