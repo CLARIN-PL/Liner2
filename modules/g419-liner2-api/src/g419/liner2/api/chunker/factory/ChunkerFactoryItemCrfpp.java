@@ -44,11 +44,12 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
             }
         }
         String mode = description.get("mode");
+        TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
         if(mode.equals("train")){
-            return train(description, cm);
+            return train(description, cm, gen);
         }
         else if(mode.equals("load")){
-            return load(description);
+            return load(description, cm, gen);
         }
         else{
             throw new Exception("Unrecognized mode for CRFPP chunker: " + mode + "(Valid: train/load)");
@@ -61,13 +62,18 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
 	 * @return
 	 * @throws IOException
 	 */
-    private Chunker load(Profile.Section description) throws IOException {
+    private Chunker load(Profile.Section description, ChunkerManager cm, TokenFeatureGenerator gen) throws Exception {
         String store = description.get("store");
 
         Logger.log("--> CRFPP Chunker deserialize from " + store);
 
-        CrfppChunker chunker = new CrfppChunker(loadUsedFeatures(description.get("features")));
+        CrfTemplate template = getTemplate(description, cm, gen);
+        for(String n: template.getUsedFeatures()){
+            System.out.println(n);
+        }
+        CrfppChunker chunker = new CrfppChunker(description.containsKey("features") ? loadUsedFeatures(description.get("features")) : new ArrayList<String>(template.getUsedFeatures()));
         chunker.deserialize(store);
+        chunker.setTemplate(template);
 
         return chunker;
     }
@@ -79,7 +85,7 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
      * @return
      * @throws Exception
      */
-    private Chunker train(Profile.Section description, ChunkerManager cm) throws Exception {
+    private Chunker train(Profile.Section description, ChunkerManager cm, TokenFeatureGenerator gen) throws Exception {
         Logger.log("--> CRFPP Chunker train");
 
         Converter trainingDataConverter = null;
@@ -95,7 +101,6 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         String inputFormat;
         String modelFilename = description.get("store");
 
-        TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
         ArrayList<Document> trainData = new ArrayList<Document>();
 
         // Setup training data 
@@ -132,24 +137,12 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
 
         Logger.log("--> Training on file=" + inputFile);
 
-        String templateData = description.get("template");
+        CrfTemplate template = getTemplate(description, cm, gen);
+        CrfppChunker chunker = new CrfppChunker(threads, types, description.containsKey("features") ? loadUsedFeatures(description.get("features")) : new ArrayList<String>(template.getUsedFeatures()));
 
-        CrfppChunker chunker = new CrfppChunker(threads, types, loadUsedFeatures(description.get("features")));
-
-        String chunkerName = description.getName().substring(8);
-        CrfTemplate template = cm.getChunkerTemplate(chunkerName);
-        if(template != null){
-            chunker.setTemplate(template);
-            template.setAttributeIndex(gen.getAttributeIndex());
-        }
-        else if(!templateData.equals("null")){
-            template = TemplateFactory.parseTemplate(templateData);
+        chunker.setTemplate(template);
 
         chunker.setTrainingDataFilename(description.get("store-training-data"));
-
-            template.setAttributeIndex(gen.getAttributeIndex());
-            chunker.setTemplate(template);
-        }
         chunker.setModelFilename(modelFilename);
 
         for(Document document: trainData)
@@ -170,6 +163,23 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
             line = reader.readLine();
         }
         return usedFeatures;
+    }
+
+    private CrfTemplate getTemplate(Ini.Section description, ChunkerManager cm, TokenFeatureGenerator gen) throws Exception {
+        String templateData = description.get("template");
+
+        String chunkerName = description.getName().substring(8);
+        CrfTemplate template = cm.getChunkerTemplate(chunkerName);
+        if(template != null){
+            template.setAttributeIndex(gen.getAttributeIndex());
+        }
+        else if(!templateData.equals("null")){
+            template = TemplateFactory.parseTemplate(templateData);
+
+
+            template.setAttributeIndex(gen.getAttributeIndex());
+        }
+        return template;
     }
 
 }
