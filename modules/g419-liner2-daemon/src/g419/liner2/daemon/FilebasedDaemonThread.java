@@ -98,7 +98,6 @@ public class FilebasedDaemonThread extends DaemonThread {
                 response.append(inputLine);
             }
             in.close();
-            System.out.println(response.toString());
             return new JSONObject(response.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
