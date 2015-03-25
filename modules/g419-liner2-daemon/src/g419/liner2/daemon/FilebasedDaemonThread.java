@@ -36,26 +36,44 @@ public class FilebasedDaemonThread extends DaemonThread {
     @Override
     public void run() {
         super.run();
-        while (this.workingThreads.size() < this.maxThreads) {
-            startWorkingThread();
-        }
-
+        daemon_loop:
         while (true) {
-            for (WorkingThread thread : workingThreads) {
-                if (!((FileBasedWorkingThread) thread).isBusy()) {
-                    try {
-                        JSONObject response = checkForJob();
-                        String task = response.getString("task");
-                        if (!task.isEmpty()) {
-                            File request = new File((String.format("%s/progress/%s", db_path.getAbsolutePath(), task)));
-                            JSONObject options = new JSONObject(response.getString("options"));
-                            ((FileBasedWorkingThread) thread).assignJob(request, options);
+            try{
+                JSONObject response = checkForJob();
+                String task = response.getString("task");
+                if(!task.isEmpty()){
+                    File request = new File((String.format("%s/progress/%s", db_path.getAbsolutePath(), task)));
+                    JSONObject options = new JSONObject(response.getString("options"));
+                    boolean job_assigned = false;
+                    while(!job_assigned){
+                        if (this.workingThreads.size() < this.maxThreads) {
+                            if(!task.isEmpty()) {
+                                startWorkingThread(request, options);
+                                job_assigned = true;
+                            }
                         }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        else {
+                            for (WorkingThread thread : workingThreads) {
+                                if (!((FileBasedWorkingThread) thread).isBusy()) {
+                                    ((FileBasedWorkingThread) thread).assignJob(request, options);
+                                    job_assigned =true;
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
+                else{
+                    for (WorkingThread thread : workingThreads) {
+                        if (!((FileBasedWorkingThread) thread).isBusy()) {
+                            finishWorkingThread(thread);
+                            continue daemon_loop;
+                        }
+                    }
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -93,9 +111,10 @@ public class FilebasedDaemonThread extends DaemonThread {
         return null;
     }
 
-    public void startWorkingThread() {
+    public void startWorkingThread(File request, JSONObject options) {
         super.startWorkingThread();
         FileBasedWorkingThread newThread = new FileBasedWorkingThread(this);
+        newThread.assignJob(request, options);
         newThread.start();
         this.workingThreads.add(newThread);
     }
