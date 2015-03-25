@@ -35,6 +35,12 @@ public class FileBasedWorkingThread extends WorkingThread {
                 options = null;
                 request = null;
             }
+            else{
+                try{
+                    Thread.sleep(1000);
+                } catch (InterruptedException e){ e.printStackTrace();}
+            }
+
         }
     }
     public boolean isBusy(){
@@ -45,6 +51,7 @@ public class FileBasedWorkingThread extends WorkingThread {
         this.request = request;
         this.options = options;
     }
+    
 
     public void processFile(File to_process, JSONObject options){
         try {
