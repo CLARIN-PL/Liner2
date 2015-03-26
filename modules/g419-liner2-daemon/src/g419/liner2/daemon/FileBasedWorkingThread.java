@@ -12,7 +12,7 @@ import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.features.TokenFeatureGenerator;
 import org.json.JSONObject;
 
-import java.io.File;
+import java.io.*;
 
 /**
  * Created by michal on 11/25/14.
@@ -60,6 +60,9 @@ public class FileBasedWorkingThread extends WorkingThread {
             if(model.equals("default")){
                 model = DaemonOptions.getGlobal().defaultModel;
             }
+            if(!daemon.chunkers.containsKey(model)){
+                throw new Exception("Unknown model name: " + model);
+            }
             TokenFeatureGenerator gen = daemon.featureGenerators.get(model);
             Chunker chunker = daemon.chunkers.get(model);
 
@@ -88,6 +91,14 @@ public class FileBasedWorkingThread extends WorkingThread {
 
         } catch (Exception e) {
             to_process.renameTo(new File(to_process.getAbsolutePath().replace("progress", "errors")));
+            try {
+                PrintStream writer = new PrintStream(to_process);
+                e.printStackTrace(writer);
+                writer.close();
+            } catch (IOException e1) {
+                Logger.log("Error while creating error log for: " + to_process.getName(), false);
+                e1.printStackTrace();
+            }
             Logger.log("Error while processing request: " + to_process.getName(), false);
             e.printStackTrace();
         }
