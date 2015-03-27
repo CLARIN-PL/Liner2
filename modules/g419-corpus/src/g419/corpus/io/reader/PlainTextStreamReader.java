@@ -8,21 +8,17 @@ import g419.corpus.structure.Tag;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 
 
 public class PlainTextStreamReader extends AbstractDocumentReader {
 
 	private Document document;
+	private String docName;
 
-	public PlainTextStreamReader(InputStream is, String analyzer) {
-		this.read(is, analyzer);		
+	public PlainTextStreamReader(String docName, InputStream is, String analyzer) {
+		this.docName = docName;
+		this.read(is, analyzer);
 	}
 
 	private void read(InputStream is, String analyzer){
@@ -108,25 +104,27 @@ public class PlainTextStreamReader extends AbstractDocumentReader {
 	 * @return
 	 */
 	private Document analyze(String cSeq, String analyzer) {
-		// prepare maca command
-		String cmd = "maca-analyse -qs morfeusz-nkjp-official -o ccl";
 
-		if ( analyzer.equals("wcrft") )
-			cmd = "wcrft-app nkjp_e2.ini -i text -o ccl - ";
-				
-		Process tager = null;
 		try {
-			tager = Runtime.getRuntime().exec(cmd);
-			InputStream tager_in = tager.getInputStream();
-			OutputStream tager_out = tager.getOutputStream();
-			
+			File tager_input = File.createTempFile("wcrft_input", ".txt");
 			BufferedWriter tager_writer = new BufferedWriter(
-				new OutputStreamWriter(tager_out));
-				
+					new FileWriter(tager_input));
+
 			tager_writer.write(cSeq, 0, cSeq.length());
 			tager_writer.close();
-			
-			AbstractDocumentReader reader = ReaderFactory.get().getStreamReader("terminal input", tager_in, "ccl");
+			String cmd = "";
+			if (analyzer.equals("wcrft")){
+				cmd = "wcrft-app nkjp_e2.ini -i text -o ccl " + tager_input.getAbsolutePath();
+			}
+			else if(analyzer.equals("maca")){
+				cmd =  "maca-analyse -qs morfeusz-nkjp-official -o ccl";
+			}
+			else{
+				throw new Exception("Unrecognized analyzer: " + analyzer);
+			}
+			Process tager = Runtime.getRuntime().exec(cmd);
+			InputStream tager_in = tager.getInputStream();
+			AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(docName, tager_in, "ccl");
 			return reader.nextDocument();
 			
 		} catch (Exception ex) {
