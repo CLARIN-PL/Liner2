@@ -8,9 +8,9 @@ import g419.liner2.api.converter.Converter;
  */
 public class AnnotaionWrapFactoryItem extends ConverterFactoryItem {
 
-    public AnnotaionWrapFactoryItem(){super("wrap-annotations");}
+    public AnnotaionWrapFactoryItem(){super("wrap-annotations:(.*\\.txt)");}
     @Override
     public Converter getConverter() {
-        return new AnnotationWrapConverter();
+        return new AnnotationWrapConverter(matcher.group(1));
     }
 }

@@ -24,6 +24,11 @@ public class AnnotationFilterByRegexConverter extends Converter{
     }
 
     @Override
+    public void start(Document doc) {
+
+    }
+
+    @Override
     public void apply(Sentence sentence) {
         LinkedHashSet<Annotation> sentenceAnnotations = sentence.getChunks();
         LinkedHashSet<Annotation> toRemove = new LinkedHashSet<Annotation>();

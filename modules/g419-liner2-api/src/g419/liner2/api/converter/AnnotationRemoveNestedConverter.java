@@ -21,6 +21,11 @@ public class AnnotationRemoveNestedConverter extends Converter{
     }
 
     @Override
+    public void start(Document doc) {
+
+    }
+
+    @Override
     public void apply(Sentence sentence) {
         LinkedHashSet<Annotation> sentenceAnnotations = sentence.getChunks();
         HashSet<Annotation> to_remove = new HashSet<Annotation>();

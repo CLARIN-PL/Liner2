@@ -65,6 +65,11 @@ public class AnnotationMappingConverter extends Converter{
     }
 
     @Override
+    public void start(Document doc) {
+
+    }
+
+    @Override
     public void apply(Sentence sentence) {
         LinkedHashSet<Annotation> result = new LinkedHashSet<Annotation>();
         for(Annotation ann: sentence.getChunks()){

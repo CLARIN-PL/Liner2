@@ -27,6 +27,13 @@ public class PipeConverter extends Converter{
     }
 
     @Override
+    public void start(Document doc) {
+        for(Converter c: pipe){
+            c.start(doc);
+        }
+    }
+
+    @Override
     public void apply(Sentence sentence) {
         for(Converter c: pipe){
             c.apply(sentence);

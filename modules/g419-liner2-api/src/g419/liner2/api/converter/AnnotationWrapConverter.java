@@ -5,22 +5,41 @@ import g419.corpus.structure.*;
 import g419.liner2.api.features.tokens.ClassFeature;
 import g419.liner2.api.tools.MaltSentence;
 
+import java.io.*;
 import java.util.*;
+import java.util.zip.DataFormatException;
 
 /**
  * Created by michal on 2/20/15.
  */
 public class AnnotationWrapConverter extends Converter {
 
+    private File log_file;
+    private String current_doc;
+
+    public AnnotationWrapConverter(String log_file){
+        this.log_file = new File(log_file);
+        try {
+            this.log_file.delete();
+            this.log_file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private ClassFeature classFeature = new ClassFeature("class");
     @Override
     public void finish(Document doc) {
+        current_doc = null;
+    }
 
+    @Override
+    public void start(Document doc) {
+        current_doc = doc.getName();
     }
 
     @Override
     public void apply(Sentence sentence) {
-//        MaltSentence maltSent = new MaltSentence(sentence, sentence.getChunks());
         HashMap<Token, String> textFormsMapping = new HashMap<>();
         HashSet<Token> annotationHeads = new HashSet<>();
         HashSet<Token> wrappedTokens = new HashSet<>();
@@ -64,28 +83,27 @@ public class AnnotationWrapConverter extends Converter {
             ann.getTokens().forEach((token) -> annotatedTokens.add(sentenceTokens.get(token)));
 
         }
-//        if(!newAnns.isEmpty()){
-//            System.out.println("--------------");
-//            System.out.println(sentence.toString());
-//        }
         annotatedTokens.removeAll(annotationHeads); //tokens to remove
         sentenceTokens.removeAll(annotatedTokens);
-//        System.out.println(sentence.toString());
         sentence.getChunks().clear();
-        for(int i=0; i<sentenceTokens.size(); i++){
-            if(newAnns.containsKey(sentenceTokens.get(i))){
-                Annotation wrapped = new Annotation(i, newAnns.get(sentenceTokens.get(i)), sentence);
-                sentence.addChunk(wrapped);
-                if(textFormsMapping.containsKey(sentenceTokens.get(i))){
-                    System.out.println(sentence.getId() + "\t" + i + "\t" + textFormsMapping.get(sentenceTokens.get(i)));
+        try {
+            BufferedWriter logger = new BufferedWriter(new FileWriter(this.log_file, true));
+            for(int i=0; i<sentenceTokens.size(); i++){
+                if(newAnns.containsKey(sentenceTokens.get(i))){
+                    Annotation wrapped = new Annotation(i, newAnns.get(sentenceTokens.get(i)), sentence);
+                    sentence.addChunk(wrapped);
+                    if(textFormsMapping.containsKey(sentenceTokens.get(i))){
+                        logger.write(current_doc + "\t" + sentence.getId() + "\t" + i + "\t" + textFormsMapping.get(sentenceTokens.get(i)) + "\n");
+                    }
                 }
             }
+            logger.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     private void setText(Token tok, Annotation ann, List<Token> sentenceTokens, int headIdx){
-//        System.out.println(tok.getOrth() + " | " + ann.getText());
-//        sentenceTokens.subList(ann.getBegin(), ann.getEnd() + 1).forEach((token) -> System.out.println(classFeature.generate(token, token.attrIdx)));
         String orth = tok.getOrth();
         String base = tok.getAttributeValue("base");
         List<Token> tokensAfter = sentenceTokens.subList(headIdx, Math.min(ann.getEnd() + 1, sentenceTokens.size()));
@@ -117,6 +135,5 @@ public class AnnotationWrapConverter extends Converter {
 
         tok.setAttributeValue("orth", orth);
         tok.setAttributeValue("base", base);
-//        System.out.println(tok.getOrth());
     }
 }
