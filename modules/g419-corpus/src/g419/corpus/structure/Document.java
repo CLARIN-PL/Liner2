@@ -1,9 +1,6 @@
 package g419.corpus.structure;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -84,8 +81,8 @@ public class Document{
 	 * and sentence are not copied. 
 	 * @return
 	 */
-	public HashMap<Sentence, AnnotationSet> getChunkings() {
-		HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
+	public LinkedHashMap<Sentence, AnnotationSet> getChunkings() {
+		LinkedHashMap<Sentence, AnnotationSet> chunkings = new LinkedHashMap<Sentence, AnnotationSet>();
 		for ( Paragraph paragraph : this.paragraphs)
 			for (Sentence sentence : paragraph.getSentences()){
 				LinkedHashSet<Annotation> annotations = new LinkedHashSet<Annotation>();
