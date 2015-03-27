@@ -68,9 +68,6 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         Logger.log("--> CRFPP Chunker deserialize from " + store);
 
         CrfTemplate template = getTemplate(description, cm, gen);
-        for(String n: template.getUsedFeatures()){
-            System.out.println(n);
-        }
         CrfppChunker chunker = new CrfppChunker(description.containsKey("features") ? loadUsedFeatures(description.get("features")) : new ArrayList<String>(template.getUsedFeatures()));
         chunker.deserialize(store);
         chunker.setTemplate(template);
