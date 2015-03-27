@@ -23,6 +23,7 @@ public class ConverterFactory {
         add(new AnnotationMappingFactoryItem());
         add(new AnnotationRemoveNestedFactoryItem());
         add(new TokenFeaturesFactoryItem());
+        add(new AnnotaionWrapFactoryItem());
 
     }};
 
