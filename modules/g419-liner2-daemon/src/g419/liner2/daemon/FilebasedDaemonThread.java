@@ -25,12 +25,11 @@ public class FilebasedDaemonThread extends DaemonThread {
 
     protected File db_path;
     URL url;
-    private TreeMap<File, JSONObject> awaiting_requests;
 
-    public FilebasedDaemonThread(File db_path, int max_threads) throws ParameterException, MalformedURLException {
+    public FilebasedDaemonThread(File db_path, String url, int max_threads) throws ParameterException, MalformedURLException {
         super(max_threads);
         this.db_path = db_path;
-        url = new URL("http://10.108.19.111:8099/reservation");
+        this.url = new URL(url);
     }
 
     @Override
