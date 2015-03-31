@@ -39,17 +39,15 @@ public class FilebasedDaemonThread extends DaemonThread {
         while (true) {
             try{
                 JSONObject response = checkForJob();
-                String task = response.getString("task");
+                String task = response != null ? response.getString("task") : "";
                 if(!task.isEmpty()){
                     File request = new File((String.format("%s/progress/%s", db_path.getAbsolutePath(), task)));
                     JSONObject options = new JSONObject(response.getString("options"));
                     boolean job_assigned = false;
                     while(!job_assigned){
                         if (this.workingThreads.size() < this.maxThreads) {
-                            if(!task.isEmpty()) {
-                                startWorkingThread(request, options);
-                                job_assigned = true;
-                            }
+                            startWorkingThread(request, options);
+                            job_assigned = true;
                         }
                         else {
                             for (WorkingThread thread : workingThreads) {
@@ -88,16 +86,21 @@ public class FilebasedDaemonThread extends DaemonThread {
             osw.flush();
             osw.close();
             int responseCode = conn.getResponseCode();
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(conn.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
+            if(responseCode == 200) {
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(conn.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
 
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+                return new JSONObject(response.toString());
             }
-            in.close();
-            return new JSONObject(response.toString());
+            else{
+                return null;
+            }
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (ProtocolException e) {
