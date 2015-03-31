@@ -90,7 +90,7 @@ public class FileBasedWorkingThread extends WorkingThread {
             writer.close();
 
         } catch (Exception e) {
-            to_process.renameTo(new File(to_process.getAbsolutePath().replace("progress", "errors")));
+            to_process.renameTo(new File(to_process.getAbsolutePath().replace("progress", "error")));
             try {
                 PrintStream writer = new PrintStream(to_process);
                 e.printStackTrace(writer);
