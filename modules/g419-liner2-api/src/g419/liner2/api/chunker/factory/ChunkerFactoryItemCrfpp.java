@@ -68,7 +68,7 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         Logger.log("--> CRFPP Chunker deserialize from " + store);
 
         CrfTemplate template = getTemplate(description, cm, gen);
-        CrfppChunker chunker = new CrfppChunker(description.containsKey("features") ? loadUsedFeatures(description.get("features")) : new ArrayList<String>(template.getUsedFeatures()));
+        CrfppChunker chunker = new CrfppChunker(description.containsKey("features") ? loadUsedFeatures(description.get("features")) : template.getUsedFeatures());
         chunker.deserialize(store);
         chunker.setTemplate(template);
 
@@ -135,7 +135,7 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         Logger.log("--> Training on file=" + inputFile);
 
         CrfTemplate template = getTemplate(description, cm, gen);
-        CrfppChunker chunker = new CrfppChunker(threads, types, description.containsKey("features") ? loadUsedFeatures(description.get("features")) : new ArrayList<String>(template.getUsedFeatures()));
+        CrfppChunker chunker = new CrfppChunker(threads, types, description.containsKey("features") ? loadUsedFeatures(description.get("features")) :template.getUsedFeatures());
 
         chunker.setTemplate(template);
 

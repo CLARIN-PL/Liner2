@@ -204,7 +204,7 @@ public class CrfppChunker extends Chunker
 			Process p = Runtime.getRuntime().exec(cmd.get_crf_learn());
             BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
             BufferedReader error = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-			String line = null;
+			String line;
             while ((line = input.readLine()) != null) {
                 Logger.log(line);
             }
