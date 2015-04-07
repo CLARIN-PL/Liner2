@@ -58,6 +58,9 @@ public class FilebasedDaemonThread extends DaemonThread {
                                 }
                             }
                         }
+		     	try{
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e){ e.printStackTrace();}
                     }
                 }
                 else{
@@ -85,7 +88,7 @@ public class FilebasedDaemonThread extends DaemonThread {
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setDoOutput(true);
             OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream());
-            osw.write("{\"tool\":\"liner2\"}");
+            osw.write("{\"tool\":\"liner2_bis\"}");
             osw.flush();
             osw.close();
             int responseCode = conn.getResponseCode();
