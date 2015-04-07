@@ -61,6 +61,9 @@ public class FilebasedDaemonThread extends DaemonThread {
                     }
                 }
                 else{
+                    try{
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e){ e.printStackTrace();}
                     for (WorkingThread thread : workingThreads) {
                         if (!((FileBasedWorkingThread) thread).isBusy()) {
                             finishWorkingThread(thread);
