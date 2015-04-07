@@ -8,7 +8,7 @@ import java.util.*;
  * Created by michal on 2/12/15.
  */
 
-public final class MaltSentence {
+public class MaltSentence {
     private HashMap<String, String> nkjpToCoNLLPos = getnkjpToCoNLLPos();
     private final String[] maltData;
     private final HashMap<Annotation, Integer> annotationIndices;
