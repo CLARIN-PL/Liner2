@@ -2,7 +2,7 @@ package g419;
 
 import g419.corpus.TerminateException;
 import g419.tools.ConvertRulesTool;
-import g419.tools.MaltPatternsTool;
+import g419.tools.CategorizeTool;
 import g419.tools.Tool;
 import g419.tools.CreateDictTool;
 
@@ -26,7 +26,7 @@ public class Main {
         Main main = new Main();
         main.registerTool(new ConvertRulesTool());
         main.registerTool(new CreateDictTool());
-        main.registerTool(new MaltPatternsTool());
+        main.registerTool(new CategorizeTool());
 
 
 

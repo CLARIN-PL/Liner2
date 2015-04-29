@@ -24,7 +24,7 @@ import java.util.zip.DataFormatException;
 /**
  * Created by michal on 2/12/15.
  */
-public class MaltPatternsTool extends Tool{
+public class CategorizeTool extends Tool{
 
     public static final String OPTION_MALT = "m";
     public static final String OPTION_MALT_LONG = "malt";
@@ -59,8 +59,8 @@ public class MaltPatternsTool extends Tool{
     HashMap<String, String> lemmatized_names = new HashMap<>();
     HashSet<String> nominativeNames = new HashSet<>();
 
-    public MaltPatternsTool() {
-        super("malt");
+    public CategorizeTool() {
+        super("categorize");
         this.setDescription("ToDo");
 
         this.options.addOption(CommonOptions.getInputFileFormatOption());
