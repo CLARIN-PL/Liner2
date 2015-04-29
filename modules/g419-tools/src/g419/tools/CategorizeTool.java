@@ -192,45 +192,49 @@ public class CategorizeTool extends Tool{
                 if (!annIndices.isEmpty()) {
 
                     for (Annotation ann : annIndices.keySet()) {
+                        String name = ann.getText();
+                        if(categorize_output != null){
+                            if(lemmatized_names.containsKey(name)){
+                                name = lemmatized_names.get(name);
+                            }
+                            if(!nominativeNames.contains(name)) {
+                                continue;
+                            }
+                        }
+                        else{
+                            name = ann.getBaseText();
+                        }
                         int nameIdx = annIndices.get(ann);
                         boolean foundPatternForName = false;
-                        String name = ann.getText();
-
-                        if(lemmatized_names.containsKey(name)){
-                            name = lemmatized_names.get(name);
+                        name = name.toLowerCase();
+                        if(lemma_count.containsKey(name)){
+                            lemma_count.put(name, lemma_count.get(name) + 1);
+                        }
+                        else{
+                            lemma_count.put(name, 1);
                         }
 
-                        if(nominativeNames.contains(name)){
-                            name = name.toLowerCase();
-                            if(lemma_count.containsKey(name)){
-                                lemma_count.put(name, lemma_count.get(name) + 1);
-                            }
-                            else{
-                                lemma_count.put(name, 1);
-                            }
-
-                            for (MaltPattern pattern : patterns) {
-                                boolean match = pattern.check(splittedData, nameIdx, pattern.name);
-                                pattern.results.remove("name");
-                                if (match) {
-                                    String result = "";
-                                    for (String label : pattern.results.keySet()) {
-                                        result += label + ":" + splittedData[pattern.results.get(label)][2] + " ";
-                                    }
-
-                                    addResult(name, pattern.pattString, result, ann.getType());
-                                    allCategories.add(ann.getType());
-
-                                    if(sentenceWriter != null){
-                                        foundPatternForName = true;
-                                        sentenceWriter.write(name + "\t" + result + "\t" + pattern.pattString + "\t" + sent.toString() + "\n");
-                                    }
+                        for (MaltPattern pattern : patterns) {
+                            boolean match = pattern.check(splittedData, nameIdx, pattern.name);
+                            pattern.results.remove("name");
+                            if (match) {
+                                String result = "";
+                                for (String label : pattern.results.keySet()) {
+                                    result += label + ":" + splittedData[pattern.results.get(label)][2] + " ";
                                 }
-                                pattern.clear();
+
+                                addResult(name, pattern.pattString, result, ann.getType());
+                                allCategories.add(ann.getType());
+
+                                if(sentenceWriter != null){
+                                    foundPatternForName = true;
+                                    sentenceWriter.write(name + "\t" + result + "\t" + pattern.pattString + "\t" + sent.toString() + "\n");
+                                }
                             }
-                            if (sentenceWriter != null && !foundPatternForName) {
-                                sentenceWriter.write(name + "\tNOT FOUND\tNOT FOUND\t" + sent.toString() + "\n");
-                            }
+                            pattern.clear();
+                        }
+                        if (sentenceWriter != null && !foundPatternForName) {
+                            sentenceWriter.write(name + "\tNOT FOUND\tNOT FOUND\t" + sent.toString() + "\n");
                         }
                     }
                 }
