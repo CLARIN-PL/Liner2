@@ -46,6 +46,7 @@ public class AnnotationWrapConverter extends Converter {
         HashSet<Token> annotatedTokens = new HashSet<>();
         HashMap<Token, String> newAnns = new HashMap<>();
         ArrayList<Token> sentenceTokens = sentence.getTokens();
+        HashMap<String, LinkedHashMap<String, HashSet<String>>> bases = new HashMap<>();
         for(Annotation ann: sentence.getChunks()){
             if(ann.getBegin() != ann.getEnd()){
                 int substIdx = -1;
@@ -69,6 +70,16 @@ public class AnnotationWrapConverter extends Converter {
                 }
                 Token head = sentenceTokens.get(headIdx);
                 String oldText = ann.getText();
+
+                LinkedHashMap<String, HashSet<String>> annBases = new LinkedHashMap<>();
+                bases.put(oldText, annBases);
+                for(int i: ann.getTokens()){
+                    Token t = sentenceTokens.get(i);
+                    HashSet<String> tokenBases = new HashSet<>();
+                    t.getTags().forEach(tag -> tokenBases.add(tag.getCtag().equals("ign") ? "ign" : tag.getBase()));
+                    annBases.put(t.getOrth(), tokenBases);
+                }
+
                 setText(head, ann, sentenceTokens, headIdx);
                 head.setNoSpaceAfter(sentenceTokens.get(ann.getEnd()).getNoSpaceAfter());
                 textFormsMapping.put(head, oldText);
@@ -80,6 +91,7 @@ public class AnnotationWrapConverter extends Converter {
                 annotationHeads.add(sentenceTokens.get(ann.getBegin()));
                 newAnns.put(sentenceTokens.get(ann.getBegin()), ann.getType());
             }
+
             ann.getTokens().forEach((token) -> annotatedTokens.add(sentenceTokens.get(token)));
 
         }
@@ -93,7 +105,11 @@ public class AnnotationWrapConverter extends Converter {
                     Annotation wrapped = new Annotation(i, newAnns.get(sentenceTokens.get(i)), sentence);
                     sentence.addChunk(wrapped);
                     if(textFormsMapping.containsKey(sentenceTokens.get(i))){
-                        logger.write(current_doc + "\t" + sentence.getId() + "\t" + i + "\t" + textFormsMapping.get(sentenceTokens.get(i)) + "\n");
+                        logger.write("ANNOTATION:\t" + current_doc + "\t" + sentence.getId() + "\t" + i + "\t" + textFormsMapping.get(sentenceTokens.get(i)) + "\n");
+                        LinkedHashMap<String, HashSet<String>> annBases = bases.get(textFormsMapping.get(sentenceTokens.get(i)));
+                        for(String token: annBases.keySet()){
+                            logger.write(token + "\t" + String.join("\t", annBases.get(token)) + "\n");
+                        }
                     }
                 }
             }
