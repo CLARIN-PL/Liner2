@@ -12,8 +12,11 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.OptionBuilder;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.stream.Stream;
 import java.util.zip.DataFormatException;
 
 /**
@@ -28,6 +31,9 @@ public class ActionLemmatize extends Action {
     public static final String OPTION_DISTANCE_MEASURE = "m";
     public static final String OPTION_DISTANCE_MEASURE_LONG = "measure";
 
+    public static final String OPTION_SUFFIXES = "s";
+    public static final String OPTION_SUFFIXES_LONG = "suffixes";
+
     private String input_file = null;
     private String input_format = null;
     private String output_file = null;
@@ -38,7 +44,7 @@ public class ActionLemmatize extends Action {
     private String measure;
     private double distanceLimit = 0;
 
-    private static ArrayList<LinkedHashSet<String>> suffixes = loadSuffixes();
+    private static ArrayList<LinkedHashSet<String>> suffixes;
 
 
     public ActionLemmatize(){
@@ -61,6 +67,12 @@ public class ActionLemmatize extends Action {
         OptionBuilder.withLongOpt(OPTION_DISTANCE_MEASURE_LONG);
         this.options.addOption(OptionBuilder.create(OPTION_DISTANCE_MEASURE));
 
+        OptionBuilder.withArgName("suffixes");
+        OptionBuilder.hasArg();
+        OptionBuilder.withDescription("suffix pairs for names inflection");
+        OptionBuilder.withLongOpt(OPTION_SUFFIXES_LONG);
+        this.options.addOption(OptionBuilder.create(OPTION_SUFFIXES));
+
     }
     @Override
     public void parseOptions(String[] args) throws Exception {
@@ -79,7 +91,13 @@ public class ActionLemmatize extends Action {
         } else if(measure.equals("dist2")) {
             distanceLimit = 0.2;
         } else if(measure.equals("dist3")) {
-        distanceLimit = 0.1;
+            distanceLimit = 0.1;
+            if(line.hasOption(OPTION_SUFFIXES)){
+                loadSuffixes(line.getOptionValue(OPTION_SUFFIXES));
+            }
+            else{
+                throw new DataFormatException("Missing -suffixes (-s) argument for dist3 measure!");
+            }
         } else{
             throw new DataFormatException("Invalind measure name: " + measure);
         }
@@ -191,6 +209,9 @@ public class ActionLemmatize extends Action {
         for(String name: toRemove){
 
             annsCases.remove(name);
+        }
+        for(String c: annsCases.get("ankh-morpork").keySet()){
+            System.out.println(c + " " + annsCases.get("ankh-morpork").get(c));
         }
 
         return annsCases;
@@ -570,71 +591,22 @@ public class ActionLemmatize extends Action {
         reader.close();
     }
 
-    private static ArrayList<LinkedHashSet<String>> loadSuffixes(){
-        ArrayList<LinkedHashSet<String>> suffixes = new ArrayList<>();
-        suffixes.add(new LinkedHashSet<String>(){{add("-a"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("'a"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("'emu"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("'ego"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("'owi"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("’a"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("’emu"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("’ego"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("’owi"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("a"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ach"); add("e");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ami"); add("e");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ami"); add("y");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ca"); add("iec");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ce"); add("ka");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("cem"); add("iec");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("cie"); add("t");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("cią"); add("ć");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ć"); add("cie");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ecie"); add("at");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ele"); add("ół");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("em"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("em"); add("o");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("emu"); add("a");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("emu"); add("y");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ego"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ego"); add("y");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ego"); add("a");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ę"); add("a");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ędu"); add("ąd");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("go"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("i"); add("a");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ie"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ie"); add("o");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ie"); add("a");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("iej"); add("a");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("iem"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("im"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ka"); add("ek");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("kiem"); add("ek");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("kowi"); add("ek");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ksa"); add("x");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ła"); add("eł");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("m"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("mu"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("na"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("na"); add("en");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("nem"); add("na");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ów"); add("y");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("oła"); add("ół");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ołów"); add("ół");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("oły"); add("ół");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("owi"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("owi"); add("a");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("u"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("y"); add("a");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ze"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("ze"); add("a");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("zie"); add("");}});
-        suffixes.add(new LinkedHashSet<String>(){{add("zie"); add("a");}});
-
-
-        return suffixes;
+    private void loadSuffixes(String file) throws IOException, DataFormatException {
+        suffixes = new ArrayList<>();
+        BufferedReader reader = Files.newBufferedReader(Paths.get(file));
+        String line = reader.readLine();
+        while(line != null){
+            LinkedHashSet<String> pair = new LinkedHashSet<String>();
+            for(String suffix: line.split("\\s+")){
+                pair.add(!suffix.equals("-") ? suffix : "");
+            }
+            if(pair.size() != 2){
+                throw new DataFormatException("Error parsing suffixes. Invalid pair: " + line);
+            }
+            suffixes.add(pair);
+            line = reader.readLine();
+        }
+        reader.close();
     }
 
 }
