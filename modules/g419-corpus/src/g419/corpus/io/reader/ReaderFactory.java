@@ -35,7 +35,7 @@ public class ReaderFactory {
         }
         else if (inputFormat.startsWith("batch:")){
             String format = inputFormat.substring(6);
-            return new BatchReader(getInputStream(inputFile), (new File(inputFile)).getParent(), format);
+            return new BatchReader(getInputStream(inputFile), (new File(inputFile)).getAbsoluteFile().getParent(), format);
         }
         else{
 		    return getStreamReader(

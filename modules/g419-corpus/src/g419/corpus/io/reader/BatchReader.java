@@ -73,13 +73,23 @@ public class BatchReader extends AbstractDocumentReader {
     public Document nextDocument() throws Exception {
     	if ( this.fileIndex < this.files.size() ){
         	String name = this.files.get(this.fileIndex++);
-            String path = new File(this.root, name).getAbsolutePath();
+            String root = this.root.getAbsolutePath();
+            String path;
+            if(name.startsWith("/")) {
+                path = name;
+                File tmp = new File(path);
+                root = tmp.getParent();
+                name = tmp.getName();
+            }
+            else {
+                path = new File(this.root, name).getAbsolutePath();
+            }
             AbstractDocumentReader reader;
             if(this.format.equals("tei")){
                 reader = ReaderFactory.get().getTEIStreamReader(path, name);
             }
             else{
-                reader = ReaderFactory.get().getStreamReader(name, new FileInputStream(path), this.root.getAbsolutePath(), this.format);
+                reader = ReaderFactory.get().getStreamReader(name, new FileInputStream(path), root, this.format);
             }
     		Document document = reader.nextDocument();
             reader.close();
