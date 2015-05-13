@@ -18,7 +18,7 @@ public class TestFeature extends TokenInSentenceFeature {
         this.value = value;
 
     }
-    public String generate(Token token, TokenAttributeIndex index) {
+    public String generate(Token token) {
         String featureVal = token.getAttributeValue(sourceFeature);
         if(operator.equals("equal")){
             return featureVal == null || !featureVal.equals(value) ? "0" : "1";
@@ -30,7 +30,7 @@ public class TestFeature extends TokenInSentenceFeature {
     @Override
     public void generate(Sentence sentence) {
         for(Token t: sentence.getTokens()){
-            t.setAttributeValue(name, generate(t, sentence.getAttributeIndex()));
+            t.setAttributeValue(name, generate(t));
         }
 
     }
