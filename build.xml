@@ -45,6 +45,11 @@
 		<copy file="modules/g419-crete-cli/g419-crete-cli.jar" todir="./lib"></copy>
 	</target>
 
+	<target name="jar-toolbox">
+		<exec dir="modules/g419-toolbox" executable="ant"><arg line="jar"/></exec>
+		<copy file="modules/g419-toolbox/g419-toolbox.jar" todir="./lib"></copy>
+	</target>
+
 	<target name="jar-liner2-api-all" depends="jar-corpus,jar-liner2-api"></target>
 	
 	<target name="jar-liner2-cli-all" depends="jar-corpus,jar-lib-cli,jar-liner2-api,jar-liner2-cli"></target>
@@ -53,7 +58,7 @@
 
 	<target name="jar-crete-cli-all" depends="jar-corpus,jar-lib-cli,jar-crete-api,jar-crete-cli"></target>
 	
-	<target name="jar" depends="jar-corpus,jar-liner2-api,jar-lib-cli,jar-liner2-cli,jar-liner2-daemon,jar-crete-api,jar-crete-cli"></target>
+	<target name="jar" depends="jar-corpus,jar-liner2-api,jar-lib-cli,jar-liner2-cli,jar-liner2-daemon,jar-crete-api,jar-crete-cli,jar-tools,jar-toolbox"></target>
 	
 	<target name="deploy" depends="jar">
 		<delete dir="${version_path}"/>
@@ -83,6 +88,7 @@
 		
 		<copy todir="${version_path}">
 			<fileset dir="./resources">
+				<include name="Merge.kif"/>
 				<include name="README"/>
 				<include name="INSTALL"/>
 				<include name="LICENSE"/>
