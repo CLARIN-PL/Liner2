@@ -88,7 +88,6 @@
 		
 		<copy todir="${version_path}">
 			<fileset dir="./resources">
-				<include name="Merge.kif"/>
 				<include name="README"/>
 				<include name="INSTALL"/>
 				<include name="LICENSE"/>
