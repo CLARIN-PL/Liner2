@@ -13,6 +13,7 @@
         <pathelement location="../../lib/commons-lang3-3.3.2.jar"/>
 		<pathelement location="../../lib/commons-cli-1.2.jar"/>
 		<pathelement location="../../lib/commons-io-2.4.jar"/>
+		<pathelement location="../../lib/princetonAdapter.jar"/>
 		<pathelement location="../g419-corpus/g419-corpus.jar"/>
 	</path>
 	
@@ -51,14 +52,7 @@
 		<manifest file="MANIFEST.MF">
     		<attribute name="Built-By" value="${user.name}"/>
 			<attribute name="Main-Class" value="g419.toolbox.Main"/>
-			<attribute name="Class-Path" value="
-				./commons-cli-1.2.jar
-				./commons-lang3-3.3.2.jar
-				./nlog4j-1.2.25.jar
-				./liblinear-1.92.jar
-				./commons-io-2.4.jar
-				./ini4j-0.5.0.jar
-				./g419-corpus.jar"/>
+			<attribute name="Class-Path" value=""/>
    		</manifest>
 
 		<jar destfile="g419-toolbox.jar" manifest="MANIFEST.MF">

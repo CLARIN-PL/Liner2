@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,10 +21,39 @@ public class WordnetToSumo {
     private HashMap<String, HashSet<String>> wordMapping;
     private HashMap<String, HashSet<String>> wordSenseMapping;
 
+    /**
+     * Tworzy obiekt na podstawie pliku z mapowaniem Serdela.
+     * @param serdelMapping
+     * @throws IOException
+     * @throws DataFormatException
+     */
     public WordnetToSumo(String serdelMapping) throws IOException, DataFormatException {
         wordMapping = new HashMap<String, HashSet<String>>();
         wordSenseMapping = new HashMap<String, HashSet<String>>();
-        parseMapping(serdelMapping);
+        File mapping = new File(serdelMapping);
+        if(mapping.exists()){
+        	Reader serdelReader = null;
+        	serdelReader = new FileReader(mapping);
+            parseMapping(serdelReader);
+            if ( serdelReader != null ){
+            	serdelReader.close();
+            }
+        }
+        else{
+            throw new DataFormatException("Serdel mapping file does not exist: " + serdelMapping);
+        }        
+    }
+
+    /**
+     * Tworzy obiekt na podstawie strumienia z mapowaniem Serdela.
+     * @param serdelReader
+     * @throws IOException
+     * @throws DataFormatException
+     */
+    public WordnetToSumo(Reader serdelReader) throws IOException, DataFormatException {
+        wordMapping = new HashMap<String, HashSet<String>>();
+        wordSenseMapping = new HashMap<String, HashSet<String>>();
+        parseMapping(serdelReader);
     }
 
     public Set<String> getConcept(String word){
@@ -35,30 +64,24 @@ public class WordnetToSumo {
         return wordSenseMapping.get(word+"-"+sense);
     }
 
-    private void parseMapping(String mappingPath) throws IOException, DataFormatException {
-        File mapping = new File(mappingPath);
-        if(mapping.exists()){
-            BufferedReader reader = new BufferedReader(new FileReader(mapping));
-            String line = reader.readLine();
-            while(line != null){
-                String[] attrs = line.split(";");
-                if(!attrs[attrs.length - 1].equals("R")){
-                    String sumoClass = attrs[attrs.length - 2];
-                    String synset = attrs[2];
-                    HashMap<String, String> synsetUnits = parseSynset(synset);
-                    for(String wordAndSense: synsetUnits.keySet()){
-                        if(wordAndSense.equals("a-1")){
-                            System.out.println(synset);
-                        }
-                        addMapping(wordAndSense, sumoClass, wordSenseMapping);
-                        addMapping(synsetUnits.get(wordAndSense), sumoClass, wordMapping);
+    private void parseMapping(Reader mappingReader) throws IOException, DataFormatException {
+        BufferedReader reader = new BufferedReader(mappingReader);
+        String line = reader.readLine();
+        while(line != null){
+            String[] attrs = line.split(";");
+            if(!attrs[attrs.length - 1].equals("R")){
+                String sumoClass = attrs[attrs.length - 2];
+                String synset = attrs[2];
+                HashMap<String, String> synsetUnits = parseSynset(synset);
+                for(String wordAndSense: synsetUnits.keySet()){
+                    if(wordAndSense.equals("a-1")){
+                        System.out.println(synset);
                     }
+                    addMapping(wordAndSense, sumoClass, wordSenseMapping);
+                    addMapping(synsetUnits.get(wordAndSense), sumoClass, wordMapping);
                 }
-                line = reader.readLine();
             }
-        }
-        else{
-            throw new DataFormatException("Serdel mapping file does not exist: " + mappingPath);
+            line = reader.readLine();
         }
     }
 
