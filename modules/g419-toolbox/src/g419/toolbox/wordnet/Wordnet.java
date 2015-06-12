@@ -1,4 +1,4 @@
-package g419.toolbox.sumo.wordnet;
+package g419.toolbox.wordnet;
 
 import java.io.BufferedReader;
 import java.io.File;
