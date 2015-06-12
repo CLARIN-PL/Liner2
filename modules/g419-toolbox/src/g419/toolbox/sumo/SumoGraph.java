@@ -15,12 +15,12 @@ public class SumoGraph {
         nodes = new HashMap<String, Node>();
     }
 
-    public Node getNode(String label) throws Exception {
+    public Node getNode(String label){
         if(containsClass(label)){
             return nodes.get(label);
         }
         else{
-            throw new Exception("SumoGraph not contain class: " + label);
+            return null;
         }
     }
 
@@ -29,6 +29,9 @@ public class SumoGraph {
     }
 
     public boolean isSubclassOf(Node subNode, Node upperNode){
+        if(subNode == null || upperNode == null){
+            return false;
+        }
         if(upperNode.isUpperClass(subNode)){
             return true;
         }
@@ -67,7 +70,7 @@ public class SumoGraph {
 
         public Node (String label){
             this.label = label;
-            subClasses = new HashSet<>();
+            subClasses = new HashSet<Node>();
         }
 
         public void addSubClass(Node subClass){

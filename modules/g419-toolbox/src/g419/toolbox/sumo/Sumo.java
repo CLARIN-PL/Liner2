@@ -48,16 +48,36 @@ public class Sumo {
         }
     }
 
-    public boolean isSubclassOf(String subClass, String upperClass) throws Exception {
+    public boolean isSubclassOf(String subClass, String upperClass){
         return graph.isSubclassOf(graph.getNode(subClass), graph.getNode(upperClass));
     }
 
-    public boolean isSubclassOf(Set<String> subclasses, String upperClass) throws Exception {
+    public boolean isSubclassOf(Set<String> subclasses, String upperClass){
         for(String subClass: subclasses){
             if(graph.isSubclassOf(graph.getNode(subClass), graph.getNode(upperClass))){
                 return true;
             }
         }
         return false;
+    }
+
+    public boolean isClassOrSubclassOf(String subClass, String upperClass){
+        if(subClass.equals(upperClass)){
+            return true;
+        }
+        else{
+            return isSubclassOf(subClass, upperClass);
+        }
+
+    }
+
+    public boolean isClassOrSubclassOf(Set<String> subclasses, String upperClass){
+        if(subclasses.contains(upperClass)){
+            return true;
+        }
+        else{
+            return isSubclassOf(subclasses, upperClass);
+        }
+
     }
 }
