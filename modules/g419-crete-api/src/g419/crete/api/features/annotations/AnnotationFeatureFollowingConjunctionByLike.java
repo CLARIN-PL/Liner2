@@ -13,8 +13,11 @@ import java.util.Set;
 public class AnnotationFeatureFollowingConjunctionByLike extends AbstractFeature<Annotation, Boolean>{
 
 	public static final Set<String> byLikeConjunctions = new HashSet<String>(Arrays.asList("by", "aby", "ażeby", "żeby", "coby"));
-	private final int lookupDistance = 2;
+	private final int lookupDistance;
 	
+	public AnnotationFeatureFollowingConjunctionByLike(int lookup) {
+		this.lookupDistance = lookup;
+	}
 	
 	@Override
 	public void generateFeature(Annotation input) {

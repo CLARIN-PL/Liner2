@@ -1,6 +1,6 @@
 package g419.crete.api.classifier;
 
-import g419.crete.api.classifier.model.Model;
+import g419.crete.api.classifier.serialization.Serializer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +17,11 @@ public abstract class AbstractCreteClassifier<M, I, L> {
 		this.trainingInstanceLabels = new ArrayList<L>();
 	}
 	
-	protected Model<M> model;
-	public void setModel(Model<M> model){
+	protected Serializer<M> model;
+	public void setModel(Serializer<M> model){
 		this.model = model;
 	}
-	public Model<M> getModel(){
+	public Serializer<M> getModel(){
 		return this.model;
 	}
 	

@@ -16,21 +16,22 @@ public class ClusterRankingTrainingInstanceGenerator extends AbstractCreteInstan
 	
 
 	@Override
-	public List<ClusterRankingTrainingDiffInstance> generateInstances(Document document, AbstractAnnotationSelector selector) {
+	public List<ClusterRankingTrainingDiffInstance> generateInstances(Document document, AbstractAnnotationSelector selector, AbstractAnnotationSelector singletonSelector) {
 		ArrayList<ClusterRankingTrainingDiffInstance> trainingInstances = new ArrayList<ClusterRankingTrainingDiffInstance>();
 		List<Annotation> mentions = selector.selectAnnotations(document);
+		List<Annotation> singletons = singletonSelector.selectAnnotations(document);
 		for(Annotation mention : mentions)
-			trainingInstances.addAll(generateInstancesForMention(document, mention, mentions));
+			trainingInstances.addAll(generateInstancesForMention(document, mention, mentions, singletons));
 		
 		return trainingInstances;
 	}
 
 	@Override
-	public List<ClusterRankingTrainingDiffInstance> generateInstancesForMention(Document document, Annotation mention, List<Annotation> mentions){
+	public List<ClusterRankingTrainingDiffInstance> generateInstancesForMention(Document document, Annotation mention, List<Annotation> mentions, List<Annotation> singletons){
 		ArrayList<ClusterRankingTrainingDiffInstance> mentionInstances = new ArrayList<ClusterRankingTrainingDiffInstance>();
 		ArrayList<ClusterRankingInstance> intermediateInstances = new ArrayList<ClusterRankingInstance>();
 
-		for(AnnotationCluster cluster : AnnotationClusterSet.fromRelationSet(document.getRelations(Relation.COREFERENCE)).getClusters()){
+		for(AnnotationCluster cluster : AnnotationClusterSet.fromRelationSetWithSingletons(document, Relation.COREFERENCE, Relation.COREFERENCE, document.getRelations(Relation.COREFERENCE), singletons).getClusters()){
 			AnnotationCluster preceedingCluster = cluster.getPreceedingCluster(mention, mentions);
 			if(preceedingCluster.getAnnotations().size() > 0){
 				Integer label = cluster.getAnnotations().contains(mention) ? 2 : 1;

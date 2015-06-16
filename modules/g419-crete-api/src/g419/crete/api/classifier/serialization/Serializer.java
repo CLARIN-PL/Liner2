@@ -1,10 +1,10 @@
-package g419.crete.api.classifier.model;
+package g419.crete.api.classifier.serialization;
 
-public abstract class Model<T> {
+public abstract class Serializer<T> {
 	
 	protected T model;
 	
-	public Model(T model){
+	public Serializer(T model){
 		this.model = model;
 	}
 	

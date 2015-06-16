@@ -9,9 +9,15 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class ClusterMentionClosestFollowingPreceededBySubordConjItem implements IFeatureFactoryItem<Pair<Annotation, AnnotationCluster>, Boolean> {
 
+	private final int lookup;
+	
+	public ClusterMentionClosestFollowingPreceededBySubordConjItem(int lookup) {
+		this.lookup = lookup;
+	}
+	
 	@Override
 	public AbstractFeature<Pair<Annotation, AnnotationCluster>, Boolean> createFeature() {
-		return new ClusterMentionClosestFollowingPreceededBySubordConj();
+		return new ClusterMentionClosestFollowingPreceededBySubordConj(lookup);
 	}
 
 }

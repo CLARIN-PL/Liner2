@@ -18,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -76,7 +77,9 @@ public class ActionEvalParent extends Action {
 		
 		boolean sysTEI = sysInputFormat.contains("tei");
 		RelationUnitCriterion identifyingUnitsCriterion = new NamedEntityCriterion();
-		RelationUnitCriterion referencingUnitsCriterion =  new ZeroCriterion();
+		RelationUnitCriterion referencingUnitsCriterion = new AgpPronounAndZeroCriterion(); 
+//		new NonZeroCriterion();
+//				new ZeroCriterion();
 		//!sysTEI
 		Comparator<Annotation> matcher = new AnnotationTokenListComparator(!sysTEI); // for ccl -> true, for tei -> false
 		ParentEvaluator evaluator = new ParentEvaluator(identifyingUnitsCriterion, referencingUnitsCriterion, matcher);
@@ -105,11 +108,15 @@ public class ActionEvalParent extends Action {
 //				System.out.println(referenceDocument.getName() + " vs. " + systemResponseDocument.getName());
 //				return;
 //			}
-			
+			System.out.println(referenceDocument.getName());
+//			if(!referenceDocument.getName().equals(systemResponseDocument.getName())){throw new NullPointerException();} 
 			gen.generateFeatures(referenceDocument);
 			gen.generateFeatures(systemResponseDocument);
 			
+			referenceDocument.refinePersonNamRelations(true);
 			referenceDocument = rewireRelations(referenceDocument, selector, overrideSelector);
+			systemResponseDocument.refinePersonNamRelations(true);
+			if(!sysTEI) systemResponseDocument = rewireRelations(systemResponseDocument, selector, overrideSelector);
 			
 			evaluator.evaluate(systemResponseDocument, referenceDocument);
 			referenceDocument = goldReader.nextDocument();
@@ -124,15 +131,38 @@ public class ActionEvalParent extends Action {
 		List<Annotation> relAnnotations = relationalAnnotations.selectAnnotations(document);
 		List<Annotation> targetAnnotations = nonrelationalAnnotations.selectAnnotations(document);
 		
+		List<Annotation> toRemove = new ArrayList<Annotation>();
+		
 		for(Annotation rAnn : relAnnotations){
+			boolean found = false;
 			for(Annotation potentialTarget : rAnn.getSentence().getChunks()){
 				if(potentialTarget.getTokens().equals(rAnn.getTokens()) && targetAnnotations.contains(potentialTarget)){
 					document.rewireSingleRelations(rAnn, potentialTarget);
+					found = true;
 				}
 			}
+			if(!found) {
+				rAnn.setType("anafora_verb_null");
+			}
+			// TODO: FIXME: nie usuwaj anotacji, które nie mają odpowiednika, który je pokrywa !!!
+//			if(found && removeNonRelational) toRemove.add(rAnn);
 		}
 		
+//		if(removeNonRelational) document.removeAnnotations(toRemove);
+		
 		return document;
+//		List<Annotation> relAnnotations = relationalAnnotations.selectAnnotations(document);
+//		List<Annotation> targetAnnotations = nonrelationalAnnotations.selectAnnotations(document);
+//		
+//		for(Annotation rAnn : relAnnotations){
+//			for(Annotation potentialTarget : rAnn.getSentence().getChunks()){
+//				if(potentialTarget.getTokens().equals(rAnn.getTokens()) && targetAnnotations.contains(potentialTarget)){
+//					document.rewireSingleRelations(rAnn, potentialTarget);
+//				}
+//			}
+//		}
+//		
+//		return document;
 	}
 }
 

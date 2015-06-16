@@ -1,4 +1,4 @@
-package g419.crete.api.classifier.model;
+package g419.crete.api.classifier.serialization;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,9 +9,9 @@ import java.io.ObjectOutputStream;
 
 import weka.classifiers.Classifier;
 
-public class WekaModel extends Model<Classifier>{
+public class WekaModelSerializer extends Serializer<Classifier>{
 
-	public WekaModel(Classifier model) {
+	public WekaModelSerializer(Classifier model) {
 		super(model);
 	}
 

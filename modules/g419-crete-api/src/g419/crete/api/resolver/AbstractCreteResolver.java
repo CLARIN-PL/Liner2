@@ -6,7 +6,7 @@ import g419.corpus.structure.AnnotationPositionComparator;
 import g419.corpus.structure.Document;
 import g419.crete.api.annotation.AbstractAnnotationSelector;
 import g419.crete.api.classifier.AbstractCreteClassifier;
-import g419.crete.api.classifier.model.Model;
+import g419.crete.api.classifier.serialization.Serializer;
 import g419.crete.api.instance.AbstractCreteInstance;
 import g419.crete.api.instance.converter.AbstractCreteInstanceConverter;
 import g419.crete.api.instance.generator.AbstractCreteInstanceGenerator;
@@ -28,20 +28,22 @@ public abstract class AbstractCreteResolver<M, T extends AbstractCreteInstance<L
 		this.converter = conv;
 	}
 	
-	public AnnotationClusterSet resolveDocument(Document document, AbstractAnnotationSelector selector){
+	public Document resolveDocument(Document document, AbstractAnnotationSelector selector, AbstractAnnotationSelector singletonSelector){
 		List<Annotation> mentions = selector.selectAnnotations(document);
+		List<Annotation> singletons = singletonSelector.selectAnnotations(document);
 	   Collections.sort(mentions, new AnnotationPositionComparator());
 		
 		for(Annotation mention : mentions){
-			List<T> instancesForMention = this.generator.generateInstancesForMention(document, mention, mentions);
+			List<T> instancesForMention = this.generator.generateInstancesForMention(document, mention, mentions, singletons);
 			document = resolveMention(document, mention, instancesForMention);
 		}
 		
-		return AnnotationClusterSet.fromRelationSet(document.getRelations());
+//		return AnnotationClusterSet.fromRelationSet(document.getRelations());
+		return document;
 	}
 	
 	
-	public void loadModel(Model<M> model){
+	public void loadModel(Serializer<M> model){
 		this.classifier.setModel(model);
 	}
 	

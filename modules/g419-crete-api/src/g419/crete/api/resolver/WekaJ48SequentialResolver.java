@@ -2,8 +2,10 @@ package g419.crete.api.resolver;
 
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationCluster;
+import g419.corpus.structure.AnnotationPositionComparator;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Relation;
+import g419.crete.api.annotation.AbstractAnnotationSelector;
 import g419.crete.api.instance.ClusterClassificationInstance;
 import g419.crete.api.structure.AnnotationUtil;
 
@@ -17,6 +19,9 @@ import weka.core.Instance;
 
 public class WekaJ48SequentialResolver extends AbstractCreteResolver<Classifier, ClusterClassificationInstance, Instance, Integer>{
 
+	private int totalPositive;
+	private int totalAccepted;
+	
 	static class BestClosestClusterMentionComparator implements Comparator<ClusterClassificationInstance>{
 
 		Document document;
@@ -45,10 +50,70 @@ public class WekaJ48SequentialResolver extends AbstractCreteResolver<Classifier,
 		
 	}
 	
+	static class BestLargestClosestClusterMentionComparator implements Comparator<ClusterClassificationInstance>{
+		
+		Document document;
+		BestClosestClusterMentionComparator closestComparator;
+		
+		public BestLargestClosestClusterMentionComparator(Document document) {
+			this.document = document;
+			this.closestComparator = new BestClosestClusterMentionComparator(this.document);
+		}
+		
+		@Override
+		public int compare(ClusterClassificationInstance clusterFirst, ClusterClassificationInstance clusterSecond) {
+			int sizeDifference = clusterSecond.getCluster().getHolder().getAnnotations().size() - clusterFirst.getCluster().getHolder().getAnnotations().size();
+			if(sizeDifference == 0)
+				return this.closestComparator.compare(clusterFirst, clusterSecond);
+			else
+				return sizeDifference;
+		}
+	}
+	
+	static class BestEarliestClusterMentionComparator  implements Comparator<ClusterClassificationInstance> {
+
+		private AnnotationPositionComparator annComp;
+		
+		public BestEarliestClusterMentionComparator() {
+			this.annComp = new AnnotationPositionComparator();
+		}
+		
+		//FIXME: skutki uboczne wywołania cluster.rehead() !
+		@Override
+		public int compare(ClusterClassificationInstance o1, ClusterClassificationInstance o2) {
+			AnnotationCluster ac1 = o1.getCluster().getHolder();
+			ac1.rehead(new AnnotationCluster.ReheadToFirst());
+			Annotation ann1 = ac1.getHead();
+					
+			AnnotationCluster ac2 = o1.getCluster().getHolder();
+			ac2.rehead(new AnnotationCluster.ReheadToFirst());
+			Annotation ann2 = ac2.getHead();
+			
+			return annComp.compare(ann1, ann2);
+		}
+		
+	}
+	
+//	boolean firstMention = true;
+	
+	@Override
+	public Document resolveDocument(Document document, AbstractAnnotationSelector selector, AbstractAnnotationSelector singletonSelector) {
+		Document d = super.resolveDocument(document, selector, singletonSelector);
+		System.out.println(totalPositive);
+		System.out.println(totalAccepted);
+		return d;
+	};
+	
+	
 	@Override
 	protected Document resolveMention(Document document, Annotation mention, List<ClusterClassificationInstance> instancesForMention) {
-		List<Integer> labels = this.classifier.classify(this.converter.convertInstances(instancesForMention));
+ 		List<Integer> labels = this.classifier.classify(this.converter.convertInstances(instancesForMention));
 		ArrayList<ClusterClassificationInstance> correctPairs = new ArrayList<ClusterClassificationInstance>();
+		
+//		if(firstMention){
+//			firstMention = false;
+//			correctPairs.add(instancesForMention.get(2));
+//		}
 		
 		for(int i = 0; i < instancesForMention.size(); i++)
 			// TODO: fixme
@@ -58,8 +123,12 @@ public class WekaJ48SequentialResolver extends AbstractCreteResolver<Classifier,
 		if(instancesForMention.size() > 0) System.out.println(instancesForMention.get(0).getMention().getHolder());
 		if(correctPairs.size() <= 0) return document; // Return unchanged document (mention does not have coreferential cluster)
 		
+		totalPositive +=correctPairs.size();
+		totalAccepted++;
+		
 		Collections.sort(correctPairs, new BestClosestClusterMentionComparator(document));
 		AnnotationCluster bestCluster = correctPairs.get(0).getCluster().getHolder();
+		System.out.println(bestCluster);
 		 
 		Relation mentionRelation = new Relation(mention, bestCluster.getHead(), Relation.COREFERENCE, Relation.COREFERENCE, document);
 		document.addRelation(mentionRelation);

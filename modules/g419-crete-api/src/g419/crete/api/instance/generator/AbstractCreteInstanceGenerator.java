@@ -9,10 +9,10 @@ import java.util.List;
 
 public abstract class AbstractCreteInstanceGenerator<T extends AbstractCreteInstance<LabelType>, LabelType> {
 	protected List<String> featureNames;
-	public abstract List<T> generateInstances(Document document, AbstractAnnotationSelector selector);
+	public abstract List<T> generateInstances(Document document, AbstractAnnotationSelector mentionSelector, AbstractAnnotationSelector singletonSelector);
 	// TODO: extract to separate class like eg: AbstractMentionFocusedInstanceGenerator + implement generate instances using 
 	// mention generation for each selected mention
-	public abstract List<T> generateInstancesForMention(Document document, Annotation mention, List<Annotation> allMentionsClassified);
+	public abstract List<T> generateInstancesForMention(Document document, Annotation mention, List<Annotation> allMentionsClassified, List<Annotation> singletons);
 	
 	public void setFeatures(List<String> features){
 		this.featureNames = features;

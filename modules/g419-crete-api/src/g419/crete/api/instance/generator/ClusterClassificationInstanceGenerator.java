@@ -20,21 +20,22 @@ public class ClusterClassificationInstanceGenerator extends AbstractCreteInstanc
 	public static final Integer NEGATIVE_LABEL = -1;
 	
 	@Override
-	public List<ClusterClassificationInstance> generateInstances(Document document, AbstractAnnotationSelector selector) {
+	public List<ClusterClassificationInstance> generateInstances(Document document, AbstractAnnotationSelector mentionSelector, AbstractAnnotationSelector singletonSelector) {
 		ArrayList<ClusterClassificationInstance> instances = new ArrayList<ClusterClassificationInstance>();
-		List<Annotation> mentions = selector.selectAnnotations(document);
+		List<Annotation> mentions = mentionSelector.selectAnnotations(document);
+		List<Annotation> singletons = singletonSelector.selectAnnotations(document);
 		Collections.sort(mentions, new AnnotationPositionComparator());
 		
 		for(Annotation mention : mentions)
-			instances.addAll(generateInstancesForMention(document, mention, mentions));
+			instances.addAll(generateInstancesForMention(document, mention, mentions, singletons));
 		
 		return instances;
 	}
 	
 	
 	@Override
-	public List<ClusterClassificationInstance> generateInstancesForMention(Document document, Annotation mention, List<Annotation> mentions) {
-		Set<AnnotationCluster> clusters = AnnotationClusterSet.fromRelationSet(document.getRelations(Relation.COREFERENCE)).getClusters();
+	public List<ClusterClassificationInstance> generateInstancesForMention(Document document, Annotation mention, List<Annotation> mentions, List<Annotation> singletons) {
+		Set<AnnotationCluster> clusters = AnnotationClusterSet.fromRelationSetWithSingletons(document, Relation.COREFERENCE, Relation.COREFERENCE, document.getRelations(Relation.COREFERENCE), singletons).getClusters();
 		ArrayList<ClusterClassificationInstance> mentionInstances = new ArrayList<ClusterClassificationInstance>();
 		for(AnnotationCluster cluster : clusters){
 			AnnotationCluster preceedingCluster = cluster.getPreceedingCluster(mention, mentions); 
