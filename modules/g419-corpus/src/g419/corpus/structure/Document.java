@@ -1,9 +1,11 @@
 package g419.corpus.structure;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -201,28 +203,102 @@ public class Document{
     	this.relations = clusterSet.getRelationSet(new AnnotationCluster.ReturnRelationsToHead());
     }
 
+    /**
+     * Przepięcie relacji z anotacji źródłowej do anotacji docelowej
+     * @param source
+     * @param dest
+     */
 	public void rewireSingleRelations(Annotation source, Annotation dest) {
 			List<Relation> rewired = new ArrayList<Relation>();
 		
 			if(this.relations.incomingRelations.containsKey(source)){
 				for(Relation incoming : this.relations.incomingRelations.get(source)){
+					if(incoming.getAnnotationTo().equals(dest)) continue;
 					Relation rwRel = new Relation(incoming.getAnnotationFrom(), dest, incoming.getType(), incoming.getSet(), this);
-					rewired.add(rwRel);
+ 					rewired.add(rwRel);
 					this.relations.relations.remove(incoming);
 				}
-				this.relations.incomingRelations.remove(source);
+				this.relations.refresh();
+//				this.relations.incomingRelations.remove(source);
 			}
 				
 			if(this.relations.outgoingRelations.containsKey(source)){
 				for(Relation outgoing : this.relations.outgoingRelations.get(source)){
+					if(outgoing.getAnnotationFrom().equals(dest)) continue;
 					Relation rwRel = new Relation(dest, outgoing.getAnnotationTo(), outgoing.getType(), outgoing.getSet(), this);
 					rewired.add(rwRel);
 					this.relations.relations.remove(outgoing);
 				}
-				this.relations.outgoingRelations.remove(source);
+//				this.relations.outgoingRelations.remove(source);
 			}
 			
 			for(Relation relation : rewired) this.relations.addRelation(relation);
+			this.relations.refresh();
+	}
+	
+	public void rewireRelations(List<Annotation> relAnnotations, List<Annotation> targetAnnotations, boolean removeNonRelational){
+ 		
+		
+		List<Annotation> toRemove = new ArrayList<Annotation>();
+ 		
+ 		for(Annotation rAnn : relAnnotations){
+ 			boolean found = false;
+ 			for(Annotation potentialTarget : rAnn.getSentence().getChunks()){
+ 				if(potentialTarget.getTokens().equals(rAnn.getTokens()) && targetAnnotations.contains(potentialTarget)){
+ 					found  = true;
+ 					rewireSingleRelations(rAnn, potentialTarget);
+ 					if(removeNonRelational) toRemove.add(rAnn);
+ 				}
+ 			}
+// 			if(!found) {
+//				rAnn.setType("anafora_verb_null");
+//			}
+ 		}
+ 		
+ 		if(removeNonRelational) removeAnnotations(toRemove);
+ 	}
+	
+	
+	/**
+	 * Scalanie relacji dla anotacji typu *person_nam* z wewnętrznymi anotacjami 
+	 * typu *person_nam_first*, *person_nam_last* etc. Dodatkowo opcja umożliwiająca
+	 * usunięcie wewnętrznych anotacji.
+	 * @param removeInnerAnnotations opcja usuwania wewnętrznych anotacji
+	 */
+	public void refinePersonNamRelations(boolean removeInnerAnnotations){
+		List<Pattern> personNam = Arrays.asList(new Pattern[]{Pattern.compile("nam_liv_person$"), Pattern.compile("person_nam")});
+		List<Pattern> personLastFirstNam = Arrays.asList(new Pattern[]{
+				Pattern.compile("nam_liv_person_add"), Pattern.compile("nam_liv_person_first"), Pattern.compile("nam_liv_person_last"),
+				Pattern.compile("person_add_nam"), Pattern.compile("person_first_nam"), Pattern.compile("person_last_nam")
+		});
+		
+		for(Sentence sentence : getSentences()){
+			Set<Annotation> lastFirstNam = sentence.getAnnotations(personLastFirstNam); 
+			Set<Annotation> persNam = sentence.getAnnotations(personNam);
+			
+			List<Annotation> toRemove = new ArrayList<>();
+			
+			// Dla każdej anotacji bardziej granularnej od nam_liv_person (imię, nazwisko etc.)
+			for(Annotation lfAnn : lastFirstNam){
+				// Dla każdej anotacji nam_liv_person - nazwa całej osoby / cała nazwa osoby
+				for(Annotation pAnn : persNam){
+//					if(pAnn.getType().equalsIgnoreCase(lfAnn.getText()))
+						
+					// Dla każdego tokenu w "mniejszej" anotacji
+					for(Integer tokenId : lfAnn.getTokens()){
+						// Sprawdź czy zawiera się w "większej"
+						if(pAnn.getTokens().contains(tokenId)){
+							// Przepnij relacje z mniejszej do większej
+							rewireSingleRelations(lfAnn, pAnn);
+							toRemove.add(lfAnn);
+							// Przestań sprawdzać kolejne tokeny - anotacje się krzyżują
+							break;
+						}
+					}
+				}
+			}
+			removeAnnotations(toRemove);
+		}
 	}
     
 }

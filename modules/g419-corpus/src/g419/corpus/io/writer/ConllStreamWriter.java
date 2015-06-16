@@ -15,6 +15,10 @@ public class ConllStreamWriter extends AbstractDocumentWriter{
 
 	private OutputStream os;
 	
+	public ConllStreamWriter(OutputStream os){
+		this.os = os;
+	}
+	
 	public ConllStreamWriter(){
 		this.os = new ByteArrayOutputStream();
 	}
@@ -46,8 +50,15 @@ public class ConllStreamWriter extends AbstractDocumentWriter{
 		String ctag = "";
 		String cpos = null;
 		
-		for(Tag tag : t.getTags()){
-			if(tag.getDisamb() || t.getTags().size() == 1){
+		Tag disambTag = t.getTags().get(0);
+		for(Tag iterTag : t.getTags())
+			if(iterTag.getDisamb()) 
+				disambTag = iterTag;
+		
+				
+//		for(Tag tag : t.getTags()){
+//			if(tag.getDisamb() || t.getTags().size() == 1){
+				Tag tag = disambTag;
 				int firstSep = Math.max(0, tag.getCtag().indexOf(":"));
 				if(firstSep > 0) cpos = tag.getCtag().substring(0, firstSep);
 				ctag = tag.getCtag().substring(tag.getCtag().indexOf(":") + 1).replace(":", "|");
@@ -63,8 +74,8 @@ public class ConllStreamWriter extends AbstractDocumentWriter{
 						ctag = "_";
 					}
 				}
-			}
-		}
+//			}
+//		}
 		//TODO: ctag dla interp conj, etc.
 		//TODO: iż -> dlaczego nie ma pos?
 		return String.format("%d\t%s\t%s\t%s\t%s\t%s\t_\t_\t_\t_\n", tokenIndex, orth, base, pos, posext, ctag);
@@ -74,11 +85,16 @@ public class ConllStreamWriter extends AbstractDocumentWriter{
 		return this.os.toString();
 	}
 	
+	private void writeNewLine() throws IOException{
+		this.os.write("\n".getBytes());
+	}
+	
 	@Override
 	public void writeDocument(Document document) {
 		for(Sentence s: document.getSentences()){
 			try {
 				writeSentence(s);
+				writeNewLine();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

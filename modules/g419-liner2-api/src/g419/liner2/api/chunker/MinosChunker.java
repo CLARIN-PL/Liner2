@@ -39,8 +39,8 @@ import org.maltparser.core.syntaxgraph.node.Node;
 public class MinosChunker extends Chunker {
 	
 	private Document document = null;
-	public final static String Annotation = "wyznacznik_null_verb";
-	public final static String NegativeAnnotation = "wyznacznik_notnull_verb";
+	public final static String Annotation = "anafora_verb_null";
+//	public final static String NegativeAnnotation = "wyznacznik_notnull_verb";
 	public final static String MaltModel = "skladnica_liblinear_stackeager_final.mco";
 	protected final String nonSubjectFile;
 	protected final String nonSubjectReflexiveFile;
@@ -102,9 +102,7 @@ public class MinosChunker extends Chunker {
 				if (vb.isZeroAnaphora(document)){
 					chunking.addChunk(new Annotation(i, MinosChunker.Annotation, sentence));
 				}
-				else{
-					chunking.addChunk(new Annotation(i, MinosChunker.NegativeAnnotation, sentence));
-				}
+//				els-
 			}	
 		}
 		
@@ -131,7 +129,7 @@ public class MinosChunker extends Chunker {
 	 * @author Adam Kaczmarek
 	 *
 	 */
-	static class MaltGraphUtil{
+	public static class MaltGraphUtil{
 		private static final String LABEL_TABLE_NAME = "DEPREL";
 		
 		public static Set<Edge> getEdgesFromNode(DependencyStructure graph, int nodeIndex){
