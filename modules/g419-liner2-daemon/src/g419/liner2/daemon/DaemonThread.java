@@ -23,7 +23,7 @@ public abstract class DaemonThread extends Thread{
 
     public DaemonThread(int maxThreads) throws ParameterException {
         // setup maximum threads number
-        this.maxThreads = DEFAULT_MAX_THREADS;
+        this.maxThreads = maxThreads;
         // setup working threads
         this.workingThreads = new Vector<WorkingThread>();
 

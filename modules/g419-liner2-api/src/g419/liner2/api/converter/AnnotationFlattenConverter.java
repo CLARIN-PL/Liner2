@@ -42,6 +42,11 @@ public class AnnotationFlattenConverter extends Converter {
     }
 
     @Override
+    public void start(Document doc) {
+
+    }
+
+    @Override
     public void apply(Sentence sentence) {
         ArrayList<Annotation> toFlatten = new ArrayList<Annotation>();
         for(Annotation ann: sentence.getChunks()){

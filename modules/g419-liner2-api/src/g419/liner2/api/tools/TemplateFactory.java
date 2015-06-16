@@ -41,13 +41,12 @@ public class TemplateFactory {
 		}
 		pw.write("# Unigram\n");
 		Hashtable<String, String[]> features = template.getFeatures();
-        TokenAttributeIndex attributeIndex = template.getAttributeIndex();
 		for (String featureName : template.getFeatureNames()) {
 			pw.write("# " + featureName + "\n");
 			String[] windowDesc = features.get(featureName);
 			// cecha pojedyncza
 			if (featureName.equals(windowDesc[0])) {
-				String featureId = Integer.toString(attributeIndex.getIndex(featureName));
+				String featureId = Integer.toString(template.getUsedFeatures().indexOf(featureName));
                 if(featureId.equals("-1")){
                 	pw.close();
                     throw new Exception("Feature not found: "+featureName);
@@ -69,7 +68,7 @@ public class TemplateFactory {
 				for (int i = 0; i < windowDesc.length - 1; i += 2) {
 					if (unigramId.length() > 1) unigramId += "/";
 					if (unigramContent.length() > 0) unigramContent += "/";
-					String featureId = Integer.toString(attributeIndex.getIndex(windowDesc[i]));
+					String featureId = Integer.toString(template.getUsedFeatures().indexOf(windowDesc[i]));
 					String featureIdFixed = featureId;
 					while (featureIdFixed.length() < 2)
 						featureIdFixed = "0" + featureIdFixed;

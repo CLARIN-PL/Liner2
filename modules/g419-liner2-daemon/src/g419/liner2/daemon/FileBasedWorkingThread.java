@@ -10,8 +10,9 @@ import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.features.TokenFeatureGenerator;
+import org.json.JSONObject;
 
-import java.io.File;
+import java.io.*;
 
 /**
  * Created by michal on 11/25/14.
@@ -19,42 +20,53 @@ import java.io.File;
 public class FileBasedWorkingThread extends WorkingThread {
 
     File request;
-    private TokenFeatureGenerator gen;
-    private Chunker chunker;
+    JSONObject options;
     FilebasedDaemonThread daemon;
 
     public FileBasedWorkingThread(FilebasedDaemonThread daemon){
         this.daemon = daemon;
-        this.chunker = daemon.chunker;
-        this.gen = daemon.gen;
     }
 
     @Override
     public void run() {
-        while(request != null){
-            File to_process = request;
-            request = null;
-            processFile(to_process);
+        while(true){
+            if(request != null){
+                processFile(request, options);
+                options = null;
+                request = null;
+            }
+            else{
+                try{
+                    Thread.sleep(1000);
+                } catch (InterruptedException e){ e.printStackTrace();}
+            }
+
         }
-        daemon.finishWorkingThread(this);
-
-
     }
     public boolean isBusy(){
         return request != null;
     }
 
-    public void assignJob(File request){
-        File next_job = new File(String.format("%s/progress/%s", daemon.db_path.getAbsolutePath(), request.getName()));
-        request.renameTo(next_job);
-        this.request = next_job;
+    public void assignJob(File request, JSONObject options){
+        this.request = request;
+        this.options = options;
     }
+    
 
-    public void processFile(File to_process){
+    public void processFile(File to_process, JSONObject options){
         try {
             AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(to_process.getAbsolutePath(), "ccl");
+            String model = options.getString("model");
+            if(model.equals("default")){
+                model = DaemonOptions.getGlobal().defaultModel;
+            }
+            if(!daemon.chunkers.containsKey(model)){
+                throw new Exception("Unknown model name: " + model);
+            }
+            TokenFeatureGenerator gen = daemon.featureGenerators.get(model);
+            Chunker chunker = daemon.chunkers.get(model);
 
-            Logger.log("Processing request with id: " + to_process.getName(), false);
+            Logger.log("Processing request with id: " + to_process.getName() + "with model: " + model, false);
             // process text and calculate stats
             Document ps = reader.nextDocument();
             reader.close();
@@ -78,7 +90,15 @@ public class FileBasedWorkingThread extends WorkingThread {
             writer.close();
 
         } catch (Exception e) {
-            to_process.renameTo(new File(to_process.getAbsolutePath().replace("progress", "errors")));
+            to_process.renameTo(new File(to_process.getAbsolutePath().replace("progress", "error")));
+            try {
+                PrintStream writer = new PrintStream(to_process);
+                e.printStackTrace(writer);
+                writer.close();
+            } catch (IOException e1) {
+                Logger.log("Error while creating error log for: " + to_process.getName(), false);
+                e1.printStackTrace();
+            }
             Logger.log("Error while processing request: " + to_process.getName(), false);
             e.printStackTrace();
         }

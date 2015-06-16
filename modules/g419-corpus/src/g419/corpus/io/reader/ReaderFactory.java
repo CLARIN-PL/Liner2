@@ -35,7 +35,7 @@ public class ReaderFactory {
         }
         else if (inputFormat.startsWith("batch:")){
             String format = inputFormat.substring(6);
-            return new BatchReader(getInputStream(inputFile), (new File(inputFile)).getParent(), format);
+            return new BatchReader(getInputStream(inputFile), (new File(inputFile)).getAbsoluteFile().getParent(), format);
         }
         else{
 		    return getStreamReader(
@@ -83,11 +83,11 @@ public class ReaderFactory {
 		else if (inputFormat.equals("iob"))
 			return new IobStreamReader(in);
 		else if (inputFormat.equals("plain"))
-			return new PlainTextStreamReader(in, "none");
+			return new PlainTextStreamReader(uri, in, "none");
 		else if (inputFormat.equals("plain:maca"))
-			return new PlainTextStreamReader(in, "maca");
+			return new PlainTextStreamReader(uri, in, "maca");
 		else if (inputFormat.equals("plain:wcrft"))
-			return new PlainTextStreamReader(in, "wcrft");
+			return new PlainTextStreamReader(uri, in, "wcrft");
 		else
 			throw new Exception("Input format " + inputFormat + " not recognized.");
 	}

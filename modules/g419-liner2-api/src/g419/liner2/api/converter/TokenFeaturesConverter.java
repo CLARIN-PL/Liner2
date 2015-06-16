@@ -30,4 +30,9 @@ public class TokenFeaturesConverter extends Converter {
     public void finish(Document doc) {
         doc.setAttributeIndex(template.expandAttributeIndex(doc.getAttributeIndex()));
     }
+
+    @Override
+    public void start(Document doc) {
+        
+    }
 }

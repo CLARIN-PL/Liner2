@@ -12,12 +12,15 @@ public abstract class Converter {
     public abstract void finish(Document doc);
 
     public void apply(Document doc){
+        start(doc);
         for(Sentence sent: doc.getSentences()){
             apply(sent);
         }
         finish(doc);
 
     }
+
+    abstract public void start(Document doc);
 
     abstract public void apply(Sentence sentence);
 

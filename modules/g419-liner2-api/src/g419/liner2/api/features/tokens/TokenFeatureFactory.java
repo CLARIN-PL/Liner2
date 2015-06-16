@@ -119,6 +119,17 @@ public class TokenFeatureFactory {
         else if(feature.equals("quotation")){
             return new QuotationFeature(feature);
         }
+		else if (feature.startsWith("test-")){
+			String[] featureAttrs = new String[4];
+			int colonPos = feature.indexOf(":");
+			for(int i=0; i<3; i++){
+				featureAttrs[i] = feature.substring(0, colonPos);
+				feature = feature.substring(colonPos + 1);
+				colonPos = feature.indexOf(":");
+			}
+			featureAttrs[3] = feature;
+			return new TestFeature(featureAttrs[0], featureAttrs[1], featureAttrs[2], featureAttrs[3]);
+		}
         else 
 			throw new DataFormatException("Invalid feature: "+feature);
 	}

@@ -7,6 +7,7 @@ import g419.corpus.io.reader.parser.tei.AnnMorphosyntaxSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnNamedSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnSegmentationSAXParser;
 import g419.corpus.structure.Document;
+import g419.corpus.structure.RelationSet;
 import g419.corpus.structure.TokenAttributeIndex;
 
 import java.io.IOException;

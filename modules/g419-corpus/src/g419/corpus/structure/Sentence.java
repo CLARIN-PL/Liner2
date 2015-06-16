@@ -247,7 +247,9 @@ public class Sentence {
         copy.attributeIndex = attributeIndex.clone();
         copy.setId(this.getId());
         for(Token t: tokens){
-            copy.addToken(t.clone());
+			Token newT = t.clone();
+			newT.attrIdx = copy.attributeIndex;
+            copy.addToken(newT);
         }
         for(Annotation a: chunks){
             copy.addChunk(a.clone());

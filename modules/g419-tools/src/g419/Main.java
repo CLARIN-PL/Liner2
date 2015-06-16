@@ -1,10 +1,7 @@
 package g419;
 
 import g419.corpus.TerminateException;
-import g419.tools.ConvertRulesTool;
-import g419.tools.MaltPatternsTool;
-import g419.tools.Tool;
-import g419.tools.CreateDictTool;
+import g419.tools.*;
 
 import java.text.ParseException;
 import java.util.HashMap;
@@ -24,9 +21,10 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         Main main = new Main();
-        main.registerTool(new ConvertRulesTool());
+        main.registerTool(new ConvertJRipRulesTool());
         main.registerTool(new CreateDictTool());
-        main.registerTool(new MaltPatternsTool());
+        main.registerTool(new CategorizeTool());
+        main.registerTool(new ConvertGeneticRulesTool());
 
 
 

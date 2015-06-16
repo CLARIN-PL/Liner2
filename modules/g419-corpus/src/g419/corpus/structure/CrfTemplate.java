@@ -6,9 +6,11 @@ import g419.corpus.io.DataFormatException;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.TreeSet;
 
 
 public class CrfTemplate {
+    ArrayList<String> usedFeatures = new ArrayList<>();
 	ArrayList<String> featureNames = new ArrayList<String>();
 	Hashtable<String, String[]> features = new Hashtable<String, String[]>();
     TokenAttributeIndex attributeIndex;
@@ -29,6 +31,9 @@ public class CrfTemplate {
 				throw new Exception("Duplicate feature definition in template description: "+description);
 			else {
 				this.featureNames.add(featureName);
+                if(!usedFeatures.contains(featureName)){
+                    this.usedFeatures.add(featureName);
+                }
 				this.features.put(featureName, windowDesc);
 			}
 		}
@@ -41,7 +46,10 @@ public class CrfTemplate {
 			if (this.features.containsKey(featureName))
 				throw new Exception("Duplicate feature definition in template description: "+description);
 			else {
-				this.featureNames.add(featureName);
+                if(!usedFeatures.contains(featureUnit[0])){
+                    this.usedFeatures.add(featureUnit[0]);
+                }
+                this.featureNames.add(featureName);
 				this.features.put(featureName, windowDesc);
 			}			
 		}
@@ -58,6 +66,9 @@ public class CrfTemplate {
 				if (featureNameB.length() > 0)
 					featureNameB.append("/");
 				featureNameB.append(featureUnit[0] + "[" + featureUnit[1] + "]");
+                if(!usedFeatures.contains(featureUnit[0])){
+                    this.usedFeatures.add(featureUnit[0]);
+                }
 				windowDesc[i*2] = featureUnit[0];
 				windowDesc[i*2+1] = featureUnit[1];
 			}
@@ -74,6 +85,10 @@ public class CrfTemplate {
 	public ArrayList<String> getFeatureNames() {
 		return this.featureNames;
 	}
+
+    public ArrayList<String> getUsedFeatures() {
+        return this.usedFeatures;
+    }
 	
 	public Hashtable<String, String[]> getFeatures() {
 		return this.features;

@@ -17,8 +17,10 @@ import java.util.HashSet;
 public class ActionFileBased extends ActionDaemon {
 
     public static final String OPTION_DB_PATH = "db_path";
+    public static final String OPTION_URL = "url";
 
     File db_path;
+    String tasker_url;
 
     public ActionFileBased() {
         super("file");
@@ -29,11 +31,18 @@ public class ActionFileBased extends ActionDaemon {
         OptionBuilder.isRequired();
         OptionBuilder.withDescription("path to database directory (with following folders created within: queue, progress, errors, done");
         options.addOption(OptionBuilder.create(OPTION_DB_PATH));
+
+        OptionBuilder.withArgName("url");
+        OptionBuilder.hasArg();
+        OptionBuilder.isRequired();
+        OptionBuilder.withDescription("url adress for tasker");
+        options.addOption(OptionBuilder.create(OPTION_URL));
     }
 
     @Override
     public void parseOptions(CommandLine line) throws Exception {
         db_path = new File(line.getOptionValue(OPTION_DB_PATH));
+        tasker_url = line.getOptionValue(OPTION_URL);
         if(!db_path.exists()){
             throw new ParameterException("Database directory does not exist:" + line.getOptionValue(OPTION_DB_PATH));
         }
@@ -42,6 +51,6 @@ public class ActionFileBased extends ActionDaemon {
 
     @Override
     public void run() throws Exception {
-        new FilebasedDaemonThread(db_path, max_threads).run();
+        new FilebasedDaemonThread(db_path, tasker_url, max_threads).run();
     }
 }
