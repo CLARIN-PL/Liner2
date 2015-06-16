@@ -14,7 +14,7 @@
 		<pathelement location="../../lib/commons-lang3-3.3.2.jar"/>
 		<pathelement location="../../lib/ini4j-0.5.0.jar"/>
 		<pathelement location="../../lib/jlibsvm-0.92-SNAPSHOT.jar"/>
-		<pathelement location="../../lib/weka-3.6.9.jar"/>
+		<pathelement location="../../lib/weka-3.6.12.jar"/>
 		<pathelement location="../../lib/maltparser-1.7.1.jar"/>
 		<pathelement location="../g419-corpus/g419-corpus.jar"/>
 		<pathelement location="../g419-tools/g419-tools.jar"/>
