@@ -102,7 +102,7 @@ public class AnnotationFeatureGenerator {
         if(!this.maltFeatures.isEmpty()){
             maltSent = new MaltSentence(sent, sentenceAnnotations);
             for (AnnotationFeatureMalt afg : this.maltFeatures)
-            features.put(afg.name, afg.generate(maltSent.getMaltData(), maltSent.getAnnotationIndices()));
+            features.put(afg.name, afg.generate(maltSent.getMaltData(), sentenceAnnotations));
         }
         for (AnnotationSentenceFeature afg : this.sentenceFeatures)
         features.put(afg.name, afg.generate(sent, sentenceAnnotations));

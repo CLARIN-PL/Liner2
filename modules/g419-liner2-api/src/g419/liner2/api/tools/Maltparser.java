@@ -17,10 +17,23 @@ public class Maltparser {
 
     private static HashMap<String, MaltParserService> parsers = new HashMap<String, MaltParserService>();
 
-    private Maltparser(){
+    MaltParserService parser;
+
+    public Maltparser(String modelPath){
+        if(isInitialized(modelPath)){
+            parser = getParser(modelPath);
+        }
+        else{
+            parser = addParser(modelPath);
+        }
+
     }
 
-    public static MaltParserService addParser(String modelPath){
+    public String [] parseTokens(String [] dataForMalt) throws MaltChainedException {
+        return parser.parseTokens(dataForMalt);
+    }
+
+    private static MaltParserService addParser(String modelPath){
         try {
             MaltParserService parser =  new MaltParserService();
             File modelFile = new File(modelPath);
@@ -33,11 +46,11 @@ public class Maltparser {
         return null;
     }
 
-    public static MaltParserService getParser(String modelPath){
+    private static MaltParserService getParser(String modelPath){
         return parsers.get(modelPath);
     }
 
-    public static boolean isInitialized(String modelPath){
+    private static boolean isInitialized(String modelPath){
         return parsers.containsKey(modelPath);
     }
 }
