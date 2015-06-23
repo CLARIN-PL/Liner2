@@ -25,6 +25,7 @@ public class Document{
 	public Document(String name, ArrayList<Paragraph> paragraphs, TokenAttributeIndex attributeIndex){
 		this.name = name;
 		this.paragraphs = paragraphs;
+		for(Paragraph paragraph: paragraphs) paragraph.setDocument(this);
 		this.attributeIndex = attributeIndex;
 	}
 	
