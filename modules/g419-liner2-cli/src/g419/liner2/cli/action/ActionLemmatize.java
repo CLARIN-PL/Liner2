@@ -122,7 +122,7 @@ public class ActionLemmatize extends Action {
         while (ps != null) {
             num_anns += ps.getAnnotations().size();
             HashMap<String, HashMap <Integer, String>> docWrappedAnns = wrappedAnnotations.isEmpty() ? new HashMap<>() : wrappedAnnotations.get(ps.getName());
-            LinkedHashMap<Sentence, AnnotationSet> chunkings = ps.getChunkings();
+            HashMap<Sentence, AnnotationSet> chunkings = ps.getChunkings();
             for (Sentence sent : chunkings.keySet()) {
                 HashMap <Integer, String> sentWrappedAnns = docWrappedAnns.containsKey(sent.getId()) ? docWrappedAnns.get(sent.getId()) : new HashMap<>();
                 ArrayList<Token> sentTokens = sent.getTokens();

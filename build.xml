@@ -35,6 +35,11 @@
         <copy file="modules/g419-liner2-daemon/g419-liner2-daemon.jar" todir="./lib"></copy>
     </target>
 
+	<target name="jar-toolbox">
+		<exec dir="modules/g419-toolbox" executable="ant"><arg line="jar"/></exec>
+		<copy file="modules/g419-toolbox/g419-toolbox.jar" todir="./lib"></copy>
+	</target>
+	
 	<target name="jar-crete-api">
         <exec dir="modules/g419-crete-api" executable="ant"><arg line="jar"/></exec>
 		<copy file="modules/g419-crete-api/g419-crete-api.jar" todir="./lib"></copy>
@@ -45,11 +50,7 @@
 		<copy file="modules/g419-crete-cli/g419-crete-cli.jar" todir="./lib"></copy>
 	</target>
 
-	<target name="jar-toolbox">
-		<exec dir="modules/g419-toolbox" executable="ant"><arg line="jar"/></exec>
-		<copy file="modules/g419-toolbox/g419-toolbox.jar" todir="./lib"></copy>
-	</target>
-
+	
 	<target name="jar-liner2-api-all" depends="jar-corpus,jar-liner2-api"></target>
 	
 	<target name="jar-liner2-cli-all" depends="jar-corpus,jar-lib-cli,jar-liner2-api,jar-liner2-cli"></target>
@@ -58,7 +59,7 @@
 
 	<target name="jar-crete-cli-all" depends="jar-corpus,jar-lib-cli,jar-crete-api,jar-crete-cli"></target>
 	
-	<target name="jar" depends="jar-corpus,jar-liner2-api,jar-lib-cli,jar-liner2-cli,jar-liner2-daemon,jar-crete-api,jar-crete-cli,jar-tools,jar-toolbox"></target>
+	<target name="jar" depends="jar-corpus,jar-toolbox,jar-liner2-api,jar-lib-cli,jar-liner2-cli,jar-liner2-daemon,jar-tools,jar-crete-api,jar-crete-cli"></target>
 	
 	<target name="deploy" depends="jar">
 		<delete dir="${version_path}"/>
@@ -81,6 +82,7 @@
 				<include name="g419-corpus.jar"/>
 				<include name="g419-lib-cli.jar"/>
 				<include name="g419-tools.jar"/>
+				<include name="g419-toolbox.jar"/>
 				<include name="g419-liner2-api.jar"/>
 				<include name="g419-crete-api.jar"/>
 			</fileset>
