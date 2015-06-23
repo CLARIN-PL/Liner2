@@ -116,15 +116,19 @@ public class ActionTrain extends Action {
 
         ArrayList<String> features = new ArrayList<String>();
         features.addAll(CreteOptions.getOptions().getFeatures().get(ANNOTATION_PAIRS).values());
-//        features.addAll(CreteOptions.getOptions().getFeatures().get(ANNOTATIONS).values());
-//        features.addAll(CreteOptions.getOptions().getFeatures().get(CLUSTERS).values());
-//        features.addAll(CreteOptions.getOptions().getFeatures().get(CLUSTER_MENTION_PAIRS).values());
+        features.addAll(CreteOptions.getOptions().getFeatures().get(ANNOTATIONS).values());
+        features.addAll(CreteOptions.getOptions().getFeatures().get(CLUSTERS).values());
+        features.addAll(CreteOptions.getOptions().getFeatures().get(CLUSTER_MENTION_PAIRS).values());
         
         initializeTrainers();
         // Zero trainer
 //        AbstractCreteTrainer<?, ?, ?, ?> trainer = CreteTrainerFactory.getFactory().getTrainer("j48_cluster_classify", "j48_cluster", "mention_cluster_generator", "mention_cluster_to_weka_instance", features);
-        AbstractCreteTrainer<?, ?, ?, ?> trainer = CreteTrainerFactory.getFactory().getTrainer("j48_mention_pair_classify", "j48_mention_pair", "mention_pair_generator", "mention_pair_to_weka_instance", features);
-        int x = 0;
+        String resolverName = CreteOptions.getOptions().getProperties().getProperty("resolver");
+		String classifierName = CreteOptions.getOptions().getProperties().getProperty("classifier");
+		String generatorName = CreteOptions.getOptions().getProperties().getProperty("generator");
+		String converterName = CreteOptions.getOptions().getProperties().getProperty("converter");
+        AbstractCreteTrainer<?, ?, ?, ?> trainer = CreteTrainerFactory.getFactory().getTrainer(resolverName, classifierName, generatorName, converterName, features);
+        
         
 //        //  Instantiate trainers
 // 		String[] trainerNames = CreteOptions.getOptions().getProperties().getProperty(TRAINER_NAMES).split(",");

@@ -117,7 +117,7 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 		rf.setNumTrees(10);
 		rf.setNumFeatures(10);
 				
-		Classifier cModel = (Classifier) rf;
+		Classifier cModel = (Classifier) j48;
 		try {
 			cModel.buildClassifier(tInstances);
 			displayDebugInfo(cModel, tInstances);

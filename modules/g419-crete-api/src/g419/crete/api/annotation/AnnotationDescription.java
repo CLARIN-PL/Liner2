@@ -23,14 +23,16 @@ public class AnnotationDescription {
 	private static final String FEATURE_ANNOTATION_TYPE = "type_regex";
 	
 	public static class AnnotationDescriptionFeature{
-		private String name;
-		private List<String> values;
-		private boolean negated;
+		private final String name;
+		private final List<String> values;
+		private final boolean negated;
 		
 		public AnnotationDescriptionFeature(String nam, List<String> val, boolean neg){
 			name = nam;
 			values = val;
 			negated = neg;
+			// Check if expected value is negated
+			if(negated) values.remove(0);
 		}
 		
 		public String getName(){
@@ -59,10 +61,6 @@ public class AnnotationDescription {
 				
 				// Set default return value to false
 				boolean tokenHasFeature = false;
-				
-				// Check if expected value is negated
-				List<String> featureValues = values;
-				if(negated) featureValues.remove(0);
 				
 				for(String value : values){
 					if(feature.equalsIgnoreCase(value)){

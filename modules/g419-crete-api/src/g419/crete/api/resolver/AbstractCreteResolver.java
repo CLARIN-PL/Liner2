@@ -30,6 +30,7 @@ public abstract class AbstractCreteResolver<M, T extends AbstractCreteInstance<L
 	
 	public Document resolveDocument(Document document, AbstractAnnotationSelector selector, AbstractAnnotationSelector singletonSelector){
 		List<Annotation> mentions = selector.selectAnnotations(document);
+//		System.out.println(mentions);
 		List<Annotation> singletons = singletonSelector.selectAnnotations(document);
 	   Collections.sort(mentions, new AnnotationPositionComparator());
 		

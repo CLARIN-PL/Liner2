@@ -5,6 +5,7 @@ import g419.corpus.structure.AnnotationClusterSet;
 import g419.corpus.structure.AnnotationPositionComparator;
 import g419.corpus.structure.Document;
 import g419.crete.api.annotation.AbstractAnnotationSelector;
+import g419.crete.api.annotation.AnnotationSelectorFactory;
 import g419.crete.api.instance.MentionPairClassificationInstance;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class MentionPairInstanceGenerator extends AbstractCreteInstanceGenerator
 	public static final Integer NEGATIVE_LABEL = -1;
 	
 	private final boolean training;
+	private final AbstractAnnotationSelector namedEntitySelector = AnnotationSelectorFactory.getFactory().getInitializedSelector("named_entity_selector");
 	
 	public MentionPairInstanceGenerator(boolean train){
 		this.training = train;
@@ -36,7 +38,8 @@ public class MentionPairInstanceGenerator extends AbstractCreteInstanceGenerator
 		AnnotationPositionComparator comparator = new AnnotationPositionComparator();
 		AnnotationClusterSet clusters = AnnotationClusterSet.fromRelationSet(document.getRelations());
 		
-		List<MentionPairClassificationInstance> negativeInstances  = document.getAnnotations()
+		List<MentionPairClassificationInstance> negativeInstances  = namedEntitySelector.selectAnnotations(document) 
+//				document.getAnnotations()
 				.parallelStream()
 				.filter(annotation -> comparator.compare(annotation, mention) < 0)
 				.filter(annotation -> !clusters.inSameCluster(mention, annotation))
@@ -53,7 +56,8 @@ public class MentionPairInstanceGenerator extends AbstractCreteInstanceGenerator
 				)
 				.collect(Collectors.toList());
 		
-		List<MentionPairClassificationInstance> positiveInstances = document.getAnnotations()
+		List<MentionPairClassificationInstance> positiveInstances = namedEntitySelector.selectAnnotations(document) 
+//				document.getAnnotations()
 				.parallelStream()
 				.filter(annotation -> comparator.compare(annotation, mention) < 0)
 				.filter(annotation -> clusters.inSameCluster(mention, annotation))

@@ -5,7 +5,9 @@ import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.Annotation;
+import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
+import g419.corpus.structure.Sentence;
 import g419.crete.api.CreteOptions;
 import g419.crete.api.annotation.AbstractAnnotationSelector;
 import g419.crete.api.annotation.AnnotationSelectorFactory;
@@ -30,6 +32,7 @@ import g419.lib.cli.action.Action;
 import g419.liner2.api.features.TokenFeatureGenerator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -128,9 +131,9 @@ public class ActionClassify extends Action {
 
         ArrayList<String> features = new ArrayList<String>();
         features.addAll(CreteOptions.getOptions().getFeatures().get(ANNOTATION_PAIRS).values());
-//        features.addAll(CreteOptions.getOptions().getFeatures().get(ANNOTATIONS).values());
-//        features.addAll(CreteOptions.getOptions().getFeatures().get(CLUSTERS).values());
-//        features.addAll(CreteOptions.getOptions().getFeatures().get(CLUSTER_MENTION_PAIRS).values());
+        features.addAll(CreteOptions.getOptions().getFeatures().get(ANNOTATIONS).values());
+        features.addAll(CreteOptions.getOptions().getFeatures().get(CLUSTERS).values());
+        features.addAll(CreteOptions.getOptions().getFeatures().get(CLUSTER_MENTION_PAIRS).values());
         
         initializeResolvers();
 		
@@ -139,16 +142,20 @@ public class ActionClassify extends Action {
         model.load(modelPath);
 	
         // Instantiate resolver
-		AbstractCreteResolver<?, ?, ?, ?> resolver = CreteResolverFactory.getFactory().getResolver("j48_cluster_classify", "j48_cluster", "mention_cluster_generator", "mention_cluster_to_weka_instance", features, model);
+		String resolverName = CreteOptions.getOptions().getProperties().getProperty("resolver");
+		String classifierName = CreteOptions.getOptions().getProperties().getProperty("classifier");
+		String generatorName = CreteOptions.getOptions().getProperties().getProperty("generator");
+		String converterName = CreteOptions.getOptions().getProperties().getProperty("converter");
+        AbstractCreteResolver<?, ?, ?, ?> resolver = CreteResolverFactory.getFactory().getResolver(resolverName, classifierName, generatorName, converterName, features, model);
 		
 		// Quick Fix for NamedEntities
-		resolver = CreteResolverFactory.getFactory().getResolver("j48_mention_pair_classify", "j48_mention_pair", "mention_pair_generator", "mention_pair_to_weka_instance", features, model);
+//		resolver = CreteResolverFactory.getFactory().getResolver("j48_mention_pair_classify", "j48_mention_pair", "mention_pair_generator", "mention_pair_to_weka_instance", features, model);
 //		resolver = new NullResolver()
 		
 		// Instantiate resolvers
 		String[] resolverNames = new String[]{}; //temp
 		List<AbstractCreteResolver<?, ?, ?, ?>> resolvers = new ArrayList<>();
-		for(String resolverName : resolverNames){
+		for(String resolverName2 : resolverNames){
 			// TODO:
 		}
 		
@@ -221,7 +228,8 @@ public class ActionClassify extends Action {
         while ( ps != null ){
 			if ( gen != null ) gen.generateFeatures(ps);
 			// Usuń niepożądane anotacje
-			ps.removeAnnotations(preFilterSelector.selectAnnotations(ps));
+			List<Annotation> preFilteredAnnotations = preFilterSelector.selectAnnotations(ps);
+			ps.removeAnnotations(preFilteredAnnotations);
 			// Przepnij relacje i usuń nazwy własne wewnętrzne nam_liv_person_* wewnątrz nam_liv_person
 			ps.refinePersonNamRelations(true);
 //			ps = rewireRelations(ps, personNamInSelector, personNamSelector, true);
@@ -239,6 +247,11 @@ public class ActionClassify extends Action {
 				// Znajdź odpowiednie relacje koreferencji
 				ps = resolver.resolveDocument(ps, selector, singletonSelector);
 			}
+			// Oddaj relacje usunięte przed klasyfikacją relacji
+			HashMap<Sentence, AnnotationSet> chunkings = new HashMap<>();
+			ps.getParagraphs().forEach(p -> p.getSentences()	.forEach(s -> chunkings.put(s, new AnnotationSet(s))));
+			preFilteredAnnotations.forEach(a -> chunkings.get(a.getSentence()).addChunk(a));
+			ps.addAnnotations(chunkings);
 			// Zapisz wynikowy dokument
 			writer.writeDocument(ps);
 			// Przejdź do następnego dokumentu

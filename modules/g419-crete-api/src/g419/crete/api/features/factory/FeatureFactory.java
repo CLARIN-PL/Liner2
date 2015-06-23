@@ -133,6 +133,8 @@ public class FeatureFactory{
 		register(new AnnotationPairFeatureSameChanNameItem());
 		register(new AnnotationPairFeatureSameHeadBaseItem());
 		register(new AnnotationPairFeatureTokenCountDiffItem());
+		register(new AnnotationPairFeatureSemanticLinkAgPItem());
+		register(new AnnotationPairFeaturePronounLinkItem());
 		
 		// ----------------------- CLUSTER FEATURES ----------------------------
 		register(new ClusterDocumentIdFeatureFactoryItem());
