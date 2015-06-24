@@ -16,6 +16,7 @@
 		<pathelement location="../../lib/jlibsvm-0.92-SNAPSHOT.jar"/>
 		<pathelement location="../g419-corpus/g419-corpus.jar"/>
 		<pathelement location="../g419-tools/g419-tools.jar"/>
+		<pathelement location="../g419-toolbox/g419-toolbox.jar"/>
 		<pathelement location="../g419-liner2-api/g419-liner2-api.jar"/>
 		<pathelement location="../g419-lib-cli/g419-lib-cli.jar"/>
 		<pathelement location="../g419-crete-api/g419-crete-api.jar"/>
@@ -82,6 +83,8 @@
 				./commons-io-2.4.jar
 				./ini4j-0.5.0.jar
 				./weka-3.6.12.jar
+				./g419-tools.jar
+				./g419-toolbox.jar
 				./g419-corpus.jar
 				./g419-lib-cli.jar
 				./g419-liner2-api.jar
