@@ -57,7 +57,7 @@
 
     <target name="jar-liner2-daemon-all" depends="jar-corpus,jar-liner2-api,jar-lib-cli,jar-liner2-daemon"></target>
 
-	<target name="jar-crete-cli-all" depends="jar-corpus,jar-lib-cli,jar-crete-api,jar-crete-cli"></target>
+	<target name="jar-crete-cli-all" depends="jar-corpus,jar-toolbox,jar-tools,jar-lib-cli,jar-crete-api,jar-crete-cli"></target>
 	
 	<target name="jar" depends="jar-corpus,jar-toolbox,jar-liner2-api,jar-lib-cli,jar-liner2-cli,jar-liner2-daemon,jar-tools,jar-crete-api,jar-crete-cli"></target>
 	
