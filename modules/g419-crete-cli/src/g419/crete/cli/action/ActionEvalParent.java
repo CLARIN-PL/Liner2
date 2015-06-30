@@ -55,6 +55,26 @@ public class ActionEvalParent extends Action {
         CreteOptions.getOptions().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
 	}
 
+	private RelationUnitCriterion getRelationUnitCriterion(String name) {
+		switch (name) {
+		case "named":
+			return new NamedEntityCriterion();
+		case "agp_pron_zero":
+			return new AgpPronounAndZeroCriterion();
+		case "non_zero":
+			return new NonZeroCriterion();
+		case "zero":
+			return new ZeroCriterion();
+		default:
+			return new NamedEntityCriterion();
+		}
+	}
+	
+	private String getAbsolutePath(String path, String confPath){
+		if(!path.startsWith(".")) return path;
+		return confPath.substring(0, confPath.lastIndexOf("/")) + path.substring(1);
+	}
+	
 	private String[] getBatchFiles() throws IOException{
 		String[] files = new String[2];
 		BufferedReader ir = new BufferedReader(new InputStreamReader(new FileInputStream(this.input_file)));
@@ -68,16 +88,19 @@ public class ActionEvalParent extends Action {
 		
 		String[] goldSysFiles = getBatchFiles();
 		
-		String goldInputFile = goldSysFiles[0].split(";")[0];
+		String goldInputFile = getAbsolutePath(goldSysFiles[0].split(";")[0], this.input_file);
 		String goldInputFormat = goldSysFiles[0].split(";")[1];
+		String goldRlc = CreteOptions.getOptions().getProperties().getProperty("gold_criterion");
 		
-		String sysInputFile =  goldSysFiles[1].split(";")[0];
+		String sysInputFile =  getAbsolutePath(goldSysFiles[1].split(";")[0], this.input_file);
 		String sysInputFormat =  goldSysFiles[1].split(";")[1];
-		
+		String sysRlc = CreteOptions.getOptions().getProperties().getProperty("system_criterion");
 		
 		boolean sysTEI = sysInputFormat.contains("tei");
-		RelationUnitCriterion identifyingUnitsCriterion = new NamedEntityCriterion();
-		RelationUnitCriterion referencingUnitsCriterion = new AgpPronounAndZeroCriterion(); 
+		RelationUnitCriterion identifyingUnitsCriterion = getRelationUnitCriterion(goldRlc); 
+//		= new NamedEntityCriterion();
+		RelationUnitCriterion referencingUnitsCriterion = getRelationUnitCriterion(sysRlc);
+//		= new AgpPronounAndZeroCriterion(); 
 //		new NonZeroCriterion();
 //				new ZeroCriterion();
 		//!sysTEI
