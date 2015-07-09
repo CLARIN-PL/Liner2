@@ -93,6 +93,18 @@ public class Token {
 		return tags;
 	}
 	
+	public Tag getDisambTag() {
+		for ( Tag tag : this.tags ){
+			if ( tag.getDisamb() ){
+				return tag;
+			}
+		}
+		if ( this.tags.size() > 0 ){
+			return this.tags.get(0);
+		}
+		return null;
+	}
+	
 	public void packAtributes(int size){
 		while(getNumAttributes()<size)
 			attributes.add(null);

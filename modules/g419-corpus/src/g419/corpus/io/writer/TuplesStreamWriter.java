@@ -20,14 +20,17 @@ import java.util.ArrayList;
 public class TuplesStreamWriter extends AbstractDocumentWriter {
 	private BufferedWriter ow;
 	private int sentenceOffset = 0;
+	private RelationTuplesWriter relationTupleWriter = null;
 	
 	public TuplesStreamWriter(OutputStream os) {
 		this.ow = new BufferedWriter(new OutputStreamWriter(os));
+		this.relationTupleWriter = new RelationTuplesWriter(os);
 	}
 
 	@Override
 	public void close() {
 		try {
+			this.relationTupleWriter.flush();
 			this.ow.flush();//close();
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -39,6 +42,12 @@ public class TuplesStreamWriter extends AbstractDocumentWriter {
         this.sentenceOffset = 0;
 		for (Paragraph paragraph : document.getParagraphs())
 			this.writeParagraph(paragraph);
+		try {
+			this.ow.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.relationTupleWriter.writeDocument(document);
 	}
 	
 	public void writeParagraph(Paragraph paragraph) {
