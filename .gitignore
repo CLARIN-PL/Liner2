@@ -1,4 +1,6 @@
 bin
+deploy
+lib/CRF++-0.57
 lib/CRFPP.jar
 lib/libCRFPP.so
 lib/g419-corpus.jar
