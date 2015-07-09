@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Created by michal on 11/5/14.
  */
-public class ConvertRulesTool extends Tool {
+public class ConvertJRipRulesTool extends Tool {
 
     public static final String OPTION_OUTPUT_FILE = "t";
     public static final String OPTION_OUTPUT_FILE_LONG = "output_file";
@@ -27,8 +27,8 @@ public class ConvertRulesTool extends Tool {
     private String input_file = null;
     private String output_file = null;
 
-    public ConvertRulesTool() {
-        super("convertRules");
+    public ConvertJRipRulesTool() {
+        super("convertJRipRules");
         options.addOption(OptionBuilder
                 .withArgName("filename").hasArg()
                 .withDescription("path to an output file")

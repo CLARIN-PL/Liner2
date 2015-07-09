@@ -154,7 +154,7 @@ public class LinerOptions {
         return types;
     }
 
-    private ArrayList<String> parseLines(File file) throws IOException {
+    public ArrayList<String> parseLines(File file) throws IOException {
         ArrayList<String> lines = new ArrayList<String>();
 
         BufferedReader br = new BufferedReader(new FileReader(file));

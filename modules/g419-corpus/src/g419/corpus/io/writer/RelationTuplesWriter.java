@@ -33,10 +33,10 @@ public class RelationTuplesWriter extends AbstractDocumentWriter {
 				Annotation at = relation.getAnnotationTo();
 				String line = String.format("(%d,%d,%s,\"%s\",%d,%d,%s,\"%s\",%s)\n", 
 						index.get(af.getSentence()).get(af.getBegin()), 
-						index.get(af.getSentence()).get(af.getEnd())-1,
+						index.get(af.getSentence()).get(af.getEnd()+1)-1,
 						af.getType(), af.getText(),
 						index.get(at.getSentence()).get(at.getBegin()), 
-						index.get(at.getSentence()).get(at.getEnd())-1,
+						index.get(at.getSentence()).get(at.getEnd()+1)-1,
 						at.getType(), at.getText(),
 						relation.getType());
 				writer.write(line);
@@ -58,7 +58,7 @@ public class RelationTuplesWriter extends AbstractDocumentWriter {
 				ArrayList<Integer> sentenceIndex = new ArrayList<Integer>();
 				for (Token token : sentence.getTokens()){
 					sentenceIndex.add(offset);
-					offset += token.getOrth().length() + 1;
+					offset += token.getOrth().length();
 				}
 				sentenceIndex.add(offset);
 				index.put(sentence, sentenceIndex);

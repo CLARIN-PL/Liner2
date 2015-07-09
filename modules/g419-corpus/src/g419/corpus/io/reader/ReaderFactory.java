@@ -92,13 +92,49 @@ public class ReaderFactory {
 			throw new Exception("Input format " + inputFormat + " not recognized.");
 	}
 
-    public AbstractDocumentReader getTEIStreamReader(String inputFolder, String docname) throws Exception{
+	/**
+	 * Creates reader for a document in the TEI format -- 
+	 * @param inputFolder
+	 * @param docname
+	 * @return
+	 * @throws Exception
+	 */
+    public AbstractDocumentReader getTEIStreamReader(String inputFolder, String docname) throws Exception{    	
         InputStream annMorphosyntax = getInputStream(new File(inputFolder,"ann_morphosyntax.xml").getPath());
         InputStream annSegmentation = getInputStream(new File(inputFolder,"ann_segmentation.xml").getPath());
-        InputStream annNamed = null;//getInputStream(new File(inputFolder,"ann_named.xml").getPath());
-//        InputStream annMentions = getInputStream(new File(inputFolder,"ann_mentions.xml").getPath());
-//        InputStream annCoreference = getInputStream(new File(inputFolder,"ann_coreference.xml").getPath());
-        return new TEIStreamReader(annMorphosyntax, annSegmentation, annNamed, null, null, docname);
+        InputStream annNamed = null; 
+        InputStream annMentions = null; 
+        InputStream annCoreference = null; 
+        InputStream annGroups = null; 
+        InputStream annWords = null;
+
+        File fileNamed = new File(inputFolder,"ann_named.xml");
+        if ( fileNamed.exists() ){
+        	annNamed = getInputStream(fileNamed.getPath());
+        }
+        
+        File fileMentions = new File(inputFolder,"ann_mentions.xml");
+        if ( fileMentions.exists() ){
+        	annMentions = getInputStream(fileMentions.getPath());
+        }
+        
+        File fileCoreference = new File(inputFolder,"ann_coreference.xml");
+        if ( fileCoreference.exists() ){
+        	annCoreference = getInputStream(fileCoreference.getPath());
+        }
+
+        File fileWords = new File(inputFolder,"ann_words.xml");
+        if ( fileWords.exists() ){
+        	annWords = getInputStream(fileWords.getPath());
+        }
+
+        File fileGroups = new File(inputFolder,"ann_groups.xml");
+        if ( fileGroups.exists() ){
+        	annGroups = getInputStream(fileGroups.getPath());
+        }
+        
+        return new TEIStreamReader(annMorphosyntax, annSegmentation, annNamed, annMentions, 
+        		annCoreference, annWords, annGroups, docname);
     }
 	
 	private InputStream getInputStream(String inputFile) throws Exception {
