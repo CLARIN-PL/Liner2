@@ -109,14 +109,16 @@ public class ConvertGeneticRulesTool extends Tool{
         }
     }
 
-
+    int i = 0;
 
     @Override
     public void run() throws Exception {
         BufferedReader rulesReader = new BufferedReader(new FileReader(rules_file));
         String line = rulesReader.readLine();
+
         while(line != null){
             parseRule(line);
+            i++;
             line = rulesReader.readLine();
         }
 
@@ -135,15 +137,23 @@ public class ConvertGeneticRulesTool extends Tool{
             }
             writer.write("\n");
         }
+//        System.out.println("COMPELX SIZE:" + complexTemplates.size());
+//        System.out.println("RULES SIZE:" + rules.size());
         for(String complexTemplate: complexTemplates){
             writer.write(complexTemplate + "\n");
         }
         writer.close();
     }
 
+    HashMap<String, Integer> rules = new HashMap<>();
+
     private void parseRule(String rule){
+//        if(rules.keySet().contains(rule)){
+//            System.out.println(i + " POWTARZA: " + rule + " | " + rules.get(rule));
+//        }
+        rules.put(rule, i);
         ArrayList<String> newTemplateFeatures = new ArrayList<>();
-        String operator, value, featureName = null;
+        String operator, value, ruleAsFeature = null;
         int featureIdx, offset = 0;
         Matcher m = featurePattern.matcher(rule);
         while(m.find()){
@@ -151,26 +161,40 @@ public class ConvertGeneticRulesTool extends Tool{
                 offset = Integer.parseInt(m.group(3));
                 operator = m.group(4);
                 value = m.group(5);
-                featureName = convertFeature(featureIdx, operator, value);
-                newTemplateFeatures.add(featureName + ":" + offset);
+                ruleAsFeature = String.format("(%s)[%d]%s\"%s\";", featureNames.get(featureIdx), offset, operator, value);
+                newTemplateFeatures.add(ruleAsFeature);
         }
-        if(newTemplateFeatures.size() == 1){
-            if (atomicTemplates.containsKey(featureName)) {
-                atomicTemplates.get(featureName).add(offset);
-            } else {
-                TreeSet<Integer> offsets = new TreeSet<Integer>();
-                offsets.add(offset);
-                atomicTemplates.put(featureName, offsets);
-            }
-        }
-        else if(newTemplateFeatures.size() > 5 &&String.join("/", newTemplateFeatures).contains("test-")){
-            System.out.println("VERY COMPLEX: " + String.join("/", newTemplateFeatures));
-            to_complex++;
-            complexTemplates.add(String.join("/", newTemplateFeatures));
-        }
-        else{
-            complexTemplates.add(String.join("/", newTemplateFeatures));
-        }
+//        if(!String.valueOf(rule.charAt(rule.lastIndexOf(" ") + 1)).equals("B")
+//                && !String.valueOf(rule.charAt(rule.lastIndexOf(" ") + 1)).equals("I")
+//                && !String.valueOf(rule.charAt(rule.lastIndexOf(" ") + 1)).equals("O")){
+//            System.out.println(String.valueOf(rule.charAt(rule.lastIndexOf(" ") + 1)));
+//        }
+        String joined = String.join("", newTemplateFeatures) + rule.substring(rule.lastIndexOf(" ") + 1);
+//        System.out.println(joined);
+        String featurename = "testRule-" + joined.replace(":", "_").replace("/", "_");
+        System.out.println(featurename + ":" + joined);
+        features.put(featurename, featurename + ":" + joined);
+//        if(complexTemplates.contains(featurename + ":0")){
+//            System.out.println("CONTAINS: " + featurename + " | RULE: " + rule);
+//        }
+        complexTemplates.add(featurename + ":0");
+//        if(newTemplateFeatures.size() == 1){
+//            if (atomicTemplates.containsKey(featureName)) {
+//                atomicTemplates.get(featureName).add(offset);
+//            } else {
+//                TreeSet<Integer> offsets = new TreeSet<Integer>();
+//                offsets.add(offset);
+//                atomicTemplates.put(featureName, offsets);
+//            }
+//        }
+//        else if(newTemplateFeatures.size() > 5 &&String.join("/", newTemplateFeatures).contains("test-")){
+//            System.out.println("VERY COMPLEX: " + String.join("/", newTemplateFeatures));
+//            to_complex++;
+//            complexTemplates.add(String.join("/", newTemplateFeatures));
+//        }
+//        else{
+//            complexTemplates.add(String.join("/", newTemplateFeatures));
+//        }
 
     }
 

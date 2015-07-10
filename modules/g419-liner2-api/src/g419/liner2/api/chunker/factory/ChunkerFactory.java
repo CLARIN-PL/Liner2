@@ -41,6 +41,7 @@ public class ChunkerFactory {
         this.items.add(new ChunkerFactoryItemMapping());
         this.items.add(new ChunkerFactoryItemIobber());
         this.items.add(new ChunkerFactoryItemChunkRel());
+        this.items.add(new ChunkerFactoryItemRulesChunker());
 	}
 	
 	/**

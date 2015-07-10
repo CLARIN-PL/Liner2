@@ -130,6 +130,12 @@ public class TokenFeatureFactory {
 			featureAttrs[3] = feature;
 			return new TestFeature(featureAttrs[0], featureAttrs[1], featureAttrs[2], featureAttrs[3]);
 		}
+		else if (feature.startsWith("testRule")){
+			int colonIdx = feature.indexOf(":");
+			String name = feature.substring(0, colonIdx);
+			String rule = feature.substring(colonIdx + 1);
+			return new TestRuleFeature(name, rule);
+		}
         else 
 			throw new DataFormatException("Invalid feature: "+feature);
 	}
