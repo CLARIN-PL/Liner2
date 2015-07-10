@@ -50,6 +50,13 @@
 		<copy file="modules/g419-toolbox/g419-toolbox.jar" todir="./lib"></copy>
 	</target>
 
+	<target name="jar-spatial">
+		<exec dir="modules/g419-spatial" executable="ant"><arg line="jar"/></exec>
+		<copy file="modules/g419-spatial/g419-spatial.jar" todir="./lib"></copy>
+	</target>
+
+	<target name="jar-spatial-all" depends="jar-corpus,jar-lib-cli,jar-toolbox,jar-liner2-api,jar-spatial"></target>
+
 	<target name="jar-liner2-api-all" depends="jar-corpus,jar-liner2-api"></target>
 	
 	<target name="jar-liner2-cli-all" depends="jar-corpus,jar-lib-cli,jar-liner2-api,jar-liner2-cli"></target>

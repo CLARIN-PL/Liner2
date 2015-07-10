@@ -595,7 +595,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         annMorphosyntaxWriter.writeCharacters("\n");
         this.indent(10, annMorphosyntaxWriter);
         annMorphosyntaxWriter.writeEmptyElement(TAG_FEATURE);
-        annMorphosyntaxWriter.writeAttribute("fVal", morphId + "_" + interps.disambIdx + "-msd");
+        annMorphosyntaxWriter.writeAttribute("fVal", "#" + morphId + "_" + interps.disambIdx + "-msd");
         annMorphosyntaxWriter.writeAttribute("name", "choice");
         annMorphosyntaxWriter.writeCharacters("\n");
         this.indent(10, annMorphosyntaxWriter);

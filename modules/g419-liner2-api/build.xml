@@ -54,17 +54,6 @@
 	<target name="jar" depends="compile">
 		<manifest file="MANIFEST.MF">
     		<attribute name="Built-By" value="${user.name}"/>
-<!--			<attribute name="Class-Path" value="
-				./lib/commons-cli-1.2.jar
-				./lib/princetonAdapter.jar
-				./lib/ini4j-0.5.0.jar
-				./lib/weka-3.6.9.jar
-				./lib/commons-lang3-3.3.2.jar
-				./lib/maltparser-1.7.1.jar
-				./lib/CRFPP.jar
-				./lib/g419-corpus.jar
-				"/>
--->			
    		</manifest>
 
 		<jar destfile="g419-liner2-api.jar" manifest="MANIFEST.MF">
