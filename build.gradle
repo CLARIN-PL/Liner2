@@ -1,0 +1,43 @@
+description = "g419 - Top-level project"
+
+apply plugin: 'wrapper'
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+    //apply plugin: 'netbeans' // if needed (?)
+
+    compileJava {
+        options.compilerArgs << "-Xlint:all"
+        options.debug = true
+    }
+
+    group = "pl.pwr.nlp"
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+    version = '2.5-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        // some ant build included nlog4j in JARs, but it doesn't seem to be used anywhere, or at least
+        // recursively grepping repo root for "nlog4j" and "log4j" returned only build files
+        // building the whole project doesn't yield any compilation errors without it, so I assume everything's fine
+
+        // I took the liberty of providing dependencies that I find most useful
+        compile 'org.slf4j:slf4j-api:1.7.2'
+        runtime 'org.slf4j:slf4j-log4j12:1.7.2'
+        testCompile 'junit:junit:4.11'
+    }
+
+    test {
+        useJUnit()
+    }
+}
+
+
+

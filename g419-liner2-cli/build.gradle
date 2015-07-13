@@ -1,0 +1,33 @@
+description = "g419-liner2-cli -- konsolowy interfejs dla g419-liner2-api"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+apply plugin: "application"
+
+main = "g419.liner2.cli.Main"
+
+mainClassName = main
+
+run {
+    if ( project.hasProperty("appArgs") ) {
+        args appArgs.split("\\p{Z}")
+    }
+}
+
+dependencies {
+    compile 'commons-cli:commons-cli:1.2'
+    compile 'commons-io:commons-io:2.4'
+    compile project(":g419-corpus")
+    compile project(":g419-liner2-api")
+    compile project(":g419-liner2-relations")
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": main
+    }
+    // ant build stated that "jar" target should  build fat JAR
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
