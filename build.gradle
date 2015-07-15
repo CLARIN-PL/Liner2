@@ -37,6 +37,13 @@ allprojects {
     test {
         useJUnit()
     }
+
+    plugins.withType(ApplicationPlugin){
+        it.project.task("appHello") << {
+            //this will soon become fatJar task
+            println "Hello from ${project.name}"
+        }
+    }
 }
 
 

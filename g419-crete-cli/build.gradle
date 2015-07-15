@@ -1,0 +1,10 @@
+description = "g419-crete-cli -- konsolowy interfejs dla g419-crete-api"
+
+dependencies {
+    compile 'commons-cli:commons-cli:1.2'
+    compile project(":g419-corpus")
+    compile project(":g419-tools")
+    compile project(":g419-lib-cli")
+    compile project(":g419-crete-api")
+}
+
