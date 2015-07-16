@@ -1,0 +1,95 @@
+    Copyright (C) 2012-2013 Michał Marcińczuk, Maciej Janicki
+    Wrocław University of Technology  
+    
+Liner2 package requires CRF++ (http://crfpp.googlecode.com/svn/trunk/doc/index.html).
+The compatible version can be also found in the ./external folder.
+
+-----------------------------
+Step 1: Installation of CRF++
+-----------------------------
+
+If you have already installed CRF++ go to step 2. If not, then continue this step.
+
+CRF++ requires gcc and g++ to compile. Make sure you have installed the required packages.
+
+Go to liner2/external folder and unpack CRF++-0.57.tar.gz
+
+  tar -xvf CRF++-0.57.tar.gz
+  
+Go inside CRF++-0.57 folder, compile and install the library:
+
+  cd CRF++-0.57
+  ./configure
+  make
+  sudo make install
+  sudo ldconfig
+
+
+-----------------------------
+Step 2: Create Java binding
+-----------------------------
+
+Java binding requires java-jdk to compile.
+
+Navigate to liner2/external/CRF++-0.57 (or your local copy of CRF++) and execute:
+
+  cd java
+  make
+
+At this step you might encounter a problem with finding jni.h file. You have to
+check a path to the java-sdk — the INCLUDE parameter in 'external/crfpp/java/Makefile'. 
+
+Make sure that the files 'lib/libCRFPP.so' and 'lib/CRFPP.jar' were created.
+
+Copy the above files to liner2/libs folder:
+
+  cp libCRFPP.so ../../../lib
+  cp CRFPP.jar ../../../lib
+
+
+-----------------------------
+Step 3: Compile liner2
+-----------------------------
+
+The Ant Apache tool is required to build liner2.jar package.
+
+Execute the following command:
+
+  ant jar
+ 
+
+-----------------------------
+Step 4: Test
+-----------------------------
+  
+To check, if the configuration was successful run the following command (the package with models can
+be downloaded from http://nlp.pwr.wroc.pl/liner2 web page):
+
+  ./liner2.sh pipe -ini liner2-models-fat-pack/config-muc.ini -i ccl -f test/sentence.xml -o tuples
+  
+You should see the following output:
+
+  (4,11,PER,"Ala Nowak")
+  (20,28,LOC,"Warszawie")
+  
+  
+-----------------------------
+Step 5: Install liner2 command
+-----------------------------
+
+You can create a global command 'liner2' referring to the local copy of liner2 by executing:
+
+  sudo ant install
+  
+Then you can run liner2 from any location:  
+  
+  liner2 pipe -ini liner2-models-fat-pack/config-muc.ini -i ccl -f test/sentence.xml -o tuples
+
+You can also set a default model by placing the -ini parameter in the liner2/local.ini file.
+The path to the model must be absolute, for example:
+
+  -ini /nlp/tools/liner2/liner2-models-fat-pack/config-muc.ini
+
+If you do it you can omit the -ini parameter to use the default model:
+
+  liner2 pipe -i ccl -f test/sentence.xml -o tuples

@@ -1,6 +1,16 @@
+buildscript {
+    repositories { jcenter() }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.1'
+    }
+}
+
 description = "g419 - Top-level project"
 
+version = "2.5-SNAPSHOT"
+
 apply plugin: 'wrapper'
+group = "pl.pwr.nlp"
 
 allprojects {
     apply plugin: 'java'
@@ -38,13 +48,60 @@ allprojects {
         useJUnit()
     }
 
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    def artifactsTasks = [
+        jar,
+        sourcesJar,
+//        javadocJar
+    ]
+
     plugins.withType(ApplicationPlugin){
-        it.project.task("appHello") << {
-            //this will soon become fatJar task
-            println "Hello from ${project.name}"
+        it.project.apply plugin: 'com.github.johnrengelman.shadow'
+
+        shadowJar {
+            classifier='all'
+        }
+
+        it.project.tasks.find { it.name == "jar" }.dependsOn it.project.tasks.find { it.name == "shadowJar" }
+    }
+
+    artifacts {
+        artifactsTasks.each {
+            archives it
         }
     }
 }
 
 
+task libZip(type: Zip, dependsOn: build){
+    classifier = "libs"
+    from subprojects.collect {
+        it.jar.archivePath
+    }
+}
 
+task appZip(type: Zip, dependsOn: build){
+    classifier = "apps"
+    def files = subprojects.collect {
+        File f = it.jar.archivePath
+        String p = f.absolutePath
+        def parts = p.split("[.]") as List
+        def last = parts.pop()
+        def archiveName = parts.pop() + "-all"
+        def appPath = (parts+[archiveName, last]).join(".")
+        File appFile = new File(appPath)
+        if (appFile.exists())
+            return appFile
+        return null
+    }
+    from files.findAll()
+}

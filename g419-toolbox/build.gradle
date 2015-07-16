@@ -12,17 +12,15 @@ run {
     }
 }
 
-dependencies {
-    compile 'commons-cli:commons-cli:1.2'
-    compile project(":g419-corpus")
-    compile project(":g419-external-dependencies")
-}
-
 jar {
     manifest {
         attributes "Main-Class": main
     }
-    // ant build stated that "jar" target should  build fat JAR
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+dependencies {
+    compile 'commons-cli:commons-cli:1.2'
+    compile project(":g419-corpus")
+    compile project(":g419-external-dependencies")
 }
 

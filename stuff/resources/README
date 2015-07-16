@@ -1,0 +1,48 @@
+    Copyright (C) 2012-2013 Michał Marcińczuk, Maciej Janicki
+    Wrocław University of Technology  
+
+In this file you will find how to use Liner2. To find the installation 
+guideline please see INSTALL. To find the license terms please see LICENSE.
+
+This is only brief introduction to Liner2. To see the complete description
+of Liner2 options please visit: http://nlp.pwr.wroc.pl/redmine/projects/inforex-liner/wiki
+    
+=== Run ===
+
+The pack with models can be downloaded from http://nlp.pwr.wroc.pl/liner2.
+
+Pipe mode
+---------
+
+In pipe mode Liner2 reads text from a single file or standard input and print the results 
+in a defined format to a file or standard output.
+
+Process ccl file and write results to a file in ccl format:
+
+  ./liner2.sh pipe -ini liner2-models-fat-pack/config-muc.ini -f test/sentence.xml -t test/sentence-output.xml
+
+Process ccl file and write results to a standard output as list of tuples:
+
+  ./liner2.sh pipe -ini liner2-models-fat-pack/config-muc.ini -f test/sentence.xml -o tuples
+
+
+Interactive mode
+----------------
+
+Interactive mode — process plain text entered into console (requires maca):
+
+  ./liner2.sh interactive -ini liner2-models-fat-pack/config-muc.ini -i plain -o tuples -maca -
+
+
+Batch mode
+----------
+
+In batch mode Liner2 process set of files listed in given batch file. The batch file must contain 
+a list of absolute or relative paths to files. The relative paths are translated to the absolute 
+path in regard to the location of the batch file. The results are printed to a file with suffix 
+.ner.EXT, where EXT is extenstion depednent on -o parameter (for ccl is xml ant for other types 
+is txt).
+
+Process set of files in ccl format:
+
+  ./liner2.sh batch -ini liner2-models-fat-pack/config-muc.ini -is batch.txt -i ccl -o ccl

@@ -45,7 +45,9 @@ def removeJavac(File f){
     f.text = ""
     lines.each { String line ->
         String l = line.trim()
-        if (!(l.startsWith("\$(JAVAC)") || l.startsWith("env") || l.startsWith("test") || l.startsWith("\$(JAR)")))
+        if (l.startsWith("INCLUDE"))
+            f.append("INCLUDE=${System.getenv("JAVA_HOME")}/include\n")
+        else if (!(l.startsWith("\$(JAVAC)") || l.startsWith("env") || l.startsWith("test") || l.startsWith("\$(JAR)")))
             f.append(line+"\n")
     }
 }

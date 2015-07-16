@@ -15,6 +15,12 @@ run {
     }
 }
 
+jar {
+    manifest {
+        attributes "Main-Class": main
+    }
+}
+
 dependencies {
     compile 'commons-cli:commons-cli:1.2'
     compile 'commons-io:commons-io:2.4'
@@ -22,12 +28,3 @@ dependencies {
     compile project(":g419-liner2-api")
     compile project(":g419-liner2-relations")
 }
-
-jar {
-    manifest {
-        attributes "Main-Class": main
-    }
-    // ant build stated that "jar" target should  build fat JAR
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-}
-
