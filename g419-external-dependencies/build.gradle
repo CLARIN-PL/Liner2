@@ -89,6 +89,9 @@ task compileCRFPP << {
     if (isCompiled()) {
         header("CRFPP already compiled (on $lastCompilationDate)")
     } else {
+        if (!System.getenv("JAVA_HOME")) {
+            throw new RuntimeException("There is no JAVA_HOME environment variable! Cannot compile CRFPP")
+        }
         header("Preparing CRFPP")
         workspace.mkdirs()
         header("tar xvf CRF++-0.57.tar.gz")
@@ -123,7 +126,6 @@ task compileCRFPP << {
         fillSourceSet()
         markSuccess()
     }
-
 }
 
 task cleanCRFPP << {
