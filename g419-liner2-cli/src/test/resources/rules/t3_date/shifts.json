@@ -1,0 +1,52 @@
+{
+  "regexEscape": "%",
+  "rules": {
+    "tommorow": {
+      "extract": "$reTommorow",
+      "normalize": "+0000-00-01"
+    },
+    "daxNext": {
+      "extract": "$reNext",
+      "normalize": "+0000-00-01"
+    },
+    "dayAfterTommorow": {
+      "extract": "pojutrze",
+      "normalize": "+0000-00-02"
+    },
+    "yesterday": {
+      "extract": "$reYesterday",
+      "normalize": "-0000-00-01"
+    },
+    "dayBefore": {
+      "extract": "$reBefore",
+      "normalize": "-0000-00-01"
+    },
+    "preyesterday": {
+      "extract": "przedwczoraj",
+      "normalize": "-0000-00-02"
+    }
+  },
+  "patterns": {
+    "reYesterday": [
+      "wczoraj",
+      "wczorajszy",
+      "przeddzień",
+      "poprzedniego dnia"
+    ],
+    "reTommorow": [
+      "jutro",
+      "jutrzejszy",
+      "nazajutrz"
+    ],
+    "reBefore": [
+      "dzień poprzedni",
+      "poprzedni dzień"
+    ],
+    "reNext": [
+      "dzień następny",
+      "następny dzień"
+    ]
+  },
+  "normalization": {
+  }
+}

@@ -16,7 +16,7 @@ dependencies {
     compile 'org.maltparser:maltparser:1.8.1' // should be compatible with 1.7.1
     compile project(":g419-corpus")
     compile project(":g419-lib-cli")
-//    compile project(":rnb")
+    compile project(":rnb")
     compile "joda-time:joda-time:2.8.1"
 
     dependencyFix fileTree(new File(project(":g419-external-dependencies").buildDir, "libs"))

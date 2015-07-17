@@ -1,0 +1,26 @@
+{
+  "regexEscape": "%",
+  "rules": {
+    "fullDate": {
+      "extract": "$reCentury$re2Digits$reDateSeparator$reMonthNumber$reDateSeparator$reDayNumber",
+      "normalize": "@group(0)@group(1)-@group(3)-@group(5)"
+    }
+  },
+  "patterns": {
+    "reCentury": "[12]%d",
+    "re2Digits": "%d%d",
+    "reDateSeparator": [
+      "[-]",
+      "[.]"
+    ],
+    "reMonthNumber":[
+      "0%d",
+      "11",
+      "12"
+    ],
+    "reDayNumber": [
+      "[012]%d",
+      "3[01]"
+    ]
+  }
+}

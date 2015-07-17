@@ -1,0 +1,148 @@
+{
+  "regexEscape": "%",
+  "rules": {
+    "age": {
+      "extract": "$reAgeNumber%s+wiek[.]?",
+      "normalize": "@group(0)"
+    },
+    "ageWrit": {
+      "extract": "$reAgeWritten",
+      "normalize": "@group(0)"
+    },
+    "ageOWR": {
+      "extract": "wiek%s+$reAgeNumber",
+      "normalize": "@group(0)"
+    },
+    "agePart": {
+      "extract": "$reStart%s+$reAgeNumber%s+wiek[.]?",
+      "normalize": "@group(1)"
+    },
+    "ageHalf": {
+      "extract": "$reWhicHalf%s+$reHalf%s+$reAgeNumber%s+wiek[.]?",
+      "normalize": "@group(2)-H@group(0)"
+    }
+  },
+  "patterns": {
+    "reStart": [
+      "pocz[.]",
+      "początek[.]?",
+      "koniec"
+    ],
+    "reHalf": [
+      "połowa"
+    ],
+    "reWhichHalf":[
+      "pierwszy",
+      "drugi"
+    ],
+    "reAgeNumber": [
+      "%d",
+      "[12]%d",
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v",
+      "vi",
+      "vii",
+      "viii",
+      "ix",
+      "x",
+      "xi",
+      "xii",
+      "xiii",
+      "xiv",
+      "xv",
+      "xvi",
+      "xvii",
+      "xviii",
+      "xix",
+      "xx",
+      "xxi",
+      "xxii",
+      "xxiii",
+      "xxiv",
+      "xxv",
+      "xxvi",
+      "xxvii",
+      "xxviii",
+      "xxix",
+      "xxx"
+    ],
+    "reAgeWritten": [
+      "dziesięciowieczny",
+      "jedenastowieczny",
+      "dwunastowieczny",
+      "trzynastowieczny",
+      "czternastowieczny",
+      "piętnastowieczny",
+      "szesnastowieczny",
+      "siedemnastowieczny",
+      "osiemnastowieczny",
+      "dziewiętnastowieczny",
+      "dwudziestowieczny"
+    ]
+  },
+  "normalization": {
+    "leadingZero": {
+      "^1$": "01",
+      "^2$": "02",
+      "^3$": "03",
+      "^4$": "04",
+      "^5$": "05",
+      "^6$": "06",
+      "^7$": "07",
+      "^8$": "08",
+      "^9$": "09"
+    },
+    "roman": {
+      "^i$": "00",
+      "^ii$": "01",
+      "^iii$": "02",
+      "^iv$": "03",
+      "^v$": "04",
+      "^vi$": "05",
+      "^vii$": "06",
+      "^viii$": "07",
+      "^ix$": "08",
+      "^x$": "09",
+      "^xi$": "10",
+      "^xii$": "11",
+      "^xiii$": "12",
+      "^xiv$": "13",
+      "^xv$": "14",
+      "^xvi$": "15",
+      "^xvii$": "16",
+      "^xviii$": "17",
+      "^xix$": "18",
+      "^xx$": "19",
+      "^xxi$": "20",
+      "^xxii$": "21",
+      "^xxiii$": "22",
+      "^xxiv$": "23",
+      "^xxv$": "24",
+      "^xxvi$": "25",
+      "^xxvii$": "26",
+      "^xxviii$": "27",
+      "^xxix$": "28",
+      "^xxx$": "29"
+    },
+    "ageWritten": {
+      "dziesięciowieczny": "09",
+      "jedenastowieczny": "10",
+      "dwunastowieczny": "11",
+      "trzynastowieczny": "12",
+      "czternastowieczny": "13",
+      "piętnastowieczny": "14",
+      "szesnastowieczny": "15",
+      "siedemnastowieczny": "16",
+      "osiemnastowieczny": "17",
+      "dziewiętnastowieczny": "18",
+      "dwudziestowieczny": "19"
+    },
+    "halfNumber": {
+      "pierwszy": "1",
+      "drugi": "2"
+    }
+  }
+}

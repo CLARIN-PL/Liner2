@@ -1,0 +1,247 @@
+{
+  "regexEscape": "%",
+  "rules": {
+    "prefixedYear": {
+      "extract": "$reDesc%s+$reCentury$re2Digits",
+      "normalize": "@group(0)@group(1)"
+    },
+    "suffixedYear": {
+      "extract": "$reCentury$re2Digits%s+$reDesc",
+      "normalize": "@group(0)@group(1)"
+    },
+    "writtenDayMonth": {
+      "extract": "$reDay%s+$reMonthName",
+      "normalize": "xxxx-@group(1)-@group(0)"
+    },
+    "writtenYearMonth": {
+      "extract": "$reMonthName%s+$reCentury$re2Digits",
+      "normalize": "@group(1)@group(2)-@group(0)"
+    },
+    "writtenYearMonthNoCentury": {
+      "extract": "$reMonthName%s+[']?$re2Digits",
+      "normalize": "XX@group(1)-@group(0)"
+    },
+    "writtenFullDate": {
+      "extract": "$reDay%s+$reMonthName%s+$reCentury$re2Digits",
+      "normalize": "@group(2)@group(3)-@group(1)-@group(0)"
+    },
+    "writtenDateNoCentury": {
+      "extract": "$reDay%s+$reMonthName%s+[']?$re2Digits%s*$reDesc?",
+      "normalize": "XX@group(2)-@group(1)-@group(0)"
+    },
+    "writtenFullDateWithHoursAndMinutes": {
+      "comment": "Time is tricky",
+      "extract": "$reDay%s+$reMonthName%s+$reCentury$re2Digits%s*$reTimeSeparator%s*$re2Digits[:]$re2Digits",
+      "normalize": "@group(2)@group(3)-@group(1)-@group(0)T@group(5):@group(6)"
+    },
+    "writtenFullDateWithHoursMinutesAndSeconds": {
+      "comment": "Time is tricky",
+      "extract": "$reDay%s+$reMonthName%s+$reCentury$re2Digits%s*$reTimeSeparator%s*$re2Digits[:]$re2Digits[:]$re2Digits",
+      "normalize": "@group(2)@group(3)-@group(1)-@group(0)T@group(5):@group(6):@group(7)"
+    },
+    "writtenFullDateNoCenturyWithHoursAndMinutes": {
+      "comment": "Time is tricky",
+      "extract": "$reDay%s+$reMonthName%s+[']?$re2Digits%s*$reTimeSeparator%s*$re2Digits[:]$re2Digits",
+      "normalize": "XX@group(2)-@group(1)-@group(0)T@group(4):@group(5)"
+    },
+    "writtenFullDateNoCenturyWithHoursMinutesAndSeconds": {
+      "comment": "Time is tricky",
+      "extract": "$reDay%s+$reMonthName%s+[']?$re2Digits%s*$reTimeSeparator%s*$re2Digits[:]$re2Digits[:]$re2Digits",
+      "normalize": "XX@group(2)-@group(1)-@group(0)T@group(4):@group(5)[:]@group(6)"
+    }
+  },
+
+  "patterns": {
+    "reCentury": "[12]%d",
+    "re2Digits": "%d%d",
+    "reDesc": [
+      "?:rok",
+      "rocznik"
+    ],
+    "reTimeSeparator": [
+      "g.",
+      "godz.",
+      ""
+    ],
+    "reMonthName": [
+      "1[012](?:[.]?)",
+      "0%d(?:[.]?)",
+      "%d(?:[.]?)",
+      "styczeń",
+      "styczen",
+      "luty",
+      "marzec",
+      "kwiecień",
+      "kwiecien",
+      "maj",
+      "czerwiec",
+      "lipiec",
+      "sierpień",
+      "sierpien",
+      "wrzesień",
+      "wrzesien",
+      "październik",
+      "pazdziernik",
+      "listopad",
+      "grudzień",
+      "grudzien",
+      "stycznia",
+      "lutego",
+      "marca",
+      "kwietnia",
+      "maja",
+      "czerwca",
+      "lipca",
+      "sierpnia",
+      "września",
+      "wrzesnia",
+      "października",
+      "pazdziernika",
+      "listopada",
+      "grudnia"
+    ],
+    "reDay": [
+      "%d(?:[.]?)",
+      "[012]%d(?:[.]?)",
+      "3[01](?:[.]?)",
+      "[dwudziesty|trzydziesty]? pierwszy",
+      "[dwudziesty]? drugi",
+      "[dwudziesty]? trzeci",
+      "[dwudziesty]? czwarty",
+      "[dwudziesty]? piąty",
+      "[dwudziesty]? piaty",
+      "[dwudziesty]? szósty",
+      "[dwudziesty]? szosty",
+      "[dwudziesty]? siódmy",
+      "[dwudziesty]? siodmy",
+      "[dwudziesty]? ósmy",
+      "[dwudziesty]? osmy",
+      "[dwudziesty]? dziewiąty",
+      "[dwudziesty]? dziewiaty",
+
+      "dziesiąty",
+      "dziesiaty",
+      "jedenasty",
+      "dwunasty",
+      "trzynasty",
+      "czternasty",
+      "piętnasty",
+      "pietnasty",
+      "szesnasty",
+      "siedemnasty",
+      "osiemnasty",
+      "dziewiętnasty",
+      "dziewietnasty",
+
+      "dwudziesty",
+      "trzydziesty"
+    ]
+  },
+  "normalization": {
+    "leadingZero": {
+      "-1$": "-01",
+      "-2$": "-02",
+      "-3$": "-03",
+      "-4$": "-04",
+      "-5$": "-05",
+      "-6$": "-06",
+      "-7$": "-07",
+      "-8$": "-08",
+      "-9$": "-09",
+      "-1-": "-01",
+      "-2-": "-02",
+      "-3-": "-03",
+      "-4-": "-04",
+      "-5-": "-05",
+      "-6-": "-06",
+      "-7-": "-07",
+      "-8-": "-08",
+      "-9-": "-09"
+    },
+    "nomMonthNames": {
+      "styczeń": "01",
+      "styczen": "01",
+      "luty": "02",
+      "marzec": "03",
+      "kwiecień": "04",
+      "kwiecien": "04",
+      "maj": "05",
+      "czerwiec": "06",
+      "lipiec": "07",
+      "sierpień": "08",
+      "sierpien": "08",
+      "wrzesień": "09",
+      "wrzesien": "09",
+      "październik": "10",
+      "pazdziernik": "10",
+      "listopad": "11",
+      "grudzień": "12",
+      "grudzien": "12"
+    },
+    "genMonthNames": {
+      "stycznia": "01",
+      "lutego": "02",
+      "marca": "03",
+      "kwietnia": "04",
+      "maja": "05",
+      "czerwca": "06",
+      "lipca": "07",
+      "sierpnia": "08",
+      "września": "09",
+      "wrzesnia": "09",
+      "października": "10",
+      "pazdziernika": "10",
+      "listopada": "11",
+      "grudnia": "12"
+    },
+    "days": {
+      "trzydziesty pierwszy": "31",
+      "trzydziesty pierwszy": "21",
+      "dwudziesty drugi": "22",
+      "dwudziesty trzeci": "23",
+      "dwudziesty czwarty": "24",
+      "dwudziesty piąty": "25",
+      "dwudziesty piaty": "25",
+      "dwudziesty szósty": "26",
+      "dwudziesty szosty": "26",
+      "dwudziesty siódmy": "27",
+      "dwudziesty siodmy": "27",
+      "dwudziesty ósmy": "28",
+      "dwudziesty osmy": "28",
+      "dwudziesty dziewiąty": "29",
+      "dwudziesty dziewiaty": "29",
+      
+      "pierwszy": "01",
+      "drugi": "02",
+      "trzeci": "03",
+      "czwarty": "04",
+      "piąty": "05",
+      "piaty": "05",
+      "szósty": "06",
+      "szosty": "06",
+      "siódmy": "07",
+      "siodmy": "07",
+      "ósmy": "08",
+      "osmy": "08",
+      "dziewiąty": "09",
+      "dziewiaty": "09",
+      
+      "dziesiąty": "10",
+      "dziesiaty": "10",
+      "jedenasty": "11",
+      "dwunasty": "12",
+      "trzynasty": "13",
+      "czternasty": "14",
+      "piętnasty": "15",
+      "pietnasty": "15",
+      "szesnasty": "16",
+      "siedemnasty": "17",
+      "osiemnasty": "18",
+      "dziewiętnasty": "19",
+      "dziewietnasty": "19",
+
+      "dwudziesty": "20",
+      "trzydziesty": "30"
+    }
+  }
+}

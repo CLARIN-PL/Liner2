@@ -1,0 +1,124 @@
+{
+  "regexEscape": "%",
+  "rules": {
+    "partOfDay": {
+      "extract": "$rePartOfDay",
+      "normalize": "xxxx-xx-xxT@group(0)"
+    },
+    "describedPartOfDay": {
+      "extract": "$reDescription%s+$rePartOfDay",
+      "normalize": "xxxx-xx-xxT@group(1)"
+    },
+    "neighbouringPartOfDay": {
+      "extract": "$reNeighbourDays%s$rePartOfDay",
+      "normalize": "@group(0)T@group(1)"
+    }
+  },
+  "patterns": {
+    "reDescription": [
+      "cały"
+    ],
+    "reNeighbourDays": [
+      "dzisiejszy",
+      "ten sam dzień",
+      "wczoraj",
+      "wczorajszy",
+      "jutrzejszy",
+      "jutro",
+      "przedwczorajszy",
+      "poniedziakowy",
+      "wtorkowy",
+      "środowy",
+      "czwartkowy",
+      "piątkowy",
+      "sobotni",
+      "niedzielny"
+    ],
+    "rePartOfDay": [
+      "noc",
+      "nocny",
+      "północ",
+      "polnoc",
+      "pólnoc",
+      "połnoc",
+      "południe",
+      "poludnie",
+      "rano",
+      "wieczór",
+      "wieczor",
+      "wieczorowy",
+      "wieczorny",
+      "ranek",
+      "poranek",
+      "poranny",
+      "przedpołudniowy",
+      "przedpoludniowy",
+      "po%s*południe",
+      "popołudniowy",
+      "popoludniowy"
+    ]
+  },
+  "normalization": {
+    "partOfDay": {
+      "noc(ny)?": "NI",
+      "północ": "MI",
+      "polnoc": "MI",
+      "pólnoc": "MI",
+      "połnoc": "MI",
+      "Tpołudnie": "TMI",
+      "Tpoludnie": "TMI",
+      "rano": "MO",
+      "wieczór": "EV",
+      "wieczor": "EV",
+      "wieczorowy": "EV",
+      "wieczorny": "EV",
+      "poranek": "MO",
+      "poranny": "MO",
+      "ranek": "MO",
+      "przedpołudniowy": "MO",
+      "przedpoludniowy": "MO",
+      "popołudnie": "AF",
+      "po południe": "AF",
+      "popołudniowy": "AF",
+      "popoludniowy": "AF"
+    },
+    "neighbourDays": {
+      "dzisiejszy": "+0000-00-00",
+      "ten sam dzień": "+0000-00-00",
+      "jutrzejszy": "+0000-00-01",
+      "jutro": "+0000-00-01",
+      "wczoraj": "-0000-00-01",
+      "wczorajszy": "-0000-00-01",
+      "przedwczorajszy": "-0000-00-02",
+      "poniedziałkowy": "xxxx-Wxx-1",
+      "wtorkowy": "xxxx-Wxx-2",
+      "środowy": "xxxx-Wxx-3",
+      "czwartkowy": "xxxx-Wxx-4",
+      "piątkowy": "xxxx-Wxx-5",
+      "sobotni": "xxxx-Wxx-6",
+      "niedzielny": "xxxx-Wxx-7"
+    },
+    "leadingHourZero": {
+      "t0:": "t00:",
+      "t1:": "t01:",
+      "t2:": "t02:",
+      "t3:": "t03:",
+      "t4:": "t04:",
+      "t5:": "t05:",
+      "t6:": "t06:",
+      "t7:": "t07:",
+      "t8:": "t08:",
+      "t9:": "t09:",
+      "T0:": "T00:",
+      "T1:": "T01:",
+      "T2:": "T02:",
+      "T3:": "T03:",
+      "T4:": "T04:",
+      "T5:": "T05:",
+      "T6:": "T06:",
+      "T7:": "T07:",
+      "T8:": "T08:",
+      "T9:": "T09:"
+    }
+  }
+}

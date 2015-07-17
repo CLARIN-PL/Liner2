@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chunkList SYSTEM "ccl.dtd">
+<chunkList>
+ <chunk id="ch1">
+  <sentence id="sent1">
+   <tok>
+    <orth>2005-03-21</orth>
+    <lex><base>2005-03-21</base><ctag>ign</ctag></lex>
+    <lex disamb="1"><base>2005-03-21</base><ctag>adj:sg:nom:m3:pos</ctag></lex>
+    <ann chan="t3_date">1</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>:</orth>
+    <lex disamb="1"><base>:</base><ctag>interp</ctag></lex>
+    <ann chan="t3_date">0</ann>
+   </tok>
+   <tok>
+    <orth>Terri</orth>
+    <lex><base>Terri</base><ctag>ign</ctag></lex>
+    <lex disamb="1"><base>terri</base><ctag>subst:sg:nom:m3</ctag></lex>
+    <ann chan="t3_date">0</ann>
+   </tok>
+   <tok>
+    <orth>Schiavo</orth>
+    <lex><base>Schiavo</base><ctag>ign</ctag></lex>
+    <lex disamb="1"><base>schiavo</base><ctag>subst:sg:nom:m3</ctag></lex>
+    <ann chan="t3_date">0</ann>
+   </tok>
+   <tok>
+    <orth>będzie</orth>
+    <lex disamb="1"><base>być</base><ctag>bedzie:sg:ter:imperf</ctag></lex>
+    <ann chan="t3_date">0</ann>
+   </tok>
+   <tok>
+    <orth>żyła</orth>
+    <lex disamb="1"><base>żyć</base><ctag>praet:sg:f:imperf</ctag></lex>
+    <lex><base>żyła</base><ctag>subst:sg:nom:f</ctag></lex>
+    <ann chan="t3_date">0</ann>
+   </tok>
+  </sentence>
+ </chunk>
+</chunkList>
