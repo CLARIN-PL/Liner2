@@ -54,7 +54,6 @@ public class WordnetTool extends Tool {
         outputDoc.addParagraph(paragraph);
         int sentId = 1;
         for(String phrase:  wordnet_loader.getMuliwordPhrases()){
-            System.out.println(phrase);
             Sentence sent = macaAnalyze(phrase).getSentences().get(0);
             sent.setId("s"+sentId);
             if(attridx == null){
