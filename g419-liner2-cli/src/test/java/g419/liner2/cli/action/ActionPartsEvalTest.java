@@ -17,7 +17,7 @@ public class ActionPartsEvalTest extends TestCase{
 
 
     public void setUp() throws URISyntaxException, FileNotFoundException {
-        config = ResourcesUtils.resourceFile("cfg_global_rule.ini");
+        config = ResourcesUtils.resourceFile("/cfg_global_rule.ini");
     }
 
     protected void setStdOut(File out) throws FileNotFoundException {

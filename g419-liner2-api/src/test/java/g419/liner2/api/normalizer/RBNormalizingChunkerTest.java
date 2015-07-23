@@ -1,6 +1,6 @@
 package g419.liner2.api.normalizer;
 
-import eu.clarin_pl.rbn.RuleSetLoader;
+import g419.liner2.api.normalizer.rbn.RuleSetLoader;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Annotation;

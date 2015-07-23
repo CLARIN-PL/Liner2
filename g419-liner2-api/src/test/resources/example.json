@@ -1,0 +1,19 @@
+{
+  "rules": {
+    "year4Digits": {
+      "extract": "$reCentury$reYear2Digits",
+      "normalize": "@group(0)@group(1)"
+    },
+    "year2Digits": {
+      "extract": "$reYear2Digits",
+      "normalize": "XX@group(0)"
+    }
+  },
+  "patterns": {
+    "reCentury": [
+      "1\\d",
+      "2\\d"
+    ],
+    "reYear2Digits": "\\d\\d"
+  }
+}

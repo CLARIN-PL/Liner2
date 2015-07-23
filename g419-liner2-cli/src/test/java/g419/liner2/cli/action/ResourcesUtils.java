@@ -3,13 +3,17 @@ package g419.liner2.cli.action;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.MissingResourceException;
 
 public class ResourcesUtils {
     /**
      * Will fail, if resource isn't in the plain filesystem, e.g. is in JAR or is fetched from URL.
      */
-    static File resourceFile(String resource) throws URISyntaxException {
-        URL url = ResourcesUtils.class.getClassLoader().getResource(resource);
+    static File resourceFile(String resource) throws URISyntaxException{
+        ClassLoader classLoader = ResourcesUtils.class.getClassLoader();
+        URL url = classLoader.getResource(resource);
+        if (url==null)
+            throw new MissingResourceException("Missing resource file", "", resource);
         return new File(url.toURI());
     }
 
