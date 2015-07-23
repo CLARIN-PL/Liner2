@@ -25,6 +25,7 @@ public class Main {
         main.registerTool(new CreateDictTool());
         main.registerTool(new CategorizeTool());
         main.registerTool(new ConvertGeneticRulesTool());
+        main.registerTool(new WordnetTool());
 
 
 
