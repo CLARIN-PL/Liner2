@@ -2,6 +2,7 @@ package g419.liner2.cli.action;
 
 import g419.liner2.cli.Main;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,7 +18,7 @@ public class ActionPartsEvalTest extends TestCase{
 
 
     public void setUp() throws URISyntaxException, FileNotFoundException {
-        config = ResourcesUtils.resourceFile("/cfg_global_rule.ini");
+        config = ResourcesUtils.resourceFile("cfg_global_rule.ini");
     }
 
     protected void setStdOut(File out) throws FileNotFoundException {

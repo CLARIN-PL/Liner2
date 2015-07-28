@@ -15,6 +15,10 @@ run {
     }
 }
 
+test {
+    useJUnit()
+}
+
 jar {
     manifest {
         attributes "Main-Class": main
@@ -27,4 +31,5 @@ dependencies {
     compile project(":g419-corpus")
     compile project(":g419-liner2-api")
     compile project(":g419-liner2-relations")
+    compile project(":g419-lib-cli")
 }

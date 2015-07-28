@@ -28,17 +28,20 @@ public class Main {
     	Main main = new Main();
     	main.registerAction(new ActionAnnotations());
     	main.registerAction(new ActionConvert());
-    	main.registerAction(new ActionEval());
-    	main.registerAction(new ActionInteractive());
-    	main.registerAction(new ActionPipe());
-    	main.registerAction(new ActionFeatureSelection());
-    	main.registerAction(new ActionTime());
-    	main.registerAction(new ActionTrain());
-    	main.registerAction(new ActionAgreement());
-    	main.registerAction(new ActionLearningCurve());
-    	main.registerAction(new ActionStats());
+		main.registerAction(new ActionEval());
+		main.registerAction(new ActionInteractive());
+		main.registerAction(new ActionPipe());
+		main.registerAction(new ActionFeatureSelection());
+		main.registerAction(new ActionTime());
+		main.registerAction(new ActionTrain());
+		main.registerAction(new ActionAgreement());
+		main.registerAction(new ActionLearningCurve());
+		main.registerAction(new ActionStats());
 		main.registerAction(new ActionLemmatize());
-    	
+		main.registerAction(new ActionConstituentsEval());
+		main.registerAction(new ActionNormalizerEval());
+		main.registerAction(new ActionValidateNormalizationData());
+
     	if ( args.length == 0 ){
     		main.printCredits();
     		System.out.println("[Error] Mode not given. \n\nUse one of the following modes:");
