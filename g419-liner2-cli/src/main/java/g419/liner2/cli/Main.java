@@ -86,8 +86,8 @@ public class Main {
 		System.out.println("*-----------------------------------------------------------------------------------------------*");
 		System.out.println("* A framework for multitask sequence labeling, including: named entities, temporal expressions. *");
 		System.out.println("*                                                                                               *");
-		System.out.println("* Authors: Michał Marcińczuk (2010–2014), Michał Krautforst (2013-2014), Jan Kocoń (2014)       *");
-		System.out.println("*          Adam Kaczmarek (2014) Dominik Piasecki (2013), Maciej Janicki (2011)                 *");
+		System.out.println("* Authors: Michał Marcińczuk (2010–2015), Michał Krautforst (2013-2015), Jan Kocoń (2014–2015)  *");
+		System.out.println("*          Adam Kaczmarek (2014–2015) Dominik Piasecki (2013), Maciej Janicki (2011)            *");
 		System.out.println("* Contact: michal.marcinczuk@pwr.wroc.pl                                                        *");
 		System.out.println("*                                                                                               *");
 		System.out.println("*          G4.19 Research Group, Wrocław University of Technology                               *");
