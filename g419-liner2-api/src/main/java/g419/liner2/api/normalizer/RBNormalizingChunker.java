@@ -1,6 +1,6 @@
 package g419.liner2.api.normalizer;
 
-import eu.clarin_pl.rbn.RuleSet;
+import g419.liner2.api.normalizer.rbn.RuleSet;
 import g419.corpus.structure.Annotation;
 
 import java.util.List;

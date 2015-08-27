@@ -25,8 +25,8 @@ allprojects {
     }
 
     group = "pl.pwr.nlp"
-    sourceCompatibility = 1.7
-    targetCompatibility = 1.7
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
     version = '2.5-SNAPSHOT'
 
     repositories {

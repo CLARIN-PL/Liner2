@@ -89,7 +89,18 @@ public class Wordnet2 {
 			if(units.getValue().containsKey(word))
 				for(String offset: units.getValue().get(word).synset_offsets)
 					synsets.add(data.get(units.getKey()).get(offset));
-		return synsets;	
+		return synsets;
+	}
+
+	public ArrayList<String> getMuliwordPhrases(){
+		ArrayList<String> multiwordPhrases = new ArrayList<String>();
+		for(Entry<String, HashMap<String, PrincetonIndexRaw>> units: index.entrySet())
+			for(String wordUnit: (units.getValue().keySet())){
+				if(wordUnit.contains("_")){
+					multiwordPhrases.add(wordUnit.replace("_", " "));
+				}
+			}
+		return multiwordPhrases;
 	}
 
 	/**

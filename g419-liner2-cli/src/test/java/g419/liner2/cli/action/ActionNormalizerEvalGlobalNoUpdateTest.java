@@ -2,13 +2,13 @@ package g419.liner2.cli.action;
 
 import g419.liner2.cli.Main;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.net.URISyntaxException;
-
 
 public class ActionNormalizerEvalGlobalNoUpdateTest extends TestCase{
     File index;
@@ -79,6 +79,7 @@ public class ActionNormalizerEvalGlobalNoUpdateTest extends TestCase{
         }
     }
 
+    @Test
     public void testTimexTrain() throws Exception {
         doTest("index_time_train");
     }
