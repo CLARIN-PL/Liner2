@@ -38,9 +38,9 @@ public class Main {
 		main.registerAction(new ActionLearningCurve());
 		main.registerAction(new ActionStats());
 		main.registerAction(new ActionLemmatize());
-		main.registerAction(new ActionConstituentsEval());
-		main.registerAction(new ActionNormalizerEval());
-		main.registerAction(new ActionValidateNormalizationData());
+		//main.registerAction(new ActionConstituentsEval());
+		//main.registerAction(new ActionNormalizerEval());
+		//main.registerAction(new ActionValidateNormalizationData());
 
     	if ( args.length == 0 ){
     		main.printCredits();
