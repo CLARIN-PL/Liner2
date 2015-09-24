@@ -2,6 +2,7 @@ package g419.liner2.cli.action;
 
 import g419.liner2.cli.Main;
 import junit.framework.TestCase;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -10,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.net.URISyntaxException;
 
+@Ignore
 public class ActionNormalizerEvalGlobalNoUpdateTest extends TestCase{
     File index;
     File config;

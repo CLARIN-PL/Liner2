@@ -5,7 +5,6 @@ import junit.framework.TestCase;
 
 import java.io.*;
 import java.net.URISyntaxException;
-import java.net.URL;
 
 
 public class ActionNormalizerEvalTest extends TestCase{
@@ -84,14 +83,17 @@ public class ActionNormalizerEvalTest extends TestCase{
     }
 
     public void testTimexAll() throws Exception {
+        System.out.println("testTimexAll");
         doTest("index_time");
     }
 
     public void testTimexTune() throws Exception {
+        System.out.println("testTimexTune");
         doTest("index_time_tune");
     }
 
     public void testTimexTest() throws Exception {
+        System.out.println("testTimexTest");
         doTest("index_time_test");
     }
 

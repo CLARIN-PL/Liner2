@@ -1,9 +1,17 @@
 {
   "regexEscape": "%",
   "rules": {
+    "ageRoman": {
+      "extract": "$reAgeRoman",
+      "normalize": "@group(0)"
+    },
     "age": {
       "extract": "$reAgeNumber%s+wiek[.]?",
       "normalize": "@group(0)"
+    },
+    "partAge": {
+      "extract": "$rePart%s+$reAgeNumber%s+wiek[.]?",
+      "normalize": "@group(1)-@group(0)"
     },
     "ageWrit": {
       "extract": "$reAgeWritten",
@@ -15,6 +23,10 @@
     },
     "agePart": {
       "extract": "$reStart%s+$reAgeNumber%s+wiek[.]?",
+      "normalize": "@group(1)"
+    },
+    "ageWrittenPart": {
+      "extract": "$reStart?%s?+$reNumberAge%s+wiek[.]?",
       "normalize": "@group(1)"
     },
     "ageHalf": {
@@ -68,6 +80,72 @@
       "xxviii",
       "xxix",
       "xxx"
+    ],
+    "reAgeRoman": [
+      "i",
+      "ii",
+      "iii",
+      "iv",
+      "v",
+      "vi",
+      "vii",
+      "viii",
+      "ix",
+      "x",
+      "xi",
+      "xii",
+      "xiii",
+      "xiv",
+      "xv",
+      "xvi",
+      "xvii",
+      "xviii",
+      "xix",
+      "xx",
+      "xxi",
+      "xxii",
+      "xxiii",
+      "xxiv",
+      "xxv",
+      "xxvi",
+      "xxvii",
+      "xxviii",
+      "xxix",
+      "xxx"
+    ],
+    "reNumberAge": [
+      "[dwudziesty]? pierwszy",
+      "[dwudziesty]? drugi",
+      "trzeci",
+      "czwarty",
+      "piąty",
+      "piaty",
+      "szósty",
+      "szosty",
+      "siódmy",
+      "siodmy",
+      "ósmy",
+      "osmy",
+      "dziewiąty",
+      "dziewiaty",
+      "dziesiąty",
+      "dziesiaty",
+      "jedenasty",
+      "dwunasty",
+      "trzynasty",
+      "czternasty",
+      "piętnasty",
+      "pietnasty",
+      "szesnasty",
+      "siedemnasty",
+      "osiemnasty",
+      "dziewiętnasty",
+      "dziewietnasty",
+      "dwudziesty"
+    ],
+    "rePart": [
+      "pierwszy połowa",
+      "drugi połowa"
     ],
     "reAgeWritten": [
       "dziesięciowieczny",
@@ -127,6 +205,38 @@
       "^xxix$": "28",
       "^xxx$": "29"
     },
+    "reNumberAge": {
+      "pierwszy": "00",
+      "drugi": "01",
+      "trzeci": "02",
+      "czwarty": "03",
+      "piąty": "04",
+      "piaty": "04",
+      "szósty": "05",
+      "szosty": "05",
+      "siódmy": "06",
+      "siodmy": "06",
+      "ósmy": "07",
+      "osmy": "07",
+      "dziewiąty": "08",
+      "dziewiaty": "08",
+      "dziesiąty": "09",
+      "dziesiaty": "09",
+      "jedenasty": "10",
+      "dwunasty": "11",
+      "trzynasty": "12",
+      "czternasty": "13",
+      "piętnasty": "14",
+      "pietnasty": "14",
+      "szesnasty": "15",
+      "siedemnasty": "16",
+      "osiemnasty": "17",
+      "dziewiętnasty": "18",
+      "dziewietnasty": "18",
+      "dwudziesty": "19",
+      "dwudziesty pierwszy": "20",
+      "dwudziesty drugi": "21"
+    },
     "ageWritten": {
       "dziesięciowieczny": "09",
       "jedenastowieczny": "10",
@@ -139,6 +249,12 @@
       "osiemnastowieczny": "17",
       "dziewiętnastowieczny": "18",
       "dwudziestowieczny": "19"
+    },
+    "part": {
+      "pierwszy połowa": "H1",
+      "1 połowa": "H1",
+      "drugi połowa": "H2",
+      "2 połowa": "H2"
     },
     "halfNumber": {
       "pierwszy": "1",

@@ -13,9 +13,41 @@
       "extract": "$reDay[.]?%s+$reMonthName[.]?",
       "normalize": "xxxx-@group(1)-@group(0)"
     },
+    "writtenDayMonthWithDayOfWeek": {
+      "extract": "$reDayOfWeek[,]?%s+$reDay[.]?%s+$reMonthName[.]?",
+      "normalize": "xxxx-@group(2)-@group(1)"
+    },
     "writtenDayMonthWithDayWord": {
       "extract": "dzień%s+$reDay[.]?%s+$reMonthName[.]?",
       "normalize": "xxxx-@group(1)-@group(0)"
+    },
+    "adjMonth": {
+      "extract": "$reMonthWritten",
+      "normalize": "xxxx-@group(0)"
+    },
+    "partMonth": {
+      "extract": "$rePart%s$reMonthName",
+      "normalize": "xxxx-@group(1)-@group(0)"
+    },
+    "monthThisYear": {
+      "extract": "$reMonthName%s$reThisYear",
+      "normalize": "xxxx-@group(0)"
+    },
+    "monthLastYear": {
+      "extract": "$reMonthName%s$reLastYear",
+      "normalize": "xxxx-@group(0)"
+    },
+    "monthNextYear": {
+      "extract": "$reMonthName%s$reNextYear",
+      "normalize": "xxxx-@group(0)"
+    },
+    "monthLastYearOWR": {
+      "extract": "$reLastYear%s$reMonthName",
+      "normalize": "xxxx-@group(1)"
+    },
+    "monthNextYearOWR": {
+      "extract": "$reNextYear%s$reMonthName",
+      "normalize": "xxxx-@group(1)"
     },
     "writtenHalfMonth": {
       "extract": "$reHalf%s+$reMonthName[.]?",
@@ -41,8 +73,20 @@
       "extract": "$reDay[.]?%s+$reMonthName[.]?%s+$reCentury$re2Digits%s*$reDesc?",
       "normalize": "@group(2)@group(3)-@group(1)-@group(0)"
     },
+    "writtenFullDateNextYear": {
+      "extract": "$reDay[.]?%s+$reMonthName[.]?%s+$reNextYear",
+      "normalize": "xxxx-@group(1)-@group(0)"
+    },
+    "writtenFullDateLastYear": {
+      "extract": "$reDay[.]?%s+$reMonthName[.]?%s+$reLastYear",
+      "normalize": "xxxx-@group(1)-@group(0)"
+    },
     "writtenFullDateWithR": {
       "extract": "$reDay[.]?%s+$reMonthName[.]?%s+$reCentury$re2Digits%s+rocznik[.]",
+      "normalize": "@group(2)@group(3)-@group(1)-@group(0)"
+    },
+    "writtenFullDateWithRWithoutSpace": {
+      "extract": "$reDay[.]?%s+$reMonthName[.]?%s+$reCentury$re2Digits+r[.]",
       "normalize": "@group(2)@group(3)-@group(1)-@group(0)"
     },
     "writtenFullDateWithDayWord": {
@@ -93,6 +137,31 @@
       "?:rok",
       "rocznik"
     ],
+    "reThisYear": [
+      "ten rok",
+      "ten sam rok",
+      "bieżący rok",
+      "bieżącego roku[.]",
+      "bieżącym roku[.]",
+      "bieżącego/bieżącym roku[.]",
+      "rok bieżący",
+      "tegoroczny"
+    ],
+    "reLastYear": [
+      "zeszły rok",
+      "zeszły",
+      "zeszłoroczny",
+      "ubiegły[.]? rok",
+      "rok ubiegły",
+      "ostatni rok"
+    ],
+    "reNextYear": [
+      "następny rok",
+      "rok następny",
+      "przyszły rok",
+      "bliski rok",
+      "rok przyszły"
+    ],
     "reTimeSeparator": [
       "g.",
       "godz.",
@@ -113,6 +182,10 @@
       "poł[.]?",
       "połowa",
       "pol[.]?"
+    ],
+    "rePart": [
+      "pierwszy połowa",
+      "drugi połowa"
     ],
     "reMonthName": [
       "1[012]",
@@ -176,6 +249,51 @@
       "listopada",
       "grudnia"
     ],
+    "reMonthWritten": [
+      "styczniowy",
+      "lutowy",
+      "marcowy",
+      "kwietniowy",
+      "majowy",
+      "czerwcowy",
+      "lipcowy",
+      "sierpniowy",
+      "wrześniowy",
+      "październikowy",
+      "listopadowy",
+      "grudniowy",
+    ],
+    "reDayOfWeek": [
+      "poniedziałek",
+      "pon[.]?",
+      "poniedziałkowy",
+      "poniedziałkowo",
+      "wtorek",
+      "wt[.]?",
+      "wtorkowy",
+      "wtorkowo",
+      "środa",
+      "śr[.]?",
+      "środowy",
+      "środowo",
+      "czwartek",
+      "czwartkowy",
+      "czwartkowo",
+      "czw[.]?",
+      "piątek",
+      "piątkowy",
+      "piątkowo",
+      "pt[.]?",
+      "sobota",
+      "sobote",
+      "sobotni",
+      "sobotnio",
+      "sob[.]?",
+      "niedziela",
+      "niedzielny",
+      "niedzielnie",
+      "nd[.]?"
+    ],
     "reDay": [
       "%d(?:)",
       "[012]%d",
@@ -194,7 +312,7 @@
       "[dwudziesty]? osmy",
       "[dwudziesty]? dziewiąty",
       "[dwudziesty]? dziewiaty",
-
+      "pierwszy",
       "dziesiąty",
       "dziesiaty",
       "jedenasty",
@@ -289,6 +407,20 @@
       "grudniowy": "12",
       "grudzien": "12"
     },
+    "monthWritten": {
+      "styczniowy": "01",
+      "lutowy": "02",
+      "marcowy": "03",
+      "kwietniowy": "04",
+      "majowy": "05",
+      "czerwcowy": "06",
+      "lipcowy": "07",
+      "sierpniowy": "08",
+      "wrześniowy": "09",
+      "październikowy": "10",
+      "listopadowy": "11",
+      "grudniowy": "12"
+    },
     "genMonthNames": {
       "stycznia": "01",
       "lutego": "02",
@@ -304,6 +436,42 @@
       "pazdziernika": "10",
       "listopada": "11",
       "grudnia": "12"
+    },
+    "dayOfWeek": {
+      "poniedziałek": "1",
+      "poniedziałkowy": "1",
+      "poniedziałkowo": "1",
+      "pon[.]?[^i]": "1",
+      "wtorek": "2",
+      "wtorkowy": "2",
+      "wtorkowo": "2",
+      "wt[.]?[^o]": "2",
+      "środa": "3",
+      "środowy": "3",
+      "środowo": "3",
+      "śr[.]?[^o]": "3",
+      "czwartek": "4",
+      "czwartkowy": "4",
+      "czwartkowo": "4",
+      "czw[.]?[^a]": "4",
+      "piątek": "5",
+      "piątkowy": "5",
+      "piątkowo": "5",
+      "pt[.]?": "5",
+      "sobota": "6",
+      "sobotni": "6",
+      "sobotnio": "6",
+      "sob[.]?[^o]": "6",
+      "niedziela": "7",
+      "niedzielny": "7",
+      "niedzielnie": "7",
+      "nd[.]?": "7"
+    },
+    "part": {
+      "pierwszy połowa": "H1",
+      "1 połowa": "H1",
+      "drugi połowa": "H2",
+      "2 połowa": "H2"
     },
     "decade": {
       "dwudziesty": "2",
