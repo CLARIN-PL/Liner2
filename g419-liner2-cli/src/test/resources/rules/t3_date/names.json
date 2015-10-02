@@ -13,6 +13,14 @@
       "extract": "$reThisMonth",
       "normalize": "+0000-00"
     },
+    "lastMonth": {
+      "extract": "$reLastMonth",
+      "normalize": "-0000-01"
+    },
+    "nextMonth": {
+      "extract": "$reNextMonth",
+      "normalize": "+0000-01"
+    },
     "thisYear": {
       "extract": "$reThisYear",
       "normalize": "+0000"
@@ -49,33 +57,49 @@
       "extract": "$reNextWeekend",
       "normalize": "+0000-W01-WE"
     },
-    "month": {
-      "extract": "$reMonth",
-      "normalize": "xxxx-@group(0)"
-    },
     "monthWithDescription": {
-      "extract": "$reDescription%s$reMonth",
+      "extract": "$reDescription?%s?$reMonth",
       "normalize": "xxxx-@group(1)"
     },
     "monthThisYear": {
       "extract": "$reMonth%s+$thisYear",
       "normalize": "+0000-@group(1)"
     },
-    "dayOfWeek": {
-      "extract": "$reDayOfWeek",
-      "normalize": "xxxx-Wxx-@group(0)"
+    "dayOfWeekWithDescription": {
+      "extract": "$rePart?%s?+$reDayOfWeek",
+      "normalize": "xxxx-Wxx-@group(1)"
     },
     "dayOfWeekWithDate": {
       "extract": "$reDayOfWeek%s$re2Digits%s$reMonth",
       "normalize": "xxxx-@group(2)-@group(1)"
     },
+    "lastDayOfWeek": {
+      "extract": "ostatni%s+$reDayOfWeek",
+      "normalize": "<D@group(0)"
+    },
+    "nextDayOfWeek": {
+      "extract": "przyszły%s+$reDayOfWeek",
+      "normalize": ">D@group(0)"
+    },
+    "nextDayOfWeek1": {
+      "extract": "bliski%s+$reDayOfWeek",
+      "normalize": ">D@group(0)"
+    },
+    "nextDayOfWeek2": {
+      "extract": "następny%s+$reDayOfWeek",
+      "normalize": ">D@group(0)"
+    },
     "partOfYear": {
       "extract": "$rePartOfYear",
       "normalize": "xxxx-@group(0)"
     },
-    "year4Digits": {
-      "extract": "$rePartOfYear%s$reCentury$re2Digits%s$reYear",
-      "normalize": "@group(1)@group(2)-@group(0)"
+    "thisPartOfYear": {
+      "extract": "ten%s+$rePartOfYear",
+      "normalize": "+0000-@group(0)"
+    },
+    "partOfYearWith4DigitsAndAdd": {
+      "extract": "$reDescription?%s?$rePartOfYear%s$reCentury$re2Digits%s?$reYear?",
+      "normalize": "@group(2)@group(3)-@group(1)"
     },
     "partOfYearWithDescription": {
       "extract": "$reDescription%s$rePartOfYear",
@@ -139,7 +163,9 @@
       "piątkowy",
       "piątkowo",
       "pt[.]?",
+      "pod tytułem[.]",
       "sobota",
+      "sobote",
       "sobotni",
       "sobotnio",
       "sob[.]?",
@@ -169,13 +195,22 @@
     "reNextWeekend": [
       "bliski weekend",
       "następny weekend",
-      "przyszły weekend"
+      "przyszły weekend",
+      "bliski weekend"
     ],
     "reNextYear": [
       "następny rok",
       "rok następny",
       "przyszły rok",
+      "bliski rok",
       "rok przyszły"
+    ],
+    "reNextMonth": [
+      "następny miesiąc",
+      "miesiąc następny",
+      "przyszły miesiąc",
+      "bliski miesiąc",
+      "miesiąc przyszły"
     ],
     "reNextWeek": [
       "następny tydzień",
@@ -188,8 +223,16 @@
       "rok ubiegły",
       "ostatni rok"
     ],
+    "reLastMonth": [
+      "zeszły miesiąc",
+      "zeszłomiesięczny",
+      "ubiegły miesiąc",
+      "miesiąc ubiegły",
+      "ostatni miesiąc"
+    ],
     "reLastWeek": [
       "zeszły tydzień",
+      "ostatni tydzień",
       "ubiegły tydzień"
     ],
     "reWeekend": [
@@ -210,6 +253,11 @@
       "późny",
       "przesilenie",
       "długi"
+    ],
+    "rePart": [
+      "początek",
+      "środek",
+      "koniec"
     ],
     "reMonth": [
       "styczeń",
@@ -287,7 +335,9 @@
       "piątkowy": "5",
       "piątkowo": "5",
       "pt[.]?": "5",
+      "pod tytułem[.]": "5",
       "sobota": "6",
+      "sobote": "6",
       "sobotni": "6",
       "sobotnio": "6",
       "sob[.]?[^o]": "6",

@@ -26,8 +26,12 @@ public class LinerOptions {
 	/**
 	 * There is one LinetOptions object. 
 	 */
-	static protected final LinerOptions linerOptions = new LinerOptions();
-	
+	static protected LinerOptions linerOptions = new LinerOptions();
+
+    public static void resetGlobal(){
+        linerOptions = new LinerOptions();
+    }
+
 	/**
 	 * Read-only access to the LinerOptions 
 	 * @return
