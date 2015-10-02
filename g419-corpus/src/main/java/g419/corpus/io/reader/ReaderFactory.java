@@ -121,6 +121,7 @@ public class ReaderFactory {
         InputStream annCoreference = null; 
         InputStream annGroups = null; 
         InputStream annWords = null;
+        InputStream annRelations = null;
 
         File fileNamed = new File(inputFolder,"ann_named.xml");
         if ( fileNamed.exists() ){
@@ -146,9 +147,14 @@ public class ReaderFactory {
         if ( fileGroups.exists() ){
         	annGroups = getInputStream(fileGroups.getPath());
         }
-        
+
+        File fileRelations = new File(inputFolder,"ann_relations.xml");
+        if ( fileRelations.exists() ){
+        	annRelations = getInputStream(fileRelations.getPath());
+        }
+
         return new TEIStreamReader(annMorphosyntax, annSegmentation, annNamed, annMentions, 
-        		annCoreference, annWords, annGroups, docname);
+        		annCoreference, annWords, annGroups, annRelations, docname);
     }
 	
 	private InputStream getInputStream(String inputFile) throws Exception {

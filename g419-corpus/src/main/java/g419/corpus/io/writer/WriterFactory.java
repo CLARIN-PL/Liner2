@@ -62,6 +62,8 @@ public class WriterFactory {
         	return new SimpleRelationClusterSetWriter(out);
         else if (outputFormat.equals("relation-tuples"))
         	return new RelationTuplesWriter(out);
+        else if (outputFormat.equals("conll"))
+        	return new ConllStreamWriter(out);
 		else		
 			throw new Exception("Output format " + outputFormat + " not recognized.");
 	}
@@ -87,7 +89,9 @@ public class WriterFactory {
         OutputStream annNamed = getOutputStream(new File(outputFolder,"ann_named.xml").getPath());
         OutputStream annMentions = getOutputStream(new File(outputFolder,"ann_mentions.xml").getPath());
         OutputStream annCoreference = getOutputStream(new File(outputFolder,"ann_coreference.xml").getPath());
-        return new TEIStreamWriter(text, annSegmentation, annMorphosyntax, annNamed, annMentions, annCoreference, new File(outputFolder).getName());
+        OutputStream annRelations = getOutputStream(new File(outputFolder,"ann_relations.xml").getPath());
+        return new TEIStreamWriter(text, annSegmentation, annMorphosyntax, annNamed, 
+        		annMentions, annCoreference, annRelations, new File(outputFolder).getName());
     }
 	
 	private OutputStream getOutputStream(String outputFile) throws Exception {

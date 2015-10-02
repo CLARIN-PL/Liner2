@@ -86,9 +86,12 @@ public class AnnMentionsSAXParser extends DefaultHandler {
         else if (elementName.equalsIgnoreCase(TAG_SENTENCE)) {
             currentSentence = currentParagraph.getSentences().get(currentSentenceIdx++);
         }
+        else if (elementName.equalsIgnoreCase(TAG_FEATURESET)) {
+        	// TODO: Sprawdzić, czy atrybut "type" istnieje
+            this.annotationType = attributes.getValue("type");
+        }
         else if (elementName.equalsIgnoreCase(TAG_SEGMENT)) {
             annotatedTokens = new ArrayList<Integer>();
-            annotationType = null;
             annotationId = attributes.getValue(TAG_ID);
         }
         else if (elementName.equalsIgnoreCase(TAG_FEATURE)) {
@@ -100,7 +103,14 @@ public class AnnMentionsSAXParser extends DefaultHandler {
         }
         else if (elementName.equalsIgnoreCase(TAG_POINTER)) {
             String target = attributes.getValue("target");
-            annotatedTokens.add(tokenIdsMap.get(target.split("#")[1]));
+            Integer tokenId = tokenIdsMap.get(target.split("#")[1]);
+    		// TODO: zamienić na logger
+            if ( tokenId != null ){
+                annotatedTokens.add(tokenId);            	
+            }
+            else{
+            	System.err.println("TEI error: null token id dla: " + target);
+            }            
         }
     }
 
@@ -108,17 +118,28 @@ public class AnnMentionsSAXParser extends DefaultHandler {
     public void endElement(String s, String s1, String element) throws SAXException {
 
         if (element.equals(TAG_SEGMENT)) {
-            Annotation ann = new Annotation(annotatedTokens.get(0), ANNOTATION_MENTION, currentSentence);
-            for(int i=1; i<annotatedTokens.size(); i++){
-                ann.addToken(annotatedTokens.get(i));
-            }
-            if(currentHead != null){
-            	ann.setHead(currentHead);
-            	currentHead = null;
-            }
-            annotationsMap.put(annotationId, ann);
+        	if ( this.annotatedTokens != null ){
+	            Annotation ann = new Annotation(
+	            		this.annotatedTokens.get(0), 
+	            		this.annotationType, 
+	            		this.currentSentence);
+	            for(int i=1; i<annotatedTokens.size(); i++){
+	                ann.addToken(annotatedTokens.get(i));
+	            }
+	            if(currentHead != null){
+	            	ann.setHead(currentHead);
+	            	currentHead = null;
+	            }
+	            annotationsMap.put(annotationId, ann);
+	            // TODO: tymczasowo dla każdej anotacji wstawiane są dwa klucze, z i bez nazwy pliku
+	            annotationsMap.put("ann_mentions.xml#" + annotationId, ann);
+	            currentSentence.addChunk(ann);
+        	}
+        	else{
+        		// TODO: zamienić na logger
+        		System.err.println("TEI error: anotacja została pominięta: " + this.annotationId);        		
+        	}
             annotationId = null;
-            currentSentence.addChunk(ann);
         }
         else if (element.equalsIgnoreCase(TAG_FEATURE)) {
             currentFeatureName = null;

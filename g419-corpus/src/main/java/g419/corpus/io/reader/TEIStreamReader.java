@@ -5,6 +5,7 @@ import g419.corpus.io.reader.parser.tei.AnnGroupsSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnMentionsSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnMorphosyntaxSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnNamedSAXParser;
+import g419.corpus.io.reader.parser.tei.AnnRelationsSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnSegmentationSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnWordsSAXParser;
 import g419.corpus.structure.Document;
@@ -22,10 +23,7 @@ public class TEIStreamReader extends  AbstractDocumentReader{
 
     private TokenAttributeIndex attributeIndex;
     private Document document;
-
     
-    // Tylko adres pliku zamiast strumieni
-    // Warunkowe tworzenie strumieni - bez System.in
     public TEIStreamReader(
     		InputStream annMorphosyntax, 
     		InputStream annSegmentation, 
@@ -34,6 +32,7 @@ public class TEIStreamReader extends  AbstractDocumentReader{
     		InputStream annCoreference,
     		InputStream annWords,
     		InputStream annGroups,
+    		InputStream annRelations,
     		String docName) throws DataFormatException {
         
     	this.attributeIndex = new TokenAttributeIndex();
@@ -48,6 +47,7 @@ public class TEIStreamReader extends  AbstractDocumentReader{
         AnnMorphosyntaxSAXParser morphoParser = new AnnMorphosyntaxSAXParser(docName, annMorphosyntax, this.attributeIndex);
         AnnSegmentationSAXParser segmentationParser = new AnnSegmentationSAXParser(annSegmentation, morphoParser.getParagraphs());
         AnnWordsSAXParser wordsParser = null;
+        AnnMentionsSAXParser mentionParser = null;
 
         /* Read words from the ann_words.xml file */
         if ( annWords != null ){
@@ -75,14 +75,21 @@ public class TEIStreamReader extends  AbstractDocumentReader{
         }
         
         if ( annMentions != null ){
-        	new AnnMentionsSAXParser(annMentions, segmentationParser.getParagraphs(), morphoParser.getTokenIdsMap());
+        	mentionParser = new AnnMentionsSAXParser(
+        			annMentions, 
+        			segmentationParser.getParagraphs(), 
+        			morphoParser.getTokenIdsMap());
         }
         
         if ( annCoreference != null ){
         	//AnnCoreferenceSAXParser coreferenceParser = new AnnCoreferenceSAXParser(annCoreference, mentionsParser.getParagraphs(), mentionsParser.getMentions());
-        	//relationSet = 
         }
-        
+
+        if ( annRelations != null ){
+        	AnnRelationsSAXParser relationParser = new AnnRelationsSAXParser(annRelations, mentionParser.getMentions());
+        	relationSet.getRelations().addAll(relationParser.getRelations());
+        }
+
         this.document = new Document(docName, segmentationParser.getParagraphs(), this.attributeIndex, relationSet);       
     }
 
