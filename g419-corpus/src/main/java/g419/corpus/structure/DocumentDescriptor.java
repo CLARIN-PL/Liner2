@@ -1,7 +1,10 @@
 package g419.corpus.structure;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.text.SimpleDateFormat;
 
 public class DocumentDescriptor {
     protected final Map<String, String> description;
@@ -10,6 +13,9 @@ public class DocumentDescriptor {
     public DocumentDescriptor() {
         description = new HashMap<>();
         metadata = new HashMap<>();
+        //as default DCT=now() if not in INI
+        this.setDescription("date", ( new SimpleDateFormat( "yyyy-MM-dd" ) ).format( Calendar.getInstance().getTime()));
+
     }
 
     public Map<String, String> getDescription() {
@@ -62,5 +68,14 @@ public class DocumentDescriptor {
         int result = description.hashCode();
         result = 31 * result + metadata.hashCode();
         return result;
+    }
+
+    public DocumentDescriptor clone(){
+        DocumentDescriptor desc = new DocumentDescriptor();
+        for (Map.Entry<String, String> entry: description.entrySet())
+            desc.setDescription(entry.getKey(), entry.getValue());
+        for (Map.Entry<String, String> entry: metadata.entrySet())
+            desc.setMetadata(entry.getKey(), entry.getValue());
+        return desc;
     }
 }

@@ -2,13 +2,15 @@ package g419.liner2.cli.action;
 
 import g419.liner2.cli.Main;
 import junit.framework.TestCase;
+import org.junit.Ignore;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.net.URISyntaxException;
 
-
+@Ignore
 public class ActionPartsEvalTest extends TestCase{
     File index;
     File config;
