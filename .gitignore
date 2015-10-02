@@ -102,3 +102,4 @@ nb-configuration.xml
 
 lib/CRFPP.jar
 lib/libCRFPP.so
+/bin/

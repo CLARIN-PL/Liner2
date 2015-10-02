@@ -38,4 +38,9 @@ public class Tag {
     public void setDisamb(boolean disamb){
         this.disamb = disamb;
     }
+
+    // TODO
+//    public void SetBase(String base){
+//    	ti
+//    }
 }

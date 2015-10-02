@@ -17,6 +17,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.xml.stream.XMLOutputFactory;
@@ -28,7 +29,6 @@ import javax.xml.stream.XMLStreamWriter;
  * User: michal
  * Date: 8/28/13
  * Time: 2:29 PM
- * To change this template use File | Settings | File Templates.
  */
 public class TEIStreamWriter extends AbstractDocumentWriter{
 
@@ -60,12 +60,14 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     private XMLStreamWriter annNamedWriter;
     private XMLStreamWriter annMentionsWriter;
     private XMLStreamWriter annCoreferenceWriter;
+    private XMLStreamWriter annRelationsWriter;
     private OutputStream text;
     private OutputStream annSegmentation;
     private OutputStream annMorphosyntax;
     private OutputStream annNamed;
     private OutputStream annMentions;
     private OutputStream annCoreference;
+    private OutputStream annRelations;
     private boolean open = false;
     private boolean indent = true;
     private String documentName;
@@ -75,10 +77,20 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     private List<Pattern> namedPatterns;
     private List<Pattern> mentionPatterns;
 
-    private HashMap<Annotation, String> mentionIds;
+    // Identyfikatory anotacji z nazwą pliku, w którym zostały zapisane, np. "ann_mentions.xml#an1" 
+    private HashMap<Annotation, String> mentionRefs = new HashMap<Annotation, String>();
+    // Identyfikatory anotacji bez nazwy pliku, np. "an1"
+    private HashMap<Annotation, String> mentionIds = new HashMap<Annotation, String>();
     private int mentionNr = 0;
     
-    public TEIStreamWriter(OutputStream text, OutputStream annSegmentation, OutputStream annMorphosyntax, OutputStream annNamed, OutputStream annMentions, OutputStream annCoreference, String documentName) {
+    public TEIStreamWriter(OutputStream text, 
+    		OutputStream annSegmentation, 
+    		OutputStream annMorphosyntax, 
+    		OutputStream annNamed, 
+    		OutputStream annMentions, 
+    		OutputStream annCoreference, 
+    		OutputStream annRelations,
+    		String documentName) {
         this.documentName = documentName;
         this.text = text;
         this.annSegmentation = annSegmentation;
@@ -86,6 +98,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         this.annNamed = annNamed;
         this.annMentions = annMentions;
         this.annCoreference = annCoreference;
+        this.annRelations = annRelations;
         
         this.namedPatterns = new ArrayList<Pattern>();
         this.namedPatterns.add(Pattern.compile(".*nam"));
@@ -93,17 +106,28 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         this.mentionPatterns = new ArrayList<Pattern>();
         this.mentionPatterns.add(Pattern.compile(".*nam"));
         this.mentionPatterns.add(Pattern.compile("anafora_wyznacznik"));
-        
-        this.mentionIds = new HashMap<Annotation, String>();
+        // TODO: tymczasowo dodany landmark, spatial_indicator i trajector
+        this.mentionPatterns.add(Pattern.compile("landmark"));
+        this.mentionPatterns.add(Pattern.compile("spatial_indicator"));
+        this.mentionPatterns.add(Pattern.compile("trajector"));
         
         XMLOutputFactory xmlof = XMLOutputFactory.newFactory();
         try {
             this.textWriter = xmlof.createXMLStreamWriter(text);
             this.annSegmentationWriter = xmlof.createXMLStreamWriter(annSegmentation);
             this.annMorphosyntaxWriter = xmlof.createXMLStreamWriter(annMorphosyntax);
-            if(this.annNamed != null) this.annNamedWriter = xmlof.createXMLStreamWriter(annNamed);
-            if(this.annMentions != null) this.annMentionsWriter = xmlof.createXMLStreamWriter(annMentions);
-            if(this.annCoreference != null) this.annCoreferenceWriter = xmlof.createXMLStreamWriter(annCoreference);
+            if(this.annNamed != null){ 
+            	this.annNamedWriter = xmlof.createXMLStreamWriter(annNamed);
+            }
+            if(this.annMentions != null){ 
+            	this.annMentionsWriter = xmlof.createXMLStreamWriter(annMentions);
+            }
+            if(this.annCoreference != null){ 
+            	this.annCoreferenceWriter = xmlof.createXMLStreamWriter(annCoreference);
+            }
+            if(this.annRelations != null){ 
+            	this.annRelationsWriter = xmlof.createXMLStreamWriter(annRelations);
+            }
         } catch (XMLStreamException ex) {
             ex.printStackTrace();
         }
@@ -187,6 +211,14 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
 	            annCoreferenceWriter.writeCharacters("\n");
             }
 
+            if(annRelationsWriter != null){
+            	writeCommonOpening(this.annRelationsWriter);
+            	this.annRelationsWriter.writeAttribute("xml:lang", "pl");
+            	this.annRelationsWriter.writeCharacters("\n");
+	            this.indent(3, this.annRelationsWriter);
+	            this.annRelationsWriter.writeStartElement(TAG_BODY);
+	            this.annRelationsWriter.writeCharacters("\n");
+            }
 
         } catch (XMLStreamException ex) {
             ex.printStackTrace();
@@ -250,10 +282,63 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     		this.writeParagraph(paragraph);
     	
     	try {
-			this.writeRelations(document.getRelations(Relation.COREFERENCE));
+			this.writeCoreferenceRelations(document.getRelations(Relation.COREFERENCE));
+			this.writeRelations(document.getRelations().getRelations());
 		} catch (XMLStreamException e) {
 			e.printStackTrace();
 		}
+    }
+    
+    /**
+     * Zapisuje wszystkie relacje do strumienia annRelationsWriter
+     * @param relations
+     * @throws XMLStreamException 
+     */
+    private void writeRelations(Set<Relation> relations) throws XMLStreamException{
+    	int relId = 1;
+    	for ( Relation relation : relations ){
+
+    		String sourceRef = this.mentionRefs.get(relation.getAnnotationFrom());
+    		String targetRef = this.mentionRefs.get(relation.getAnnotationTo());
+    		
+    		if ( sourceRef == null ){
+    			sourceRef = "?";
+    		}
+    		else{
+    			// TODO: logowanie brakującej anotacji
+    			// Logger.getLogger(this.getClass()).warn("Annotation ref id not found for " + relation.getAnnotationFrom());
+    		}
+
+    		if ( targetRef == null ){
+    			targetRef = "?";
+    		}
+    		else{
+    			// TODO: logowanie brakującej anotacji
+    			// Logger.getLogger(this.getClass()).warn("Annotation ref id not found for " + relation.getAnnotationTo());
+    		}
+
+    		this.indent(4, annRelationsWriter);
+    		this.annRelationsWriter.writeStartElement(TAG_SEGMENT);
+    		this.annRelationsWriter.writeAttribute("xml:id", "relation_" + relId++);
+    		this.annRelationsWriter.writeAttribute("type", relation.getType());
+    		this.annRelationsWriter.writeCharacters("\n");
+    		
+    		this.indent(5, this.annRelationsWriter);
+    		this.annRelationsWriter.writeEmptyElement(TAG_POINTER);
+    		this.annRelationsWriter.writeAttribute("type", "source");
+    		this.annRelationsWriter.writeAttribute("target", sourceRef);
+    		this.annRelationsWriter.writeCharacters("\n");
+
+    		this.indent(5, this.annRelationsWriter);
+    		this.annRelationsWriter.writeEmptyElement(TAG_POINTER);
+    		this.annRelationsWriter.writeAttribute("type", "target");
+    		this.annRelationsWriter.writeAttribute("target", targetRef);
+    		this.annRelationsWriter.writeCharacters("\n");
+
+    		this.indent(4, this.annRelationsWriter);
+    		this.annRelationsWriter.writeEndElement();
+    		this.annRelationsWriter.writeCharacters("\n");
+    	}
     }
     
     private void writeParagraph(Paragraph paragraph) {
@@ -406,7 +491,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
 //      </seg>
     }
     
-    private void writeRelations(RelationSet relations) throws XMLStreamException{
+    private void writeCoreferenceRelations(RelationSet relations) throws XMLStreamException{
     	this.indent(4, annCoreferenceWriter);
     	annCoreferenceWriter.writeStartElement(TAG_PARAGRAPH);
     	annCoreferenceWriter.writeCharacters("\n");
@@ -422,6 +507,8 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     
     private void writeMention(Annotation ann, String annotationId, HashMap<Integer, String> tokenTEIIds) throws XMLStreamException {
     	this.mentionIds.put(ann, annotationId);
+    	this.mentionRefs.put(ann, "ann_mentions.xml#" + annotationId);
+    	
     	int annMentionsIndent = 6;
     	this.indent(annMentionsIndent, annMentionsWriter);
     	annMentionsWriter.writeComment(ann.getText());
@@ -434,7 +521,8 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         // Start feature set
         this.indent(++annMentionsIndent, annMentionsWriter);
         annMentionsWriter.writeStartElement(TAG_FEATURESET);
-        annMentionsWriter.writeAttribute("type", "mention");
+        // TODO: typ ustawiony na sztywno został zmienione na annotation.getType()
+        annMentionsWriter.writeAttribute("type", ann.getType());
         annMentionsWriter.writeCharacters("\n");
     
         if(!ann.hasHead()) ann.assignHead(); 
@@ -678,16 +766,34 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
             writeClosing(textWriter, 4);
             writeClosing(annSegmentationWriter, 3);
             writeClosing(annMorphosyntaxWriter, 3);
-            if(annNamedWriter != null) writeClosing(annNamedWriter, 3);
-            if(annMentionsWriter != null) writeClosing(annMentionsWriter, 3);
-            if(annCoreferenceWriter != null) writeClosing(annCoreferenceWriter, 3);
+            if(annNamedWriter != null){
+            	writeClosing(annNamedWriter, 3);
+            }
+            if(annMentionsWriter != null){
+            	writeClosing(annMentionsWriter, 3);
+            }
+            if(annCoreferenceWriter != null){
+            	writeClosing(annCoreferenceWriter, 3);
+            }
+            if(annRelationsWriter != null){
+            	writeClosing(annRelationsWriter, 3);
+            }
 
             textWriter.close();
             annSegmentationWriter.close();
             annMorphosyntaxWriter.close();
-            if(annNamedWriter != null) annNamedWriter.close();
-            if(annMentionsWriter != null) annMentionsWriter.close();
-            if(annCoreferenceWriter != null) annCoreferenceWriter.close();
+            if (annNamedWriter != null){ 
+            	annNamedWriter.close();
+            }
+            if (annMentionsWriter != null){ 
+            	annMentionsWriter.close();
+            }
+            if (annCoreferenceWriter != null){ 
+            	annCoreferenceWriter.close();
+            }
+            if (annRelationsWriter != null){ 
+            	annCoreferenceWriter.close();
+            }
 
             text.close();
             annMorphosyntax.close();

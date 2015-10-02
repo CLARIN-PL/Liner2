@@ -55,9 +55,6 @@ public class AnnNamedSAXParser extends DefaultHandler {
         this.is = is;
         this.paragraphs = paragraphs;
         this.tokenIdsMap = tokenIdsMap;
-        for ( String id : tokenIdsMap.keySet() ){
-        	System.out.println(id);
-        }
         parseDocument();
     }
 
@@ -90,7 +87,6 @@ public class AnnNamedSAXParser extends DefaultHandler {
             currentSentence = currentParagraph.getSentences().get(currentSentenceIdx++);
         }
         else if (elementName.equalsIgnoreCase(TAG_SEGMENT)) {
-        	System.out.println(attributes.getValue("xml:id"));
             annotatedTokens = new ArrayList<Integer>();
             annotationType = null;
         }
@@ -119,7 +115,6 @@ public class AnnNamedSAXParser extends DefaultHandler {
     public void endElement(String s, String s1, String element) throws SAXException {
 
         if (element.equals(TAG_SEGMENT)) {
-        	System.out.println(annotatedTokens.size());
             Annotation ann = new Annotation(annotatedTokens.get(0), annotationType, currentSentence);
             for(int i=1; i<annotatedTokens.size(); i++){
                 ann.addToken(annotatedTokens.get(i));

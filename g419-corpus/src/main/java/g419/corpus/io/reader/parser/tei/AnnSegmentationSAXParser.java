@@ -56,6 +56,7 @@ public class AnnSegmentationSAXParser extends DefaultHandler {
         } catch (ParserConfigurationException e) {
             throw new DataFormatException("Parse error (ParserConfigurationException)");
         } catch (SAXException e) {
+        	System.err.println(e.getMessage());
             throw new DataFormatException("Parse error (SAXException)");
         } catch (IOException e) {
             throw new DataFormatException("Parse error (IOException)");
