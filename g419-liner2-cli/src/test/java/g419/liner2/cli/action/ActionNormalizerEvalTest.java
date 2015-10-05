@@ -2,11 +2,12 @@ package g419.liner2.cli.action;
 
 import g419.liner2.cli.Main;
 import junit.framework.TestCase;
+import org.junit.Ignore;
 
 import java.io.*;
 import java.net.URISyntaxException;
 
-
+@Ignore
 public class ActionNormalizerEvalTest extends TestCase{
     File index;
     File config;

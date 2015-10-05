@@ -3,5 +3,6 @@ description = "g419-corpus -- biblioteka ze strukturą pliku, czytnikami i piśn
 dependencies {
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'org.ini4j:ini4j:0.5.2'
+    compile 'org.json:json:20141113'
     testCompile 'com.cedarsoftware:java-util:1.13.3'
 }

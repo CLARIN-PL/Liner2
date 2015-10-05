@@ -84,7 +84,7 @@ public class ActionNormalizerEvalGlobalUpdateTest extends TestCase{
         doTest("index_time_train");
     }
 
-    public void                                                                                                                                                                                                                                                                     testTimexAll() throws Exception {
+    public void testTimexAll() throws Exception {
         doTest("index_time");
     }
 

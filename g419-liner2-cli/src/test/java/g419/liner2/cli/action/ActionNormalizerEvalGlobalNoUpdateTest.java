@@ -21,6 +21,7 @@ public class ActionNormalizerEvalGlobalNoUpdateTest extends TestCase{
     public void setUp() throws URISyntaxException, FileNotFoundException {
 //        index = resourceFile("./2015-02-11-kpwr-timex-norm-local/index_time_tune.txt");
         config = ResourcesUtils.resourceFile("cfg_global_no_update.ini");
+        //config = ResourcesUtils.resourceFile("cfg_chain2.ini");
     }
 
     protected void setStdOut(File out) throws FileNotFoundException {

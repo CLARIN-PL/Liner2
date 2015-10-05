@@ -185,6 +185,7 @@ public class Document{
         for(Paragraph p: paragraphs){
             copy.addParagraph(p.clone());
         }
+		copy.documentDescriptor = documentDescriptor.clone();
         return copy;
 
     }

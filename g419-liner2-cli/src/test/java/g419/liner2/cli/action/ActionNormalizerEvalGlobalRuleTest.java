@@ -2,6 +2,8 @@ package g419.liner2.cli.action;
 
 import g419.liner2.cli.Main;
 import junit.framework.TestCase;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,7 +11,7 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.net.URISyntaxException;
 
-
+@Ignore
 public class ActionNormalizerEvalGlobalRuleTest extends TestCase{
     File index;
     File config;
@@ -18,7 +20,9 @@ public class ActionNormalizerEvalGlobalRuleTest extends TestCase{
 
     public void setUp() throws URISyntaxException, FileNotFoundException {
 //        index = resourceFile("./2015-02-11-kpwr-timex-norm-local/index_time_tune.txt");
-        config = ResourcesUtils.resourceFile("cfg_global_rule.ini");
+//        config = ResourcesUtils.resourceFile("cfg_global_rule.ini");
+        config = ResourcesUtils.resourceFile("cfg_chain.ini");
+
     }
 
     protected void setStdOut(File out) throws FileNotFoundException {
@@ -79,20 +83,21 @@ public class ActionNormalizerEvalGlobalRuleTest extends TestCase{
         }
     }
 
-//    public void testTimexTrain() throws Exception {
-//        doTest("index_time_train");
-//    }
-//
-//    public void testTimexAll() throws Exception {
-//        doTest("index_time");
-//    }
+    public void testTimexAll() throws Exception {
+        doTest("index_time");
+
+    }
+
+    public void testTimexTrain() throws Exception {
+        doTest("index_time_train");
+    }
 
     public void testTimexTune() throws Exception {
         doTest("index_time_tune");
     }
 
-//    public void testTimexTest() throws Exception {
-//        doTest("index_time_test");
-//    }
+    public void testTimexTest() throws Exception {
+        doTest("index_time_test");
+    }
 
 }
