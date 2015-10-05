@@ -103,3 +103,5 @@ nb-configuration.xml
 lib/CRFPP.jar
 lib/libCRFPP.so
 /bin/
+g419-liner2-cli/src/test/resources
+g419-liner2-cli/src/test/data
