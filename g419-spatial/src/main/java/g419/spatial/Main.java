@@ -2,6 +2,7 @@ package g419.spatial;
 
 import g419.lib.cli.action.Action;
 import g419.spatial.action.ActionSpatial;
+import g419.spatial.action.ActionSpatialPatterns;
 import g419.spatial.action.ActionTest;
 import g419.spatial.action.ActionTest2;
 
@@ -26,6 +27,7 @@ public class Main {
 		main.registerAction(new ActionTest());
 		//main.registerAction(new ActionWordnet());
 		main.registerAction(new ActionSpatial());
+		main.registerAction(new ActionSpatialPatterns());
 		main.registerAction(new ActionTest2());
 			
 		if ( args.length == 0 ){

@@ -8,12 +8,14 @@ import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
 import g419.lib.cli.CommonOptions;
 import g419.lib.cli.action.Action;
+import g419.liner2.api.Liner2;
 import g419.liner2.api.chunker.IobberChunker;
 import g419.spatial.filter.IRelationFilter;
 import g419.spatial.filter.RelationFilterPronoun;
 import g419.spatial.filter.RelationFilterSemanticPattern;
 import g419.spatial.filter.RelationFilterSpatialIndicator;
 import g419.spatial.structure.SpatialRelation;
+import g419.toolbox.sumo.NamToSumo;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -35,13 +37,15 @@ public class ActionSpatial extends Action {
 	private List<Pattern> annotationsPrep = new LinkedList<Pattern>();
 	private List<Pattern> annotationsNg = new LinkedList<Pattern>();
 	
+	private Pattern patternAnnotationNam = Pattern.compile("^nam(_.*|$)");
+	
 	private String filename = null;
 	private String inputFormat = null;
 	
 	private Logger logger = Logger.getLogger("ActionSpatial");
 	
 	/* Parametry, które będzie trzeba wyciągnąć do pliku ini. */
-	private String config_liner2_model = "";
+	private String config_liner2_model = "/home/czuk/nlp/eclipse/workspace_liner2/models-released/liner2.5/liner25-model-pack-ibl/config-n82.ini";
 	private String config_iobber_model = "model-kpwr11-H";
 	private String config_iobber_config = "kpwr.ini";
 
@@ -91,9 +95,12 @@ public class ActionSpatial extends Action {
 		filters.add(new RelationFilterSemanticPattern());
 		
 		IobberChunker iobber = new IobberChunker("", this.config_iobber_model, this.config_iobber_config);
-				
+		
+		Liner2 liner2 = new Liner2(this.config_liner2_model);
+		
 		while ( document != null ){					
-			System.out.println("\nDocument: " + document.getName());
+			Logger.getLogger(this.getClass()).info("\nDocument: " + document.getName());
+			liner2.chunkInPlace(document);
 			iobber.chunkInPlace(document);			
 			
 			for (Paragraph paragraph : document.getParagraphs()){
@@ -102,6 +109,8 @@ public class ActionSpatial extends Action {
 					List<SpatialRelation> relations = new LinkedList<SpatialRelation>();
 					relations.addAll( this.findSpatialRelationsNgAnyPrepNg(sentence) );
 										
+					this.replaceNgWithNames(sentence, relations);
+					
 					if ( relations.size() > 0 ){
 						System.out.println();
 						System.out.println(sentence);
@@ -128,6 +137,41 @@ public class ActionSpatial extends Action {
 		}
 			
 		reader.close();
+	}
+	
+	/**
+	 * Dla fraz NG, które pokrywają się z nazwą własną, zmienia NG na nazwę.
+	 * @param sentence
+	 * @param relations
+	 */
+	private void replaceNgWithNames(Sentence sentence, List<SpatialRelation> relations){
+		Map<String, Annotation> names = new HashMap<String, Annotation>();
+		for ( Annotation an : sentence.getAnnotations(this.patternAnnotationNam) ){
+			String key = String.format("%d:%d", an.getBegin(), an.getEnd());
+			if ( names.containsKey(key) ){
+				Logger.getLogger(this.getClass()).warn(String.format("Name for key '%s' already exists: %s", key, an));				
+			}
+			else{
+				names.put(key, an);
+			}
+		}
+		for ( SpatialRelation relation : relations ){
+			// Sprawdź landmark
+			String landmarkKey = String.format("%d:%d",relation.getLandmark().getBegin(), relation.getLandmark().getEnd());
+			Annotation landmarkName = names.get(landmarkKey);
+			if ( landmarkName != null ){
+				Logger.getLogger(this.getClass()).info(String.format("Replace NG (%s) with nam (%s)", relation.getLandmark(), landmarkName));
+				landmarkName.setHead(relation.getLandmark().getHead());
+				relation.setLandmark(landmarkName);
+			}
+			// Sprawdź trajector
+			String trajectorKey = String.format("%d:%d",relation.getTrajector().getBegin(), relation.getTrajector().getEnd());
+			Annotation trajectorName = names.get(trajectorKey);
+			if ( trajectorName != null ){
+				Logger.getLogger(this.getClass()).info(String.format("Replace NG (%s) with nam (%s)", relation.getTrajector(), trajectorName));
+				relation.setTrajector(trajectorName);
+			}
+		}
 	}
 	
 	/**
@@ -195,28 +239,50 @@ public class ActionSpatial extends Action {
 			}
 						
 			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
-			Integer trajectorId = an.getBegin()-1;
-			boolean breakSearch = false;
-			while ( !breakSearch && trajectorId >=0 && mapTokenIdToAnnotations.get(trajectorId) == null ){
+			Integer trajectorPrevId = an.getBegin()-1;
+			Integer trajectorNextId = an.getEnd()+1;
+			
+			boolean breakSearchPrev = false;
+			while ( !breakSearchPrev && trajectorPrevId >=0 && mapTokenIdToAnnotations.get(trajectorPrevId) == null ){
 				/* Przecinek i nawias zamykający przerywają poszykiwanie */
-				String orth = sentence.getTokens().get(trajectorId).getOrth(); 
+				String orth = sentence.getTokens().get(trajectorPrevId).getOrth(); 
 				if ( orth.equals(",") || orth.equals(")") ){
-					breakSearch = true;
+					breakSearchPrev = true;
 				}
-				trajectorId--;
+				trajectorPrevId--;
 			}
-			if ( !breakSearch ){
+			
+			boolean breakSearchNext = false;
+			while ( !breakSearchNext
+					&& trajectorNextId < sentence.getTokenNumber()
+					&& mapTokenIdToAnnotations.get(trajectorNextId) == null ){
+				/* Przecinek i nawias zamykający przerywają poszykiwanie */
+				String orth = sentence.getTokens().get(trajectorNextId).getOrth(); 
+				if ( orth.equals(",") || orth.equals(")") ){
+					breakSearchNext = true;
+				}
+				trajectorNextId++;
+			}
+			
+			if ( !breakSearchPrev || !breakSearchNext ){
+				String type = "";
+				Integer trajectorId = null;
+				if ( (!breakSearchPrev && !breakSearchNext && (an.getBegin() - trajectorPrevId < trajectorNextId - an.getEnd()))
+						|| !breakSearchPrev ){
+					type = "NG*|...|prep|NG*";
+					trajectorId = trajectorPrevId;
+				}
+				else{
+					type = "prep|NG*|...|NG*";
+					trajectorId = trajectorNextId;						
+				}
 				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
 				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
 				if ( trajectors != null && landmarks != null ){
 					for ( Annotation trajector : trajectors ){
-						if ( chunkNpTokens.get(trajector.getHead()) != null ){
-							for ( Annotation landmark : landmarks ){
-								if ( chunkNpTokens.get(trajector.getHead()) == chunkNpTokens.get(landmark.getHead()) ){
-									SpatialRelation sr = new SpatialRelation("[NG*|...|prep|NG]@NP*", trajector, preposition, landmark);
-									relations.add(sr);						
-								}
-							}
+						for ( Annotation landmark : landmarks ){
+							SpatialRelation sr = new SpatialRelation(type, trajector, preposition, landmark);
+							relations.add(sr);						
 						}
 					}
 				}

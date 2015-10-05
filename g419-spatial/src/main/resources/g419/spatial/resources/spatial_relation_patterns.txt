@@ -481,3 +481,23 @@ lm: #object
 si: w obrębie
 tr: #object
 lm: #object
+
+si: w
+tr: #StationaryArtifact, #GeographicArea, #region
+lm: #region
+
+si: z
+tr: #animal, #vehicle
+lm: #StationaryArtifact, #LandArea, #GeopoliticalArea
+
+si: na
+tr: #animal, #vehicle, #StationaryArtifact, #LandArea, #waterArea, #Region
+lm: #LandForm, #Region
+
+si: na
+tr: #stationaryArtifact, #geographicArea, #WaterArea
+lm: #waterarea, #transitway
+
+si: przez
+tr: #transitway, #streamWaterArea, #internationalborder, #stationaryartifact
+lm: #StationaryArtifact, #LandArea, #GeopoliticalArea, #LandForm, #Region

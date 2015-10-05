@@ -4,6 +4,7 @@ import g419.spatial.io.SpatialPatternParser;
 import g419.spatial.structure.SpatialRelation;
 import g419.spatial.structure.SpatialRelationPattern;
 import g419.spatial.structure.SpatialRelationPatternMatcher;
+import g419.toolbox.sumo.NamToSumo;
 import g419.toolbox.sumo.Sumo;
 import g419.toolbox.sumo.WordnetToSumo;
 
@@ -11,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.HashSet;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.Set;
@@ -20,8 +20,9 @@ import java.util.zip.DataFormatException;
 public class RelationFilterSemanticPattern implements IRelationFilter {
 
 	WordnetToSumo wts = null;
-	Sumo sumo = null;
+	Sumo sumo = new Sumo(false);
 	SpatialRelationPatternMatcher patternMatcher = null;
+	NamToSumo namToSumo = new NamToSumo();
 		
 	public RelationFilterSemanticPattern() throws IOException{
 
@@ -32,7 +33,7 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
+     
 	}
 	
 	/**
@@ -67,23 +68,32 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
                     this.getClass().getName(), location);
         }
         
-        SpatialPatternParser parser = new SpatialPatternParser(new InputStreamReader( resource ), new Sumo(false));
+        SpatialPatternParser parser = new SpatialPatternParser(
+        		new InputStreamReader( resource ), this.sumo);
         return parser.parse();        
 	}
 		
 	@Override
-	public boolean pass(SpatialRelation relation) {		
+	public boolean pass(SpatialRelation relation) {
 		String landmark = relation.getLandmark().getSentence().getTokens().get(relation.getLandmark().getHead()).getDisambTag().getBase();
 		String trajector = relation.getTrajector().getSentence().getTokens().get(relation.getTrajector().getHead()).getDisambTag().getBase();
 		Set<String> landmarkConcepts = this.wts.getConcept(landmark);
+		Set<String> landmarkTypeConcepts = this.namToSumo.getConcept(relation.getLandmark().getType());
 		Set<String> trajetorConcepts = this.wts.getConcept(trajector);
+		Set<String> trajetorTypeConcepts = this.namToSumo.getConcept(relation.getTrajector().getType());
 		
 		if ( landmarkConcepts != null ){ 
 			relation.getLandmarkConcepts().addAll(landmarkConcepts);
 		}
+		if ( landmarkTypeConcepts != null ){
+			relation.getLandmarkConcepts().addAll(landmarkTypeConcepts);
+		}
 		
 		if ( trajetorConcepts != null ){
 			relation.getTrajectorConcepts().addAll(trajetorConcepts);
+		}
+		if ( trajetorTypeConcepts != null ){
+			relation.getTrajectorConcepts().addAll(trajetorTypeConcepts);
 		}
 		
 		List<SpatialRelationPattern> matching = this.patternMatcher.matchAll(relation);
