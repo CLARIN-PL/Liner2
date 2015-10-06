@@ -106,10 +106,8 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         this.mentionPatterns = new ArrayList<Pattern>();
         this.mentionPatterns.add(Pattern.compile(".*nam"));
         this.mentionPatterns.add(Pattern.compile("anafora_wyznacznik"));
-        // TODO: tymczasowo dodany landmark, spatial_indicator i trajector
-        this.mentionPatterns.add(Pattern.compile("landmark"));
-        this.mentionPatterns.add(Pattern.compile("spatial_indicator"));
-        this.mentionPatterns.add(Pattern.compile("trajector"));
+        // TODO: tymczasowo dodane elementy wyrażeń przestrzennych
+        this.mentionPatterns.add(Pattern.compile("^(landmark|spatial_indicator|trajector|spatial_object|region|path)", Pattern.CASE_INSENSITIVE));
         
         XMLOutputFactory xmlof = XMLOutputFactory.newFactory();
         try {
