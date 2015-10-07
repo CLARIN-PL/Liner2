@@ -13,33 +13,37 @@ import java.util.HashMap;
 
 public class Liner2 extends Chunker {
 
-    private LinerOptions opts;
-    private Chunker chunker;
-    private TokenFeatureGenerator gen;
+    private LinerOptions opts = null;
+    private Chunker chunker = null;
+    private TokenFeatureGenerator gen = null;
 
-    public Liner2(String ini){
-        opts = new LinerOptions();
-        opts.parseModelIni(ini);
+    public Liner2(String ini) throws Exception{
+        this.opts = new LinerOptions();
+        this.opts.parseModelIni(ini);
 
-        ChunkerManager cm = new ChunkerManager(opts);
+        ChunkerManager cm = new ChunkerManager(this.opts);
         try {
             cm.loadChunkers();
         } catch (Exception e) {
             System.out.println("Error while creating chunkers:\n");
             e.printStackTrace();
         }
-        chunker = cm.getChunkerByName(opts.getOptionUse());
+        this.chunker = cm.getChunkerByName(opts.getOptionUse());
+        if ( chunker == null ){
+        	throw new Exception(
+        		String.format("Chunker named '%s' not found in %s", opts.getOptionUse(), ini));
+        }
 
-        gen = new TokenFeatureGenerator(opts.features);
+        this.gen = new TokenFeatureGenerator(opts.features);
     }
 
     @Override
     public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
         try {
-            gen.generateFeatures(ps);
+        	this.gen.generateFeatures(ps);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return chunker.chunk(ps);
+        return this.chunker.chunk(ps);
     }
 }

@@ -39,7 +39,8 @@ public class TEIStreamReader extends  AbstractDocumentReader{
         this.attributeIndex.addAttribute("orth");
         this.attributeIndex.addAttribute("base");
         this.attributeIndex.addAttribute("ctag");
-        this.attributeIndex.addAttribute("tagTool");
+        // TODO dodanie tego atrybutu "psuje" kolejność atrybutów
+        //this.attributeIndex.addAttribute("tagTool");
 
         RelationSet relationSet = new RelationSet();
         
