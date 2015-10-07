@@ -6,6 +6,7 @@ import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.BatchReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.AnnotationSet;
+import g419.corpus.structure.CrfTemplate;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 import g419.lib.cli.CommonOptions;
@@ -13,10 +14,11 @@ import g419.lib.cli.ParameterException;
 import g419.lib.cli.action.Action;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
+import g419.liner2.api.chunker.CrfppChunker;
 import g419.liner2.api.chunker.factory.ChunkerManager;
 import g419.liner2.api.features.TokenFeatureGenerator;
 import g419.liner2.api.tools.*;
-import g419.corpus.structure.CrfTemplate;
+//import g419.corpus.structure.CrfTemplate;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -30,7 +32,10 @@ import java.util.regex.Pattern;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
+import org.ini4j.Ini;
+import org.ini4j.Profile.Section;
 
 /**
  * Perform bottom-up feature selection using chunker on a specified corpus.
@@ -40,68 +45,29 @@ import org.apache.commons.io.IOUtils;
  */
 public class ActionFeatureSelection extends Action {
 
-	public static final String OPTION_TEMPLATES = "T";
-	public static final String OPTION_TEMPLATES_LONG = "templates";
-
-    public static final String OPTION_CHUNKER = "C";
-    public static final String OPTION_CHUNKER_LONG = "chunker";
-
 	private String input_file = null;
-	private String input_format = null;
 	private HashMap<String, CrfTemplate> templates = new HashMap<String, CrfTemplate>();
-    private TokenFeatureGenerator gen;
-    private String chunker = null;
+	private String chunker = "c1";
+	private TokenFeatureGenerator gen;
 
 	public ActionFeatureSelection() {
 		super("selection");
 		this.setDescription("todo");
 
-		this.options.addOption(CommonOptions.getInputFileFormatOption());
 		this.options.addOption(CommonOptions.getInputFileNameOption());
 		this.options.addOption(CommonOptions.getModelFileOption());
 		this.options.addOption(CommonOptions.getVerboseDeatilsOption());
-		
-		OptionBuilder.withArgName("templates");
-		OptionBuilder.hasArg();
-		OptionBuilder.withDescription("file with paths to template files");
-		OptionBuilder.withLongOpt(OPTION_TEMPLATES_LONG);
-		OptionBuilder.isRequired();
-		this.options.addOption(OptionBuilder.create(OPTION_TEMPLATES));
-		
-		OptionBuilder.withArgName("chunker");
-		OptionBuilder.hasArg();
-		OptionBuilder.withDescription("chunker used for testing features");
-		OptionBuilder.withLongOpt(OPTION_CHUNKER_LONG);
-		OptionBuilder.isRequired();		
-        this.options.addOption(OptionBuilder.create(OPTION_CHUNKER));
+
 	}
 
 	@Override
-	public void parseOptions(String[] args) throws Exception {
+	public void parseOptions(String[] args) throws ParseException {
 		CommandLine line = new GnuParser().parse(this.options, args);
 		parseDefault(line);
-		loadTemplates(line.getOptionValue(OPTION_TEMPLATES));
-        chunker = line.getOptionValue(OPTION_CHUNKER);
 		this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
-		this.input_format = line.getOptionValue(
-				CommonOptions.OPTION_INPUT_FORMAT, "ccl");
-		LinerOptions.getGlobal().parseModelIni(
-				line.getOptionValue(CommonOptions.OPTION_MODEL));
-		if (line.hasOption(CommonOptions.OPTION_VERBOSE_DETAILS)) {
+		LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
+		if(line.hasOption(CommonOptions.OPTION_VERBOSE_DETAILS)){
 			Logger.verboseDetails = true;
-		}
-	}
-
-	private void loadTemplates(String file) throws Exception {
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		StringBuffer sb = new StringBuffer();
-		String line = br.readLine();
-		while (line != null) {
-			if (line.isEmpty() || !line.startsWith("#")) {
-				line = line.trim();
-				templates.put(line, TemplateFactory.parseTemplate(line));
-				line = br.readLine();
-			}
 		}
 	}
 
@@ -109,23 +75,63 @@ public class ActionFeatureSelection extends Action {
 	 * 
 	 */
 	public void run() throws Exception {
-
-		if (!LinerOptions.isOption(LinerOptions.OPTION_USED_CHUNKER)) {
-			throw new ParameterException(
-					"Parameter 'chunker' in 'main' section of model not set");
+		LinerOptions l = LinerOptions.getGlobal();
+		if ( !LinerOptions.isOption(LinerOptions.OPTION_USED_CHUNKER) ){
+			throw new ParameterException("Parameter 'chunker' in 'main' section of model configuration not set");
 		}
-		// not nice solution - but initializes all objects with full feature set
 		Iterator<Entry<String, CrfTemplate>> it = templates.entrySet()
 				.iterator();
+		//LinerOptions.getGlobal().chunkersDescriptions.
+		Iterator<Section> cit = LinerOptions.getGlobal().chunkersDescriptions.iterator();
+		List<Pattern> ll = l.getTypes();
+		Section c = null;
+		while (cit.hasNext()){
+			c = cit.next();
+			if (c.get("type").equals("crfpp"))
+				break;
+		}
+		if (c == null || !(c.get("type").equals("crfpp")))
+			throw new ParameterException("At least one crfpp chunker must be set!");
+
+		ProcessingTimer timer = new ProcessingTimer();
+		TokenFeatureGenerator gen = null;
+		if (!LinerOptions.getGlobal().features.isEmpty()){
+			gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
+		}
+
+		ChunkerEvaluator globalEval = new ChunkerEvaluator(LinerOptions.getGlobal().types, true);
+		ChunkerEvaluatorMuc globalEvalMuc = new ChunkerEvaluatorMuc(LinerOptions.getGlobal().types);
+		LinerOptions.getGlobal().setCVDataFormat("ccl");
+
+		ArrayList<List<String>> folds = loadFolds();
+		String crfppChunkerName = cit.toString();
+		ChunkerManager cm = null;
+		for(int i=0; i < folds.size(); i++){
+			timer.startTimer("fold "+ (i + 1));
+			System.out.println("***************************************** FOLD " + (i + 1) + " *****************************************");
+			String trainSet = getTrainingSet(i, folds);
+			String testSet = getTestingSet(i, folds);
+			cm = new ChunkerManager(LinerOptions.getGlobal());
+			cm.loadTrainData(new BatchReader(IOUtils.toInputStream(trainSet), "", "ccl"), gen);
+			cm.loadTestData(new BatchReader(IOUtils.toInputStream(testSet), "", "ccl"), gen);
+			AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet), "", "ccl");
+			evaluate(reader, gen, cm, globalEval, globalEvalMuc);
+			timer.stopTimer();
+			break;
+		}
+
 		System.out.println("#FS: begin");
-		while (it.hasNext()) {
+		CrfTemplate ct2 = cm.getChunkerTemplate2("c1");
+		selectFeaturesBottomUp(ct2);
+
+		/*while (it.hasNext()) {
 			Entry<String, CrfTemplate> pairs = it.next();
 			System.out.println(pairs.getKey());
 			CrfTemplate ct = pairs.getValue();
 			System.out.println("#FS: current template: " + pairs.getKey());
 			selectFeaturesBottomUp(ct);
 			// selectFeaturesTopDown(ct);
-		}
+		}*/
 		System.out.println("#FS: end");
 	}
 
@@ -310,40 +316,31 @@ public class ActionFeatureSelection extends Action {
 		}
 		System.out.println();
 
-        if (this.input_format.startsWith("cv:")){
-            ChunkerEvaluator globalEval = new ChunkerEvaluator(LinerOptions.getGlobal().types, true);
-            ChunkerEvaluatorMuc globalEvalMuc = new ChunkerEvaluatorMuc(LinerOptions.getGlobal().types);
+		ChunkerEvaluator globalEval = new ChunkerEvaluator(LinerOptions.getGlobal().types, true);
+		ChunkerEvaluatorMuc globalEvalMuc = new ChunkerEvaluatorMuc(LinerOptions.getGlobal().types);
 
-            String input_format = this.input_format.substring(3);
-            LinerOptions.getGlobal().setCVDataFormat(this.input_format);
-            ArrayList<List<String>> folds = loadFolds();
-            for(int i=0; i < folds.size(); i++){
-                timer.startTimer("fold "+ (i + 1));
-                System.out.println("***************************************** FOLD " + (i + 1) + " *****************************************");
-                String trainSet = getTrainingSet(i, folds);
-                String testSet = getTestingSet(i, folds);
-                cm.loadTrainData(new BatchReader(IOUtils.toInputStream(trainSet), "", input_format), this.gen);
-                cm.loadTestData(new BatchReader(IOUtils.toInputStream(testSet), "", input_format), this.gen);
-                AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet), "", input_format);
-                evaluate(reader, gen, cm, globalEval, globalEvalMuc);
-                timer.stopTimer();
+		LinerOptions.getGlobal().setCVDataFormat("ccl");
+		ArrayList<List<String>> folds = loadFolds();
+		for(int i=0; i < folds.size(); i++){
+			timer.startTimer("fold "+ (i + 1));
+			System.out.println("***************************************** FOLD " + (i + 1) + " *****************************************");
+			String trainSet = getTrainingSet(i, folds);
+			String testSet = getTestingSet(i, folds);
+			cm.loadTrainData(new BatchReader(IOUtils.toInputStream(trainSet), "", "ccl"), this.gen);
+			cm.loadTestData(new BatchReader(IOUtils.toInputStream(testSet), "", "ccl"), this.gen);
+			AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet), "", "ccl");
+			evaluate(reader, gen, cm, globalEval, globalEvalMuc);
+			timer.stopTimer();
 
 
-            }
+		}
 
-            System.out.println("***************************************** SUMMARY *****************************************");
-            globalEval.printResults();
-            globalEvalMuc.printResults();
-            System.out.println("");
-            timer.printStats();
-            result = globalEval;
-        }
-        else{
-            System.out.println("INPUT: " + this.input_file + " | " + this.input_format);
-            cm.loadTestData(ReaderFactory.get().getStreamReader(this.input_file, this.input_format), gen);
-            result = evaluate(ReaderFactory.get().getStreamReader(this.input_file, this.input_format),
-                    gen, cm, null, null);
-        }
+		System.out.println("***************************************** SUMMARY *****************************************");
+		globalEval.printResults();
+		globalEvalMuc.printResults();
+		System.out.println("");
+		timer.printStats();
+		result = globalEval;
 		return result;
 	}
 
