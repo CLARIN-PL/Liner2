@@ -8,6 +8,7 @@ import g419.corpus.structure.CrfTemplate;
 import g419.corpus.structure.Document;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
+import g419.liner2.api.chunker.CrfppChunker;
 import g419.liner2.api.features.TokenFeatureGenerator;
 import org.ini4j.Ini;
 import org.ini4j.Profile;
@@ -59,6 +60,11 @@ public class ChunkerManager {
     public CrfTemplate getChunkerTemplate(String chunkerName){
         return chunkerTemplates.containsKey(chunkerName) ? chunkerTemplates.get(chunkerName) : null;
     }
+
+    public CrfTemplate getChunkerTemplate2(String chunkerName){
+        return chunkers.containsKey(chunkerName) ? ((CrfppChunker)(chunkers.get(chunkerName))).getTemplate() : null;
+    }
+
 
     public void addChunker(String name, Chunker chunker) {
         if(chunkers.containsKey(name)){
