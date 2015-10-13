@@ -1,7 +1,9 @@
-package g419.liner2.api.tools;
+package g419.liner2.api.tools.parser;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
@@ -13,13 +15,13 @@ import org.maltparser.core.exception.MaltChainedException;
  * Time: 10:28 AM
  * To change this template use File | Settings | File Templates.
  */
-public class Maltparser {
+public class MaltParser {
 
     private static HashMap<String, MaltParserService> parsers = new HashMap<String, MaltParserService>();
 
     MaltParserService parser;
 
-    public Maltparser(String modelPath){
+    public MaltParser(String modelPath){
         if(isInitialized(modelPath)){
             parser = getParser(modelPath);
         }
@@ -28,9 +30,22 @@ public class Maltparser {
         }
 
     }
-
+    
     public String [] parseTokens(String [] dataForMalt) throws MaltChainedException {
         return parser.parseTokens(dataForMalt);
+    }
+    
+    public void parse(MaltSentence sentence) throws MaltChainedException {
+    	List<MaltSentenceLink> links = new ArrayList<MaltSentenceLink>();
+    	String[] output = this.parseTokens(sentence.getMaltData());
+    	int i = 0;
+    	for ( String line : output ){
+    		String[] parts = line.split("\t");
+    		int parentIndex = Integer.parseInt(parts[8]) - 1;
+    		String relationType = parts[9];
+    		links.add(new MaltSentenceLink(i++, parentIndex, relationType));
+    	}
+    	sentence.setLinks(links);
     }
 
     private static MaltParserService addParser(String modelPath){
@@ -53,5 +68,6 @@ public class Maltparser {
     private static boolean isInitialized(String modelPath){
         return parsers.containsKey(modelPath);
     }
+    
 }
 

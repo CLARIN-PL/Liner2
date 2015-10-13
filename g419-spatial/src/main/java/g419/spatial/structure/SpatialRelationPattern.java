@@ -4,22 +4,22 @@ import java.util.Set;
 
 public class SpatialRelationPattern {
 
-	String indicator = null;
+	Set<String> indicators = null;
 	Set<String> landmarkConcepts = null;
 	Set<String> trajectorConcepts = null;
 	
-	public SpatialRelationPattern(String indicator, Set<String> landmarkConcepts, Set<String> trajectorConcepts){
-		this.indicator = indicator;
+	public SpatialRelationPattern(Set<String> indicators, Set<String> trajectorConcepts, Set<String> landmarkConcepts){
+		this.indicators = indicators;
 		this.landmarkConcepts = landmarkConcepts;
 		this.trajectorConcepts = trajectorConcepts;
 	}
 	
-	public String getIndicator() {
-		return indicator;
+	public Set<String> getIndicators() {
+		return indicators;
 	}
 
-	public void setIndicator(String indicator) {
-		this.indicator = indicator;
+	public void setIndicator(Set<String> indicators) {
+		this.indicators = indicators;
 	}
 
 	public Set<String> getLandmarkConcepts() {
@@ -36,6 +36,13 @@ public class SpatialRelationPattern {
 
 	public void setTrajectorConcepts(Set<String> trajectorConcepts) {
 		this.trajectorConcepts = trajectorConcepts;
+	}
+	
+	public String toString(){
+		return String.format("[%s|%s|%s]", 
+				String.join(",", this.indicators), 
+				String.join(",", this.trajectorConcepts), 
+				String.join(",", this.landmarkConcepts));
 	}
 
 }

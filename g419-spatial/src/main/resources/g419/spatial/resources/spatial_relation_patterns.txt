@@ -34,23 +34,23 @@ si: na
 tr: #stationaryartifact, #substance, #artifact, #plant
 lm: #measure
 
-si: w
+si: w,we
 tr: #animal, #plant, #fungus, #preparedfood, #device, #document, #furniture, #interiorvehicleequipment, #pottery, #product, #tobbacoproduct, #artwork, #wearableitem, #fabric, #container, #meat, #vehicle
 lm: #stationaryartifact, #tube, #animalresidence, #pottery, #transitshelter, #wearableitem
 
-si: w
+si: w,we
 tr: #animal, #plant, #vehicle, #artifact
 lm: #substance
 
-si: w
+si: w,we
 tr: #animal, #plant, #fungus, #preparedfood, #device, #document, #furniture, #interiorvehicleequipment, #pottery, #product, #tobbacoproduct, #artwork, #wearableitem, #fabric, #container, #meat, #vehicle
 lm: #stationaryartifact, #tube, #animalresidence, #pottery, #transitshelter, #wearableitem
 
-si: w
+si: w,we
 tr: #animal, #plant, #vehicle, #artifact
 lm: #substance
 
-si: w
+si: w,we
 tr: #rock, #bodypart, #device, #artifact, #weapon, #projectile
 lm: #animal, #plant, #device, #stationaryartifact, #artifact, #vehicle
 
@@ -482,11 +482,11 @@ si: w obrębie
 tr: #object
 lm: #object
 
-si: w
+si: w,we
 tr: #StationaryArtifact, #GeographicArea, #region
 lm: #region
 
-si: z
+si: z,ze
 tr: #animal, #vehicle
 lm: #StationaryArtifact, #LandArea, #GeopoliticalArea
 

@@ -8,11 +8,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.MissingResourceException;
 
-public class ActionTest2 extends Action {
+public class ActionSemanticPatterns extends Action {
 	
-	public ActionTest2() {
-		super("test2");
-		this.setDescription("quick test");		
+	public ActionSemanticPatterns() {
+		super("semantic-patterns");
+		this.setDescription("parse file with semantic patterns");		
 	}
 	
 

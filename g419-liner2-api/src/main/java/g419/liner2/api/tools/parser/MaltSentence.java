@@ -1,4 +1,4 @@
-package g419.liner2.api.tools;
+package g419.liner2.api.tools.parser;
 
 import g419.corpus.structure.*;
 
@@ -11,67 +11,29 @@ import java.util.regex.Pattern;
 
 public class MaltSentence {
     private HashMap<String, String> nkjpToCoNLLPos = getnkjpToCoNLLPos();
-    private final String[] maltData;
-    private final LinkedHashSet<Annotation> annotations;
+    private String[] maltData = null;
+    private LinkedHashSet<Annotation> annotations = new LinkedHashSet<Annotation>();
     Pattern allAnnotationsPattern = Pattern.compile("nam*");
+    List<MaltSentenceLink> links = new ArrayList<MaltSentenceLink>();
 
-    public MaltSentence(Sentence sent, LinkedHashSet<Annotation> sentenceAnnotations) {
-
-        Sentence wrappedSent = TokenWrapper.wrapAnnotations(sent, new ArrayList<Pattern>(){{add(allAnnotationsPattern);}});
-        List<String[]> coNLLTokens = convertToCoNLL(wrappedSent);
-        Sentence tmpSent = sent.clone();
-//        tmpSent.setAnnotations(new AnnotationSet(tmpSent, sentenceAnnotations));
-//        int newIdx = 1;
-//        HashMap<Annotation, Integer> wrappedAnnotationsIndexes = new HashMap<Annotation, Integer>();
-//        List<String[]> wrappedTokens = new ArrayList<String[]>();
-//        for(int tokIdx=0; tokIdx<coNLLTokens.size(); tokIdx++){
-//            ArrayList<Annotation> tokenAnnotations = tmpSent.getChunksAt(tokIdx, null, true);
-//            if(!tokenAnnotations.isEmpty()){
-//                Annotation ann =  tokenAnnotations.get(0);
-//                if(ann.getEnd() != tokIdx){
-//                    int headIdx = -1;
-//                    for(Integer annTokIdx: ann.getTokens()){
-//                        if(coNLLTokens.get(annTokIdx)[4].equals("subst")) {
-//                            headIdx = annTokIdx;
-//                            break;
-//                        }
-//                    }
-//                    tokIdx = ann.getEnd();
-//                    String[] wrappedAnn;
-//                    if(headIdx == -1){
-//                        wrappedAnn = coNLLTokens.get(tokIdx);
-//                        wrappedAnn[3] = "ign";
-//                        wrappedAnn[4] = "ign";
-//                        wrappedAnn[5] = "_";
-//                    }
-//                    else{
-//                        wrappedAnn = coNLLTokens.get(headIdx);
-//                    }
-//                    wrappedAnn[0] = String.valueOf(newIdx);
-//                    wrappedAnn[1] = ann.getText();
-//                    wrappedAnn[2] = ann.getBaseText();
-//                    wrappedTokens.add(wrappedAnn);
-//                    wrappedAnnotationsIndexes.put(ann, wrappedTokens.size()-1);
-//                }
-//                else{
-//                    String[] token = coNLLTokens.get(tokIdx);
-//                    token[0] = String.valueOf(newIdx);
-//                    wrappedTokens.add(token);
-//                    wrappedAnnotationsIndexes.put(ann, newIdx-1);
-//                }
-//            }
-//            else{
-//                String[] token = coNLLTokens.get(tokIdx);
-//                token[0] = String.valueOf(newIdx);
-//                wrappedTokens.add(token);
-//            }
-//            newIdx++;
-//        }
+    public MaltSentence(Sentence sent) {
+        List<String[]> coNLLTokens = convertToCoNLL(sent);
 
         String[] dataForMalt = new String[coNLLTokens.size()];
         for(int i=0; i<coNLLTokens.size(); i++)
             dataForMalt[i] = String.join("\t", Arrays.asList(coNLLTokens.get(i)));
 
+        this.maltData = dataForMalt;
+    }
+
+    public MaltSentence(Sentence sent, Set<Annotation> sentenceAnnotations) {
+
+        Sentence wrappedSent = TokenWrapper.wrapAnnotations(sent, new ArrayList<Pattern>(){{add(allAnnotationsPattern);}});
+        List<String[]> coNLLTokens = convertToCoNLL(wrappedSent);
+
+        String[] dataForMalt = new String[coNLLTokens.size()];
+        for(int i=0; i<coNLLTokens.size(); i++)
+            dataForMalt[i] = String.join("\t", Arrays.asList(coNLLTokens.get(i)));
 
         this.maltData = dataForMalt;
         this.annotations = wrappedSent.getChunks();
@@ -79,6 +41,29 @@ public class MaltSentence {
 
     public String[] getMaltData() {
         return maltData;
+    }
+    
+    public void setLinks(List<MaltSentenceLink> links){
+    	this.links = links;
+    }
+    
+    public MaltSentenceLink getLink(int index){
+    	return this.links.get(index);
+    }
+    
+    /**
+     * Zwraca listę linków wskazujących na token o wskazanym indeksie.
+     * @param index
+     * @return
+     */
+    public List<MaltSentenceLink> getIncomingLinks(int index){
+    	List<MaltSentenceLink> links = new ArrayList<MaltSentenceLink>();
+    	for ( MaltSentenceLink link : this.links){
+    		if ( link.getParentIndex() == index ){
+    			links.add(link);
+    		}
+    	}
+    	return links;
     }
 
     public HashSet<Annotation> getAnnotations() {

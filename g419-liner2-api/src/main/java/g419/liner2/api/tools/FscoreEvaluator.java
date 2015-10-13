@@ -35,6 +35,14 @@ public class FscoreEvaluator {
 		falseNegatives++;
 	}
 	
+	public int getTruePositiveCount(){
+		return this.truePositives;
+	}
+	
+	public int getFalsePositiveCount(){
+		return this.falsePositives;
+	}
+	
 	protected float safeDiv(float numerator, float denominator, float defaultValue){
 		if(denominator == 0) return defaultValue;
 		return numerator / denominator;

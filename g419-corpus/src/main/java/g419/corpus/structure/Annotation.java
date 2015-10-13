@@ -46,16 +46,19 @@ public class Annotation {
 	private Map<String, String> metadata = new HashMap<String, String>();
 
 	public Annotation(int begin, int end, String type, Sentence sentence){
-		for(int i = begin; i <= end; i++)
+		for(int i = begin; i <= end; i++){
 			this.tokens.add(i);
+		}
 		this.type = type;
 		this.sentence = sentence;
+		this.assignHead();
 	}
 
 	public Annotation(int begin, String type, Sentence sentence){
 		this.tokens.add(begin);
 		this.type = type;
 		this.sentence = sentence;
+		this.assignHead();
 	}
 
 	public Annotation(int begin, String type, int channelIdx, Sentence sentence){
@@ -69,6 +72,7 @@ public class Annotation {
 		this.tokens = tokens;
 		this.type = type;
 		this.sentence = sentence;
+		this.assignHead();
 	}
 
 	public void setChannelIdx(int idx){
@@ -83,16 +87,49 @@ public class Annotation {
 		return this.hasHead;
 	}
 
+	public void assignHead(){
+		this.assignHead(false);
+	}
+	
 	/**
 	 * Przypisuje głowę do anotacji na podst. równoległej anotacji, lub jako pierwszy token.
 	 * Do użytku z anotacjami "anafora_wyznacznik" na potrzeby piśnika TEI
 	 * @return
 	 */
-	public void assignHead(){
-		if(hasHead()) return;
+	public void assignHead(boolean force){
+		// TODO: dlaczego tworzona jest anotacja dla pustego zdania
+		if( !force && hasHead() ){
+			return;
+		}		
 
-		this.setHead(this.tokens.first());
-		if(this.tokens.size() == 1) return;
+		int head = -1;
+		for ( int i : this.getTokens() ){
+			Token t = this.sentence.getTokens().get(i);
+			if ( t.getDisambTag().getPos().equals("subst") ){
+				head = i;
+				break;
+			}
+		}
+		
+		if ( head == -1 ){
+			for ( int i : this.getTokens() ){
+				Token t = this.sentence.getTokens().get(i);
+				if ( t.getDisambTag().getPos().equals("ign") ){
+					head = i;
+					break;
+				}
+			}
+		}
+		
+		if ( head == -1 ){
+			head = this.tokens.first();
+		}
+		
+		this.setHead(head);
+		
+		if(this.tokens.size() == 1){ 
+			return;
+		}
 
 		for(Annotation ann: this.sentence.getChunks()){
 			if(ann.hasHead() && this.tokens.equals(ann.tokens) && !this.type.equalsIgnoreCase(ann.type)){

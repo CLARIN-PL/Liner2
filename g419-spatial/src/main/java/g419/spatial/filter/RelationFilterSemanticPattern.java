@@ -74,7 +74,12 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
 	}
 		
 	@Override
-	public boolean pass(SpatialRelation relation) {
+	public boolean pass(SpatialRelation relation) {		
+		List<SpatialRelationPattern> matching = this.match(relation);
+		return matching.size() > 0;
+	}
+	
+	public List<SpatialRelationPattern> match(SpatialRelation relation){
 		String landmark = relation.getLandmark().getSentence().getTokens().get(relation.getLandmark().getHead()).getDisambTag().getBase();
 		String trajector = relation.getTrajector().getSentence().getTokens().get(relation.getTrajector().getHead()).getDisambTag().getBase();
 		Set<String> landmarkConcepts = this.wts.getConcept(landmark);
@@ -98,11 +103,7 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
 		
 		List<SpatialRelationPattern> matching = this.patternMatcher.matchAll(relation);
 				
-		if ( matching.size() == 0){
-//			System.out.println("\t\t\tTrajector = " + trajector + " => " + String.join(", ", relation.getTrajectorConcepts()));
-//			System.out.println("\t\t\tLandmark  = " + landmark + " => " + String.join(", ",relation.getLandmarkConcepts()));
-		}
-		return matching.size() > 0;
+		return matching;		
 	}
 	
 }

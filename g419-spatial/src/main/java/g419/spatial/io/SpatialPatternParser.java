@@ -39,7 +39,10 @@ public class SpatialPatternParser {
 		
 		while ( this.currentLine != null ){
 			if ( this.currentLine.startsWith("si:") ){
-				String si = this.currentLine.substring(3).trim();
+				Set<String> sis = new HashSet<String>();
+				for ( String si : this.currentLine.substring(3).trim().split(",") ){
+					sis.add(si.trim());
+				}
 				this.nextLine();
 				if ( this.currentLine == null || !this.currentLine.startsWith("tr:")){
 					Logger.getLogger(SpatialPatternParser.class).warn(
@@ -57,7 +60,7 @@ public class SpatialPatternParser {
 				Set<String> landmarkConcepts = this.parseConcepts(this.currentLine.substring(3).trim());
 				
 				if ( trajectorConcepts.size() > 0 && landmarkConcepts.size() > 0 ){
-					patterns.add(new SpatialRelationPattern(si, trajectorConcepts, landmarkConcepts));
+					patterns.add(new SpatialRelationPattern(sis, trajectorConcepts, landmarkConcepts));
 				}
 				else if ( trajectorConcepts.size() == 0 ){
 					this.logWarning("Pusty zbiór trajectorConcept");

@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,7 +18,7 @@ import java.util.zip.DataFormatException;
 public class Sumo {
 
     private final Pattern subclassRelPattern = Pattern.compile("^\\p{Z}*\\(subclass (\\p{L}+) (\\p{L}+)\\)\\p{Z}*$");
-    private SumoGraph graph = new SumoGraph();
+    private Graph graph = new Graph();
     private boolean caseSensitive = true;
 
     public Sumo(String mapping) throws IOException, DataFormatException {
@@ -73,12 +74,27 @@ public class Sumo {
         }
     }
 
+    public Set<String> getSubclasses(String upperClass){
+    	Set<String> subclasses = new HashSet<String>();
+   		this.graph.getSubclasses(upperClass, subclasses);
+    	return subclasses;
+    }
+
+    public Set<String> getSubclasses(Set<String> classes){
+    	Set<String> subclasses = new HashSet<String>();
+    	for ( String cl : classes ){
+    		this.graph.getSubclasses(cl, subclasses);
+    	}
+    	return subclasses;
+    }
+
     public boolean isSubclassOf(String subClass, String upperClass){
     	if ( this.caseSensitive == false ){
     		subClass = subClass.toLowerCase();
     		upperClass = upperClass.toLowerCase();
     	}
-        return graph.isSubclassOf(graph.getNode(subClass), graph.getNode(upperClass));
+    	return this.graph.isSubclassOf(subClass, upperClass);
+        //return graph.isSubclassOf(graph.getNode(subClass), graph.getNode(upperClass));
     }
 
     public boolean isSubclassOf(Set<String> subclasses, String upperClass){
@@ -89,7 +105,8 @@ public class Sumo {
         	if ( this.caseSensitive == false ){
         		subClass = subClass.toLowerCase();
         	}
-            if(graph.isSubclassOf(graph.getNode(subClass), graph.getNode(upperClass))){
+            //if(graph.isSubclassOf(graph.getNode(subClass), graph.getNode(upperClass))){
+        	if(graph.isSubclassOf(subClass, upperClass)){
                 return true;
             }
         }
@@ -123,4 +140,5 @@ public class Sumo {
         }
 
     }
+    
 }
