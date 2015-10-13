@@ -105,3 +105,4 @@ lib/libCRFPP.so
 /bin/
 g419-liner2-cli/src/test/resources
 g419-liner2-cli/src/test/data
+g419-external-dependencies/CRF++-0.57

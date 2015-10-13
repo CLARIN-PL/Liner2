@@ -27,6 +27,7 @@ public class CclSAXStreamReader extends AbstractDocumentReader {
 		else{
 			this.document = parser_out.getDocument();
 		}
+		this.document.setUri(uri);
 		if (cclDescriptor != null){
 			new CclDescriptorReader().enhanceDocument(document, cclDescriptor);
 		}

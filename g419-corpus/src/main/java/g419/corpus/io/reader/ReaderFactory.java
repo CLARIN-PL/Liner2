@@ -117,7 +117,8 @@ public class ReaderFactory {
         InputStream annMorphosyntax = getInputStream(new File(inputFolder,"ann_morphosyntax.xml").getPath());
         InputStream annSegmentation = getInputStream(new File(inputFolder,"ann_segmentation.xml").getPath());
         InputStream annNamed = null; 
-        InputStream annMentions = null; 
+        InputStream annMentions = null;
+        InputStream annChunks = null; 
         InputStream annCoreference = null; 
         InputStream annGroups = null; 
         InputStream annWords = null;
@@ -132,7 +133,12 @@ public class ReaderFactory {
         if ( fileMentions.exists() ){
         	annMentions = getInputStream(fileMentions.getPath());
         }
-        
+
+        File fileChunks = new File(inputFolder,"ann_chunks.xml");
+        if ( fileChunks.exists() ){
+        	annChunks = getInputStream(fileChunks.getPath());
+        }
+
         File fileCoreference = new File(inputFolder,"ann_coreference.xml");
         if ( fileCoreference.exists() ){
         	annCoreference = getInputStream(fileCoreference.getPath());
@@ -153,7 +159,7 @@ public class ReaderFactory {
         	annRelations = getInputStream(fileRelations.getPath());
         }
 
-        return new TEIStreamReader(annMorphosyntax, annSegmentation, annNamed, annMentions, 
+        return new TEIStreamReader(inputFolder, annMorphosyntax, annSegmentation, annNamed, annMentions, annChunks,
         		annCoreference, annWords, annGroups, annRelations, docname);
     }
 	

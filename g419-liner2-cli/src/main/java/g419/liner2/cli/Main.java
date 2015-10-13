@@ -42,6 +42,7 @@ public class Main {
 			main.registerAction(new ActionConstituentsEval());
 			main.registerAction(new ActionNormalizerEval());
 			main.registerAction(new ActionValidateNormalizationData());
+			main.registerAction(new ActionInplace());
 
 			if (args.length == 0) {
 				main.printCredits();

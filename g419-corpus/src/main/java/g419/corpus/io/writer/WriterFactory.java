@@ -82,18 +82,20 @@ public class WriterFactory {
         if(outputFolder == null){
             throw new FileNotFoundException("TEI format requires existing folder as a target (-t) parameter value)");
         }
-        else if(!new File(outputFolder).exists()){
-            throw new FileNotFoundException("Folder specified as target parameter does not exist:" + outputFolder);
+        File folder = new File(outputFolder);
+        if ( !folder.exists() ){
+        	folder.mkdirs();
         }
         OutputStream text = getOutputStream(new File(outputFolder,"text.xml").getPath());
         OutputStream annSegmentation = getOutputStream(new File(outputFolder,"ann_segmentation.xml").getPath());
         OutputStream annMorphosyntax = getOutputStream(new File(outputFolder,"ann_morphosyntax.xml").getPath());
         OutputStream annNamed = getOutputStream(new File(outputFolder,"ann_named.xml").getPath());
         OutputStream annMentions = getOutputStream(new File(outputFolder,"ann_mentions.xml").getPath());
+        OutputStream annChunks = getOutputStream(new File(outputFolder,"ann_chunks.xml").getPath());
         OutputStream annCoreference = getOutputStream(new File(outputFolder,"ann_coreference.xml").getPath());
         OutputStream annRelations = getOutputStream(new File(outputFolder,"ann_relations.xml").getPath());
         return new TEIStreamWriter(text, annSegmentation, annMorphosyntax, annNamed, 
-        		annMentions, annCoreference, annRelations, new File(outputFolder).getName());
+        		annMentions, annChunks, annCoreference, annRelations, new File(outputFolder).getName());
     }
 	
 	private OutputStream getOutputStream(String outputFile) throws Exception {

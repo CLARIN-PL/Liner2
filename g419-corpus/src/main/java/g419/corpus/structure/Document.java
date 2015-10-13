@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 public class Document{
 
 	String name = null;
+	String uri = null;
 	TokenAttributeIndex attributeIndex = null;
 	ArrayList<Paragraph> paragraphs = new ArrayList<Paragraph>();
 	DocumentDescriptor documentDescriptor = new DocumentDescriptor();
@@ -43,6 +44,14 @@ public class Document{
 	 */
 	public String getName(){
 		return this.name;
+	}
+	
+	public String getUri(){
+		return this.uri;
+	}
+	
+	public void setUri(String uri){
+		this.uri = uri;
 	}
 	
 	public RelationSet getRelations(){

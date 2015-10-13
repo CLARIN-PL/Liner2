@@ -45,20 +45,21 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     private final String TAG_DIV         = "div";
     private final String TAG_PARAGRAPH   = "p";
     private final String TAG_SENTENCE    = "s";
-    private final String TAG_SEGMENT    	= "seg";
-    private final String TAG_FEATURESET		= "fs";
-    private final String TAG_FEATURE		= "f";
-    private final String TAG_STRING	    	= "string";
-    private final String TAG_SYMBOL	    	= "symbol";
-    private final String TAG_VALT	    	= "vAlt";
-    private final String TAG_POINTER	    = "ptr";
-    private final String TAG_BINARY			= "binary";
+    private final String TAG_SEGMENT     = "seg";
+    private final String TAG_FEATURESET	  = "fs";
+    private final String TAG_FEATURE	  = "f";
+    private final String TAG_STRING	      = "string";
+    private final String TAG_SYMBOL	      = "symbol";
+    private final String TAG_VALT	      = "vAlt";
+    private final String TAG_POINTER	  = "ptr";
+    private final String TAG_BINARY		  = "binary";
 
     private XMLStreamWriter textWriter;
     private XMLStreamWriter annSegmentationWriter;
     private XMLStreamWriter annMorphosyntaxWriter;
     private XMLStreamWriter annNamedWriter;
     private XMLStreamWriter annMentionsWriter;
+    private XMLStreamWriter annChunksWriter;
     private XMLStreamWriter annCoreferenceWriter;
     private XMLStreamWriter annRelationsWriter;
     private OutputStream text;
@@ -66,6 +67,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     private OutputStream annMorphosyntax;
     private OutputStream annNamed;
     private OutputStream annMentions;
+    private OutputStream annChunks;
     private OutputStream annCoreference;
     private OutputStream annRelations;
     private boolean open = false;
@@ -76,18 +78,21 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     
     private List<Pattern> namedPatterns;
     private List<Pattern> mentionPatterns;
+    private List<Pattern> chunksPatterns;
 
     // Identyfikatory anotacji z nazwą pliku, w którym zostały zapisane, np. "ann_mentions.xml#an1" 
     private HashMap<Annotation, String> mentionRefs = new HashMap<Annotation, String>();
     // Identyfikatory anotacji bez nazwy pliku, np. "an1"
     private HashMap<Annotation, String> mentionIds = new HashMap<Annotation, String>();
     private int mentionNr = 0;
+    private int chunkNr = 0;
     
     public TEIStreamWriter(OutputStream text, 
     		OutputStream annSegmentation, 
     		OutputStream annMorphosyntax, 
     		OutputStream annNamed, 
-    		OutputStream annMentions, 
+    		OutputStream annMentions,
+    		OutputStream annChunks, 
     		OutputStream annCoreference, 
     		OutputStream annRelations,
     		String documentName) {
@@ -97,6 +102,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         this.annMorphosyntax = annMorphosyntax;
         this.annNamed = annNamed;
         this.annMentions = annMentions;
+        this.annChunks = annChunks;
         this.annCoreference = annCoreference;
         this.annRelations = annRelations;
         
@@ -109,6 +115,9 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         // TODO: tymczasowo dodane elementy wyrażeń przestrzennych
         this.mentionPatterns.add(Pattern.compile("^(landmark|spatial_indicator|trajector|spatial_object|region|path)", Pattern.CASE_INSENSITIVE));
         
+        this.chunksPatterns = new ArrayList<Pattern>();
+        this.chunksPatterns.add(Pattern.compile("^chunk_.*"));
+        
         XMLOutputFactory xmlof = XMLOutputFactory.newFactory();
         try {
             this.textWriter = xmlof.createXMLStreamWriter(text);
@@ -119,6 +128,9 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
             }
             if(this.annMentions != null){ 
             	this.annMentionsWriter = xmlof.createXMLStreamWriter(annMentions);
+            }
+            if(this.annChunks != null){ 
+            	this.annChunksWriter = xmlof.createXMLStreamWriter(annChunks);
             }
             if(this.annCoreference != null){ 
             	this.annCoreferenceWriter = xmlof.createXMLStreamWriter(annCoreference);
@@ -199,7 +211,16 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
 	            annMentionsWriter.writeStartElement(TAG_BODY);
 	            annMentionsWriter.writeCharacters("\n");
             }
-            
+
+            if(annChunksWriter != null){
+            	writeCommonOpening(annChunksWriter);
+            	annChunksWriter.writeAttribute("xml:lang", "pl");
+            	annChunksWriter.writeCharacters("\n");
+	            this.indent(3, annChunksWriter);
+	            annChunksWriter.writeStartElement(TAG_BODY);
+	            annChunksWriter.writeCharacters("\n");
+            }
+
             if(annCoreferenceWriter != null){
             	writeCommonOpening(annCoreferenceWriter);
 	            annCoreferenceWriter.writeAttribute("xml:lang", "pl");
@@ -243,8 +264,6 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         this.indent(5, textWriter);
         textWriter.writeStartElement(TAG_PARAGRAPH);
         textWriter.writeAttribute("xml:id", paragraphId);
-//        textWriter.writeCharacters("\n");
-//        this.indent(6, textWriter);
 
         this.indent(4, annSegmentationWriter);
         annSegmentationWriter.writeStartElement(TAG_PARAGRAPH);
@@ -272,6 +291,14 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
 	        annMentionsWriter.writeAttribute("corresp", "ann_morphosyntax.xml#" + paragraphId);
 	        annMentionsWriter.writeCharacters("\n");
         }
+        
+        if(annChunksWriter != null){
+	        this.indent(4, annChunksWriter);
+	        annChunksWriter.writeStartElement(TAG_PARAGRAPH);
+	        annChunksWriter.writeAttribute("xml:id", paragraphId);
+	        annChunksWriter.writeAttribute("corresp", "ann_morphosyntax.xml#" + paragraphId);
+	        annChunksWriter.writeCharacters("\n");
+        }        
     }
 
     @Override
@@ -360,11 +387,17 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
             }
             writeEndElementLine(4, annSegmentationWriter);
             writeEndElementLine(4, annMorphosyntaxWriter);
-            if(annNamedWriter != null) writeEndElementLine(4, annNamedWriter);
-            if(annMentionsWriter != null) writeEndElementLine(4, annMentionsWriter);
+            if(annNamedWriter != null) {
+            	writeEndElementLine(4, annNamedWriter);
+            }
+            if(annMentionsWriter != null) {
+            	writeEndElementLine(4, annMentionsWriter);
+            }
+            if (annChunksWriter != null ){
+            	writeEndElementLine(4, annChunksWriter);            	
+            }
 
             textWriter.writeCharacters(wholeParagraph.toString().trim());
-//            textWriter.writeCharacters("\n");
             writeEndElementLine(0, textWriter);
         } catch (XMLStreamException ex) {
             ex.printStackTrace();
@@ -399,6 +432,14 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
 	        annMentionsWriter.writeCharacters("\n");
         }
 
+        if(annChunksWriter != null){
+	        this.indent(5, annChunksWriter);
+	        annChunksWriter.writeStartElement(TAG_SENTENCE);
+	        annChunksWriter.writeAttribute("xml:id", currentIds.get("sentenceId"));
+	        annChunksWriter.writeAttribute("corresp", "ann_morphosyntax.xml#" + currentIds.get("sentenceId"));
+	        annChunksWriter.writeCharacters("\n");
+        }
+
         ArrayList<Token> sentenceTokens = sent.getTokens();
         HashMap<Integer, String> tokenTEIIds = new HashMap<Integer, String>();
         boolean noPreviousSpace = false;
@@ -427,11 +468,25 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
 	        	writeMention(ann, "mention_" + (++this.mentionNr), tokenTEIIds);
 	        }
         }
-        
+
+        // Write chunks
+        if(annChunksWriter != null){
+	        for(Annotation ann: sent.getAnnotations(this.chunksPatterns)){
+	        	writeChunk(ann, "chunk_" + (++this.chunkNr), tokenTEIIds);
+	        }
+        }
+
         writeEndElementLine(6, annSegmentationWriter);
         writeEndElementLine(5, annMorphosyntaxWriter);
-        if(annNamedWriter != null) writeEndElementLine(5, annNamedWriter);
-        if(annMentionsWriter != null) writeEndElementLine(5, annMentionsWriter);
+        if(annNamedWriter != null){
+        	writeEndElementLine(5, annNamedWriter);
+        }
+        if(annMentionsWriter != null){
+        	writeEndElementLine(5, annMentionsWriter);
+        }
+        if(annChunksWriter != null){
+        	writeEndElementLine(5, annChunksWriter);
+        }
     }
 
     
@@ -502,6 +557,45 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     	
     	writeEndElementLine(4, annCoreferenceWriter);
     }
+    
+    private void writeChunk(Annotation ann, String annotationId, HashMap<Integer, String> tokenTEIIds) throws XMLStreamException {
+    	this.mentionIds.put(ann, annotationId);
+    	this.mentionRefs.put(ann, "ann_mentions.xml#" + annotationId);
+    	
+    	int annMentionsIndent = 6;
+    	this.indent(annMentionsIndent, annChunksWriter);
+    	annChunksWriter.writeComment(ann.getText());
+    	annChunksWriter.writeCharacters("\n");
+    	this.indent(annMentionsIndent, annChunksWriter);
+    	annChunksWriter.writeStartElement(TAG_SEGMENT);
+    	annChunksWriter.writeAttribute("xml:id", annotationId);
+    	annChunksWriter.writeCharacters("\n");
+        
+        // Start feature set
+        this.indent(++annMentionsIndent, annChunksWriter);
+        annChunksWriter.writeStartElement(TAG_FEATURESET);
+        // TODO: typ ustawiony na sztywno został zmienione na annotation.getType()
+        annChunksWriter.writeAttribute("type", ann.getType());
+        annChunksWriter.writeCharacters("\n");
+    
+        if(!ann.hasHead()) ann.assignHead(); 
+        this.indent(++annMentionsIndent, annChunksWriter);
+        annChunksWriter.writeEmptyElement(TAG_FEATURE);
+        annChunksWriter.writeAttribute("name", "semh");
+        annChunksWriter.writeAttribute("fVal", "ann_morphosyntax.xml#"+ tokenTEIIds.get(ann.getHead()));
+        annChunksWriter.writeCharacters("\n");
+        
+        // End feature set        
+        writeEndElementLine(--annMentionsIndent, annChunksWriter);
+        
+        for(int tokenIdx: ann.getTokens()){
+            this.indent(annMentionsIndent, annChunksWriter);
+            annChunksWriter.writeEmptyElement(TAG_POINTER);
+            annChunksWriter.writeAttribute("target", "ann_morphosyntax.xml#" + tokenTEIIds.get(tokenIdx));
+            annChunksWriter.writeCharacters("\n");
+        }
+        writeEndElementLine(--annMentionsIndent, annChunksWriter);      
+    }    
     
     private void writeMention(Annotation ann, String annotationId, HashMap<Integer, String> tokenTEIIds) throws XMLStreamException {
     	this.mentionIds.put(ann, annotationId);
@@ -770,6 +864,9 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
             if(annMentionsWriter != null){
             	writeClosing(annMentionsWriter, 3);
             }
+            if(annChunksWriter != null){
+            	writeClosing(annChunksWriter, 3);
+            }
             if(annCoreferenceWriter != null){
             	writeClosing(annCoreferenceWriter, 3);
             }
@@ -785,6 +882,9 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
             }
             if (annMentionsWriter != null){ 
             	annMentionsWriter.close();
+            }
+            if (annChunksWriter != null){ 
+            	annChunksWriter.close();
             }
             if (annCoreferenceWriter != null){ 
             	annCoreferenceWriter.close();
