@@ -27,6 +27,7 @@ import g419.crete.api.resolver.factory.CreteResolverFactory;
 import g419.crete.api.resolver.factory.NullResolverItem;
 import g419.crete.api.resolver.factory.WekaJ48MentionPairResolverItem;
 import g419.crete.api.resolver.factory.WekaJ48ResolverItem;
+import g419.crete.api.resolver.factory.WekaRandomForestMentionPairClusterClassifyItem;
 import g419.lib.cli.CommonOptions;
 import g419.lib.cli.action.Action;
 import g419.liner2.api.features.TokenFeatureGenerator;
@@ -65,12 +66,13 @@ public class ActionClassify extends Action {
 	public static final String PERSON_NAM_IN_SELECTOR = "person_nam_in_selector";
 
 	
-	public static final String MODEL_PATH = "model_path";
+//	public static final String MODEL_PATH = "model_path";
 	
 	private String input_file = null;
     private String input_format = null;
     private String output_file = null;
     private String output_format = null;
+    private String classifier_file = null;
 	
     
     public ActionClassify() {
@@ -82,6 +84,7 @@ public class ActionClassify extends Action {
         this.options.addOption(CommonOptions.getOutputFileNameOption());
         this.options.addOption(CommonOptions.getFeaturesOption());
         this.options.addOption(CommonOptions.getFeaturesOption());
+        this.options.addOption(CommonOptions.getClassifierModelFile());
         this.options.addOption(CommonOptions.getModelFileOption());
 	}
 
@@ -93,6 +96,7 @@ public class ActionClassify extends Action {
         this.output_format = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT, "ccl");
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
+        this.classifier_file = line.getOptionValue(CommonOptions.OPTION_CLASSIFIER_MODEL, "model.mdl");
         CreteOptions.getOptions().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
 		
 	}
@@ -100,6 +104,7 @@ public class ActionClassify extends Action {
 	public void initializeResolvers(){
 		CreteResolverFactory.getFactory().register("j48_cluster_classify", new WekaJ48ResolverItem());
 		CreteResolverFactory.getFactory().register("j48_mention_pair_classify", new WekaJ48MentionPairResolverItem());
+		CreteResolverFactory.getFactory().register("randomforest_mentionpair_cluster_classify", new WekaRandomForestMentionPairClusterClassifyItem());
 		CreteResolverFactory.getFactory().register("null_resolver",  new NullResolverItem());
 		// --------------- CLASSIFIERS -----------------------------------
 		ClassifierFactory.getFactory().register("j48_cluster", new WekaJ48ClassifierItem());
@@ -137,9 +142,9 @@ public class ActionClassify extends Action {
         
         initializeResolvers();
 		
-        String modelPath = CreteOptions.getOptions().getProperties().getProperty(MODEL_PATH);
+//        String modelPath = CreteOptions.getOptions().getProperties().getProperty(MODEL_PATH);
         WekaModelSerializer model = new WekaModelSerializer(null);
-        model.load(modelPath);
+        model.load(this.classifier_file);
 	
         // Instantiate resolver
 		String resolverName = CreteOptions.getOptions().getProperties().getProperty("resolver");

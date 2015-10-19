@@ -10,17 +10,21 @@ import java.util.List;
 import java.util.Random;
 
 import weka.classifiers.Classifier;
+import weka.classifiers.CostMatrix;
 import weka.classifiers.Evaluation;
+import weka.classifiers.meta.CostSensitiveClassifier;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.J48graft;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.Range;
 import weka.core.converters.ArffSaver;
 import weka.filters.Filter;
 import weka.filters.supervised.instance.Resample;
 import weka.filters.supervised.instance.SMOTE;
 import weka.filters.unsupervised.attribute.NumericToNominal;
+import weka.filters.unsupervised.attribute.StringToNominal;
 import weka.gui.treevisualizer.PlaceNode2;
 import weka.gui.treevisualizer.TreeVisualizer;
 
@@ -89,13 +93,29 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 		}
 		
 		try {
-//			exportInstances(tInstances, "/home/adam/crete-training-instances/rawinstances_verb_merge.arff");
+			exportInstances(tInstances, "/home/akaczmarek/data/rawinstances_named_merge.arff");
 			NumericToNominal numToNom =  new NumericToNominal();
-			numToNom.setInputFormat(tInstances);
+//			numToNom.setInputFormat(tInstances);
 			numToNom.setAttributeIndicesArray(new int[]{attributes.size() - 1});
 			numToNom.setInputFormat(tInstances);
 			
+			StringToNominal stringToNom = new StringToNominal();
+			ArrayList<Integer> rangeList = new ArrayList<>();
+			for (int i = 0; i < tInstances.numAttributes(); i++) {
+				if (tInstances.classIndex() == i) continue;
+				if (tInstances.attribute(i).isString()) rangeList.add(i); 
+			}
+			int[] rangeArray = new int[rangeList.size()];
+			for(int i = 0; i < rangeList.size(); i++) rangeArray[i] = rangeList.get(i);
+			
+			String rangeString = Range.indicesToRangeList(rangeArray);
+			stringToNom.setAttributeRange(rangeString);
+			stringToNom.setInputFormat(tInstances);
+			
 			tInstances = Filter.useFilter(tInstances, numToNom);
+			tInstances = Filter.useFilter(tInstances, stringToNom);
+		
+			exportInstances(tInstances, "/home/akaczmarek/data/rawinstances_named_merge_filtered.arff");
 			
 			SMOTE smote = new SMOTE();
 			smote.setInputFormat(tInstances);
@@ -106,7 +126,7 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 			resample.setSampleSizePercent(100);
 			resample.setInputFormat(tInstances);
 			
-			tInstances = Filter.useFilter(tInstances, smote);
+			tInstances = Filter.useFilter(tInstances, resample);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -114,10 +134,12 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 //		J48graft j48 = new J48graft();
 		J48 j48 = new J48();
 		RandomForest rf = new RandomForest();
-		rf.setNumTrees(10);
-		rf.setNumFeatures(10);
+		System.out.println(rf.getNumTrees());
+		rf.setNumTrees(200);
+//		rf.setNumTrees(10);
+		rf.setNumFeatures(15);
 				
-		Classifier cModel = (Classifier) j48;
+		Classifier cModel = (Classifier) rf;
 		try {
 			cModel.buildClassifier(tInstances);
 			displayDebugInfo(cModel, tInstances);
@@ -149,6 +171,23 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 			numToNom.setAttributeIndicesArray(new int[]{attributes.size() - 1});
 			numToNom.setInputFormat(randData);
 			randData = Filter.useFilter(randData, numToNom);
+			
+			StringToNominal stringToNom = new StringToNominal();
+			ArrayList<Integer> rangeList = new ArrayList<>();
+			for (int i = 0; i < randData.numAttributes(); i++) {
+				if (randData.classIndex() == i) continue;
+				if (randData.attribute(i).isString()) rangeList.add(i); 
+			}
+			int[] rangeArray = new int[rangeList.size()];
+			for(int i = 0; i < rangeList.size(); i++) rangeArray[i] = rangeList.get(i);
+			
+			String rangeString = Range.indicesToRangeList(rangeArray);
+			stringToNom.setAttributeRange(rangeString);
+			stringToNom.setInputFormat(randData);
+			
+			randData = Filter.useFilter(randData, stringToNom);
+			
+			
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -177,7 +216,7 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 		resample.setSampleSizePercent(100);
 		resample.setInputFormat(randData);
 		
-		randData = Filter.useFilter(randData, resample);
+//		randData = Filter.useFilter(randData, resample);
 		
 		randData.randomize(rand);
 		randData.stratify(folds);
@@ -187,11 +226,28 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 		   
 		for (int n = 0; n < folds; n++) {
 		   Instances train = randData.trainCV(folds, n);
+		   
+		   SMOTE smote = new SMOTE();
+			smote.setInputFormat(train);
+			smote.setClassValue("0");
+		   train = Filter.useFilter(train, smote);
+		   
 		   Instances test = randData.testCV(folds, n);
 		   Evaluation evalLocal = new Evaluation(test);
 		   
 		   J48graft j48 = new J48graft();
-		   Classifier cls = (Classifier) j48;
+		   RandomForest rf = new RandomForest();
+		   rf.setNumTrees(200);
+		   Classifier cls = (Classifier) rf;
+		   
+//		   CostMatrix cm = new CostMatrix(2);
+//		   cm.setCell(0, 0, -1.0);
+//		   cm.setCell(0, 1, 5.0);
+//		   cm.setCell(1, 0, 5.0);
+//		   cm.setCell(1, 1, -10.0);
+//		   CostSensitiveClassifier ccls = new CostSensitiveClassifier();
+//		   ccls.setClassifier(cls);
+//		   ccls.setCostMatrix(cm);
 		   
 		   	Classifier clsCopy = Classifier.makeCopy(cls);
 	        clsCopy.buildClassifier(train);
@@ -199,6 +255,7 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 		    evalLocal.evaluateModel(clsCopy, test);
 		    System.out.println(evalLocal.toSummaryString());
 		    System.out.println(evalLocal.toMatrixString());
+		    System.out.println(evalLocal.fMeasure(1));
 //		    System.out.println(clsCopy);
 		    
 		    this.model = new  WekaModelSerializer(clsCopy);
@@ -206,6 +263,7 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 		
 		System.out.println(eval.toSummaryString("=== " + folds + "-fold Cross-validation ===", false));
 		System.out.println(eval.toMatrixString());
+	    System.out.println(eval.fMeasure(1));
 		
 	}
 	

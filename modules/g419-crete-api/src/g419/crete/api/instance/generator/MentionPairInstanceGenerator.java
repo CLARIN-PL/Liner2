@@ -21,7 +21,8 @@ public class MentionPairInstanceGenerator extends AbstractCreteInstanceGenerator
 	private final AbstractAnnotationSelector namedEntitySelector = AnnotationSelectorFactory.getFactory().getInitializedSelector("named_entity_selector");
 	
 	public MentionPairInstanceGenerator(boolean train){
-		this.training = train;
+//		this.training = train;
+		this.training = false;
 	}
 	
 	@Override
@@ -45,7 +46,7 @@ public class MentionPairInstanceGenerator extends AbstractCreteInstanceGenerator
 				.filter(annotation -> !clusters.inSameCluster(mention, annotation))
 				.sorted(comparator)
 				// Apply limit only to training data
-				.limit(training ? 3 : 1000)
+				.limit(training ? 2: 1000)
 				.map(antecedent -> 
 					new MentionPairClassificationInstance(
 						mention, 
@@ -59,11 +60,11 @@ public class MentionPairInstanceGenerator extends AbstractCreteInstanceGenerator
 		List<MentionPairClassificationInstance> positiveInstances = namedEntitySelector.selectAnnotations(document) 
 //				document.getAnnotations()
 				.parallelStream()
-				.filter(annotation -> comparator.compare(annotation, mention) < 0)
+				.filter(annotation -> training || comparator.compare(annotation, mention) < 0)
 				.filter(annotation -> clusters.inSameCluster(mention, annotation))
 				.sorted(comparator)
 				// Apply limit only to training data
-				.limit(training ? 1: 1000)
+				.limit(training ? 10: 1000)
 				.map(antecedent -> 
 					new MentionPairClassificationInstance(
 						mention, 
@@ -73,6 +74,11 @@ public class MentionPairInstanceGenerator extends AbstractCreteInstanceGenerator
 					)
 				)
 				.collect(Collectors.toList());
+		
+		if(positiveInstances.size() > 0){
+			int x = 0;
+			int y = x;
+		}
 		
 		List<MentionPairClassificationInstance> instances = new ArrayList<>();
 		instances.addAll(positiveInstances);

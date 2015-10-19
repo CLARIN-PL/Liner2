@@ -53,12 +53,13 @@ public class ActionTrain extends Action {
 	public static final String PERSON_NAM_IN_SELECTOR = "person_nam_in_selector";
 	
 	public static final String TRAINER_NAMES = "trainers";
-	public static final String MODEL_PATH = "model_path";
+//	public static final String MODEL_PATH = "model_path";
 	
 	private String input_file = null;
     private String input_format = null;
     private String output_file = null;
     private String output_format = null;
+    private String classifier_file = null;
 	
 	
 	public ActionTrain() {
@@ -70,6 +71,7 @@ public class ActionTrain extends Action {
         this.options.addOption(CommonOptions.getOutputFileNameOption());
         this.options.addOption(CommonOptions.getFeaturesOption());
         this.options.addOption(CommonOptions.getFeaturesOption());
+        this.options.addOption(CommonOptions.getClassifierModelFile());
         this.options.addOption(CommonOptions.getModelFileOption());
 	}
 
@@ -81,6 +83,7 @@ public class ActionTrain extends Action {
         this.output_format = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT, "ccl");
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
+        this.classifier_file = line.getOptionValue(CommonOptions.OPTION_CLASSIFIER_MODEL, "model.mdl");
         CreteOptions.getOptions().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
 		
 	}
@@ -91,6 +94,7 @@ public class ActionTrain extends Action {
 		// --------------- CLASSIFIERS -----------------------------------
 		ClassifierFactory.getFactory().register("j48_cluster", new WekaJ48ClassifierItem());
 		ClassifierFactory.getFactory().register("j48_mention_pair", new WekaJ48ClassifierItem());
+//		ClassifierFactory.getFactory().register("lemur_ranking", new LemurClassifierItem());
 		// ------------------ GENERATORS -------------------------------
 		CreteInstanceGeneratorFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Integer.class, "mention_cluster_generator", new ClusterClassificationInstanceGenerator());
 		CreteInstanceGeneratorFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Integer.class, "mention_cluster_classify_generator", new ClusterClassificationInstanceGenerator());
@@ -195,8 +199,8 @@ public class ActionTrain extends Action {
         
 		trainer.train();
 		Serializer trainedModel = trainer.getTrainedModel();
-		String modelPath = CreteOptions.getOptions().getProperties().getProperty(MODEL_PATH);
-		trainedModel.persist(modelPath);
+//		String modelPath = CreteOptions.getOptions().getProperties().getProperty(MODEL_PATH);
+		trainedModel.persist(this.classifier_file);
 		
 		reader.close();
 		writer.close();

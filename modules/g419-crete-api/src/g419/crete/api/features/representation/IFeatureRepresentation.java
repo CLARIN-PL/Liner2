@@ -16,7 +16,7 @@ public abstract class IFeatureRepresentation<O> {
 		else if(feature.getReturnTypeClass().equals(Integer.class)) addIntegerFeature((AbstractFeature<?, Integer>) feature);
 		else if(feature.getReturnTypeClass().equals(Float.class)) addFloatFeature((AbstractFeature<?, Float>) feature);
 		else if(Enum.class.isAssignableFrom(feature.getReturnTypeClass())) addEnumFeature((AbstractFeature<?, Enum<?>>) feature);
-//		else addLexicalFeature((AbstractFeature<?, String>) feature);
+		else addLexicalFeature((AbstractFeature<?, String>) feature);
 	}
 	
 	public abstract void addBooleanFeature(AbstractFeature<?, Boolean> feature);

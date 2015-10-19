@@ -95,7 +95,7 @@ public class ParentEvaluator extends FscoreEvaluator{
 
 		@Override
 		public boolean isSatisfied(Annotation annotation) {
-			return "anafora_wyznacznik".equals(annotation.getType()) || "anafora_verb_null".equalsIgnoreCase(annotation.getType());
+			return "anafora_wyznacznik".equals(annotation.getType()) || "anafora_verb_null".equalsIgnoreCase(annotation.getType()) || "anafora_verb_null_in".equalsIgnoreCase(annotation.getType());
 		}
 	}
 	

@@ -34,8 +34,10 @@ public class WekaJ48MentionPairResolver extends AbstractCreteResolver<Classifier
 	
 	@Override
 	protected Document resolveMention(Document document, Annotation mention, List<MentionPairClassificationInstance> instancesForMention) {
- 		List<Integer> labels = this.classifier.classify(this.converter.convertInstances(instancesForMention));
-		List<MentionPairClassificationInstance> correctPairs = IntStream
+		System.out.println("Mention: " + mention);
+		for(MentionPairClassificationInstance instance : instancesForMention) System.out.println(instance.getAntecedent());
+		List<Integer> labels = this.classifier.classify(this.converter.convertInstances(instancesForMention));
+ 		List<MentionPairClassificationInstance> correctPairs = IntStream
 				.range(0, labels.size())
 				.parallel()
 				// TODO: fixme for positive label recognition

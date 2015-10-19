@@ -123,7 +123,6 @@ public class ActionEvalParent extends Action {
         AbstractAnnotationSelector overrideSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(OVERRIDE_SELECTOR));
         
 		// TODO: porównywanie z uwzględnieniem relacji dla "wyznacznik_null_verb"
-		
 		while(referenceDocument != null && systemResponseDocument != null){
 //			String[] refParts = referenceDocument.getName().split("/");
 //			String[] sysParts = systemResponseDocument.getName().split("/");
@@ -131,8 +130,11 @@ public class ActionEvalParent extends Action {
 //				System.out.println(referenceDocument.getName() + " vs. " + systemResponseDocument.getName());
 //				return;
 //			}
+			
+//			if(!referenceDocument.getName().contains("103628")) continue;
+			
 			System.out.println(referenceDocument.getName());
-//			if(!referenceDocument.getName().equals(systemResponseDocument.getName())){throw new NullPointerException();} 
+			if(!referenceDocument.getName().equals(systemResponseDocument.getName())){throw new NullPointerException();} 
 			gen.generateFeatures(referenceDocument);
 			gen.generateFeatures(systemResponseDocument);
 			

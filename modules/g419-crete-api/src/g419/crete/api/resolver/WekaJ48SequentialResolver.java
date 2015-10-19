@@ -126,6 +126,7 @@ public class WekaJ48SequentialResolver extends AbstractCreteResolver<Classifier,
 		totalPositive +=correctPairs.size();
 		totalAccepted++;
 		
+		
 		Collections.sort(correctPairs, new BestClosestClusterMentionComparator(document));
 		AnnotationCluster bestCluster = correctPairs.get(0).getCluster().getHolder();
 		System.out.println(bestCluster);

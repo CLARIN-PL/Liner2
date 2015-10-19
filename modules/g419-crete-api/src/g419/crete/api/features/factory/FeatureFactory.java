@@ -68,6 +68,15 @@ import g419.crete.api.features.factory.item.ClusterMentionPreceedingEntityRecenc
 import g419.crete.api.features.factory.item.ClusterSentenceFrequencyFeatureFactoryItem;
 import g419.crete.api.features.factory.item.ClusterTermFrequencyFeatureFactoryItem;
 import g419.crete.api.features.factory.item.IFeatureFactoryItem;
+import info.debatty.java.stringsimilarity.Cosine;
+import info.debatty.java.stringsimilarity.Damerau;
+import info.debatty.java.stringsimilarity.Jaccard;
+import info.debatty.java.stringsimilarity.JaroWinkler;
+import info.debatty.java.stringsimilarity.LongestCommonSubsequence;
+import info.debatty.java.stringsimilarity.NGram;
+import info.debatty.java.stringsimilarity.NormalizedLevenshtein;
+import info.debatty.java.stringsimilarity.QGram;
+import info.debatty.java.stringsimilarity.SorensenDice;
 
 import java.util.HashMap;
 
@@ -135,6 +144,41 @@ public class FeatureFactory{
 		register(new AnnotationPairFeatureTokenCountDiffItem());
 		register(new AnnotationPairFeatureSemanticLinkAgPItem());
 		register(new AnnotationPairFeaturePronounLinkItem());
+		
+		register(new AnnotationPairFeatureSameBeginWordItem());
+		register(new AnnotationPairFeatureSameBeginWordBaseItem());
+		register(new AnnotationPairFeatureSameEndWordItem());
+		register(new AnnotationPairFeatureSameEndWordBaseItem());
+		register(new AnnotationPairFeatureSameMiddleWordItem());
+		register(new AnnotationPairFeatureSameMiddleWordBaseItem());
+		register(new AnnotationPairFeatureAcroItem());
+		register(new AnnotationPairFeatureFirstLengthItem());
+		register(new AnnotationPairFeatureSecondLengthItem());
+		// --------------------- STRING DISTANCES -----------------------
+		register(new AnnotationPairFeatureStringDistanceItem(new NormalizedLevenshtein(), "normalized_levenshtein", false));
+		register(new AnnotationPairFeatureStringDistanceItem(new Damerau(), "damerau", false));
+		register(new AnnotationPairFeatureStringDistanceItem(new JaroWinkler(), "jaro_winkler", false));
+		register(new AnnotationPairFeatureStringDistanceItem(new LongestCommonSubsequence(), "lcs", false));
+//		register(new AnnotationPairFeatureStringDistanceItem(new MetricLCS(), "lcs_metric", false));
+		register(new AnnotationPairFeatureStringDistanceItem(new NGram(1), "ngram1", false));
+		register(new AnnotationPairFeatureStringDistanceItem(new NGram(2), "ngram2", false));
+		register(new AnnotationPairFeatureStringDistanceItem(new NGram(3), "ngram3", false));
+		register(new AnnotationPairFeatureStringDistanceItem(new QGram(1), "qgram1", false));
+		register(new AnnotationPairFeatureStringDistanceItem(new QGram(2), "qgram2", false));
+		register(new AnnotationPairFeatureStringDistanceItem(new QGram(3), "qgram3", false));
+		register(new AnnotationPairFeatureStringDistanceItem(new Cosine(), "cosine", false));
+		register(new AnnotationPairFeatureStringDistanceItem(new Jaccard(1), "jaccard1", false));
+		register(new AnnotationPairFeatureStringDistanceItem(new Jaccard(2), "jaccard2", false));
+		register(new AnnotationPairFeatureStringDistanceItem(new Jaccard(3), "jaccard3", false));
+		register(new AnnotationPairFeatureStringDistanceItem(new SorensenDice(1), "sorensen1", false));
+		register(new AnnotationPairFeatureStringDistanceItem(new SorensenDice(2), "sorensen2", false));
+		register(new AnnotationPairFeatureStringDistanceItem(new SorensenDice(3), "sorensen3", false));
+		
+		register(new AnnotationPairFeatureChannelItem(false));
+		register(new AnnotationPairFeatureChannelItem(true));
+		
+		register(new AnnotationPairFeatureTextItem());
+		register(new AnnotationPairFeatureDocumentIdItem());
 		
 		// ----------------------- CLUSTER FEATURES ----------------------------
 		register(new ClusterDocumentIdFeatureFactoryItem());
