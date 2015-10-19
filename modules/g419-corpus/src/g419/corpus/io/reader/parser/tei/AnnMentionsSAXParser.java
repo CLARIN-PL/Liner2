@@ -34,7 +34,7 @@ public class AnnMentionsSAXParser extends DefaultHandler {
     private final String TAG_ID 			= "xml:id";
 
     public final static String ANNOTATION_MENTION = "anafora_wyznacznik";
-    public final static String ANNOTATION_ZERO_MENTION = "wyznacznik_null_verb";
+    public final static String ANNOTATION_ZERO_MENTION = "anafora_verb_null";
     
     InputStream is;
     ArrayList<Paragraph> paragraphs;
@@ -49,6 +49,7 @@ public class AnnMentionsSAXParser extends DefaultHandler {
     String annotationId;
     HashMap<String,Integer> tokenIdsMap;
     HashMap<String, Annotation> annotationsMap;
+    boolean isZero = false;
     
     public AnnMentionsSAXParser(InputStream is, ArrayList<Paragraph> paragraphs, HashMap<String,Integer> tokenIdsMap) throws DataFormatException {
         this.is = is;
@@ -97,6 +98,9 @@ public class AnnMentionsSAXParser extends DefaultHandler {
             if("semh".equals(currentFeatureName)){
             	currentHead = tokenIdsMap.get(currentFeatureValue.split("#")[1]);
             }
+            if("zero".equals(currentFeatureName)){
+            	if("true".equals(currentFeatureValue)) isZero = true;
+            }
         }
         else if (elementName.equalsIgnoreCase(TAG_POINTER)) {
             String target = attributes.getValue("target");
@@ -108,7 +112,8 @@ public class AnnMentionsSAXParser extends DefaultHandler {
     public void endElement(String s, String s1, String element) throws SAXException {
 
         if (element.equals(TAG_SEGMENT)) {
-            Annotation ann = new Annotation(annotatedTokens.get(0), ANNOTATION_MENTION, currentSentence);
+            Annotation ann = new Annotation(annotatedTokens.get(0), isZero ? ANNOTATION_ZERO_MENTION : ANNOTATION_MENTION, currentSentence);
+            isZero = false;
             for(int i=1; i<annotatedTokens.size(); i++){
                 ann.addToken(annotatedTokens.get(i));
             }

@@ -42,8 +42,9 @@ public class TEIStreamReader extends  AbstractDocumentReader{
         AnnSegmentationSAXParser segmentationParser = new AnnSegmentationSAXParser(annSegmentation, morphoParser.getParagraphs());
         AnnNamedSAXParser namedParser = new AnnNamedSAXParser(annNamed, segmentationParser.getParagraphs(), morphoParser.getTokenIdsMap());
         AnnMentionsSAXParser mentionsParser = new AnnMentionsSAXParser(annMentions, segmentationParser.getParagraphs(), morphoParser.getTokenIdsMap());
-        AnnCoreferenceSAXParser coreferenceParser = new AnnCoreferenceSAXParser(annCoreference, mentionsParser.getParagraphs(), mentionsParser.getMentions());
-        this.document = new Document(docName, segmentationParser.getParagraphs(), this.attributeIndex, coreferenceParser.getRelations());
+//        AnnCoreferenceSAXParser coreferenceParser = new AnnCoreferenceSAXParser(annCoreference, mentionsParser.getParagraphs(), mentionsParser.getMentions());
+        this.document = new Document(docName, segmentationParser.getParagraphs(), this.attributeIndex, null);
+//        		coreferenceParser.getRelations());
     }
 
     @Override
