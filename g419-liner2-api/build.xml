@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<project name="g419-liner2-api -- biblioteka ze strukturą pliku, czytnikami i piśnikami" default="compile" basedir=".">
+
+	<property name="build_path" value="build" />
+	
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+	  <classpath>
+	    <pathelement location="../../lib/ant-contrib-1.0b3.jar"/>
+	  </classpath>
+	</taskdef>
+	
+	<path id="classpath.standard">
+        <pathelement location="../../lib/commons-io-2.4.jar"/>
+		<pathelement location="../../lib/princetonAdapter.jar"/>
+		<pathelement location="../../lib/ini4j-0.5.0.jar"/>
+		<pathelement location="../../lib/weka-3.6.12.jar"/>
+		<pathelement location="../../lib/maltparser-1.7.1.jar"/>
+		<pathelement location="../../lib/CRFPP.jar"/>
+		<pathelement location="../g419-corpus/g419-corpus.jar"/>
+		<pathelement location="../g419-lib-cli/g419-lib-cli.jar"/>
+	</path>
+	
+	<target name="clean">
+		<delete dir="${build_path}"/>
+	</target>
+
+	<target name="compile" depends="clean">
+		<mkdir dir="${build_path}"/>
+		<mkdir dir="${build_path}/lib"/>					
+		<mkdir dir="${build_path}/classes"/>
+				
+	    <if>
+	        <available file="../g419-corpus/g419-corpus.jar"/>
+	    	<else>
+	    		<echo message="Compiling g419-corpus.jar ..."/>
+	            <exec dir="../g419-corpus" executable="ant">
+	        		<arg line="jar"/>
+	        	</exec>
+	        </else>
+	    </if>
+				
+		<javac 
+				srcdir="src"
+				optimize="on" 
+				debug="yes" 
+				debuglevel="source,lines,vars" 
+				destdir="build/classes" 
+				includeantruntime="false">
+    		<compilerarg value="-Xlint:all"/>
+    		<classpath refid="classpath.standard"/>
+  		</javac>
+	</target>
+
+	<target name="jar" depends="compile">
+		<manifest file="MANIFEST.MF">
+    		<attribute name="Built-By" value="${user.name}"/>
+<!--			<attribute name="Class-Path" value="
+				./lib/commons-cli-1.2.jar
+				./lib/princetonAdapter.jar
+				./lib/ini4j-0.5.0.jar
+				./lib/weka-3.6.9.jar
+				./lib/commons-lang3-3.3.2.jar
+				./lib/maltparser-1.7.1.jar
+				./lib/CRFPP.jar
+				./lib/g419-corpus.jar
+				"/>
+-->			
+   		</manifest>
+
+		<jar destfile="g419-liner2-api.jar" manifest="MANIFEST.MF">
+    		<fileset dir="${build_path}/classes" includes="**/*.class"/>
+  		</jar>
+                
+		<delete file="MANIFEST.MF"/>
+		<delete dir="bin"/>
+		<delete dir="build"/>
+	</target>
+			
+</project>

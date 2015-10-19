@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="g419-crete-api">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/g419-crete-api/g419-crete-api.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

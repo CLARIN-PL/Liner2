@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>liner2</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
+			<triggers>full,incremental,</triggers>
+			<arguments>
+				<dictionary>
+					<key>LaunchConfigHandle</key>
+					<value>&lt;project&gt;/.externalToolBuilders/org.eclipse.jdt.core.javabuilder.launch</value>
+				</dictionary>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
+			<triggers>full,incremental,</triggers>
+			<arguments>
+				<dictionary>
+					<key>LaunchConfigHandle</key>
+					<value>&lt;project&gt;/.externalToolBuilders/Liner2 Main Ant Builder.launch</value>
+				</dictionary>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>fr.obeo.dsl.viewpoint.nature.modelingproject</nature>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+</projectDescription>

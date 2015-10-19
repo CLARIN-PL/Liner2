@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/g419-corpus/g419-corpus.iml" filepath="$PROJECT_DIR$/g419-corpus/g419-corpus.iml" />
+      <module fileurl="file://$PROJECT_DIR$/liner2.iml" filepath="$PROJECT_DIR$/liner2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/g419-crete-api/src/main/main.iml" filepath="$PROJECT_DIR$/g419-crete-api/src/main/main.iml" />
+    </modules>
+  </component>
+</project>
