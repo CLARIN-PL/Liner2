@@ -45,7 +45,9 @@ public class Sentence {
         }
     };
 
-    public Sentence()	{}
+    public Sentence()	{
+    	
+    }
 	
 	public void addChunk(Annotation chunk) {
 		chunks.add(chunk);
@@ -86,7 +88,13 @@ public class Sentence {
 		}
 	}
 	
-    public boolean hasId(){ return id != null; }
+	/**
+	 * Return true if the sentence has an assigned identifier.
+	 * @return True if the sentence identifier is set.
+	 */
+    public boolean hasId(){ 
+    	return id != null; 
+    }
 	
 	/*
 	 * Zwraca chunk dla podanego indeksu tokenu.
@@ -125,8 +133,9 @@ public class Sentence {
     public String getTokenClassLabel(int tokenIdx, List<Pattern> types){
         ArrayList<Annotation> tokenAnnotations = getChunksAt(tokenIdx, types, true);
 
-        if (tokenAnnotations.isEmpty())
+        if (tokenAnnotations.isEmpty()){
             return "O";
+        }
         else {
             ArrayList<String> classLabels = new ArrayList<String>();
             sortTokenAnnotations(tokenAnnotations);
@@ -150,7 +159,23 @@ public class Sentence {
     private void sortTokenAnnotations(ArrayList<Annotation> tokenAnnotations){
         Collections.sort(tokenAnnotations, annotationComparator);
     }
-	
+
+    /**
+     * Return a set of annotations with a type matching the pattern `type`.
+     * @param type Pattern of annotation type.
+     * @return Set of annotations.
+     */
+	public LinkedHashSet<Annotation> getAnnotations(Pattern type){
+		LinkedHashSet<Annotation> annotationsForTypes = new LinkedHashSet<Annotation>();
+		for(Annotation annotation : this.chunks){
+			if(type.matcher(annotation.getType()).find()){
+				annotationsForTypes.add(annotation);
+			}
+		}
+		
+		return annotationsForTypes;
+	}
+        
 	public LinkedHashSet<Annotation> getAnnotations(List<Pattern> types){
 		LinkedHashSet<Annotation> annotationsForTypes = new LinkedHashSet<Annotation>();
 		for(Annotation annotation : this.chunks){
@@ -162,6 +187,10 @@ public class Sentence {
 		return annotationsForTypes;
 	}
 	
+	/**
+	 * Return a set of all annotations assigned to the sentence.
+	 * @return Set of all annotations.
+	 */
 	public LinkedHashSet<Annotation> getChunks() {
 		return this.chunks;
 	}
@@ -174,7 +203,7 @@ public class Sentence {
 		return this.attributeIndex;
 	}
 	
-	/*
+	/**
 	 * Zwraca ilość tokenów.
 	 */
 	public int getTokenNumber() {

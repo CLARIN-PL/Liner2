@@ -11,8 +11,10 @@ import java.util.regex.Pattern;
 public class Document{
 
 	String name = null;
+	String uri = null;
 	TokenAttributeIndex attributeIndex = null;
 	ArrayList<Paragraph> paragraphs = new ArrayList<Paragraph>();
+	DocumentDescriptor documentDescriptor = new DocumentDescriptor();
 	
 	/* Zbiór relacji */
 	RelationSet relations = new RelationSet();
@@ -43,6 +45,14 @@ public class Document{
 	 */
 	public String getName(){
 		return this.name;
+	}
+	
+	public String getUri(){
+		return this.uri;
+	}
+	
+	public void setUri(String uri){
+		this.uri = uri;
 	}
 	
 	public RelationSet getRelations(){
@@ -185,6 +195,7 @@ public class Document{
         for(Paragraph p: paragraphs){
             copy.addParagraph(p.clone());
         }
+		copy.documentDescriptor = documentDescriptor.clone();
         return copy;
 
     }
@@ -296,5 +307,8 @@ public class Document{
 			removeAnnotations(toRemove);
 		}
 	}
-    
+
+	public DocumentDescriptor getDocumentDescriptor() {
+		return documentDescriptor;
+	}
 }

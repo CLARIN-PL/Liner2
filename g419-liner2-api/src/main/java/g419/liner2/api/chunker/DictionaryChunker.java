@@ -94,7 +94,7 @@ public class DictionaryChunker extends Chunker
 					
 					// dodaj chunk
 					chunking.addChunk(new Annotation(i, i + n, 	
-						this.dictionary.get(nGrams.get(n).get(idx)).toUpperCase(), sentence));
+						this.dictionary.get(nGrams.get(n).get(idx)), sentence));
 					
 					// usuń z tablicy wszystkie krótsze n-gramy, które zahaczają o to miejsce
 					// j - dł. odrzucanego n-gramu - 1, k - pozycja startowa

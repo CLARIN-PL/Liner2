@@ -52,33 +52,47 @@ public class ReaderFactory {
 
 	public AbstractDocumentReader getStreamReader(String uri, InputStream in, String root, String inputFormat) throws Exception {
 		if (inputFormat.equals("ccl")){
-			return new CclSAXStreamReader(uri, in, null);
+			InputStream desc = null;
+			try {
+				desc = getInputStream(new File(root, uri.replace(".xml", ".ini")).getPath());
+			} catch (Exception e){}
+			return new CclSAXStreamReader(uri, in, desc, null);
 		}
 		else if (inputFormat.equals("ccl_rel")){
 			InputStream rel = null;
+			InputStream desc = null;
 			try{
 				rel = getInputStream(new File(root, uri.replace(root, "").replace(".xml", ".rel.xml")).getPath());
 			}
 			catch(Exception e){
 				e.printStackTrace();
 			}
-			return new CclSAXStreamReader(uri, in, rel);
+			try {
+				desc = getInputStream(new File(root, uri.replace(".xml", ".ini")).getPath());
+			} catch (Exception e){}
+			return new CclSAXStreamReader(uri, in, desc, rel);
 		}
 		else if (inputFormat.equals("ccl_relr")){
 			InputStream rel = null;
+			InputStream desc = null;
 			try{
 				rel = getInputStream(new File(root, uri.replace(".xml", ".rel_r")).getPath());
-			}
-			catch(Exception e){}
-			return new CclSAXStreamReader(uri, in, rel);
+			} catch(Exception e){}
+			try {
+				desc = getInputStream(new File(root, uri.replace(".xml", ".ini")).getPath());
+			} catch (Exception e){}
+			return new CclSAXStreamReader(uri, in, desc, rel);
 		}
 		else if (inputFormat.equals("ccl_relcls")){
 			InputStream rel = null;
+			InputStream desc = null;
 			try{
 				rel = getInputStream(new File(root, uri.replace(".xml", ".rel_cls")).getPath());
-			}
-			catch(Exception e){}
-			return new CclSAXStreamReader(uri, in, rel);
+			}catch(Exception e){}
+			try {
+				desc = getInputStream(new File(root, uri.replace(".xml", ".ini")).getPath());
+			} catch (Exception e){}
+			return new CclSAXStreamReader(uri, in, desc, rel);
 		}
 		else if (inputFormat.equals("iob"))
 			return new IobStreamReader(in);
@@ -92,26 +106,63 @@ public class ReaderFactory {
 			throw new Exception("Input format " + inputFormat + " not recognized.");
 	}
 
-    public AbstractDocumentReader getTEIStreamReader(String inputFolder, String docname) throws Exception{
+	/**
+	 * Creates reader for a document in the TEI format -- 
+	 * @param inputFolder
+	 * @param docname
+	 * @return
+	 * @throws Exception
+	 */
+    public AbstractDocumentReader getTEIStreamReader(String inputFolder, String docname) throws Exception{    	
         InputStream annMorphosyntax = getInputStream(new File(inputFolder,"ann_morphosyntax.xml").getPath());
         InputStream annSegmentation = getInputStream(new File(inputFolder,"ann_segmentation.xml").getPath());
-        InputStream annNamed = getInputStreamOrNull(new File(inputFolder,"ann_named.xml").getPath());
-        InputStream annMentions = getInputStreamOrNull(new File(inputFolder,"ann_mentions.xml").getPath());
-        InputStream annCoreference = getInputStreamOrNull(new File(inputFolder,"ann_coreference.xml").getPath());
-        return new TEIStreamReader(annMorphosyntax, annSegmentation, annNamed, annMentions, annCoreference, docname);
+        InputStream annNamed = null; 
+        InputStream annMentions = null;
+        InputStream annChunks = null; 
+        InputStream annCoreference = null; 
+        InputStream annGroups = null; 
+        InputStream annWords = null;
+        InputStream annRelations = null;
+
+        File fileNamed = new File(inputFolder,"ann_named.xml");
+        if ( fileNamed.exists() ){
+        	annNamed = getInputStream(fileNamed.getPath());
+        }
+        
+        File fileMentions = new File(inputFolder,"ann_mentions.xml");
+        if ( fileMentions.exists() ){
+        	annMentions = getInputStream(fileMentions.getPath());
+        }
+
+        File fileChunks = new File(inputFolder,"ann_chunks.xml");
+        if ( fileChunks.exists() ){
+        	annChunks = getInputStream(fileChunks.getPath());
+        }
+
+        File fileCoreference = new File(inputFolder,"ann_coreference.xml");
+        if ( fileCoreference.exists() ){
+        	annCoreference = getInputStream(fileCoreference.getPath());
+        }
+
+        File fileWords = new File(inputFolder,"ann_words.xml");
+        if ( fileWords.exists() ){
+        	annWords = getInputStream(fileWords.getPath());
+        }
+
+        File fileGroups = new File(inputFolder,"ann_groups.xml");
+        if ( fileGroups.exists() ){
+        	annGroups = getInputStream(fileGroups.getPath());
+        }
+
+        File fileRelations = new File(inputFolder,"ann_relations.xml");
+        if ( fileRelations.exists() ){
+        	annRelations = getInputStream(fileRelations.getPath());
+        }
+
+        return new TEIStreamReader(inputFolder, annMorphosyntax, annSegmentation, annNamed, annMentions, annChunks,
+        		annCoreference, annWords, annGroups, annRelations, docname);
     }
 	
-    private InputStream getInputStreamOrNull(String inputFile){
-    	InputStream is;
-    	try{
-    		is = getInputStream(inputFile);
-    	}
-    	catch(Exception ex){
-    		is = null;
-    	}
-    	return is;
-    }
-    
 	private InputStream getInputStream(String inputFile) throws Exception {
 		if ((inputFile == null) || (inputFile.isEmpty()))
 			return System.in;

@@ -7,6 +7,9 @@ import g419.liner2.api.chunker.ensemble.MajorityVotingChunker;
 import g419.liner2.api.chunker.ensemble.UnionChunker;
 import g419.corpus.Logger;
 import org.ini4j.Ini;
+import g419.liner2.api.normalizer.factory.GlobalRuleTimexNormalizerFactoryItem;
+import g419.liner2.api.normalizer.factory.GlobalTimexNormalizerFactoryItem;
+import g419.liner2.api.normalizer.factory.RBNormalizerFactoryItem;
 
 import java.util.ArrayList;
 
@@ -41,6 +44,10 @@ public class ChunkerFactory {
         this.items.add(new ChunkerFactoryItemMapping());
         this.items.add(new ChunkerFactoryItemIobber());
         this.items.add(new ChunkerFactoryItemChunkRel());
+        this.items.add(new ChunkerFactoryItemRulesChunker());
+        this.items.add(new RBNormalizerFactoryItem());
+        this.items.add(new GlobalTimexNormalizerFactoryItem());
+        this.items.add(new GlobalRuleTimexNormalizerFactoryItem());
 	}
 	
 	/**

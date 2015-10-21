@@ -207,11 +207,7 @@ public class ActionLemmatize extends Action {
             }
         }
         for(String name: toRemove){
-
             annsCases.remove(name);
-        }
-        for(String c: annsCases.get("ankh-morpork").keySet()){
-            System.out.println(c + " " + annsCases.get("ankh-morpork").get(c));
         }
 
         return annsCases;
@@ -311,26 +307,64 @@ public class ActionLemmatize extends Action {
                 for(String oth_name: distances.keySet()){
                     int oth_name_count = annsCases.get(oth_name).values().stream().reduce(0, Integer::sum);
 
-                    int lcp = longestCommonPrefix(name.toLowerCase(), oth_name.toLowerCase());
-                    String name_suffix = name.split("//s+")[0].substring(lcp).toLowerCase();
-                    String oth_name_suffix = oth_name.split("//s+")[0].substring(lcp).toLowerCase();
-                    LinkedHashSet<String> namesSuffixes = new LinkedHashSet<String>(){{
-                        add(name_suffix);
-                        add(oth_name_suffix);}};
-                    for(HashSet<String> suffixPair: suffixes){
-                        if(suffixPair.equals(namesSuffixes)){
-                            if(suffixPair.iterator().next().equals(name_suffix)){
-                                rejectedNoms.add(name);
+                    String[] name_tokens = name.split("\\s+");
+                    String[] oth_name_tokens = oth_name.split("\\s+");
+                    if(name_tokens.length == oth_name_tokens.length){
+                        String full_match = "";
+                        match_tokens:
+                        for(int i=0; i< name_tokens.length; i++){
+                            String name_token = name_tokens[i];
+                            String oth_name_token = oth_name_tokens[i];
+                            int lcp = longestCommonPrefix(name_token.toLowerCase(), oth_name_token.toLowerCase());
+                            String name_suffix = name_token.substring(lcp).toLowerCase();
+                            String oth_name_suffix = oth_name_token.substring(lcp).toLowerCase();
+                            LinkedHashSet<String> namesSuffixes = new LinkedHashSet<String>(){{
+                                add(name_suffix);
+                                add(oth_name_suffix);}};
+                            for(HashSet<String> suffixPair: suffixes){
+                                if(suffixPair.equals(namesSuffixes)){
+                                    if(suffixPair.iterator().next().equals(name_suffix)){
+                                        if(full_match.isEmpty()){
+                                            full_match = "name";
+                                        }
+                                        else if(full_match.equals("name")){
+                                            continue;
+                                        }
+                                        else{
+                                            full_match = "none";
+                                            break match_tokens;
+                                        }
+                                    }
+                                    else{
+                                        if(full_match.isEmpty()){
+                                            full_match = "oth_name";
+                                        }
+                                        else if(full_match.equals("oth_name")){
+                                            continue;
+                                        }
+                                        else{
+                                            full_match = "none";
+                                            break match_tokens;
+                                        }
+                                    }
+                                    break;
+                                }
                             }
-                            else{
-                                rejectedNoms.add(oth_name);
-                            }
+
+                        }
+                        if(full_match.equals("name")){
+                            rejectedNoms.add(name);
                             continue main;
                         }
+                        else if(full_match.equals("oth_name")){
+                            rejectedNoms.add(oth_name);
+                            continue main;
+                        }
+
                     }
 
                     if(distances.get(oth_name) < distanceLimit){
-                        if(oth_name_count > name_count){
+                        if (oth_name_count > name_count){
                             rejectedNoms.add(name);
                         }
                         else if(oth_name_count == name_count){

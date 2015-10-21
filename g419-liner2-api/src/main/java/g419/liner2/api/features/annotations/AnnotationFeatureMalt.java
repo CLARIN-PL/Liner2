@@ -1,9 +1,10 @@
 package g419.liner2.api.features.annotations;
 
 import g419.corpus.structure.Annotation;
-import g419.liner2.api.tools.Maltparser;
+import g419.liner2.api.tools.parser.MaltParser;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
@@ -17,7 +18,7 @@ import org.maltparser.core.exception.MaltChainedException;
  */
 public class AnnotationFeatureMalt extends AnnotationFeature{
 
-    private MaltParserService malt;
+    private MaltParser malt;
     private String type;
     private int distance;
 
@@ -25,20 +26,17 @@ public class AnnotationFeatureMalt extends AnnotationFeature{
     public AnnotationFeatureMalt(String modelPath, int distance, String type) {
         this.type = type;
         this.distance = distance;
-        if(Maltparser.isInitialized(modelPath))
-            malt = Maltparser.getParser(modelPath);
-        else
-            malt = Maltparser.addParser(modelPath);
+        malt = new MaltParser(modelPath);
     }
 
-    public HashMap<Annotation, String> generate(String[] dataForMalt, HashMap<Annotation, Integer> annotationIndexes) {
+    public HashMap<Annotation, String> generate(String[] dataForMalt, HashSet<Annotation> annotations) {
 
         HashMap<Annotation, String> features = new HashMap<Annotation, String>();
         try {
             String [] parsedTokens =  malt.parseTokens(dataForMalt);
 
-            for(Annotation ann: annotationIndexes.keySet()){
-                String annData = parsedTokens[annotationIndexes.get(ann)];
+            for(Annotation ann: annotations){
+                String annData = parsedTokens[ann.getBegin()];
                 features.put(ann, getFeature(annData, parsedTokens));
 
             }

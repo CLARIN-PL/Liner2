@@ -1,0 +1,10 @@
+{
+  "include": [
+    "./t3_date/names.json",
+    "./t3_date/dates_numbered.json",
+    "./t3_date/dates_written.json",
+    "./t3_date/ages.json",
+    "./t3_date/shifts.json",
+    "./t3_date/vague.json"
+  ]
+}

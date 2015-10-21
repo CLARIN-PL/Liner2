@@ -1,0 +1,86 @@
+{
+  "regexEscape": "%",
+  "rules": {
+    "datesAndVagueHourWithMinutes": {
+      "extract": "$reDayNumber$reDateSeparator$reMonthNumber$reDateSeparator$reCentury$re2Digits%s*reYear%s*$prefix%s*$reVagueHour%s*$reHourMinuteSeparator%s*$reMinutes",
+      "normalize": "@group(4)@group(5)-@group(2)-@group(0)t@group(8):@group(10)"
+    },
+    "datesAndKnownHourWithMinutes": {
+      "extract": "$reDayNumber$reDateSeparator$reMonthNumber$reDateSeparator$reCentury$re2Digits%sreYear%s$prefix%s$reKnownHour%s*$reHourMinuteSeparator%s*$reMinutes",
+      "normalize": "@group(4)@group(5)-@group(2)-@group(0)T@group(8):@group(10)"
+    }
+  },
+  "patterns": {
+    "reCentury": "[12]%d",
+    "re2Digits": "%d%d",
+    "reVagueHour": [
+      "0?%d",
+      "1[01]"
+    ],
+    "reKnownHour": [
+      "1[3-9]",
+      "2[0-4]"
+    ],
+    "reDateSeparator": [
+      "[-]",
+      "[.]"
+    ],
+    "reDayNumber": [
+      "[012]?%d",
+      "3[01]"
+    ],
+    "reMonthNumber":[
+      "0%d",
+      "10",
+      "11",
+      "12"
+    ],
+    "reMinutes": "[0-5]%d",
+    "reNonZeroMinutes": "[1-5]%d",
+    "reHourMinuteSeparator": "[.:]",
+    "prefix": [
+      "godz[.]",
+      "godzina[.]?"
+    ],
+    "reYear": [
+      "rok[.]",
+      "r[.]",
+      "rocznik[.]"
+    ]
+  },
+  "normalization": {
+    "leadingHourZero": {
+      "t0:": "t00:",
+      "t1:": "t01:",
+      "t2:": "t02:",
+      "t3:": "t03:",
+      "t4:": "t04:",
+      "t5:": "t05:",
+      "t6:": "t06:",
+      "t7:": "t07:",
+      "t8:": "t08:",
+      "t9:": "t09:",
+      "T0:": "T00:",
+      "T1:": "T01:",
+      "T2:": "T02:",
+      "T3:": "T03:",
+      "T4:": "T04:",
+      "T5:": "T05:",
+      "T6:": "T06:",
+      "T7:": "T07:",
+      "T8:": "T08:",
+      "T9:": "T09:"
+    },
+    "leadingZero": {
+      "-1$": "-01",
+      "-2$": "-02",
+      "-3$": "-03",
+      "-4$": "-04",
+      "-5$": "-05",
+      "-6$": "-06",
+      "-7$": "-07",
+      "-8$": "-08",
+      "-9$": "-09"
+    }
+  }
+}

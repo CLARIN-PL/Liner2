@@ -14,7 +14,7 @@ public class CclSAXStreamReader extends AbstractDocumentReader {
 	
 	private Document document;
 	
-	public CclSAXStreamReader(String uri, InputStream cclDocument, InputStream cclRelations) throws DataFormatException {
+	public CclSAXStreamReader(String uri, InputStream cclDocument, InputStream cclDescriptor, InputStream cclRelations) throws DataFormatException, IOException {
 		TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
 		attributeIndex.addAttribute("orth");
 		attributeIndex.addAttribute("base");
@@ -26,6 +26,10 @@ public class CclSAXStreamReader extends AbstractDocumentReader {
 		}
 		else{
 			this.document = parser_out.getDocument();
+		}
+		this.document.setUri(uri);
+		if (cclDescriptor != null){
+			new CclDescriptorReader().enhanceDocument(document, cclDescriptor);
 		}
 	}
 	

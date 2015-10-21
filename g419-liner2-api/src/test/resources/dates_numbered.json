@@ -1,0 +1,62 @@
+{
+  "regexEscape": "%",
+  "rules": {
+    "year4Digits": {
+      "extract": "$reCentury$re2Digits",
+      "normalize": "@group(0)@group(1)"
+    },
+    "year2Digits": {
+      "extract": "[']?$re2Digits",
+      "normalize": "XX@group(0)"
+    },
+    "fullDate": {
+      "extract": "$reCentury$re2Digits$reDateSeparator$reMonthNumber$reDateSeparator$reDayNumber",
+      "normalize": "@group(0)@group(1)-@group(3)-@group(5)"
+    },
+    "fullDateNoCentury": {
+      "extract": "[']$re2Digits$reDateSeparator$reMonthNumber$reDateSeparator$reDayNumber",
+      "normalize": "XX@group(0)-@group(2)-@group(4)"
+    },
+    "dateWithHourAndMinutes": {
+      "comment": "rules with time will need some work, due to AM/PM ambigouity",
+      "extract": "$reCentury$re2Digits$reDateSeparator$reMonthNumber$reDateSeparator$reDayNumber%s*$reTimeSeparator%s*$re2Digits[:]$re2Digits",
+      "normalize": "@group(0)@group(1)-@group(3)-@group(5)T@group(7):@group(8)"
+    },
+    "dateWithHourMinutesAndSeconds": {
+      "comment": "rules with time will need some work, due to AM/PM ambigouity",
+      "extract": "$reCentury$re2Digits$reDateSeparator$reMonthNumber$reDateSeparator$reDayNumber%s*$reTimeSeparator%s*$re2Digits[:]$re2Digits[:]$re2Digits",
+      "normalize": "@group(0)@group(1)-@group(3)-@group(5)T@group(7):@group(8):@group(9)"
+    },
+    "dateWithHourMinutesNoCentury": {
+      "comment": "rules with time will need some work, due to AM/PM ambigouity",
+      "extract": "[']$re2Digits$reDateSeparator$reMonthNumber$reDateSeparator$reDayNumber%s*$reTimeSeparator%s*$re2Digits[:]$re2Digits",
+      "normalize": "XX@group(0)-@group(2)-@group(4)T@group(6):@group(7)"
+    },
+    "dateWithHourMinutesAndSecondsNoCentury": {
+      "comment": "rules with time will need some work, due to AM/PM ambiguity",
+      "extract": "[']$re2Digits$reDateSeparator$reMonthNumber$reDateSeparator$reDayNumber%s*$reTimeSeparator%s*$re2Digits[:]$re2Digits[:]$re2Digits",
+      "normalize": "XX@group(0)-@group(2)-@group(4)T@group(6):@group(7):@group(8)"
+    }
+  },
+  "patterns": {
+    "reCentury": "[12]%d",
+    "re2Digits": "%d%d",
+    "reDateSeparator": [
+      "[-]",
+      "[.]"
+    ],
+    "reTimeSeparator": [
+      "g[.]",
+      "godz[.]"
+    ],
+    "reMonthNumber":[
+      "0%d",
+      "11",
+      "12"
+    ],
+    "reDayNumber": [
+      "[012]%d",
+      "3[01]"
+    ]
+  }
+}

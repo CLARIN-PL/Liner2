@@ -1,18 +1,8 @@
 package g419.crete.api.classifier;
 
 import g419.crete.api.classifier.serialization.WekaModelSerializer;
-
-import java.awt.BorderLayout;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import weka.classifiers.Classifier;
-import weka.classifiers.CostMatrix;
 import weka.classifiers.Evaluation;
-import weka.classifiers.meta.CostSensitiveClassifier;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.J48graft;
 import weka.classifiers.trees.RandomForest;
@@ -27,6 +17,13 @@ import weka.filters.unsupervised.attribute.NumericToNominal;
 import weka.filters.unsupervised.attribute.StringToNominal;
 import weka.gui.treevisualizer.PlaceNode2;
 import weka.gui.treevisualizer.TreeVisualizer;
+
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 
 public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Integer>{

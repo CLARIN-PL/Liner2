@@ -1,0 +1,121 @@
+buildscript {
+    repositories { jcenter() }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.1'
+    }
+}
+
+description = "g419 - Top-level project"
+
+version = "2.5-SNAPSHOT"
+
+apply plugin: 'wrapper'
+group = "pl.pwr.nlp"
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+    //apply plugin: 'netbeans' // if needed (?)
+
+    compileJava {
+        options.compilerArgs << "-Xlint:all"
+        options.debug = true
+    }
+
+    group = "pl.pwr.nlp"
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+    version = '2.5-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        // some ant build included nlog4j in JARs, but it doesn't seem to be used anywhere, or at least
+        // recursively grepping repo root for "nlog4j" and "log4j" returned only build files
+        // building the whole project doesn't yield any compilation errors without it, so I assume everything's fine
+
+        // I took the liberty of providing dependencies that I find most useful
+        compile 'org.slf4j:slf4j-api:1.7.2'
+        runtime 'org.slf4j:slf4j-log4j12:1.7.2'
+        testCompile 'junit:junit:4.11'
+    }
+
+    test {
+        useJUnit()
+    }
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        description "Makes JAR with sources of this module."
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        description "Makes JAR with javadocs of this module."
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    def artifactsTasks = [
+        jar,
+        sourcesJar,
+//        javadocJar //uncomment this when javadoc will work
+    ]
+
+    plugins.withType(ApplicationPlugin){
+        it.project.apply plugin: 'com.github.johnrengelman.shadow'
+
+        shadowJar {
+            classifier='all'
+        }
+
+        it.project.tasks.find { it.name == "jar" }.dependsOn it.project.tasks.find { it.name == "shadowJar" }
+    }
+
+    artifacts {
+        artifactsTasks.each {
+            archives it
+        }
+    }
+}
+
+task libZip(type: Zip, dependsOn: build){
+    description "Makes ZIP with all JARs and some additional stuff, like README and samples."
+    classifier = "libs"
+    into("liner2-pack") {
+        from new File(project.rootDir, "stuff/README")
+        from new File(project.rootDir, "stuff/log4j.properties")    
+        into("libs") {
+            from subprojects.collect {
+                it.jar.archivePath
+            }
+        }
+        into("wrapper"){
+            from new File(project.rootDir, "stuff/wrapper")
+        }
+    }
+}
+
+task appZip(type: Zip, dependsOn: build){
+    description "Makes ZIP with all FAT-JARs."
+    classifier = "apps"
+    def files = subprojects.collect {
+        File f = it.jar.archivePath
+        String p = f.absolutePath
+        def parts = p.split("[.]") as List
+        def last = parts.pop()
+        def archiveName = parts.pop() + "-all"
+        def appPath = (parts+[archiveName, last]).join(".")
+        File appFile = new File(appPath)
+        if (appFile.exists())
+            return appFile
+        return null
+    }
+    into("liner2-executable-jars") {
+        from files.findAll()
+    }
+}

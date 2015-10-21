@@ -14,11 +14,11 @@ import java.io.OutputStream;
 public class ConllStreamWriter extends AbstractDocumentWriter{
 
 	private OutputStream os;
-	
+
 	public ConllStreamWriter(OutputStream os){
 		this.os = os;
 	}
-	
+
 	public ConllStreamWriter(){
 		this.os = new ByteArrayOutputStream();
 	}
@@ -105,14 +105,22 @@ public class ConllStreamWriter extends AbstractDocumentWriter{
 
 	@Override
 	public void flush() {
-		// TODO Auto-generated method stub
-		
+		try {
+			os.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void close() {
-		// TODO Auto-generated method stub
-		
+		try {
+			this.os.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 	}
 
 }

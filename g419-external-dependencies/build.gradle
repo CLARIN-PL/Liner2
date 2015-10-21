@@ -1,0 +1,150 @@
+import java.text.SimpleDateFormat
+
+description = "g419-external-dependencies -- syntetyczny moduł, którego zadaniem jest wystawienie artefaktu z CRFPP"
+
+/**
+ * Directory in which all C++-related build data will be kept. Existance of this directory determines whether CRFPP
+ * should be recompiled.
+ */
+workspace = new File(project.projectDir, "crfppWorkspace")
+
+/**
+ * Untarred CRFPP source archive path.
+ */
+crfppDir = new File(workspace, "CRF++-0.57")
+
+SUCCESS_MARKER = "SUCCESS"
+
+lastCompilationDate = null
+
+/**
+ * This file should exist and contain two lines: SUCCESS_MARKER and date of successful compilation
+ * to consider CRFPP as compiled. Any other state of this file (non-existing, or with wrong content)
+ * means that compilation failed.
+ */
+statusFile = new File(workspace, "status.txt")
+
+/**
+ * Helper function, printing provided text with border made of # signs. Second parameter defines width of border (number
+ * of signs making top and bottom borders).
+ */
+def header(str, width=60){
+    println "#"*width
+    diff = width - str.size() - 4
+    if (diff<0) diff = 0
+    println "# " + str + " "*diff + " #"
+    println "#"*width
+}
+
+/**
+ * Function that takes Makefile and removes java-related parts from it (keeps only C++ compilation, Java
+ * compilation will be handled by gradle).
+ */
+def removeJavac(File f){
+    lines = f.readLines()
+    f.text = ""
+    lines.each { String line ->
+        String l = line.trim()
+        if (l.startsWith("INCLUDE"))
+            f.append("INCLUDE=${System.getenv("JAVA_HOME")}/include\n")
+        else if (!(l.startsWith("\$(JAVAC)") || l.startsWith("env") || l.startsWith("test") || l.startsWith("\$(JAR)")))
+            f.append(line+"\n")
+    }
+}
+
+/**
+ * Copy CRFPP wrapper sources and compiled library to source set, so that gradle may handle it in future.
+ */
+def fillSourceSet(){
+    header("Append wrapper codebase to source directories")
+    javaSource = new File(project.projectDir, "src/main/java")
+    javaSource.mkdirs()
+    new File(javaSource, "org").mkdir()
+    javaRes = new File(project.projectDir, "src/main/resources")
+    javaRes.mkdirs()
+    copy {
+        from new File(crfppDir, "java/org")
+        into new File(javaSource, "org")
+    }
+    ant.copy(file: new File(crfppDir, "java/libCRFPP.so"), tofile: new File(javaRes, "libCRFPP.so"))
+}
+
+def markSuccess(){
+    statusFile.text = "$SUCCESS_MARKER\n${new SimpleDateFormat().format(new Date())}"
+}
+
+def isCompiled(){
+    try {
+        def lines = statusFile.text.split("\n")
+        if (! (lines.first() == SUCCESS_MARKER && lines.size()==2))
+            return false
+        lastCompilationDate = lines[1]
+        return true
+    } catch (FileNotFoundException fnfe){
+        return false
+    }
+}
+
+task compileCRFPP << {
+    if (isCompiled()) {
+        header("CRFPP already compiled (on $lastCompilationDate)")
+    } else {
+        if (!System.getenv("JAVA_HOME")) {
+            throw new RuntimeException("There is no JAVA_HOME environment variable! Cannot compile CRFPP")
+        }
+        header("Preparing CRFPP")
+        workspace.mkdirs()
+        header("tar xvf CRF++-0.57.tar.gz")
+        tarSrc = new File(project.projectDir, "CRF++-0.57.tar.gz")
+        copy {
+            from tarTree(tarSrc)
+            into workspace
+        }
+        header("m4 hack")
+        m4 = new File(crfppDir, "m4")
+        m4.mkdirs()
+        exec {
+            workingDir crfppDir
+            commandLine "autoreconf", "--force", "--install"
+        }
+        header("./configure")
+        exec {
+            workingDir crfppDir
+            commandLine "./configure"
+        }
+        header("make")
+        exec {
+            workingDir crfppDir
+            commandLine "make"
+        }
+        removeJavac(new File(crfppDir, "java/Makefile"))
+        header("make binaries")
+        exec {
+            workingDir new File(crfppDir, "java")
+            commandLine "make"
+        }
+        fillSourceSet()
+        markSuccess()
+    }
+}
+
+task cleanCRFPP << {
+    header("Clean CRFPP workspace")
+    delete { delete workspace }
+    header("Clean source sets")
+    delete {
+        delete new File(project.projectDir, "src")
+    }
+}
+
+compileJava.dependsOn compileCRFPP
+clean.dependsOn cleanCRFPP
+
+jar {
+    from(
+        zipTree(new File(project.projectDir, "princetonAdapter.jar"))
+    )
+    from(
+        zipTree(new File(project.projectDir, "jlibsvm-0.92-SNAPSHOT.jar"))
+    )
+}

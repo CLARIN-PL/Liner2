@@ -1,0 +1,234 @@
+{
+  "regexEscape": "%",
+  "rules": {
+	"vague": {
+  	"extract": ".*$reVagueIndicator.*",
+  	"normalize": "VAGUE"
+	},
+	"oneOfDateUnit": {
+  	"extract": "$reDateUnit",
+  	"normalize": "P1@group(0)"
+	},
+	"numberOfDateUnit": {
+  	"extract": "$reInt%s+$reDateUnit",
+  	"normalize": "P@group(0)@group(1)"
+	},
+	"fewDateUnits1": {
+  	"extract": "$reOnes%s+$reDateUnit",
+  	"normalize": "P@group(0)@group(1)"
+	},
+	"tensOfDateUnits": {
+  	"extract": "$reTens%s+$reDateUnit",
+  	"normalize": "P@group(0)0@group(1)"
+	},
+	"manyDateUnits": {
+  	"extract": "$reTens%s+$reOnes%s+$reDateUnit",
+  	"normalize": "P@group(0)@group(1)@group(2)"
+	},
+	"oneOfTimeUnit": {
+  	"extract": "$reTimeUnit",
+  	"normalize": "PT1@group(0)"
+	},
+	"numberOfTimeUnit": {
+  	"extract": "$reInt%s+$reTimeUnit",
+  	"normalize": "PT@group(0)@group(1)"
+	},
+	"someTimeUnits": {
+  	"extract": "$reFloat%s+$reTimeUnit",
+  	"normalize": "PT@group(0)@group(1)"
+	},
+	"fewTimeUnits1": {
+  	"extract": "$reOnes%s+$reTimeUnit",
+  	"normalize": "PT@group(0)@group(1)"
+	},
+	"tensOfTimeUnits": {
+  	"extract": "$reTens%s+$reTimeUnit",
+  	"normalize": "PT@group(0)0@group(1)"
+	},
+	"manyTimeUnits": {
+  	"extract": "$reTens%s+$reOnes%s+$reTimeUnit",
+  	"normalize": "PT@group(0)@group(1)@group(2)"
+	},
+	"descriptionDateUnits": {
+  	"extract": "$reDescription%s+$reDateUnit",
+  	"normalize": "P@group(0)@group(1)"
+	},
+	"durationWithYears": {
+  	"extract": "$reDurationYear",
+  	"normalize": "P@group(0)"
+	},
+        "dateUnitAdj": {
+  	"extract": "$reDateUnitsAdj",
+  	"normalize": "P1@group(0)"
+	},
+        "numberOfDateUnitsAdj": {
+  	"extract": "$reInt%s+$reDateUnitsAdj",
+  	"normalize": "P@group(0)@group(1)"
+	},
+        "timeUnitAdj": {
+  	"extract": "$reTimeUnitsAdj",
+  	"normalize": "PT1@group(0)"
+	},
+        "numberOfTimeUnitsAdj": {
+  	"extract": "$reInt%s+$reTimeUnitsAdj",
+  	"normalize": "PT@group(0)@group(1)"
+	},
+        "numberWithSeparatorOfTimeUnitsAdj": {
+  	"extract": "$reInt$reSeparator$reTimeUnitsAdj",
+  	"normalize": "PT@group(0)@group(2)"
+	}
+  },
+  "patterns": {
+	"reVagueIndicator": [
+  	"wiele",
+  	"kilka",
+  	"tyle"
+	],
+	"reDescription": [
+	"cały"
+	],
+       "reSeparator": [
+       "[-]"
+        ],
+	"reInt": "[1-9][%d%s]*",
+	"reFloat": "[1-9][%d%s]*[,.]%d+",
+	"reOnes": [
+  	"jeden",
+  	"dwa",
+  	"trzy",
+  	"cztery",
+  	"pięć",
+  	"sześć",
+  	"siedem",
+  	"osiem",
+  	"dziewięć",
+  	"jedenaście",
+  	"dwanaście",
+  	"trzynaście",
+  	"czternaście",
+  	"piętnaście",
+  	"szesnaście",
+  	"siedemnaście",
+  	"osiemnaście",
+  	"dziewiętnaście"
+	],
+	"reTens": [
+  	"dziesięć",
+  	"dwadzieścia",
+  	"trzydzieści",
+  	"czterdzieści",
+  	"pięćdziesiąt",
+  	"sześćdziesiąt",
+  	"siedemdziesiąt",
+  	"osiemdziesiąt",
+  	"dziewięćdziesiąt"
+	],
+	"reDateUnit": [
+  	"rok",
+  	"miesiąc",
+  	"tydzień",
+  	"dzień"
+	],
+	"reTimeUnit": [
+  	"godzina",
+  	"minuta",
+  	"sekunda"
+	],
+	"reDurationYear": [
+  	"dwuletni",
+  	"trzyletni",
+  	"czteroletni",
+  	"pięcioletni",
+        "pięciolecie",
+  	"sześcioletni",
+  	"siedmioletni",
+  	"ośmioletni",
+  	"dziewięcioletni",
+  	"dziesięcioletni"
+	],
+	"reDateUnitsAdj": [
+  	"dzienny",
+  	"tygodniowy",
+        "miesięczny",
+        "roczny"
+        ],
+	"reTimeUnitsAdj": [
+  	"godzinny"
+        ]
+  },
+  "normalization": {
+	"dateUnit": {
+  	"rok": "Y",
+  	"miesiąc": "M",
+  	"tydzień": "W",
+  	"dzień": "D"
+	},
+	"timeUnit": {
+  	"godzina": "H",
+  	"minuta": "M",
+  	"sekunda": "S"
+	},
+	"dateUnitsAdj": {
+  	"dzienny": "D" ,
+  	"tygodniowy": "W",
+        "miesięczny": "M",
+        "roczny": "Y"
+	},
+	"timeUnitsAdj": {
+  	"godzinny": "H"
+	},
+	"ones": {
+  	"jedenaście": "11",
+  	"dwanaście": "12",
+  	"trzynaście": "13",
+  	"czternaście": "14",
+  	"piętnaście": "15",
+  	"szesnaście": "16",
+  	"siedemnaście": "17",
+  	"osiemnaście": "18",
+  	"dziewiętnaście": "19",
+  	"jeden": "1",
+  	"dwa": "2",
+  	"trzy": "3",
+  	"cztery": "4",
+  	"pięć": "5",
+  	"sześć": "6",
+  	"siedem": "7",
+  	"osiem": "8",
+  	"dziewięć": "9"
+	},
+	"durationYear": {
+  	"dwuletni": "2Y",
+  	"trzyletni": "3Y",
+  	"czteroletni": "4Y",
+  	"pięcioletni": "5Y",
+        "pięciolecie": "5Y",
+  	"sześcioletni": "6Y",
+  	"siedmioletni": "7Y",
+  	"ośmioletni": "8Y",
+  	"dziewięcioletni": "9Y",
+  	"dziesięcioletni": "10Y"
+	},
+	"description":{
+  	"cały": "1"
+	},
+	"tens": {
+  	"dziesięć": "1",
+  	"dwadzieścia": "2",
+  	"trzydzieści": "3",
+  	"czterdzieści": "4",
+  	"pięćdziesiąt": "5",
+  	"sześćdziesiąt": "6",
+  	"siedemdziesiąt": "7",
+  	"osiemdziesiąt": "8",
+  	"dziewięćdziesiąt": "9"
+	},
+	"comma": {
+  	",": "."
+	},
+	"whitespace": {
+  	" ": ""
+	}
+
+  }
+}

@@ -3,7 +3,7 @@ package g419.liner2.api.features;
 import g419.corpus.structure.*;
 import g419.liner2.api.features.annotations.*;
 import g419.liner2.api.features.annotations.AnnotationAtomicFeature;
-import g419.liner2.api.tools.MaltSentence;
+import g419.liner2.api.tools.parser.MaltSentence;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -102,7 +102,7 @@ public class AnnotationFeatureGenerator {
         if(!this.maltFeatures.isEmpty()){
             maltSent = new MaltSentence(sent, sentenceAnnotations);
             for (AnnotationFeatureMalt afg : this.maltFeatures)
-            features.put(afg.name, afg.generate(maltSent.getMaltData(), maltSent.getAnnotationIndices()));
+            features.put(afg.name, afg.generate(maltSent.getMaltData(), sentenceAnnotations));
         }
         for (AnnotationSentenceFeature afg : this.sentenceFeatures)
         features.put(afg.name, afg.generate(sent, sentenceAnnotations));

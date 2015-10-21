@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chunkList SYSTEM "ccl.dtd">
+<chunkList>
+ <chunk id="ch1">
+  <sentence id="sent1">
+   <tok>
+    <orth>W</orth>
+    <lex><base>w</base><ctag>prep:acc:nwok</ctag></lex>
+    <lex disamb="1"><base>w</base><ctag>prep:loc:nwok</ctag></lex>
+    <lex><base>wiek</base><ctag>brev:pun</ctag></lex>
+    <lex><base>wielki</base><ctag>brev:pun</ctag></lex>
+    <lex><base>wiersz</base><ctag>brev:pun</ctag></lex>
+    <lex><base>wieś</base><ctag>brev:pun</ctag></lex>
+    <lex><base>wyspa</base><ctag>brev:pun</ctag></lex>
+   </tok>
+   <tok>
+    <orth>programie</orth>
+    <lex disamb="1"><base>program</base><ctag>subst:sg:loc:m3</ctag></lex>
+    <lex><base>program</base><ctag>subst:sg:voc:m3</ctag></lex>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>:</orth>
+    <lex disamb="1"><base>:</base><ctag>interp</ctag></lex>
+   </tok>
+  </sentence>
+ </chunk>
+ <chunk id="ch2">
+  <sentence id="sent2">
+   <tok>
+    <orth>-</orth>
+    <lex disamb="1"><base>-</base><ctag>interp</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>rozstrzygnięcie</orth>
+    <lex disamb="1"><base>rozstrzygnięcie</base><ctag>subst:sg:nom:n</ctag></lex>
+    <lex><base>rozstrzygnięcie</base><ctag>subst:sg:acc:n</ctag></lex>
+    <lex><base>rozstrzygnięcie</base><ctag>subst:sg:voc:n</ctag></lex>
+    <lex><base>rozstrzygnąć</base><ctag>ger:sg:nom:n:perf:aff</ctag></lex>
+    <lex><base>rozstrzygnąć</base><ctag>ger:sg:acc:n:perf:aff</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>II</orth>
+    <lex disamb="1"><base>ii</base><ctag>interj</ctag></lex>
+    <ann chan="keyword">1</ann>
+    <prop key="keyword:lval">II Regionalny Konkurs Fotograficzny</prop>
+   </tok>
+   <tok>
+    <orth>Regionalnego</orth>
+    <lex><base>regionalny</base><ctag>adj:sg:gen:m1:pos</ctag></lex>
+    <lex><base>regionalny</base><ctag>adj:sg:acc:m1:pos</ctag></lex>
+    <lex><base>regionalny</base><ctag>adj:sg:gen:m2:pos</ctag></lex>
+    <lex><base>regionalny</base><ctag>adj:sg:acc:m2:pos</ctag></lex>
+    <lex disamb="1"><base>regionalny</base><ctag>adj:sg:gen:m3:pos</ctag></lex>
+    <lex><base>regionalny</base><ctag>adj:sg:gen:n:pos</ctag></lex>
+    <ann chan="keyword">1</ann>
+   </tok>
+   <tok>
+    <orth>Konkursu</orth>
+    <lex disamb="1"><base>konkurs</base><ctag>subst:sg:gen:m3</ctag></lex>
+    <ann chan="keyword">1</ann>
+   </tok>
+   <tok>
+    <orth>Fotograficznego</orth>
+    <lex><base>fotograficzny</base><ctag>adj:sg:gen:m1:pos</ctag></lex>
+    <lex><base>fotograficzny</base><ctag>adj:sg:acc:m1:pos</ctag></lex>
+    <lex><base>fotograficzny</base><ctag>adj:sg:gen:m2:pos</ctag></lex>
+    <lex><base>fotograficzny</base><ctag>adj:sg:acc:m2:pos</ctag></lex>
+    <lex disamb="1"><base>fotograficzny</base><ctag>adj:sg:gen:m3:pos</ctag></lex>
+    <lex><base>fotograficzny</base><ctag>adj:sg:gen:n:pos</ctag></lex>
+    <ann chan="keyword">1</ann>
+   </tok>
+   <tok>
+    <orth>&quot;</orth>
+    <lex disamb="1"><base>&quot;</base><ctag>interp</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>Ozorków</orth>
+    <lex><base>Ozorków</base><ctag>subst:sg:nom:m3</ctag></lex>
+    <lex><base>Ozorków</base><ctag>subst:sg:acc:m3</ctag></lex>
+    <lex disamb="1"><base>ozorek</base><ctag>subst:pl:gen:m3</ctag></lex>
+    <ann chan="keyword">2</ann>
+    <prop key="keyword:lval">Ozorków na starej fotografii</prop>
+   </tok>
+   <tok>
+    <orth>na</orth>
+    <lex><base>na</base><ctag>interj</ctag></lex>
+    <lex><base>na</base><ctag>prep:acc</ctag></lex>
+    <lex disamb="1"><base>na</base><ctag>prep:loc</ctag></lex>
+    <ann chan="keyword">2</ann>
+   </tok>
+   <tok>
+    <orth>starej</orth>
+    <lex><base>stara</base><ctag>subst:sg:gen:f</ctag></lex>
+    <lex><base>stara</base><ctag>subst:sg:dat:f</ctag></lex>
+    <lex><base>stara</base><ctag>subst:sg:loc:f</ctag></lex>
+    <lex><base>stary</base><ctag>adj:sg:gen:f:pos</ctag></lex>
+    <lex><base>stary</base><ctag>adj:sg:dat:f:pos</ctag></lex>
+    <lex disamb="1"><base>stary</base><ctag>adj:sg:loc:f:pos</ctag></lex>
+    <ann chan="keyword">2</ann>
+   </tok>
+   <tok>
+    <orth>fotografii</orth>
+    <lex><base>fotografia</base><ctag>subst:sg:gen:f</ctag></lex>
+    <lex><base>fotografia</base><ctag>subst:sg:dat:f</ctag></lex>
+    <lex disamb="1"><base>fotografia</base><ctag>subst:sg:loc:f</ctag></lex>
+    <lex><base>fotografia</base><ctag>subst:pl:gen:f</ctag></lex>
+    <ann chan="keyword">2</ann>
+   </tok>
+   <tok>
+    <orth>&quot;</orth>
+    <lex disamb="1"><base>&quot;</base><ctag>interp</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>&quot;</orth>
+    <lex disamb="1"><base>&quot;</base><ctag>interp</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>pod</orth>
+    <lex><base>POD</base><ctag>subst:pl:nom:n</ctag></lex>
+    <lex><base>POD</base><ctag>subst:pl:gen:n</ctag></lex>
+    <lex><base>POD</base><ctag>subst:pl:dat:n</ctag></lex>
+    <lex><base>POD</base><ctag>subst:pl:acc:n</ctag></lex>
+    <lex><base>POD</base><ctag>subst:pl:inst:n</ctag></lex>
+    <lex><base>POD</base><ctag>subst:pl:loc:n</ctag></lex>
+    <lex><base>POD</base><ctag>subst:pl:voc:n</ctag></lex>
+    <lex><base>pod</base><ctag>prep:acc:nwok</ctag></lex>
+    <lex disamb="1"><base>pod</base><ctag>prep:inst:nwok</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>honorowym</orth>
+    <lex><base>honorowy</base><ctag>adj:sg:inst:m1:pos</ctag></lex>
+    <lex><base>honorowy</base><ctag>adj:sg:loc:m1:pos</ctag></lex>
+    <lex><base>honorowy</base><ctag>adj:sg:inst:m2:pos</ctag></lex>
+    <lex><base>honorowy</base><ctag>adj:sg:loc:m2:pos</ctag></lex>
+    <lex disamb="1"><base>honorowy</base><ctag>adj:sg:inst:m3:pos</ctag></lex>
+    <lex><base>honorowy</base><ctag>adj:sg:loc:m3:pos</ctag></lex>
+    <lex><base>honorowy</base><ctag>adj:sg:inst:n:pos</ctag></lex>
+    <lex><base>honorowy</base><ctag>adj:sg:loc:n:pos</ctag></lex>
+    <lex><base>honorowy</base><ctag>adj:pl:dat:m1:pos</ctag></lex>
+    <lex><base>honorowy</base><ctag>adj:pl:dat:m2:pos</ctag></lex>
+    <lex><base>honorowy</base><ctag>adj:pl:dat:m3:pos</ctag></lex>
+    <lex><base>honorowy</base><ctag>adj:pl:dat:f:pos</ctag></lex>
+    <lex><base>honorowy</base><ctag>adj:pl:dat:n:pos</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>patronatem</orth>
+    <lex disamb="1"><base>patronat</base><ctag>subst:sg:inst:m3</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>Burmistrza</orth>
+    <lex disamb="1"><base>burmistrz</base><ctag>subst:sg:gen:m1</ctag></lex>
+    <lex><base>burmistrz</base><ctag>subst:sg:acc:m1</ctag></lex>
+    <ann chan="keyword">3</ann>
+    <prop key="keyword:lval">Burmistrz Miasta Ozorkowa</prop>
+   </tok>
+   <tok>
+    <orth>Miasta</orth>
+    <lex disamb="1"><base>miasto</base><ctag>subst:sg:gen:n</ctag></lex>
+    <lex><base>miasto</base><ctag>subst:pl:nom:n</ctag></lex>
+    <lex><base>miasto</base><ctag>subst:pl:acc:n</ctag></lex>
+    <lex><base>miasto</base><ctag>subst:pl:voc:n</ctag></lex>
+    <ann chan="keyword">3</ann>
+   </tok>
+   <tok>
+    <orth>Ozorkowa</orth>
+    <lex disamb="1"><base>Ozorków</base><ctag>subst:sg:gen:m3</ctag></lex>
+    <lex><base>ozorkowy</base><ctag>adj:sg:nom:f:pos</ctag></lex>
+    <lex><base>ozorkowy</base><ctag>adj:sg:voc:f:pos</ctag></lex>
+    <ann chan="keyword">3</ann>
+   </tok>
+  </sentence>
+ </chunk>
+ <chunk id="ch3">
+  <sentence id="sent3">
+   <tok>
+    <orth>-</orth>
+    <lex disamb="1"><base>-</base><ctag>interp</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>montaż</orth>
+    <lex disamb="1"><base>montaż</base><ctag>subst:sg:nom:m3</ctag></lex>
+    <lex><base>montaż</base><ctag>subst:sg:acc:m3</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>słowno</orth>
+    <lex><base>słowno</base><ctag>ign</ctag></lex>
+    <lex disamb="1"><base>słowno</base><ctag>adja</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>-</orth>
+    <lex disamb="1"><base>-</base><ctag>interp</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>muzyczny</orth>
+    <lex><base>muzyczny</base><ctag>adj:sg:nom:m1:pos</ctag></lex>
+    <lex><base>muzyczny</base><ctag>adj:sg:voc:m1:pos</ctag></lex>
+    <lex><base>muzyczny</base><ctag>adj:sg:nom:m2:pos</ctag></lex>
+    <lex><base>muzyczny</base><ctag>adj:sg:voc:m2:pos</ctag></lex>
+    <lex><base>muzyczny</base><ctag>adj:sg:nom:m3:pos</ctag></lex>
+    <lex disamb="1"><base>muzyczny</base><ctag>adj:sg:acc:m3:pos</ctag></lex>
+    <lex><base>muzyczny</base><ctag>adj:sg:voc:m3:pos</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>pt</orth>
+    <lex><base>piątek</base><ctag>brev:npun</ctag></lex>
+    <lex disamb="1"><base>pod tytułem</base><ctag>brev:pun</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>.</orth>
+    <lex disamb="1"><base>.</base><ctag>interp</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>&quot;</orth>
+    <lex disamb="1"><base>&quot;</base><ctag>interp</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>Ozorków</orth>
+    <lex><base>Ozorków</base><ctag>subst:sg:nom:m3</ctag></lex>
+    <lex><base>Ozorków</base><ctag>subst:sg:acc:m3</ctag></lex>
+    <lex disamb="1"><base>ozorek</base><ctag>subst:pl:gen:m3</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>-</orth>
+    <lex disamb="1"><base>-</base><ctag>interp</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>moje</orth>
+    <lex><base>moja</base><ctag>subst:pl:nom:f</ctag></lex>
+    <lex><base>moja</base><ctag>subst:pl:acc:f</ctag></lex>
+    <lex><base>moja</base><ctag>subst:pl:voc:f</ctag></lex>
+    <lex><base>moje</base><ctag>subst:sg:nom:n</ctag></lex>
+    <lex><base>moje</base><ctag>subst:sg:acc:n</ctag></lex>
+    <lex><base>moje</base><ctag>subst:sg:voc:n</ctag></lex>
+    <lex><base>moje</base><ctag>subst:pl:nom:n</ctag></lex>
+    <lex><base>moje</base><ctag>subst:pl:acc:n</ctag></lex>
+    <lex><base>moje</base><ctag>subst:pl:voc:n</ctag></lex>
+    <lex disamb="1"><base>mój</base><ctag>adj:sg:nom:n:pos</ctag></lex>
+    <lex><base>mój</base><ctag>adj:sg:acc:n:pos</ctag></lex>
+    <lex><base>mój</base><ctag>adj:sg:voc:n:pos</ctag></lex>
+    <lex><base>mój</base><ctag>adj:pl:nom:m2:pos</ctag></lex>
+    <lex><base>mój</base><ctag>adj:pl:acc:m2:pos</ctag></lex>
+    <lex><base>mój</base><ctag>adj:pl:voc:m2:pos</ctag></lex>
+    <lex><base>mój</base><ctag>adj:pl:nom:m3:pos</ctag></lex>
+    <lex><base>mój</base><ctag>adj:pl:acc:m3:pos</ctag></lex>
+    <lex><base>mój</base><ctag>adj:pl:voc:m3:pos</ctag></lex>
+    <lex><base>mój</base><ctag>adj:pl:nom:f:pos</ctag></lex>
+    <lex><base>mój</base><ctag>adj:pl:acc:f:pos</ctag></lex>
+    <lex><base>mój</base><ctag>adj:pl:voc:f:pos</ctag></lex>
+    <lex><base>mój</base><ctag>adj:pl:nom:n:pos</ctag></lex>
+    <lex><base>mój</base><ctag>adj:pl:acc:n:pos</ctag></lex>
+    <lex><base>mój</base><ctag>adj:pl:voc:n:pos</ctag></lex>
+    <lex><base>mój</base><ctag>depr:pl:nom:m2</ctag></lex>
+    <lex><base>mój</base><ctag>depr:pl:voc:m2</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>miasto</orth>
+    <lex><base>miasto</base><ctag>conj</ctag></lex>
+    <lex><base>miasto</base><ctag>prep:gen</ctag></lex>
+    <lex disamb="1"><base>miasto</base><ctag>subst:sg:nom:n</ctag></lex>
+    <lex><base>miasto</base><ctag>subst:sg:acc:n</ctag></lex>
+    <lex><base>miasto</base><ctag>subst:sg:voc:n</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>&quot;</orth>
+    <lex disamb="1"><base>&quot;</base><ctag>interp</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>w</orth>
+    <lex><base>w</base><ctag>prep:acc:nwok</ctag></lex>
+    <lex disamb="1"><base>w</base><ctag>prep:loc:nwok</ctag></lex>
+    <lex><base>wiek</base><ctag>brev:pun</ctag></lex>
+    <lex><base>wielki</base><ctag>brev:pun</ctag></lex>
+    <lex><base>wiersz</base><ctag>brev:pun</ctag></lex>
+    <lex><base>wieś</base><ctag>brev:pun</ctag></lex>
+    <lex><base>wyspa</base><ctag>brev:pun</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>wykonaniu</orth>
+    <lex><base>wykonanie</base><ctag>subst:sg:dat:n</ctag></lex>
+    <lex disamb="1"><base>wykonanie</base><ctag>subst:sg:loc:n</ctag></lex>
+    <lex><base>wykonać</base><ctag>ger:sg:dat:n:perf:aff</ctag></lex>
+    <lex><base>wykonać</base><ctag>ger:sg:loc:n:perf:aff</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>uczniów</orth>
+    <lex disamb="1"><base>uczeń</base><ctag>subst:pl:gen:m1</ctag></lex>
+    <lex><base>uczeń</base><ctag>subst:pl:acc:m1</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>Szkoły</orth>
+    <lex disamb="1"><base>szkoła</base><ctag>subst:sg:gen:f</ctag></lex>
+    <lex><base>szkoła</base><ctag>subst:pl:nom:f</ctag></lex>
+    <lex><base>szkoła</base><ctag>subst:pl:acc:f</ctag></lex>
+    <lex><base>szkoła</base><ctag>subst:pl:voc:f</ctag></lex>
+    <ann chan="keyword">1</ann>
+    <prop key="keyword:lval">Szkoła Podstawowa nr 4 w Ozorkowie</prop>
+   </tok>
+   <tok>
+    <orth>Podstawowej</orth>
+    <lex disamb="1"><base>podstawowy</base><ctag>adj:sg:gen:f:pos</ctag></lex>
+    <lex><base>podstawowy</base><ctag>adj:sg:dat:f:pos</ctag></lex>
+    <lex><base>podstawowy</base><ctag>adj:sg:loc:f:pos</ctag></lex>
+    <ann chan="keyword">1</ann>
+   </tok>
+   <tok>
+    <orth>nr</orth>
+    <lex><base>nr</base><ctag>ign</ctag></lex>
+    <lex disamb="1"><base>nr</base><ctag>brev:npun</ctag></lex>
+    <ann chan="keyword">1</ann>
+   </tok>
+   <tok>
+    <orth>4</orth>
+    <lex><base>4</base><ctag>ign</ctag></lex>
+    <lex disamb="1"><base>4</base><ctag>num:pl:nom:m3:congr</ctag></lex>
+    <ann chan="keyword">1</ann>
+   </tok>
+   <tok>
+    <orth>w</orth>
+    <lex><base>w</base><ctag>prep:acc:nwok</ctag></lex>
+    <lex disamb="1"><base>w</base><ctag>prep:loc:nwok</ctag></lex>
+    <lex><base>wiek</base><ctag>brev:pun</ctag></lex>
+    <lex><base>wielki</base><ctag>brev:pun</ctag></lex>
+    <lex><base>wiersz</base><ctag>brev:pun</ctag></lex>
+    <lex><base>wieś</base><ctag>brev:pun</ctag></lex>
+    <lex><base>wyspa</base><ctag>brev:pun</ctag></lex>
+    <ann chan="keyword">1</ann>
+   </tok>
+   <tok>
+    <orth>Ozorkowie</orth>
+    <lex disamb="1"><base>Ozorków</base><ctag>subst:sg:loc:m3</ctag></lex>
+    <lex><base>Ozorków</base><ctag>subst:sg:voc:m3</ctag></lex>
+    <ann chan="keyword">1</ann>
+   </tok>
+  </sentence>
+ </chunk>
+ <chunk id="ch4">
+  <sentence id="sent4">
+   <tok>
+    <orth>-</orth>
+    <lex disamb="1"><base>-</base><ctag>interp</ctag></lex>
+   </tok>
+   <tok>
+    <orth>słodki</orth>
+    <lex><base>słodki</base><ctag>adj:sg:nom:m1:pos</ctag></lex>
+    <lex><base>słodki</base><ctag>adj:sg:voc:m1:pos</ctag></lex>
+    <lex><base>słodki</base><ctag>adj:sg:nom:m2:pos</ctag></lex>
+    <lex><base>słodki</base><ctag>adj:sg:voc:m2:pos</ctag></lex>
+    <lex disamb="1"><base>słodki</base><ctag>adj:sg:nom:m3:pos</ctag></lex>
+    <lex><base>słodki</base><ctag>adj:sg:acc:m3:pos</ctag></lex>
+    <lex><base>słodki</base><ctag>adj:sg:voc:m3:pos</ctag></lex>
+   </tok>
+   <tok>
+    <orth>poczęstunek</orth>
+    <lex disamb="1"><base>poczęstunek</base><ctag>subst:sg:nom:m3</ctag></lex>
+    <lex><base>poczęstunek</base><ctag>subst:sg:acc:m3</ctag></lex>
+   </tok>
+  </sentence>
+ </chunk>
+ <chunk id="ch5">
+  <sentence id="sent5">
+   <tok>
+    <orth>Zapraszamy</orth>
+    <lex disamb="1"><base>zapraszać</base><ctag>fin:pl:pri:imperf</ctag></lex>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>!</orth>
+    <lex disamb="1"><base>!</base><ctag>interp</ctag></lex>
+   </tok>
+  </sentence>
+ </chunk>
+</chunkList>

@@ -1,0 +1,396 @@
+{
+  "regexEscape": "%",
+  "rules": {
+    "today": {
+      "extract": "$reToday",
+      "normalize": "+0000-00-00"
+    },
+    "tomorrow": {
+      "extract": "$reTomorrow",
+      "normalize": "+0000-00-01"
+    },
+    "thisMonth": {
+      "extract": "$reThisMonth",
+      "normalize": "+0000-00"
+    },
+    "lastMonth": {
+      "extract": "$reLastMonth",
+      "normalize": "-0000-01"
+    },
+    "nextMonth": {
+      "extract": "$reNextMonth",
+      "normalize": "+0000-01"
+    },
+    "thisYear": {
+      "extract": "$reThisYear",
+      "normalize": "+0000"
+    },
+    "nextYear": {
+      "extract": "$reNextYear",
+      "normalize": "+0001"
+    },
+    "lastYear": {
+      "extract": "$reLastYear",
+      "normalize": "-0001"
+    },
+    "thisWeek": {
+      "extract": "$reThisWeek",
+      "normalize": "+0000-W00"
+    },
+    "nextWeek": {
+      "extract": "$reNextWeek",
+      "normalize": "+0000-W01"
+    },
+    "lastWeek": {
+      "extract": "^reLastWeek$",
+      "normalize": "-0000-W01"
+    },
+    "weekend": {
+      "extract": "$reDescription?%s?$reWeekend",
+      "normalize": "xxxx-Wxx-WE"
+    },
+    "thisWeekend": {
+      "extract": "$reThisWeekend",
+      "normalize": "+0000-W00-WE"
+    },
+    "nextWeekend": {
+      "extract": "$reNextWeekend",
+      "normalize": "+0000-W01-WE"
+    },
+    "monthWithDescription": {
+      "extract": "$reDescription?%s?$reMonth",
+      "normalize": "xxxx-@group(1)"
+    },
+    "monthThisYear": {
+      "extract": "$reMonth%s+$thisYear",
+      "normalize": "+0000-@group(1)"
+    },
+    "dayOfWeekWithDescription": {
+      "extract": "$rePart?%s?+$reDayOfWeek",
+      "normalize": "xxxx-Wxx-@group(1)"
+    },
+    "dayOfWeekWithDate": {
+      "extract": "$reDayOfWeek%s$re2Digits%s$reMonth",
+      "normalize": "xxxx-@group(2)-@group(1)"
+    },
+    "lastDayOfWeek": {
+      "extract": "ostatni%s+$reDayOfWeek",
+      "normalize": "<D@group(0)"
+    },
+    "nextDayOfWeek": {
+      "extract": "przyszły%s+$reDayOfWeek",
+      "normalize": ">D@group(0)"
+    },
+    "nextDayOfWeek1": {
+      "extract": "bliski%s+$reDayOfWeek",
+      "normalize": ">D@group(0)"
+    },
+    "nextDayOfWeek2": {
+      "extract": "następny%s+$reDayOfWeek",
+      "normalize": ">D@group(0)"
+    },
+    "partOfYear": {
+      "extract": "$rePartOfYear",
+      "normalize": "xxxx-@group(0)"
+    },
+    "thisPartOfYear": {
+      "extract": "ten%s+$rePartOfYear",
+      "normalize": "+0000-@group(0)"
+    },
+    "partOfYearWith4DigitsAndAdd": {
+      "extract": "$reDescription?%s?$rePartOfYear%s$reCentury$re2Digits%s?$reYear?",
+      "normalize": "@group(2)@group(3)-@group(1)"
+    },
+    "partOfYearWithDescription": {
+      "extract": "$reDescription%s$rePartOfYear",
+      "normalize": "xxxx-@group(1)"
+    },
+    "partOfYearWithLastYear": {
+      "extract": "$rePartOfYear%s$reLastYear",
+      "normalize": "xxxx-@group(0)"
+    },
+    "partOfYearWithThisYear": {
+      "extract": "$rePartOfYear%s$reThisYear",
+      "normalize": "xxxx-@group(0)"
+    },
+    "partOfYearWithNextYear": {
+      "extract": "$rePartOfYear%s$reNextYear",
+      "normalize": "xxxx-@group(0)"
+    }
+  },
+
+  "patterns": {
+    "reCentury": "[12]%d",
+    "re2Digits": "%d%d",
+    "reToday": [
+      "dziś",
+      "dzis",
+      "dzisiaj",
+      "dziś dzień",
+      "ten dzień",
+      "dzień ten",
+      "dzień to",
+      "dzisiejszy",
+      "dzień dzisiejszy",
+      "ten sam dzień"
+    ],
+    "reTomorrow": [
+      "następny dzień",
+      "nazajutrz"
+    ],
+    "reYesterday": [
+      "przeddzień",
+      "poprzedniego dnia"
+    ],
+    "reDayOfWeek": [
+      "poniedziałek",
+      "pon[.]?",
+      "poniedziałkowy",
+      "poniedziałkowo",
+      "wtorek",
+      "wt[.]?",
+      "wtorkowy",
+      "wtorkowo",
+      "środa",
+      "śr[.]?",
+      "środowy",
+      "środowo",
+      "czwartek",
+      "czwartkowy",
+      "czwartkowo",
+      "czw[.]?",
+      "piątek",
+      "piątkowy",
+      "piątkowo",
+      "pt[.]?",
+      "pod tytułem[.]",
+      "sobota",
+      "sobote",
+      "sobotni",
+      "sobotnio",
+      "sob[.]?",
+      "niedziela",
+      "niedzielny",
+      "niedzielnie",
+      "nd[.]?"
+    ],
+    "reYear": [
+      "rok",
+      "rocznik[.]"
+    ],
+    "reThisYear": [
+      "ten rok",
+      "ten sam rok",
+      "bieżący rok",
+      "rok bieżący",
+      "tegoroczny"
+    ],
+    "reThisMonth": [
+      "ten miesiąc"
+    ],
+    "reThisWeek": [
+      "ten tydzień",
+      "ten sam tydzień"
+    ],
+    "reNextWeekend": [
+      "bliski weekend",
+      "następny weekend",
+      "przyszły weekend",
+      "bliski weekend"
+    ],
+    "reNextYear": [
+      "następny rok",
+      "rok następny",
+      "przyszły rok",
+      "bliski rok",
+      "rok przyszły"
+    ],
+    "reNextMonth": [
+      "następny miesiąc",
+      "miesiąc następny",
+      "przyszły miesiąc",
+      "bliski miesiąc",
+      "miesiąc przyszły"
+    ],
+    "reNextWeek": [
+      "następny tydzień",
+      "przyszły tydzień"
+    ],
+    "reLastYear": [
+      "zeszły rok",
+      "zeszłoroczny",
+      "ubiegły rok",
+      "rok ubiegły",
+      "ostatni rok"
+    ],
+    "reLastMonth": [
+      "zeszły miesiąc",
+      "zeszłomiesięczny",
+      "ubiegły miesiąc",
+      "miesiąc ubiegły",
+      "ostatni miesiąc"
+    ],
+    "reLastWeek": [
+      "zeszły tydzień",
+      "ostatni tydzień",
+      "ubiegły tydzień"
+    ],
+    "reWeekend": [
+      "weekend"
+    ],
+    "reThisWeekend": [
+      "ten weekend"
+    ],
+    "reDescription": [
+      "początek",
+      "środek",
+      "koniec",
+      "końcówka",
+      "cały",
+      "okres",
+      "przedwczesny",
+      "wczesny",
+      "późny",
+      "przesilenie",
+      "długi"
+    ],
+    "rePart": [
+      "początek",
+      "środek",
+      "koniec"
+    ],
+    "reMonth": [
+      "styczeń",
+      "styczen",
+      "luty",
+      "marzec",
+      "kwiecień",
+      "kwiecien",
+      "maj",
+      "czerwiec",
+      "lipiec",
+      "sierpień",
+      "sierpien",
+      "wrzesień",
+      "wrzesien",
+      "październik",
+      "pazdziernik",
+      "listopad",
+      "grudzień",
+      "grudzien",
+      "stycznia",
+      "lutego",
+      "marca",
+      "kwietnia",
+      "maja",
+      "czerwca",
+      "lipca",
+      "sierpnia",
+      "września",
+      "wrzesnia",
+      "października",
+      "pazdziernika",
+      "listopada",
+      "grudnia"
+    ],
+    "rePartOfYear": [
+      "zima",
+      "zimowy",
+      "lato",
+      "letni",
+      "jesień",
+      "jesienny",
+      "wiosna",
+      "wiosenny"
+    ]
+  },
+  "normalization": {
+    "leadingZero": {
+      "Wxx-01": "Wxx-1",
+      "Wxx-02": "Wxx-2",
+      "Wxx-03": "Wxx-3",
+      "Wxx-04": "Wxx-4",
+      "Wxx-05": "Wxx-5",
+      "Wxx-06": "Wxx-6",
+      "Wxx-07": "Wxx-7"
+    },
+    "dayOfWeek": {
+      "poniedziałek": "1",
+      "poniedziałkowy": "1",
+      "poniedziałkowo": "1",
+      "pon[.]?[^i]": "1",
+      "wtorek": "2",
+      "wtorkowy": "2",
+      "wtorkowo": "2",
+      "wt[.]?[^o]": "2",
+      "środa": "3",
+      "środowy": "3",
+      "środowo": "3",
+      "śr[.]?[^o]": "3",
+      "czwartek": "4",
+      "czwartkowy": "4",
+      "czwartkowo": "4",
+      "czw[.]?[^a]": "4",
+      "piątek": "5",
+      "piątkowy": "5",
+      "piątkowo": "5",
+      "pt[.]?": "5",
+      "pod tytułem[.]": "5",
+      "sobota": "6",
+      "sobote": "6",
+      "sobotni": "6",
+      "sobotnio": "6",
+      "sob[.]?[^o]": "6",
+      "niedziela": "7",
+      "niedzielny": "7",
+      "niedzielnie": "7",
+      "nd[.]?": "7"
+    },
+    "nomMonthNames": {
+      "styczeń": "01",
+      "styczen": "01",
+      "luty": "02",
+      "marzec": "03",
+      "kwiecień": "04",
+      "kwiecien": "04",
+      "maj": "05",
+      "czerwiec": "06",
+      "lipiec": "07",
+      "sierpień": "08",
+      "sierpien": "08",
+      "wrzesień": "09",
+      "wrzesien": "09",
+      "październik": "10",
+      "pazdziernik": "10",
+      "listopad": "11",
+      "grudzień": "12",
+      "grudzien": "12"
+    },
+    "genMonthNames": {
+      "stycznia": "01",
+      "lutego": "02",
+      "marca": "03",
+      "kwietnia": "04",
+      "maja": "05",
+      "czerwca": "06",
+      "lipca": "07",
+      "sierpnia": "08",
+      "września": "09",
+      "wrzesnia": "09",
+      "października": "10",
+      "pazdziernika": "10",
+      "listopada": "11",
+      "grudnia": "12"
+    },
+    "partOfYear": {
+      "zima": "WI",
+      "lato" : "SU",
+      "jesień": "FA",
+      "wiosna": "SP",
+      "zimowy": "WI",
+      "letni" : "SU",
+      "jesienny": "FA",
+      "wiosenny": "SP"
+    }
+  }
+}

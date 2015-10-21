@@ -6,6 +6,7 @@ import g419.corpus.io.DataFormatException;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.TreeSet;
 
 
 public class CrfTemplate {

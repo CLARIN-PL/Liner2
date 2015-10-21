@@ -26,6 +26,7 @@ public class AnnotationHeadComparatorTest {
 	@Test
 	public void testCompare() {
 		Sentence sentence = new Sentence();
+		sentence.id = "someId";
 		int begin = 0;
 		String type = "";
 		Annotation annotation1 = new Annotation(begin, type, sentence);

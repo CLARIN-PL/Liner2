@@ -28,16 +28,44 @@ public class AnnotationPositionComparatorTest {
 		Annotation annotation4 = new Annotation(begin1, end1, type, sentence2);
 		Annotation annotation5 = new Annotation(begin1, end2, type, sentence2);
 
-		AnnotationHeadComparator annotationHeadComparator = new AnnotationHeadComparator();
+		AnnotationPositionComparator annotationPositionComparator = new AnnotationPositionComparator();
 		
-		assertEquals("Annotation is not equal to itself", equal, annotationHeadComparator.compare(annotation1, annotation1));
-		assertEquals("Annotation is not equal to same annotation", equal, annotationHeadComparator.compare(annotation1, annotation2));
-		assertEquals("Annotation is supposed to be lower if is earlier in senence", lower, annotationHeadComparator.compare(annotation1, annotation3));
-		assertEquals("Annotation is supposed to be greater if is later in senence", greater, annotationHeadComparator.compare(annotation3, annotation1));
-		assertEquals("Annotation is supposed to be lower if is set of tokens is smaller", greater, annotationHeadComparator.compare(annotation4, annotation5));
-		assertEquals("Annotation is supposed to be greater if is set of tokens is bigger", greater, annotationHeadComparator.compare(annotation5, annotation4));
+		assertEquals(
+				"Annotation is not equal to itself",
+				equal,
+				signum(annotationPositionComparator.compare(annotation1, annotation1))
+		);
+		assertEquals(
+				"Annotation is not equal to same annotation",
+				equal,
+				signum(annotationPositionComparator.compare(annotation1, annotation2))
+		);
+		assertEquals(
+				"Annotation is supposed to be lower if is earlier in senence",
+				lower,
+				signum(annotationPositionComparator.compare(annotation1, annotation3))
+		);
+		assertEquals(
+				"Annotation is supposed to be greater if is later in senence",
+				greater,
+				signum(annotationPositionComparator.compare(annotation3, annotation1))
+		);
+		assertEquals(
+				"Annotation is supposed to be lower if is set of tokens is smaller",
+				lower,
+				signum(annotationPositionComparator.compare(annotation4, annotation5))
+		);
+		assertEquals(
+				"Annotation is supposed to be greater if is set of tokens is bigger",
+				greater,
+				signum(annotationPositionComparator.compare(annotation5, annotation4))
+		);
 		
 		//TODO What happens if two sentences are different?
+	}
+
+	static private int signum(int x){
+		return x == 0 ? 0 : (x<0 ? -1 : 1);
 	}
 
 }

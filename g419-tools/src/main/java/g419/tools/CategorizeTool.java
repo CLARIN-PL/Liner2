@@ -6,9 +6,10 @@ import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 import g419.lib.cli.CommonOptions;
-import g419.liner2.api.tools.MaltSentence;
-import g419.liner2.api.tools.Maltparser;
 import g419.liner2.api.tools.ValueComparator;
+import g419.liner2.api.tools.parser.MaltParser;
+import g419.liner2.api.tools.parser.MaltSentence;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.OptionBuilder;
@@ -49,7 +50,7 @@ public class CategorizeTool extends Tool{
     private String categorize_output = null;
     private File category_matrix_file = null;
     private boolean getSentences = false;
-    private MaltParserService malt;
+    private MaltParser malt;
     private HashMap<String, Integer> lemma_count = new HashMap<>();
     private ArrayList<MaltPattern> patterns = new ArrayList<>();
     private static Pattern relFrom = Pattern.compile("^--\\(([a-z_]+)\\)-->$");
@@ -124,10 +125,7 @@ public class CategorizeTool extends Tool{
             }
         }
         String modelPath = line.getOptionValue(OPTION_MALT);
-        if(Maltparser.isInitialized(modelPath))
-            malt = Maltparser.getParser(modelPath);
-        else
-            malt = Maltparser.addParser(modelPath);
+        malt = new MaltParser(modelPath);
         getPatterns(line.getOptionValue(OPTION_PATTERNS));
 
         if(line.hasOption(OPTION_SENTENCES)){
@@ -188,10 +186,10 @@ public class CategorizeTool extends Tool{
 
                 wrapConjunctions(splittedData);
 
-                HashMap<Annotation, Integer> annIndices = maltSent.getAnnotationIndices();
-                if (!annIndices.isEmpty()) {
+                HashSet<Annotation> anns = maltSent.getAnnotations();
+                if (!anns.isEmpty()) {
 
-                    for (Annotation ann : annIndices.keySet()) {
+                    for (Annotation ann : anns) {
                         String name = ann.getText();
                         if(categorize_output != null){
                             if(lemmatized_names.containsKey(name)){
@@ -204,7 +202,7 @@ public class CategorizeTool extends Tool{
                         else{
                             name = ann.getBaseText();
                         }
-                        int nameIdx = annIndices.get(ann);
+                        int nameIdx = ann.getBegin();
                         boolean foundPatternForName = false;
                         name = name.toLowerCase();
                         if(lemma_count.containsKey(name)){

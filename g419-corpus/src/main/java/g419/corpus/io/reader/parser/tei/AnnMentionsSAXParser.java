@@ -34,7 +34,7 @@ public class AnnMentionsSAXParser extends DefaultHandler {
     private final String TAG_ID 			= "xml:id";
 
     public final static String ANNOTATION_MENTION = "anafora_wyznacznik";
-    public final static String ANNOTATION_ZERO_MENTION = "anafora_verb_null";
+    public final static String ANNOTATION_ZERO_MENTION = "wyznacznik_null_verb";
     
     InputStream is;
     ArrayList<Paragraph> paragraphs;
@@ -49,7 +49,6 @@ public class AnnMentionsSAXParser extends DefaultHandler {
     String annotationId;
     HashMap<String,Integer> tokenIdsMap;
     HashMap<String, Annotation> annotationsMap;
-    boolean isZero = false;
     
     public AnnMentionsSAXParser(InputStream is, ArrayList<Paragraph> paragraphs, HashMap<String,Integer> tokenIdsMap) throws DataFormatException {
         this.is = is;
@@ -87,9 +86,12 @@ public class AnnMentionsSAXParser extends DefaultHandler {
         else if (elementName.equalsIgnoreCase(TAG_SENTENCE)) {
             currentSentence = currentParagraph.getSentences().get(currentSentenceIdx++);
         }
+        else if (elementName.equalsIgnoreCase(TAG_FEATURESET)) {
+        	// TODO: Sprawdzić, czy atrybut "type" istnieje
+            this.annotationType = attributes.getValue("type");
+        }
         else if (elementName.equalsIgnoreCase(TAG_SEGMENT)) {
             annotatedTokens = new ArrayList<Integer>();
-            annotationType = null;
             annotationId = attributes.getValue(TAG_ID);
         }
         else if (elementName.equalsIgnoreCase(TAG_FEATURE)) {
@@ -98,13 +100,17 @@ public class AnnMentionsSAXParser extends DefaultHandler {
             if("semh".equals(currentFeatureName)){
             	currentHead = tokenIdsMap.get(currentFeatureValue.split("#")[1]);
             }
-            if("zero".equals(currentFeatureName)){
-            	if("true".equals(currentFeatureValue)) isZero = true;
-            }
         }
         else if (elementName.equalsIgnoreCase(TAG_POINTER)) {
             String target = attributes.getValue("target");
-            annotatedTokens.add(tokenIdsMap.get(target.split("#")[1]));
+            Integer tokenId = tokenIdsMap.get(target.split("#")[1]);
+    		// TODO: zamienić na logger
+            if ( tokenId != null ){
+                annotatedTokens.add(tokenId);            	
+            }
+            else{
+            	System.err.println("TEI error: null token id dla: " + target);
+            }            
         }
     }
 
@@ -112,18 +118,31 @@ public class AnnMentionsSAXParser extends DefaultHandler {
     public void endElement(String s, String s1, String element) throws SAXException {
 
         if (element.equals(TAG_SEGMENT)) {
-            Annotation ann = new Annotation(annotatedTokens.get(0), isZero ? ANNOTATION_ZERO_MENTION : ANNOTATION_MENTION, currentSentence);
-            isZero = false;
-            for(int i=1; i<annotatedTokens.size(); i++){
-                ann.addToken(annotatedTokens.get(i));
-            }
-            if(currentHead != null){
-            	ann.setHead(currentHead);
-            	currentHead = null;
-            }
-            annotationsMap.put(annotationId, ann);
+        	if ( this.annotatedTokens != null ){
+	            Annotation ann = new Annotation(
+	            		this.annotatedTokens.get(0), 
+	            		this.annotationType, 
+	            		this.currentSentence);
+	            for(int i=1; i<annotatedTokens.size(); i++){
+	                ann.addToken(annotatedTokens.get(i));
+	            }
+	            if(currentHead != null){
+	            	ann.setHead(currentHead);
+	            	currentHead = null;
+	            }
+	            //else{
+	            ann.assignHead(true);
+	            //}
+	            annotationsMap.put(annotationId, ann);
+	            // TODO: tymczasowo dla każdej anotacji wstawiane są dwa klucze, z i bez nazwy pliku
+	            annotationsMap.put("ann_mentions.xml#" + annotationId, ann);
+	            currentSentence.addChunk(ann);
+        	}
+        	else{
+        		// TODO: zamienić na logger
+        		System.err.println("TEI error: anotacja została pominięta: " + this.annotationId);        		
+        	}
             annotationId = null;
-            currentSentence.addChunk(ann);
         }
         else if (element.equalsIgnoreCase(TAG_FEATURE)) {
             currentFeatureName = null;

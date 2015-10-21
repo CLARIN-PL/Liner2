@@ -32,10 +32,10 @@ public class AnnNamedSAXParser extends DefaultHandler {
     private final String TAG_PARAGRAPH		= "p";
     private final String TAG_SENTENCE		= "s";
     private final String TAG_SEGMENT		= "seg";
-    private final String TAG_FEATURESET		= "fs";
+    private final String TAG_FEATURESET	= "fs";
     private final String TAG_FEATURE		= "f";
-    private final String TAG_STRING	    	= "string";
-    private final String TAG_SYMBOL	    	= "symbol";
+    private final String TAG_STRING	    = "string";
+    private final String TAG_SYMBOL	    = "symbol";
     private final String TAG_POINTER	   	= "ptr";
     private final String TAG_ID 			= "xml:id";
 
@@ -66,7 +66,7 @@ public class AnnNamedSAXParser extends DefaultHandler {
         } catch (ParserConfigurationException e) {
             throw new DataFormatException("Parse error (ParserConfigurationException)");
         } catch (SAXException e) {
-            throw new DataFormatException("Parse error (SAXException)");
+            throw new DataFormatException("Parse error (SAXException): " + e.getMessage());
         } catch (IOException e) {
             throw new DataFormatException("Parse error (IOException)");
         }
@@ -103,7 +103,11 @@ public class AnnNamedSAXParser extends DefaultHandler {
         }
         else if (elementName.equalsIgnoreCase(TAG_POINTER)) {
             String target = attributes.getValue("target");
-            annotatedTokens.add(tokenIdsMap.get(target.split("#")[1]));
+            Integer tokenIndex = tokenIdsMap.get(target.split("#")[1]);
+            if ( tokenIndex == null ){
+            	throw new SAXException("Token with id '" + target + "' not found");
+            }
+            annotatedTokens.add(tokenIndex);
         }
     }
 

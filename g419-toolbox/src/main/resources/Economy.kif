@@ -1,0 +1,5100 @@
+;;         Ontology of Economy          ;;; 
+
+;; Access to and use of these products is governed by the GNU General Public 
+;; License <http://www.gnu.org/copyleft/gpl.html>. 
+;; By using these products, you agree to be bound by the terms 
+;; of the GPL.
+
+;; Those who are interested in making use of this ontology are urged 
+;; to contact Adam Pease (apease@articulatesoftware.com).
+;; We ask the people using or referencing this work cite our primary paper:
+
+;; Nles, I., and Pease, A.  2001.  Towards a Standard Upper Ontology.  In 
+;; Proceedings of the 2nd International Conference on Formal Ontology in 
+;; Information Systems (FOIS-2001), Chris Welty and Barry Smith, eds, 
+;; Ogunquit, Maine, October 17-19, 2001.  See also www.ontologyportal.org 
+;;		 
+;; Ontology dependencies: Merge.txt, Government.kif, Geography.kif, Transportation.kif, 
+;; naics.kif, elements.kif
+	
+;;--------------------------------------------------------------------------
+
+;; Outline:
+;; I. Economy Concepts for CIA World Fact Book
+;;	A. Economy - overview
+;;	B. GDP
+;;	C. GDP - real growth rate
+;;	D. GDP - per capita
+;;	E. GDP - composition by sector
+;;	F. Population below poverty line
+;;	G. Household income or consumption by percentage share
+;;		1. lowest 10%
+;;		2. highest 10%
+;;		3. Distribution of family income - Gini index
+;;	H. Inflation rate (consumer prices)
+;;	I. Labor force
+;;	J. Labor force - by occupation
+;;	K. Unemployment rate
+;;	L. Budget
+;;	M. Industries
+;;	N. Industrial production growth rate
+;;	O. Electricity - production
+;;	P. Electricity - production by source
+;;	Q. Electricity - consumption
+;;	R. Electricity - exports
+;;	S. Electricity - imports
+;;	T. Agriculture - products
+;;	U. Exports
+;;	V. Exports - commodities
+;;	W. Exports - partners
+;;	X. Imports
+;;	Y. Imports - commodities
+;;	Z. Imports - partners
+;;	AA. Debt - external
+;;	BB. Economic aid - donor
+;;	CC. Economic aid - recipient
+;;	DD. Currency
+;;	EE. Currency code
+;;	FF. Exchange rates
+;;	GG. Fiscal year
+;;
+;; II. Economy Background Terms for CIA World Fact Book
+;; 	A.  Agricultural Products
+;;	B.  Raw Materials and Resources (Non-agricultural)
+;;   	C.  Manufactured Goods (1): Capital Goods
+;;	D.  Manufactured Goods (2): Consumer Goods
+;; 		(a) Durable Goods 
+;; 		(b) Non-durable Consumer Goods
+;;	E.  Agricultural Production Processes
+
+;;--------------------------------------------------------------------------
+;; ECONOMY ONTOLOGY
+;;--------------------------------------------------------------------------
+
+;; I. Economy Concepts for CIA World Fact Book
+
+;;  A. Economy - overview
+;; Covers type of economy, including degree of market orientation
+;; and level of economic development
+
+(instance economyType BinaryPredicate)
+(domain economyType 1 Agent)  ;; GeopoliticalArea or GovernmentOrganization
+(domain economyType 2 EconomicAttribute)
+(subrelation economyType attribute)
+
+(documentation economyType EnglishLanguage "(&%economyType ?POLITY ?TYPE) means that the 
+&%GeopoliticalArea ?POLITY has an economic system of &%TYPE.")
+
+(=>
+  (economyType ?AGENT ?ATTRIBUTE)
+  (or
+    (instance ?AGENT GeopoliticalArea)
+    (instance ?AGENT Organization)))
+
+    
+;; KJN: Moving this to Mid-level-ontology.kif as there are dependent axioms there.
+;;(subclass EconomicAttribute RelationalAttribute)
+;;(subclass EconomicAttribute PoliticoEconomicAttribute)
+;;(documentation EconomicAttribute EnglishLanguage "&%EconomicAttribute is the class 
+;;of terms including all &%Attributes used to characterize the 
+;;economic systems or development levels of &%Nations or dependent 
+;;&%GeopoliticalAreas.")
+
+(subclass EconomicDevelopmentLevel EconomicAttribute)
+
+(documentation EconomicDevelopmentLevel EnglishLanguage 
+"&%EconomicDevelopmentLevel is a subclass of &%EconomicAttribute  
+containing terms used to describe the economic development level of a 
+&%Nation or &%GeopoliticalArea.  This class is further subdivided into 
+different scales devised or used by different agencies.")
+
+;;---------------------------------
+;; Economic Levels used by United Nations agencies:
+
+(subclass UNEconomicDevelopmentLevel EconomicDevelopmentLevel)
+
+(documentation UNEconomicDevelopmentLevel EnglishLanguage "&%UNEconomicDevelopmentLevel 
+is a subclass of &%EconomicDevelopmentLevel containing terms used to 
+represent economic development classifications used by &%UnitedNations 
+agencies.  The top level of this classification scheme includes the 
+concepts of &%DevelopedCountry, &%FormerSovietOrEasternEuropeanCountry, 
+and &%LessDevelopedCountry.")
+
+(instance DevelopedCountry UNEconomicDevelopmentLevel)
+(formerName "First World" DevelopedCountry)
+(conventionalLongName "Developed Country" DevelopedCountry)
+(names "industrial country" DevelopedCountry)
+(conventionalShortName "the North" DevelopedCountry)
+
+(documentation DevelopedCountry EnglishLanguage 
+"&%DevelopedCountry (DC) is a term used to describe members of the top 
+group in the &%UNEconomicDevelopmentLevels.  &%DevelopedCountry includes 
+market-oriented economies of mainly democratic nations, including members 
+of the &%OrganizationForEconomicCooperationAndDevelopment (OECD).  DCs 
+are also known as First World countries, 'the North', and industrial 
+countries.  Developed countries generally have high incomes (high per 
+capita GDP or GNI), but there are exceptions to DC membership both above 
+and below that standard.  There is significant overlap, but not perfect 
+congruence, between the UN category &%DevelopedCountry and the IMF 
+category &%AdvancedEconomy.")
+
+(cardinality (ExtensionFn DevelopedCountry) 35)
+
+(economyType Andorra DevelopedCountry)
+(economyType Australia DevelopedCountry)
+(economyType Austria DevelopedCountry)
+(economyType Belgium DevelopedCountry)
+(economyType Bermuda DevelopedCountry)
+(economyType Canada DevelopedCountry)
+(economyType Denmark DevelopedCountry)
+(economyType FaroeIslands DevelopedCountry)
+(economyType Finland DevelopedCountry)
+(economyType France DevelopedCountry)
+(economyType Germany DevelopedCountry)
+(economyType Greece DevelopedCountry)
+(economyType HolySee DevelopedCountry)
+(economyType Iceland DevelopedCountry)
+(economyType Ireland DevelopedCountry)
+(economyType Israel DevelopedCountry)
+(economyType Italy DevelopedCountry)
+(economyType Japan DevelopedCountry)
+(economyType Liechtenstein DevelopedCountry)
+(economyType Luxembourg DevelopedCountry)
+(economyType Malta DevelopedCountry)
+(economyType Mexico DevelopedCountry)
+(economyType Monaco DevelopedCountry)
+(economyType Netherlands DevelopedCountry)
+(economyType NewZealand DevelopedCountry)
+(economyType Norway DevelopedCountry)
+(economyType Portugal DevelopedCountry)
+(economyType SanMarino DevelopedCountry)
+(economyType SouthAfrica DevelopedCountry)
+(economyType Spain DevelopedCountry)
+(economyType Sweden DevelopedCountry)
+(economyType Switzerland DevelopedCountry)
+(economyType Turkey DevelopedCountry)
+(economyType UnitedKingdom DevelopedCountry)
+(economyType UnitedStates DevelopedCountry)
+
+(instance FormerSovietOrEasternEuropeanCountry UNEconomicDevelopmentLevel)
+(names "Former Soviet or Eastern European Country" FormerSovietOrEasternEuropeanCountry)
+(names "Former Soviet" FormerSovietOrEasternEuropeanCountry)
+(names "Former Eastern European" FormerSovietOrEasternEuropeanCountry)
+(formerName "Second World" FormerSovietOrEasternEuropeanCountry) 
+(successorAttribute FormerSovietOrEasternEuropeanCountry DevelopedCountry)
+
+(=>
+  (attribute ?AREA FormerSovietOrEasternEuropeanCountry)
+  (economyType ?AREA CountryInTransition))
+
+(documentation FormerSovietOrEasternEuropeanCountry EnglishLanguage 
+"&%FormerSovietOrEasternEuropeanCountry (former USSR-EE) is an  
+&%Attribute that characterizes countries that were part of the former 
+Soviet Union or its sphere of influence in Eastern Europe.  This level 
+occupies a middle position between &%DevelopedCountry (DC) and 
+&%LessDevelopedCountry (LDC) in &%UNEconomicDevelopmentLevels. 
+Previously, former USSR-EE countries had a &%CentrallyPlannedEconomy and 
+were Marxist-Leninist states.  Many are now evolving away from command 
+economies to market economic systems.  During the 1980's, the group 
+included Albania, Bulgaria, Cambodia, China, Cuba, Czechoslovakia, the 
+German Democratic Republic (East Germany), Hungary, North Korea, Laos, 
+Mongolia, Poland, Romania, the USSR, Vietnam and Yugoslavia.")
+
+(instance LessDevelopedCountry UNEconomicDevelopmentLevel)
+(conventionalLongName "Less Developed Country" LessDevelopedCountry)
+(formerName "Third World" LessDevelopedCountry)
+(successorAttribute LessDevelopedCountry FormerSovietOrEasternEuropeanCountry)
+
+(documentation LessDevelopedCountry EnglishLanguage "&%LessDevelopedCountry (LDC) is 
+the &%Attribute used to describe the bottom group in the hierarchy 
+of &%UNEconomicDevelopmentLevels. Less developed countries are countries 
+or dependent areas with low levels of production, living standards, 
+and technology.  Per capita GDP (&%perCapitaGDPInPeriod), or GDI 
+(Gross Domestic Income), is generally less than $5,000 and often 
+below $1,500.  Subgroups of LDC, however, include countries that have 
+higher per capita incomes, as well as advanced technology, and rapid rates 
+of growth.  Subgroups of LDC include: advanced developing countries, 
+the Four Dragons (also known as Four Tigers), &%LeastDevelopedCountry 
+(LLDCs), low-income countries, middle-income countries, newly 
+industrializing economies (NIEs), the South (from the location of 
+most LDC countries, relative to Northern developed countries), Third 
+World (obsolete), &%UnderdevelopedCountry, &%UndevelopedCountry.")
+
+(conventionalShortName "the South" LessDevelopedCountry)
+(abbreviation "LDC" LessDevelopedCountry) 
+
+(cardinality (ExtensionFn LessDevelopedCountry) 172)
+
+(economyType Afghanistan LessDevelopedCountry)
+(economyType Algeria LessDevelopedCountry)
+(economyType Angola LessDevelopedCountry)
+(economyType AntiguaAndBarbuda LessDevelopedCountry)
+(economyType Argentina LessDevelopedCountry)
+(economyType Aruba LessDevelopedCountry)
+(economyType TheBahamas LessDevelopedCountry)
+(economyType Bahrain LessDevelopedCountry)
+(economyType Bangladesh LessDevelopedCountry)
+(economyType Barbados LessDevelopedCountry)
+(economyType Belize LessDevelopedCountry)
+(economyType Burundi LessDevelopedCountry)
+(economyType Cambodia LessDevelopedCountry)
+(economyType Cameroon LessDevelopedCountry)
+(economyType CapeVerde LessDevelopedCountry)
+(economyType CentralAfricanRepublic LessDevelopedCountry)
+(economyType Chad LessDevelopedCountry)
+(economyType Chile LessDevelopedCountry)
+(economyType China LessDevelopedCountry)
+(economyType Colombia LessDevelopedCountry)
+(economyType Comoros LessDevelopedCountry)
+(economyType DemocraticRepublicOfTheCongo LessDevelopedCountry)
+(economyType CostaRica LessDevelopedCountry)
+(economyType CoteDIvoire LessDevelopedCountry)
+(economyType Cyprus LessDevelopedCountry)
+(economyType Djibouti LessDevelopedCountry)
+(economyType Dominica LessDevelopedCountry)
+(economyType DominicanRepublic LessDevelopedCountry)
+(economyType Ecuador LessDevelopedCountry)
+(economyType Egypt LessDevelopedCountry)
+(economyType ElSalvador LessDevelopedCountry)
+(economyType EquatorialGuinea LessDevelopedCountry)
+(economyType Ethiopia LessDevelopedCountry)
+(economyType Fiji LessDevelopedCountry)
+(economyType Gabon LessDevelopedCountry)
+(economyType Gambia LessDevelopedCountry)
+(economyType Ghana LessDevelopedCountry)
+(economyType Grenada LessDevelopedCountry)
+(economyType Guatemala LessDevelopedCountry)
+(economyType Guinea LessDevelopedCountry)
+(economyType GuineaBissau LessDevelopedCountry)
+(economyType Guyana LessDevelopedCountry)
+(economyType Haiti LessDevelopedCountry)
+(economyType Honduras LessDevelopedCountry)
+(economyType India LessDevelopedCountry)
+(economyType Indonesia LessDevelopedCountry)
+(economyType Iran LessDevelopedCountry)
+(economyType Iraq LessDevelopedCountry)
+(economyType Jamaica LessDevelopedCountry)
+(economyType Jordan LessDevelopedCountry)
+(economyType Kenya LessDevelopedCountry)
+(economyType Kiribati LessDevelopedCountry)
+(economyType Kuwait LessDevelopedCountry)
+(economyType Laos LessDevelopedCountry)
+(economyType Lebanon LessDevelopedCountry)
+(economyType Lesotho LessDevelopedCountry)
+(economyType Liberia LessDevelopedCountry)
+(economyType Libya LessDevelopedCountry)
+(economyType Madagascar LessDevelopedCountry)
+(economyType Malawi LessDevelopedCountry)
+(economyType Malaysia LessDevelopedCountry)
+(economyType Maldives LessDevelopedCountry)
+(economyType Mali LessDevelopedCountry)
+(economyType Malta LessDevelopedCountry)
+(economyType MarshallIslands LessDevelopedCountry)
+(economyType Mauritania LessDevelopedCountry)
+(economyType Mauritius LessDevelopedCountry)
+(economyType Mexico LessDevelopedCountry)
+(economyType Micronesia LessDevelopedCountry)
+(economyType Morocco LessDevelopedCountry)
+(economyType Mozambique LessDevelopedCountry)
+(economyType Namibia LessDevelopedCountry)
+(economyType Nepal LessDevelopedCountry)
+(economyType NetherlandsAntilles LessDevelopedCountry)
+(economyType Nicaragua LessDevelopedCountry)
+(economyType Niger LessDevelopedCountry)
+(economyType Nigeria LessDevelopedCountry)
+(economyType Oman LessDevelopedCountry)
+(economyType Pakistan LessDevelopedCountry)
+(economyType Panama LessDevelopedCountry)
+(economyType PapuaNewGuinea LessDevelopedCountry)
+(economyType Paraguay LessDevelopedCountry)
+(economyType Peru LessDevelopedCountry)
+(economyType Philippines LessDevelopedCountry)
+(economyType Qatar LessDevelopedCountry)
+(economyType Rwanda LessDevelopedCountry)
+(economyType SaintKittsAndNevis LessDevelopedCountry)
+(economyType SaintLucia LessDevelopedCountry)
+(economyType SaintVincentAndTheGrenadines LessDevelopedCountry)
+(economyType Samoa LessDevelopedCountry)
+(economyType SaoTomeAndPrincipe LessDevelopedCountry)
+(economyType SaudiArabia LessDevelopedCountry)
+(economyType Senegal LessDevelopedCountry)
+(economyType Seychelles LessDevelopedCountry)
+(economyType SierraLeone LessDevelopedCountry)
+(economyType SolomonIslands LessDevelopedCountry)
+(economyType Somalia LessDevelopedCountry)
+(economyType SouthAfrica LessDevelopedCountry)
+(economyType SriLanka LessDevelopedCountry)
+(economyType Sudan LessDevelopedCountry)
+(economyType Suriname LessDevelopedCountry)
+(economyType Swaziland LessDevelopedCountry)
+(economyType Syria LessDevelopedCountry)
+(economyType Tanzania LessDevelopedCountry)
+(economyType Thailand LessDevelopedCountry)
+(economyType Togo LessDevelopedCountry)
+(economyType TrinidadAndTobago LessDevelopedCountry)
+(economyType Tunisia LessDevelopedCountry)
+(economyType Turkey LessDevelopedCountry)
+(economyType UnitedArabEmirates LessDevelopedCountry)
+(economyType Uganda LessDevelopedCountry)
+(economyType Uruguay LessDevelopedCountry)
+(economyType Vanuatu LessDevelopedCountry)
+(economyType Venezuela LessDevelopedCountry)
+(economyType Vietnam LessDevelopedCountry)
+(economyType Yemen LessDevelopedCountry)
+(economyType Zambia LessDevelopedCountry)
+(economyType Zimbabwe LessDevelopedCountry)
+
+(instance AdvancedDevelopingCountry EconomicDevelopmentLevel)
+(subAttribute AdvancedDevelopingCountry LessDevelopedCountry)
+(names "Advanced Developing Country" AdvancedDevelopingCountry)
+
+(documentation AdvancedDevelopingCountry EnglishLanguage "&%AdvancedDevelopingCountry 
+is an &%Attribute used to describe a &%LessDevelopedCountry (LDC) 
+that is undergoing rapid industrial development.  Also called 'newly 
+industrializing economy' (or 'country').")
+
+(instance NewlyIndustrializingEconomy EconomicDevelopmentLevel)
+(names "Newly Industrializing Economies" NewlyIndustrializingEconomy)
+(abbreviation "NIE" NewlyIndustrializingEconomy)
+(formerName "Newly Industrializing Countries" NewlyIndustrializingEconomy)
+(formerName "NIC" NewlyIndustrializingEconomy)
+
+(documentation NewlyIndustrializingEconomy EnglishLanguage 
+"&%NewlyIndustrializingEconomy is an &%Attribute used to describe a 
+&%LessDevelopedCountry (LDC) that is undergoing rapid industrial 
+development.  Also called 'newly industrializing economy' (or 
+'country').")
+
+(instance FourDragonsEconomy EconomicDevelopmentLevel)
+(names "Four Dragons" FourDragonsEconomy)
+(names "Four Tigers" FourDragonsEconomy)
+(economyType HongKong FourDragonsEconomy)
+(economyType Singapore FourDragonsEconomy)
+(economyType SouthKorea FourDragonsEconomy)
+(economyType Taiwan FourDragonsEconomy)
+
+(documentation FourDragonsEconomy EnglishLanguage "&%FourDragonsEconomy describes four 
+small Asian countries that achieved rapid economic growth in the 1990s. 
+Some systems of &%EconomicDevelopmentLevel place them as a 
+&%LessDevelopedCountry, but the IMF includes them in &%AdvancedEconomy.")
+
+(=>
+  (attribute ?AREA FourDragonsEconomy)
+  (economyType ?AREA LessDevelopedCountry))
+
+(=>
+  (attribute ?AREA FourDragonsEconomy)
+  (economyType ?AREA AdvancedEconomy))
+
+(instance UnderdevelopedCountry EconomicDevelopmentLevel)
+(subAttribute UnderdevelopedCountry LessDevelopedCountry)
+
+(documentation UnderdevelopedCountry EnglishLanguage "&%UnderdevelopedCountry is an 
+&%Attribute describing less developed countries that have potential 
+for above-average economic growth.  See also &%LessDevelopedCountry.")
+
+(instance LeastDevelopedCountry EconomicDevelopmentLevel)
+(subAttribute LeastDevelopedCountry LessDevelopedCountry)
+(conventionalLongName "Least Developed Countries" LeastDevelopedCountry)
+(names "Undeveloped Country" LeastDevelopedCountry)
+(names "Undeveloped Economy" LeastDevelopedCountry)
+(abbreviation "LLDC" LeastDevelopedCountry)
+(cardinality (ExtensionFn LeastDevelopedCountry) 42)
+
+(documentation LeastDevelopedCountry EnglishLanguage "&%LeastDevelopedCountry 
+is a sub-classification of &%LessDevelopedCountry characterizing
+those countries that have no significant economic growth, a per 
+capita GDP of less than $1,000 &%UnitedStatesDollars, and low 
+literacy.  Also known as 'undeveloped countries'.")
+
+;; World Bank Classifications based on Gross National Income Per Capita:
+
+(subclass WorldBankGNIPerCapitaLevel EconomicDevelopmentLevel)
+(names "GNI per capita" WorldBankGNIPerCapitaLevel)
+(names "gross national income per capita" WorldBankGNIPerCapitaLevel)
+
+(documentation WorldBankGNIPerCapitaLevel EnglishLanguage "&%WorldBankGNIPerCapitaLevel 
+is the subclass of &%EconomicDevelopmentLevel containing attributes 
+that characterize countries according to their per capita gross national 
+income (GNI), as determined by the &%WorldBankGroup.  The World Bank 
+uses the Atlas method for making cross-country comparisons of national 
+income.") 
+
+(successorAttribute LowIncomeCountry LowerMiddleIncomeCountry)
+(successorAttribute LowerMiddleIncomeCountry UpperMiddleIncomeCountry) 
+(successorAttribute UpperMiddleIncomeCountry HighIncomeCountry)
+
+(instance LowIncomeCountry WorldBankGNIPerCapitaLevel)
+
+(=>
+  (attribute ?AREA LowIncomeCountry)
+  (economyType ?AREA LeastDevelopedCountry))  
+
+(documentation LowIncomeCountry EnglishLanguage "&%LowIncomeCountry is an 
+&%Attribute representing the World Bank classification for any country 
+where the per capita GNI is $755 or below in &%UnitedStatesDollars.")
+
+(=>
+  (and
+    (instance ?YEAR TimeInterval)
+    (holdsDuring ?YEAR (economyType ?AREA LowIncomeCountry)))
+  (and
+    (perCapitaGDPInPeriod ?AREA (MeasureFn ?AMOUNT UnitedStatesDollar) ?YEAR)
+    (lessThan ?AMOUNT 756)))
+
+(instance LowerMiddleIncomeCountry WorldBankGNIPerCapitaLevel)
+
+(documentation LowerMiddleIncomeCountry EnglishLanguage 
+"&%LowerMiddleIncomeCountry is an &%Attribute representing the World 
+Bank classification for any country where the per capita GNI is 
+between $756 and $2,995 (inclusive) in &%UnitedStatesDollars.")
+
+(=>
+  (and
+    (instance ?YEAR TimeInterval)
+    (holdsDuring ?YEAR (economyType ?AREA LowerMiddleIncomeCountry)))
+  (and
+    (perCapitaGDPInPeriod ?AREA (MeasureFn ?AMOUNT UnitedStatesDollar) ?YEAR)
+    (greaterThanOrEqualTo ?AMOUNT 756)))
+
+(=>
+  (and
+    (instance ?YEAR TimeInterval)
+    (holdsDuring ?YEAR (economyType ?AREA LowerMiddleIncomeCountry)))
+  (and
+    (perCapitaGDPInPeriod ?AREA (MeasureFn ?AMOUNT UnitedStatesDollar) ?YEAR)
+    (lessThan ?AMOUNT 2996)))
+
+(instance UpperMiddleIncomeCountry WorldBankGNIPerCapitaLevel)
+
+(documentation UpperMiddleIncomeCountry EnglishLanguage 
+"&%LowerMiddleIncomeCountry is an &%Attribute representing the World Bank 
+classification for any country where the per capita GNI is 
+between $2,996 and $9,266 (inclusive) in &%UnitedStatesDollars.")
+
+(=>
+  (and
+    (instance ?YEAR TimeInterval)
+    (holdsDuring ?YEAR (economyType ?AREA UpperMiddleIncomeCountry)))
+  (and
+    (perCapitaGDPInPeriod ?AREA (MeasureFn ?AMOUNT UnitedStatesDollar) ?YEAR)
+    (greaterThanOrEqualTo ?AMOUNT 2996)))
+
+(=>
+  (and
+    (instance ?YEAR TimeInterval)
+    (holdsDuring ?YEAR (economyType ?AREA UpperMiddleIncomeCountry)))
+  (and
+    (perCapitaGDPInPeriod ?AREA (MeasureFn ?AMOUNT UnitedStatesDollar) ?YEAR)
+    (lessThan ?AMOUNT 9267)))
+
+(instance HighIncomeCountry WorldBankGNIPerCapitaLevel)
+
+(documentation HighIncomeCountry EnglishLanguage 
+"&%HighIncomeCountry is an &%Attribute representing the World Bank 
+classification for any country where the per capita GNI is 
+equal to or greater than &9,266 in &%UnitedStatesDollars.")
+
+(=>
+  (and
+    (attribute ?AREA HighIncomeCountry)
+    (not (member ?AREA OrganizationOfPetroleumExportingCountries)))
+  (economyType ?AREA DevelopedCountry))
+
+;;---------------------------------
+;; IMF-related Economic Development Levels:
+
+(subclass IMFDevelopmentLevel EconomicDevelopmentLevel)
+(successorAttribute DevelopingCountry CountryInTransition)
+(successorAttribute CountryInTransition AdvancedEconomy)
+
+(documentation IMFDevelopmentLevel EnglishLanguage "&%IMFDevelopmentLevel is a 
+collection of &%Attributes representing economic development levels 
+used by the &%InternationalMonetaryFund (IMF) to characterize national 
+economies.  The hierarchy of IMF levels includes: &%AdvancedEconomy, 
+&%CountryInTransition, and &%DevelopingCountry.  There is some, but not  
+complete, overlap with concepts used by &%UnitedNations agencies.  
+See ")
+
+(instance AdvancedEconomy IMFDevelopmentLevel)
+
+(documentation AdvancedEconomy EnglishLanguage "&%AdvancedEconomy is an &%Attribute 
+used to represent the &%InternationalMonetaryFund's top category of 
+development levels (&%AdvancedEconomy,, countries in transition, and 
+developing countries.  Generally (but not exactly) corresponds with 
+&%DevelopedCountry classification used by &%UnitedNations agencies.")
+
+(economyType Australia AdvancedEconomy)
+(economyType Austria AdvancedEconomy)
+(economyType Belgium AdvancedEconomy)
+(economyType Canada AdvancedEconomy)
+(economyType Denmark AdvancedEconomy)
+(economyType Finland AdvancedEconomy)
+(economyType France AdvancedEconomy)
+(economyType Germany AdvancedEconomy)
+(economyType Greece AdvancedEconomy)
+(economyType HongKong AdvancedEconomy)
+(economyType Iceland AdvancedEconomy)
+(economyType Ireland AdvancedEconomy)
+(economyType Israel AdvancedEconomy)
+(economyType Italy AdvancedEconomy)
+(economyType Japan AdvancedEconomy)
+(economyType SouthKorea AdvancedEconomy)
+(economyType Luxembourg AdvancedEconomy)
+(economyType Netherlands AdvancedEconomy)
+(economyType NewZealand AdvancedEconomy)
+(economyType Norway AdvancedEconomy)
+(economyType Portugal AdvancedEconomy)
+(economyType Singapore AdvancedEconomy)
+(economyType Spain AdvancedEconomy)
+(economyType Sweden AdvancedEconomy)
+(economyType Switzerland AdvancedEconomy)
+(economyType Taiwan AdvancedEconomy)
+(economyType UnitedKingdom AdvancedEconomy)
+(economyType UnitedStates AdvancedEconomy)
+
+(instance CountryInTransition IMFDevelopmentLevel)
+
+(documentation CountryInTransition EnglishLanguage "&%CountryInTransition is a term 
+used by the &%InternationalMonetaryFund (IMF) to describe the middle 
+group in its hierarchy of advanced countries, countries in transition, 
+and developing countries.  Most of the countries with this attribute 
+are former USSR or Eastern European countries.  Generally corresponds 
+with &%FormerSovietOrEasternEuropeanCountry classification used by 
+&%UnitedNations agencies.")
+
+(economyType Albania CountryInTransition)
+(economyType Armenia CountryInTransition)
+(economyType Azerbaijan CountryInTransition)
+(economyType Belarus CountryInTransition)
+(economyType BosniaAndHerzegovina CountryInTransition)
+(economyType Bulgaria CountryInTransition)
+(economyType Croatia CountryInTransition)
+(economyType CzechRepublic CountryInTransition)
+(economyType Estonia CountryInTransition)
+(economyType RepublicOfGeorgia CountryInTransition)
+(economyType Hungary CountryInTransition)
+(economyType Kazakhstan CountryInTransition)
+(economyType Kyrgyzstan CountryInTransition)
+(economyType Latvia CountryInTransition)
+(economyType Lithuania CountryInTransition)
+(economyType Macedonia CountryInTransition)
+(economyType Moldova CountryInTransition)
+(economyType Mongolia CountryInTransition)
+(economyType Poland CountryInTransition)
+(economyType Romania CountryInTransition)
+(economyType Russia CountryInTransition)
+(economyType Slovakia CountryInTransition)
+(economyType Slovenia CountryInTransition)
+(economyType Tajikistan CountryInTransition)
+(economyType Turkmenistan CountryInTransition)
+(economyType Ukraine CountryInTransition)
+(economyType Uzbekistan CountryInTransition)
+(economyType Yugoslavia CountryInTransition)
+(instance Yugoslavia Nation)
+
+(instance DevelopingCountry IMFDevelopmentLevel)
+
+(documentation DevelopingCountry EnglishLanguage "&%DevelopingCountry is a term 
+used by the &%InternationalMonetaryFund (IMF) for the bottom group 
+in its hierarchy of advanced countries, countries in transition, 
+and developing countries. Generally corresponds to the attribute 
+&%LessDevelopedCountry used by &%UnitedNations agencies.  Not to 
+be confused with &%DevelopedCountry.")
+
+(cardinality (ExtensionFn DevelopingCountry) 126)
+
+(economyType Afghanistan DevelopingCountry)
+(economyType Algeria DevelopingCountry)
+(economyType Angola DevelopingCountry)
+(economyType AntiguaAndBarbuda DevelopingCountry)
+(economyType Argentina DevelopingCountry)
+(economyType Aruba DevelopingCountry)
+(economyType TheBahamas DevelopingCountry)
+(economyType Bahrain DevelopingCountry)
+(economyType Bangladesh DevelopingCountry)
+(economyType Barbados DevelopingCountry)
+(economyType Belize DevelopingCountry)
+(economyType Burundi DevelopingCountry)
+(economyType Cambodia DevelopingCountry)
+(economyType Cameroon DevelopingCountry)
+(economyType CapeVerde DevelopingCountry)
+(economyType CentralAfricanRepublic DevelopingCountry)
+(economyType Chad DevelopingCountry)
+(economyType Chile DevelopingCountry)
+(economyType China DevelopingCountry)
+(economyType Colombia DevelopingCountry)
+(economyType Comoros DevelopingCountry)
+(economyType DemocraticRepublicOfTheCongo DevelopingCountry)
+(economyType CostaRica DevelopingCountry)
+(economyType CoteDIvoire DevelopingCountry)
+(economyType Cyprus DevelopingCountry)
+(economyType Djibouti DevelopingCountry)
+(economyType Dominica DevelopingCountry)
+(economyType DominicanRepublic DevelopingCountry)
+(economyType Ecuador DevelopingCountry)
+(economyType Egypt DevelopingCountry)
+(economyType ElSalvador DevelopingCountry)
+(economyType EquatorialGuinea DevelopingCountry)
+(economyType Ethiopia DevelopingCountry)
+(economyType Fiji DevelopingCountry)
+(economyType Gabon DevelopingCountry)
+(economyType Gambia DevelopingCountry)
+(economyType Ghana DevelopingCountry)
+(economyType Grenada DevelopingCountry)
+(economyType Guatemala DevelopingCountry)
+(economyType Guinea DevelopingCountry)
+(economyType GuineaBissau DevelopingCountry)
+(economyType Guyana DevelopingCountry)
+(economyType Haiti DevelopingCountry)
+(economyType Honduras DevelopingCountry)
+(economyType India DevelopingCountry)
+(economyType Indonesia DevelopingCountry)
+(economyType Iran DevelopingCountry)
+(economyType Iraq DevelopingCountry)
+(economyType Jamaica DevelopingCountry)
+(economyType Jordan DevelopingCountry)
+(economyType Kenya DevelopingCountry)
+(economyType Kiribati DevelopingCountry)
+(economyType Kuwait DevelopingCountry)
+(economyType Laos DevelopingCountry)
+(economyType Lebanon DevelopingCountry)
+(economyType Lesotho DevelopingCountry)
+(economyType Liberia DevelopingCountry)
+(economyType Libya DevelopingCountry)
+(economyType Madagascar DevelopingCountry)
+(economyType Malawi DevelopingCountry)
+(economyType Malaysia DevelopingCountry)
+(economyType Maldives DevelopingCountry)
+(economyType Mali DevelopingCountry)
+(economyType Malta DevelopingCountry)
+(economyType MarshallIslands DevelopingCountry)
+(economyType Mauritania DevelopingCountry)
+(economyType Mauritius DevelopingCountry)
+(economyType Mexico DevelopingCountry)
+(economyType Micronesia DevelopingCountry)
+(economyType Morocco DevelopingCountry)
+(economyType Mozambique DevelopingCountry)
+(economyType Namibia DevelopingCountry)
+(economyType Nepal DevelopingCountry)
+(economyType NetherlandsAntilles DevelopingCountry)
+(economyType Nicaragua DevelopingCountry)
+(economyType Niger DevelopingCountry)
+(economyType Nigeria DevelopingCountry)
+(economyType Oman DevelopingCountry)
+(economyType Pakistan DevelopingCountry)
+(economyType Panama DevelopingCountry)
+(economyType PapuaNewGuinea DevelopingCountry)
+(economyType Paraguay DevelopingCountry)
+(economyType Peru DevelopingCountry)
+(economyType Philippines DevelopingCountry)
+(economyType Qatar DevelopingCountry)
+(economyType Rwanda DevelopingCountry)
+(economyType SaintKittsAndNevis DevelopingCountry)
+(economyType SaintLucia DevelopingCountry)
+(economyType SaintVincentAndTheGrenadines DevelopingCountry)
+(economyType Samoa DevelopingCountry)
+(economyType SaoTomeAndPrincipe DevelopingCountry)
+(economyType SaudiArabia DevelopingCountry)
+(economyType Senegal DevelopingCountry)
+(economyType Seychelles DevelopingCountry)
+(economyType SierraLeone DevelopingCountry)
+(economyType SolomonIslands DevelopingCountry)
+(economyType Somalia DevelopingCountry)
+(economyType SouthAfrica DevelopingCountry)
+(economyType SriLanka DevelopingCountry)
+(economyType Sudan DevelopingCountry)
+(economyType Suriname DevelopingCountry)
+(economyType Swaziland DevelopingCountry)
+(economyType Syria DevelopingCountry)
+(economyType Tanzania DevelopingCountry)
+(economyType Thailand DevelopingCountry)
+(economyType Togo DevelopingCountry)
+(economyType TrinidadAndTobago DevelopingCountry)
+(economyType Tunisia DevelopingCountry)
+(economyType Turkey DevelopingCountry)
+(economyType UnitedArabEmirates DevelopingCountry)
+(economyType Uganda DevelopingCountry)
+(economyType Uruguay DevelopingCountry)
+(economyType Vanuatu DevelopingCountry)
+(economyType Venezuela DevelopingCountry)
+(economyType Vietnam DevelopingCountry)
+(economyType Yemen DevelopingCountry)
+(economyType Zambia DevelopingCountry)
+(economyType Zimbabwe DevelopingCountry)
+
+;;---------------------------------
+;; Miscellaneous economic development attributes:
+
+(instance MajorIndustrialEconomy EconomicDevelopmentLevel)
+
+(documentation MajorIndustrialEconomy EnglishLanguage "&%MajorIndustrialEconomy is an 
+&%Attribute used to describe countries with the largest, industrialized, 
+non-communist economies in the world.")
+
+(=>
+  (attribute ?AREA MajorIndustrialEconomy)
+  (economyType ?AREA DevelopedCountry))
+        
+(=>
+  (attribute ?AREA MajorIndustrialEconomy)
+  (economyType ?AREA AdvancedEconomy))
+
+(=>
+  (member ?STATE GroupOf7)
+  (attribute ?STATE MajorIndustrialEconomy))
+
+(instance HighTechIndustrialEconomy EconomicDevelopmentLevel)
+
+(documentation HighTechIndustrialEconomy EnglishLanguage "&%HighTechIndustrialEconomy 
+is an &%Attribute used to describe industrialized countries whose 
+infrastructure uses the most advanced kinds of technology.")
+
+;;---------------------------------
+;; Economic System attributes:
+
+(subclass EconomicSystemAttribute EconomicAttribute)
+
+(documentation EconomicSystemAttribute EnglishLanguage "&%EconomicSystemAttribute 
+is the class of &%Attributes that describe the type of economic 
+system that a country or area has.  For example, &%CapitalistEconomy 
+or &%SocialistEconomy.")
+
+(instance CapitalistEconomy EconomicSystemAttribute)
+(subAttribute CapitalistEconomy PrivateEnterpriseEconomy)
+
+(documentation CapitalistEconomy EnglishLanguage "&%CapitalistEconomy is the 
+&%Attribute used to characterize a country whose economy is based 
+on private ownership of the means of production and distribution, 
+and on private accumulation of capital.")
+
+(instance PureCapitalistEconomy EconomicSystemAttribute)
+(subAttribute PureCapitalistEconomy CapitalistEconomy)
+(contraryAttribute PureCapitalistEconomy MixedEconomy)
+
+(documentation PureCapitalistEconomy EnglishLanguage "&%PureCapitalistEconomy is an 
+&%Attribute representing a capitalist economy that has no admixture of 
+socialism.")
+
+(instance PrivateEnterpriseEconomy EconomicSystemAttribute)
+(subAttribute PrivateEnterpriseEconomy CapitalistEconomy)
+
+(documentation PrivateEnterpriseEconomy EnglishLanguage "&%PrivateEnterpriseEconomy is 
+the &%Attribute used to characterize a country in which private 
+enterprise is the main source of economic wealth.")
+
+(instance MarketEconomy EconomicSystemAttribute)
+
+(documentation MarketEconomy EnglishLanguage "&%MarketEconomy is an &%Attribute that 
+describes an economy in which market forces, specifically supply and 
+demand, provide input for privately managed decisions about pricing 
+and production of goods.")
+
+(instance SocialistEconomy EconomicSystemAttribute)
+
+(documentation SocialistEconomy EnglishLanguage "&%SocialistEconomy is the &%Attribute 
+used to characterize a country in which there is government ownership 
+or direction of the means of production and distribution.")
+
+(instance PureSocialistEconomy EconomicSystemAttribute)
+(subAttribute PureSocialistEconomy SocialistEconomy)
+(contraryAttribute PureSocialistEconomy MixedEconomy)
+(contraryAttribute PureSocialistEconomy PureCapitalistEconomy)
+
+(documentation PureSocialistEconomy EnglishLanguage "&%PureSocialistEconomy is an 
+&%Attribute representing a socialist economy that has no admixture of 
+capitalism.")
+
+(instance DemocraticSocialism EconomicSystemAttribute)
+(subAttribute DemocraticSocialism SocialistEconomy)
+
+(documentation DemocraticSocialism EnglishLanguage "&%DemocraticSocialism is an  
+&%Attribute that describes a country in which socialism is promoted 
+by a political party or parties within a democratic government. 
+Under &%DemocraticSocialism, the government participates in central 
+planning of the economy and may also manage nationalized industries.")
+
+(=>
+  (attribute ?AREA DemocraticSocialism)
+  (governmentType ?AREA Democracy))
+
+(instance MarketSocialism EconomicSystemAttribute)
+(subAttribute MarketSocialism PartialMarketEconomy)
+
+(instance CommunalLandOwnershipEconomy EconomicSystemAttribute)
+(subAttribute CommunalLandOwnershipEconomy SocialistEconomy)
+
+(instance MixedEconomy EconomicSystemAttribute)  
+
+(documentation MixedEconomy EnglishLanguage "&%MixedEconomy is the &%Attribute 
+of a country whose economy has elements of more than one pure 
+economic system, e.g., a market economy with government welfare 
+for unemployed workers.  A mixed-economy country may be a 
+&%CountryInTransition, as from a prior communist economy to 
+capitalism, but a mixed economy may also be a stable combination 
+of different economic approaches in different areas of a national 
+economy, e.g., nationally managed health care and education systems 
+in an otherwise private-enterprise economy.")
+
+(instance PartialMarketEconomy EconomicSystemAttribute)
+(subAttribute PartialMarketEconomy MixedEconomy)
+
+(instance GovernmentRegulatedEconomy EconomicSystemAttribute)
+
+(documentation GovernmentRegulatedEconomy EnglishLanguage "&%GovernmentRegulatedEconomy 
+is an &%Attribute that describes the economy of a country in which the 
+government determines prices, production, wages, allocation of resources, 
+or other economic factors.  An economy that is wholly government planned 
+is a &%CentrallyPlannedEconomy.")
+
+(instance CentrallyPlannedEconomy EconomicSystemAttribute) 
+(subAttribute CentrallyPlannedEconomy GovernmentRegulatedEconomy)
+
+(documentation CentrallyPlannedEconomy EnglishLanguage "&%CentrallyPlannedEconomy 
+is a term used mainly to describe communist or formerly communist 
+states, many of which are now evolving away from command economies 
+towards market-oriented systems.  Also known as a 'command economy'.")
+
+(=>
+  (and
+    (attribute ?AREA CommunistState)
+    (instance ?AREA Nation))
+  (economyType ?AREA CentrallyPlannedEconomy))
+;; Note: CommunistState is defined in Government.kif.
+
+(instance PrivatizingEconomy EconomicSystemAttribute)
+(subAttribute PrivatizingEconomy MixedEconomy)
+
+(documentation PrivatizingEconomy EnglishLanguage "&%PrivatizingEconomy is an 
+&%Attribute that describes a country in which formerly government-
+owned industries are being transferred into private holdings.")
+
+(=>
+  (attribute ?AREA PrivatizingEconomy)
+  (economyType ?AREA CountryInTransition))
+
+(instance NationalizedIndustryEconomy EconomicSystemAttribute)
+(subAttribute NationalizedIndustryEconomy GovernmentRegulatedEconomy)
+
+(documentation NationalizedIndustryEconomy EnglishLanguage "&%NationalizedIndustryEconomy 
+is an &%Attribute describing an economy in which the major industries,  
+such as energy and transportation, are owned by the national government.")
+
+(instance GovernmentSubsidizedEconomy EconomicSystemAttribute)
+
+(documentation GovernmentSubsidizedEconomy EnglishLanguage "&%GovernmentSubsidizedEconomy 
+is an &%Attribute describing an economy in which the government provides 
+subsidies to various industries, workers, or other groups as part of its 
+economic policy.")
+
+(instance WelfareCapitalism EconomicSystemAttribute)
+(subAttribute WelfareCapitalism MixedEconomy)
+(subAttribute WelfareCapitalism GovernmentSubsidizedEconomy)
+
+(documentation WelfareCapitalism EnglishLanguage "&%WelfareCapitalism is an &%Attribute 
+describing an economy in which the government provides economic subsidies 
+to unemployed or disabled individuals.")
+
+;;----------------------------------
+;; Economic Attributes based on Financial Sectors: 
+
+(subclass FinancialSectorAttribute EconomicAttribute) 
+
+(documentation FinancialSectorAttribute EnglishLanguage "&%FinancialSectorAttribute is 
+a class of &%Attributes that are used to indicate which financial sectors 
+are most important in the economy of a &%Nation or &%GeopoliticalArea.")
+
+(instance DiversifiedEconomy FinancialSectorAttribute)  
+(instance ManufacturingBasedEconomy FinancialSectorAttribute)
+(instance TradeBasedEconomy FinancialSectorAttribute)
+(instance PetroleumBasedEconomy FinancialSectorAttribute)
+(instance TourismBasedEconomy FinancialSectorAttribute)
+(instance ServiceBasedEconomy FinancialSectorAttribute)
+(instance AgricultureBasedEconomy FinancialSectorAttribute)
+(instance SubsistenceAgricultureEconomy FinancialSectorAttribute)
+(subAttribute SubsistenceAgricultureEconomy AgricultureBasedEconomy)
+(instance TwoTierLaborMarketEconomy FinancialSectorAttribute)
+(instance ControlledLaborMarketEconomy FinancialSectorAttribute)
+(instance OffshoreFinancialSectorEconomy FinancialSectorAttribute)
+(subAttribute TaxHavenEconomy OffshoreFinancialSectorEconomy)
+(subAttribute OffshoreBankingSectorEconomy OffshoreFinancialSectorEconomy)
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  B. GDP
+
+(instance totalGDPInPeriod PPPBasedEconomicValuation)
+(instance totalGDPInPeriod TernaryPredicate)
+(domain totalGDPInPeriod 1 GeopoliticalArea)
+(domain totalGDPInPeriod 2 CurrencyMeasure)
+(domainSubclass totalGDPInPeriod 3 TimeInterval)
+
+(documentation totalGDPInPeriod EnglishLanguage "(&%totalGDPInPeriod ?AREA ?AMOUNT ?PERIOD) 
+means that the value of all final goods and services produced within 
+the &%GeopoliticalArea ?AREA is ?AMOUNT in the period indicated by ?PERIOD, 
+measured in U.S. dollars calculated on a purchasing power parity basis.  
+(See &%PPPBasedEconomicValuation.)  This is the Gross Domestic Product for 
+?AREA for a specified period.")
+
+(instance totalGDP PPPBasedEconomicValuation)
+(instance totalGDP BinaryPredicate)
+(domain totalGDP 1 GeopoliticalArea)
+(domain totalGDP 2 CurrencyMeasure)
+
+(documentation totalGDP EnglishLanguage "(&%totalGDP ?AREA ?AMOUNT) means that the value 
+of all final goods and services produced within the &%GeopoliticalArea 
+?AREA is ?AMOUNT, in U.S. dollars, calculated on a purchasing power parity 
+basis.  This represents Gross Domestic Product (GDP).  See 
+&%PPPBasedEconomicValuation.")
+
+(<=>
+  (totalGDPInPeriod ?AREA ?AMOUNT ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (totalGDP ?AREA ?AMOUNT)))))    
+
+(subclass PPPBasedEconomicValuation Relation)
+
+(documentation PPPBasedEconomicValuation EnglishLanguage "&%PPPBasedEconomicValuation 
+is a class of relations used to state international economic information 
+in U.S. dollar amounts.  The U.S. dollar amounts are derived from Purchasing 
+Power Parity conversions of economic totals (e.g., GDP)  given in local 
+currency.  This contrasts with a method of conversion based on currency 
+exchange rates.  The PPP method is used by the CIA World Fact Book for 
+the purpose of presenting economic data for all countries covered.  Their 
+basis for PPP dollar price weights is the UN International Comparison Program 
+(UNICP) and the work of Professors Robert Summers and Alan Heston of the 
+University of Pennsylvania.")
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  C. GDP - real growth rate
+
+(instance realGrowthRateOfGDPInPeriod PPPBasedEconomicValuation)
+(instance realGrowthRateOfGDPInPeriod TernaryPredicate)
+(domain realGrowthRateOfGDPInPeriod 1 GeopoliticalArea)
+(domain realGrowthRateOfGDPInPeriod 2 RealNumber)
+(domainSubclass realGrowthRateOfGDPInPeriod 3 TimeInterval)
+
+(documentation realGrowthRateOfGDPInPeriod EnglishLanguage 
+"(&%realGrowthRateOfGDPInPeriod ?AREA ?RATE ?PERIOD) means that the 
+annual rate of growth in the Gross Domestic Product (GDP) for the 
+&%GeopoliticalArea ?AREA is the fraction ?RATE in the period ?PERIOD, 
+adjusted for inflation, with GDP calculated on a purchasing power 
+parity basis.  See &%PPPBasedEconomicValuation.") 
+
+(instance realGrowthRateOfGDP PPPBasedEconomicValuation)
+(instance realGrowthRateOfGDP BinaryPredicate)
+(domain realGrowthRateOfGDP 1 GeopoliticalArea)
+(domain realGrowthRateOfGDP 2 RealNumber)
+
+(documentation realGrowthRateOfGDP EnglishLanguage "(&%realGrowthRateOfGDP ?AREA ?RATE) 
+means that the annual rate of growth in the Gross Domestic Product (GDP) 
+for the &%GeopoliticalArea ?AREA is the fraction ?RATE, adjusted for 
+inflation, with GDP calculated on a purchasing power parity basis.  
+See &%PPPBasedEconomicValuation.") 
+
+(<=>
+  (realGrowthRateOfGDPInPeriod ?AREA ?RATE ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (realGrowthRateOfGDP ?AREA ?RATE)))))
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  D. GDP - per capita
+
+(instance perCapitaGDPInPeriod PPPBasedEconomicValuation)
+(instance perCapitaGDPInPeriod TernaryPredicate)
+(domain perCapitaGDPInPeriod 1 GeopoliticalArea)
+(domain perCapitaGDPInPeriod 2 CurrencyMeasure)
+(domainSubclass perCapitaGDPInPeriod 3 TimeInterval)
+
+(documentation perCapitaGDPInPeriod EnglishLanguage 
+"(&%perCapitaGDPInPeriod ?AREA ?AMOUNT ?PERIOD) means that the Gross 
+Domestic Product, on a per capita basis, for the &%GeopoliticalArea 
+?AREA is ?AMOUNT during the period indicated by ?PERIOD, calculated in 
+U.S. dollars on a purchasing power parity basis.  See 
+&%PPPBasedEconomicValuation.")
+
+(instance perCapitaGDP PPPBasedEconomicValuation)
+(instance perCapitaGDP BinaryPredicate)
+(domain perCapitaGDP 1 GeopoliticalArea)
+(domain perCapitaGDP 2 CurrencyMeasure)
+
+(documentation perCapitaGDP EnglishLanguage "(&%perCapitaGDP ?AREA ?AMOUNT) means 
+that the Gross Domestic Product, on a per capita basis, for the 
+&%GeopoliticalArea ?AREA is ?AMOUNT, calculated in U.S. dollars on a 
+purchasing power parity basis.  See &%PPPBasedEconomicValuation.")
+
+(<=>
+  (perCapitaGDPInPeriod ?AREA ?AMOUNT ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (perCapitaGDP ?AREA ?AMOUNT)))))
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  E. GDP - composition by sector
+
+(instance sectorCompositionOfGDPInPeriod PPPBasedEconomicValuation)
+(instance sectorCompositionOfGDPInPeriod QuaternaryPredicate)
+(domain sectorCompositionOfGDPInPeriod 1 GeopoliticalArea)
+(domain sectorCompositionOfGDPInPeriod 2 IndustryAttribute)
+(domain sectorCompositionOfGDPInPeriod 3 RealNumber)
+(domainSubclass sectorCompositionOfGDPInPeriod 4 TimeInterval)
+
+(documentation sectorCompositionOfGDPInPeriod EnglishLanguage 
+"(&%sectorCompositionOfGDPInPeriod ?AREA ?SECTOR ?FRACTION ?PERIOD) 
+means that in the &%GeopoliticalArea ?AREA, the economic sector ?SECTOR 
+contributes the amount ?FRACTION to the Gross National Product 
+during the &%TimeInterval indicated by ?PERIOD.")
+
+(=>
+  (sectorCompositionOfGDPInPeriod ?AREA ?SECTOR ?FRACTION ?PERIOD)
+  (lessThanOrEqualTo ?FRACTION 1.0))
+
+(instance sectorCompositionOfGDP PPPBasedEconomicValuation)
+(instance sectorCompositionOfGDP TernaryPredicate)
+(domain sectorCompositionOfGDP 1 GeopoliticalArea)
+(domain sectorCompositionOfGDP 2 IndustryAttribute)
+(domain sectorCompositionOfGDP 3 RealNumber)
+
+(documentation sectorCompositionOfGDP EnglishLanguage 
+"(&%sectorCompositionOfGDP ?AREA ?SECTOR ?FRACTION) means 
+that in the &%GeopoliticalArea ?AREA, the economic sector ?SECTOR 
+contributes the amount ?FRACTION to the Gross National Product.")
+
+(=>
+  (sectorCompositionOfGDP ?AREA ?SECTOR ?FRACTION)
+  (lessThanOrEqualTo ?FRACTION 1.0))
+
+(<=>
+  (sectorCompositionOfGDPInPeriod ?AREA ?SECTOR ?AMOUNT ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (sectorCompositionOfGDP ?AREA ?SECTOR ?AMOUNT)))))
+
+(instance sectorValueOfGDPInPeriod PPPBasedEconomicValuation)
+(instance sectorValueOfGDPInPeriod QuaternaryPredicate)
+(domain sectorValueOfGDPInPeriod 1 GeopoliticalArea)
+(domain sectorValueOfGDPInPeriod 2 IndustryAttribute)
+(domain sectorValueOfGDPInPeriod 3 CurrencyMeasure)
+(domainSubclass sectorValueOfGDPInPeriod 4 TimeInterval)
+
+(documentation sectorValueOfGDPInPeriod EnglishLanguage 
+"(&%sectorValueOfGDPInPeriod ?AREA ?SECTOR ?AMOUNT ?PERIOD) means that 
+for the &%GeopoliticalArea ?AREA, the economic sector ?SECTOR contributes 
+?AMOUNT to the Gross National Product during the &%TimeInterval indicated 
+by ?PERIOD, evaluated in U.S. dollars on a purchasing power parity basis.  
+See &%PPPBasedEconomicValuation.")
+
+(=>
+  (and
+    (sectorCompositionOfGDPInPeriod ?AREA ?SECTOR ?FRACTION ?PERIOD)
+    (totalGDPInPeriod ?AREA ?GDPAMOUNT ?PERIOD)
+    (equal ?AMOUNT (MultiplicationFn ?FRACTION ?GDPAMOUNT)))
+  (sectorValueOfGDPInPeriod ?AREA ?SECTOR ?AMOUNT ?PERIOD))
+
+(instance sectorValueOfGDP PPPBasedEconomicValuation)
+(instance sectorValueOfGDP TernaryPredicate)
+(domain sectorValueOfGDP 1 GeopoliticalArea)
+(domain sectorValueOfGDP 2 IndustryAttribute)
+(domain sectorValueOfGDP 3 CurrencyMeasure)
+
+(documentation sectorValueOfGDP EnglishLanguage 
+"(&%sectorValueOfGDP ?AREA ?SECTOR ?AMOUNT) means that for the 
+&%GeopoliticalArea ?AREA, the economic sector ?SECTOR contributes 
+?AMOUNT to the Gross National Product, evaluated in U.S. dollars on 
+a purchasing power parity basis.  See &%PPPBasedEconomicValuation.")
+
+(<=>
+  (sectorValueOfGDPInPeriod ?AREA ?SECTOR ?AMOUNT ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (sectorValueOfGDP ?AREA ?SECTOR ?AMOUNT)))))
+
+;;----------------------------------
+;; Economic sectors:
+
+(instance AgriculturalSector IndustryAttribute)
+(instance IndustrialSector IndustryAttribute)
+(instance ServiceSector IndustryAttribute)
+
+; AgricultureForestryFishingAndHunting defined in naics.kif:
+(subAttribute AgricultureForestryFishingAndHunting AgriculturalSector)
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  F. Population below poverty line
+
+(instance populationFractionBelowPovertyLineInPeriod TernaryPredicate)
+(domain populationFractionBelowPovertyLineInPeriod 1 GeopoliticalArea)
+(domain populationFractionBelowPovertyLineInPeriod 2 RealNumber)
+(domainSubclass populationFractionBelowPovertyLineInPeriod 3 TimeInterval)
+
+(documentation populationFractionBelowPovertyLineInPeriod EnglishLanguage 
+"(&%populationFractionBelowPovertyLineInPeriod ?AREA ?FRACTION ?PERIOD) 
+means that in the &%GeopoliticalArea ?AREA, the segment of the population 
+living below the (locally defined) poverty line is ?FRACTION during the 
+&%TimeInterval indicated by ?PERIOD.  Note that the definition of the 
+poverty line varies internationally.")
+
+(=>
+  (populationFractionBelowPovertyLineInPeriod ?AREA ?FRACTION ?PERIOD)
+  (lessThanOrEqualTo ?FRACTION 1.0))
+
+(instance populationFractionBelowPovertyLine BinaryPredicate)
+(domain populationFractionBelowPovertyLine 1 GeopoliticalArea)
+(domain populationFractionBelowPovertyLine 2 RealNumber)
+
+(documentation populationFractionBelowPovertyLine EnglishLanguage 
+"(&%populationFractionBelowPovertyLine ?AREA ?FRACTION) means that in 
+the &%GeopoliticalArea ?AREA, the segment of the population living 
+below the (locally defined) poverty line is ?FRACTION.  Note that the 
+definition of the poverty line varies internationally.")
+
+(=>
+  (populationFractionBelowPovertyLine ?AREA ?FRACTION)
+  (lessThanOrEqualTo ?FRACTION 1.0))
+
+(<=>
+  (populationFractionBelowPovertyLineInPeriod ?AREA ?FRACTION ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (populationFractionBelowPovertyLine ?AREA ?FRACTION)))))
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  G. Household income or consumption by percentage share (& Gini)
+
+;;    1. lowest 10%
+
+(instance lowestDecileShareOfHouseholdIncomeInPeriod TernaryPredicate)
+(domain lowestDecileShareOfHouseholdIncomeInPeriod 1 GeopoliticalArea)
+(domain lowestDecileShareOfHouseholdIncomeInPeriod 2 RealNumber)
+(domainSubclass lowestDecileShareOfHouseholdIncomeInPeriod 3 TimeInterval)
+
+(documentation lowestDecileShareOfHouseholdIncomeInPeriod EnglishLanguage 
+"(&%lowestDecileShareOfHouseholdIncomeInPeriod ?AREA ?FRACTION ?PERIOD) 
+means that in the &%GeopoliticalArea ?AREA, the lowest decile (0-10%) 
+of households with respect to household income (or consumption) had 
+?FRACTION amount of the total household income (or consumption), during 
+the &%TimeInterval indicated by ?PERIOD.  Data from different countries 
+may not be directly comparable due to variation in the basis of the data 
+(e.g., based on household income versus based on household consumption).")
+
+(=>
+  (lowestDecileShareOfHouseholdIncomeInPeriod ?AREA ?FRACTION ?PERIOD)
+  (lessThanOrEqualTo ?FRACTION 1.0))
+
+(instance lowestDecileShareOfHouseholdIncome BinaryPredicate)
+(domain lowestDecileShareOfHouseholdIncome 1 GeopoliticalArea)
+(domain lowestDecileShareOfHouseholdIncome 2 RealNumber)
+
+(documentation lowestDecileShareOfHouseholdIncome EnglishLanguage 
+"(&%lowestDecileShareOfHouseholdIncome ?AREA ?FRACTION) means that 
+in the &%GeopoliticalArea ?AREA, the lowest decile (0-10%) of 
+households with respect to household income (or consumption) had 
+?FRACTION amount of the total household income (or consumption).  
+Data from different countries may not be directly comparable due to 
+variation in the basis of the data (e.g., based on income versus based 
+on consumption).")
+
+(=>
+  (lowestDecileShareOfHouseholdIncome ?AREA ?FRACTION)
+  (lessThanOrEqualTo ?FRACTION 1.0))
+
+(<=>
+  (lowestDecileShareOfHouseholdIncomeInPeriod ?AREA ?FRACTION ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (lowestDecileShareOfHouseholdIncome ?AREA ?FRACTION)))))
+
+;;---------------------------------
+;;    2. highest 10%
+
+(instance highestDecileShareOfHouseholdIncomeInPeriod TernaryPredicate)
+(domain highestDecileShareOfHouseholdIncomeInPeriod 1 GeopoliticalArea)
+(domain highestDecileShareOfHouseholdIncomeInPeriod 2 RealNumber)
+(domainSubclass highestDecileShareOfHouseholdIncomeInPeriod 3 TimeInterval)
+
+(documentation highestDecileShareOfHouseholdIncomeInPeriod EnglishLanguage 
+"(&%highestDecileShareOfHouseholdIncomeInPeriod ?AREA ?FRACTION ?PERIOD) 
+means that in the &%GeopoliticalArea ?AREA, the highest decile (90-100%) 
+of households with respect to household income (or consumption) had 
+?FRACTION amount of the total household income (or consumption), during 
+the &%TimeInterval indicated by ?PERIOD.  Data from different countries 
+may not be directly comparable due to variation in the basis of the data 
+(e.g., based on household income versus based on household consumption).")
+
+(=>
+  (highestDecileShareOfHouseholdIncomeInPeriod ?AREA ?FRACTION ?PERIOD)
+  (lessThanOrEqualTo ?FRACTION 1.0))
+
+(instance highestDecileShareOfHouseholdIncome BinaryPredicate)
+(domain highestDecileShareOfHouseholdIncome 1 GeopoliticalArea)
+(domain highestDecileShareOfHouseholdIncome 2 RealNumber)
+
+(documentation highestDecileShareOfHouseholdIncome EnglishLanguage 
+"(&%highestDecileShareOfHouseholdIncome ?AREA ?FRACTION) means that 
+in the &%GeopoliticalArea ?AREA, the highest decile (90-100%) of 
+households with respect to household income (or consumption) had 
+?FRACTION amount of the total household income (or consumption).  
+Data from different countries may not be directly comparable due to 
+variation in the basis of the data (e.g., based on income versus 
+based on consumption).")
+
+
+(=>
+  (highestDecileShareOfHouseholdIncome ?AREA ?FRACTION)
+  (lessThanOrEqualTo ?FRACTION 1.0))
+
+(<=>
+  (highestDecileShareOfHouseholdIncomeInPeriod ?AREA ?FRACTION ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?PERIOD (highestDecileShareOfHouseholdIncome ?AREA ?FRACTION)))))
+
+;;---------------------------------
+;;    3. Distribution of family income - Gini index
+
+(instance incomeDistributionByGiniIndexInPeriod TernaryPredicate)
+(domain incomeDistributionByGiniIndexInPeriod 1 GeopoliticalArea)
+(domain incomeDistributionByGiniIndexInPeriod 2 NonnegativeRealNumber)
+(domainSubclass incomeDistributionByGiniIndexInPeriod 3 TimeInterval)
+
+(documentation incomeDistributionByGiniIndexInPeriod EnglishLanguage 
+"(&%incomeDistributionByGiniIndexInPeriod ?AREA ?INDEX ?PERIOD) means that 
+in the &%GeopoliticalArea ?AREA, the distribution of family income is 
+?INDEX, as measured by the Gini index, during the &%TimeInterval indicated 
+by ?PERIOD.")
+
+(=>
+  (incomeDistributionByGiniIndexInPeriod ?AREA ?INDEX ?PERIOD)
+  (lessThanOrEqualTo ?INDEX 100))
+
+(instance incomeDistributionByGiniIndex BinaryPredicate)
+(domain incomeDistributionByGiniIndex 1 GeopoliticalArea)
+(domain incomeDistributionByGiniIndex 2 NonnegativeRealNumber)
+
+(documentation incomeDistributionByGiniIndex EnglishLanguage 
+"(&%incomeDistributionByGiniIndex ?AREA ?INDEX) means that in the 
+&%GeopoliticalArea ?AREA, the distribution of family income is ?INDEX, 
+as measured by the Gini index for family income distribution.")
+
+(=>
+  (incomeDistributionByGiniIndex ?AREA ?INDEX)
+  (lessThanOrEqualTo ?INDEX 100))
+
+
+(<=>
+  (incomeDistributionByGiniIndexInPeriod ?AREA ?INDEX ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (incomeDistributionByGiniIndex ?AREA ?INDEX)))))
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  H. Inflation rate (consumer prices)
+
+(instance inflationRateOfConsumerPricesInPeriod TernaryPredicate)
+(domain inflationRateOfConsumerPricesInPeriod 1 GeopoliticalArea)
+(domain inflationRateOfConsumerPricesInPeriod 2 RealNumber)
+(domainSubclass inflationRateOfConsumerPricesInPeriod 3 TimeInterval)
+
+(documentation inflationRateOfConsumerPricesInPeriod EnglishLanguage 
+"(&%inflationRateOfConsumerPricesInPeriod ?AREA ?FRACTION ?PERIOD) means 
+that in the &%GeopoliticalArea ?AREA, the annual change in consumer 
+prices was ?FRACTION, for the &%TimeInterval indicated by ?PERIOD, 
+compared with prices from the prior period.")
+
+(=>
+  (inflationRateOfConsumerPricesInPeriod ?AREA ?FRACTION ?PERIOD)
+  (lessThanOrEqualTo ?FRACTION 1.0))
+
+(instance inflationRateOfConsumerPrices BinaryPredicate)
+(domain inflationRateOfConsumerPrices 1 GeopoliticalArea)
+(domain inflationRateOfConsumerPrices 2 RealNumber)
+
+(documentation inflationRateOfConsumerPrices EnglishLanguage 
+"(&%inflationRateOfConsumerPrices ?AREA ?FRACTION) means that in the 
+&%GeopoliticalArea ?AREA, the annual change in consumer prices was 
+?FRACTION, compared with prices from the previous year.")
+
+(=>
+  (inflationRateOfConsumerPrices ?AREA ?FRACTION)
+  (lessThanOrEqualTo ?FRACTION 1.0))
+
+(<=>
+  (inflationRateOfConsumerPricesInPeriod ?AREA ?FRACTION ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (inflationRateOfConsumerPrices ?AREA ?FRACTION)))))
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  I. Labor force
+
+(instance laborForceTotalInPeriod TernaryPredicate)
+(domain laborForceTotalInPeriod 1 GeopoliticalArea)
+(domain laborForceTotalInPeriod 2 NonnegativeRealNumber)
+(domainSubclass laborForceTotalInPeriod 3 TimeInterval)
+
+(documentation laborForceTotalInPeriod EnglishLanguage 
+"(&%laborForceTotalInPeriod ?AREA ?AMOUNT ?PERIOD) means that the total 
+labor force of the &%GeopoliticalArea ?AREA is ?AMOUNT during the 
+&%TimeInterval indicated by ?PERIOD.  This includes unemployed workers.")
+
+(instance laborForceTotal BinaryPredicate)
+(domain laborForceTotal 1 GeopoliticalArea)
+(domain laborForceTotal 2 NonnegativeRealNumber)
+
+(documentation laborForceTotal EnglishLanguage 
+"(&%laborForceTotal ?AREA ?AMOUNT) means that the total labor 
+force of the &%GeopoliticalArea ?AREA is ?AMOUNT. This includes 
+unemployed workers.")
+
+(<=>
+  (laborForceTotalInPeriod ?AREA ?AMOUNT ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (laborForceTotal ?AREA ?AMOUNT)))))
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  J. Labor force - by occupation
+
+(instance laborForceFractionByOccupationInPeriod QuaternaryPredicate)
+(domain laborForceFractionByOccupationInPeriod 1 GeopoliticalArea)
+(domain laborForceFractionByOccupationInPeriod 2 Attribute)
+(domain laborForceFractionByOccupationInPeriod 3 RealNumber)
+(domainSubclass laborForceFractionByOccupationInPeriod 4 TimeInterval)
+
+(documentation laborForceFractionByOccupationInPeriod EnglishLanguage 
+"(&%laborForceFractionByOccupationInPeriod ?AREA ?SECTOR ?FRACTION ?PERIOD) 
+means that in the &%GeopoliticalArea ?AREA, workers in the job area   
+?SECTOR make up ?FRACTION of the labor force, during the &%TimeInterval 
+indicated by ?PERIOD.  The unemployed are not included in these figures. 
+Occupation may be indicated by an &%OccupationalRole or an 
+&%IndustryAttribute.")
+
+(=>
+  (laborForceFractionByOccupationInPeriod ?AREA ?SECTOR ?FRACTION ?PERIOD)
+  (lessThanOrEqualTo ?FRACTION 1.0))
+ 
+(instance laborForceFractionByOccupation TernaryPredicate)
+(domain laborForceFractionByOccupation 1 GeopoliticalArea)
+(domain laborForceFractionByOccupation 2 Attribute)
+(domain laborForceFractionByOccupation 3 RealNumber)
+
+(documentation laborForceFractionByOccupation EnglishLanguage 
+"(&%laborForceFractionByOccupation ?AREA ?SECTOR ?FRACTION) 
+means that in the &%GeopoliticalArea ?AREA, workers in the job area   
+?SECTOR make up ?FRACTION of the labor force.  The unemployed are not 
+included in these figures.  Occupation may be indicated by an 
+&%OccupationalRole or an &%IndustryAttribute.")
+
+(=>
+  (laborForceFractionByOccupation ?AREA ?SECTOR ?FRACTION)
+  (lessThanOrEqualTo ?FRACTION 1.0))
+
+(<=>
+  (laborForceFractionByOccupationInPeriod ?AREA ?SECTOR ?FRACTION ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (laborForceFractionByOccupation ?AREA ?SECTOR ?FRACTION)))))
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  K. Unemployment rate
+
+(instance unemploymentRateOfAreaInPeriod TernaryPredicate)
+(domain unemploymentRateOfAreaInPeriod 1 GeopoliticalArea)
+(domain unemploymentRateOfAreaInPeriod 2 RealNumber)
+(domainSubclass unemploymentRateOfAreaInPeriod 3 TimeInterval)
+
+(documentation unemploymentRateOfAreaInPeriod EnglishLanguage 
+"(&%unemploymentRateOfAreaInPeriod ?AREA ?RATE ?PERIOD) means that the 
+unemployment rate in the &%GeographicalArea ?AREA is ?RATE, during the 
+&%TimeInterval indicated by ?PERIOD.")
+
+(=>
+  (unemploymentRateOfAreaInPeriod ?AREA ?RATE ?PERIOD)
+  (lessThanOrEqualTo ?RATE 1.0))
+
+(instance unemploymentRateOfArea BinaryPredicate)
+(domain unemploymentRateOfArea 1 GeopoliticalArea)
+(domain unemploymentRateOfArea 2 RealNumber)
+(documentation unemploymentRateOfArea EnglishLanguage 
+"(&%unemploymentRateOfArea ?AREA ?RATE) means that the 
+unemployment rate in the &%GeographicalArea ?AREA is ?RATE.")
+
+(=>
+  (unemploymentRateOfArea ?AREA ?RATE)
+  (lessThanOrEqualTo ?RATE 1.0))
+
+(<=>
+  (unemploymentRateOfAreaInPeriod ?AREA ?RATE ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (unemploymentRateOfArea ?AREA ?RATE)))))
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  L. Budget
+
+(instance annualRevenuesOfAreaInPeriod TernaryPredicate)
+(domain annualRevenuesOfAreaInPeriod 1 GeopoliticalArea)
+(domain annualRevenuesOfAreaInPeriod 2 CurrencyMeasure)
+(domainSubclass annualRevenuesOfAreaInPeriod 3 TimeInterval)
+
+(documentation annualRevenuesOfAreaInPeriod EnglishLanguage 
+"(&%annualRevenuesOfAreaInPeriod ?AREA ?AMOUNT ?PERIOD) means that the 
+annual budgetary revenues of the &%GeopoliticalArea ?AREA are ?AMOUNT 
+for the annual &%TimeInterval indicated by ?PERIOD, calculated in U.S. 
+dollars according to the currency exchange rate method.")
+
+(instance annualRevenuesOfArea BinaryPredicate)
+(domain annualRevenuesOfArea 1 GeopoliticalArea)
+(domain annualRevenuesOfArea 2 CurrencyMeasure)
+
+(documentation annualRevenuesOfArea EnglishLanguage 
+"(&%annualRevenuesOfArea ?AREA ?AMOUNT) means that the annual budgetary 
+revenues of the &%GeopoliticalArea ?AREA are ?AMOUNT, calculated in U.S. 
+dollars according  to the currency exchange rate method.")
+
+(<=>
+  (annualRevenuesOfAreaInPeriod ?AREA ?AMOUNT ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (annualRevenuesOfArea ?AREA ?AMOUNT)))))
+
+;;---------------------------------
+(instance annualExpendituresOfAreaInPeriod TernaryPredicate)
+(domain annualExpendituresOfAreaInPeriod 1 GeopoliticalArea)
+(domain annualExpendituresOfAreaInPeriod 2 CurrencyMeasure)
+(domainSubclass annualExpendituresOfAreaInPeriod 3 TimeInterval)
+
+(documentation annualExpendituresOfAreaInPeriod EnglishLanguage 
+"(&%annualExpendituresOfAreaInPeriod ?AREA ?AMOUNT ?PERIOD) means that 
+the annual budgetary expenditures of the &%GeopoliticalArea ?AREA are 
+?AMOUNT for the annual &%TimeInterval indicated by ?PERIOD, calculated 
+in U.S. dollars according to the currency exchange rate method.")
+
+(instance annualExpendituresOfArea BinaryPredicate)
+(domain annualExpendituresOfArea 1 GeopoliticalArea)
+(domain annualExpendituresOfArea 2 CurrencyMeasure)
+
+(documentation annualExpendituresOfArea EnglishLanguage 
+"(&%annualExpendituresOfArea ?AREA ?AMOUNT) means that the annual 
+budgetary expenditures of the &%GeopoliticalArea ?AREA are ?AMOUNT, 
+calculated in U.S. dollars according  to the currency exchange rate 
+method.")
+
+(<=>
+  (annualExpendituresOfAreaInPeriod ?AREA ?AMOUNT ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (annualExpendituresOfArea ?AREA ?AMOUNT)))))
+
+;;---------------------------------
+;; PREDICATE
+(instance capitalExpendituresOfAreaInPeriod TernaryPredicate)
+(domain capitalExpendituresOfAreaInPeriod 1 GeopoliticalArea)
+(domain capitalExpendituresOfAreaInPeriod 2 CurrencyMeasure)
+(domainSubclass capitalExpendituresOfAreaInPeriod 3 TimeInterval)
+
+(documentation capitalExpendituresOfAreaInPeriod EnglishLanguage 
+"(&%capitalExpendituresOfAreaInPeriod ?AREA ?AMOUNT ?PERIOD) means that 
+the annual capital expenditures of the &%GeopoliticalArea ?AREA are 
+?AMOUNT for the annual &%TimeInterval indicated by ?PERIOD, calculated in 
+U.S. dollars according to the currency exchange rate method.  This figure 
+is a portion of the &%annualExpendituresOfArea for ?AREA in ?PERIOD.")
+
+(=>
+  (and
+    (capitalExpendituresOfAreaInPeriod ?AREA ?CAPAMOUNT ?PERIOD)
+    (annualExpendituresOfAreaInPeriod ?AREA ?TOTALAMOUNT ?PERIOD))
+  (greaterThan ?TOTALAMOUNT ?CAPAMOUNT))
+
+;; PREDICATE
+(instance capitalExpendituresOfArea BinaryPredicate)
+(domain capitalExpendituresOfArea 1 GeopoliticalArea)
+(domain capitalExpendituresOfArea 2 CurrencyMeasure)
+
+(documentation capitalExpendituresOfArea EnglishLanguage 
+"(&%capitalExpendituresOfArea ?AREA ?AMOUNT) means that the annual 
+capital expenditures of the &%GeopoliticalArea ?AREA are ?AMOUNT, 
+calculated in U.S. dollars according to the currency exchange rate 
+method.  This figure is a portion of the &%annualExpendituresOfArea 
+for ?AREA.")
+
+(=>
+  (and
+    (holdsDuring ?TIME (capitalExpendituresOfArea ?AREA ?CAPAMOUNT))
+    (holdsDuring ?TIME (annualExpendituresOfArea ?AREA ?TOTALAMOUNT)))
+  (greaterThan ?TOTALAMOUNT ?CAPAMOUNT))
+
+
+(<=>
+  (capitalExpendituresOfAreaInPeriod ?AREA ?CAPAMOUNT ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (capitalExpendituresOfArea ?AREA ?AMOUNT)))))
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  M. Industries
+
+(instance industryOfArea BinaryPredicate)
+(domain industryOfArea 1 GeopoliticalArea)
+(domain industryOfArea 2 IndustryAttribute)
+
+(documentation industryOfArea EnglishLanguage "(&%industryOfArea ?AREA ?SECTOR) 
+means that the &%GeopoliticalArea ?AREA produces goods or services 
+in the economic area ?SECTOR.")
+
+(instance industryRankByOutput TernaryPredicate)
+(domain industryRankByOutput 1 GeopoliticalArea)
+(domain industryRankByOutput 2 IndustryAttribute)
+(domain industryRankByOutput 3 PositiveInteger)
+
+(documentation industryRankByOutput EnglishLanguage 
+"(&%industryRankByOutput ?AREA ?SECTOR ?NTH) means that in the 
+&%GeopoliticalArea ?AREA, the economic area ?SECTOR is ?NTH with 
+respect to the value of its annual output.")
+
+(=>
+  (industryRankByOutput ?AREA ?SECTOR ?NTH)
+  (industryOfArea ?AREA ?SECTOR))
+
+(instance industryProductType BinaryPredicate)
+(domain industryProductType 1 IndustryAttribute)
+(domainSubclass industryProductType 2 Object)
+
+(documentation industryProductType EnglishLanguage 
+"(&%industryProductType ?INDUSTRY ?TYPE) means that organizations with 
+the &%IndustryAttribute ?INDUSTRY produce products of the kind ?TYPE.")
+
+(=>
+  (and
+    (instance ?ORG Organization)
+    (attribute ?ORG ?INDUSTRY)
+    (industryProductType ?INDUSTRY ?TYPE))
+  (exists (?EVENT ?ITEM)
+    (and
+      (instance ?EVENT Making)
+      (instance ?ITEM ?TYPE)
+      (agent ?EVENT ?ORG)
+      (result ?EVENT ?ITEM))))
+
+(instance organizationProductType BinaryPredicate)
+(domain organizationProductType 1 Organization)
+(domainSubclass organizationProductType 2 Object)
+
+(documentation organizationProductType EnglishLanguage 
+"(&%organizationProductType ?BUSINESS ?TYPE) means that the &%Organization 
+?BUSINESS produces products of the kind ?TYPE.")
+
+(=>
+  (and 
+    (organizationProductType ?BUSINESS ?TYPE)
+    (subclass ?TYPE ?GENUS))
+  (organizationProductType ?BUSINESS ?GENUS))
+
+(=>
+  (and
+    (industryProductType ?INDUSTRY ?TYPE)
+    (instance ?INDUSTRY IndustryAttribute)
+    (instance ?BUSINESS Organization)
+    (attribute ?BUSINESS ?INDUSTRY))
+  (organizationProductType ?BUSINESS ?TYPE))
+
+(instance industryServiceType BinaryPredicate)
+(domain industryServiceType 1 IndustryAttribute)
+(domainSubclass industryServiceType 2 IntentionalProcess)
+
+(documentation industryServiceType EnglishLanguage 
+"(&%industryServiceType ?INDUSTRY ?TYPE) means that organizations with 
+the &%IndustryAttribute ?INDUSTRY provide services of the kind ?TYPE.")
+
+(=>
+  (and
+    (instance ?ORG Organization)
+    (attribute ?ORG ?INDUSTRY)
+    (industryServiceType ?INDUSTRY ?TYPE))
+  (exists (?EVENT)
+    (and
+      (instance ?EVENT ?TYPE)
+      (agent ?EVENT ?ORG))))
+
+(instance organizationServiceType BinaryPredicate)
+(domain organizationServiceType 1 Organization)
+(domainSubclass organizationServiceType 2 IntentionalProcess)
+
+(documentation organizationServiceType EnglishLanguage 
+"(&%organizationServiceType ?BUSINESS ?TYPE) means that the &%Organization 
+?BUSINESS provides services of the kind ?TYPE.")
+
+(=>
+  (and 
+    (organizationServiceType ?BUSINESS ?TYPE)
+    (subclass ?TYPE ?GENUS))
+  (organizationServiceType ?BUSINESS ?GENUS))
+
+(=>
+  (and
+    (industryServiceType ?INDUSTRY ?TYPE)
+    (instance ?INDUSTRY IndustryAttribute)
+    (instance ?BUSINESS Organization)
+    (attribute ?BUSINESS ?INDUSTRY))
+  (organizationServiceType ?BUSINESS ?TYPE))
+
+(instance resultType BinaryPredicate)
+(domain resultType 1 Process)
+(domainSubclass resultType 2 Object)
+
+(documentation resultType EnglishLanguage "(&%resultType ?PROCESS ?TYPE) means that 
+the &%Process ?PROCESS produces some result(s) of the type ?TYPE.")
+
+(=>
+  (resultType ?PROCESS ?TYPE)
+  (exists (?ITEM)
+    (and
+      (instance ?ITEM ?TYPE)
+      (result ?PROCESS ?ITEM))))
+    
+;; Aerospace Industry (naics.kif): &%AerospaceProductAndPartsManufacturing
+
+;; Aircraft Industry (naics.kif): &%AircraftManufacturing
+(industryProductType AircraftManufacturing Aircraft)
+
+;; Aluminum Industry (naics.kif): &%AluminaAndAluminumProductionAndProcessing
+(industryProductType AluminaRefining Alumina)
+;;(industryProductType PrimaryAluminumProduction AluminumMetal)
+
+;; Automobile Industry (naics.kif): &%AutomobileAndLightDutyMotorVehicleManufacturing
+(industryProductType AutomobileManufacturing Automobile)
+
+;; Cement Industry (naics.kif): &%CementManufacturing
+(industryProductType CementManufacturing Cement)
+
+;; Chemical Industry (naics.kif): &%ChemicalManufacturing
+;(industryProductType ChemicalManufacturing ChemicalProduct)
+
+(instance CoalIndustry IndustryAttribute)
+(subAttribute CoalMining CoalIndustry)
+(subAttribute CoalProductsManufacturing CoalIndustry)
+(industryProductType CoalMining Coal)
+
+;; TERMS - Creating specialization of term in naics.kif:
+(subAttribute CoalProductsManufacturing PetroleumAndCoalProductsManufacturing)
+
+(instance ConsumerGoodsIndustry IndustryAttribute)
+;; (industryProductType ConsumerGoodsIndustry ConsumerGood)
+
+(instance CopperIndustry IndustryAttribute)
+(subAttribute CopperOreMining CopperIndustry)
+(subAttribute PrimarySmeltingAndRefiningOfCopper CopperIndustry)
+(subAttribute CopperRollingDrawingExtrudingAndAlloying CopperIndustry)
+(subAttribute CopperFoundriesExceptDieCasting CopperIndustry)
+(industryProductType CopperOreMining CopperOre)
+
+;; TERMS - Creating specialization of term in naics.kif:
+(subAttribute CopperOreMining CopperOreAndNickelOreMining)
+
+;; Electronics Industry (naics.kif): &%ComputerAndElectronicProductManufacturing
+;; or (more specialized) &%SemiconductorAndOtherElectronicComponentManufacturing
+
+(instance FertilizerIndustry IndustryAttribute)
+(subAttribute FertilizerManufacturing FertilizerIndustry)
+(subAttribute FertilizerMineralMining FertilizerIndustry)
+(subAttribute FertilizerMineralMining OtherChemicalAndFertilizerMineralMining)
+(industryProductType FertilizerMineralMining Fertilizer)
+
+;; Food Processing Industry (naics.kif): &%FoodManufacturing
+(industryProductType FoodManufacturing (FoodForFn Animal))
+; (industryProductType FoodManufacturing FoodProduct)
+
+;; TERM
+;; Footwear Industry (naics.kif): &%FootwearManufacturing
+(subclass Footwear Clothing)
+(industryProductType FootwearManufacturing Footwear)
+
+(instance FurnitureIndustry IndustryAttribute)
+(subAttribute FurnitureAndRelatedProductManufacturing FurnitureIndustry)
+(subAttribute FurnitureAndHomeFurnishingWholesalers FurnitureIndustry)
+(subAttribute FurnitureAndHomeFurnishingsStores FurnitureIndustry)
+(subAttribute FurnitureManufacturing FurnitureAndRelatedProductManufacturing)
+(industryProductType FurnitureManufacturing Furniture)
+
+(instance HandicraftIndustry IndustryAttribute)
+(subAttribute HandwovenCarpetManufacturing HandicraftIndustry)
+;(industryProductType HandwovenCarpetManufacturing HandwovenCarpet)
+
+(instance LeadIndustry IndustryAttribute)
+(subAttribute LeadOreMining LeadIndustry)
+(subAttribute LeadManufacturing LeadIndustry)
+
+;; TERM - Creating specialization of term in naics.kif:
+(subAttribute LeadOreMining LeadOreAndZincOreMining)
+(industryProductType LeadOreMining LeadOre)
+
+(instance LeadManufacturing IndustryAttribute)
+;;(industryProductType LeadManufacturing LeadProduct)
+
+(instance LumberIndustry IndustryAttribute)
+(subAttribute ForestryAndLogging LumberIndustry)
+(subAttribute WoodProductManufacturing LumberIndustry)
+(subAttribute Millwork LumberIndustry)
+(subAttribute LumberPlywoodMillworkAndWoodPanelWholesalers LumberIndustry)
+
+(industryProductType ForestryAndLogging Timber)
+;(industryProductType WoodProductManufacturing WoodProduct)
+;(industryProductType Millwork WoodProduct)
+
+;; Machinery Industry (naics.kif): &%MachineryManufacturing
+(industryProductType MachineryManufacturing Machine)
+
+;; TERM
+(instance MetallurgyIndustry IndustryAttribute)
+(industryProductType MetallurgyIndustry Metal)
+
+(=>
+  (instance ?ORG MetallurgicalPlant)
+  (attribute ?ORG MetallurgyIndustry))
+
+;; Metal Machine Tool Industry (naics.kif): &%MetalworkingMachineryManufacturing
+;;(industryProductType MetalworkingMachineryManufacturing MachineTool)
+
+(instance MiningIndustry IndustryAttribute)
+(subAttribute MiningExceptOilAndGas MiningIndustry)
+(subAttribute SupportActivitiesForMetalMining MiningIndustry)
+(subAttribute SupportActivitiesForNonmetallicMineralsExceptFuels MiningIndustry)
+
+;; TERM - Creating specialization of term in naics.kif:
+(subAttribute NickelOreMining CopperOreAndNickelOreMining)
+
+(industryProductType IndustrialSandMining Sand)
+(industryProductType IronOreMining IronOre)
+(industryProductType KaolinAndBallClayMining Clay)
+(industryProductType NickelOreMining NickelOre)
+(industryProductType StoneMiningAndQuarrying Rock)
+
+(instance MotorVehicleIndustry IndustryAttribute)
+(subAttribute MotorVehicleManufacturing MotorVehicleIndustry)
+(subAttribute MotorVehiclePartsManufacturing MotorVehicleIndustry)
+(subAttribute MotorVehicleBodyAndTrailerManufacturing MotorVehicleIndustry)
+(subAttribute MotorVehicleAndMotorVehiclePartsAndSuppliesWholesalers MotorVehicleIndustry)
+(subAttribute MotorVehicleAndPartsDealers MotorVehicleIndustry)
+
+(industryProductType MotorVehicleManufacturing RoadVehicle)
+(industryProductType TruckTrailerManufacturing Wagon)
+
+;; TERM
+(instance NaturalGasIndustry IndustryAttribute)
+(subAttribute NaturalGasLiquidExtraction NaturalGasIndustry)
+(subAttribute NaturalGasDistribution NaturalGasIndustry)
+(subAttribute PipelineTransportationOfNaturalGas NaturalGasIndustry)
+(industryProductType NaturalGasIndustry NaturalGas)
+
+;; TERM
+(instance PetroleumIndustry IndustryAttribute)  ;; aka Oil Industry
+(subAttribute PetroleumProductsManufacturing PetroleumIndustry)
+(subAttribute PetroleumRefineries PetroleumIndustry)
+(subAttribute CrudePetroleumExtraction PetroleumIndustry)
+(subAttribute DrillingOilAndGasWells PetroleumIndustry)
+(subAttribute SupportActivitiesForOilOperations PetroleumIndustry)
+(subAttribute AsphaltPavingRoofingAndSaturatedMaterialsManufacturing PetroleumIndustry)
+
+;; TERM - Creating specializations of terms in naics.kif:
+(subAttribute SupportActivitiesForOilOperations SupportActivitiesForOilAndGasOperations)
+(subAttribute PetroleumProductsManufacturing PetroleumAndCoalProductsManufacturing)
+(subAttribute PetroleumLubricatingOilAndGreaseManufacturing  PetroleumProductsManufacturing)
+(subAttribute CrudePetroleumExtraction CrudePetroleumAndNaturalGasExtraction)
+
+(industryProductType CrudePetroleumExtraction Petroleum)
+(industryProductType PetroleumRefineries RefinedPetroleumProduct)
+(industryProductType PetroleumLubricatingOilAndGreaseManufacturing PetroleumLubricant)
+(industryProductType AsphaltPavingRoofingAndSaturatedMaterialsManufacturing Asphalt)
+
+;; TERM
+(instance RefrigeratorAndFreezerIndustry IndustryAttribute)
+(subAttribute RefrigerationEquipmentManufacturing RefrigeratorAndFreezerIndustry)
+(subAttribute RefrigerationEquipmentAndSuppliesWholesalers RefrigeratorAndFreezerIndustry)
+(subAttribute RefrigeratedWarehousingAndStorage RefrigeratorAndFreezerIndustry)
+
+;; TERM - Creating specialization of term in naics.kif:
+(subAttribute CommercialAndIndustrialRefrigerationAndEquipmentManufacturing AirConditioningAndWarmAirHeatingEquipmentAndCommercialAndIndustrialRefrigerationEquipmentManufacturing)
+
+;; TERM - Creating a generalization:
+(instance RefrigerationEquipmentManufacturing IndustryAttribute)
+(subAttribute HouseholdRefrigeratorAndHomeFreezerManufacturing RefrigeratorAndFreezerIndustry)
+(subAttribute CommercialAndIndustrialRefrigerationAndEquipmentManufacturing  RefrigeratorAndFreezerIndustry)
+
+;; Soap Manufacturing (naics.kif): &%SoapAndOtherDetergentManufacturing
+(industryProductType SoapAndOtherDetergentManufacturing Detergent)
+
+(instance SteelIndustry IndustryAttribute)
+(subAttribute SteelMills SteelIndustry)
+(subAttribute SteelForging SteelIndustry)
+(subAttribute SteelFoundriesExceptInvestment SteelIndustry)
+(subAttribute SteelInvestmentFoundries SteelIndustry)
+(subAttribute SteelProductManufacturingFromPurchasedSteel SteelIndustry) 
+
+;; TERMS - Creating specializations of terms in naics.kif:
+(subAttribute SteelMills IronAndSteelMills)
+(subAttribute IronMills IronAndSteelMills)
+(subAttribute SteelForging IronAndSteelForging)
+(subAttribute IronForging IronAndSteelForging)
+;;(industryProductType SteelMills Steel)
+;;(industryProductType IronMills IronMetal)
+
+
+;; Telecommunications Industry (naics.kif): &%Telecommunications
+
+(instance TextileIndustry IndustryAttribute)
+(subAttribute TextileMills TextileIndustry)
+(subAttribute TextileProductMills TextileIndustry)
+(industryProductType FabricMills Fabric)
+
+;(subclass TextileProduct Artifact)
+;(industryProductType TextileIndustry TextileProduct)
+
+(instance TourismIndustry IndustryAttribute)
+
+(documentation TourismIndustry EnglishLanguage "&%TourismIndustry is an &%Attribute that 
+describes organizations that provide services or products for travellers 
+who stay temporarily in a region to experience local attractions.  There 
+is an overlap between &%TourismIndustry and each of the following 
+industries: &%TravelArrangementAndReservationServices, 
+&%TravelerAccommodation, &%MuseumsHistoricalSitesAndSimilarInstitutions, 
+&%AmusementGamblingAndRecreationIndustries, and
+&%ArtsEntertainmentAndRecreation.")
+
+(relatedInternalConcept TravelArrangementAndReservationServices TourismIndustry)
+(relatedInternalConcept TravelerAccommodation TourismIndustry)
+(relatedInternalConcept MuseumsHistoricalSitesAndSimilarInstitutions TourismIndustry)
+(relatedInternalConcept AmusementGamblingAndRecreationIndustries TourismIndustry)
+(relatedInternalConcept ArtsEntertainmentAndRecreation TourismIndustry)
+
+(instance VegetableOilIndustry IndustryAttribute)
+(subAttribute GrainAndOilseedMilling VegetableOilIndustry)
+
+;; TERM - Creating specialization of term in naics.kif:
+; naics StarchAndVegetableFatsAndOilsManufacturing 
+
+(instance ZincIndustry IndustryAttribute)
+(subAttribute ZincOreMining ZincIndustry)
+; is ZincIndustry only Mining or also manufacture?
+
+;; TERM - Creating specialization of term in naics.kif:
+(subAttribute ZincOreMining LeadOreAndZincOreMining)
+(industryProductType ZincOreMining ZincOre)
+
+(instance ZincManufacturing IndustryAttribute)
+;(industryProductType ZincManufacturing ZincProduct)
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  N. Industrial production growth rate
+
+(instance industrialProductionGrowthRateInPeriod TernaryPredicate)
+(domain industrialProductionGrowthRateInPeriod 1 GeopoliticalArea)
+(domain industrialProductionGrowthRateInPeriod 2 RealNumber)
+(domainSubclass industrialProductionGrowthRateInPeriod 3 TimeInterval) 
+
+(documentation industrialProductionGrowthRateInPeriod EnglishLanguage 
+"(&%industrialProductionGrowthRateInPeriod ?AREA ?RATE ?PERIOD) means 
+that in the &%GeopoliticalArea ?AREA, the annual percentage increase in 
+industrial production is ?RATE, for the &%TimeInterval ?PERIOD.")
+
+(instance industrialProductionGrowthRate BinaryPredicate)
+(domain industrialProductionGrowthRate 1 GeopoliticalArea)
+(domain industrialProductionGrowthRate 2 RealNumber)
+
+(documentation industrialProductionGrowthRate EnglishLanguage 
+"(&%industrialProductionGrowthRate ?AREA ?RATE) means that in 
+the &%GeopoliticalArea ?AREA, the annual percentage increase in 
+industrial production is ?RATE.")
+
+(<=>
+  (industrialProductionGrowthRateInPeriod ?AREA ?RATE ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (industrialProductionGrowthRate ?AREA ?RATE)))))
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  O. Electricity - production
+
+(instance electricityProductionInPeriod TernaryPredicate)
+(domain electricityProductionInPeriod 1 GeopoliticalArea)
+(domain electricityProductionInPeriod 2 PhysicalQuantity)
+(domainSubclass electricityProductionInPeriod 3 TimeInterval) 
+
+(documentation electricityProductionInPeriod EnglishLanguage 
+"(&%electricityProductionInPeriod ?AREA ?AMOUNT ?PERIOD) means that the 
+&%GeopoliticalArea ?AREA generates ?AMOUNT of electricity, measured in 
+&%KilowattHours, during the &%TimeInterval indicated by ?PERIOD.")
+
+(instance annualElectricityProduction BinaryPredicate)
+(domain annualElectricityProduction 1 GeopoliticalArea)
+(domain annualElectricityProduction 2 PhysicalQuantity)
+
+(documentation annualElectricityProduction EnglishLanguage 
+"(&%annualElectricityProduction ?AREA ?AMOUNT) means that the amount of 
+electricity generated annually in the &%GeographicalArea ?AREA is 
+?AMOUNT, measured in &%KilowattHours.")
+
+(=>
+  (and
+    (electricityProductionInPeriod ?AREA ?AMOUNT ?PERIOD)
+    (or
+      (subclass ?PERIOD Year)
+      (subclass ?PERIOD (FiscalYearFn ?AREA))))
+  (exists (?YEAR)
+    (and
+      (instance ?YEAR ?PERIOD)
+      (holdsDuring ?YEAR (annualElectricityProduction ?AREA ?AMOUNT)))))
+
+(=>
+  (and
+    (holdsDuring ?YEAR (annualElectricityProduction ?AREA ?AMOUNT))
+    (instance ?YEAR ?PERIOD)
+      (or
+        (subclass ?PERIOD Year)
+        (subclass ?PERIOD (FiscalYearFn ?AREA))))
+  (electricityProductionInPeriod ?AREA ?AMOUNT ?PERIOD))
+
+(instance KilowattHour CompositeUnitOfMeasure)
+(abbreviation "kWh" KilowattHour)
+
+(documentation KilowattHour EnglishLanguage "&%KilowattHour is a &%UnitOfMeasure for 
+energy that represents 1000 &%Watts (1 kW) of power expended over one 
+hour (1 h) of time.  This is the unit commonly used in commercial 
+power contexts.  It is equivalent to 3,600,000 &%Joules.")
+
+(equal (MeasureFn 1 KilowattHour) (MeasureFn 3.6 (MegaFn Joule)))
+(equal (MeasureFn 1 KilowattHour) (MeasureFn 3600000 Joule))
+
+(=>
+  (equal ?AMOUNT (MeasureFn ?X KilowattHour))
+  (equal ?AMOUNT (MeasureFn (MultiplicationFn 3600000 ?X) Joule)))
+
+
+(=>
+  (equal ?AMOUNT (MeasureFn ?X Joule))
+  (equal ?AMOUNT (MeasureFn (MultiplicationFn 0.0002778 ?X) Watt))) 
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  P. Electricity - production by source
+
+(instance electricityFractionFromSourceInPeriod QuaternaryPredicate)
+(domain electricityFractionFromSourceInPeriod 1 GeopoliticalArea)
+(domainSubclass electricityFractionFromSourceInPeriod 2 PowerGeneration) 
+(domain electricityFractionFromSourceInPeriod 3 RealNumber)
+(domainSubclass electricityFractionFromSourceInPeriod 4 TimeInterval)
+
+(documentation electricityFractionFromSourceInPeriod EnglishLanguage 
+"(&%electricityFractionFromSourceInPeriod ?AREA ?SOURCE ?FRACTION ?PERIOD) 
+means that in the &%GeopoliticalArea ?AREA, ?SOURCE provides ?FRACTION 
+of the total electricity production during the &%TimeInterval indicated 
+by ?PERIOD.")
+
+(=>
+  (electricityFractionFromSourceInPeriod ?AREA ?SOURCE ?FRACTION ?PERIOD)
+  (lessThanOrEqualTo ?FRACTION 1.0))
+
+(instance electricityFractionFromSource TernaryPredicate)
+(domain electricityFractionFromSource 1 GeopoliticalArea)
+(domainSubclass electricityFractionFromSource 2 PowerGeneration) 
+(domain electricityFractionFromSource 3 RealNumber)
+
+(documentation electricityFractionFromSource EnglishLanguage 
+"(&%electricityFractionFromSource ?AREA ?SOURCE ?FRACTION) means that in 
+the &%GeopoliticalArea ?AREA, ?SOURCE provides ?FRACTION of the total 
+electricity production.")
+
+(=>
+  (electricityFractionFromSource ?AREA ?SOURCE ?FRACTION)
+  (lessThanOrEqualTo ?FRACTION 1.0))
+
+
+(<=>
+  (electricityFractionFromSourceInPeriod ?AREA ?SOURCE ?FRACTION ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (electricityFractionFromSource ?AREA ?SOURCE ?FRACTION)))))
+
+(subclass PowerGeneration Process)
+
+(documentation PowerGeneration EnglishLanguage "&%PowerGeneration is the class of 
+&%Processes in which some kind of power is generated either for immediate 
+use in a &%Device or to be stored for future use.")
+
+(subclass ElectricalPowerGeneration PowerGeneration)
+
+(documentation ElectricalPowerGeneration EnglishLanguage "&%ElectricalPowerGeneration is 
+the subclass of &%PowerGeneration processes in which electricity is 
+generated.")
+
+(instance FossilFuelPowerGeneration PowerGeneration)
+
+(instance HydroElectricPowerGeneration ElectricalPowerGeneration)
+
+(instance NuclearPowerGeneration PowerGeneration)
+
+(instance OtherSourcePowerGeneration PowerGeneration)
+
+(documentation OtherSourcePowerGeneration EnglishLanguage "&%OtherSourcePowerGeneration 
+represents all non-fossil fuel, non-hydroelectric, and non-nuclear power 
+generation processes, e.g., wind power generation.")
+
+(disjointDecomposition PowerGeneration FossilFuelPowerGeneration HydroElectricPowerGeneration NuclearPowerGeneration OtherSourcePowerGeneration)
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  Q. Electricity - consumption
+(instance electricityConsumptionInPeriod TernaryPredicate)
+(domain electricityConsumptionInPeriod 1 GeopoliticalArea)
+(domain electricityConsumptionInPeriod 2 PhysicalQuantity)
+(domainSubclass electricityConsumptionInPeriod 3 TimeInterval) 
+
+(documentation electricityConsumptionInPeriod EnglishLanguage 
+"(&%electricityConsumptionInPeriod ?AREA ?AMOUNT ?YEAR) means that 
+the &%GeopoliticalArea ?AREA used ?AMOUNT of electricity (measured in 
+&%KilowattHours) during the &%TimeInterval indicated by ?YEAR.")
+
+(instance annualElectricityConsumption BinaryPredicate)
+(domain annualElectricityConsumption 1 GeopoliticalArea)
+(domain annualElectricityConsumption 2 PhysicalQuantity)
+
+(documentation annualElectricityConsumption EnglishLanguage 
+"(&%annualElectricityConsumption ?AREA ?AMOUNT) means that the 
+&%GeopoliticalArea ?AREA uses ?AMOUNT of electricity (measured in 
+&%KilowattHours) annually.")
+
+(=>
+  (and
+    (electricityConsumptionInPeriod ?AREA ?AMOUNT ?PERIOD)
+    (or
+      (subclass ?PERIOD Year)
+      (subclass ?PERIOD (FiscalYearFn ?AREA))))
+  (exists (?YEAR)
+    (and
+      (instance ?YEAR ?PERIOD)
+      (holdsDuring ?YEAR (annualElectricityConsumption ?AREA ?AMOUNT)))))
+
+(=>
+  (and
+    (holdsDuring ?YEAR (annualElectricityConsumption ?AREA ?AMOUNT))
+    (instance ?YEAR ?PERIOD)
+      (or
+        (subclass ?PERIOD Year)
+        (subclass ?PERIOD (FiscalYearFn ?AREA))))
+  (electricityConsumptionInPeriod ?AREA ?AMOUNT ?PERIOD))
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  R. Electricity - exports
+(instance electricityExportInPeriod TernaryPredicate)
+(domain electricityExportInPeriod 1 GeopoliticalArea)
+(domain electricityExportInPeriod 2 PhysicalQuantity)
+(domainSubclass electricityExportInPeriod 3 TimeInterval) 
+
+(documentation electricityExportInPeriod EnglishLanguage 
+"(&%electricityExportInPeriod ?AREA ?AMOUNT ?PERIOD) means that 
+the &%GeopoliticalArea ?AREA exported the total ?AMOUNT of electricity 
+(measured in &%KilowattHours) during the &%TimeInterval indicated 
+by ?PERIOD.")
+
+(instance annualElectricityExport BinaryPredicate)
+(domain annualElectricityExport 1 GeopoliticalArea)
+(domain annualElectricityExport 2 PhysicalQuantity)
+
+(documentation annualElectricityExport EnglishLanguage 
+"(&%annualElectricityExport ?AREA ?AMOUNT) means that the 
+&%GeopoliticalArea ?AREA exported the total ?AMOUNT of 
+electricity (measured in &%KilowattHours) annually.")
+
+(=>
+  (and
+    (electricityExportInPeriod ?AREA ?AMOUNT ?PERIOD)
+    (or
+      (subclass ?PERIOD Year)
+      (subclass ?PERIOD (FiscalYearFn ?AREA))))
+  (exists (?YEAR)
+    (and
+      (instance ?YEAR ?PERIOD)
+      (holdsDuring ?YEAR (annualElectricityExport ?AREA ?AMOUNT)))))
+
+(=>
+  (and
+    (holdsDuring ?YEAR (annualElectricityExport ?AREA ?AMOUNT))
+    (instance ?YEAR ?PERIOD)
+    (or
+      (subclass ?PERIOD Year)
+      (subclass ?PERIOD (FiscalYearFn ?AREA))))
+  (electricityExportInPeriod ?AREA ?AMOUNT ?PERIOD))
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  S. Electricity - imports
+
+(instance electricityImportInPeriod TernaryPredicate)
+(domain electricityImportInPeriod 1 GeopoliticalArea)
+(domain electricityImportInPeriod 2 PhysicalQuantity)
+(domainSubclass electricityImportInPeriod 3 TimeInterval) 
+
+(documentation electricityImportInPeriod EnglishLanguage 
+"(&%electricityImportInPeriod ?AREA ?AMOUNT ?PERIOD) means that 
+the &%GeopoliticalArea ?AREA imported the total ?AMOUNT of electricity 
+(measured in &%KilowattHours) during the &%TimeInterval indicated 
+by ?PERIOD.")
+
+;; PREDICATE
+(instance annualElectricityImport BinaryPredicate)
+(domain annualElectricityImport 1 GeopoliticalArea)
+(domain annualElectricityImport 2 PhysicalQuantity)
+
+(documentation annualElectricityImport EnglishLanguage 
+"(&%annualElectricityImport ?AREA ?AMOUNT) means that the 
+&%GeopoliticalArea ?AREA imported the total ?AMOUNT of 
+electricity (measured in &%KilowattHours) annually.")
+
+(=>
+  (and
+    (electricityImportInPeriod ?AREA ?AMOUNT ?PERIOD)
+    (or
+      (subclass ?PERIOD Year)
+      (subclass ?PERIOD (FiscalYearFn ?AREA))))
+  (exists (?YEAR)
+    (and
+      (instance ?YEAR ?PERIOD)
+      (holdsDuring ?YEAR (annualElectricityImport ?AREA ?AMOUNT)))))
+
+(=>
+  (and
+    (holdsDuring ?YEAR (annualElectricityImport ?AREA ?AMOUNT))
+    (instance ?YEAR ?PERIOD)
+    (or
+      (subclass ?PERIOD Year)
+      (subclass ?PERIOD (FiscalYearFn ?AREA))))
+  (electricityImportInPeriod ?AREA ?AMOUNT ?PERIOD))
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  T. Agriculture - products
+
+;; See section II. for Product representations
+
+;; PREDICATE
+(instance agriculturalProductType BinaryPredicate)
+(domain agriculturalProductType 1 GeopoliticalArea)
+(domainSubclass agriculturalProductType 2 Object)
+
+(documentation agriculturalProductType EnglishLanguage 
+"(&%agriculturalProductType ?AREA ?TYPE) means that the 
+&%GeopoliticalArea ?AREA produces a crop or other 
+agricultural product of ?TYPE.")
+
+;; PREDICATE
+(instance agriculturalProductTypeByRank TernaryPredicate)
+(domain agriculturalProductTypeByRank 1 GeopoliticalArea)
+(domainSubclass agriculturalProductTypeByRank 2 Object)
+(domainSubclass agriculturalProductTypeByRank 3 PositiveInteger)
+
+(documentation agriculturalProductTypeByRank EnglishLanguage 
+"(&%agriculturalProductTypeByRank ?AREA ?TYPE ?NTH) means that the 
+&%GeopoliticalArea ?AREA produces a crop or other 
+agricultural product of ?TYPE, which is its ?NTH most important 
+crop.")
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  U. Exports
+
+(instance exportTotalInPeriod TernaryPredicate)
+(domain exportTotalInPeriod 1 GeopoliticalArea)
+(domain exportTotalInPeriod 2 CurrencyMeasure)
+(domainSubclass exportTotalInPeriod 3 TimeInterval) 
+
+(documentation exportTotalInPeriod EnglishLanguage 
+"(&%exportTotalInPeriod ?AREA ?AMOUNT ?PERIOD) means that the 
+total value of exports from the &%GeopoliticalArea ?AREA is ?AMOUNT 
+(in &%UnitedStatesDollars) for the &%TimeInterval indicated by ?PERIOD.  
+Export value is calculated on a Free on Board (F.O.B.) basis.")
+
+(instance annualExportTotal BinaryPredicate)
+(domain annualExportTotal 1 GeopoliticalArea)
+(domain annualExportTotal 2 CurrencyMeasure)
+
+(documentation annualExportTotal EnglishLanguage 
+"(&%annualExportTotal ?AREA ?AMOUNT) means that the total 
+value of exports from the &%GeopoliticalArea ?AREA is ?AMOUNT 
+(in &%UnitedStatesDollars) annually.  Export value is calculated 
+on a Free on Board (F.O.B.) basis.")
+
+(=>
+  (and
+    (exportTotalInPeriod ?AREA ?AMOUNT ?PERIOD)
+      (or
+        (subclass ?PERIOD Year)
+        (subclass ?PERIOD (FiscalYearFn ?AREA))))
+  (exists (?YEAR)
+    (and
+      (instance ?YEAR ?PERIOD)
+      (holdsDuring ?YEAR (annualExportTotal ?AREA ?AMOUNT)))))
+
+(=>
+  (and
+    (holdsDuring ?YEAR (annualExportTotal ?AREA ?AMOUNT))
+    (instance ?YEAR ?PERIOD)
+    (or
+      (subclass ?PERIOD Year)
+      (subclass ?PERIOD (FiscalYearFn ?AREA))))
+  (exportTotalInPeriod ?AREA ?AMOUNT ?PERIOD))
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  V. Exports - commodities
+
+;; See section II. for Product representations
+
+(instance exportCommodityType BinaryPredicate)
+(domain exportCommodityType 1 GeopoliticalArea)
+(domainSubclass exportCommodityType 2 Object) 
+
+(documentation exportCommodityType EnglishLanguage 
+"(&%exportCommodityType ?AREA ?TYPE) means that the &%GeopoliticalArea 
+?AREA exports the commodity ?TYPE.")
+
+(=>
+  (exportCommodityType ?AGENT ?TYPE)
+  (exists (?EXPORT ?OBJECT)
+    (and
+      (instance ?EXPORT Exporting)
+      (agent ?EXPORT ?AGENT)
+      (instance ?OBJECT ?TYPE)
+      (patient ?EXPORT ?OBJECT))))
+
+(instance exportCommodityTypeByRank TernaryPredicate)
+(domain exportCommodityTypeByRank 1 GeopoliticalArea)
+(domainSubclass exportCommodityTypeByRank 2 Object) 
+(domain exportCommodityTypeByRank 3 PositiveInteger) 
+
+(documentation exportCommodityTypeByRank EnglishLanguage 
+"(&%exportCommodityTypeByRank ?AREA ?TYPE ?NTH) means that the 
+&%GeopoliticalArea ?AREA has the commodity ?TYPE as its ?NTH 
+most valuable export.")
+
+(=>
+  (exportCommodityTypeByRank ?AREA ?TYPE ?RANK)
+  (exportCommodityType ?AREA ?TYPE))
+
+(=>
+  (exportCommodityType ?AREA ?TYPE)
+  (exists (?TRANSFER ?OBJECT)
+    (and
+      (instance ?TRANSFER Exporting)
+      (agent ?TRANSFER ?AREA)
+      (patient ?TRANSFER ?OBJECT)
+      (instance ?OBJECT ?TYPE))))
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  W. Exports - partners
+
+(instance exportPartnerInPeriod TernaryPredicate)
+(domain exportPartnerInPeriod 1 Agent)
+(domain exportPartnerInPeriod 2 Agent)
+(domainSubclass exportPartnerInPeriod 3 TimeInterval)
+
+(documentation exportPartnerInPeriod EnglishLanguage 
+"(&%exportPartnerInPeriod ?AGENT1 ?AGENT2 ?PERIOD) means that the &%Agent 
+?AGENT1 exports goods to the &%Agent ?AGENT2 during the &%TimeInterval 
+indicated by ?PERIOD.")
+
+(=>
+  (exportPartnerInPeriod ?AGENT1 ?AGENT2 ?PERIOD)
+  (exists (?TIME ?EXPORT)
+    (and
+      (instance ?TIME ?PERIOD)
+      (instance ?EXPORT Exporting)
+      (overlapsTemporally ?TIME (WhenFn ?EXPORT))
+      (origin ?EXPORT ?AGENT1)
+      (destination ?EXPORT ?AGENT2))))
+
+(instance exportPartner BinaryPredicate)
+(instance exportPartner IrreflexiveRelation)
+(domain exportPartner 1 Agent)
+(domain exportPartner 2 Agent)
+
+(documentation exportPartner EnglishLanguage "(&%exportPartner ?AGENT1 ?AGENT2) 
+means that the &%Agent ?AGENT1 exports goods to the &%Agent 
+?AGENT2.")
+
+(=>
+  (exportPartner ?AGENT1 ?AGENT2)
+  (exists (?EXPORT)
+    (and
+      (instance ?EXPORT Exporting)
+      (origin ?EXPORT ?AGENT1)
+      (destination ?EXPORT ?AGENT2))))
+
+(<=>
+  (exportPartnerInPeriod ?AGENT1 ?AGENT2 ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (exportPartner ?AGENT1 ?AGENT2)))))
+
+(subclass Exporting ChangeOfPossession)
+(subclass Exporting FinancialTransaction) 
+
+(documentation Exporting EnglishLanguage "&%Exporting is the class of actions in 
+which there is a &%ChangeOfPossession of goods shipped from a 
+provider in one &%Nation to a destination in another &%Nation. 
+Typically, there are &%Selling and &%Buying events associated 
+with an &%Exporting.  Either the seller or the exporting country 
+may be considered the &%origin of &%Exporting.")
+
+(=>
+  (instance ?EXPORT Exporting)
+  (exists (?ITEM)
+    (and
+      (instance ?ITEM Object)
+      (patient ?EXPORT ?ITEM))))
+
+(=>
+  (and
+    (instance ?EXPORT Exporting)
+    (patient ?EXPORT ?ITEM)
+    (instance ?AREA GeopoliticalArea)
+    (origin ?EXPORT ?AREA))
+  (holdsDuring (BeginFn (WhenFn ?EXPORT))
+    (located ?ITEM ?AREA)))
+
+(=>
+  (and
+    (instance ?EXPORT Exporting)
+    (patient ?EXPORT ?ITEM)
+    (instance ?AREA GeopoliticalArea)
+    (holdsDuring (BeginFn (WhenFn ?EXPORT))
+      (located ?ITEM ?AREA)))
+  (holdsDuring (EndFn (WhenFn ?EXPORT))
+      (not
+        (located ?ITEM ?AREA))))
+
+(=>
+  (and
+    (instance ?EXPORT Exporting)
+    (patient ?EXPORT ?ITEM)
+    (instance ?AREA GeopoliticalArea)
+    (holdsDuring (BeginFn (WhenFn ?EXPORT))
+      (located ?ITEM ?AREA)))
+  (exists (?AREA2)
+    (and
+      (instance ?AREA2 GeopoliticalArea)
+      (not (geopoliticalSubdivision ?AREA1 ?AREA2))
+      (not (geopoliticalSubdivision ?AREA2 ?AREA1))
+      (holdsDuring (EndFn (WhenFn ?EXPORT))
+        (located ?ITEM ?AREA2)))))
+
+(=>
+  (and
+    (instance ?EXPORT Exporting)
+    (patient ?EXPORT ?ITEM)
+    (instance ?AREA GeopoliticalArea)
+    (destination ?EXPORT ?AREA))
+  (holdsDuring (EndFn (WhenFn ?EXPORT))
+    (located ?ITEM ?AREA)))
+
+(=>
+  (and
+    (instance ?EXPORT Exporting)
+    (patient ?EXPORT ?ITEM)
+    (instance ?AREA1 GeopoliticalArea)
+    (instance ?AREA2 GeopoliticalArea)
+    (holdsDuring (BeginFn (WhenFn ?EXPORT))
+      (located ?ITEM ?AREA1))
+    (holdsDuring (EndFn (WhenFn ?EXPORT))
+      (located ?ITEM ?AREA2)))
+  (not (located ?AREA2 ?AREA1)))
+
+(=>
+  (and
+    (instance ?EXPORT Exporting)
+    (patient ?EXPORT ?ITEM)
+    (instance ?AREA1 GeopoliticalArea)
+    (origin ?EXPORT ?AREA1)
+    (instance ?AREA2 GeopoliticalArea)
+    (destination ?EXPORT ?AREA2))
+  (not (equal ?AREA1 ?AREA2)))
+
+(=>
+  (and
+    (instance ?EXPORT Exporting)
+    (patient ?EXPORT ?ITEM)
+    (instance ?AREA1 GeopoliticalArea)
+    (origin ?EXPORT ?AREA1)
+    (instance ?AREA2 GeopoliticalArea)
+    (destination ?EXPORT ?AREA2))
+  (not (located ?AREA2 ?AREA1)))
+
+(instance exportPartnerByRankInPeriod QuaternaryPredicate)
+(domain exportPartnerByRankInPeriod 1 GeopoliticalArea)
+(domain exportPartnerByRankInPeriod 2 GeopoliticalArea)
+(domain exportPartnerByRankInPeriod 3 PositiveInteger)
+(domainSubclass exportPartnerByRankInPeriod 4 TimeInterval)
+
+(documentation exportPartnerByRankInPeriod EnglishLanguage 
+"(&%exportPartnerByRankInPeriod ?AREA1 ?AREA2 ?NTH ?PERIOD) means that 
+the &%GeopoliticalArea ?AREA1 exports goods to &%GeopoliticalArea 
+?AREA2 and is the ?NTH most important export partner of ?AREA1, 
+in the &%TimeInterval ?PERIOD, based on U.S. dollar value of exports.")
+
+(instance exportPartnerByRank TernaryPredicate)
+(domain exportPartnerByRank 1 GeopoliticalArea)
+(domain exportPartnerByRank 2 GeopoliticalArea)
+(domain exportPartnerByRank 3 PositiveInteger)
+
+(documentation exportPartnerByRank EnglishLanguage 
+"(&%exportPartnerByRank ?AREA1 ?AREA2 ?NTH) means that 
+the &%GeopoliticalArea ?AREA1 exports goods to &%GeopoliticalArea 
+?AREA2 and is the ?NTH most important export partner of ?AREA1, 
+based on U.S. dollar value of exports.")
+
+(<=>
+  (exportPartnerByRankInPeriod ?AREA1 ?AREA2 ?NTH ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (exportPartnerByRank ?AREA1 ?AREA2 ?NTH)))))
+
+(instance exportPartnerByFractionInPeriod QuaternaryPredicate)
+(domain exportPartnerByFractionInPeriod 1 GeopoliticalArea)
+(domain exportPartnerByFractionInPeriod 2 GeopoliticalArea)
+(domain exportPartnerByFractionInPeriod 3 PositiveRealNumber)
+(domainSubclass exportPartnerByFractionInPeriod 4 TimeInterval)
+
+(documentation exportPartnerByFractionInPeriod EnglishLanguage 
+"(&%exportPartnerByFractionInPeriod ?AREA1 ?AREA2 ?FRACTION ?PERIOD) means 
+that the &%GeopoliticalArea ?AREA1 exports goods to &%GeopoliticalArea 
+?AREA2 and receives ?FRACTION of the &%exportTotalInPeriod of ?AREA1 
+in the &%TimeInterval ?PERIOD, based on U.S. dollar value of exports.")
+
+(=>
+  (exportPartnerByFractionInPeriod ?AREA1 ?AREA2 ?FRACTION ?PERIOD)
+  (lessThanOrEqualTo ?YEAR 1.0))
+
+(instance exportPartnerByFraction TernaryPredicate)
+(domain exportPartnerByFraction 1 GeopoliticalArea)
+(domain exportPartnerByFraction 2 GeopoliticalArea)
+(domain exportPartnerByFraction 3 PositiveRealNumber)
+
+(documentation exportPartnerByFraction EnglishLanguage 
+"(&%exportPartnerByFraction ?AREA1 ?AREA2 ?FRACTION) means that 
+the &%GeopoliticalArea ?AREA1 exports goods to &%GeopoliticalArea 
+?AREA2 and receives ?FRACTION of the &%exportTotalInPeriod of ?AREA1, 
+based on U.S. dollar value of exports.")
+
+(=>
+  (exportPartnerByFraction ?AREA1 ?AREA2 ?FRACTION)
+  (lessThanOrEqualTo ?YEAR 1.0))
+
+(<=>
+  (exportPartnerByFractionInPeriod ?AREA1 ?AREA2 ?FRACTION ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (exportPartnerByFraction ?AREA1 ?AREA2 ?FRACTION)))))
+
+;; 
+;;-----------------------------------------------------------------------------
+;;
+;;  X. Imports
+
+(instance importTotalInPeriod TernaryPredicate)
+(domain importTotalInPeriod 1 GeopoliticalArea)
+(domain importTotalInPeriod 2 CurrencyMeasure)
+(domainSubclass importTotalInPeriod 3 TimeInterval) 
+
+(documentation importTotalInPeriod EnglishLanguage 
+"(&%importTotalInPeriod ?AREA ?AMOUNT ?PERIOD) means that the 
+total value of imports to the &%GeopoliticalArea ?AREA is ?AMOUNT 
+(in &%UnitedStatesDollars) for the &%TimeInterval indicated by ?PERIOD.  
+Import value is calculated on a Cost, Insurance, and Freight (C.I.F.) 
+or a Free on Board (F.O.B.) basis.")
+
+(instance annualImportTotal BinaryPredicate)
+(domain annualImportTotal 1 GeopoliticalArea)
+(domain annualImportTotal 2 CurrencyMeasure)
+
+(documentation annualImportTotal EnglishLanguage 
+"(&%annualImportTotal ?AREA ?AMOUNT) means that the total 
+value of imports to the &%GeopoliticalArea ?AREA is ?AMOUNT (in 
+&%UnitedStatesDollars) annually.  Import value is calculated on a Cost, 
+Insurance, and Freight (C.I.F.) or a Free on Board (F.O.B.) basis.")
+
+(=>
+  (and
+    (importTotalInPeriod ?AREA ?AMOUNT ?PERIOD)
+      (or
+        (subclass ?PERIOD Year)
+        (subclass ?PERIOD (FiscalYearFn ?AREA))))
+  (exists (?YEAR)
+    (and
+      (instance ?YEAR ?PERIOD)
+      (holdsDuring ?YEAR (annualImportTotal ?AREA ?AMOUNT)))))
+
+(=>
+  (and
+    (holdsDuring ?YEAR (annualImportTotal ?AREA ?AMOUNT))
+    (instance ?YEAR ?PERIOD)
+    (or
+      (subclass ?PERIOD Year)
+      (subclass ?PERIOD (FiscalYearFn ?AREA))))
+  (importTotalInPeriod ?AREA ?AMOUNT ?PERIOD))
+
+;;-----------------------------------------------------------------------------
+;;
+;;  Y. Imports - commodities
+
+;; See section II. for Product representations
+
+(instance importCommodityType BinaryPredicate)
+(domain importCommodityType 1 GeopoliticalArea)
+(domainSubclass importCommodityType 2 Object) 
+
+(documentation importCommodityType EnglishLanguage 
+"(&%importCommodityType ?AREA ?TYPE) means that the &%GeopoliticalArea 
+?AREA imports the commodity ?TYPE.")
+
+(instance importCommodityTypeByRank TernaryPredicate)
+(domain importCommodityTypeByRank 1 GeopoliticalArea)
+(domainSubclass importCommodityTypeByRank 2 Object) 
+(domain importCommodityTypeByRank 3 PositiveInteger) 
+
+(documentation importCommodityTypeByRank EnglishLanguage 
+"(&%importCommodityTypeByRank ?AREA ?TYPE ?NTH) means that the 
+&%GeopoliticalArea ?AREA has the commodity ?TYPE as its ?NTH 
+most valuable import.")
+
+(=>
+  (importCommodityTypeByRank ?AREA ?TYPE ?RANK)
+  (importCommodityType ?AREA ?TYPE))
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  Z. Imports - partners
+
+(instance importPartnerInPeriod TernaryPredicate)
+;; (instance importPartnerInPeriod IrreflexiveRelation)
+(domain importPartnerInPeriod 1 Agent)
+(domain importPartnerInPeriod 2 Agent)
+(domainSubclass importPartnerInPeriod 3 TimeInterval)
+
+(documentation importPartnerInPeriod EnglishLanguage 
+"(&%importPartnerInPeriod ?AGENT1 ?AGENT2 ?PERIOD) means that the &%Agent 
+?AGENT1 imports goods from the &%Agent ?AGENT2 during the &%TimeInterval 
+indicated by ?PERIOD.")
+
+(=>
+  (importPartnerInPeriod ?AGENT1 ?AGENT2 ?PERIOD)
+  (exists (?TIME ?EXPORT)
+    (and
+      (instance ?TIME ?PERIOD)
+      (instance ?EXPORT Exporting)
+      (overlapsTemporally ?TIME ?EXPORT)
+      (origin ?EXPORT ?AGENT2)
+      (destination ?EXPORT ?AGENT1))))
+
+(instance importPartner BinaryPredicate)
+(instance importPartner IrreflexiveRelation)
+(domain importPartner 1 Agent)
+(domain importPartner 2 Agent)
+
+(documentation importPartner EnglishLanguage "(&%importPartner ?AGENT1 ?AGENT2) means 
+that the &%Agent ?AGENT1 imports goods from the &%Agent ?AGENT2.")
+
+(=>
+  (importPartner ?AGENT1 ?AGENT2)
+  (exists (?EXPORT)
+    (and
+      (instance ?EXPORT Exporting)
+      (origin ?EXPORT ?AGENT2)
+      (destination ?EXPORT ?AGENT1))))
+
+(<=>
+  (importPartnerInPeriod ?AGENT1 ?AGENT2 ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (importPartner ?AGENT1 ?AGENT2)))))
+
+(instance importPartnerByRankInPeriod QuaternaryPredicate)
+(domain importPartnerByRankInPeriod 1 GeopoliticalArea)
+(domain importPartnerByRankInPeriod 2 GeopoliticalArea)
+(domain importPartnerByRankInPeriod 3 PositiveInteger)
+(domainSubclass importPartnerByRankInPeriod 4 TimeInterval)
+
+(documentation importPartnerByRankInPeriod EnglishLanguage 
+"(&%importPartnerByRankInPeriod ?AREA1 ?AREA2 ?NTH ?PERIOD) means that 
+the &%GeopoliticalArea ?AREA1 imports goods from &%GeopoliticalArea 
+?AREA2 is the ?NTH most important import partner of ?AREA1 during 
+the &%TimeInterval ?PERIOD, based on U.S. dollar value of imports.")
+
+(instance importPartnerByRank TernaryPredicate)
+(domain importPartnerByRank 1 GeopoliticalArea)
+(domain importPartnerByRank 2 GeopoliticalArea)
+(domain importPartnerByRank 3 PositiveInteger)
+
+(documentation importPartnerByRank EnglishLanguage 
+"(&%importPartnerByRank ?AREA1 ?AREA2 ?NTH) means that 
+the &%GeopoliticalArea ?AREA1 imports goods from &%GeopoliticalArea 
+?AREA2 is the ?NTH most important import partner of ?AREA1, based on 
+U.S. dollar value of imports.")
+
+(<=>
+  (importPartnerByRankInPeriod ?AREA1 ?AREA2 ?NTH ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (importPartnerByRank ?AREA1 ?AREA2 ?NTH)))))
+
+(instance importPartnerByFractionInPeriod QuaternaryPredicate)
+(domain importPartnerByFractionInPeriod 1 GeopoliticalArea)
+(domain importPartnerByFractionInPeriod 2 GeopoliticalArea)
+(domain importPartnerByFractionInPeriod 3 PositiveRealNumber)
+(domainSubclass importPartnerByFractionInPeriod 4 TimeInterval)
+
+(documentation importPartnerByFractionInPeriod EnglishLanguage 
+"(&%importPartnerByFractionInPeriod ?AREA1 ?AREA2 ?FRACTION ?PERIOD) means 
+that the &%GeopoliticalArea ?AREA1 imports goods from &%GeopoliticalArea 
+?AREA2 and provides ?FRACTION of the &%importTotalInPeriod of ?AREA1 
+during the &%TimeInterval ?PERIOD, in U.S. dollar value of imports.")
+
+(=>
+  (importPartnerByFractionInPeriod ?AREA1 ?AREA2 ?FRACTION ?PERIOD)
+  (lessThanOrEqualTo ?YEAR 1.0))
+
+(instance importPartnerByFraction TernaryPredicate)
+(domain importPartnerByFraction 1 GeopoliticalArea)
+(domain importPartnerByFraction 2 GeopoliticalArea)
+(domain importPartnerByFraction 3 PositiveRealNumber)
+
+(documentation importPartnerByFraction EnglishLanguage 
+"(&%importPartnerByFraction ?AREA1 ?AREA2 ?FRACTION) means that 
+the &%GeopoliticalArea ?AREA1 imports goods from &%GeopoliticalArea 
+?AREA2 and provides ?FRACTION of the &%importTotalInPeriod of ?AREA1, 
+based on U.S. dollar value of imports.")
+
+(=>
+  (importPartnerByFraction ?AREA1 ?AREA2 ?FRACTION)
+  (lessThanOrEqualTo ?YEAR 1.0))
+
+(<=>
+  (importPartnerByFractionInPeriod ?AREA1 ?AREA2 ?FRACTION ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (importPartnerByFraction ?AREA1 ?AREA2 ?FRACTION)))))
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  AA. Debt - external
+
+(instance externalDebtInPeriod TernaryPredicate)
+(domain externalDebtInPeriod 1 GeopoliticalArea)
+(domain externalDebtInPeriod 2 CurrencyMeasure)
+(domainSubclass externalDebtInPeriod 3 TimeInterval)
+
+(documentation externalDebtInPeriod EnglishLanguage 
+"(&%externalDebtInPeriod ?COUNTRY ?AMOUNT ?PERIOD) means that the 
+&%GeopoliticalArea ?COUNTRY owes the total sum ?AMOUNT of debt (public 
+and private) to nonresidents during the &%TimeInterval indicated by 
+?PERIOD. The amount is valued in U.S. dollars but may be repayable in 
+foreign currency, goods, or services.")
+
+(instance externalDebt BinaryPredicate)
+(domain externalDebt 1 GeopoliticalArea)
+(domain externalDebt 2 CurrencyMeasure)
+
+(documentation externalDebt EnglishLanguage "(&%externalDebt ?COUNTRY ?AMOUNT) means 
+that the &%GeopoliticalArea ?COUNTRY owes the total sum ?AMOUNT of debt 
+(public and private) to nonresidents.  The amount is valued in U.S. 
+dollars but may be repayable in foreign currency, goods, or services.")
+
+(<=>
+  (externalDebtInPeriod ?COUNTRY ?AMOUNT ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (externalDebt ?COUNTRY ?AMOUNT)))))
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  BB. Economic aid - donor
+
+(instance economicAidDonatedInPeriod TernaryPredicate)
+(domain economicAidDonatedInPeriod 1 GeopoliticalArea)
+(domain economicAidDonatedInPeriod 2 CurrencyMeasure)
+(domainSubclass economicAidDonatedInPeriod 3 TimeInterval)
+
+(documentation economicAidDonatedInPeriod EnglishLanguage 
+"(&%economicAidDonatedInPeriod ?AGENT ?AMOUNT ?PERIOD) means that the 
+&%GeopoliticalArea ?AGENT donated ?AMOUNT of aid (valued in U.S. dollars) 
+to developing countries and multilateral organizations during the 
+&%TimeInterval indicated by ?PERIOD.  This figure covers 'net official 
+development assistance' (ODA), which is net financial assistance from 
+nations belonging to the 
+&%OrganizationForEconomicCooperationAndDevelopment (OECD), with the main 
+goal of promoting economic development and welfare.  Such aid contains a 
+grant element of at least 25%.  This statistic does not cover private 
+flows of assistance or other official flows (OOF).")
+
+(instance economicAidDonated BinaryPredicate)
+(domain economicAidDonated 1 GeopoliticalArea)
+(domain economicAidDonated 2 CurrencyMeasure)
+
+(documentation economicAidDonated EnglishLanguage 
+"(&%economicAidDonated ?AGENT ?AMOUNT) means that the &%GeopoliticalArea 
+?AREA donated ?AMOUNT of aid (valued in U.S. dollars) to developing 
+countries and multilateral organizations.  This figure covers 'net 
+official development assistance' (ODA), which is net financial assistance 
+from nations belonging to the 
+&%OrganizationForEconomicCooperationAndDevelopment (OECD), with the main 
+goal of promoting economic development and welfare.  Such aid contains a 
+grant element of at least 25%.  This statistic does not cover private 
+flows of assistance or other official flows (OOF).")
+
+(<=>
+  (economicAidDonatedInPeriod ?COUNTRY ?AMOUNT ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (economicAidDonated ?COUNTRY ?AMOUNT)))))
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  CC. Economic aid - recipient
+
+(instance economicAidReceivedNetInPeriod TernaryPredicate)
+(domain economicAidReceivedNetInPeriod 1 GeopoliticalArea)
+(domain economicAidReceivedNetInPeriod 2 CurrencyMeasure)
+(domainSubclass economicAidReceivedNetInPeriod 3 TimeInterval)
+
+(documentation economicAidReceivedNetInPeriod EnglishLanguage 
+"(&%economicAidReceivedNetInPeriod ?AREA ?AMOUNT ?PERIOD) means that the 
+&%GeopoliticalArea ?AREA had a net inflow of Official Development Finance 
+(ODF) of ?AMOUNT during the &%TimeInterval indicated by ?PERIOD.  ODF 
+includes funds from the World Bank, the IMF, other international 
+organizations, and individual donor nations, including both grants and 
+loans.  The figure includes formal commitments of aid not yet disbursed.  
+The figure is the net amount of inflow after deducting repayments, 
+valued in U.S. dollars.")
+
+(instance economicAidReceivedNet BinaryPredicate)
+(domain economicAidReceivedNet 1 GeopoliticalArea)
+(domain economicAidReceivedNet 2 CurrencyMeasure)
+
+(documentation economicAidReceivedNet EnglishLanguage 
+"(&%economicAidReceivedNet ?AREA ?AMOUNT) means that the 
+&%GeopoliticalArea ?AREA had a net inflow of Official Development Finance 
+(ODF) of ?AMOUNT.  ODF includes funds from the World Bank, the IMF, other 
+international organizations, and individual donor nations, including both 
+grants and loans.  The figure includes formal commitments of aid not yet 
+disbursed.  The figure is the net amount of inflow after deducting 
+repayments, valued in U.S. dollars.")
+
+(<=>
+  (economicAidReceivedNetInPeriod ?COUNTRY ?AMOUNT ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (economicAidReceivedNet ?COUNTRY ?AMOUNT)))))
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  DD. Currency
+
+(instance currencyType BinaryPredicate)
+(domain currencyType 1 GeopoliticalArea)
+(domain currencyType 2 UnitOfCurrency)
+
+(documentation currencyType EnglishLanguage "(&%currencyType ?AREA ?UNIT) means 
+that the official currency used in the &%GeopoliticalArea ?AREA 
+is the &%UnitOfMeasure ?UNIT.")
+
+;; National currency units:
+
+(instance AfghanAfghani UnitOfCurrency)
+(currencyType Afghanistan AfghanAfghani)
+
+(instance BritishPound UnitOfCurrency)
+(currencyType UnitedKingdom BritishPound)
+
+(instance CanadianDollar UnitOfCurrency)
+(currencyType Canada CanadianDollar)
+
+(instance FrenchFranc UnitOfCurrency)
+(currencyType France FrenchFranc)
+
+(instance GermanMark UnitOfCurrency)
+(currencyType Germany GermanMark)
+
+(instance ItalianLire UnitOfCurrency)
+(currencyType Italy ItalianLire)
+
+(instance JapaneseYen UnitOfCurrency)
+(currencyType Japan JapaneseYen)
+
+(instance TajikSomoni UnitOfCurrency)
+(currencyType Tajikistan TajikSomoni)
+
+(subclass AfghanAfghaniCoin CurrencyCoin)   
+(currencyValue AfghanAfghaniCoin AfghanAfghani)   
+(subclass BritishPoundCoin CurrencyCoin)   
+(currencyValue BritishPoundCoin BritishPound)   
+(subclass CanadianDollarCoin CurrencyCoin)   
+(currencyValue CanadianDollarCoin CanadianDollar)   
+(subclass EuroCentCoin CurrencyCoin)         
+(currencyValue EuroCentCoin EuroCent)         
+(subclass EuroCoin CurrencyCoin)       
+;;(currencyValue EuroCoin Euro)       
+(subclass FrenchFrancCoin CurrencyCoin)       
+(currencyValue FrenchFrancCoin FrenchFranc)       
+(subclass GermanMarkCoin CurrencyCoin)       
+(currencyValue GermanMarkCoin GermanMark)       
+(subclass ItalianLireCoin CurrencyCoin)       
+(currencyValue ItalianLireCoin ItalianLire)       
+(subclass JapaneseYenCoin CurrencyCoin)       
+(currencyValue JapaneseYenCoin JapaneseYen)       
+(subclass TajikSomoniCoin CurrencyCoin)       
+(currencyValue TajikSomoniCoin TajikSomoni) 
+      
+(subclass UnitedStatesCentCoin CurrencyCoin) 
+(currencyValue UnitedStatesCentCoin UnitedStatesCent) 
+
+(subclass UnitedStatesFiveCentCoin CurrencyCoin) 
+(currencyValue UnitedStatesFiveCentCoin (MeasureFn 5 UnitedStatesCent))
+
+(subclass UnitedStatesTenCentCoin CurrencyCoin) 
+(currencyValue UnitedStatesCentCoin (MeasureFn 10 UnitedStatesCent))
+ 
+(subclass UnitedStatesQuarterCoin CurrencyCoin) 
+(currencyValue UnitedStatesQuarterCoin (MeasureFn 25 UnitedStatesCent))
+ 
+(subclass UnitedStatesDollarBill CurrencyBill)
+(currencyValue UnitedStatesDollarBill UnitedStatesDollar)
+
+(instance AlbanianLek UnitOfCurrency)
+
+(currencyType Albania AlbanianLek)
+
+(instance AlgerianDinar UnitOfCurrency)
+
+(currencyType Algeria AlgerianDinar)
+
+(instance AngolanKwanza UnitOfCurrency)
+
+(currencyType Angola AngolanKwanza)
+
+(instance ArgentineAustral UnitOfCurrency)
+
+(currencyType Argentina ArgentineAustral)
+
+(instance ArmenianDram UnitOfCurrency)
+
+(currencyType Armenia ArmenianDram)
+
+(instance AustralianDollar UnitOfCurrency)
+
+(currencyType Australia AustralianDollar)
+
+(instance AustrianSchilling UnitOfCurrency)
+
+(currencyType Austria AustrianSchilling)
+
+(instance AzerbaijaniManat UnitOfCurrency)
+
+(currencyType Azerbaijan AzerbaijaniManat)
+
+(instance BahamianDollar UnitOfCurrency)
+
+(currencyType TheBahamas BahamianDollar)
+
+(instance BahrainianDinar UnitOfCurrency)
+
+(currencyType Bahrain BahrainianDinar)
+
+(instance BangladeshiTaka UnitOfCurrency)
+
+(currencyType Bangladesh BangladeshiTaka)
+
+(instance BarbadosDollar UnitOfCurrency)
+
+(currencyType Barbados BarbadosDollar)
+
+(instance BelarusianRubel UnitOfCurrency)
+
+(currencyType Belarus BelarusianRubel)
+
+(instance BelgianFranc UnitOfCurrency)
+
+(currencyType Belgium BelgianFranc)
+
+(instance BelizeDollar UnitOfCurrency)
+
+(currencyType Belize BelizeDollar)
+
+(instance BeninFranc UnitOfCurrency)
+
+(currencyType Benin BeninFranc)
+
+(instance BermudaDollar UnitOfCurrency)
+
+(currencyType Bermuda BermudaDollar)
+
+(instance BhutaneseNgultrum UnitOfCurrency)
+
+(currencyType Bhutan BhutaneseNgultrum)
+
+(instance BolivianBoliviano UnitOfCurrency)
+
+(currencyType Bolivia BolivianBoliviano)
+
+(instance BotswanaPula UnitOfCurrency)
+
+(currencyType Botswana BotswanaPula)
+
+(instance BrazilianReal UnitOfCurrency)
+
+(currencyType Brazil BrazilianReal)
+
+(instance BruneiDollar UnitOfCurrency)
+
+(currencyType Brunei BruneiDollar)
+
+(instance BulgarianLev UnitOfCurrency)
+
+(currencyType Bulgaria BulgarianLev)
+
+(instance BurkinaFasoFranc UnitOfCurrency)
+
+(currencyType BurkinaFaso BurkinaFasoFranc)
+
+(instance BurundiFranc UnitOfCurrency)
+
+(currencyType Burundi BurundiFranc)
+
+(instance CambodianRiel UnitOfCurrency)
+
+(currencyType Cambodia CambodianRiel)
+
+(instance CameroonFranc UnitOfCurrency)
+
+(currencyType Cameroon CameroonFranc)
+
+(instance CapeVerdeEscudo UnitOfCurrency)
+
+(currencyType CapeVerde CapeVerdeEscudo)
+
+(instance CaymanIslandsDollar UnitOfCurrency)
+
+(currencyType CaymanIslands CaymanIslandsDollar)
+
+(instance CentralAfricanRepublicFranc UnitOfCurrency)
+
+(currencyType CentralAfricanRepublic CentralAfricanRepublicFranc)
+
+(instance ChadianFranc UnitOfCurrency)
+
+(currencyType Chad ChadianFranc)
+
+(instance ChileanPeso UnitOfCurrency)
+
+(currencyType Chile ChileanPeso)
+
+(instance ChineseYuan UnitOfCurrency)
+
+(currencyType China ChineseYuan)
+
+(instance ColombianPeso UnitOfCurrency)
+
+(currencyType Colombia ColombianPeso)
+
+(instance CongoFranc UnitOfCurrency)
+
+(currencyType DemocraticRepublicOfTheCongo CongoFranc)
+
+(instance CostaRicanColon UnitOfCurrency)
+
+(currencyType CostaRica CostaRicanColon)
+
+(instance CubanPeso UnitOfCurrency)
+
+(currencyType Cuba CubanPeso)
+
+(instance CypriotPound UnitOfCurrency)
+
+(currencyType Cyprus CypriotPound)
+
+(instance CzechKoruna UnitOfCurrency)
+
+(currencyType CzechRepublic CzechKoruna)
+
+(instance DanishKrone UnitOfCurrency)
+
+(currencyType Netherlands DanishKrone)
+
+(instance DjiboutiFranc UnitOfCurrency)
+
+(currencyType Djibouti DjiboutiFranc)
+
+(instance DominicanDollar UnitOfCurrency)
+
+(currencyType Dominica DominicanDollar)
+
+(instance DominicanPeso UnitOfCurrency)
+
+(currencyType Dominica DominicanPeso)
+
+(instance DutchGuilder UnitOfCurrency)
+
+(currencyType Netherlands DutchGuilder)
+
+(instance EcuadoranSucre UnitOfCurrency)
+
+(currencyType Ecuador EcuadoranSucre)
+
+(instance EgyptianPound UnitOfCurrency)
+
+(currencyType Egypt EgyptianPound)
+
+(instance ElSalvadoranColon UnitOfCurrency)
+
+(currencyType ElSalvador ElSalvadoranColon)
+
+(instance EstonianKroon UnitOfCurrency)
+
+(currencyType Estonia EstonianKroon)
+
+(instance EthiopianBirr UnitOfCurrency)
+
+(currencyType Ethiopia EthiopianBirr)
+
+(instance FijiDollar UnitOfCurrency)
+
+(currencyType Fiji FijiDollar)
+
+(instance FinnishMarkka UnitOfCurrency)
+
+(currencyType Finland FinnishMarkka)
+
+(instance GabonFranc UnitOfCurrency)
+
+(currencyType Gabon GabonFranc)
+
+(instance GambianDalasi UnitOfCurrency)
+
+(currencyType Gambia GambianDalasi)
+
+(instance GeorgianLari UnitOfCurrency)
+
+(currencyType RepublicOfGeorgia GeorgianLari)
+
+(instance GhanianCedi UnitOfCurrency)
+
+(currencyType Ghana GhanianCedi)
+
+(instance GreekDrachma UnitOfCurrency)
+
+(currencyType Greece GreekDrachma)
+
+(instance GrenadaDollar UnitOfCurrency)
+
+(currencyType Grenada GrenadaDollar)
+
+(instance GuatemalanQuetzal UnitOfCurrency)
+
+(currencyType Guatemala GuatemalanQuetzal)
+
+(instance GuineaBissauPeso UnitOfCurrency)
+
+(currencyType GuineaBissau GuineaBissauPeso)
+
+(instance GuineanFranc UnitOfCurrency)
+
+(currencyType Guinea GuineanFranc)
+
+(instance GuyanaDollar UnitOfCurrency)
+
+(currencyType Guyana GuyanaDollar)
+
+(instance HaitianGourde UnitOfCurrency)
+
+(currencyType Haiti HaitianGourde)
+
+(instance HonduranLempira UnitOfCurrency)
+
+(currencyType Honduras HonduranLempira)
+
+(instance HongKongDollar UnitOfCurrency)
+
+(currencyType HongKong HongKongDollar)
+
+(instance HungarianForint UnitOfCurrency)
+
+(currencyType Hungary HungarianForint)
+
+(instance IcelandicKrona UnitOfCurrency)
+
+(currencyType Iceland IcelandicKrona)
+
+(instance IndianRupee UnitOfCurrency)
+
+(currencyType India IndianRupee)
+
+(instance IndonesianRupiah UnitOfCurrency)
+
+(currencyType Indonesia IndonesianRupiah)
+
+(instance IranianRial UnitOfCurrency)
+
+(currencyType Iran IranianRial)
+
+(instance IraqiDinar UnitOfCurrency)
+
+(currencyType Iraq IraqiDinar)
+
+(instance IrishPound UnitOfCurrency)
+
+(currencyType Ireland IrishPound)
+
+(instance IsraeliShekel UnitOfCurrency)
+
+(currencyType Israel IsraeliShekel)
+
+(instance IvoryCoastFranc UnitOfCurrency)
+
+(currencyType CoteDIvoire IvoryCoastFranc)
+
+(instance JamaicanDollar UnitOfCurrency)
+
+(currencyType Jamaica JamaicanDollar)
+
+(instance JordanianDinar UnitOfCurrency)
+
+(currencyType Jordan JordanianDinar)
+
+(instance KazakhstaniTenge UnitOfCurrency)
+
+(currencyType Kazakhstan KazakhstaniTenge)
+
+(instance KenyanShilling UnitOfCurrency)
+
+(currencyType Kenya KenyanShilling)
+
+(instance KiribatiDollar UnitOfCurrency)
+
+(currencyType Kiribati KiribatiDollar)
+
+(instance KuwaitiDinar UnitOfCurrency)
+
+(currencyType Kuwait KuwaitiDinar)
+
+(instance KyrgyzstaniSom UnitOfCurrency)
+
+(currencyType Kyrgyzstan KyrgyzstaniSom)
+
+(instance LaotianKip UnitOfCurrency)
+
+(currencyType Laos LaotianKip)
+
+(instance LatvianLats UnitOfCurrency)
+
+(currencyType Latvia LatvianLats)
+
+(instance LebanesePound UnitOfCurrency)
+
+(currencyType Lebanon LebanesePound)
+
+(instance LesothoLoti UnitOfCurrency)
+
+(currencyType Lesotho LesothoLoti)
+
+(instance LiberianDollar UnitOfCurrency)
+
+(currencyType Liberia LiberianDollar)
+
+(instance LibyanDinar UnitOfCurrency)
+
+(currencyType Libya LibyanDinar)
+
+(instance LithuanianLitas UnitOfCurrency)
+
+(currencyType Lithuania LithuanianLitas)
+
+(instance LuxembourgFranc UnitOfCurrency)
+
+(currencyType Luxembourg LuxembourgFranc)
+
+(instance MacaoPataca UnitOfCurrency)
+
+(currencyType Macau MacaoPataca)
+
+(instance MadagascarFranc UnitOfCurrency)
+
+(currencyType Madagascar MadagascarFranc)
+
+(instance MalawianKwacha UnitOfCurrency)
+
+(currencyType Malawi MalawianKwacha)
+
+(instance MalaysianRinggit UnitOfCurrency)
+
+(currencyType Malaysia MalaysianRinggit)
+
+(instance MaliFranc UnitOfCurrency)
+
+(currencyType Mali MaliFranc)
+
+(instance MalteseLira UnitOfCurrency)
+
+(currencyType Malta MalteseLira)
+
+(instance MauritanianOuguiya UnitOfCurrency)
+
+(currencyType Mauritius MauritanianOuguiya)
+
+(instance MauritianRupee UnitOfCurrency)
+
+(currencyType Mauritius MauritianRupee)
+
+(instance MexicanPeso UnitOfCurrency)
+
+(currencyType Mexico MexicanPeso)
+
+(instance MoldovanLeu UnitOfCurrency)
+
+(currencyType Moldova MoldovanLeu)
+
+(instance MongolianTugrik UnitOfCurrency)
+
+(currencyType Mongolia MongolianTugrik)
+
+(instance MoroccanDirham UnitOfCurrency)
+
+(currencyType Morocco MoroccanDirham)
+
+(instance MozambiqueMetical UnitOfCurrency)
+
+(currencyType Mozambique MozambiqueMetical)
+
+(instance MyanmarKyat UnitOfCurrency)
+
+(currencyType Myanmar MyanmarKyat)
+
+(instance NepaleseRupee UnitOfCurrency)
+
+(currencyType Nepal NepaleseRupee)
+
+(instance NewZealandDollar UnitOfCurrency)
+
+(currencyType NewZealand NewZealandDollar)
+
+(instance NicaraguanCordoba UnitOfCurrency)
+
+(currencyType Nicaragua NicaraguanCordoba)
+
+(instance NigerFranc UnitOfCurrency)
+
+(currencyType Niger NigerFranc)
+
+(instance NigerianNaira UnitOfCurrency)
+
+(currencyType Nigeria NigerianNaira)
+
+(instance NorthKoreanWon UnitOfCurrency)
+
+(currencyType NorthKorea NorthKoreanWon)
+
+(instance NorwegianKrone UnitOfCurrency)
+
+(currencyType Norway NorwegianKrone)
+
+(instance OmaniRiyal UnitOfCurrency)
+
+(currencyType Oman OmaniRiyal)
+
+(instance PakistaniRupee UnitOfCurrency)
+
+(currencyType Pakistan PakistaniRupee)
+
+(instance PanamanianBalboa UnitOfCurrency)
+
+(currencyType Panama PanamanianBalboa)
+
+(instance PapuanKina UnitOfCurrency)
+
+(currencyType PapuaNewGuinea PapuanKina)
+
+(instance ParaguayanGuarani UnitOfCurrency)
+
+(currencyType Paraguay ParaguayanGuarani)
+
+(instance PeruvianInti UnitOfCurrency)
+
+(currencyType Peru PeruvianInti)
+
+(instance PhilippinePeso UnitOfCurrency)
+
+(currencyType Philippines PhilippinePeso)
+
+(instance PolishZloty UnitOfCurrency)
+
+(currencyType Poland PolishZloty)
+
+(instance PortugueseEscudo UnitOfCurrency)
+
+(currencyType Portugal PortugueseEscudo)
+
+(instance QatariRiyal UnitOfCurrency)
+
+(currencyType Qatar QatariRiyal)
+
+(instance RomanianLeu UnitOfCurrency)
+
+(currencyType Romania RomanianLeu)
+
+(instance RussianRuble UnitOfCurrency)
+
+(currencyType Russia RussianRuble)
+
+(instance RwandaFranc UnitOfCurrency)
+
+(currencyType Rwanda RwandaFranc)
+
+(instance SaoThomeEPrincipeDobra UnitOfCurrency)
+
+(currencyType SaoTomeAndPrincipe SaoThomeEPrincipeDobra)
+
+(instance SaudiArabianRiyal UnitOfCurrency)
+
+(currencyType SaudiArabia SaudiArabianRiyal)
+
+(instance SenegaleseFranc UnitOfCurrency)
+
+(currencyType Senegal SenegaleseFranc)
+
+(instance SeychellesRupee UnitOfCurrency)
+
+(currencyType Seychelles SeychellesRupee)
+
+(instance SierraLeoneLeone UnitOfCurrency)
+
+(currencyType SierraLeone SierraLeoneLeone)
+
+(instance SingaporeDollar UnitOfCurrency)
+
+(currencyType Singapore SingaporeDollar)
+
+(instance SlovakianKoruna UnitOfCurrency)
+
+(currencyType Slovakia SlovakianKoruna)
+
+(instance SomalianShilling UnitOfCurrency)
+
+(currencyType Somalia SomalianShilling)
+
+(instance SouthAfricanRand UnitOfCurrency)
+
+(currencyType SouthAfrica SouthAfricanRand)
+
+(instance SouthKoreanWon UnitOfCurrency)
+
+(currencyType SouthKorea SouthKoreanWon)
+
+(instance SpanishPeseta UnitOfCurrency)
+
+(currencyType Spain SpanishPeseta)
+
+(instance SriLankanRupee UnitOfCurrency)
+
+(currencyType SriLanka SriLankanRupee)
+
+(instance SudanesePound UnitOfCurrency)
+
+(currencyType Sudan SudanesePound)
+
+(instance SurinameseGuilder UnitOfCurrency)
+
+(currencyType Suriname SurinameseGuilder)
+
+(instance SwazilandLilangeni UnitOfCurrency)
+
+(currencyType Swaziland SwazilandLilangeni)
+
+(instance SwedishKrona UnitOfCurrency)
+
+(currencyType Sweden SwedishKrona)
+
+(instance SwissFranc UnitOfCurrency)
+
+(currencyType Switzerland SwissFranc)
+
+(instance SyrianPound UnitOfCurrency)
+
+(currencyType Syria SyrianPound)
+
+(instance TaiwanDollar UnitOfCurrency)
+
+(currencyType Taiwan TaiwanDollar)
+
+(instance TajikistaniRuble UnitOfCurrency)
+
+(currencyType Tajikistan TajikistaniRuble)
+
+(instance TanzanianShilling UnitOfCurrency)
+
+(currencyType Tanzania TanzanianShilling)
+
+(instance ThaiBaht UnitOfCurrency)
+
+(currencyType Thailand ThaiBaht)
+
+(instance TogoFranc UnitOfCurrency)
+
+(currencyType Togo TogoFranc)
+
+(instance TonganPaanga UnitOfCurrency)
+
+(currencyType Tonga TonganPaanga)
+
+(instance TrinidadAndTobagoDollar UnitOfCurrency)
+
+(currencyType TrinidadAndTobago TrinidadAndTobagoDollar)
+
+(instance TunisianDinar UnitOfCurrency)
+
+(currencyType Tunisia TunisianDinar)
+
+(instance TurkishLira UnitOfCurrency)
+
+(currencyType Turkey TurkishLira)
+
+(instance TurkmenManat UnitOfCurrency)
+
+(currencyType Turkmenistan TurkmenManat)
+
+(instance TuvaluDollar UnitOfCurrency)
+
+(currencyType Tuvalu TuvaluDollar)
+
+(instance UgandanShilling UnitOfCurrency)
+
+(currencyType Uganda UgandanShilling)
+
+(instance UkranianHryvnia UnitOfCurrency)
+
+(currencyType Ukraine UkranianHryvnia)
+
+(instance UnitedArabEmirateDirham UnitOfCurrency)
+
+(currencyType UnitedArabEmirates UnitedArabEmirateDirham)
+
+(instance UruguayanPeso UnitOfCurrency)
+
+(currencyType Uruguay UruguayanPeso)
+
+(instance UzbekistaniSom UnitOfCurrency)
+
+(currencyType Uzbekistan UzbekistaniSom)
+
+(instance VenezuelanBolivar UnitOfCurrency)
+
+(currencyType Venezuela VenezuelanBolivar)
+
+(instance VietnameseDong UnitOfCurrency)
+
+(currencyType Vietnam VietnameseDong)
+
+(instance WesternSamoanTala UnitOfCurrency)
+
+(currencyType Samoa WesternSamoanTala)
+
+(instance YemeniRial UnitOfCurrency)
+
+(currencyType Yemen YemeniRial)
+
+(instance YugoslavianDinar UnitOfCurrency)
+
+(currencyType Yugoslavia YugoslavianDinar)
+
+(instance ZambianKwacha UnitOfCurrency)
+
+(currencyType Zambia ZambianKwacha)
+
+(instance ZimbabweanDollar UnitOfCurrency)
+
+(currencyType Zimbabwe ZimbabweanDollar)
+
+(instance currencyValue BinaryPredicate)
+(domainSubclass currencyValue 1 Currency)
+(domain currencyValue 2 CurrencyMeasure)
+(documentation currencyValue EnglishLanguage "The currencyValue is a relation between
+a physical instrument of currency, such as a bill or coin, and the
+measure of its worth in a particular currency.")
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  EE. Currency code
+
+(instance currencyCode BinaryPredicate)
+(domain currencyCode 1 SymbolicString)
+(domain currencyCode 2 UnitOfCurrency)
+(subrelation currencyCode abbreviation)
+
+(documentation currencyCode EnglishLanguage "(&%currencyCode ?CODE ?UNIT) means 
+that ?CODE is the &%InternationalOrganizationForStandardization 
+(ISO) 4217 alphabetic currency code for the national 
+&%CurrencyMeasure ?UNIT.")
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  FF. Exchange rates
+
+(instance currencyExchangePerUSDollar BinaryPredicate)
+(domain currencyExchangePerUSDollar 1 CurrencyMeasure)
+(domainSubclass currencyExchangePerUSDollar 2 TimeInterval)
+
+(documentation currencyExchangePerUSDollar EnglishLanguage 
+"(&%currencyExchangePerUSDollar ?AMOUNT ?PERIOD) means that one 
+&%UnitedStatesDollar is worth ?AMOUNT (in a non-U.S. &%CurrencyMeasure), 
+during the &%TimeInterval indicated by ?PERIOD.  The rate of exchange may 
+be based either on international market forces or official fiat.")
+
+(instance currencyExchangeRateInPeriod TernaryPredicate)
+(domain currencyExchangeRateInPeriod 1 UnitOfCurrency)
+(domain currencyExchangeRateInPeriod 2 CurrencyMeasure)
+(domainSubclass currencyExchangeRateInPeriod 3 TimeInterval)
+
+(documentation currencyExchangeRateInPeriod EnglishLanguage 
+"(&%currencyExchangeRateInPeriod ?UNIT ?AMOUNT ?PERIOD) means that the 
+currency denomination ?UNIT is worth ?AMOUNT (which is expressed in another 
+&%UnitOfCurrency) during the &%TimeInterval indicated by ?PERIOD.")
+
+(<=>
+  (currencyExchangePerUSDollar ?AMOUNT ?PERIOD)
+  (currencyExchangeRateInPeriod UnitedStatesDollar ?AMOUNT ?PERIOD))
+
+(instance currencyExchangeRate BinaryPredicate)
+(domain currencyExchangeRate 1 UnitOfCurrency)
+(domain currencyExchangeRate 2 CurrencyMeasure)
+
+(documentation currencyExchangeRate EnglishLanguage 
+"(&%currencyExchangeRate ?UNIT ?AMOUNT) means that the currency 
+denomination ?UNIT is worth ?AMOUNT (which is in another 
+&%CurrencyMeasure).")
+
+(<=>
+  (currencyExchangePerUSDollar ?AMOUNT ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (currencyExchangeRate UnitedStatesDollar ?AMOUNT)))))
+
+(<=>
+  (currencyExchangeRateInPeriod ?UNIT ?AMOUNT ?PERIOD)
+  (exists (?TIME)
+    (and
+      (instance ?TIME ?PERIOD)
+      (holdsDuring ?TIME (currencyExchangeRate ?UNIT ?AMOUNT)))))
+
+;;
+;;-----------------------------------------------------------------------------
+;;
+;;  GG. Fiscal year
+
+(instance fiscalYearPeriod BinaryPredicate)
+(domain fiscalYearPeriod 1 Agent)
+(domainSubclass fiscalYearPeriod 2 TimeInterval)
+
+(documentation fiscalYearPeriod EnglishLanguage "The predicate &%fiscalYearPeriod 
+indicates the period that an &%Agent or &%Organization uses as its 
+12-month accounting period.  (&%fiscalYearPeriod ?AGENT &%Year) means 
+that ?AGENT observes its 12-month accounting period during the 
+regular calendar year (CY), from &%January to &%December.  For 
+fiscal years with other beginning and ending months (FYs), use 
+(&%fiscalYearPeriod ?AGENT (&%RecurrentTimeIntervalFn ?STARTMONTH ?ENDMONTH)).  
+For example, (&%fiscalYearPeriod (&%GovernmentFn &%UnitedStates) 
+(&%RecurrentTimeIntervalFn &%October &%September)).  For FYs that begin 
+or end mid-month, days may be specified within &%RecurrentTimeIntervalFn.")
+
+;; FUNCTION:
+(instance FiscalYearFn UnaryFunction)
+(domain FiscalYearFn 1 Agent)
+(rangeSubclass FiscalYearFn TimeInterval)
+
+(documentation FiscalYearFn EnglishLanguage "(&%FiscalYearFn ?PLACE) denotes the subclass 
+of &%TimeIntervals that are &%fiscalYearPeriods of the &%Organization or 
+&%GeopoliticalArea ?PLACE.")
+
+(=>
+  (equal ?FY (FiscalYearFn ?PLACE))
+  (or
+    (instance ?PLACE GeopoliticalArea)
+    (instance ?PLACE Organization)))
+
+(=>
+  (and
+    (fiscalYearPeriod ?PLACE ?PERIOD)
+    (instance ?FY (FiscalYearFn ?PLACE)))
+  (instance ?FY ?PERIOD))
+
+(=>
+  (instance ?FY (FiscalYearFn ?PLACE))
+  (duration ?FY (MeasureFn 1 YearDuration)))
+
+;; FUNCTION:
+(instance FiscalYearStartingFn BinaryFunction)
+(domain FiscalYearStartingFn 1 Agent)
+(domainSubclass FiscalYearStartingFn 2 Year)
+(range FiscalYearStartingFn TimeInterval)
+
+(documentation FiscalYearStartingFn EnglishLanguage "(&%FiscalYearStartingFn ?PLACE ?YEAR) 
+denotes the particular fiscal year that is observed in ?PLACE and begins  
+during the calendar &%Year indicated by ?YEAR.")
+
+(=>
+  (equal ?FY (FiscalYearStartingFn ?PLACE ?YEAR))
+  (or
+    (instance ?PLACE GeopoliticalArea)
+    (instance ?PLACE Organization)))
+
+(=>
+  (and
+    (instance ?PLACE Agent)
+    (instance ?YEAR Year))
+  (instance (FiscalYearStartingFn ?PLACE ?YEAR) (FiscalYearFn ?PLACE)))
+
+(=>
+  (equal ?FY (FiscalYearStartingFn ?PLACE ?YEAR))
+  (duration ?FY (MeasureFn 1 YearDuration)))
+
+(=>
+  (and
+    (equal ?FY (FiscalYearStartingFn ?PLACE ?YEAR))
+    (fiscalYearPeriod ?PLACE ?PERIOD))
+  (instance ?FY ?PERIOD))
+            
+(=>
+  (and
+    (equal ?FY (FiscalYearStartingFn ?PLACE ?YEAR))
+    (fiscalYearPeriod ?PLACE ?PERIOD)
+    (instance ?FY ?PERIOD))
+  (exists (?DAY)
+    (and
+      (instance ?DAY Day)
+      (starts ?DAY ?FY)
+      (temporalPart ?DAY ?YEAR))))
+
+;; ==========================================================================
+
+;; Part II. Economy Background Terms for CIA World Fact Book
+;;   A.  Agricultural Products
+;;  B.  Raw Materials and Resources (Non-agricultural)
+;;     C.  Manufactured Goods (1): Capital Goods
+;;  D.  Manufactured Goods (2): Consumer Goods
+;;     (a) Durable Goods 
+;;     (b) Non-durable Consumer Goods
+;;  E.  Agricultural Production Processes
+
+;;----------------------------------------------------------------------------
+
+
+;;EconomicRole - a class made for better organisation of the instances.
+(subclass EconomicRole RelationalAttribute)
+(documentation EconomicRole EnglishLanguage "A &%Class of &%RelationalAttributes that specify the &%EconomicRole of a &%Object or &%Process in the economy.")
+
+;; A.  Agricultural Products
+; 10/07/2011: Products are manufactured by their logical definition in Merge.kif 12976-12981, so we have  an issue with AgriculturalProducts.
+;  Adam says we comment it out and introduce instead AgriculturalArtifact subclass of Artifact, in Society.kif
+;(subclass AgriculturalProduct Product)
+
+;(documentation AgriculturalProduct EnglishLanguage "&%AgriculturalProduct is the subclass of &%OrganicThing that comprises the products of agricultural 
+;activity.")
+
+;(=>
+;  (instance ?AG Agriculture)
+;  (resultType ?AG AgriculturalProduct))
+
+;(subclass PlantAgriculturalProduct OrganicThing)
+
+;(documentation PlantAgriculturalProduct EnglishLanguage "&%PlantAgriculturalProduct 
+;is the class of &%AgriculturalProducts that are vegetable in nature, 
+;in the widest sense, e.g., fruits, grains, green vegetables, cotton, 
+;linen, flowers, wine, and hops.")
+
+;(subclass AnimalAgriculturalProduct AgriculturalProduct)
+
+;(documentation AnimalAgriculturalProduct EnglishLanguage 
+;"&%AnimalAgriculturalProduct is the class of &%AgriculturalProducts 
+;that are animal in nature, including meat, fish, dairy products, 
+;hides, furs, animal fats and oils, etc.")
+
+;; TERMS:
+(subclass CerealGrass Grass)
+(subclass PaddyRice CerealGrass)
+(subclass Sorghum CerealGrass)
+
+;; TERMS - Subclasses of PlantAgriculturalProduct:
+;(subclass CerealGrain PlantAgriculturalProduct)
+;(subclass CerealGrain Vegetable)
+(names "maize" MaizeGrain)
+(names "corn" MaizeGrain)
+(subclass OatGrain CerealGrain)
+(subclass BarleyGrain CerealGrain)
+(subclass RyeGrain CerealGrain)
+(subclass SorghumGrain CerealGrain)
+(subclass MilletGrain CerealGrain)
+(subclass MaizeGrain GroceryProduce)
+
+
+;(subclass Sugar PlantAgriculturalProduct)
+(subclass Sugar Substance)
+
+;(subclass GroceryProduce PlantAgriculturalProduct)
+(subclass GroceryProduce FruitOrVegetable)
+
+(subclass Vegetable FruitOrVegetable)
+
+(subclass LeafyGreenVegetable Vegetable)
+(subclass (DeadFn LeafyGreenVegetable) GroceryProduce)
+
+(subclass Cucumber Vegetable)
+(subclass (DeadFn Cucumber) GroceryProduce)
+
+(subclass Cabbage Vegetable)
+(subclass (DeadFn Cabbage) GroceryProduce)
+
+(subclass Cauliflower Vegetable)
+(subclass (DeadFn Cauliflower) GroceryProduce)
+
+(subclass Eggplant Vegetable)
+(subclass (DeadFn Eggplant) GroceryProduce)
+
+(subclass SweetPepper Vegetable)
+(subclass (DeadFn SweetPepper) GroceryProduce)
+
+;(subclass RootVegetable PlantAgriculturalProduct)
+(subclass RootVegetable FruitOrVegetable)
+(names "root vegetable" RootVegetable)
+(names "root crop" RootVegetable)
+
+
+;(subclass Radish PlantAgriculturalProduct)
+(subclass Radish RootVegetable)
+(documentation Radish EnglishLanguage "A &%PlantRoot that is often used in salads.")
+
+;;(subclass EdibleTuber PlantAgriculturalProduct)
+
+(subclass EdibleTuber RootVegetable)
+
+;(subclass RootStarch PlantAgriculturalProduct)
+(subclass RootStarch FruitOrVegetable)
+(relatedInternalConcept RootStarch RootVegetable)
+
+(subclass Turnip RootVegetable)
+(subclass (DeadFn Turnip) GroceryProduce)
+
+(subclass Carrot RootVegetable)
+(subclass (DeadFn Carrot) GroceryProduce)
+
+(subclass Squash Vegetable)
+(subclass (DeadFn Squash) GroceryProduce)
+
+(subclass SugarBeet Vegetable)
+
+(subclass PotatoTuber EdibleTuber)
+(subclass PotatoTuber GroceryProduce)
+
+(subclass SweetPotatoTuber EdibleTuber)
+(subclass (DeadFn SweetPotatoTuber) GroceryProduce)
+
+(subclass TaroTuber EdibleTuber)
+(subclass (DeadFn TaroTuber) GroceryProduce)
+
+(subclass YamTuber EdibleTuber)
+(subclass (DeadFn YamTuber) GroceryProduce)
+
+(subclass Cassava RootVegetable)
+(subclass (DeadFn Cassava) GroceryProduce)
+(names "cassava" Cassava)
+(names "tapioca" Cassava)
+(names "manioc" Cassava)
+
+(subclass Legume Vegetable)
+;(subclass Legume PlantAgriculturalProduct)
+
+(subclass Bean Legume)
+(subclass Soybean Bean)
+
+;(subclass Soya PlantAgriculturalProduct)
+;(subclass Soya (ExtensionFn Liquid))
+;(relatedInternalConcept Soya Soybean)
+
+(subclass Pea Legume)
+(subclass CowPea Legume)
+(subclass Pulse Legume)
+(subclass Lentil Pulse)
+
+(subclass SugarCane Vegetable)
+(subclass (DeadFn SugarCane) GroceryProduce)
+
+;; TERMS - Subclasses of Fruit:
+
+(subclass Fruit FruitOrVegetable)
+
+(subclass Tomato Fruit)
+(subclass (DeadFn Tomato) GroceryProduce)
+
+(subclass Grape Fruit)
+(subclass (DeadFn Grape) GroceryProduce)
+
+(subclass Melon Fruit)
+(subclass (DeadFn Melon) GroceryProduce)
+
+(subclass Watermelon Melon)
+
+(subclass Berry Fruit)
+(subclass (DeadFn Berry) GroceryProduce)
+
+(subclass Apple Fruit)
+(subclass (DeadFn Apple) GroceryProduce)
+
+(subclass Olive Fruit)
+(subclass (DeadFn Olive) GroceryProduce)
+
+(subclass CitrusFruit Fruit)
+(subclass (DeadFn CitrusFruit) GroceryProduce)
+
+(subclass LemonFruit CitrusFruit)
+(subclass LemonFruit (FoodForFn Animal))
+(documentation LemonFruit EnglishLanguage "A citrus &%FruitOrVegetable that has a &%Yellow skin 
+and a tart, acidic flavor.")
+
+;; KJN: Changing to subclass from CitrusFruit
+;;(subclass OrangeFruit FruitOrVegetable)
+(subclass OrangeFruit CitrusFruit)
+(subclass OrangeFruit (FoodForFn Animal))
+(documentation OrangeFruit EnglishLanguage "A citrus &%FruitOrVegetable that has an &%OrangeColor 
+skin and a sweet, acidic flavor.")
+
+(subclass Lime CitrusFruit)
+
+(subclass TropicalFruit Fruit)
+(subclass (DeadFn TropicalFruit) GroceryProduce)
+
+(subclass Avocado TropicalFruit)
+(subclass (DeadFn Avocado) GroceryProduce)
+
+(subclass Banana TropicalFruit)
+(subclass (DeadFn Banana) GroceryProduce)
+
+(subclass Breadfruit TropicalFruit)
+(subclass (DeadFn Breadfruit) GroceryProduce)
+
+(subclass Coconut TropicalFruit)
+(subclass (DeadFn Coconut) GroceryProduce)
+
+(subclass DateFruit TropicalFruit)
+(subclass (DeadFn DateFruit) GroceryProduce)
+
+(subclass Mango TropicalFruit)
+(subclass (DeadFn Mango) GroceryProduce)
+
+(subclass Papaw TropicalFruit)
+(subclass (DeadFn Papaw) GroceryProduce)
+(names "papaw" Papaw)
+(names "pawpaw" Papaw)
+
+(subclass Papaya TropicalFruit)
+(subclass (DeadFn Papaya) GroceryProduce)
+
+(subclass PassionFruit TropicalFruit)
+(subclass (DeadFn PassionFruit) GroceryProduce)
+
+(subclass Pineapple TropicalFruit)
+(subclass (DeadFn Pineapple) GroceryProduce)
+
+(subclass Plantain TropicalFruit)
+(subclass (DeadFn Plantain) GroceryProduce)
+
+;; TERMS - Spices:
+
+(subclass Spice FruitOrVegetable)
+;(subclass Spice PlantAgriculturalProduct)
+
+(subclass Vanilla Spice)
+(subclass Clove Spice)
+(subclass Nutmeg Spice)
+(subclass Mace Spice)
+(subclass Cardamom Spice)
+(subclass BlackPepper Spice)
+(subclass SpicePepper Spice)
+(subclass Cinnamon Spice)
+(subclass Ginger Spice)
+(subclass Ginger Vegetable)
+
+;; TERMS - Subclasses of nuts and seeds:
+
+;(subclass Nut PlantAgriculturalProduct)
+(subclass Nut ReproductiveBody)
+
+(subclass (DeadFn EdibleNut) GroceryProduce)
+(subclass EdibleNut FruitOrVegetable)
+
+(subclass Walnut EdibleNut)
+(subclass AlmondNut EdibleNut)
+(subclass PecanNut EdibleNut)
+(subclass CashewNut EdibleNut)
+(subclass MacademiaNut EdibleNut)
+
+(subclass SheaNut EdibleNut)
+
+(subclass (DeadFn Peanut) GroceryProduce)
+(subclass Peanut EdibleNut)
+
+(subclass (DeadFn Groundnut) GroceryProduce)
+(subclass Groundnut FruitOrVegetable)
+(subclass Groundnut EdibleTuber)
+
+;(subclass SesameSeed PlantAgriculturalProduct)
+
+;;KJN: Moving this to Merge.kif as Seed and FruitOrVegetable are both defined there
+;;(subclass Seed FruitOrVegetable)
+
+;(subclass NorfolkIslandPineSeed PlantAgriculturalProduct)
+(subclass NorfolkIslandPineSeed Seed)
+
+;(subclass KentiaPalmSeed PlantAgriculturalProduct)
+(subclass KentiaPalmSeed Seed)
+
+;(subclass SunflowerSeed PlantAgriculturalProduct)
+(subclass SunflowerSeed Seed)
+
+;(subclass Sunflower PlantAgriculturalProduct)
+(subclass Sunflower FloweringPlant)
+
+;(subclass Oilseed PlantAgriculturalProduct)
+(subclass Oilseed Seed)
+
+;(subclass Copra PlantAgriculturalProduct)
+;(relatedInternalConcept Copra VegetableOil)
+
+;(documentation Copra EnglishLanguage "&%Copra is the class of dried coconut 
+;meat valued for the extracted coconut oil.")
+
+;(subclass PalmOilNut PlantAgriculturalProduct)
+(subclass PalmOilNut Nut)
+;;(relatedInternalConcept PalmKernel PalmOilNut)
+(names "palm oil nut" PalmOilNut)
+(names "coquilla nut" PalmOilNut)
+
+;(subclass PalmKernel PlantAgriculturalProduct)
+
+;(subclass VegetableOil PlantAgriculturalProduct)
+;(subclass VegetableOil (ExtensionFn Liquid))
+(subclass VegetableOil Substance)
+
+(subclass PalmOil VegetableOil)
+(subclass OliveOil VegetableOil)
+
+;; TERMS - Beverage sources:
+
+(subclass CoffeeBean FruitOrVegetable)
+;(subclass CoffeeBean PlantAgriculturalProduct)
+
+(subclass Cocoa FruitOrVegetable)
+;(subclass Cocoa PlantAgriculturalProduct)
+
+(subclass CocoaBean FruitOrVegetable)
+;(subclass CocoaBean PlantAgriculturalProduct)
+(relatedInternalConcept CocoaBean Cocoa)
+
+(documentation Cocoa EnglishLanguage "&%Cocoa is the class of powdered 
+&%PlantAgriculturalProduct derived from cacao beans.") 
+
+(subclass TeaPlantAerialPart FruitOrVegetable)
+(subclass TeaLeaf TeaPlantAerialPart)
+
+(documentation TeaPlantAerialPart EnglishLanguage "&%TeaPlantAerialPart is the 
+class of all parts of the tea plant from which tea may be made, 
+including leaves, stems, and twigs.")
+
+
+;(subclass WineGrape PlantAgriculturalProduct)
+
+;; KJN: Removing this as Food.kif already has a definition that says Wine is an AlcoholicBeverage
+;;(subclass Wine Beverage)
+
+;;(subclass Wine PlantAgriculturalProduct)
+
+;; TERMS - Pharmaceutical and chemical plant products:
+
+;(subclass PerfumeEssence PlantAgriculturalProduct)
+;(subclass YlangYlang PerfumeEssence)
+
+;(subclass GumArabic PlantAgriculturalProduct)
+(subclass GumArabic Substance)
+
+;(subclass Quinine PlantAgriculturalProduct)
+
+;(subclass Opium PlantAgriculturalProduct)
+;(subclass (DeadFn Tobacco) PlantAgriculturalProduct)
+;(subclass Cannabis PlantAgriculturalProduct)
+;(subclass Cocaine PlantAgriculturalProduct)
+
+;(subclass Aloes PlantAgriculturalProduct)
+
+;(documentation Aloes EnglishLanguage "&%Aloes is the class of 
+;&%PlantAgriculturalProducts that are dried juice of 
+;the Aloe plant.")
+
+;(subclass Coca PlantAgriculturalProduct)
+
+;;(documentation Coca EnglishLanguage "&%Coca is the class of 
+;;&%PlantAgriculturalProducts consisting of the parts, 
+;;especially leaves, of the coca plant.  Coca leaves 
+;;are the source of &%Cocaine.")
+
+;;(subclass Khat PlantAgriculturalProduct)
+;;(names "khat" Khat)
+;;(names "qat" Khat)
+
+;;(documentation Khat EnglishLanguage 
+;;"&%Khat is the class of &%PlantAgriculturalProducts 
+;;made from the leaves and buds of the staff tree, which 
+;;are chewed or brewed as a stimulating tea.")
+
+(subclass Narcotic ControlledSubstance)
+(subclass Opium Narcotic)
+(subclass Cocaine Narcotic)
+
+(documentation Narcotic EnglishLanguage "&%Narcotic is a subclass of addictive 
+&%BiologicallyActiveSubstances that have damping effects on the 
+nervous system and may be fatal in large doses.")
+
+(subclass ControlledSubstance BiologicallyActiveSubstance)
+
+(documentation ControlledSubstance EnglishLanguage "&%ControlledSubstance is 
+the subclass of &%BiologicallyActiveSubstances whose distribution 
+and use is controlled by government regulation.")
+
+;; TERMS - Plants grown as hay or animal food:
+
+;(subclass (DeadFn Alfalfa) PlantAgriculturalProduct)
+(subclass Alfalfa Plant)
+(subclass Alfalfa Fodder)
+
+;(subclass (DeadFn Clover) PlantAgriculturalProduct)
+(subclass Clover Plant)
+(subclass Clover Fodder)
+
+;(subclass (DeadFn ForageCrop) PlantAgriculturalProduct)
+(subclass ForageCrop Fodder)
+(subclass ForageCrop Plant)
+
+;(subclass (DeadFn MulberryLeaf) PlantAgriculturalProduct)
+;;(subclass MulberryLeaf Fodder)
+;;(subclass MulberryLeaf Leaf)
+
+;; TERMS - Vegetable fibers:
+;(subclass Cotton PlantAgriculturalProduct)
+;(subclass HempFiber PlantAgriculturalProduct)
+;(subclass FlaxFiber PlantAgriculturalProduct)
+;(subclass SisalFiber PlantAgriculturalProduct)
+;(subclass JuteFiber PlantAgriculturalProduct)
+
+(subclass Poppy FloweringPlant)
+;(subclass OpiumPoppy PlantAgriculturalProduct)
+(subclass OpiumPoppy Poppy)
+
+;; TERMS:
+;(subclass Orchid PlantAgriculturalProduct)
+(subclass Orchid FloweringPlant)
+
+;(subclass (DeadFn Chrysanthemum) PlantAgriculturalProduct)
+(subclass Chrysanthemum FloweringPlant)
+(relatedInternalConcept Chrysanthemum Pyrethrum)
+
+;(subclass CutFlower PlantAgriculturalProduct)
+;(relatedInternalConcept CutFlower FloweringPlant)
+
+(subclass Pyrethrum BiologicallyActiveSubstance)
+;(subclass Pyrethrum PlantAgriculturalProduct)
+
+(documentation Pyrethrum EnglishLanguage "&%Pyrethrum is the subclass of 
+&%BiologicallyActiveSubstance consisting of insecticidal 
+derivations from the flower heads of Chrysanthemums.") 
+
+;------------------------
+
+;; TERMS - subclasses of &%AnimalAgriculturalProduct:
+
+(subclass Livestock DomesticAnimal)
+
+(documentation Livestock EnglishLanguage "&%Livestock is the class of live animals 
+raised as &%AgriculturalProducts.")
+
+(=>
+  (instance ?ITEM Livestock)
+  (instance ?ITEM Animal))
+
+;; TERMS - subclasses of &%Livestock:
+;; KJN: Removing all Animals as subclasses of Livestock for now as I think it is an
+;; incorrect implementation.  It implies that all Animals, to exist, should be Livestock,
+;; which of course is incorrect.
+;;(subclass Sheep Livestock)
+(subclass Cattle HoofedMammal)
+;;(subclass Cattle Livestock)
+(subclass GuernseyCattle Cattle)
+(subclass SenepolCattle Cattle)
+(subclass Goat HoofedMammal)
+;;(subclass Goat Livestock)
+(subclass WaterBuffalo HoofedMammal)
+(subclass WaterBuffalo Livestock)
+(subclass Reindeer HoofedMammal)
+;;(subclass Reindeer Livestock)
+(subclass Deer HoofedMammal)
+;;(subclass Deer Livestock)
+;;(subclass Poultry Livestock)
+;;(subclass Horse Livestock)
+;;(subclass Pig Livestock)
+;;(subclass Donkey Livestock)
+
+(subclass Camel Mammal)
+;;(subclass Camel Livestock)
+
+(subclass TurkeyBird Poultry)
+
+(subclass Turtle Reptile)
+;;(subclass Turtle Livestock)
+
+(subclass OrnamentalFish Fish)
+
+;; TERMS - Products from live animals:
+;(subclass DairyProduct AnimalAgriculturalProduct)
+;;(names "dairy product" DairyProduct)
+;;(names "milk product" DairyProduct)
+;(subclass Milk DairyProduct)
+;(subclass Cheese DairyProduct)
+;(subclass Butter DairyProduct)
+
+;(subclass FoodEgg AnimalAgriculturalProduct)
+
+;(subclass Honey AnimalAgriculturalProduct)
+
+;(subclass WoolFiber AnimalAgriculturalProduct)
+
+;; TERMS - Meat and other products from dead animals:
+;(subclass Meat AnimalAgriculturalProduct)
+
+(subclass Mutton Meat)
+(subclass Veal Meat)
+(subclass LambMeat Meat)
+(subclass TurkeyMeat Meat)
+(subclass WaterBuffaloMeat Meat)
+
+;; KJN: Transferring this to Food.kif, which has a more extensive definition for 
+;; and categorization for Meat.
+;;(subclass Seafood Meat)
+
+;;(subclass FoodFish Seafood)
+;;(subclass Salmon FoodFish)
+
+;;(subclass Shellfish Seafood)
+;;(documentation Shellfish EnglishLanguage "&%Shellfish refers to &%Seafood coming from
+;;crustaceans, which are creatures live in bodies of water that have an exoskeleton")
+
+;;(subclass Shrimp Shellfish)
+;;(subclass Crayfish Shellfish)
+
+;; KJN: commenting out for now as AnimalAgriculturalProduct has been removed
+;;(subclass FishProduct AnimalAgriculturalProduct)
+
+;; KJN: Changing this to FishMeat
+;;(relatedInternalConcept FishProduct FoodFish)
+;; commenting this out as FishProduct has been commented out
+;;(relatedInternalConcept FishProduct FishMeat)
+
+
+
+;(documentation FishProduct EnglishLanguage "&%FishProduct is the subclass of 
+;&%AnimalAgriculturalProduct that comprises products derived  
+;from fish.")
+
+;(subclass FishRoe FishProduct)
+;(subclass Caviar FishRoe)
+
+(subclass AnimalSkin BodyCovering)
+
+(documentation AnimalSkin EnglishLanguage "&%AnimalSkin is the subclass of 
+&%BodyCovering that includes the skins, or parts of skins, 
+of animals.")
+
+(subclass Pelt AnimalSkin)
+;(subclass Pelt AnimalAgriculturalProduct)
+(names "pelt" Pelt)
+(names "hide" Pelt)
+
+(documentation Pelt EnglishLanguage "&%Pelt is the subclass of &%AnimalSkin that comprises 
+the pelts or hides of animals that are used in the manufacture of wearable or household items.")
+
+(subclass Sheepskin Pelt)
+(subclass Lambskin Pelt)
+
+;;----------------------------------------------------------------------
+
+;; TERMS - Food and Beverage Products:
+
+
+;(subclass FoodProduct Product)
+
+;(documentation FoodProduct EnglishLanguage "&%FoodProduct is the class of food 
+;products, packaged or unpackaged.")
+
+;(documentation FoodProduct EnglishLanguage "&%FoodProduct is the class of food 
+;products, packaged or unpackaged.")
+
+;(=>
+;  (instance ?ITEM FoodProduct)
+;  (or
+;    (instance ?ITEM (FoodForFn Organism))
+;    (instance ?ITEM PackagedFoodProduct)))
+
+;(subclass PackagedFoodProduct FoodProduct)
+
+;(documentation PackagedFoodProduct EnglishLanguage "&%PackagedFoodProduct is the 
+;class of &%Products that consist of a &%FoodProduct in a package.")
+
+;(=>
+;  (instance ?ITEM PackagedFoodProduct)
+;  (exists (?FOOD ?PACKAGE)
+;    (and
+;      (instance ?FOOD FoodProduct)
+;      (instance ?PACKAGE ProductPackage)
+;      (contains ?PACKAGE ?FOOD))))
+
+;(subclass BeverageProduct Product)
+
+;(documentation BeverageProduct EnglishLanguage "&%BeverageProduct is the class of products 
+;that are &%Beverages, packaged or unpackaged.")
+
+;(=>
+;  (instance ?ITEM BeverageProduct)
+;  (instance ?ITEM Beverage))
+
+;(subclass PackagedBeverageProduct BeverageProduct)
+
+;(documentation PackagedBeverageProduct EnglishLanguage "&%PackagedBeverageProduct is the 
+;class of &%Products that consist of a &%BeverageProduct in some kind of 
+;packaging, including cups and bottles.")
+
+;(=>
+;  (instance ?ITEM PackagedBeverageProduct)
+;  (exists (?DRINK ?PACKAGE)
+;    (and
+;      (instance ?DRINK BeverageProduct)
+;      (instance ?PACKAGE ProductPackage)
+;      (contains ?PACKAGE ?DRINK))))
+;(=>
+;  (instance ?ITEM FoodProduct)
+;  (or
+;    (instance ?ITEM (FoodForFn Organism))
+;    (instance ?ITEM PackagedFoodProduct)))
+
+;(subclass PackagedFoodProduct FoodProduct)
+
+;(documentation PackagedFoodProduct EnglishLanguage "&%PackagedFoodProduct is the 
+;class of &%Products that consist of a &%FoodProduct in a package.")
+
+;(=>
+;  (instance ?ITEM PackagedFoodProduct)
+;  (exists (?FOOD ?PACKAGE)
+;    (and
+;      (instance ?FOOD FoodProduct)
+;      (instance ?PACKAGE ProductPackage)
+;      (contains ?PACKAGE ?FOOD))))
+
+;(subclass BeverageProduct Product)
+
+;(documentation BeverageProduct EnglishLanguage "&%BeverageProduct is the class of products 
+;that are &%Beverages, packaged or unpackaged.")
+
+;(=>
+;  (instance ?ITEM BeverageProduct)
+;  (instance ?ITEM Beverage))
+
+;(subclass PackagedBeverageProduct BeverageProduct)
+
+;(documentation PackagedBeverageProduct EnglishLanguage "&%PackagedBeverageProduct is the 
+;class of &%Products that consist of a &%BeverageProduct in some kind of 
+;packaging, including cups and bottles.")
+
+;(=>
+;  (instance ?ITEM PackagedBeverageProduct)
+;  (exists (?DRINK ?PACKAGE)
+;    (and
+;      (instance ?DRINK BeverageProduct)
+;      (instance ?PACKAGE ProductPackage)
+;      (contains ?PACKAGE ?DRINK))))
+
+
+(subclass ProductPackage Container)
+
+(documentation ProductPackage EnglishLanguage "&%ProductPackage is the class of objects 
+designed to contain &%Products for shipping and sale.")
+
+(subclass HeatSealer Device)
+(documentation HeatSealer EnglishLanguage "A &%HeatSealer is a machine used to seal products, packaging, and other thermoplastic materials using heat. This can be with uniform thermoplastic monolayers or with materials having several layers, at least one being thermoplastic. Heat sealing can join two similar materials together or can join dissimilar materials, one of which has a thermoplastic layer. (Wikipedia)")
+
+(=>
+  (instance ?HS HeatSealer)
+  (hasPurpose ?HS
+    (exists (?CLOSE ?PLAST ?CONT ?HEAT)
+      (and
+        (instance ?CONT Container)
+        (instance ?PLAST Plastic)
+        (instance ?CLOSE Closing)
+        (instance ?HEAT Heating)
+        (instrument ?CLOSE ?HS)
+        (instrument ?CLOSE ?PLAST)
+        (agent ?HEAT ?HS)
+        (patient ?HEAT ?PLAST)
+        (result ?HEAT ?CLOSE)
+        (patient ?CLOSE ?CONT)))))
+        
+;;----------------------------------------------------------------------
+
+;;  B.  Raw Materials and Resources (Non-agricultural)
+
+;; TERMS:
+;subclass ForestProduct Product)
+;(subclass Timber ForestProduct)
+;(documentation Lumber EnglishLanguage "A &%Product derived from &%Timber.")
+;(subclass Lumber ForestProduct)
+;(subclass Hardwood WoodProduct)
+;(subclass WoodProduct ForestProduct)
+;(subclass BalsaWood WoodProduct)
+;(subclass Okoume Hardwood)
+
+;;(documentation Okoume EnglishLanguage "&%Okoume (Aucoumea klaineana), also called 
+;;'gaboon', is a wood of West African origin.")
+
+;(subclass NaturalRubber PlantAgriculturalProduct)
+
+;(documentation NaturalRubber EnglishLanguage "&%NaturalRubber is the subclass of 
+;&%PlantAgriculturalProducts made from the sap of plant species which produce natural 
+;polymers.")
+
+;(subclass MiningProduct Product)
+
+;(documentation MiningProduct EnglishLanguage "&%MiningProduct is the class of things 
+;that are produced from the earth for human use by mining or another form 
+;of extraction.  This includes metal ores, petroleum, and other products.")
+
+(names "bauxite" Bauxite)
+(documentation Bauxite EnglishLanguage "&%Bauxite is an impure mixture of earthy 
+hydrous aluminum oxides and hydroxides that is the principal 
+source of aluminum.")
+;(subclass Bauxite MiningProduct)
+(subclass Bauxite Mixture)
+
+(=>
+  (instance ?ORE Bauxite)
+  (exists (?METAL)
+    (and
+      (instance ?METAL Alumina)
+      (component ?METAL ?ORE))))
+
+(subclass Alumina CompoundSubstance)
+(names "aluminum oxide" Alumina)
+(names "alumina" Alumina)
+
+;;(subclass PetroleumProduct MiningProduct)
+
+
+(documentation Alumina EnglishLanguage "&%Alumina is the naturally occurring oxide 
+of aluminum which is found in corundum and bauxite.")
+
+(subclass Timber CompoundSubstance)
+(subclass Timber (DeadFn BotanicalTree)) 
+(names "timber" Timber)
+(documentation Timber EnglishLanguage "&%Timber is wood from trees that is 
+suitable for use for building or other human purposes.")
+(relatedInternalConcept Timber OrganicObject)
+(relatedInternalConcept Timber BotanicalTree)
+
+(subclass IronOre CompoundSubstance)
+(names "iron ore" IronOre)
+;;(subclass IronOre MiningProduct)
+(subclass IronOre Mineral)
+(documentation IronOre EnglishLanguage "&%IronOre is a subclass of &%CompoundSubstance 
+that contains compounds of iron, of which the most common are 
+hematite and limonite.  Iron is obtained from smelting iron ores.")
+
+(=>
+  (and
+    (instance ?PROCESS Separating)
+    (resource ?PROCESS ?SOURCE)
+    (result ?PROCESS ?PRODUCT)
+    (instance ?PRODUCT Iron))
+  (instance ?SOURCE IronOre)) 
+
+(=>
+  (instance ?ORE IronOre)
+  (exists (?METAL)
+    (and
+      (instance ?METAL Iron)
+      (component ?METAL ?ORE))))
+
+;;(subclass CopperOre MiningProduct)
+(subclass CopperOre Mineral)
+
+(=>
+  (instance ?ORE CopperOre)
+  (exists (?METAL)
+    (and
+      (instance ?METAL Copper)
+      (component ?METAL ?ORE))))
+
+;;(subclass NickelOre MiningProduct)
+(subclass NickelOre Mineral)
+
+(=>
+  (instance ?ORE NickelOre)
+  (exists (?METAL)
+    (and
+      (instance ?METAL Nickel)
+      (component ?METAL ?ORE))))
+
+;;(subclass LeadOre MiningProduct)
+(subclass LeadOre Mineral)
+
+(=>
+  (instance ?ORE LeadOre)
+  (exists (?METAL)
+    (and
+      (instance ?METAL Lead)
+      (component ?METAL ?ORE))))
+
+;;(subclass ZincOre MiningProduct)
+(subclass ZincOre Mineral)
+
+(=>
+  (instance ?ORE ZincOre)
+  (exists (?METAL)
+    (and
+      (instance ?METAL Zinc)
+      (component ?METAL ?ORE))))
+
+(subclass Petroleum PetroleumProduct)
+(names "petroleum" Petroleum)
+(names "crude oil" Petroleum)
+
+(documentation Petroleum EnglishLanguage "Petroleum is commonly known as crude 
+oil.  It is a thick, dark brown or greenish flammable liquid, which exists 
+in the upper strata of some areas of the Earth's crust.  It consists of a 
+complex mixture of various hydrocarbons, largely of the methane series, 
+but may vary much in appearance, composition, and purity. (from Wikipedia)
+Crude oil has not be subject to the distillation that will yield a
+&%RefinedPetroleumProduct.") 
+
+(subclass Distilling Separating)
+
+(documentation Distilling EnglishLanguage "Distillation is a means of separating &%Liquids 
+through differences in their &%boilingPoints.  The device used in 
+distillation is referred to as a still and consists at a minimum of a pot 
+in which the source material is heated, a condenser in which the heated 
+&%Gas is cooled back to the liquid state, and a receiver in which the 
+concentrated or purified liquid is collected.  The equipment may effect 
+separation by one of two main methods.  Firstly the vapours given off by 
+the heated mixture may consist of two liquids with significantly different 
+boiling points.  Thus, the vapour that is given off is in the vast 
+majority of one or the other liquid, which after condensation and 
+collection effects the separation.  The second method (fractional 
+distillation) relies upon a gradient of temperatures existing in the 
+condenser stage of the equipment.  Often in this technique, a vertical 
+condenser, or column, is used.  By extracting products that are liquid at 
+different heights up the column, it is possible to extract liquids that 
+have different boiling points.  (from Wikipedia)") 
+
+;; KJN: Moving this concept to Mid-level-ontology.kif as it seems to be a fundamental
+;; concept in the world.
+;;(subclass Electricity Substance)
+
+;;(documentation Electricity EnglishLanguage "While electricity is typically thought of as just a difference
+;;in electrical potential, one way of modeling electricity is as a substance
+;;that can be moved from one point to another or consumed.  One could make the claim
+;;that subatomic physics also supports the classification as a substance since electrons
+;;are objects.")
+
+(industryProductType ElectricalPowerGeneration Electricity)
+
+;;----------------------------------------------------------------------
+
+;; C. Manufactured Goods (1): Capital Goods
+;; removing this as all products are manufactured by definition, vcvp oct2011
+;(subclass ManufacturedProduct Product)
+
+;(documentation ManufacturedProduct EnglishLanguage "&%ManufacturedProduct is 
+;the subclass of &%Product that includes goods that are produced 
+;or assembled in factories or other manufacturing processes, 
+;in contrast to &%AgriculturalProducts.")
+
+;;MS: The problematic definition of Product could be solved by changing it from a class to an attribute. For instance I have changed the term CapitalGood from a class to an Attribute, it is more about the manner how something is used and most if not all of the lowlevel subclass are not neccessary used as CapitalGood. The same goes for Product, which could be IMHO maybe even made a relation.
+
+;;(subclass CapitalGood Product)
+;;(documentation CapitalGood EnglishLanguage "&%CapitalGoods are those that are used in
+;;the production of other &%Products. For example, raw materials from which end 
+;;products are manufactured, or machines and other structures used in the production process.")
+
+(instance MeanOfProduction EconomicRole)
+(documentation MeanOfProduction EnglishLanguage "Means of production refers to physical, non-human inputs used in production—the factories, machines, and tools used to produce wealth — along with both infrastructural capital and natural capital. This includes the classical factors of production minus financial capital and minus human capital. They include two broad categories of objects: instruments of labour (tools, factories, infrastructure, etc.) and subjects of labour (natural resources and raw materials). (Wikipedia)")
+(=>
+  (attribute ?X MeanOfProduction)
+  (hasPurpose ?X
+    (or
+      (exists (?MAKE ?PRODUCT)
+        (and
+          (instance ?MAKE Making)
+          (involvedInEvent ?MAKE ?X)
+          (not
+            (result ?MAKE ?X))
+          (instance ?PRODUCT Artifact)
+          (result ?MAKE ?PRODUCT)
+          (hasPurpose ?PRODUCT
+            (exists (?SELL)
+              (and
+                (instance ?SELL Selling)
+                (patient ?SELL ?PRODUCT))))))
+      (exists (?SERVICE)
+        (and
+          (instance ?SERVICE CommercialService)
+          (involvedInEvent ?SERVICE ?X))))))
+
+;;(subclass IndustrialRawMaterial CapitalGood)
+
+(subAttribute IndustrialRawMaterial MeanOfProduction)
+(=>
+  (attribute ?X IndustrialRawMaterial)
+  (hasPurpose ?X
+    (exists (?M)
+      (and
+        (instance ?M Manufacture)
+        (resource ?M ?X)))))
+        
+;(subclass IndustrialSupply CapitalGood)
+;(subclass IndustrialSupply Product)
+
+(subAttribute IndustrialSupply MeanOfProduction)
+(documentation IndustrialSupply EnglishLanguage "&%IndustrialSupply is the class of 
+products that are used in industry but which are not raw materials 
+for products being manufactured.  &%IndustrialSupply includes maintenance, 
+repair, and operation (MRO) supplies, including janitorial, electrical, 
+bearings, tools, machinery, accessories, fire and safety equipment, and 
+other industrial items.")
+
+(relatedInternalConcept IndustrialMachineryManufacturing IndustrialSupply)
+(relatedInternalConcept IndustrialMachineryAndEquipmentWholesalers IndustrialSupply) 
+(relatedInternalConcept MachineryEquipmentAndSuppliesWholesalers IndustrialSupply)
+
+(subAttribute Machinery IndustrialSupply)
+;;(subclass Machinery IndustrialSupply)
+;;(subclass Machinery Device)
+;;(subclass Machine Machinery)
+
+(documentation Machinery EnglishLanguage "&%Machinery is the class of products 
+that includes &%Machines, tools, and machine parts used in industrial 
+or other commercial processes.")
+
+
+(=>
+  (attribute ?X Machinery)
+  (hasPurpose ?X
+    (exists (?M)
+      (and
+        (instance ?M Manufacture)
+        (instrument ?M ?X)))))
+
+;;(subclass MachineTool Machinery)
+
+;(subclass ChemicalProduct ManufacturedProduct)
+(subclass ChemicalProduct CompoundSubstance)
+(documentation ChemicalProduct EnglishLanguage "&%ChemicalProduct is the subclass 
+of &%Product comprising all chemical compounds that are end products 
+or industrial products used in the manufacture of end products.")
+
+;;(subclass Plastic ManufacturedProduct)
+;;(industryProductType PlasticsProductManufacturing Plastic)
+
+;; Manufactured metal products:
+;;(relatedInternalConcept MetalProduct Metal)
+
+;;(=>
+;;  (instance ?ITEM MetalProduct)
+;;  (or
+;;    (instance ?ITEM Metal)
+;;    (exists (?PART)
+;;      (and
+;;        (instance ?PART Metal)
+;;        (or
+;;          (part ?PART ?ITEM)
+;;          (component ?PART ?ITEM))))))
+
+;; TERM :
+;; KJN: Removing this for now - same issue with everything about Product --- are all
+;; Steel instances MetalProduct / ManufacturedProduct instances?
+;;(subclass Steel MetalProduct)
+;;(relatedInternalConcept Steel Iron)
+
+;;(=>
+;;  (instance ?ITEM Steel)
+;;  (exists (?PART)
+;;    (and
+;;      (instance ?PART Iron)
+;;      (part ?PART ?ITEM))))
+
+;;(=>
+;;  (instance ?ITEM Steel)
+;;  (exists (?PART)
+;;    (and
+;;      (instance ?PART Carbon)
+;;      (part ?PART ?ITEM))))
+
+;;(subclass IronMetal MetalProduct)
+;;(relatedInternalConcept IronMetal Iron)
+
+;;(=>
+;;  (instance ?ITEM IronMetal)
+;;  (exists (?PART)
+;;    (and
+;;      (instance ?PART Iron)
+;;      (part ?PART ?ITEM))))
+
+;;(subclass AluminumMetal MetalProduct)
+;;(relatedInternalConcept AluminumMetal Aluminum)
+
+;;(=>
+;;  (instance ?ITEM AluminumMetal)
+;;  (exists (?PART)
+;;    (and
+;;      (instance ?PART Aluminum)
+;;      (part ?PART ?ITEM))))
+
+;;(subclass LeadMetal MetalProduct)
+;;(relatedInternalConcept LeadMetal Lead)
+
+;;(=>
+;;  (instance ?ITEM LeadMetal)
+;;  (exists (?PART)
+;;    (and
+;;      (instance ?PART Lead)
+;;      (part ?PART ?ITEM))))
+
+;(subclass LeadProduct ManufacturedProduct)
+;(subclass LeadProduct LeadMetal)
+
+;(subclass ZincProduct ManufacturedProduct)
+;(subclass ZincProduct MetalProduct)
+
+;(subclass Concrete ManufacturedProduct)
+(subclass Concrete Mixture)
+(industryProductType ConcretePipeBrickAndBlockManufacturing Concrete)
+(industryProductType OtherConcreteProductManufacturing Concrete)
+
+(documentation Concrete EnglishLanguage "&%Concrete is a class of &%CompoundSubstances 
+used as building materials.  Concrete is made up of &%Mineral pieces 
+(sand or gravel) and a &%Cement material used to bind them together.") 
+
+(=>
+  (instance ?CONCRETE Concrete)
+  (exists (?PART)
+    (and
+      (instance ?PART Mineral)
+      (component ?PART ?CONCRETE))))
+
+(=>
+  (instance ?CONCRETE Concrete)
+  (exists (?PART)
+    (and
+      (instance ?PART Cement)
+      (component ?PART ?CONCRETE))))
+
+(subclass ReadyMixConcrete Concrete)
+(industryProductType ReadyMixConcreteManufacturing ReadyMixConcrete)
+
+;(subclass Cement ManufacturedProduct)
+(subclass Cement CompoundSubstance)
+
+(documentation Cement EnglishLanguage "&%Cement is a subclass of &%CompoundSubstance 
+whose instances may contain various minerals or ores, prepared by 
+heating and pulverizing, and used in binding &%Concrete or in laying 
+brick or stone.")
+
+;; AXIOMS:
+(subclass RefinedPetroleumProduct PetroleumProduct)
+(documentation RefinedPetroleumProduct EnglishLanguage "A &%Substance that is the result
+of the &%Distilling of &%Petroleum.")
+
+(subclass LiquefiedPetroleumGas RefinedPetroleumProduct)
+
+(subclass PetroleumLubricant RefinedPetroleumProduct)
+(documentation PetroleumLubricant EnglishLanguage "PetroleumLubricant is the subclass of 
+RefinedPetroleumProducts that are lubricants.")
+
+(subclass MotorOil PetroleumLubricant)
+(documentation MotorOil EnglishLanguage "MotorOil is the subclass of PetroleumLubricants 
+that are used to lubricate motors.")
+
+;; KJN: Moving this to Mid-level-ontology.kif as it is a common enough concept and
+;; is used in a couple other axioms there.
+;;(subclass Gasoline FossilFuel)
+;;(documentation Gasoline EnglishLanguage "Gasoline is the subclass of 
+;;RefinedPetroleumProducts that are fuels for internal combustion engines.")
+
+;;(subclass DieselFuel FossilFuel)
+;;(documentation DieselFuel EnglishLanguage "DieselFuel is the subclass of 
+;;RefinedPetroleumProducts that are fuels for diesel engines.")
+
+(subclass Asphalt RefinedPetroleumProduct)
+(disjoint Asphalt FossilFuel)
+(documentation Asphalt EnglishLanguage "Asphalt is a highly viscous liquid that occurs 
+naturally in most crude petroleums.  Asphalt can be separated from the 
+other components in crude oil (such as naphtha, gasoline and diesel) by 
+the process of fractional distillation, usually under vacuum conditions.  
+Both tars and asphalts are classified as bitumens, a classification that 
+includes all materials entirely soluble in carbon disulphide.  Asphalt is 
+commonly used in roofing shingles, and combined with mineral aggregate to 
+make asphalt concrete for making roads.  (definition from Wikipedia)") 
+
+;; TERMS:
+(subclass Soap Surfactant)
+
+(documentation Soap EnglishLanguage "Soap is a &%Surfactant &%Cleaning mixture used for 
+personal or minor cleaning.  It usually comes in solid moulded form.  In 
+the developed world, synthetic detergents have superseded soap as a 
+laundry aid.  Many soaps are mixtures of sodium or potassium salts of 
+fatty acids which can be derived from oils or fats by reacting them with 
+an alkali (such as sodium or potassium hydroxide) at 80-100 degrees Celsius in a 
+process known as saponification. (from Wikipedia)") 
+
+(subclass Fertilizer Mixture)
+(documentation Fertilizer EnglishLanguage "Any Mixture which is used to provide nutrients to 
+living Plants.  Fertilizers can be made up of plant or animal material, e.g. 
+compost, or they can be entirely synthetic, e.g. ammonium nitrate.")
+(relatedInternalConcept Fertilizer Nitrogen)
+(relatedInternalConcept Fertilizer Potash)
+(relatedInternalConcept Fertilizer PhosphoricAcid)
+
+(subclass PhosphoricAcid CompoundSubstance)
+(relatedInternalConcept PhosphoricAcid Phosphorus)
+
+(subclass Lathe Machine)
+(documentation Lathe EnglishLanguage "A &%Machine desighned to shape (or change the surface of) a &%Object made of different materials by means of &%Rotating the &%Object against a &%Device making the change.")
+(=>
+  (instance ?L Lathe)
+  (hasPurpose ?L
+    (exists (?PROC ?OBJ)
+      (and
+        (instrument ?PROC ?L)
+        (patient ?PROC ?OBJ)
+        (or
+          (instance ?PROC ShapeChange)
+          (instance ?PROC SurfaceChange))))))
+(=>
+  (and
+    (instance ?L Lathe)
+    (instance ?OBJ Object)
+    (instrument ?PROC ?L)
+    (patient ?PROC ?OBJ))
+  (exists (?R)
+    (and
+      (instance ?R Rotating)
+      (subProcess ?PROC ?R)
+      (patient ?R ?OBJ)
+      (agent ?R ?L))))
+      
+(subclass Planer Machine)
+(subclass Planer CuttingDevice)
+(documentation Planer EnglishLanguage "A &%Machine designed to produce a &%Flat surface on a wooden board.")
+;;Maybe it would be worth reviewing the definition of Flat and LevelShape.
+(=>
+  (instance ?PLANER Planer)
+  (hasPurpose ?PLANER
+    (exists (?CUT ?OBJ1 ?OBJ2)
+      (and
+        (instance ?CUT Cutting)
+        (instrument ?CUT ?PLANER)
+        (resource ?CUT ?OBJ1)
+        (instance ?OBJ1 Object)
+        (material ?OBJ1 Wood)
+        (result ?CUT ?OBJ2)
+        (instance ?OBJ2 Object)
+        (material ?OBJ2 Wood)
+        (attribute ?OBJ2 Flat)
+        (height ?OBJ1 ?H1)
+        (height ?OBJ2 ?H2)
+        (greaterThan ?H1 ?H2)))))
+;;----------------------------------------------------------------------
+
+;;  D.  Manufactured Goods (2): Consumer Goods
+
+;; (a) Durable Goods 
+
+;(subclass DurableGood ManufacturedProduct)
+
+;; KJN: Because DurableGood was commented out due to ManufacturedProduct, I am
+;; commenting out the the documentation statement, as well as all other subclasses
+;; of DurableGood
+;;(documentation DurableGood EnglishLanguage "&%DurableGood is the subclass of 
+;;&%Products which are designed to last for three years 
+;;or more.")
+
+;;(subclass MajorAppliance DurableGood)
+;; KJN: Moving these to MILO for now
+;;(subclass MajorAppliance Device)
+
+;; TERMS - subclasses of &%MajorAppliance:
+;;(subclass Refrigerator MajorAppliance)
+;;(subclass Freezer MajorAppliance)
+;;(subclass CookingRange MajorAppliance)
+;;(subclass CookingOven MajorAppliance)
+;;(subclass HotWaterHeater MajorAppliance)
+;;(subclass ClothesWashingMachine MajorAppliance)
+;;(subclass ClothesDryer MajorAppliance)
+;;(subclass Dishwasher MajorAppliance)
+
+;; Other durable goods:
+;; cancelling this subclasses after discussion with Adam on artisanal products, like artsy chairs and handmade cheeses
+;(subclass Furniture DurableGood)  ;; &%Furniture is defined in naics.kif vcvp:not really Furniture is defined in Mid-level-ontology.kif 2856-2860
+;(subclass Lumber DurableGood)
+;(subclass MetalProduct DurableGood)
+;(subclass Machinery DurableGood)
+
+;; (b) Non-durable Consumer Goods
+
+;; TERM
+;(subclass ConsumerGood ManufacturedProduct) 
+
+;(subclass TextileProduct ManufacturedProduct)
+;(industryProductType TextileMills TextileProduct)
+;(industryProductType TextileProductMills TextileProduct)
+
+;(subclass HandicraftProduct Product)
+
+;(documentation HandicraftProduct EnglishLanguage "&%HandicraftProduct is the class of 
+;&%Products that are manufactured by hand with a special skill.")
+
+;(subclass HandwovenCarpet TextileProduct)
+;(subclass HandwovenCarpet HandicraftProduct)
+
+(subclass PersonalAdornment WearableItem)
+
+(documentation PersonalAdornment EnglishLanguage "&%PersonalAdornment is the subclass 
+of &%WearableItems that are worn primarily for decorative purposes.")
+
+;;(subclass PreciousGemstone MiningProduct)
+;;(subclass SemipreciousGemstone MiningProduct)
+
+(subclass Gemstone Mixture)
+(subclass PreciousGemstone Gemstone)
+
+(documentation PreciousGemstone EnglishLanguage "&%PreciousGemstone is the class of 
+&%Minerals and fossilized substances that have great monetary value.")
+
+(subclass SemipreciousGemstone Gemstone)
+
+(documentation SemipreciousGemstone EnglishLanguage "&%SemipreciousGemstone is the 
+class of &%Minerals and other substances that have significant 
+monetary value, but less than those of the class &%PreciousGemstone.")
+
+(subclass Pearl Jewelry)
+
+(documentation Gemstone EnglishLanguage "&%Gemstone is the subclass of &%Mineral items 
+that are especially valued for use in jewelry and other decorative items, and also in some mechanical and industrial applications.")
+
+(subclass Jewelry PersonalAdornment)
+(subclass Jewelry WearableItem)
+
+(documentation Jewelry EnglishLanguage "&%Jewelry is the subclass of &%PersonalAdornment 
+items that are typically made of metals (especially precious metals), 
+gems, and other non-cloth materials.")
+
+;(subclass PharmaceuticalProduct ManufacturedProduct)
+;(relatedInternalConcept PharmaceuticalProduct ChemicalProduct)
+;(industryProductType PharmaceuticalPreparationManufacturing PharmaceuticalProduct)
+
+(subclass Veneer Artifact)
+(documentation Veneer EnglishLanguage "A thin layer covering an &%Object (like &%Furniture) or a &%Wall for decorative or productive purposes.")
+(=>
+  (instance ?V Veneer)
+  (attribute ?V Flat))
+(=>
+  (instance ?V Veneer)
+  (hasPurpose ?V
+    (exists (?OBJ)
+      (covers ?V ?OBJ))))
+
+;;---------------------------------------------------------------------
+;;
+;; E. Agricultural Production Processes
+
+;; &%Agriculture defined in Geography.kif, &%CropProduction in naics.kif
+
+;; FUNCTION:
+
+;; KJN: Commenting this out for now as AgriculturalProduct has been commented out.
+;;(instance AgricultureFn UnaryFunction)
+;;(domainSubclass AgricultureFn 1 AgriculturalProduct)
+;;(rangeSubclass AgricultureFn Agriculture)  
+
+;;(documentation AgricultureFn EnglishLanguage "(&%AgricultureFn ?PRODUCT) denotes the 
+;;subclass of &%Agriculture processes in which the &%AgriculturalProduct 
+;;?PRODUCT is cultivated.")
+
+;;(=>
+;;  (subclass ?ITEM FruitOrVegetable)
+;;  (attribute (AgricultureFn ?ITEM) CropProduction))
+
+;;(=>
+;;   (and
+;;  (subAttribute ?INDUSTRY AnimalProduction)
+;;  (industryProductType ?INDUSTRY ?ANIMAL)
+;;  (subclass ?ANIMAL Livestock))
+;;  (attribute (AgricultureFn ?ANIMAL) ?INDUSTRY))
+
+(instance CerealGrainFarming IndustryAttribute)
+(subAttribute CerealGrainFarming OilseedAndGrainFarming)
+(industryProductType CerealGrainFarming CerealGrain)
+
+;; AXIOMS for terms defined in naics.kif:
+(subAttribute CornFarming CerealGrainFarming)
+(subAttribute RiceFarming CerealGrainFarming)
+(subAttribute WheatFarming CerealGrainFarming)
+(industryProductType CornFarming MaizeGrain)
+(industryProductType WheatFarming WheatGrain)
+(industryProductType RiceFarming RiceGrain)
+
+(instance OatFarming IndustryAttribute)
+(subAttribute OatFarming CerealGrainFarming)
+(subAttribute OatFarming OtherGrainFarming)
+(industryProductType OatFarming OatGrain)
+
+(instance BarleyFarming IndustryAttribute)
+(subAttribute BarleyFarming CerealGrainFarming)
+(subAttribute BarleyFarming OtherGrainFarming)
+(industryProductType BarleyFarming BarleyGrain)
+
+(instance RyeFarming IndustryAttribute)
+(subAttribute RyeFarming CerealGrainFarming)
+(subAttribute RyeFarming OtherGrainFarming)
+(industryProductType RyeFarming RyeGrain)
+
+(instance SorghumFarming IndustryAttribute)
+(subAttribute SorghumFarming CerealGrainFarming)
+(subAttribute SorghumFarming OtherGrainFarming)
+(industryProductType SorghumFarming SorghumGrain)
+
+(instance MilletFarming IndustryAttribute)
+(subAttribute MilletFarming CerealGrainFarming)
+(subAttribute MilletFarming OtherGrainFarming)
+(industryProductType MilletFarming MilletGrain)
+
+(instance FruitFarming IndustryAttribute)
+(subAttribute FruitFarming FruitAndTreeNutFarming)
+(industryProductType FruitFarming Fruit)
+
+(instance VegetableFarming IndustryAttribute)
+(subAttribute VegetableFarming VegetableAndMelonFarming)
+(industryProductType VegetableFarming Vegetable)
+
+;; AXIOMS for industries defined in naics.kif:
+;(industryProductType ForestryAndLogging ForestProduct)
+(industryProductType TreeNutFarming EdibleNut)
+(industryProductType PeanutFarming Peanut)
+(industryProductType CattleRanchingAndFarming Cattle)
+(industryProductType SheepFarming Sheep)
+(industryProductType GoatFarming Goat)
+(industryProductType HogAndPigFarming Pork)
+(industryProductType PotatoFarming PotatoTuber)
+(industryProductType SugarBeetFarming SugarBeet)
+(industryProductType CottonFarming Cotton)
+(industryProductType PoultryAndEggProduction Poultry)
+;(industryProductType PoultryAndEggProduction FoodEgg)
+;(industryProductType DairyCattleAndMilkProduction DairyProduct)
+
+(subAttribute WineGrapeVineyards GrapeVineyards)
+;(industryProductType WineGrapeVineyards WineGrape)
+
+;; TERM
+(subclass OpiumPoppyFarming Farming)
+(industryProductType OpiumPoppyFarming OpiumPoppy)
+
+;;======================================================================
+
+

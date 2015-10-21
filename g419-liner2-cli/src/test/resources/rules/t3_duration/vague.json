@@ -1,0 +1,42 @@
+{
+  "regexEscape": "%",
+  "rules": {
+    "vagueDuration": {
+      "extract": "$reVagueDurations",
+      "normalize": "VAGUE"
+    }
+  },
+
+  "patterns": {
+    "reVagueIndicator": [
+      "wiele",
+      "kilka",
+      "tyle",
+      "kilkanaście",
+      "parę",
+      "tyle"
+      "kilku",
+      "kilkadziesiąt"
+    ],
+    "rePreposition": [
+      "od",
+      "przez",
+      "po"
+    ],
+    "reVagueDurations": [
+      "wielowiekowy",
+      "wieloletni",
+      "wielogodzinny",
+      "kilkuletni",
+      "kilkugodzinny",
+      "kilkumiesięczny"
+    ],
+    "rePeriod": [
+      "rok",
+      "miesiąc",
+      "dzień",
+      "tydzień",
+      "godzina"
+    ]
+  }
+}

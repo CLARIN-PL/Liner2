@@ -17,7 +17,7 @@ import java.util.Set;
 public class ClassFeature extends TokenFeature{
 	
 	@SuppressWarnings("serial")
-	private static final Map<String, Set<String>> BROAD_CLASSES = new HashMap<String, Set<String>>(){{
+	public static final Map<String, Set<String>> BROAD_CLASSES = new HashMap<String, Set<String>>(){{
 		put("verb", new HashSet<String>(Arrays.asList(new String[]{"pact","ppas","winien","praet","bedzie","fin","impt","ger","imps","inf"})));
 		put("subst", new HashSet<String>(Arrays.asList(new String[]{"subst", "depr", "xxs", "ger", "ppron12", "ppron3", "siebie"})));
 		put("adv", new HashSet<String>(Arrays.asList(new String[]{"pant", "pcon"})));

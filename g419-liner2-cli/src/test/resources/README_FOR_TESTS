@@ -1,0 +1,5 @@
+Do katalogu <repo root>/g419-liner2-cli/src/test/resources należy wrzucić:
+- korpus z plikami indeksu index_time(_(test|tune|train))?.txt
+- katalog data z podkatalogami:
+-- timex (z plikiem timex.txt, z cechami)
+-- plwordnet_2_0_2_pwn_format (z mnóstwem magicznych plików)

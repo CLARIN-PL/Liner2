@@ -118,7 +118,7 @@ public class AnnMorphosyntaxSAXParser extends DefaultHandler{
         }
         else if (elementName.equalsIgnoreCase(TAG_FEATURESET)) {
             if(currentFeatureName.equals("disamb")){
-                currentToken.setAttributeValue(attributeIndex.getIndex("tagTool"), attributes.getValue("feats"));
+                //currentToken.setAttributeValue(attributeIndex.getIndex("tagTool"), attributes.getValue("feats"));
             }
         }
         else if (elementName.equalsIgnoreCase(TAG_SYMBOL)) {

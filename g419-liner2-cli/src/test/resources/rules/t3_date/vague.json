@@ -1,0 +1,88 @@
+{
+  "regexEscape": "%",
+  "rules": {
+    "vague": {
+      "extract": ".*$reVagueIndicator.*",
+      "normalize": "VAGUE"
+    },
+    "vagueOth": {
+      "extract": "$reOther",
+      "normalize": "VAGUE"
+    },
+    "periodOnly": {
+      "extract": "^$reWeek$",
+      "normalize": "xxxx-Wxx"
+    },
+    "lastWeek": {
+      "extract": "ostatni%s+$reWeek",
+      "normalize": "xxxx-Wxx"
+    },
+    "dayOnly": {
+      "extract": "^$reDay$",
+      "normalize": "xxxx-xx-xx"
+    },
+    "lastDay": {
+      "extract": "$reLast%s+$reDay",
+      "normalize": "xxxx-xx-xx"
+    },
+    "yearOnly": {
+      "extract": "^$reYear$",
+      "normalize": "xxxx"
+    },
+    "monthOnly": {
+      "extract": "^$reMonth$",
+      "normalize": "xxxx-xx"
+    },
+    "lastMonth": {
+      "extract": "ostatni%s+$reMonth",
+      "normalize": "xxxx-xx"
+    },
+    "cantthinkofanyname": {
+      "extract": "dsaf s$reShift%s+$rePeriod",
+      "normalize": "VAGUE"
+    }
+  },
+
+  "patterns": {
+    "reVagueIndicator": [
+      "wiele",
+      "kilka",
+      "tyle",
+      "kilkanaście",
+      "parę",
+      "tyle",
+      "wieloletni",
+      "kilku",
+      "kilkadziesiąt"
+    ],
+    "reShift": [
+      "ostatni",
+      "kolejny"
+    ],
+    "reLast": [
+      "ostatni",
+      "pewny",
+      "określony"
+    ],
+    "reDay": [
+      "dzień",
+      "pewien dzień",
+      "któryś dzień"
+    ],
+    "reYear": [
+      "rok"
+    ],
+    "rePeriod": [
+      "rok"
+    ],
+    "reOther": [
+      "dzienny"
+    ],
+    "reMonth": [
+      "miesiąc"
+    ],
+    "reWeek": [
+      "tydzień"
+    ]
+  }
+}

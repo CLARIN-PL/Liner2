@@ -1,0 +1,31 @@
+description = "g419-tools -- narzędzia"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+apply plugin: 'application'
+
+main = "g419.Main"
+
+mainClassName = main
+
+run {
+    if ( project.hasProperty("appArgs") ) {
+        args appArgs.split("\\p{Z}")
+    }
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": main
+    }
+}
+
+dependencies {
+    compile 'org.apache.commons:commons-lang3:3.3.2'
+    compile 'commons-cli:commons-cli:1.2'
+    compile 'commons-io:commons-io:2.4'
+    compile project(":g419-corpus")
+    compile project(":g419-lib-cli")
+    compile project(":g419-liner2-api")
+}

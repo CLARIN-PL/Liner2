@@ -1,0 +1,36 @@
+description = "g419-liner2-api -- biblioteka ze strukturą pliku, czytnikami i piśnikami"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+configurations {
+    dependencyFix
+    dependencyFix.extendsFrom(compile)
+}
+
+dependencies {
+    compile project(":g419-external-dependencies")
+    compile 'commons-io:commons-io:2.4'
+    compile 'org.ini4j:ini4j:0.5.2' // change to 0.5.0 if needed, but I doubt it (semver states that there were only bug fixes, not API change)
+    compile 'nz.ac.waikato.cms.weka:weka-stable:3.6.11' // ant build stated 3.6.9 - stable or dev?
+    compile 'org.maltparser:maltparser:1.8.1' // should be compatible with 1.7.1
+    compile project(":g419-corpus")
+    compile project(":g419-lib-cli")
+    compile project(":g419-toolbox")
+    compile "joda-time:joda-time:2.8.1"
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
+    compile 'org.slf4j:slf4j-api:1.7.2'
+    runtime 'org.slf4j:slf4j-log4j12:1.7.2'
+
+    dependencyFix fileTree(new File(project(":g419-external-dependencies").buildDir, "libs"))
+
+    // for some reason this was in ant build, but it doesn't seem to be used, and it would introduce circular dependencies
+    //compile project(":g419-liner2-relations")
+}
+
+
+idea {
+    module {
+        scopes.COMPILE.plus += [ configurations.dependencyFix ]
+    }
+}

@@ -1,0 +1,43 @@
+description = "g419-liner2-cli -- konsolowy interfejs dla g419-liner2-api"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+apply plugin: "application"
+
+main = "g419.liner2.cli.Main"
+
+mainClassName = main
+
+run {
+    def zipFile = file('src/test/resources/resources.zip')
+    def outputDir = file("src/test/resources")
+    def dataDir = file("src/test/resources/data")
+    if ( !dataDir.exists() ){
+        copy {
+            from zipTree(zipFile)
+            into outputDir
+        }
+    }
+    if ( project.hasProperty("appArgs") ) {
+        args appArgs.split("\\p{Z}")
+    }
+}
+
+test {
+    useJUnit()
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": main
+    }
+}
+
+dependencies {
+    compile 'commons-cli:commons-cli:1.2'
+    compile 'commons-io:commons-io:2.4'
+    compile project(":g419-corpus")
+    compile project(":g419-liner2-api")
+    compile project(":g419-lib-cli")
+}

@@ -1,0 +1,211 @@
+{
+  "regexEscape": "%",
+  "rules": {
+    "year4Digits": {
+      "extract": "$reCentury$re2Digits",
+      "normalize": "@group(0)@group(1)"
+    },
+    "year3Digits": {
+      "extract": "$re1Digit$re2Digits",
+      "normalize": "0@group(0)@group(1)"
+    },
+    "year3DigitsWithYear": {
+      "extract": "$re1Digit$re2Digits%s+$reYear",
+      "normalize": "0@group(0)@group(1)"
+    },
+    "year4DigitsWithYear": {
+      "extract": "$reCentury$re2Digits%s+rocznik[.]",
+      "normalize": "@group(0)@group(1)"
+    },
+    "year4DigitsWithA": {
+      "extract": "$reCentury$re2Digits+a",
+      "normalize": "@group(0)@group(1)"
+    },
+    "year4DigitsWithB": {
+      "extract": "$reCentury$re2Digits+b",
+      "normalize": "@group(0)@group(1)"
+    },
+    "year4DigitsWithYearAWR": {
+      "extract": "rocznik[.]%s+$reCentury$re2Digits",
+      "normalize": "@group(0)@group(1)"
+    },
+    "year4DigitsWithYearWithoutSp": {
+      "extract": "$reCentury$re2Digits+r[.]",
+      "normalize": "@group(0)@group(1)"
+    },
+    "year4DigitsWithAdd": {
+      "extract": "$reAdd%s$reCentury$re2Digits%s+rok?",
+      "normalize": "@group(1)@group(2)"
+    },
+    "year4DigitsWithAddAndYear": {
+      "extract": "$reAdd%s+rok[.]?%s+$reCentury$re2Digits",
+      "normalize": "@group(1)@group(2)"
+    },
+    "year2Digits": {
+      "extract": "[']?$re2Digits",
+      "normalize": "xx@group(0)"
+    },
+    "yearWithDecade": {
+      "extract": "rok%s+$reDecade[.]?",
+      "normalize": "xx@group(0)"
+    },
+    "yearWithHalfDecade": {
+      "extract": "$reHalfYear%s+$reDecade[.]?",
+      "normalize": "xx@group(1)"
+    },
+    "yearWithHalfDecade": {
+      "extract": "$reBorder%s+rok%s+$reDecade[.]?",
+      "normalize": "xx@group(1)"
+    },
+    "DecadeNum": {
+      "extract": "$reDecade[.]",
+      "normalize": "xx@group(0)"
+    },
+    "dayOnly": {
+      "extract": "^re1Digit$",
+      "normalize": "xxxx-xx-0@group(0)"
+    },
+    "fullDateFromYear": {
+      "extract": "$reCentury$re2Digits$reDateSeparator$reMonthNumber$reDateSeparator$reDayNumber",
+      "normalize": "@group(0)@group(1)-@group(3)-@group(5)"
+    },
+    "fullDateFromDay": {
+      "extract": "$reDayNumber$reDateSeparator$reMonthNumber$reDateSeparator$reCentury$re2Digits",
+      "normalize": "@group(4)@group(5)-@group(2)-@group(0)"
+    },
+    "fullDateFromDayWithYear": {
+      "extract": "$reDayOfWeek?%s?+$reDayNumber$reDateSeparator$reMonthNumber$reDateSeparator$reCentury$re2Digits%s+$reYear",
+      "normalize": "@group(5)@group(6)-@group(3)-@group(1)"
+    },
+    "fullDateFromDayWithR": {
+      "extract": "$reDayNumber$reDateSeparator$reMonthNumber$reDateSeparator$reCentury$re2Digits+r[.]",
+      "normalize": "@group(4)@group(5)-@group(2)-@group(0)"
+    },
+    "fullDateFromDayWithYearAndWordDay": {
+      "extract": "$reDayWord%s+$reDayNumber$reDateSeparator$reMonthNumber$reDateSeparator$reCentury$re2Digits%s+$reYear",
+      "normalize": "@group(5)@group(6)-@group(3)-@group(1)"
+    },
+    "fullDateFromDayWithYearDottedAndWordDay": {
+      "extract": "dzień%s+$reDayNumber[.]$reMonthNumber[.]$reCentury$re2Digits%s+rocznik[.]?",
+      "normalize": "@group(2)@group(3)-@group(1)-@group(0)"
+    },
+    "fullDateFromDayInXXIC": {
+      "extract": "$reDayNumber$reDateSeparator$reMonthNumber$reDateSeparator$re2Digits",
+      "normalize": "20@group(4)-@group(2)-@group(0)"
+    },
+    "dottedDateWithoutYear": {
+      "extract": "$reDayNumber$reDateSeparator$reMonthNumber$",
+      "normalize": "xxxx-@group(2)-@group(0)"
+    },
+    "halfYear": {
+      "extract": "$reHalf%s$reCentury$re2Digits%s+rok[.]?"
+      "normalize": "@group(1)@group(2)"
+    }
+  },
+  "patterns": {
+    "reCentury": "[12]%d",
+    "re2Digits": "%d%d",
+    "re1Digit": "%d",
+    "reDecade": "%d[0]",
+    "reDateSeparator": [
+      "[-]",
+      "[/]",
+      "[.]"
+    ],
+    "reTimeSeparator": [
+      "g[.]",
+      "godz[.]"
+    ],
+    "reDayWord": [
+      "dzień"
+    ],
+    "reAdd": [
+      "około[.]?",
+      "prawie",
+      "początek",
+      "koniec"
+    ],
+    "reYear": [
+      "rok",
+      "rocznik[.]?",
+      "r[.]"
+    ],
+    "reHalf": [
+      "poł[.]",
+      "pol[.]",
+      "połowa"
+    ],
+    "reHalfYear": [
+      "połowa rok"
+    ],
+    "reBorder": [
+      "początek",
+      "koniec"
+    ],
+    "reMonthNumber": [
+      "0%d",
+      "10",
+      "11",
+      "12"
+    ],
+    "reDayNumber": [
+      "[012]?%d",
+      "3[01]"
+    ],
+    "reDayOfWeek": [
+      "poniedziałek",
+      "pon[.]?",
+      "poniedziałkowy",
+      "poniedziałkowo",
+      "wtorek",
+      "wt[.]?",
+      "wtorkowy",
+      "wtorkowo",
+      "środa",
+      "śr[.]?",
+      "środowy",
+      "środowo",
+      "czwartek",
+      "czwartkowy",
+      "czwartkowo",
+      "czw[.]?",
+      "piątek",
+      "piątkowy",
+      "piątkowo",
+      "pt[.]?",
+      "sobota",
+      "sobote",
+      "sobotni",
+      "sobotnio",
+      "sob[.]?",
+      "niedziela",
+      "niedzielny",
+      "niedzielnie",
+      "nd[.]?"
+    ]
+  },
+  "normalization": {
+    "leadingZero": {
+      "-1$": "-01",
+      "-2$": "-02",
+      "-3$": "-03",
+      "-4$": "-04",
+      "-5$": "-05",
+      "-6$": "-06",
+      "-7$": "-07",
+      "-8$": "-08",
+      "-9$": "-09"
+    },
+    "decades": {
+      "xx10": "xx1",
+      "xx20": "xx2",
+      "xx30": "xx3",
+      "xx40": "xx4",
+      "xx50": "xx5",
+      "xx60": "xx6",
+      "xx70": "xx7",
+      "xx80": "xx8",
+      "xx90": "xx9"
+    }
+  }
+}
