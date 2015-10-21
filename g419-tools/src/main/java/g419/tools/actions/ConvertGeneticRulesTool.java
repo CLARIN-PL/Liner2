@@ -1,16 +1,25 @@
 package g419.tools.actions;
 
-import g419.liner2.api.LinerOptions;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.OptionBuilder;
-
-import java.io.*;
-import java.nio.file.Files;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
+
+import g419.liner2.api.LinerOptions;
 
 /**
  * Created by michal on 5/7/15.
@@ -37,29 +46,17 @@ public class ConvertGeneticRulesTool extends Tool{
 
     public ConvertGeneticRulesTool() {
         super("convertGeneticRules");
-        options.addOption(OptionBuilder
-                .withArgName("filename").hasArg()
-                .withDescription("path to an output file")
-                .withLongOpt(OPTION_RULES_LONG)
-                .isRequired()
-                .create(OPTION_RULES));
-        options.addOption(OptionBuilder
-                .withArgName("filename").hasArg()
-                .withDescription("path to an output file")
-                .withLongOpt(OPTION_FEATURES_LONG)
-                .isRequired()
-                .create(OPTION_FEATURES));
-        options.addOption(OptionBuilder
-                .withArgName("filename").hasArg()
-                .withDescription("path to an output file")
-                .withLongOpt(OPTION_TEMPLATE_LONG)
-                .isRequired()
-                .create(OPTION_TEMPLATE));
+        options.addOption(Option.builder(OPTION_RULES).longOpt(OPTION_RULES_LONG).hasArg().argName("filename").required()
+    			.desc("path to an output file").build());
+        options.addOption(Option.builder(OPTION_FEATURES).longOpt(OPTION_FEATURES_LONG).hasArg().argName("filename").required()
+    			.desc("path to a file with features").build());
+        options.addOption(Option.builder(OPTION_TEMPLATE).longOpt(OPTION_TEMPLATE_LONG).hasArg().argName("filename").required()
+    			.desc("path to a file with template").build());
     }
 
     @Override
     public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new GnuParser().parse(this.options, args);
+        CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
         rules_file = new File(line.getOptionValue(OPTION_RULES));
         if(!rules_file.exists()){

@@ -1,17 +1,24 @@
 package g419.tools.actions;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.InputStream;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
+
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
-import g419.corpus.structure.*;
+import g419.corpus.structure.Document;
+import g419.corpus.structure.Paragraph;
+import g419.corpus.structure.Sentence;
+import g419.corpus.structure.TokenAttributeIndex;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.api.tools.Wordnet2;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.OptionBuilder;
-
-import java.io.*;
 
 /**
  * Created by michal on 7/23/15.
@@ -28,16 +35,13 @@ public class WordnetTool extends Tool {
         super("wordnet");
         this.setDescription("ToDo");
         this.options.addOption(CommonOptions.getOutputFileNameOption());
-        OptionBuilder.withDescription("use base forms of named entities");
-        OptionBuilder.isRequired();
-        OptionBuilder.withArgName("wordnet").hasArg();
-        OptionBuilder.withLongOpt(OPTION_WORDNET_LONG);
-        this.options.addOption(OptionBuilder.create(OPTION_WORDNET));
+        this.options.addOption(Option.builder(OPTION_WORDNET).longOpt(OPTION_WORDNET_LONG).hasArg().argName("wordnet").required()
+        						.desc("use base forms of named entities").build());
     }
 
     @Override
     public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new GnuParser().parse(this.options, args);
+        CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
         this.output_file = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
         System.out.println(line.getOptionValue(OPTION_WORDNET));

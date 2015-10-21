@@ -1,12 +1,16 @@
 package g419.tools.actions;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.OptionBuilder;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.OutputStreamWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -29,22 +33,15 @@ public class ConvertJRipRulesTool extends Tool {
 
     public ConvertJRipRulesTool() {
         super("convertJRipRules");
-        options.addOption(OptionBuilder
-                .withArgName("filename").hasArg()
-                .withDescription("path to an output file")
-                .withLongOpt(OPTION_OUTPUT_FILE_LONG)
-                .create(OPTION_OUTPUT_FILE));
-        options.addOption(OptionBuilder
-                .withArgName("filename").hasArg()
-                .withDescription("read input from file")
-                .withLongOpt(OPTION_INPUT_FILE_LONG)
-                .isRequired()
-                .create(OPTION_INPUT_FILE));
+        options.addOption(Option.builder(OPTION_OUTPUT_FILE).longOpt(OPTION_OUTPUT_FILE_LONG).hasArg().argName("filename")
+        					.desc("path to an output file").build());
+        options.addOption(Option.builder(OPTION_INPUT_FILE).longOpt(OPTION_INPUT_FILE_LONG).hasArg().argName("filename")
+				.desc("path to an input file").build());
     }
 
     @Override
     public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new GnuParser().parse(this.options, args);
+        CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
         this.input_file = line.getOptionValue(OPTION_INPUT_FILE);
         this.output_file = line.getOptionValue(OPTION_OUTPUT_FILE);

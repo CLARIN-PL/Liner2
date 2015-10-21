@@ -179,7 +179,9 @@ public class FeatureMatrix extends Tool{
                     	for ( DependencyPath path : paths ){
                     		System.out.println(pattern.getPatternString() + ":: " + path.toString(maltSent.getSentence()));
                     		System.out.println("PATTERN|" + this.pathToPattern(maltSent.getSentence(), pattern, path));
-                    		System.out.println("PATTERN|" + this.pathToPattern(maltSent.getSentence(), pattern, path, serdel));
+                    		for  ( String patternStr : this.pathToPattern(maltSent.getSentence(), pattern, path, serdel) ){
+                    			System.out.println("PATTERN|" + patternStr);
+                    		}
                     		pathsCount++;
                     	}                 
                     }
@@ -226,7 +228,8 @@ public class FeatureMatrix extends Tool{
      * @param path
      * @return
      */
-    public String pathToPattern(Sentence sentence, MaltPattern pattern, DependencyPath path, WordnetToSumo sumo){
+    @SuppressWarnings("serial")
+	public List<String> pathToPattern(Sentence sentence, MaltPattern pattern, DependencyPath path, WordnetToSumo sumo){
     	StringBuilder sb = new StringBuilder();
     	List<Set<String>> parts = new ArrayList<Set<String>>();
     	for ( int i=0; i<pattern.getNodes().size(); i++ ){
@@ -258,10 +261,43 @@ public class FeatureMatrix extends Tool{
     		}
     		if ( i < pattern.getEdges().size() ){
     			sb.append(pattern.getEdges().get(i));
+    			Set<String> values = new HashSet<String>();
+    			values.add(pattern.getEdges().get(i).toString());
+    			parts.add(values);
     		}
     	}
-    	return sb.toString();
+    	return this.generateCombinations(parts);
     }
 
+    /**
+     * Generuje wszystkie możliwe kombinacje wartości dla sekwencji list
+     * <code>
+     *   [ ("mały "), ("biały ", "czarny "), ("kot", "pies") }
+     * </code>
+     * Wygeneruje następujące napisy:
+     * <code>
+     *   mały biały kot
+     *   mały biały pies
+     *   mały czarny kot
+     *   mały czarny pies
+     * </code>     
+     * @param names
+     * @param values
+     * @return
+     */
+    private List<String> generateCombinations(List<Set<String>> parts){
+    	@SuppressWarnings("serial")
+		List<String> lastList = new ArrayList<String>(){{add("");}};
+    	for ( Set<String> values : parts ){
+    		List<String> newList = new ArrayList<String>();
+    		for ( String str : lastList ){
+    			for ( String value : values ){
+    				newList.add(str + value);
+    			}
+    		}
+    		lastList = newList;
+    	}
+    	return lastList;
+    }    
 
 }

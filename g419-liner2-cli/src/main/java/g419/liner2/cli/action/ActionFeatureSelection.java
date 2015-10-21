@@ -76,7 +76,7 @@ public class ActionFeatureSelection extends Action {
 	 */
 	public void run() throws Exception {
 		LinerOptions l = LinerOptions.getGlobal();
-		if ( !LinerOptions.isOption(LinerOptions.OPTION_USED_CHUNKER) ){
+		if ( !LinerOptions.isGlobalOption(LinerOptions.OPTION_USED_CHUNKER) ){
 			throw new ParameterException("Parameter 'chunker' in 'main' section of model configuration not set");
 		}
 		Iterator<Entry<String, CrfTemplate>> it = templates.entrySet()

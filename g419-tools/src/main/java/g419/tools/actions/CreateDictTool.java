@@ -1,5 +1,15 @@
 package g419.tools.actions;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
+
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Annotation;
@@ -11,13 +21,6 @@ import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.factory.ChunkerManager;
 import g419.liner2.api.features.TokenFeatureGenerator;
 import g419.liner2.api.tools.ValueComparator;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.OptionBuilder;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.util.*;
 
 /**
  * Created by michal on 1/9/15.
@@ -31,6 +34,7 @@ public class CreateDictTool extends Tool{
     private String input_format = null;
     private String output_file = null;
     private boolean baseForm = false;
+    private LinerOptions linerOptions = null;
 
     public CreateDictTool() {
         super("createDict");
@@ -41,19 +45,20 @@ public class CreateDictTool extends Tool{
         this.options.addOption(CommonOptions.getOutputFileNameOption());
         this.options.addOption(CommonOptions.getFeaturesOption());
         this.options.addOption(CommonOptions.getModelFileOption());
-        OptionBuilder.withDescription("use base forms of named entities");
-        OptionBuilder.withLongOpt(OPTION_BASE_FORM_LONG);
-        this.options.addOption(OptionBuilder.create(OPTION_BASE_FORM));
+        this.options.addOption(Option.builder(OPTION_BASE_FORM).longOpt(OPTION_BASE_FORM_LONG)
+        							.desc("use base forms of named entities").build());
     }
 
     @Override
     public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new GnuParser().parse(this.options, args);
+        CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
         this.output_file = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
-        LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
+        
+        this.linerOptions = new LinerOptions();
+        this.linerOptions.parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
         if(line.hasOption(OPTION_BASE_FORM)){
             baseForm = true;
         }
@@ -61,7 +66,7 @@ public class CreateDictTool extends Tool{
 
     @Override
     public void run() throws Exception {
-        if ( !LinerOptions.getGlobal().isOption(LinerOptions.OPTION_USED_CHUNKER) ){
+        if ( this.linerOptions.isOption(LinerOptions.OPTION_USED_CHUNKER) ){
             throw new ParameterException("Parameter 'chunker' in 'main' section of model not set");
         }
 
