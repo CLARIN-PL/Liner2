@@ -1,0 +1,5 @@
+# Get location
+DIR="$( cd "$( dirname "$0" )" && pwd )"
+
+# Run g419-crete-cli
+java -Xmx4024M -cp -Djava.library.path=$DIR/lib -jar $DIR/lib/g419-crete-cli.jar $@

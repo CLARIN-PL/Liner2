@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chunkList SYSTEM "ccl.dtd">
+<chunkList>
+ <chunk id="ch1">
+  <sentence id="sent1">
+   <tok>
+    <orth>22</orth>
+    <lex><base>22</base><ctag>ign</ctag></lex>
+    <lex disamb="1"><base>22</base><ctag>adj:sg:gen:m3:pos</ctag></lex>
+    <ann chan="t3_time">1</ann>
+    <ann chan="plimex_time">1</ann>
+    <ann chan="keyword">0</ann>
+    <prop key="t3_time:lval">xxxx-02-22T17:00</prop>
+    <prop key="t3_time:val">2012-02-22T17:00</prop>
+    <prop key="plimex_time:lval">xxxx-02-22T17:00</prop>
+   </tok>
+   <tok>
+    <orth>lutego</orth>
+    <lex><base>luty</base><ctag>adj:sg:gen:m1:pos</ctag></lex>
+    <lex><base>luty</base><ctag>adj:sg:acc:m1:pos</ctag></lex>
+    <lex><base>luty</base><ctag>adj:sg:gen:m2:pos</ctag></lex>
+    <lex><base>luty</base><ctag>adj:sg:acc:m2:pos</ctag></lex>
+    <lex><base>luty</base><ctag>adj:sg:gen:m3:pos</ctag></lex>
+    <lex><base>luty</base><ctag>adj:sg:gen:n:pos</ctag></lex>
+    <lex disamb="1"><base>luty</base><ctag>subst:sg:gen:m3</ctag></lex>
+    <ann chan="t3_time">1</ann>
+    <ann chan="plimex_time">1</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>o</orth>
+    <lex><base>o</base><ctag>interj</ctag></lex>
+    <lex><base>o</base><ctag>prep:acc</ctag></lex>
+    <lex disamb="1"><base>o</base><ctag>prep:loc</ctag></lex>
+    <lex><base>ojciec</base><ctag>brev:pun</ctag></lex>
+    <ann chan="t3_time">1</ann>
+    <ann chan="plimex_time">1</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>godz</orth>
+    <lex disamb="1"><base>godzina</base><ctag>brev:pun</ctag></lex>
+    <ann chan="t3_time">1</ann>
+    <ann chan="plimex_time">1</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>.</orth>
+    <lex disamb="1"><base>.</base><ctag>interp</ctag></lex>
+    <ann chan="t3_time">1</ann>
+    <ann chan="plimex_time">1</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>17</orth>
+    <lex><base>17</base><ctag>ign</ctag></lex>
+    <lex disamb="1"><base>17</base><ctag>adj:sg:loc:f:pos</ctag></lex>
+    <ann chan="t3_time">1</ann>
+    <ann chan="plimex_time">1</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>.</orth>
+    <lex disamb="1"><base>.</base><ctag>interp</ctag></lex>
+    <ann chan="t3_time">1</ann>
+    <ann chan="plimex_time">1</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>00</orth>
+    <lex><base>00</base><ctag>ign</ctag></lex>
+    <lex disamb="1"><base>00</base><ctag>num:pl:nom:f:rec</ctag></lex>
+    <ann chan="t3_time">1</ann>
+    <ann chan="plimex_time">1</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>w</orth>
+    <lex><base>w</base><ctag>prep:acc:nwok</ctag></lex>
+    <lex disamb="1"><base>w</base><ctag>prep:loc:nwok</ctag></lex>
+    <lex><base>wiek</base><ctag>brev:pun</ctag></lex>
+    <lex><base>wielki</base><ctag>brev:pun</ctag></lex>
+    <lex><base>wiersz</base><ctag>brev:pun</ctag></lex>
+    <lex><base>wieś</base><ctag>brev:pun</ctag></lex>
+    <lex><base>wyspa</base><ctag>brev:pun</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>Miejskiej</orth>
+    <lex><base>miejski</base><ctag>adj:sg:gen:f:pos</ctag></lex>
+    <lex><base>miejski</base><ctag>adj:sg:dat:f:pos</ctag></lex>
+    <lex disamb="1"><base>miejski</base><ctag>adj:sg:loc:f:pos</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">1</ann>
+    <prop key="keyword:lval">Miejska Biblioteka Publiczna</prop>
+   </tok>
+   <tok>
+    <orth>Bibliotece</orth>
+    <lex><base>biblioteka</base><ctag>subst:sg:dat:f</ctag></lex>
+    <lex disamb="1"><base>biblioteka</base><ctag>subst:sg:loc:f</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">1</ann>
+   </tok>
+   <tok>
+    <orth>Publicznej</orth>
+    <lex><base>publiczny</base><ctag>adj:sg:gen:f:pos</ctag></lex>
+    <lex><base>publiczny</base><ctag>adj:sg:dat:f:pos</ctag></lex>
+    <lex disamb="1"><base>publiczny</base><ctag>adj:sg:loc:f:pos</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">1</ann>
+   </tok>
+   <tok>
+    <orth>odbędzie</orth>
+    <lex disamb="1"><base>odbyć</base><ctag>fin:sg:ter:perf</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>się</orth>
+    <lex disamb="1"><base>się</base><ctag>qub</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>otwarcie</orth>
+    <lex><base>otwarcie</base><ctag>adv:pos</ctag></lex>
+    <lex><base>otwarcie</base><ctag>subst:sg:nom:n</ctag></lex>
+    <lex><base>otwarcie</base><ctag>subst:sg:acc:n</ctag></lex>
+    <lex><base>otwarcie</base><ctag>subst:sg:voc:n</ctag></lex>
+    <lex disamb="1"><base>otworzyć</base><ctag>ger:sg:nom:n:perf:aff</ctag></lex>
+    <lex><base>otworzyć</base><ctag>ger:sg:acc:n:perf:aff</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>wystawy</orth>
+    <lex disamb="1"><base>wystawa</base><ctag>subst:sg:gen:f</ctag></lex>
+    <lex><base>wystawa</base><ctag>subst:pl:nom:f</ctag></lex>
+    <lex><base>wystawa</base><ctag>subst:pl:acc:f</ctag></lex>
+    <lex><base>wystawa</base><ctag>subst:pl:voc:f</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">2</ann>
+    <prop key="keyword:lval">wystawa &quot; Święto wachlarza i lalki japońskiej &quot;</prop>
+   </tok>
+   <tok>
+    <orth>&quot;</orth>
+    <lex disamb="1"><base>&quot;</base><ctag>interp</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">2</ann>
+   </tok>
+   <tok>
+    <orth>Święto</orth>
+    <lex><base>święto</base><ctag>adv:pos</ctag></lex>
+    <lex disamb="1"><base>święto</base><ctag>subst:sg:nom:n</ctag></lex>
+    <lex><base>święto</base><ctag>subst:sg:acc:n</ctag></lex>
+    <lex><base>święto</base><ctag>subst:sg:voc:n</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">2</ann>
+   </tok>
+   <tok>
+    <orth>wachlarza</orth>
+    <lex disamb="1"><base>wachlarz</base><ctag>subst:sg:gen:m3</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">2</ann>
+   </tok>
+   <tok>
+    <orth>i</orth>
+    <lex disamb="1"><base>i</base><ctag>conj</ctag></lex>
+    <lex><base>i</base><ctag>interj</ctag></lex>
+    <lex><base>i</base><ctag>qub</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">2</ann>
+   </tok>
+   <tok>
+    <orth>lalki</orth>
+    <lex disamb="1"><base>lalka</base><ctag>subst:sg:gen:f</ctag></lex>
+    <lex><base>lalka</base><ctag>subst:pl:nom:f</ctag></lex>
+    <lex><base>lalka</base><ctag>subst:pl:acc:f</ctag></lex>
+    <lex><base>lalka</base><ctag>subst:pl:voc:f</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">2</ann>
+   </tok>
+   <tok>
+    <orth>japońskiej</orth>
+    <lex disamb="1"><base>japoński</base><ctag>adj:sg:gen:f:pos</ctag></lex>
+    <lex><base>japoński</base><ctag>adj:sg:dat:f:pos</ctag></lex>
+    <lex><base>japoński</base><ctag>adj:sg:loc:f:pos</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">2</ann>
+   </tok>
+   <tok>
+    <orth>&quot;</orth>
+    <lex disamb="1"><base>&quot;</base><ctag>interp</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">2</ann>
+   </tok>
+   <tok>
+    <orth>połączonej</orth>
+    <lex disamb="1"><base>połączyć</base><ctag>ppas:sg:gen:f:perf:aff</ctag></lex>
+    <lex><base>połączyć</base><ctag>ppas:sg:dat:f:perf:aff</ctag></lex>
+    <lex><base>połączyć</base><ctag>ppas:sg:loc:f:perf:aff</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>z</orth>
+    <lex><base>z</base><ctag>prep:gen:nwok</ctag></lex>
+    <lex><base>z</base><ctag>prep:acc:nwok</ctag></lex>
+    <lex disamb="1"><base>z</base><ctag>prep:inst:nwok</ctag></lex>
+    <lex><base>z</base><ctag>qub</ctag></lex>
+    <lex><base>zeszyt</base><ctag>brev:pun</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>wystawą</orth>
+    <lex disamb="1"><base>wystawa</base><ctag>subst:sg:inst:f</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">3</ann>
+    <prop key="keyword:lval">wystawa fotograficzna</prop>
+   </tok>
+   <tok>
+    <orth>fotograficzną</orth>
+    <lex><base>fotograficzny</base><ctag>adj:sg:acc:f:pos</ctag></lex>
+    <lex disamb="1"><base>fotograficzny</base><ctag>adj:sg:inst:f:pos</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">3</ann>
+   </tok>
+   <tok>
+    <orth>Masakatsu</orth>
+    <lex><base>Masakatsu</base><ctag>ign</ctag></lex>
+    <lex disamb="1"><base>masakatsu</base><ctag>subst:sg:inst:f</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">4</ann>
+    <prop key="keyword:lval">Masakatsu Yoshida</prop>
+   </tok>
+   <tok>
+    <orth>Yoshida</orth>
+    <lex><base>Yoshida</base><ctag>ign</ctag></lex>
+    <lex disamb="1"><base>yoshida</base><ctag>subst:sg:inst:f</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">4</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>.</orth>
+    <lex disamb="1"><base>.</base><ctag>interp</ctag></lex>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+  </sentence>
+  <sentence id="sent2">
+   <tok>
+    <orth>Podczas</orth>
+    <lex disamb="1"><base>podczas</base><ctag>prep:gen</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>otwarcia</orth>
+    <lex disamb="1"><base>otwarcie</base><ctag>subst:sg:gen:n</ctag></lex>
+    <lex><base>otwarcie</base><ctag>subst:pl:nom:n</ctag></lex>
+    <lex><base>otwarcie</base><ctag>subst:pl:acc:n</ctag></lex>
+    <lex><base>otwarcie</base><ctag>subst:pl:voc:n</ctag></lex>
+    <lex><base>otworzyć</base><ctag>ger:sg:gen:n:perf:aff</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>autor</orth>
+    <lex disamb="1"><base>autor</base><ctag>subst:sg:nom:m1</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>wystawy</orth>
+    <lex disamb="1"><base>wystawa</base><ctag>subst:sg:gen:f</ctag></lex>
+    <lex><base>wystawa</base><ctag>subst:pl:nom:f</ctag></lex>
+    <lex><base>wystawa</base><ctag>subst:pl:acc:f</ctag></lex>
+    <lex><base>wystawa</base><ctag>subst:pl:voc:f</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>wygłosi</orth>
+    <lex disamb="1"><base>wygłosić</base><ctag>fin:sg:ter:perf</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>prelekcję</orth>
+    <lex disamb="1"><base>prelekcja</base><ctag>subst:sg:acc:f</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>pt</orth>
+    <lex><base>piątek</base><ctag>brev:npun</ctag></lex>
+    <lex disamb="1"><base>pod tytułem</base><ctag>brev:pun</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>.</orth>
+    <lex disamb="1"><base>.</base><ctag>interp</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>&quot;</orth>
+    <lex disamb="1"><base>&quot;</base><ctag>interp</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>Kultura</orth>
+    <lex disamb="1"><base>kultura</base><ctag>subst:sg:nom:f</ctag></lex>
+    <ann chan="keyword">1</ann>
+    <prop key="keyword:lval">Kultura Japonii</prop>
+   </tok>
+   <tok>
+    <orth>Japonii</orth>
+    <lex disamb="1"><base>Japonia</base><ctag>subst:sg:gen:f</ctag></lex>
+    <lex><base>Japonia</base><ctag>subst:sg:dat:f</ctag></lex>
+    <lex><base>Japonia</base><ctag>subst:sg:loc:f</ctag></lex>
+    <lex><base>Japonia</base><ctag>subst:pl:gen:f</ctag></lex>
+    <ann chan="keyword">1</ann>
+   </tok>
+   <tok>
+    <orth>&quot;</orth>
+    <lex disamb="1"><base>&quot;</base><ctag>interp</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>.</orth>
+    <lex disamb="1"><base>.</base><ctag>interp</ctag></lex>
+    <ann chan="keyword">0</ann>
+   </tok>
+  </sentence>
+  <sentence id="sent3">
+   <tok>
+    <orth>Wstęp</orth>
+    <lex disamb="1"><base>wstęp</base><ctag>subst:sg:nom:m3</ctag></lex>
+    <lex><base>wstęp</base><ctag>subst:sg:acc:m3</ctag></lex>
+   </tok>
+   <tok>
+    <orth>wolny</orth>
+    <lex><base>Wolny</base><ctag>subst:sg:nom:m1</ctag></lex>
+    <lex><base>Wolny</base><ctag>subst:sg:voc:m1</ctag></lex>
+    <lex><base>wolny</base><ctag>adj:sg:nom:m1:pos</ctag></lex>
+    <lex><base>wolny</base><ctag>adj:sg:voc:m1:pos</ctag></lex>
+    <lex><base>wolny</base><ctag>adj:sg:nom:m2:pos</ctag></lex>
+    <lex><base>wolny</base><ctag>adj:sg:voc:m2:pos</ctag></lex>
+    <lex disamb="1"><base>wolny</base><ctag>adj:sg:nom:m3:pos</ctag></lex>
+    <lex><base>wolny</base><ctag>adj:sg:acc:m3:pos</ctag></lex>
+    <lex><base>wolny</base><ctag>adj:sg:voc:m3:pos</ctag></lex>
+    <lex><base>wolny</base><ctag>subst:sg:nom:m2</ctag></lex>
+    <lex><base>wolny</base><ctag>subst:sg:voc:m2</ctag></lex>
+    <lex><base>wolny</base><ctag>subst:sg:nom:m3</ctag></lex>
+    <lex><base>wolny</base><ctag>subst:sg:acc:m3</ctag></lex>
+    <lex><base>wolny</base><ctag>subst:sg:voc:m3</ctag></lex>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>.</orth>
+    <lex disamb="1"><base>.</base><ctag>interp</ctag></lex>
+   </tok>
+  </sentence>
+ </chunk>
+</chunkList>

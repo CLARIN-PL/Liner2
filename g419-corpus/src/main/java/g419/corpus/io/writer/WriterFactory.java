@@ -48,6 +48,10 @@ public class WriterFactory {
 			return new CclStreamWriter(out);
         else if (outputFormat.equals("iob"))
 			return new IobStreamWriter(out);
+        else if (outputFormat.equals("conll"))
+			return new ConllStreamWriter(out);
+        else if (outputFormat.equals("zero_verb"))
+			return new ZeroVerbWriter(out);
 		else if (outputFormat.equals("iob-tab"))
 			return new IobTabStreamWriter(out);
 		else if (outputFormat.equals("tuples"))

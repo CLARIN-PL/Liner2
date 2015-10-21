@@ -3,11 +3,16 @@ description = "g419-crete-api -- API dla modułu do rozpoznawania koreferencji o
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+repositories{
+    mavenCentral()
+}
+
 dependencies {
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'commons-io:commons-io:2.4'
     compile 'org.ini4j:ini4j:0.5.2'
 //    compile 'edu.berkeley.compbio:jlibsvm:0.911'
+    compile 'info.debatty:java-string-similarity:0.13'
     compile 'nz.ac.waikato.cms.weka:weka-stable:3.6.12'
     compile project(":g419-corpus")
     compile project(":g419-tools")

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_omKaAHY2EeSEEshS9hAPlg" name="NewModel">
+  <packagedElement xmi:type="uml:Interface" xmi:id="_AlaocHY3EeSEEshS9hAPlg" name="IFeature">
+    <ownedOperation xmi:id="_O9h9gHY3EeSEEshS9hAPlg" name="getFeatureValue">
+      <ownedParameter xmi:id="_2dYMAHY3EeSEEshS9hAPlg" name="object">
+        <type xmi:type="uml:Class" href="pathmap://UML_METAMODELS/Ecore.metamodel.uml#EJavaClass-_ownedElement.0-_ownedParameter.0-_ownedParameteredElement"/>
+      </ownedParameter>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_QZfIsHY4EeSEEshS9hAPlg" name="EnumFeature">
+    <generalization xmi:id="_aNaEYHY5EeSEEshS9hAPlg" general="_eycyUHY4EeSEEshS9hAPlg"/>
+    <generalization xmi:id="_bFzsAHY5EeSEEshS9hAPlg" general="_mBjdUHY4EeSEEshS9hAPlg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_YgLjAHY4EeSEEshS9hAPlg" name="LexicalFeature"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_eycyUHY4EeSEEshS9hAPlg" name="IntegerFeature"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_mBjdUHY4EeSEEshS9hAPlg" name="ContinuousFeature"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_vjYY4HY4EeSEEshS9hAPlg" clientDependency="_VQSqIHY5EeSEEshS9hAPlg" name="BooleanVectorFeature">
+    <generalization xmi:id="_WV_G4HY5EeSEEshS9hAPlg" general="_YgLjAHY4EeSEEshS9hAPlg"/>
+    <generalization xmi:id="_XbNpkHY5EeSEEshS9hAPlg" general="_QZfIsHY4EeSEEshS9hAPlg"/>
+    <ownedAttribute xmi:id="_Bk0IkHY6EeSEEshS9hAPlg" name="featureVector" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+    </ownedAttribute>
+    <interfaceRealization xmi:id="_VQSqIHY5EeSEEshS9hAPlg" client="_vjYY4HY4EeSEEshS9hAPlg" supplier="_AlaocHY3EeSEEshS9hAPlg" contract="_AlaocHY3EeSEEshS9hAPlg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_anEsIHY6EeSEEshS9hAPlg" name="Annotation"/>
+</uml:Model>

@@ -170,7 +170,10 @@ public class Annotation {
 	@Override
 	public boolean equals(Object object) {
 		Annotation chunk = (Annotation) object;
-		if (!this.tokens.equals(chunk.getTokens()))
+		if(chunk == null) return false;
+		if(this.getSentence().getId() != chunk.getSentence().getId())
+			return false;
+		else if (!this.tokens.equals(chunk.getTokens()))
 			return false;
 		else if (!this.getText().equals(chunk.getText()))
 			return false;
@@ -323,4 +326,35 @@ public class Annotation {
     	return true;
     }
 
+//    public List<Annotation> getExactOverlappingAnnotations(){
+//    	return getExactOverlappingAnnotations(Arrays.asList(new Pattern[]{Pattern.compile("*")}));
+//    }
+//    
+//    public List<Annotation> getExactOverlappingAnnotations(List<Pattern> patterns){
+//    	List<Annotation> overlapping = new ArrayList<Annotation>();
+//    	
+//    	for(Annotation potentialOverlap : getSentence().getAnnotations(patterns)){
+//    		// NIe istnieje dokładne pokrycie taką samą anotacją
+//    		if(potentialOverlap.getChannelIdx() != getChannelIdx()){
+//    			if(getTokens().equals(potentialOverlap.getTokens())){
+//    				overlapping.add(potentialOverlap);
+//    			}
+//    		}
+//    	}
+//    	
+//    	return overlapping;
+//    }
+//    
+//    public boolean isOverlappedByAll(List<Pattern> overlapPatterns){
+//    	// TODO: incomplete implementation
+//		boolean overlapByAll = false;
+//		List<Annotation> overlapping = getExactOverlappingAnnotations(overlapPatterns);
+//		
+//		return overlapByAll;
+//	}
+//	
+//	public boolean isOverlappedByAny(List<Pattern> overlapPatterns){
+//		List<Annotation> overlapping = getExactOverlappingAnnotations(overlapPatterns);
+//		return overlapping.size() > 0;
+//	}
 }
