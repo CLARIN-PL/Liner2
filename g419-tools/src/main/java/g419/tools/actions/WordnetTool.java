@@ -1,4 +1,4 @@
-package g419.tools;
+package g419.tools.actions;
 
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;

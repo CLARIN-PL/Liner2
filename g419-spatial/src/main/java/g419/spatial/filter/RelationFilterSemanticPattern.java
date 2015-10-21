@@ -27,31 +27,13 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
 	public RelationFilterSemanticPattern() throws IOException{
 
         try {
-			this.wts = this.getWordnetToSumo();
+			this.wts = new WordnetToSumo();
 	        this.patternMatcher = this.getPatternMatcher();
 		} catch (DataFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
      
-	}
-	
-	/**
-	 * 
-	 * @return
-	 * @throws IOException
-	 * @throws DataFormatException
-	 */
-	private WordnetToSumo getWordnetToSumo() throws IOException, DataFormatException{
-		String location = "/g419/spatial/resources/mapping-26.05.2015-Serdel.csv";
-		InputStream resource = this.getClass().getResourceAsStream(location);
-
-        if (resource == null) {
-            throw new MissingResourceException("Resource not found: " + location,
-                    this.getClass().getName(), location);
-        }
-        Reader serdelReader = new InputStreamReader( resource );
-        return new WordnetToSumo(serdelReader);
 	}
 	
 	/**

@@ -4,9 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,19 +25,39 @@ public class WordnetToSumo {
     private HashMap<String, HashSet<String>> wordSenseMapping;
 
     /**
+     * Wczytuje mapowanie z domyślnym modelem, tj. mapping-26.05.2015-Serdel.csv
+     * @throws IOException
+     * @throws DataFormatException
+     */
+    public WordnetToSumo() throws IOException, DataFormatException {
+    	this.wordMapping = new HashMap<String, HashSet<String>>();
+    	this.wordSenseMapping = new HashMap<String, HashSet<String>>();
+		String location = "/mapping-26.05.2015-Serdel.csv";
+		InputStream resource = this.getClass().getResourceAsStream(location);
+	
+	    if (resource == null) {
+	        throw new MissingResourceException("Resource not found: " + location,
+	                this.getClass().getName(), location);
+	    }
+	    Reader serdelReader = new InputStreamReader( resource );
+	    this.parseMapping(serdelReader);
+    }
+    
+    
+    /**
      * Tworzy obiekt na podstawie pliku z mapowaniem Serdela.
      * @param serdelMapping
      * @throws IOException
      * @throws DataFormatException
      */
     public WordnetToSumo(String serdelMapping) throws IOException, DataFormatException {
-        wordMapping = new HashMap<String, HashSet<String>>();
-        wordSenseMapping = new HashMap<String, HashSet<String>>();
+    	this.wordMapping = new HashMap<String, HashSet<String>>();
+    	this.wordSenseMapping = new HashMap<String, HashSet<String>>();
         File mapping = new File(serdelMapping);
         if(mapping.exists()){
         	Reader serdelReader = null;
         	serdelReader = new FileReader(mapping);
-            parseMapping(serdelReader);
+        	this.parseMapping(serdelReader);
             if ( serdelReader != null ){
             	serdelReader.close();
             }
@@ -51,9 +74,9 @@ public class WordnetToSumo {
      * @throws DataFormatException
      */
     public WordnetToSumo(Reader serdelReader) throws IOException, DataFormatException {
-        wordMapping = new HashMap<String, HashSet<String>>();
-        wordSenseMapping = new HashMap<String, HashSet<String>>();
-        parseMapping(serdelReader);
+    	this.wordMapping = new HashMap<String, HashSet<String>>();
+    	this.wordSenseMapping = new HashMap<String, HashSet<String>>();
+        this.parseMapping(serdelReader);
     }
 
     public Set<String> getConcept(String word){

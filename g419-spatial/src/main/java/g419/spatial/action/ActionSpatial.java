@@ -102,8 +102,8 @@ public class ActionSpatial extends Action {
 		filters.add(new RelationFilterPronoun());
 		filters.add(semanticFilter);
 		
-		IobberChunker iobber = new IobberChunker("", this.config_iobber_model, this.config_iobber_config);		
-		Liner2 liner2 = new Liner2(this.config_liner2_model);
+		//IobberChunker iobber = new IobberChunker("", this.config_iobber_model, this.config_iobber_config);		
+		//Liner2 liner2 = new Liner2(this.config_liner2_model);
 		MaltParser malt = new MaltParser("/nlp/resources/maltparser/skladnica_liblinear_stackeager_final.mco");
 		FscoreEvaluator2 evalTotal = new FscoreEvaluator2();
 		FscoreEvaluator2 evalNoSeedTotal = new FscoreEvaluator2();
@@ -121,8 +121,8 @@ public class ActionSpatial extends Action {
 				continue;
 			}
 						
-			liner2.chunkInPlace(document);
-			iobber.chunkInPlace(document);			
+			//liner2.chunkInPlace(document);
+			//iobber.chunkInPlace(document);			
 						
 			for ( SpatialRelation relation : gold ){
 				evalTotal.addGold(relation);
@@ -186,16 +186,16 @@ public class ActionSpatial extends Action {
 					List<SpatialRelation> relations = new LinkedList<SpatialRelation>();
 
 					// Second Iteration only
-					/*
+					
 					relations.addAll( this.findCandidatesFirstNgAnyPrepNg(sentence, mapTokenIdToAnnotations, chunkNpTokens, chunkPrepTokens) );
 					relations.addAll( this.findCandidatesByMalt(sentence, maltSentence));
-					*/
+					
 
 					relations.addAll( this.findCandidatesNgPpasPrepNg(
 							sentence, mapTokenIdToAnnotations, chunkNpTokens, chunkPpasTokens, chunkPrepTokens));
 					relations.addAll( this.findCandidatesNgPactPrepNg(
 							sentence, mapTokenIdToAnnotations, chunkNpTokens, chunkPactTokens, chunkPrepTokens));
-					
+					/*
 					relations.addAll( this.findCandidatesNgPrepNgPpasPrepNg(
 							sentence, mapTokenIdToAnnotations, chunkVerbfinTokens, chunkPrepTokens, chunkPpasTokens) );
 					relations.addAll( this.findCandidatesNgPrepNgCommaPrepNg(
@@ -222,7 +222,7 @@ public class ActionSpatial extends Action {
 							sentence, mapTokenIdToAnnotations, chunkVerbfinTokens, chunkPrepTokens) );
 					relations.addAll( this.findCandidatesPrepNgVerbfinNg(
 							sentence, mapTokenIdToAnnotations, chunkVerbfinTokens, chunkPrepTokens) );
-					
+					*/
 
 
 					this.replaceNgWithNames(sentence, relations);
@@ -1023,33 +1023,33 @@ public class ActionSpatial extends Action {
 			String typeLM = "";
 			String typeTR = "";
 			if ( ClassFeature.BROAD_CLASSES.get("verb").contains(token.getDisambTag().getPos()) ){
-				List<MaltSentenceLink> links = maltSentence.getIncomingLinks(i);
+				List<MaltSentenceLink> links = maltSentence.getLinksByTargetIndex(i);
 				for ( MaltSentenceLink link : links ){
-					Token tokenChild = sentence.getTokens().get(link.getTokenIndex());
+					Token tokenChild = sentence.getTokens().get(link.getSourceIndex());
 					if ( link.getRelationType().equals("subj") ){
 						if ( tokenChild.getDisambTag().getBase().equals("i")
 								|| tokenChild.getDisambTag().getBase().equals("oraz")){
 							typeTR = "_TRconj";
-							for ( MaltSentenceLink trLink : maltSentence.getIncomingLinks(link.getTokenIndex())){
-								landmarks.add(trLink.getTokenIndex());
+							for ( MaltSentenceLink trLink : maltSentence.getLinksByTargetIndex(link.getSourceIndex())){
+								landmarks.add(trLink.getSourceIndex());
 							}										
 						}
 						else if ( !tokenChild.getDisambTag().getPos().equals("interp") ){
-							trajectors.add(link.getTokenIndex());
+							trajectors.add(link.getSourceIndex());
 						}
 					}
 					else if ( tokenChild.getDisambTag().getPos().equals("prep") ){
-						indicator = link.getTokenIndex();
-						for ( MaltSentenceLink prepLink : maltSentence.getIncomingLinks(link.getTokenIndex())){
-							Token lm = sentence.getTokens().get(prepLink.getTokenIndex());
+						indicator = link.getSourceIndex();
+						for ( MaltSentenceLink prepLink : maltSentence.getLinksByTargetIndex(link.getSourceIndex())){
+							Token lm = sentence.getTokens().get(prepLink.getSourceIndex());
 							if ( lm.getOrth().equals(",")){
 								typeLM = "_LMconj";
-								for ( MaltSentenceLink prepLinkComma : maltSentence.getIncomingLinks(prepLink.getTokenIndex())){
-									landmarks.add(prepLinkComma.getTokenIndex());
+								for ( MaltSentenceLink prepLinkComma : maltSentence.getLinksByTargetIndex(prepLink.getSourceIndex())){
+									landmarks.add(prepLinkComma.getSourceIndex());
 								}
 							}
 							else if (!lm.getDisambTag().getPos().equals("interp")){
-								landmarks.add(prepLink.getTokenIndex());
+								landmarks.add(prepLink.getSourceIndex());
 							}
 						}
 					}

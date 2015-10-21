@@ -13,8 +13,9 @@ public class MaltSentence {
     private HashMap<String, String> nkjpToCoNLLPos = getnkjpToCoNLLPos();
     private String[] maltData = null;
     private LinkedHashSet<Annotation> annotations = new LinkedHashSet<Annotation>();
-    Pattern allAnnotationsPattern = Pattern.compile("nam*");
+    Pattern allAnnotationsPattern = Pattern.compile("nam.*");
     List<MaltSentenceLink> links = new ArrayList<MaltSentenceLink>();
+    private Sentence sentence = null;
 
     public MaltSentence(Sentence sent) {
         List<String[]> coNLLTokens = convertToCoNLL(sent);
@@ -24,11 +25,12 @@ public class MaltSentence {
             dataForMalt[i] = String.join("\t", Arrays.asList(coNLLTokens.get(i)));
 
         this.maltData = dataForMalt;
+        this.sentence = sent;
     }
 
     public MaltSentence(Sentence sent, Set<Annotation> sentenceAnnotations) {
 
-        Sentence wrappedSent = TokenWrapper.wrapAnnotations(sent, new ArrayList<Pattern>(){{add(allAnnotationsPattern);}});
+        Sentence wrappedSent = TokenWrapper.wrapAnnotations(sent, new ArrayList<Pattern>(){{add(allAnnotationsPattern);}});        
         List<String[]> coNLLTokens = convertToCoNLL(wrappedSent);
 
         String[] dataForMalt = new String[coNLLTokens.size()];
@@ -37,10 +39,20 @@ public class MaltSentence {
 
         this.maltData = dataForMalt;
         this.annotations = wrappedSent.getChunks();
+        this.sentence = wrappedSent;
     }
+
+
+	public void setMaltData(String[] output) {
+		this.maltData = output;
+	}
 
     public String[] getMaltData() {
         return maltData;
+    }
+    
+    public Sentence getSentence() {
+    	return this.sentence;
     }
     
     public void setLinks(List<MaltSentenceLink> links){
@@ -48,18 +60,38 @@ public class MaltSentence {
     }
     
     public MaltSentenceLink getLink(int index){
-    	return this.links.get(index);
+    	if ( index >= this.links.size() ){
+    		return null;
+    	}
+    	else{
+    		return this.links.get(index);
+    	}
+    }
+
+    public void wrapConjunctions(){
+//        for(int i=0; i<sentenceData.length; i++){
+//            if(sentenceData[i][3].equals("conj") && Integer.parseInt(sentenceData[i][8]) != 0){
+//                for(int j=0; j<sentenceData.length; j++){
+//                    if(sentenceData[j][9].equals("conjunct") && (Integer.parseInt(sentenceData[j][8]) - 1) == i){
+//                        sentenceData[j][9] = sentenceData[i][9];
+//                        sentenceData[j][8] = sentenceData[i][8];
+//                    }
+//                }
+//                sentenceData[i][9] = "deleted_rel";
+//            }
+//        }
     }
     
+
     /**
      * Zwraca listę linków wskazujących na token o wskazanym indeksie.
      * @param index
      * @return
      */
-    public List<MaltSentenceLink> getIncomingLinks(int index){
+    public List<MaltSentenceLink> getLinksByTargetIndex(int index){
     	List<MaltSentenceLink> links = new ArrayList<MaltSentenceLink>();
     	for ( MaltSentenceLink link : this.links){
-    		if ( link.getParentIndex() == index ){
+    		if ( link.getTargetIndex() == index ){
     			links.add(link);
     		}
     	}

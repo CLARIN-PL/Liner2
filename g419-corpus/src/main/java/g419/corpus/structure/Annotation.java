@@ -54,11 +54,11 @@ public class Annotation {
 		this.assignHead();
 	}
 
-	public Annotation(int begin, String type, Sentence sentence){
-		this.tokens.add(begin);
+	public Annotation(int tokenIndex, String type, Sentence sentence){
+		this.tokens.add(tokenIndex);
 		this.type = type;
 		this.sentence = sentence;
-		this.assignHead();
+		this.head = tokenIndex;
 	}
 
 	public Annotation(int begin, String type, int channelIdx, Sentence sentence){

@@ -163,8 +163,10 @@ public class CclSaxParser extends DefaultHandler {
             paragraphs.add(currentParagraph);
         }
         else if (element.equalsIgnoreCase(TAG_SENTENCE)) {
-            for (Annotation chunk : annotations.values())
+            for (Annotation chunk : annotations.values()){
+            	chunk.assignHead();
                 currentSentence.addChunk(chunk);
+            }
             if(!currentSentence.hasId()){
                 currentSentence.setId("sent" + (currentParagraph.numSentences() + 1));
                 if(foundSentenceId){

@@ -32,18 +32,24 @@ public class MaltParser {
     }
     
     public String [] parseTokens(String [] dataForMalt) throws MaltChainedException {
-        return parser.parseTokens(dataForMalt);
+        if ( dataForMalt.length == 0 ){
+           return new String[0];
+        }
+        else{
+           return parser.parseTokens(dataForMalt);
+        }
     }
     
     public void parse(MaltSentence sentence) throws MaltChainedException {
     	List<MaltSentenceLink> links = new ArrayList<MaltSentenceLink>();
     	String[] output = this.parseTokens(sentence.getMaltData());
+    	sentence.setMaltData(output);
     	int i = 0;
     	for ( String line : output ){
     		String[] parts = line.split("\t");
-    		int parentIndex = Integer.parseInt(parts[8]) - 1;
+    		int targetIndex = Integer.parseInt(parts[8]) - 1;
     		String relationType = parts[9];
-    		links.add(new MaltSentenceLink(i++, parentIndex, relationType));
+    		links.add(new MaltSentenceLink(i++, targetIndex, relationType));
     	}
     	sentence.setLinks(links);
     }

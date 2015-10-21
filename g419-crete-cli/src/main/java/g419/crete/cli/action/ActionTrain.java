@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 
 import weka.core.Instance;
 
@@ -65,7 +65,7 @@ public class ActionTrain extends Action {
 
 	@Override
 	public void parseOptions(String[] args) throws Exception {
-		CommandLine line = new GnuParser().parse(this.options, args);
+		CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
         this.output_file = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
         this.output_format = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT, "ccl");

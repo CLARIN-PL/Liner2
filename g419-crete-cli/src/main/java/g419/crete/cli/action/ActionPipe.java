@@ -12,7 +12,7 @@ import g419.lib.cli.action.Action;
 import g419.liner2.api.features.TokenFeatureGenerator;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 
 public class ActionPipe extends Action{
 
@@ -38,7 +38,7 @@ public class ActionPipe extends Action{
 
 	@Override
 	public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new GnuParser().parse(this.options, args);
+        CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
         this.output_file = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
         this.output_format = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT, "ccl");

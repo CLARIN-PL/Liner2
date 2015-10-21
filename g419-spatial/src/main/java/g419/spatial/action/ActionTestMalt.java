@@ -109,33 +109,33 @@ public class ActionTestMalt extends Action {
 			String typeLM = "";
 			String typeTR = "";
 			if ( ClassFeature.BROAD_CLASSES.get("verb").contains(token.getDisambTag().getPos()) ){
-				List<MaltSentenceLink> links = maltSentence.getIncomingLinks(i);
+				List<MaltSentenceLink> links = maltSentence.getLinksByTargetIndex(i);
 				for ( MaltSentenceLink link : links ){
-					Token tokenChild = sentence.getTokens().get(link.getTokenIndex());
+					Token tokenChild = sentence.getTokens().get(link.getSourceIndex());
 					if ( link.getRelationType().equals("subj") ){
 						if ( tokenChild.getDisambTag().getBase().equals("i")
 								|| tokenChild.getDisambTag().getBase().equals("oraz")){
 							typeTR = "_TRconj";
-							for ( MaltSentenceLink trLink : maltSentence.getIncomingLinks(link.getTokenIndex())){
-								landmarks.add(trLink.getTokenIndex());
+							for ( MaltSentenceLink trLink : maltSentence.getLinksByTargetIndex(link.getSourceIndex())){
+								landmarks.add(trLink.getSourceIndex());
 							}										
 						}
 						else if ( !tokenChild.getDisambTag().getPos().equals("interp") ){
-							trajectors.add(link.getTokenIndex());
+							trajectors.add(link.getSourceIndex());
 						}
 					}
 					else if ( tokenChild.getDisambTag().getPos().equals("prep") ){
-						indicator = link.getTokenIndex();
-						for ( MaltSentenceLink prepLink : maltSentence.getIncomingLinks(link.getTokenIndex())){
-							Token lm = sentence.getTokens().get(prepLink.getTokenIndex());
+						indicator = link.getSourceIndex();
+						for ( MaltSentenceLink prepLink : maltSentence.getLinksByTargetIndex(link.getSourceIndex())){
+							Token lm = sentence.getTokens().get(prepLink.getSourceIndex());
 							if ( lm.getOrth().equals(",")){
 								typeLM = "_LMconj";
-								for ( MaltSentenceLink prepLinkComma : maltSentence.getIncomingLinks(prepLink.getTokenIndex())){
-									landmarks.add(prepLinkComma.getTokenIndex());
+								for ( MaltSentenceLink prepLinkComma : maltSentence.getLinksByTargetIndex(prepLink.getSourceIndex())){
+									landmarks.add(prepLinkComma.getSourceIndex());
 								}
 							}
 							else if (!lm.getDisambTag().getPos().equals("interp")){
-								landmarks.add(prepLink.getTokenIndex());
+								landmarks.add(prepLink.getSourceIndex());
 							}
 						}
 					}

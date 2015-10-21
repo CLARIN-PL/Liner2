@@ -1,26 +1,44 @@
-package g419.tools;
+package g419.tools.actions;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.regex.Pattern;
+import java.util.zip.DataFormatException;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
+import org.apache.log4j.Logger;
 
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
+import g419.corpus.structure.Token;
+import g419.corpus.structure.WrappedToken;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.api.tools.ValueComparator;
 import g419.liner2.api.tools.parser.MaltParser;
 import g419.liner2.api.tools.parser.MaltSentence;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.OptionBuilder;
-import org.maltparser.MaltParserService;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.zip.DataFormatException;
+import g419.liner2.api.tools.parser.TokenWrapper;
+import g419.toolbox.sumo.WordnetToSumo;
+import g419.tools.maltfeature.DependencyPath;
+import g419.tools.maltfeature.MaltPattern;
 
 /**
  * Created by michal on 2/12/15.
@@ -53,16 +71,15 @@ public class CategorizeTool extends Tool{
     private MaltParser malt;
     private HashMap<String, Integer> lemma_count = new HashMap<>();
     private ArrayList<MaltPattern> patterns = new ArrayList<>();
-    private static Pattern relFrom = Pattern.compile("^--\\(([a-z_]+)\\)-->$");
-    private static Pattern relTo = Pattern.compile("^<--\\(([a-z_]+)\\)--$");
     HashMap<String, HashMap<String, HashMap<String, Integer>>> results = new HashMap<>();
     HashMap<String, HashMap<String, Integer>> categoryMatrix = new HashMap<>();
     HashMap<String, String> lemmatized_names = new HashMap<>();
     HashSet<String> nominativeNames = new HashSet<>();
+    WordnetToSumo serdel = null;
 
     public CategorizeTool() {
         super("categorize");
-        this.setDescription("ToDo");
+        this.setDescription("Generuje macierz wystąpień cech dla określonych klas anotacji.");
 
         this.options.addOption(CommonOptions.getInputFileFormatOption());
         this.options.addOption(CommonOptions.getInputFileNameOption());
@@ -70,44 +87,41 @@ public class CategorizeTool extends Tool{
         this.options.addOption(CommonOptions.getFeaturesOption());
         this.options.addOption(CommonOptions.getModelFileOption());
 
-        OptionBuilder.withArgName("malt");
-        OptionBuilder.hasArg();
-        OptionBuilder.withDescription("path to maltparser model");
-        OptionBuilder.withLongOpt(OPTION_MALT_LONG);
-        OptionBuilder.isRequired();
-        this.options.addOption(OptionBuilder.create(OPTION_MALT));
+        this.options.addOption(
+        		Option.builder(OPTION_MALT).longOpt(OPTION_MALT_LONG).hasArg().argName("malt")
+        		.desc("path to maltparser model").required().build());
 
-        OptionBuilder.withArgName("patterns");
-        OptionBuilder.hasArg();
-        OptionBuilder.withDescription("path to file with patterns");
-        OptionBuilder.withLongOpt(OPTION_PATTERNS_LONG);
-        this.options.addOption(OptionBuilder.create(OPTION_PATTERNS));
+        this.options.addOption(
+        		Option.builder(OPTION_PATTERNS).longOpt(OPTION_PATTERNS_LONG).hasArg().argName("patterns")
+        		.desc("path to file with patterns").required().build());
 
-        OptionBuilder.withDescription("create additional output with sentences for all names");
-        OptionBuilder.withLongOpt(OPTION_SENTENCES_LONG);
-        this.options.addOption(OptionBuilder.create(OPTION_SENTENCES));
+        this.options.addOption(
+        		Option.builder(OPTION_SENTENCES).longOpt(OPTION_SENTENCES_LONG)
+        		.desc("create additional output with sentences for all names").build());
 
-        OptionBuilder.withDescription("output for matrix with frequency by categories");
-        OptionBuilder.withArgName("matrix");
-        OptionBuilder.hasArg();
-        this.options.addOption(OptionBuilder.create(OPTION_CATEGORY_MATRIX));
+        this.options.addOption(
+        		Option.builder(OPTION_CATEGORY_MATRIX).hasArg().argName("matrix")
+        		.desc("output for matrix with frequency by categories").build());
 
-        OptionBuilder.withDescription("annotate names with new categories");
-        OptionBuilder.withArgName("categorize");
-        OptionBuilder.withLongOpt(OPTION_CATEGORIZE_LONG);
-        OptionBuilder.hasArg();
-        this.options.addOption(OptionBuilder.create(OPTION_CATEGORIZE));
 
-        OptionBuilder.withDescription("file with lematization of names");
-        OptionBuilder.withArgName("lemmatization");
-        OptionBuilder.withLongOpt(OPTION_LEMMATIZATION_LONG);
-        OptionBuilder.hasArg();
-        this.options.addOption(OptionBuilder.create(OPTION_LEMMATIZATION));
+        this.options.addOption(
+        		Option.builder(OPTION_CATEGORIZE).longOpt(OPTION_CATEGORIZE_LONG).hasArg().argName("categorize")
+        		.desc("annotate names with new categories").build());
+
+        this.options.addOption(
+        		Option.builder(OPTION_LEMMATIZATION).longOpt(OPTION_LEMMATIZATION_LONG).hasArg().argName("lemmatization")
+        		.desc("file with lematization of names").build());
+        
+        try {
+			this.serdel = new WordnetToSumo();
+		} catch (IOException | DataFormatException e) {
+			Logger.getLogger(this.getClass()).error("Błąd wczytania WordnetToSumo: " + e.getMessage());
+		}
     }
 
     @Override
     public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new GnuParser().parse(this.options, args);
+        CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
         this.patterns_output = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
@@ -168,76 +182,95 @@ public class CategorizeTool extends Tool{
     @Override
     public void run() throws Exception {
         AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(this.input_file, this.input_format);
-        Document ps = reader.nextDocument();
-        HashSet<String> allCategories = new HashSet<>();
+        HashSet<String> allCategories = new HashSet<String>();
+        Document ps = null;
 
         BufferedWriter sentenceWriter = null;
         if(getSentences && patterns_output != null){
             sentenceWriter= new BufferedWriter(new FileWriter(this.patterns_output.replace(".csv", "_sentences.csv")));
         }
-        while ( ps != null ){
+        
+        while ( (ps = reader.nextDocument()) != null ){
             for(Sentence sent: ps.getSentences()){
                 MaltSentence maltSent = new MaltSentence(sent, sent.getChunks());
-                String [] parsedTokens =  malt.parseTokens(maltSent.getMaltData());
-                String [][] splittedData = new String[parsedTokens.length][10];
-                for(int i=0; i<parsedTokens.length; i++){
-                    splittedData[i] = parsedTokens[i].split("\t");
-                }
-
-                wrapConjunctions(splittedData);
-
-                HashSet<Annotation> anns = maltSent.getAnnotations();
-                if (!anns.isEmpty()) {
-
-                    for (Annotation ann : anns) {
-                        String name = ann.getText();
-                        if(categorize_output != null){
-                            if(lemmatized_names.containsKey(name)){
-                                name = lemmatized_names.get(name);
-                            }
-                            if(!nominativeNames.contains(name)) {
-                                continue;
-                            }
+                maltSent.wrapConjunctions();
+                
+                for (Annotation ann : maltSent.getAnnotations()) {
+                    String name = ann.getText();
+                    if(categorize_output != null){
+                        if(lemmatized_names.containsKey(name)){
+                            name = lemmatized_names.get(name);
                         }
-                        else{
-                            name = ann.getBaseText();
+                        if(!nominativeNames.contains(name)) {
+                            continue;
                         }
-                        int nameIdx = ann.getBegin();
-                        boolean foundPatternForName = false;
-                        name = name.toLowerCase();
-                        if(lemma_count.containsKey(name)){
-                            lemma_count.put(name, lemma_count.get(name) + 1);
-                        }
-                        else{
-                            lemma_count.put(name, 1);
-                        }
+                    }
+                    else{
+                        name = ann.getBaseText();
+                    }
+                    
+                    boolean foundPatternForName = false;
+                    name = name.toLowerCase();
+                    if(lemma_count.containsKey(name)){
+                        lemma_count.put(name, lemma_count.get(name) + 1);
+                    }
+                    else{
+                        lemma_count.put(name, 1);
+                    }
 
-                        for (MaltPattern pattern : patterns) {
-                            boolean match = pattern.check(splittedData, nameIdx, pattern.name);
-                            pattern.results.remove("name");
-                            if (match) {
-                                String result = "";
-                                for (String label : pattern.results.keySet()) {
-                                    result += label + ":" + splittedData[pattern.results.get(label)][2] + " ";
-                                }
-
-                                addResult(name, pattern.pattString, result, ann.getType());
-                                allCategories.add(ann.getType());
-
-                                if(sentenceWriter != null){
-                                    foundPatternForName = true;
-                                    sentenceWriter.write(name + "\t" + result + "\t" + pattern.pattString + "\t" + sent.toString() + "\n");
-                                }
-                            }
-                            pattern.clear();
-                        }
-                        if (sentenceWriter != null && !foundPatternForName) {
-                            sentenceWriter.write(name + "\tNOT FOUND\tNOT FOUND\t" + sent.toString() + "\n");
-                        }
+                    for (MaltPattern pattern : patterns) {
+                    	List<DependencyPath> paths = pattern.match(maltSent, ann.getBegin() );
+                    	for ( DependencyPath path : paths ){
+                    		System.out.println(path.toString());
+                    	}
+                    	                    	
+//                    	pattern.match(sentence, tokenIdx)
+//                        boolean match = pattern.check(maltSent, nameIdx, pattern.getFirstNode());
+//                        pattern.getResults().remove("name");
+//                        if (match) {
+//                            Map<String, Set<String>> conceptValues = new TreeMap<String, Set<String>>();
+//                            String result = "";
+//                            int conceptFound = 0;
+//                            for (String label : pattern.getResults().keySet()) {
+//                            	String value = maltSent.getSentence().getTokens().get(pattern.getResults().get(label)).getDisambTag().getBase();
+//                                result += label + ":" + value + " ";
+//                                
+//                                Set<String> concepts = this.serdel.getConcept(value);
+//                                if ( concepts != null && concepts.size() > 0 ){
+//                                	conceptValues.put(label, concepts);
+//                                	conceptFound++;
+//                                }
+//                                else{
+//                                	conceptValues.put(label, new HashSet<String>(){{add(value);}});
+//                                }
+//                            }
+//
+//                            addResult(name, pattern.getPatternString(), result, ann.getType());
+//                            allCategories.add(ann.getType());
+//
+//                            if(sentenceWriter != null){
+//                                foundPatternForName = true;
+//                                sentenceWriter.write(name + "\t" + result + "\t" + pattern.getPatternString() + "\t" + sent.toString() + "\n");
+//                            }
+//                            
+//                            /**
+//                             * Wygeneruj dopasowania z uwzględnieniem mapowania na sumo
+//                             */
+//                            if ( conceptFound > 0 ){
+//                                for ( String conceptResult : this.generateCombinations(conceptValues) ){
+//                                    addResult(name, pattern.getPatternString(), conceptResult, ann.getType());
+//                                    allCategories.add(ann.getType());	                                	
+//                                }
+//                            }
+//                            
+//                        }
+//                        pattern.clear();
+                    }
+                    if (sentenceWriter != null && !foundPatternForName) {
+                        sentenceWriter.write(name + "\tNOT FOUND\tNOT FOUND\t" + sent.toString() + "\n");
                     }
                 }
             }
-            ps = reader.nextDocument();
         }
         if(getSentences){
             sentenceWriter.close();
@@ -377,19 +410,38 @@ public class CategorizeTool extends Tool{
             categoryWriter.close();
 
         }
+        /**
+         * Zapisz macierz wystąpień wzorców dla poszczególnych klas.
+         */
         else if(category_matrix_file != null){
             BufferedWriter matrixWriter = new BufferedWriter(new FileWriter(this.category_matrix_file));
+            // Wypisz nagłówek
             for(String category: allCategories){
                 matrixWriter.write("\t" + category);
             }
-            matrixWriter.write("\n");
+            matrixWriter.write("\tSum\tScore\n");
+            
+            // Wypisz wiersze
             for(String pattval: categoryMatrix.keySet()){
-                matrixWriter.write(pattval);
                 HashMap<String, Integer> pattvalResults = categoryMatrix.get(pattval);
+                int patternInstancesCount = 0;
+                int maxCount = 0;
                 for(String category: allCategories){
-                    matrixWriter.write("\t" + (pattvalResults.containsKey(category) ? pattvalResults.get(category) : 0));
+                	int categoryCount = pattvalResults.containsKey(category) ? pattvalResults.get(category) : 0;
+                	patternInstancesCount += categoryCount;
+                	maxCount = Math.max(maxCount, categoryCount);
                 }
-                matrixWriter.write("\n");
+            	if ( patternInstancesCount > 5 ){
+            		double score = (float)maxCount / (float)patternInstancesCount * Math.log(patternInstancesCount);
+	                matrixWriter.write(pattval);
+	                for(String category: allCategories){
+	                    matrixWriter.write("\t" + (pattvalResults.containsKey(category) ? pattvalResults.get(category) : 0));
+	                }
+	                matrixWriter.write("\t" + patternInstancesCount);
+	                matrixWriter.write(String.format("\t%5.2f", score));
+	                
+	                matrixWriter.write("\n");
+            	}
             }
             matrixWriter.close();
         }
@@ -442,229 +494,40 @@ public class CategorizeTool extends Tool{
     }
 
     private void getPatterns(String file) throws IOException {
-        Files.lines(Paths.get(file)).filter((line) -> !line.isEmpty()).forEach((patt) -> patterns.add(new MaltPattern(patt)));
+        Files.lines(Paths.get(file)).filter((line) -> !line.isEmpty()).forEach((patt) -> this.patterns.add(new MaltPattern(patt)));
     }
 
-    private void wrapConjunctions(String[][] sentenceData){
-        for(int i=0; i<sentenceData.length; i++){
-            if(sentenceData[i][3].equals("conj") && Integer.parseInt(sentenceData[i][8]) != 0){
-                for(int j=0; j<sentenceData.length; j++){
-                    if(sentenceData[j][9].equals("conjunct") && (Integer.parseInt(sentenceData[j][8]) - 1) == i){
-                        sentenceData[j][9] = sentenceData[i][9];
-                        sentenceData[j][8] = sentenceData[i][8];
-                    }
-                }
-                sentenceData[i][9] = "deleted_rel";
-            }
-        }
+    /**
+     * Generuje wszystkie możliwe kombinacje wartości dla listy atrybutów, np.
+     * <code>
+     *   values = { "X":("biały", "czarny"), "Y":("kot", "pies") }
+     * </code>
+     * Wygeneruje następujące napisy:
+     * <code>
+     *   X:biały Y:kot
+     *   X:biały Y:pies
+     *   X:czarny Y:kot
+     *   X:czarny Y:pies
+     * </code>     
+     * @param names
+     * @param values
+     * @return
+     */
+    private List<String> generateCombinations(Map<String, Set<String>> values){
+    	@SuppressWarnings("serial")
+		List<String> lastList = new ArrayList<String>(){{add("");}};
+    	for ( String name : values.keySet() ){
+    		Set<String> nameValues = values.get(name);
+    		List<String> newList = new ArrayList<String>();
+    		for ( String str : lastList ){
+    			for ( String value : nameValues ){
+    				String strNew = String.format("%s %s:%s", str, name, value).trim();
+    				newList.add(strNew);
+    			}
+    		}
+    		lastList = newList;
+    	}
+    	return lastList;
     }
-
-    private class MaltPattern {
-        String pattString;
-        Node name;
-        ArrayList<Node> nodes = new ArrayList<>();
-        ArrayList<Edge> edges = new ArrayList<>();
-        HashMap<String, Integer> results = new HashMap<>();
-
-        public MaltPattern(String pattern){
-            parsePattern(pattern);
-        }
-
-        private void parsePattern(String pattern) {
-            pattString = pattern;
-            String[] elements = pattern.split("\\s+");
-            int idx = 0;
-            Node node = createNode(elements[0]);
-            if(node.label != null && node.label.equals("name")){
-                name = node;
-            }
-            nodes.add(node);
-            while(idx != elements.length - 1){
-                node = addRel(node, elements[idx+1], elements[idx + 2]);
-                nodes.add(node);
-                if(node.label != null && node.label.equals("name")){
-                    name = node;
-                }
-                idx += 2;
-            }
-//            print();
-        }
-
-        private void print(){
-            System.out.println("NAME NODE:" + name.printNode());
-            for(Node n: nodes){
-                System.out.println(n.printNode());
-                for(Edge e: n.edges){
-                    System.out.println(e.printEdge());
-                }
-                System.out.println("--------");
-            }
-            System.out.println("######");
-
-        }
-
-        private Node addRel(Node node, String rel, String element){
-            Node newNode = createNode(element);
-            Matcher matchFrom = relFrom.matcher(rel);
-            Matcher matchTo = relTo.matcher(rel);
-            Edge edge;
-            if(matchFrom.find()){
-                edge = new Edge(matchFrom.group(1), node, newNode);
-            }
-            else if(matchTo.find()){
-                edge = new Edge(matchTo.group(1), newNode, node);
-            }
-            else{
-//                System.out.println("NO MATCH");
-                newNode = null;
-                edge = null;
-            }
-            edges.add(edge);
-            node.addEdge(edge);
-            newNode.addEdge(edge);
-            return newNode;
-        }
-
-        private Node createNode(String data){
-            String[] nodeData = data.split(":");
-            Node node;
-            if(nodeData.length == 1){
-                node = new Node(nodeData[0], null, null);
-            }
-            else if(nodeData.length == 2){
-                node = new Node(null, nodeData[0], nodeData[1]);
-            }
-            else if(nodeData.length == 3){
-                node = new Node(nodeData[0], nodeData[1], nodeData[2]);
-            }
-            else{
-                node = null;
-            }
-
-            return node;
-        }
-
-        private boolean check(String[][] sentenceData, int tokenIdx, Node node){
-            boolean nodeResult = node.check(sentenceData[tokenIdx], tokenIdx);
-            if(!nodeResult){
-                return false;
-            }
-            for(Edge edge: node.edges){
-                    int edgeResult;
-                    if(!edge.checkedFrom && node == edge.from){
-                        edgeResult = edge.checkFrom(sentenceData, tokenIdx);
-                        if(edgeResult == -1 || !check(sentenceData, edgeResult, edge.to)){
-                            return false;
-                        }
-                    }
-                    else if(!edge.checkedTo && node == edge.to){
-                        edgeResult = edge.checkTo(sentenceData, tokenIdx);
-                        if(edgeResult == -1 || !check(sentenceData, edgeResult, edge.from)){
-                            return false;
-                        }
-                    }
-            }
-            return true;
-        }
-
-        public void clear() {
-            for(Edge edge: edges){
-                edge.checkedFrom = false;
-                edge.checkedTo = false;
-            }
-            results = new HashMap<>();
-        }
-
-        private class Node{
-            String label = null;
-            String checkBy = null;
-            String form = null;
-            HashSet<Edge> edges = new HashSet<>();
-
-            private Node(String label, String checkBy, String form){
-                this.label = label;
-                this.checkBy = checkBy;
-                this.form = form;
-            }
-
-            private void addEdge(Edge edge){
-                edges.add(edge);
-            }
-
-            private String printNode(){
-                String pattern = "";
-                pattern += "label: " + (label != null ? label : "-");
-                pattern += " checkBy: " + (checkBy != null ? checkBy : "-");
-                pattern += " form: " + (form != null ? form : "-");
-                return pattern;
-            }
-
-            private boolean check(String[] tokenData, int tokenIdx){
-                if(label != null){
-                    results.put(label, tokenIdx);
-                }
-                if(form == null){
-                    return true;
-                }
-                boolean match = true;
-                if(checkBy == "base"){
-                    match = form.equals(tokenData[2]);
-                }
-                else if(checkBy == "pos"){
-                    match = form.equals(tokenData[3]);
-                }
-                return match;
-            }
-        }
-
-        private class Edge{
-            boolean checkedFrom = false;
-            boolean checkedTo = false;
-            String relation;
-            Node from, to;
-
-            private Edge(String relation, Node from, Node to){
-                this.relation = relation;
-                this.from = from;
-                this.to = to;
-            }
-
-            private String printEdge(){
-                return from.printNode() + " --(" + relation + ")--> " + to.printNode();
-            }
-
-            private int checkFrom(String[][] sentenceData, int fromIdx){
-                checkedFrom =true;
-                for(int toIdx=0; toIdx<sentenceData.length; toIdx++){
-                    if(sentenceData[toIdx][9].equals(relation)){
-                        if(Integer.parseInt(sentenceData[toIdx][8]) - 1 == fromIdx){
-                            if(to.check(sentenceData[toIdx], toIdx)) {
-                                return toIdx;
-                            }
-                        }
-                    }
-                }
-                return -1;
-            }
-
-            private int checkTo(String[][] sentenceData, int toIdx){
-                checkedTo =true;
-                if(sentenceData[toIdx][9].equals(relation)){
-                    int fromIdx = Integer.parseInt(sentenceData[toIdx][8]) - 1;
-                    if(fromIdx == -1){
-                        return -1;
-                    }
-                    if(from.check(sentenceData[fromIdx], fromIdx)){
-                        return fromIdx;
-                    }
-                }
-                return -1;
-
-            }
-
-
-        }
-    }
-
 
 }

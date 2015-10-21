@@ -1,4 +1,4 @@
-package g419.tools;
+package g419.tools.actions;
 
 import g419.liner2.api.LinerOptions;
 import org.apache.commons.cli.CommandLine;

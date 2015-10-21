@@ -28,4 +28,20 @@ public class WrappedToken extends Token{
     public void setOldSentence(Sentence s){
         oldSentence = s;
     }
+    
+    public String getFullOrth(){
+    	String str = "";
+    	for ( Token token : oldTokens ){
+    		if ( !this.noSpaceAfter ){
+    			str += " ";
+    		}
+    		if ( token instanceof WrappedToken ){
+    			str += ((WrappedToken)token).getFullOrth();
+    		}
+    		else{
+    			str += token.getOrth();
+    		}
+    	}
+    	return str.trim();
+    }
 }

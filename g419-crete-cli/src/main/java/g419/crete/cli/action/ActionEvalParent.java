@@ -23,7 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 
 
 public class ActionEvalParent extends Action {
@@ -47,7 +47,7 @@ public class ActionEvalParent extends Action {
 
 	@Override
 	public void parseOptions(String[] args) throws Exception {
-		CommandLine line = new GnuParser().parse(this.options, args);
+		CommandLine line = new DefaultParser().parse(this.options, args);
 		parseDefault(line);
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");

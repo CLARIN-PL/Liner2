@@ -1,4 +1,4 @@
-package g419.tools;
+package g419.tools.actions;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;

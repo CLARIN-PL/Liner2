@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 /**
  * Created by michal on 1/9/15.
  */
@@ -23,28 +25,39 @@ public class TokenWrapper {
         HashMap<Integer, Integer> newTokenIndexes = new HashMap<Integer, Integer>();
         HashSet<Integer> notWrappedTokens = new HashSet<Integer>();
         ArrayList<Token> oldTokens = sentence.getTokens();
-        for(int i=0; i<sentence.getTokenNumber(); i++){
-            ArrayList<Annotation> tokenAnnsToWrap = getLongestAnns(sentence.getChunksAt(i, annotationTypes));
+        int sentenceIndex=0;
+        while ( sentenceIndex<sentence.getTokenNumber() ){
+            ArrayList<Annotation> tokenAnnsToWrap = getLongestAnns(sentence.getChunksAt(sentenceIndex, annotationTypes));
             if(tokenAnnsToWrap.isEmpty()){
-                wrappedSent.addToken(oldTokens.get(i));
-                newTokenIndexes.put(i, i);
-                notWrappedTokens.add(i);
+                wrappedSent.addToken(oldTokens.get(sentenceIndex));
+                newTokenIndexes.put(sentenceIndex, sentenceIndex);
+                notWrappedTokens.add(sentenceIndex);
+                sentenceIndex++;
             }
             else{
                 Annotation ann = tokenAnnsToWrap.get(0);
                 for(int tokIdx: ann.getTokens()){
-                    newTokenIndexes.put(i, tokIdx);
+                    newTokenIndexes.put(sentenceIndex, tokIdx);
                 }
-                List<Token> tokensToWrap = oldTokens.subList(ann.getBegin(), ann.getEnd());
-                Token head = getAnnotationHead(tokensToWrap, sentence);
-                Token newToken = new WrappedToken(head.getOrth(), head.getTags().get(0), attrIdx, tokensToWrap, sentence);
-                wrappedSent.addToken(newToken);
+                List<Token> tokensToWrap = new ArrayList<Token>();
+                for (int j=ann.getBegin(); j<=ann.getEnd(); j++){
+                    tokensToWrap.add(sentence.getTokens().get(j));
+                }
+                if ( tokensToWrap.size() == 0 ){
+                   System.out.println("no tokens");
+                }
+                else{
+	                Token head = getAnnotationHead(tokensToWrap, sentence);
+	                WrappedToken newToken = new WrappedToken(head.getOrth(), head.getTags().get(0), attrIdx, tokensToWrap, sentence);
+	                wrappedSent.addToken(newToken);
+	                //Logger.getLogger(TokenWrapper.class).info("Wrapped: " + newToken.getFullOrth());
+                }             
+                // ToDo: dodać pozostałe anotacje
+                for(Annotation an2: tokenAnnsToWrap){
+                    wrappedSent.addChunk(new Annotation(wrappedSent.getTokenNumber()-1, an2.getType(), wrappedSent));
+                }
+                sentenceIndex+= ann.getTokens().size();
             }
-
-            for(Annotation ann: tokenAnnsToWrap){
-                wrappedSent.addChunk(new Annotation(i, ann.getType(), wrappedSent));
-            }
-
         }
 
         for(Annotation ann: sentence.getChunks()){
@@ -59,6 +72,7 @@ public class TokenWrapper {
                 wrappedSent.addChunk(newAnn);
             }
         }
+        
         return wrappedSent;
     }
 
