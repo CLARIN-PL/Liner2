@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
+import org.maltparser.core.syntaxgraph.DependencyStructure;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,7 +31,11 @@ public class MaltParser {
         }
 
     }
-    
+
+    public DependencyStructure parseTokensToDependencyStructure(String [] dataForMalt) throws MaltChainedException {
+        return parser.parse(dataForMalt);
+    }
+
     public String [] parseTokens(String [] dataForMalt) throws MaltChainedException {
         if ( dataForMalt.length == 0 ){
            return new String[0];

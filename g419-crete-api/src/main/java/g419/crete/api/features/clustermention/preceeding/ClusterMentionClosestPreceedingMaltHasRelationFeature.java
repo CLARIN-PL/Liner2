@@ -6,7 +6,7 @@ import g419.corpus.structure.AnnotationCluster;
 import g419.crete.api.features.clustermention.AbstractClusterMentionFeature;
 import g419.crete.api.structure.AnnotationUtil;
 import g419.liner2.api.chunker.MinosChunker;
-import g419.liner2.api.tools.Maltparser;
+import g419.liner2.api.tools.parser.MaltParser;
 
 import java.util.Set;
 
@@ -20,13 +20,14 @@ public abstract class ClusterMentionClosestPreceedingMaltHasRelationFeature exte
 
 	public abstract String getRelationName();
 	
-	MaltParserService maltService;
+	MaltParser maltParser;
 	
 	public ClusterMentionClosestPreceedingMaltHasRelationFeature(String modelPath){
-		if(Maltparser.isInitialized(modelPath))
-            maltService = Maltparser.getParser(modelPath);
-        else
-            maltService = Maltparser.addParser(modelPath);
+		maltParser = new MaltParser(modelPath);
+//		if(MaltParser.isInitialized(modelPath))
+//            maltService = MaltParser.getParser(modelPath);
+//        else
+//            maltService = MaltParser.addParser(modelPath);
 	}
 	
 	public Boolean mentionHasRelation(Annotation mention, String relationName){
@@ -34,7 +35,7 @@ public abstract class ClusterMentionClosestPreceedingMaltHasRelationFeature exte
 		int mentionPositionEnd = mention.getTokens().last();
 		String[] conllSentence  = ConllStreamWriter.convertSentence(mention.getSentence());
 		try {
-			DependencyStructure maltGraph = maltService.parse(conllSentence);
+			DependencyStructure maltGraph = maltParser.parseTokensToDependencyStructure(conllSentence);
 			for(int i = mentionPositionStart; i <= mentionPositionEnd; i++)
 				if(MinosChunker.MaltGraphUtil.hasRelation(MinosChunker.MaltGraphUtil.getEdgesToNode(maltGraph, i), relationName))
 					return true;
