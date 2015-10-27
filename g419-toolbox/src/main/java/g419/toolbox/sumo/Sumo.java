@@ -54,10 +54,18 @@ public class Sumo {
     private void loadDeafultKifs() throws IOException{
     	this.parseMapping(getClass().getResourceAsStream("/Merge.kif"));
     	this.parseMapping(getClass().getResourceAsStream("/Geography.kif"));
-    	this.parseMapping(getClass().getResourceAsStream("/Transportation.kif"));
     	this.parseMapping(getClass().getResourceAsStream("/Mid-level-ontology.kif"));
+    	this.parseMapping(getClass().getResourceAsStream("/Transportation.kif"));
     	this.parseMapping(getClass().getResourceAsStream("/Economy.kif"));
     	this.parseMapping(getClass().getResourceAsStream("/Cars.kif"));
+    	this.parseMapping(getClass().getResourceAsStream("/naics.kif"));
+    	this.parseMapping(getClass().getResourceAsStream("/Food.kif"));
+    	this.parseMapping(getClass().getResourceAsStream("/Media.kif"));
+    	this.parseMapping(getClass().getResourceAsStream("/TransportDetail.kif"));
+    	this.parseMapping(getClass().getResourceAsStream("/Dining.kif"));
+    	this.parseMapping(getClass().getResourceAsStream("/QoSontology.kif"));
+    	this.parseMapping(getClass().getResourceAsStream("/MilitaryDevices.kif"));
+    	
     }
 
     private void parseMapping(InputStream mapping) throws IOException {

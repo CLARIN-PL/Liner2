@@ -14,15 +14,15 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-public class PlainSpatialPatternParser {
+public class PlainSpatialSchemeParser {
 
 	private BufferedReader reader = null;
 	private Sumo sumo = null;
 	private int lineNo = 0;
 	private String currentLine = null;
-	private Logger logger = Logger.getLogger(PlainSpatialPatternParser.class); 
+	private Logger logger = Logger.getLogger(PlainSpatialSchemeParser.class); 
 	
-	public PlainSpatialPatternParser(Reader reader, Sumo sumo){
+	public PlainSpatialSchemeParser(Reader reader, Sumo sumo){
 		this.reader = new BufferedReader(reader);
 		this.sumo = sumo;
 	}
@@ -45,7 +45,7 @@ public class PlainSpatialPatternParser {
 				}
 				this.nextLine();
 				if ( this.currentLine == null || !this.currentLine.startsWith("tr:")){
-					Logger.getLogger(PlainSpatialPatternParser.class).warn(
+					Logger.getLogger(PlainSpatialSchemeParser.class).warn(
 							String.format("Linia nr %d: oczekiwano 'tr:', ale napotkano '%s'", this.lineNo, this.currentLine));
 					continue;
 				}
@@ -60,7 +60,7 @@ public class PlainSpatialPatternParser {
 				Set<String> landmarkConcepts = this.parseConcepts(this.currentLine.substring(3).trim());
 				
 				if ( trajectorConcepts.size() > 0 && landmarkConcepts.size() > 0 ){
-					patterns.add(new SpatialRelationPattern(sis, trajectorConcepts, landmarkConcepts));
+					patterns.add(new SpatialRelationPattern(String.join("-", sis), sis, trajectorConcepts, landmarkConcepts));
 				}
 				else if ( trajectorConcepts.size() == 0 ){
 					this.logWarning("Pusty zbiór trajectorConcept");

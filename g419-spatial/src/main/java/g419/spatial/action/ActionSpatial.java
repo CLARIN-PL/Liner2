@@ -102,8 +102,9 @@ public class ActionSpatial extends Action {
 		filters.add(new RelationFilterPronoun());
 		filters.add(semanticFilter);
 		
-		//IobberChunker iobber = new IobberChunker("", this.config_iobber_model, this.config_iobber_config);		
-		//Liner2 liner2 = new Liner2(this.config_liner2_model);
+		IobberChunker iobber = new IobberChunker("", this.config_iobber_model, this.config_iobber_config);		
+		Liner2 liner2 = new Liner2(this.config_liner2_model);
+		
 		MaltParser malt = new MaltParser("/nlp/resources/maltparser/skladnica_liblinear_stackeager_final.mco");
 		FscoreEvaluator2 evalTotal = new FscoreEvaluator2();
 		FscoreEvaluator2 evalNoSeedTotal = new FscoreEvaluator2();

@@ -1,21 +1,20 @@
 package g419.spatial.filter;
 
-import g419.spatial.io.PlainSpatialPatternParser;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.List;
+import java.util.MissingResourceException;
+import java.util.Set;
+import java.util.zip.DataFormatException;
+
+import g419.spatial.io.CsvSpatialSchemeParser;
 import g419.spatial.structure.SpatialRelation;
 import g419.spatial.structure.SpatialRelationPattern;
 import g419.spatial.structure.SpatialRelationPatternMatcher;
 import g419.toolbox.sumo.NamToSumo;
 import g419.toolbox.sumo.Sumo;
 import g419.toolbox.sumo.WordnetToSumo;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.List;
-import java.util.MissingResourceException;
-import java.util.Set;
-import java.util.zip.DataFormatException;
 
 public class RelationFilterSemanticPattern implements IRelationFilter {
 
@@ -42,17 +41,16 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
 	 * @throws IOException
 	 */
 	private SpatialRelationPatternMatcher getPatternMatcher() throws IOException{
-		String location = "/g419/spatial/resources/spatial_relation_patterns.txt";
+		String location = "/g419/spatial/resources/spatial_schemes.csv";
 		InputStream resource = this.getClass().getResourceAsStream(location);
+		boolean general = false;
 
         if (resource == null) {
             throw new MissingResourceException("Resource not found: " + location,
                     this.getClass().getName(), location);
         }
         
-        PlainSpatialPatternParser parser = new PlainSpatialPatternParser(
-        		new InputStreamReader( resource ), this.sumo);
-        return parser.parse();        
+        return (new CsvSpatialSchemeParser(new InputStreamReader( resource ), new Sumo(false), general)).parse();
 	}
 		
 	@Override

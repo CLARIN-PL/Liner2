@@ -2,16 +2,29 @@ package g419.spatial.structure;
 
 import java.util.Set;
 
+/**
+ * Klasa reprezentuje schemat zaimkowego wyrażenia przestrzennego.
+ * Schemat definiuje ograniczenia semantyczne dla trajestora i landmarka w zależności
+ * od przyimka przestrzennego.
+ * @author czuk
+ *
+ */
 public class SpatialRelationPattern {
 
+	String name = null;
 	Set<String> indicators = null;
 	Set<String> landmarkConcepts = null;
 	Set<String> trajectorConcepts = null;
 	
-	public SpatialRelationPattern(Set<String> indicators, Set<String> trajectorConcepts, Set<String> landmarkConcepts){
+	public SpatialRelationPattern(String name, Set<String> indicators, Set<String> trajectorConcepts, Set<String> landmarkConcepts){
+		this.name = name;
 		this.indicators = indicators;
 		this.landmarkConcepts = landmarkConcepts;
 		this.trajectorConcepts = trajectorConcepts;
+	}
+	
+	public String getName(){
+		return this.name;
 	}
 	
 	public Set<String> getIndicators() {

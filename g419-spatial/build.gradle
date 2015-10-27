@@ -21,6 +21,7 @@ jar {
 dependencies {
     compile 'commons-cli:commons-cli:1.2'
     compile 'log4j:log4j:1.2.17'
+    compile 'org.apache.commons:commons-csv:1.2'
     compile project(":g419-corpus")
     compile project(":g419-lib-cli")
     compile project(":g419-toolbox")

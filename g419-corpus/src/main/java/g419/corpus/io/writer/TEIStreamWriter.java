@@ -564,7 +564,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     	
     	int annMentionsIndent = 6;
     	this.indent(annMentionsIndent, annChunksWriter);
-    	annChunksWriter.writeComment(ann.getText());
+    	//annChunksWriter.writeComment(" " + ann.getText() + " ");
     	annChunksWriter.writeCharacters("\n");
     	this.indent(annMentionsIndent, annChunksWriter);
     	annChunksWriter.writeStartElement(TAG_SEGMENT);
@@ -603,7 +603,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     	
     	int annMentionsIndent = 6;
     	this.indent(annMentionsIndent, annMentionsWriter);
-    	annMentionsWriter.writeComment(ann.getText());
+    	//annMentionsWriter.writeComment(ann.getText());
     	annMentionsWriter.writeCharacters("\n");
     	this.indent(annMentionsIndent, annMentionsWriter);
         annMentionsWriter.writeStartElement(TAG_SEGMENT);

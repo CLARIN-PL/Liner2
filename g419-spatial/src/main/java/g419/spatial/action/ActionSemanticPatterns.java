@@ -1,12 +1,12 @@
 package g419.spatial.action;
 
-import g419.lib.cli.action.Action;
-import g419.spatial.io.PlainSpatialPatternParser;
-import g419.toolbox.sumo.Sumo;
-
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.MissingResourceException;
+
+import g419.lib.cli.action.Action;
+import g419.spatial.io.CsvSpatialSchemeParser;
+import g419.toolbox.sumo.Sumo;
 
 public class ActionSemanticPatterns extends Action {
 	
@@ -27,7 +27,7 @@ public class ActionSemanticPatterns extends Action {
 	@Override
 	public void run() throws Exception {
 		
-		String location = "/g419/spatial/resources/spatial_relation_patterns.txt";
+		String location = "/g419/spatial/resources/spatial_schemes.csv";
 		InputStream resource = this.getClass().getResourceAsStream(location);
 
         if (resource == null)
@@ -36,8 +36,12 @@ public class ActionSemanticPatterns extends Action {
                     this.getClass().getName(), location);
         }
         
-        PlainSpatialPatternParser parser = new PlainSpatialPatternParser(new InputStreamReader( resource ), new Sumo(false));
-        parser.parse();
+        System.out.println("=== Ogół ===");
+        (new CsvSpatialSchemeParser(new InputStreamReader( resource ), new Sumo(false))).parse();
+
+		resource = this.getClass().getResourceAsStream(location);
+        System.out.println("=== Prototyp ===");
+        (new CsvSpatialSchemeParser(new InputStreamReader( resource ), new Sumo(false), false)).parse();
 	}
 	
 }
