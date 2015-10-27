@@ -8,9 +8,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
 import org.apache.log4j.Logger;
 
 import g419.corpus.io.reader.AbstractDocumentReader;
@@ -31,6 +30,7 @@ public class ActionSpatialPatterns extends Action {
 	
 	private List<Pattern> annotationsPrep = new LinkedList<Pattern>();
 	private List<Pattern> annotationsNg = new LinkedList<Pattern>();
+	private List<Pattern> annotationsNp = new LinkedList<Pattern>();
 	
 	private String filename = null;
 	private String inputFormat = null;
@@ -43,7 +43,7 @@ public class ActionSpatialPatterns extends Action {
 	private final Pattern generaliseRepeatedNG = Pattern.compile("\\[NG\\]( \\[NG\\])");
 	private final Pattern generaliseRepeatedPrepNG = Pattern.compile("\\[PrepNG\\]( \\[PrepNG\\])");
 	private final Pattern generaliseVerb = Pattern.compile("pos=(fin|bedzie|aglt|praet|impt|imps|inf|pcon|pant|ger|pact|ppas)");
-	private final Pattern generalisePrepNGtrajector = Pattern.compile("\\[PrepNG#trajector\\]");
+	private final Pattern generalisePrepNGtrajector = Pattern.compile("\\[PrepNG#TR\\]");
 	private final Pattern generaliseToVerbfin = Pattern.compile("\\[(Ppas|Pact|Inf|Imps)\\]");
 	private final Pattern generaliseIgnoreQubNum = Pattern.compile(" \\[pos=qub\\] \\[pos=num\\]");
 	private final Pattern generaliseIgnoreQub = Pattern.compile(" \\[pos=qub\\]");
@@ -63,7 +63,8 @@ public class ActionSpatialPatterns extends Action {
 		this.options.addOption(CommonOptions.getInputFileFormatOption());
 		
 		this.annotationsPrep.add(Pattern.compile("^PrepNG.*"));
-		this.annotationsNg.add(Pattern.compile("^NG.*"));
+		this.annotationsNg.add(Pattern.compile("^NG.*"));		
+		this.annotationsNp.add(Pattern.compile("chunk_np"));
 	}
 	
 	/**
@@ -71,12 +72,8 @@ public class ActionSpatialPatterns extends Action {
 	 * @return Object for input file name parameter.
 	 */
 	private Option getOptionInputFilename(){
-		OptionBuilder.withArgName(ActionSpatialPatterns.OPTION_FILENAME_LONG);
-		OptionBuilder.hasArg();
-		OptionBuilder.isRequired();
-		OptionBuilder.withDescription("path to the input file");
-		OptionBuilder.withLongOpt(OPTION_FILENAME_LONG);
-		return OptionBuilder.create(ActionSpatialPatterns.OPTION_FILENAME);			
+		return Option.builder(ActionSpatialPatterns.OPTION_FILENAME).hasArg().argName("FILENAME").required()
+				.desc("path to the input file").longOpt(OPTION_FILENAME_LONG).build();			
 	}
 
 	/**
@@ -85,7 +82,7 @@ public class ActionSpatialPatterns extends Action {
 	 */
 	@Override
 	public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new GnuParser().parse(this.options, args);
+        CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
         this.filename = line.getOptionValue(ActionSpatialPatterns.OPTION_FILENAME);
         this.inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
@@ -112,6 +109,7 @@ public class ActionSpatialPatterns extends Action {
 			iobber.chunkInPlace(document);
 			
 			Map<String, Annotation> tokenToNg = this.makeAnnotationIndex(document.getAnnotations(annotationNG));
+			Map<String, Annotation> tokenToNp = this.makeAnnotationIndex(document.getAnnotations(this.annotationsNp));
 			
 			Map<Annotation, List<Annotation>> tuples = new HashMap<Annotation, List<Annotation>>();
 						
@@ -125,7 +123,7 @@ public class ActionSpatialPatterns extends Action {
 			}
 			
 			for ( Annotation si : tuples.keySet() ){
-				String pattern = this.generatePattern(si.getSentence(), tuples.get(si), tokenToNg);
+				String pattern = this.generatePattern(si.getSentence(), tuples.get(si), tokenToNg, tokenToNp);
 				pattern = this.generalisePattern(pattern);
 				System.out.println(pattern);
 			}
@@ -141,7 +139,8 @@ public class ActionSpatialPatterns extends Action {
 	 * @param tokenToNg
 	 * @return
 	 */
-	public String generatePattern(Sentence sentence, List<Annotation> anns, Map<String, Annotation> tokenToNg){
+	public String generatePattern(Sentence sentence, List<Annotation> anns, 
+			Map<String, Annotation> tokenToNg, Map<String, Annotation> tokenToNp){
 		List<Token> tokens = sentence.getTokens();
 		StringBuilder sb = new StringBuilder();
 		sb.append("PATTERN: ");
@@ -173,9 +172,22 @@ public class ActionSpatialPatterns extends Action {
 		
 		Map<String, Annotation> mentionIndex = this.makeAnnotationIndex(anns);		
 		
+		Annotation lastNP = null;
+		
 		int i=begin;
 		while ( i<=end){
 			String tokenHashI = "" + sentence.hashCode() + "#" + i;
+			
+			Annotation currentNP = tokenToNp.get(tokenHashI);
+			if ( currentNP != lastNP && lastNP != null ){
+				sb.append(">");
+			}
+			sb.append(" ");
+			if ( currentNP != lastNP && currentNP != null ){
+				sb.append("<");
+			}
+			lastNP = currentNP;			
+			
 			Annotation mention = mentionIndex.get(tokenHashI);
 			Annotation group = tokenToNg.get(tokenHashI);
 			String t = "";
@@ -200,11 +212,14 @@ public class ActionSpatialPatterns extends Action {
 				}
 			}
 			if ( mention != null ){
-				t += "#" + mention.getType();
+				t += "#" + mention.getType().replace("trajector", "TR").replace("landmark", "LM");
 				i = Integer.max(i, mention.getEnd());
-			}
+			}						
 			i++;
-			sb.append("[" + t + "] ");
+			sb.append("[" + t + "]");
+		}
+		if ( lastNP != null ){
+			sb.append(">");
 		}
 
 		sb.append("	***	");
@@ -230,8 +245,8 @@ public class ActionSpatialPatterns extends Action {
 		genPattern = this.generaliseRepeatedNG.matcher(genPattern).replaceAll("[NG]");
 		genPattern = this.generaliseRepeatedPrepNG.matcher(genPattern).replaceAll("[PrepNG]");
 		genPattern = this.generaliseVerb.matcher(genPattern).replaceAll("pos=@verb");
-		genPattern = this.generaliseToVerbfin.matcher(genPattern).replaceAll("[Verbfin]");
-		genPattern = this.generalisePrepNGtrajector.matcher(genPattern).replaceAll("[NG#trajector]");
+		//genPattern = this.generaliseToVerbfin.matcher(genPattern).replaceAll("[Verbfin]");
+		genPattern = this.generalisePrepNGtrajector.matcher(genPattern).replaceAll("[NG#TR]");
 		genPattern = this.generaliseIgnoreQubNum.matcher(genPattern).replaceAll("");
 		genPattern = this.generaliseIgnoreQub.matcher(genPattern).replaceAll("");
 		genPattern = this.generaliseVerbfinVerbfin.matcher(genPattern).replaceAll("[Verbfin]");

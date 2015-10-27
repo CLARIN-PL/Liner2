@@ -65,4 +65,8 @@ public class Paragraph {
     public int numSentences(){
         return sentences.size();
     }
+
+	public void setDocument(Document document) {
+		for(Sentence sentence : sentences) sentence.setDocument(document);
+	}
 }

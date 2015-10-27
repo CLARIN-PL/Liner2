@@ -1,7 +1,7 @@
 package g419.liner2.api.features.annotations;
 
 import g419.corpus.structure.Annotation;
-import g419.liner2.api.tools.Maltparser;
+import g419.liner2.api.tools.parser.MaltParser;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,7 +18,7 @@ import org.maltparser.core.exception.MaltChainedException;
  */
 public class AnnotationFeatureMalt extends AnnotationFeature{
 
-    private Maltparser malt;
+    private MaltParser malt;
     private String type;
     private int distance;
 
@@ -26,7 +26,7 @@ public class AnnotationFeatureMalt extends AnnotationFeature{
     public AnnotationFeatureMalt(String modelPath, int distance, String type) {
         this.type = type;
         this.distance = distance;
-        malt = new Maltparser(modelPath);
+        malt = new MaltParser(modelPath);
     }
 
     public HashMap<Annotation, String> generate(String[] dataForMalt, HashSet<Annotation> annotations) {

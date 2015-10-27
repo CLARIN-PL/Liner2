@@ -64,7 +64,7 @@ public class ChunkRelChunker extends Chunker {
 			ex.printStackTrace();
 		}
 		finally{
-			deleteFile(tmpFileName);
+//			deleteFile(tmpFileName);
 		}
 
 		return new HashMap<Sentence, AnnotationSet>();

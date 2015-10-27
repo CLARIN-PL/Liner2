@@ -71,7 +71,11 @@ public class LinerOptions {
 		this.properties = new Properties();
 	}
 	
-	public static boolean isOption(String name){
+	public static boolean isGlobalOption(String name){
+		return LinerOptions.getGlobal().getProperties().containsKey(name);		
+	}
+
+	public boolean isOption(String name){
 		return LinerOptions.getGlobal().getProperties().containsKey(name);		
 	}
 

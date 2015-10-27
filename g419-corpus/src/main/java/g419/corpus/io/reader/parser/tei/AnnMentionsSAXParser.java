@@ -130,6 +130,9 @@ public class AnnMentionsSAXParser extends DefaultHandler {
 	            	ann.setHead(currentHead);
 	            	currentHead = null;
 	            }
+	            //else{
+	            ann.assignHead(true);
+	            //}
 	            annotationsMap.put(annotationId, ann);
 	            // TODO: tymczasowo dla każdej anotacji wstawiane są dwa klucze, z i bez nazwy pliku
 	            annotationsMap.put("ann_mentions.xml#" + annotationId, ann);

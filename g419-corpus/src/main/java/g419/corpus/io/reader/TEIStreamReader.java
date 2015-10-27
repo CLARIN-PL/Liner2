@@ -1,6 +1,7 @@
 package g419.corpus.io.reader;
 
 import g419.corpus.io.DataFormatException;
+import g419.corpus.io.reader.parser.tei.AnnChunksSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnGroupsSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnMentionsSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnMorphosyntaxSAXParser;
@@ -25,10 +26,12 @@ public class TEIStreamReader extends  AbstractDocumentReader{
     private Document document;
     
     public TEIStreamReader(
+    		String uri,
     		InputStream annMorphosyntax, 
     		InputStream annSegmentation, 
     		InputStream annNamed, 
     		InputStream annMentions, 
+    		InputStream annChunks,
     		InputStream annCoreference,
     		InputStream annWords,
     		InputStream annGroups,
@@ -49,6 +52,7 @@ public class TEIStreamReader extends  AbstractDocumentReader{
         AnnSegmentationSAXParser segmentationParser = new AnnSegmentationSAXParser(annSegmentation, morphoParser.getParagraphs());
         AnnWordsSAXParser wordsParser = null;
         AnnMentionsSAXParser mentionParser = null;
+        AnnChunksSAXParser chunksParser = null;
 
         /* Read words from the ann_words.xml file */
         if ( annWords != null ){
@@ -81,7 +85,14 @@ public class TEIStreamReader extends  AbstractDocumentReader{
         			segmentationParser.getParagraphs(), 
         			morphoParser.getTokenIdsMap());
         }
-        
+
+        if ( annChunks != null ){
+        	chunksParser = new AnnChunksSAXParser(
+        			annChunks, 
+        			segmentationParser.getParagraphs(), 
+        			morphoParser.getTokenIdsMap());
+        }
+
         if ( annCoreference != null ){
         	//AnnCoreferenceSAXParser coreferenceParser = new AnnCoreferenceSAXParser(annCoreference, mentionsParser.getParagraphs(), mentionsParser.getMentions());
         }
@@ -91,7 +102,8 @@ public class TEIStreamReader extends  AbstractDocumentReader{
         	relationSet.getRelations().addAll(relationParser.getRelations());
         }
 
-        this.document = new Document(docName, segmentationParser.getParagraphs(), this.attributeIndex, relationSet);       
+        this.document = new Document(docName, segmentationParser.getParagraphs(), this.attributeIndex, relationSet);     
+        this.document.setUri(uri);
     }
 
     @Override

@@ -40,7 +40,7 @@ public class Tag {
     }
 
     // TODO
-//    public void SetBase(String base){
-//    	ti
-//    }
+    public void setBase(String base){
+    	this.base = base;
+    }
 }

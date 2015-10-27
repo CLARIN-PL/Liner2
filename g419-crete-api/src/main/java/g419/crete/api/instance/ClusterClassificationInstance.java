@@ -47,6 +47,11 @@ public class ClusterClassificationInstance extends AbstractCreteInstance<Integer
 		this.mentionClusterPair = new MentionClusterPair(new ImmutablePair<Annotation, AnnotationCluster>(mention, cluster));
 		extractFeatures();
 	}
+	
+	@Override
+	public String toString(){
+		return mention.getHolder().toString() + " -- ??? --> " + cluster.getHolder().toString() + "\n";
+	}
 
 	
 	@Override

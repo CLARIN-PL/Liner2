@@ -27,8 +27,11 @@ public class AnnotationFeaturePreceedingSubordinateConjunction extends AbstractF
 		    "skoro",
 		    "że", "żeby"));
 	
-	private final int lookupDistance = 2;
+	private final int lookupDistance;
 	
+	public AnnotationFeaturePreceedingSubordinateConjunction(int lookup) {
+		this.lookupDistance = lookup;
+	}
 	
 	@Override
 	public void generateFeature(Annotation input) {
@@ -48,7 +51,7 @@ public class AnnotationFeaturePreceedingSubordinateConjunction extends AbstractF
 
 	@Override
 	public String getName() {
-		return "annotation_preceeding_subordinate_conjunction";
+		return "annotation_preceeding_subordinate_conjunction"+lookupDistance;
 	}
 
 	@Override

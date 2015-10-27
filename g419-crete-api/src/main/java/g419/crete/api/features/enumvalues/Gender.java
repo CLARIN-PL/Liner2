@@ -26,4 +26,9 @@ public enum Gender {
 			return UNDEFINED;
 		}
 		
+		public boolean equalsSoftMasculinum(Gender other){
+			if(FEMINUM.equals(other) || NEUTER.equals(other) || UNDEFINED.equals(other)) return equals(other);
+			if(FEMINUM.equals(this) || NEUTER.equals(this) || UNDEFINED.equals(this)) return equals(other);
+			return true;
+		}
 }

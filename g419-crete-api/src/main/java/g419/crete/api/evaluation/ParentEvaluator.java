@@ -22,13 +22,22 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+/**
+ * Ewaluator metryki PARENT dla koreferencji
+ * 
+ * @author Adam Kaczmarek
+ * TODO:
+ * 1. Parametryzacja kryterium porównywania wzmianek pomiędzy dokumentami: co najmniej dwie metody:
+ * - Dokładna zgodność
+ * - Zgodność głów (+heurystyka przypisania głowy
+ * 2. Zmiana RelationUnitCriterion na AnnotationSelector konfigurowalny w modelu podawanym na wejście
+ */
+
+
 public class ParentEvaluator extends FscoreEvaluator{
 	
 	List<Pattern> personLastFirstNam;
 	List<Pattern> personNam;
-	
-	//TODO: Kryterium porównywania wzmianek pomiędzy dokumentami
-	// 
 	
 	public static interface RelationUnitCriterion {
 		public boolean isSatisfied(Annotation annotation);
@@ -40,7 +49,7 @@ public class ParentEvaluator extends FscoreEvaluator{
 
 		@Override
 		public boolean isSatisfied(Annotation annotation) {
-			return annotation.getType().startsWith("nam");
+			return annotation.getType().startsWith("nam") || annotation.getType().endsWith("nam");
 		}
 		
 		
@@ -86,7 +95,7 @@ public class ParentEvaluator extends FscoreEvaluator{
 
 		@Override
 		public boolean isSatisfied(Annotation annotation) {
-			return "anafora_wyznacznik".equals(annotation.getType());
+			return "anafora_wyznacznik".equals(annotation.getType()) || "anafora_verb_null".equalsIgnoreCase(annotation.getType()) || "anafora_verb_null_in".equalsIgnoreCase(annotation.getType());
 		}
 	}
 	
@@ -96,24 +105,26 @@ public class ParentEvaluator extends FscoreEvaluator{
 		
 		@Override
 		public boolean isSatisfied(Annotation annotation) {
+			if("anafora_verb_null".equalsIgnoreCase(annotation.getType())) return true;
+			if("anafora_verb_null_in".equalsIgnoreCase(annotation.getType())) return true;
 			if(Pattern.matches("anafora_verb_null.*", annotation.getType())) return true;
 			
-//			
-//			if(!"anafora_wyznacznik".equalsIgnoreCase(annotation.getType())) return false; // Tylko anafora_wyznacznik (bez *_nam)
-//			if(annotation.getTokens().size() > 1) return false; // Zał.: tylko AgP mają więcej niż 1 token
-//			TokenAttributeIndex ai = annotation.getSentence().getAttributeIndex();
-//			int headIndex = annotation.getTokens().first();
-//			String headPos = "";
-//			try{
-//				headPos = ai.getAttributeValue(annotation.getSentence().getTokens().get(headIndex), "pos");
-//			}
-//			catch(IndexOutOfBoundsException ex){
-//				headPos = ai.getAttributeValue(annotation.getSentence().getTokens().get(headIndex), "tagTool");
-//			}
-//			
-//			
-//			return "verb".equals(headPos);
-			return false;
+			
+			if(!"anafora_wyznacznik".equalsIgnoreCase(annotation.getType())) return false; // Tylko anafora_wyznacznik (bez *_nam)
+			if(annotation.getTokens().size() > 1) return false; // Zał.: tylko AgP mają więcej niż 1 token
+			TokenAttributeIndex ai = annotation.getSentence().getAttributeIndex();
+			int headIndex = annotation.getTokens().first();
+			String headPos = "";
+			try{
+				headPos = ai.getAttributeValue(annotation.getSentence().getTokens().get(headIndex), "pos");
+			}
+			catch(IndexOutOfBoundsException ex){
+				headPos = ai.getAttributeValue(annotation.getSentence().getTokens().get(headIndex), "tagTool");
+			}
+			
+			
+			return "verb".equals(headPos);
+//			return false;
 		}
 			
 		
@@ -168,17 +179,22 @@ public class ParentEvaluator extends FscoreEvaluator{
 		this.referencingUnitsCriteria = referencingUnitsCriteria;
 		ArrayList<Pattern> annotationTypes = new ArrayList<Pattern>();
 		annotationTypes.add(Pattern.compile("nam.*"));
+		annotationTypes.add(Pattern.compile(".*nam"));
 		annotationTypes.add(Pattern.compile("anafora_wyznacznik"));
 		annotationTypes.add(Pattern.compile("anafora_verb_null.*"));
 		this.mapper = new AnnotationMapper(annotationMatcher, annotationTypes);
 		
 		personNam = new ArrayList<Pattern>();
 		personNam.add(Pattern.compile("person_nam"));
+		personNam.add(Pattern.compile("nam_liv_person"));
 		
 		personLastFirstNam = new ArrayList<Pattern>();
 		personLastFirstNam.add(Pattern.compile("person_first_nam"));
 		personLastFirstNam.add(Pattern.compile("person_last_nam"));
 		personLastFirstNam.add(Pattern.compile("person_add_nam"));
+		personLastFirstNam.add(Pattern.compile("nam_liv_person_first"));
+		personLastFirstNam.add(Pattern.compile("nam_liv_person_last"));
+		personLastFirstNam.add(Pattern.compile("nam_liv_person_add"));
 	}
 	
 	public Set<Annotation> extractUnits(Document document, RelationUnitCriterion criterion){

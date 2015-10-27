@@ -2,7 +2,7 @@ package g419.crete.api.resolver.factory;
 
 import g419.crete.api.classifier.AbstractCreteClassifier;
 import g419.crete.api.classifier.factory.ClassifierFactory;
-import g419.crete.api.classifier.model.Model;
+import g419.crete.api.classifier.serialization.Serializer;
 import g419.crete.api.instance.AbstractCreteInstance;
 import g419.crete.api.instance.converter.AbstractCreteInstanceConverter;
 import g419.crete.api.instance.converter.factory.CreteInstanceConverterFactory;
@@ -31,13 +31,13 @@ public class CreteResolverFactory {
 		instances.put(name, resolver);
 	}
 
-	public <M extends Object, L extends Object> AbstractCreteResolver<M, ? extends AbstractCreteInstance<L>, ?, L> getResolver(String name, String classifierName, String generatorName, String converterName, List<String> features, Model<M> model){
+	public <M extends Object, L extends Object> AbstractCreteResolver<M, ? extends AbstractCreteInstance<L>, ?, L> getResolver(String name, String classifierName, String generatorName, String converterName, List<String> features, Serializer<M> model){
 		return getInstance(name, classifierName, generatorName, converterName, features, model);
 	}
 	
 	
 	@SuppressWarnings("unchecked")
-	private <M extends Object, T extends AbstractCreteInstance<L>,I extends Object, L extends Object> AbstractCreteResolver<M, T, I, L> getInstance(String name, String classifierName, String generatorName, String converterName, List<String> featureNames, Model<M> model){
+	private <M extends Object, T extends AbstractCreteInstance<L>,I extends Object, L extends Object> AbstractCreteResolver<M, T, I, L> getInstance(String name, String classifierName, String generatorName, String converterName, List<String> featureNames, Serializer<M> model){
 		AbstractCreteResolver<M, T, I, L> resolver = (AbstractCreteResolver<M, T, I, L>) ((CreteResolverFactoryItem<L>)instances.get(name)).getResolver();
 //		AbstractCreteResolver<M, T, I, L> resolver = (AbstractCreteResolver<M, T, I, L>) instances.get(name);
 		if(resolver == null) return null;

@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,7 +18,7 @@ import java.util.zip.DataFormatException;
 public class Sumo {
 
     private final Pattern subclassRelPattern = Pattern.compile("^\\p{Z}*\\(subclass (\\p{L}+) (\\p{L}+)\\)\\p{Z}*$");
-    private SumoGraph graph = new SumoGraph();
+    private Graph graph = new Graph();
     private boolean caseSensitive = true;
 
     public Sumo(String mapping) throws IOException, DataFormatException {
@@ -53,10 +54,18 @@ public class Sumo {
     private void loadDeafultKifs() throws IOException{
     	this.parseMapping(getClass().getResourceAsStream("/Merge.kif"));
     	this.parseMapping(getClass().getResourceAsStream("/Geography.kif"));
-    	this.parseMapping(getClass().getResourceAsStream("/Transportation.kif"));
     	this.parseMapping(getClass().getResourceAsStream("/Mid-level-ontology.kif"));
+    	this.parseMapping(getClass().getResourceAsStream("/Transportation.kif"));
     	this.parseMapping(getClass().getResourceAsStream("/Economy.kif"));
     	this.parseMapping(getClass().getResourceAsStream("/Cars.kif"));
+    	this.parseMapping(getClass().getResourceAsStream("/naics.kif"));
+    	this.parseMapping(getClass().getResourceAsStream("/Food.kif"));
+    	this.parseMapping(getClass().getResourceAsStream("/Media.kif"));
+    	this.parseMapping(getClass().getResourceAsStream("/TransportDetail.kif"));
+    	this.parseMapping(getClass().getResourceAsStream("/Dining.kif"));
+    	this.parseMapping(getClass().getResourceAsStream("/QoSontology.kif"));
+    	this.parseMapping(getClass().getResourceAsStream("/MilitaryDevices.kif"));
+    	
     }
 
     private void parseMapping(InputStream mapping) throws IOException {
@@ -72,13 +81,36 @@ public class Sumo {
             line = reader.readLine();
         }
     }
+    
+    /**
+     * Zwraca zbiór wszystkich (bezpośrednich i pośrednich) klas nadrzędnych dla wskazanej klasy.
+     * @param concept
+     * @return
+     */
+    public Set<String> getSuperclasses(String currentClass){
+    	return this.graph.getSuperclasses(currentClass);
+    }
+
+    public Set<String> getSubclasses(String upperClass){
+    	Set<String> subclasses = new HashSet<String>();
+   		this.graph.getSubclasses(upperClass, subclasses);
+    	return subclasses;
+    }
+
+    public Set<String> getSubclasses(Set<String> classes){
+    	Set<String> subclasses = new HashSet<String>();
+    	for ( String cl : classes ){
+    		this.graph.getSubclasses(cl, subclasses);
+    	}
+    	return subclasses;
+    }
 
     public boolean isSubclassOf(String subClass, String upperClass){
     	if ( this.caseSensitive == false ){
     		subClass = subClass.toLowerCase();
     		upperClass = upperClass.toLowerCase();
     	}
-        return graph.isSubclassOf(graph.getNode(subClass), graph.getNode(upperClass));
+    	return this.graph.isSubclassOf(subClass, upperClass);
     }
 
     public boolean isSubclassOf(Set<String> subclasses, String upperClass){
@@ -89,7 +121,7 @@ public class Sumo {
         	if ( this.caseSensitive == false ){
         		subClass = subClass.toLowerCase();
         	}
-            if(graph.isSubclassOf(graph.getNode(subClass), graph.getNode(upperClass))){
+        	if(graph.isSubclassOf(subClass, upperClass)){
                 return true;
             }
         }
@@ -112,7 +144,6 @@ public class Sumo {
 
     public boolean isClassOrSubclassOf(Set<String> subclasses, String upperClass){
     	if ( this.caseSensitive == false ){
-    		//subClass = subClass.toLowerCase();
     		upperClass = upperClass.toLowerCase();
     	}
         if(subclasses.contains(upperClass)){
@@ -123,4 +154,5 @@ public class Sumo {
         }
 
     }
+    
 }

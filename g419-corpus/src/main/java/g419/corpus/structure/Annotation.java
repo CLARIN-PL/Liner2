@@ -46,16 +46,19 @@ public class Annotation {
 	private Map<String, String> metadata = new HashMap<String, String>();
 
 	public Annotation(int begin, int end, String type, Sentence sentence){
-		for(int i = begin; i <= end; i++)
+		for(int i = begin; i <= end; i++){
 			this.tokens.add(i);
+		}
 		this.type = type;
 		this.sentence = sentence;
+		this.assignHead();
 	}
 
-	public Annotation(int begin, String type, Sentence sentence){
-		this.tokens.add(begin);
+	public Annotation(int tokenIndex, String type, Sentence sentence){
+		this.tokens.add(tokenIndex);
 		this.type = type;
 		this.sentence = sentence;
+		this.head = tokenIndex;
 	}
 
 	public Annotation(int begin, String type, int channelIdx, Sentence sentence){
@@ -69,6 +72,7 @@ public class Annotation {
 		this.tokens = tokens;
 		this.type = type;
 		this.sentence = sentence;
+		this.assignHead();
 	}
 
 	public void setChannelIdx(int idx){
@@ -83,16 +87,49 @@ public class Annotation {
 		return this.hasHead;
 	}
 
+	public void assignHead(){
+		this.assignHead(false);
+	}
+	
 	/**
 	 * Przypisuje głowę do anotacji na podst. równoległej anotacji, lub jako pierwszy token.
 	 * Do użytku z anotacjami "anafora_wyznacznik" na potrzeby piśnika TEI
 	 * @return
 	 */
-	public void assignHead(){
-		if(hasHead()) return;
+	public void assignHead(boolean force){
+		// TODO: dlaczego tworzona jest anotacja dla pustego zdania
+		if( !force && hasHead() ){
+			return;
+		}		
 
-		this.setHead(this.tokens.first());
-		if(this.tokens.size() == 1) return;
+		int head = -1;
+		for ( int i : this.getTokens() ){
+			Token t = this.sentence.getTokens().get(i);
+			if ( t.getDisambTag().getPos().equals("subst") ){
+				head = i;
+				break;
+			}
+		}
+		
+		if ( head == -1 ){
+			for ( int i : this.getTokens() ){
+				Token t = this.sentence.getTokens().get(i);
+				if ( t.getDisambTag().getPos().equals("ign") ){
+					head = i;
+					break;
+				}
+			}
+		}
+		
+		if ( head == -1 ){
+			head = this.tokens.first();
+		}
+		
+		this.setHead(head);
+		
+		if(this.tokens.size() == 1){ 
+			return;
+		}
 
 		for(Annotation ann: this.sentence.getChunks()){
 			if(ann.hasHead() && this.tokens.equals(ann.tokens) && !this.type.equalsIgnoreCase(ann.type)){
@@ -133,7 +170,10 @@ public class Annotation {
 	@Override
 	public boolean equals(Object object) {
 		Annotation chunk = (Annotation) object;
-		if (!this.tokens.equals(chunk.getTokens()))
+		if(chunk == null) return false;
+		if(this.getSentence().getId() != chunk.getSentence().getId())
+			return false;
+		else if (!this.tokens.equals(chunk.getTokens()))
 			return false;
 		else if (!this.getText().equals(chunk.getText()))
 			return false;
@@ -286,4 +326,35 @@ public class Annotation {
     	return true;
     }
 
+//    public List<Annotation> getExactOverlappingAnnotations(){
+//    	return getExactOverlappingAnnotations(Arrays.asList(new Pattern[]{Pattern.compile("*")}));
+//    }
+//    
+//    public List<Annotation> getExactOverlappingAnnotations(List<Pattern> patterns){
+//    	List<Annotation> overlapping = new ArrayList<Annotation>();
+//    	
+//    	for(Annotation potentialOverlap : getSentence().getAnnotations(patterns)){
+//    		// NIe istnieje dokładne pokrycie taką samą anotacją
+//    		if(potentialOverlap.getChannelIdx() != getChannelIdx()){
+//    			if(getTokens().equals(potentialOverlap.getTokens())){
+//    				overlapping.add(potentialOverlap);
+//    			}
+//    		}
+//    	}
+//    	
+//    	return overlapping;
+//    }
+//    
+//    public boolean isOverlappedByAll(List<Pattern> overlapPatterns){
+//    	// TODO: incomplete implementation
+//		boolean overlapByAll = false;
+//		List<Annotation> overlapping = getExactOverlappingAnnotations(overlapPatterns);
+//		
+//		return overlapByAll;
+//	}
+//	
+//	public boolean isOverlappedByAny(List<Pattern> overlapPatterns){
+//		List<Annotation> overlapping = getExactOverlappingAnnotations(overlapPatterns);
+//		return overlapping.size() > 0;
+//	}
 }

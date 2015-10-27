@@ -63,6 +63,10 @@ public class SpatialRelation{
 		this.landmark = landmark;
 	}
 
+	public String getKey(){
+		return String.format("%d_%d_%d_%d", this.spatialIndicator.getSentence().hashCode(), this.trajector.getHead(), this.spatialIndicator.getHead(), this.landmark.getHead());
+	}
+	
 	public String toString(){
 		return String.format("%s: %s[%s]%s[%s] %s[%s]",
 				this.type,

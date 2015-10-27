@@ -28,7 +28,7 @@ public class ActionTime extends ActionPipe{
 	 */
 	public void run() throws Exception{
 
-        if ( !LinerOptions.isOption(LinerOptions.OPTION_USED_CHUNKER) ){
+        if ( !LinerOptions.isGlobalOption(LinerOptions.OPTION_USED_CHUNKER) ){
             throw new ParameterException("Parameter 'chunker' in 'main' section of model configuration not set");
         }
 

@@ -11,6 +11,7 @@ import g419.corpus.structure.TokenAttributeIndex;
 import g419.crete.api.features.enumvalues.MentionType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -53,11 +54,20 @@ public class AnnotationUtil {
 	
 	public static MentionType getMentionType(Annotation mention){
 		if(mention.getType().startsWith("nam")) return MentionType.NAMED_ENTITY;
+//		else if(mention.getType().equalsIgnoreCase("anafora_wyznacznik")){
+//			if(mention.isOverlappedByAny(Arrays.asList(new Pattern[]{Pattern.compile("chunk_agp")}))){
+//				return MentionType.AGP;
+//			}
+//			return MentionType.PRONOUN;
+//		}
 		else if(mention.getType().equalsIgnoreCase("anafora_wyznacznik")){
 			if(mention.getTokens().size() == 1){
 				TokenAttributeIndex ai = mention.getSentence().getAttributeIndex();
 				String tokenBase = ai.getAttributeValue(mention.getSentence().getTokens().get(mention.getTokens().first()), "base");
-				if(tokenBase == "on" || tokenBase == "mu" || tokenBase == "jej") return MentionType.PRONOUN;
+				// FIXME: rozszerzyć definicję pronoun
+				if(MentionType.isPronounBase(tokenBase)){
+					return MentionType.PRONOUN;
+				}
 			}
 			return MentionType.AGP;
 		}
@@ -137,4 +147,5 @@ public class AnnotationUtil {
 				
 		return annotations;
 	}
+
 }

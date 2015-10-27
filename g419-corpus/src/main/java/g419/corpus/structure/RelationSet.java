@@ -40,6 +40,16 @@ public class RelationSet {
 		addAnnotationRelation(this.incomingRelations, relation.getAnnotationTo(), relation);
 	}
 	
+	public void refresh(){
+		incomingRelations = new HashMap<Annotation, TreeSet<Relation>>();
+		outgoingRelations = new HashMap<Annotation, TreeSet<Relation>>();
+		
+		for(Relation relation : this.relations){
+			addAnnotationRelation(this.outgoingRelations, relation.getAnnotationFrom(), relation);
+			addAnnotationRelation(this.incomingRelations, relation.getAnnotationTo(), relation);
+		}
+	}
+	
 	private void addAnnotationRelation(HashMap<Annotation, TreeSet<Relation>> relationMap, Annotation indexAnnotation, Relation relation){
 		if(relationMap.containsKey(indexAnnotation))
 			relationMap.get(indexAnnotation).add(relation);

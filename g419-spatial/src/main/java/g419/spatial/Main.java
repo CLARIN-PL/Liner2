@@ -1,10 +1,12 @@
 package g419.spatial;
 
 import g419.lib.cli.action.Action;
+import g419.spatial.action.ActionCheckMentions;
 import g419.spatial.action.ActionSpatial;
 import g419.spatial.action.ActionSpatialPatterns;
 import g419.spatial.action.ActionTest;
-import g419.spatial.action.ActionTest2;
+import g419.spatial.action.ActionTestMalt;
+import g419.spatial.action.ActionSemanticPatterns;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +30,9 @@ public class Main {
 		//main.registerAction(new ActionWordnet());
 		main.registerAction(new ActionSpatial());
 		main.registerAction(new ActionSpatialPatterns());
-		main.registerAction(new ActionTest2());
+		main.registerAction(new ActionSemanticPatterns());
+		main.registerAction(new ActionCheckMentions());
+		main.registerAction(new ActionTestMalt());
 			
 		if ( args.length == 0 ){
 			main.printError("Mode not given.");

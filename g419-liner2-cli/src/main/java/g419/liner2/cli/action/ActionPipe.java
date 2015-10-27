@@ -5,6 +5,7 @@ import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.Document;
+import g419.corpus.structure.RelationSet;
 import g419.lib.cli.CommonOptions;
 import g419.lib.cli.ParameterException;
 import g419.lib.cli.action.Action;
@@ -56,7 +57,7 @@ public class ActionPipe extends Action{
 	 */
 	public void run() throws Exception{
 	
-        if ( !LinerOptions.isOption(LinerOptions.OPTION_USED_CHUNKER) ){
+        if ( !LinerOptions.isGlobalOption(LinerOptions.OPTION_USED_CHUNKER) ){
 			throw new ParameterException("Parameter 'chunker' in 'main' section of model not set");
 		}		
 	
@@ -76,9 +77,11 @@ public class ActionPipe extends Action{
 
 		Document ps = reader.nextDocument();
 		while ( ps != null ){
+			RelationSet relations = ps.getRelations();
 			if ( gen != null )
 				gen.generateFeatures(ps);
 			chunker.chunkInPlace(ps);
+			ps.setRelations(relations);
 			writer.writeDocument(ps);
 			ps = reader.nextDocument();
 		}

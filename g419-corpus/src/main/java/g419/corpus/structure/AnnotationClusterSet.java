@@ -2,6 +2,7 @@ package g419.corpus.structure;
 
 import g419.corpus.structure.AnnotationCluster.ReturningStrategy;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -80,6 +81,14 @@ public class AnnotationClusterSet {
 		return this.relationClusters;
 	}
 
+	public boolean inSameCluster(Annotation ann1, Annotation ann2){
+		AnnotationCluster cluster1 = annotationInCluster.get(ann1);
+		AnnotationCluster cluster2 = annotationInCluster.get(ann2);
+		
+		if(cluster1 != null  && cluster2 != null) return cluster1.equals(cluster2);
+		return false;
+	}
+	
 	public Set<AnnotationCluster> getClustersWithAnnotations(Set<Annotation> annotations){
 		Set<AnnotationCluster> clustersWithAnnotations = new HashSet<AnnotationCluster>();
 		for(Annotation annotation: annotations)
@@ -93,6 +102,49 @@ public class AnnotationClusterSet {
 		
 		for(Relation relation: relations.getRelations())
 			relationClusterSet.addRelation(relation);
+		
+		return relationClusterSet;
+	}
+	
+	/**
+	 *  Method for creating AnnotationClusterSet for all given relations 
+	 *  and including all given mentions - mentions that are not in any
+	 *  relation are added to resulting set of clusters as singleton clusters
+	 *  consisting of only one annotation
+	 * @param relations Set of considered relations
+	 * @param singletons Set of annotations to be placed into clusters
+	 * @return Set of relational clusters for all given annotations based on passed relations
+	 */
+	public static AnnotationClusterSet fromRelationSetWithSingletons(Document document, String type, String set, RelationSet relations, List<Annotation> singletonAnnotations){
+		AnnotationClusterSet relationClusterSet = new AnnotationClusterSet();
+		List<Annotation> singletons = new ArrayList<Annotation>(singletonAnnotations);
+		
+		// Relation Type and Set for setting properties of singleton relation clusters
+//		String type = "";
+//		String set="";
+		
+		// Add every non-singleton cluster to set of resulting clusters
+		for(Relation relation: relations.getRelations()){
+			// Extract Type and Set properties' values
+			if("".equals(type) || "".equals(set)){ type = relation.getType(); set = relation.getSet();}
+			// Add current relation to resulting set of clusters
+			relationClusterSet.addRelation(relation);
+			// Remove mentions from potential singletons list
+			singletons.remove(relation.getAnnotationFrom());
+			singletons.remove(relation.getAnnotationTo());
+		}
+		
+		// Add all remaining mentions which are singletons
+		for(Annotation singleton : singletons){
+			// Create new singleton cluster
+			AnnotationCluster cluster = new AnnotationCluster(type, set);
+			// Add singleton mention
+			cluster.addAnnotation(singleton);
+			// Assign document to cluster
+			cluster.setDocument(document);
+			// Add cluster to resulting set of clusters
+			relationClusterSet.addRelationCluster(cluster);
+		}
 		
 		return relationClusterSet;
 	}

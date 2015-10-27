@@ -3,7 +3,7 @@ package g419.crete.api.trainer;
 import g419.corpus.structure.Document;
 import g419.crete.api.annotation.AbstractAnnotationSelector;
 import g419.crete.api.classifier.AbstractCreteClassifier;
-import g419.crete.api.classifier.model.Model;
+import g419.crete.api.classifier.serialization.Serializer;
 import g419.crete.api.instance.AbstractCreteInstance;
 import g419.crete.api.instance.converter.AbstractCreteInstanceConverter;
 import g419.crete.api.instance.generator.AbstractCreteInstanceGenerator;
@@ -24,8 +24,8 @@ public abstract class AbstractCreteTrainer <M, T extends AbstractCreteInstance<L
 	}
 	
 	
-	public void addDocumentTrainingInstances(Document document, AbstractAnnotationSelector selector){
-		List<T> abstractInstances = generator.generateInstances(document, selector);
+	public void addDocumentTrainingInstances(Document document, AbstractAnnotationSelector selector, AbstractAnnotationSelector singletonSelector){
+		List<T> abstractInstances = generator.generateInstances(document, selector, singletonSelector);
 		List<I> classifierInstances = converter.convertInstances(abstractInstances);
 		List<L> instanceLabels = new ArrayList<L>();
 		for(AbstractCreteInstance<L> abstractInstance : abstractInstances)
@@ -37,7 +37,7 @@ public abstract class AbstractCreteTrainer <M, T extends AbstractCreteInstance<L
 		classifier.train();
 	}
 	
-	public Model<M> getTrainedModel(){
+	public Serializer<M> getTrainedModel(){
 		return classifier.getModel();
 	}
 	//-------------------------- Abstract methods -------------------------

@@ -18,6 +18,8 @@ import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonIndexRaw;
 import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonParser;
 
 public class Wordnet {
+	 
+	
 	HashMap<String, HashMap<String, PrincetonDataRaw>> data = new HashMap<String, HashMap<String, PrincetonDataRaw>>();
 	HashMap<String, HashMap<String, PrincetonIndexRaw>> index = new HashMap<String, HashMap<String, PrincetonIndexRaw>>();
 	
@@ -25,11 +27,30 @@ public class Wordnet {
 	
 	String wordnet_path;
 	
+	
+	private static class WordnetHolder{
+		private static HashMap<String, Wordnet> wordnets = new HashMap<>();
+		
+		private static synchronized void createNewWordnet(String path){
+			if(!wordnets.containsKey(path)) wordnets.put(path, new Wordnet(path));
+		}
+		
+		public static  Wordnet getWordnet(String path){
+			if(!wordnets.containsKey(path)) createNewWordnet(path); 
+			return wordnets.get(path);
+		}
+		
+	}
+	
+	public static synchronized Wordnet getWordnet(String path){
+		return WordnetHolder.getWordnet(path);
+	}
+	
 	/**
 	 * Tworzy obiekt na podstawie plików w formacie Princeton.
 	 * @param path Ścieżka do katalogu z plikami w formacie Princeton.
 	 */
-	public Wordnet(String path){
+	private Wordnet(String path){
 		wordnet_path = path;
 		try {
 			if (!new File(path).exists())

@@ -163,8 +163,10 @@ public class CclSaxParser extends DefaultHandler {
             paragraphs.add(currentParagraph);
         }
         else if (element.equalsIgnoreCase(TAG_SENTENCE)) {
-            for (Annotation chunk : annotations.values())
+            for (Annotation chunk : annotations.values()){
+            	chunk.assignHead();
                 currentSentence.addChunk(chunk);
+            }
             if(!currentSentence.hasId()){
                 currentSentence.setId("sent" + (currentParagraph.numSentences() + 1));
                 if(foundSentenceId){
@@ -205,7 +207,7 @@ public class CclSaxParser extends DefaultHandler {
                     if(sentId == null){
                         sentId = "unknown_sentence_id";
                     }
-                    System.err.println(uri + ":" +  sentId + ":t" + idx + " | Warning: Invalid annotation category in property: " + propertyKey + " - property has been skipped");
+//                    System.out.println(uri + ":" +  sentId + ":t" + idx + " | Warning: Invalid annotation category in property: " + propertyKey + " - property has been skipped");
                 }
             }
         }

@@ -41,8 +41,13 @@ public class WekaInstanceFeatureRepresentation extends IFeatureRepresentation<In
 	}
 
 	@Override
-	public void addEnumFeature(AbstractFeature<?, Enum> feature) {
+	public void addEnumFeature(AbstractFeature<?, Enum<?>> feature) {
 		repr.setValue(getAttribute(feature), feature.getValue().toString());
+	}
+
+	@Override
+	public void addLexicalFeature(AbstractFeature<?, String> feature) {
+		repr.setValue(getAttribute(feature), feature.getValue());
 	}
 	
 }
