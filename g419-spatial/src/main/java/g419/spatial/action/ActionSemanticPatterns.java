@@ -1,7 +1,7 @@
 package g419.spatial.action;
 
 import g419.lib.cli.action.Action;
-import g419.spatial.io.SpatialPatternParser;
+import g419.spatial.io.PlainSpatialPatternParser;
 import g419.toolbox.sumo.Sumo;
 
 import java.io.InputStream;
@@ -36,7 +36,7 @@ public class ActionSemanticPatterns extends Action {
                     this.getClass().getName(), location);
         }
         
-        SpatialPatternParser parser = new SpatialPatternParser(new InputStreamReader( resource ), new Sumo(false));
+        PlainSpatialPatternParser parser = new PlainSpatialPatternParser(new InputStreamReader( resource ), new Sumo(false));
         parser.parse();
 	}
 	

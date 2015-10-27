@@ -1,14 +1,5 @@
 package g419.spatial.action;
 
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-import g419.lib.cli.action.Action;
-import g419.spatial.io.ConllDocumentReader;
-import g419.spatial.io.Wordnet;
-import g419.spatial.structure.NodeToken;
-
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.HashSet;
@@ -16,9 +7,16 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
+
+import g419.corpus.structure.Document;
+import g419.corpus.structure.Paragraph;
+import g419.corpus.structure.Sentence;
+import g419.corpus.structure.Token;
+import g419.lib.cli.action.Action;
+import g419.spatial.io.ConllDocumentReader;
+import g419.spatial.structure.NodeToken;
 
 public class ActionTest extends Action {
 	
@@ -55,12 +53,8 @@ public class ActionTest extends Action {
 	 * @return Object for input file name parameter.
 	 */
 	private Option getOptionInputFilename(){
-		OptionBuilder.withArgName(ActionTest.OPTION_FILENAME_LONG);
-		OptionBuilder.hasArg();
-		OptionBuilder.isRequired();
-		OptionBuilder.withDescription("path to the input file");
-		OptionBuilder.withLongOpt(OPTION_FILENAME_LONG);
-		return OptionBuilder.create(ActionTest.OPTION_FILENAME);			
+		return Option.builder(OPTION_FILENAME).longOpt(OPTION_FILENAME_LONG)
+				.hasArg().argName("filename").required().desc("path to the input file").build();
 	}
 
 	/**
@@ -69,7 +63,7 @@ public class ActionTest extends Action {
 	 */
 	@Override
 	public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new GnuParser().parse(this.options, args);
+        CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
         this.filename = line.getOptionValue(ActionTest.OPTION_FILENAME);
     }

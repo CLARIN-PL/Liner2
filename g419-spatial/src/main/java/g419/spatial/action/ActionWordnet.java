@@ -1,10 +1,10 @@
 package g419.spatial.action;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+
 import g419.lib.cli.action.Action;
 import g419.spatial.io.Wordnet;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
 
 public class ActionWordnet extends Action {
 	
@@ -22,7 +22,7 @@ public class ActionWordnet extends Action {
 	 */
 	@Override
 	public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new GnuParser().parse(this.options, args);
+        CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
     }
 

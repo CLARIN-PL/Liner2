@@ -1,6 +1,6 @@
 package g419.spatial.filter;
 
-import g419.spatial.io.SpatialPatternParser;
+import g419.spatial.io.PlainSpatialPatternParser;
 import g419.spatial.structure.SpatialRelation;
 import g419.spatial.structure.SpatialRelationPattern;
 import g419.spatial.structure.SpatialRelationPatternMatcher;
@@ -50,7 +50,7 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
                     this.getClass().getName(), location);
         }
         
-        SpatialPatternParser parser = new SpatialPatternParser(
+        PlainSpatialPatternParser parser = new PlainSpatialPatternParser(
         		new InputStreamReader( resource ), this.sumo);
         return parser.parse();        
 	}

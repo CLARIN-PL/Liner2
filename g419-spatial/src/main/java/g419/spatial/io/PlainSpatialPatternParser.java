@@ -14,15 +14,15 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-public class SpatialPatternParser {
+public class PlainSpatialPatternParser {
 
 	private BufferedReader reader = null;
 	private Sumo sumo = null;
 	private int lineNo = 0;
 	private String currentLine = null;
-	private Logger logger = Logger.getLogger(SpatialPatternParser.class); 
+	private Logger logger = Logger.getLogger(PlainSpatialPatternParser.class); 
 	
-	public SpatialPatternParser(Reader reader, Sumo sumo){
+	public PlainSpatialPatternParser(Reader reader, Sumo sumo){
 		this.reader = new BufferedReader(reader);
 		this.sumo = sumo;
 	}
@@ -45,7 +45,7 @@ public class SpatialPatternParser {
 				}
 				this.nextLine();
 				if ( this.currentLine == null || !this.currentLine.startsWith("tr:")){
-					Logger.getLogger(SpatialPatternParser.class).warn(
+					Logger.getLogger(PlainSpatialPatternParser.class).warn(
 							String.format("Linia nr %d: oczekiwano 'tr:', ale napotkano '%s'", this.lineNo, this.currentLine));
 					continue;
 				}

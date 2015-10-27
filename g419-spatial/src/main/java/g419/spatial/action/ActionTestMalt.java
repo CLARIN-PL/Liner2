@@ -5,9 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
 import org.apache.log4j.Logger;
 
 import g419.corpus.io.reader.AbstractDocumentReader;
@@ -45,12 +44,8 @@ public class ActionTestMalt extends Action {
 	 * @return Object for input file name parameter.
 	 */
 	private Option getOptionInputFilename(){
-		OptionBuilder.withArgName(ActionTestMalt.OPTION_FILENAME_LONG);
-		OptionBuilder.hasArg();
-		OptionBuilder.isRequired();
-		OptionBuilder.withDescription("path to the input file");
-		OptionBuilder.withLongOpt(OPTION_FILENAME_LONG);
-		return OptionBuilder.create(ActionTestMalt.OPTION_FILENAME);	
+		return Option.builder(OPTION_FILENAME).longOpt(OPTION_FILENAME_LONG)
+				.hasArg().argName("filename").required().desc("path to the input file").build();
 	}
 
 	/**
@@ -59,7 +54,7 @@ public class ActionTestMalt extends Action {
 	 */
 	@Override
 	public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new GnuParser().parse(this.options, args);
+        CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
         this.filename = line.getOptionValue(ActionTestMalt.OPTION_FILENAME);
         this.inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);

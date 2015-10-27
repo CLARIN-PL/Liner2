@@ -5,13 +5,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
 import org.apache.log4j.Logger;
 
 import g419.corpus.io.reader.AbstractDocumentReader;
@@ -52,12 +50,8 @@ public class ActionCheckMentions extends Action {
 	 * @return Object for input file name parameter.
 	 */
 	private Option getOptionInputFilename(){
-		OptionBuilder.withArgName(ActionCheckMentions.OPTION_FILENAME_LONG);
-		OptionBuilder.hasArg();
-		OptionBuilder.isRequired();
-		OptionBuilder.withDescription("path to the input file");
-		OptionBuilder.withLongOpt(OPTION_FILENAME_LONG);
-		return OptionBuilder.create(ActionCheckMentions.OPTION_FILENAME);			
+		return Option.builder(ActionCheckMentions.OPTION_FILENAME).longOpt(ActionCheckMentions.OPTION_FILENAME_LONG)
+						.hasArg().argName("filename").required().desc("path to the input file").build();
 	}
 
 	/**
@@ -66,7 +60,7 @@ public class ActionCheckMentions extends Action {
 	 */
 	@Override
 	public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new GnuParser().parse(this.options, args);
+        CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
         this.filename = line.getOptionValue(ActionCheckMentions.OPTION_FILENAME);
         this.inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
