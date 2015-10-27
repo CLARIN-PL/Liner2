@@ -73,6 +73,15 @@ public class Sumo {
             line = reader.readLine();
         }
     }
+    
+    /**
+     * Zwraca zbiór wszystkich (bezpośrednich i pośrednich) klas nadrzędnych dla wskazanej klasy.
+     * @param concept
+     * @return
+     */
+    public Set<String> getSuperclasses(String currentClass){
+    	return this.graph.getSuperclasses(currentClass);
+    }
 
     public Set<String> getSubclasses(String upperClass){
     	Set<String> subclasses = new HashSet<String>();
@@ -94,7 +103,6 @@ public class Sumo {
     		upperClass = upperClass.toLowerCase();
     	}
     	return this.graph.isSubclassOf(subClass, upperClass);
-        //return graph.isSubclassOf(graph.getNode(subClass), graph.getNode(upperClass));
     }
 
     public boolean isSubclassOf(Set<String> subclasses, String upperClass){
@@ -105,7 +113,6 @@ public class Sumo {
         	if ( this.caseSensitive == false ){
         		subClass = subClass.toLowerCase();
         	}
-            //if(graph.isSubclassOf(graph.getNode(subClass), graph.getNode(upperClass))){
         	if(graph.isSubclassOf(subClass, upperClass)){
                 return true;
             }
@@ -129,7 +136,6 @@ public class Sumo {
 
     public boolean isClassOrSubclassOf(Set<String> subclasses, String upperClass){
     	if ( this.caseSensitive == false ){
-    		//subClass = subClass.toLowerCase();
     		upperClass = upperClass.toLowerCase();
     	}
         if(subclasses.contains(upperClass)){

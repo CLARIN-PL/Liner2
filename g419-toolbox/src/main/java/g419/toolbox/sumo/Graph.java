@@ -53,7 +53,18 @@ public class Graph {
     	}
     	directSubclasses.add(child);
     }
-    
+
+    public Set<String> getSuperclasses(String currentClass){
+    	Set<String> classes = new HashSet<String>();
+    	for ( String superclass : this.childrens.keySet() ){
+    		if ( this.childrens.get(superclass).contains(currentClass)){
+   				classes.add(superclass);
+    			classes.addAll(this.getSuperclasses(superclass));
+    		}
+    	}
+    	return classes;
+    }
+
     public Set<String> getSubclasses(String currentClass){
     	Set<String> classes = new HashSet<String>();
     	this.getSubclasses(currentClass, classes);

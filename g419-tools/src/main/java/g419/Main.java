@@ -3,9 +3,11 @@ package g419;
 import g419.corpus.TerminateException;
 import g419.tools.*;
 import g419.tools.actions.CategorizeTool;
+import g419.tools.actions.ClassifyArff;
 import g419.tools.actions.ConvertGeneticRulesTool;
 import g419.tools.actions.ConvertJRipRulesTool;
 import g419.tools.actions.CreateDictTool;
+import g419.tools.actions.FeatureExtractor;
 import g419.tools.actions.FeatureMatrix;
 import g419.tools.actions.Tool;
 import g419.tools.actions.WordnetTool;
@@ -34,6 +36,8 @@ public class Main {
         main.registerTool(new ConvertGeneticRulesTool());
         main.registerTool(new WordnetTool());
         main.registerTool(new FeatureMatrix());
+        main.registerTool(new FeatureExtractor());
+        main.registerTool(new ClassifyArff());
 
         if ( args.length == 0 ){
             main.printCredits();

@@ -35,13 +35,13 @@ public class AnnotationArffWriter {
         }
     }
 
-    public void writeAnnotation(String label, List<String> features) throws IOException {
+    public void writeAnnotation(String label, List<? extends Object> features) throws IOException {
         String line = "";
-        for(String feature: features){
+        for(Object feature: features){
             if (feature == null)
                 feature = "?";
             else
-                feature = "\'" + feature.replace("\'", "\\\'") + "\'";
+                feature = "\'" + feature.toString().replace("\'", "\\\'") + "\'";
             line += (line.length() > 0 ? "," : "") + feature;
         }
         line += ","+label;
