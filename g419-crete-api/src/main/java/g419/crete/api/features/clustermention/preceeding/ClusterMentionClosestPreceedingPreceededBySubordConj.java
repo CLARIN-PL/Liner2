@@ -31,7 +31,11 @@ public class ClusterMentionClosestPreceedingPreceededBySubordConj extends Abstra
 		    "skoro",
 		    "że", "żeby"));
 	
-	public static final int lookupDistance = 2;
+	public final int lookupDistance;
+	
+	public ClusterMentionClosestPreceedingPreceededBySubordConj(int lookup) {
+		this.lookupDistance = lookup;
+	}
 	
 	@Override
 	public void generateFeature(Pair<Annotation, AnnotationCluster> input) {
@@ -59,7 +63,7 @@ public class ClusterMentionClosestPreceedingPreceededBySubordConj extends Abstra
 
 	@Override
 	public String getName() {
-		return "clustermention_closest_preceeding_preceeded_by_subordinate_conj";
+		return "clustermention_closest_preceeding_preceeded_by_subordinate_conj"+lookupDistance;
 	}
 
 	@Override

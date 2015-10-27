@@ -1,5 +1,7 @@
 package g419.corpus.structure;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
  * Klasa reprezentuje relację pomiędzy dwoma anotacjami 
  * @author Adam Kaczmarek<adamjankaczmarek@gmail.com>
@@ -100,8 +102,32 @@ public class Relation {
 		return this.set;
 	}
 	
+	@Override
 	public String toString(){
 		return annotationFrom.toString() + " >-- " + type + " --> " + annotationTo.toString();
 	}
+	
+	@Override
+	public boolean equals(Object other){
+		if (other == null) return false;
+	    if (other == this) return true;
+	    if (!(other instanceof Relation))return false;
+	    Relation otherRelation = (Relation) other;
+	    
+		return this.set.equalsIgnoreCase(otherRelation.set) 
+				&& this.type.equalsIgnoreCase(otherRelation.type) 
+				&& this.annotationFrom.equals(otherRelation.annotationFrom)
+				&& this.annotationTo.equals(otherRelation.annotationTo);
+	}
+	
+	@Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 31). 
+            append(set).
+            append(type).
+            append(annotationFrom).
+            append(annotationTo).
+            toHashCode();
+    }
 	
 }

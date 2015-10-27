@@ -1,0 +1,10 @@
+# train_models
+./crete-cli train -m $1/crete-named.ini -i batch:ccl_rel -f $2/index_tt.txt;
+./crete-cli train -m $1/crete-agp.ini -i batch:ccl_rel -f $2/index_tt.txt;
+./crete-cli train -m $1/crete-pron.ini -i batch:ccl_rel -f $2/index_tt.txt;
+./crete-cli train -m $1/crete-zero.ini -i batch:ccl_rel -f $2/index_tt.txt;
+# classify fold
+./crete-cli classify -m $1/crete-named.ini -i batch:ccl -f $2/index_test.txt -o batch:ccl_rel -t $3/index_test.txt
+./crete-cli classify -m $1/crete-agp.ini -i batch:ccl_rel -f $3/index_test.txt -o batch:ccl_rel -t $3/index_test.txt
+./crete-cli classify -m $1/crete-pron.ini -i batch:ccl_rel -f $3/index_test.txt -o batch:ccl_rel -t $3/index_test.txt
+./crete-cli classify -m $1/crete-zero.ini -i batch:ccl_rel -f $3/index_test.txt -o batch:ccl_rel -t $3/index_test.txt

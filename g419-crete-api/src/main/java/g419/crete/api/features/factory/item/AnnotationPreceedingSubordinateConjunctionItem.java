@@ -6,9 +6,15 @@ import g419.crete.api.features.annotations.AnnotationFeaturePreceedingSubordinat
 
 public class AnnotationPreceedingSubordinateConjunctionItem implements IFeatureFactoryItem<Annotation, Boolean> {
 
+	private final int lookup;
+	
+	public AnnotationPreceedingSubordinateConjunctionItem(int lookup) {
+		this.lookup = lookup;
+	}
+	
 	@Override
 	public AbstractFeature<Annotation, Boolean> createFeature() {
-		return new AnnotationFeaturePreceedingSubordinateConjunction();
+		return new AnnotationFeaturePreceedingSubordinateConjunction(lookup);
 	}
 
 }

@@ -2,4 +2,4 @@
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 
 # Run g419-crete-cli
-java -Xmx4024M -cp -Djava.library.path=$DIR/lib -jar $DIR/lib/g419-crete-cli.jar $@
+java -Xmx4024M -cp -Djava.library.path=$DIR/../g419-crete-cli/build/libs -jar $DIR/../g419-crete-cli/build/libs/g419-crete-cli-2.5-SNAPSHOT-all.jar $@

@@ -159,8 +159,16 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 		String toSentenceId = relation.getAnnotationTo().getSentence().getId();
 		String toChannel = relation.getAnnotationTo().getType().toLowerCase();
 		
-		int fromAnnIdx = annotationSentChannelIdx.get(relation.getAnnotationFrom()).get(fromChannel);
-		int toAnnIdx = annotationSentChannelIdx.get(relation.getAnnotationTo()).get(toChannel);
+		int fromAnnIdx = 0; 
+		int toAnnIdx = 0;
+		try{
+			fromAnnIdx = annotationSentChannelIdx.get(relation.getAnnotationFrom()).get(fromChannel);
+			toAnnIdx = annotationSentChannelIdx.get(relation.getAnnotationTo()).get(toChannel);
+		}
+		catch(Exception ex){
+			System.out.println(relation);
+			System.out.println(relation.getDocument().getName());
+		}
 		
 		indentRel(2);
 		xmlRelw.writeStartElement(TAG_RELATION);
@@ -279,8 +287,15 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 		writeText(token.getOrth());
 		xmlw.writeEndElement();
 		xmlw.writeCharacters("\n");
-		for (Tag tag : token.getTags())
-			writeTag(tag);
+		boolean written = false;
+		for (Tag tag : token.getTags()){
+			if(tag.getDisamb()){
+				writeTag(tag);
+				written = true;
+				break;
+			}
+		}
+		if(!written) writeTag(token.getTags().get(0));
 		
 		Annotation[] tokenchannels = new Annotation[channels.size()];
 		for (Annotation chunk : chunks) {

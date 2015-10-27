@@ -33,6 +33,9 @@ public class CommonOptions {
 
     public static final String OPTION_MODEL = "m";
     public static final String OPTION_MODEL_LONG = "model";
+    
+    public static final String OPTION_CLASSIFIER_MODEL = "c";
+    public static final String OPTION_CLASSIFIER_MODEL_LONG = "classifier_model";
 
 
 	public static Option getOutputFileNameOption(){
@@ -76,6 +79,15 @@ public class CommonOptions {
         return OptionBuilder.create(CommonOptions.OPTION_FEATURES);
     }
 
+    public static Option getClassifierModelFile(){
+    	OptionBuilder.withArgName("classifier model");
+    	OptionBuilder.hasArg();
+        OptionBuilder.withDescription("file with classifier model");
+        OptionBuilder.withLongOpt(CommonOptions.OPTION_CLASSIFIER_MODEL_LONG);
+//        OptionBuilder.isRequired();
+        return OptionBuilder.create(CommonOptions.OPTION_CLASSIFIER_MODEL);
+    }
+    
     public static Option getModelFileOption(){
     	OptionBuilder.withArgName("model");
     	OptionBuilder.hasArg();

@@ -1,8 +1,10 @@
 package g419.crete.api.instance;
 
+import g419.crete.api.features.factory.FeatureFactory;
 import g419.crete.api.structure.IHaveFeatures;
 
 import java.util.List;
+
 
 
 
@@ -41,6 +43,22 @@ public abstract class AbstractCreteInstance<LabelType> {
 		return label;
 	}
 	
+	private <T> void  extractFeaturesForComponent(IHaveFeatures<T> component, List<String> featureNames){
+		FeatureFactory factory = FeatureFactory.getFactory();
+		Class<T> componentHolderClass = component.getHolderClass();
+		for(String featureName : featureNames)
+			if(componentHolderClass.equals(factory.getFeatureClass(featureName)))
+				component.addFeature(factory.getFeature(componentHolderClass, featureName));
+		
+		component.generateFeatures();
+	}
+	
+	// Populate features
+	protected void extractFeatures(){
+		getComponents().forEach(c -> extractFeaturesForComponent(c, featureNames));
+	}
+	
+	
 //	public boolean hasPositiveLabel(){
 //		return POSITIVE_LABEL.equals(label);
 //	}
@@ -49,7 +67,7 @@ public abstract class AbstractCreteInstance<LabelType> {
 //	public LabelType getNegativeLabel(){return NEGATIVE_LABEL;}
 //	
 	// Populate features
-	protected abstract void extractFeatures();
+//	protected abstract void extractFeatures();
 	
 	//
 	public abstract List<IHaveFeatures<?>> getComponents();

@@ -14,6 +14,11 @@ public abstract class IHaveFeatures<T> {
 		return featureHolder;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public Class<T> getHolderClass(){
+		return (Class<T>) featureHolder.getClass();
+	}
+	
 	public List<AbstractFeature<T, ?>> extractFeatures(){
 		if(!featureValuesUpToDate) generateFeatures();
 		return features;

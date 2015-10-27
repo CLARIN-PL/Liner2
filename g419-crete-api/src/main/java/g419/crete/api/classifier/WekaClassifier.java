@@ -62,6 +62,9 @@ public abstract class WekaClassifier<T, L> extends AbstractCreteClassifier<T, In
 			
 			return new Attribute(feature.getName(), fvEnumValues);
 		}
+		if(String.class.isAssignableFrom(feature.getReturnTypeClass())){
+			return new Attribute(feature.getName(), (FastVector)null);
+		}
 		else{
 			return new Attribute(feature.getName());
 		}
