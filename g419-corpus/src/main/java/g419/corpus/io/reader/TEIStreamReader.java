@@ -11,6 +11,7 @@ import g419.corpus.io.reader.parser.tei.AnnSegmentationSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnWordsSAXParser;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.RelationSet;
+import g419.corpus.structure.Sentence;
 import g419.corpus.structure.TokenAttributeIndex;
 
 import java.io.IOException;
@@ -104,6 +105,9 @@ public class TEIStreamReader extends  AbstractDocumentReader{
 
         this.document = new Document(docName, segmentationParser.getParagraphs(), this.attributeIndex, relationSet);     
         this.document.setUri(uri);
+        for ( Sentence sentence : this.document.getSentences() ){
+        	sentence.setDocument(document);
+        }
     }
 
     @Override

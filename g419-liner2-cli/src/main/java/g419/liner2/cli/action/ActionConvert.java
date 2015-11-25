@@ -1,25 +1,26 @@
 package g419.liner2.cli.action;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.ParseException;
+import org.apache.log4j.Logger;
+
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
-import g419.corpus.Logger;
 import g419.corpus.structure.Document;
+import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.lib.cli.action.Action;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.converter.Converter;
 import g419.liner2.api.converter.factory.ConverterFactory;
 import g419.liner2.api.features.TokenFeatureGenerator;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.ParseException;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 public class ActionConvert extends Action {
 
@@ -43,16 +44,13 @@ public class ActionConvert extends Action {
         this.options.addOption(CommonOptions.getOutputFileNameOption());
         this.options.addOption(CommonOptions.getFeaturesOption());
         
-        OptionBuilder.withArgName("file");
-        OptionBuilder.hasArg();
-        OptionBuilder.withDescription("converter description");
-        OptionBuilder.withLongOpt(OPTION_CONVERSION_LONG);
-        this.options.addOption(OptionBuilder.create(OPTION_CONVERSION));
+        this.options.addOption(Option.builder(OPTION_CONVERSION).longOpt(OPTION_CONVERSION_LONG).hasArg().argName("file")
+        		.desc("converter description").build());
 	}
 
 	@Override
 	public void parseOptions(String[] args) throws ParseException, IOException {
-        CommandLine line = new GnuParser().parse(this.options, args);
+        CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
         this.output_file = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
         this.output_format = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT, "ccl");
@@ -90,19 +88,20 @@ public class ActionConvert extends Action {
         AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(this.output_file, this.output_format);
         Document ps = reader.nextDocument();
         while(ps != null) {
+        	Logger.getLogger(this.getClass()).info("Processing " + ps.getName() + " ...");
             if(gen != null) {
             	if ( gen != null ){
-            		Logger.log("Generating features ...");
+            		Logger.getLogger(this.getClass()).info(" - generating features ...");
             	}
                 gen.generateFeatures(ps);
             }
 
             if (converter != null) {
-        		Logger.log("Applying converter ...");
+            	Logger.getLogger(this.getClass()).info(" - applying converter ...");
                 converter.apply(ps);
             }
 
-    		Logger.log("Writing ...");
+            Logger.getLogger(this.getClass()).info(" - writing ...");
             writer.writeDocument(ps);
             ps = reader.nextDocument();
         }

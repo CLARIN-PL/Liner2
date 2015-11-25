@@ -8,7 +8,7 @@ import g419.corpus.structure.Document;
 import g419.crete.api.Crete;
 import g419.crete.api.CreteOptions;
 import g419.lib.cli.CommonOptions;
-import g419.lib.cli.action.Action;
+import g419.lib.cli.Action;
 import g419.liner2.api.features.TokenFeatureGenerator;
 
 import org.apache.commons.cli.CommandLine;

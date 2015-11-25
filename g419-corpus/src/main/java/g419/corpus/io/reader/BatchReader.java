@@ -71,33 +71,40 @@ public class BatchReader extends AbstractDocumentReader {
     
     @Override
     public Document nextDocument() throws Exception {
-    	if ( this.fileIndex < this.files.size() ){
-        	String name = this.files.get(this.fileIndex++);
-            String root = this.root.getAbsolutePath();
-            String path;
-            if(name.startsWith("/")) {
-                path = name;
-                File tmp = new File(path);
-                root = tmp.getParent();
-                name = tmp.getName();
-            }
-            else {
-                path = new File(this.root, name).getAbsolutePath();
-            }
-            AbstractDocumentReader reader;
-            if(this.format.equals("tei")){
-                reader = ReaderFactory.get().getTEIStreamReader(path, name);
-            }
-            else{
-                reader = ReaderFactory.get().getStreamReader(name, new FileInputStream(path), root, this.format);
-            }
-    		Document document = reader.nextDocument();
-    		document.setUri(path);
-            reader.close();
-    		return document;
+    	while ( this.fileIndex < this.files.size() ){
+	    	if ( this.fileIndex < this.files.size() ){
+	        	String name = this.files.get(this.fileIndex++);
+	            String root = this.root.getAbsolutePath();
+	            String path;
+	            if(name.startsWith("/")) {
+	                path = name;
+	                File tmp = new File(path);
+	                root = tmp.getParent();
+	                name = tmp.getName();
+	            }
+	            else {
+	                path = new File(this.root, name).getAbsolutePath();
+	            }
+	    		try{
+		            AbstractDocumentReader reader = null;
+		            if(this.format.equals("tei")){
+		                reader = ReaderFactory.get().getTEIStreamReader(path, name);
+		            }
+		            else{
+		                reader = ReaderFactory.get().getStreamReader(name, new FileInputStream(path), root, this.format);
+		            }
+		    		Document document = reader.nextDocument();
+		            reader.close();
+		    		return document;
+	    		}
+	    		catch(Exception ex){
+	    			// TODO zamienić na Logger
+	    			System.err.println("Błąd odczytu pliku: " + path);
+	    			System.err.println(ex.getMessage());
+	    		}
+	    	}
     	}
-    	else
-    		return null;
+    	return null;
     }
     
     @Override

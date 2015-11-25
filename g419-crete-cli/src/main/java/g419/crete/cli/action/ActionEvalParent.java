@@ -11,7 +11,7 @@ import g419.crete.api.annotation.AnnotationSelectorFactory;
 import g419.crete.api.evaluation.ParentEvaluator;
 import g419.crete.api.evaluation.ParentEvaluator.*;
 import g419.lib.cli.CommonOptions;
-import g419.lib.cli.action.Action;
+import g419.lib.cli.Action;
 import g419.liner2.api.features.TokenFeatureGenerator;
 
 import java.io.BufferedReader;

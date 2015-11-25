@@ -7,7 +7,7 @@ import g419.crete.cli.action.ActionEvalParent;
 import g419.crete.cli.action.ActionPipe;
 import g419.crete.cli.action.ActionPrepareGold;
 import g419.crete.cli.action.ActionTrain;
-import g419.lib.cli.action.Action;
+import g419.lib.cli.Action;
 
 import java.util.HashMap;
 

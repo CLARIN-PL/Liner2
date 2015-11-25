@@ -107,10 +107,7 @@ public class PlainTextStreamReader extends AbstractDocumentReader {
 
 		try {
 			// IMPORTANT uporządkować wywołanie wcrft-app, aby działało pod windows i linux. 
-			// 
-			
-			//File tager_input = File.createTempFile("wcrft_input", ".txt");
-			File tager_input = new File("liner2_input.tmp");
+			File tager_input = File.createTempFile("wcrft_input", ".txt");
 			BufferedWriter tager_writer = new BufferedWriter(
 					new FileWriter(tager_input));
 
@@ -118,7 +115,7 @@ public class PlainTextStreamReader extends AbstractDocumentReader {
 			tager_writer.close();
 			String cmd = "";
 			if (analyzer.equals("wcrft")){
-				cmd = "wcrft-app.exe nkjp_e2.ini -i text -o ccl " + "liner2_input.tmp"; //+ tager_input.getAbsolutePath();
+				cmd = String.format("wcrft-app nkjp_e2.ini -i text -o ccl %s > %s.tag", tager_input.getAbsolutePath(), tager_input.getAbsolutePath());
 			}
 			else if(analyzer.equals("maca")){
 				cmd =  "maca-analyse -qs morfeusz-nkjp-official -o ccl";
@@ -127,15 +124,16 @@ public class PlainTextStreamReader extends AbstractDocumentReader {
 				throw new Exception("Unrecognized analyzer: " + analyzer);
 			}
 			
-			System.out.println(cmd);
 			Process tager = Runtime.getRuntime().exec(cmd);
 			tager.waitFor();
 			
 			//InputStream tager_in = tager.getInputStream();			
 			//AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(docName, tager_in, "ccl");
 			
-			AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(docName, new FileInputStream(new File("liner2_input.tmp.tag")), "ccl");
-			return reader.nextDocument();
+			AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(docName, new FileInputStream(new File(tager_input.getAbsolutePath() + ".tag")), "ccl");
+			Document doc = reader.nextDocument();
+			reader.close();
+			return doc;
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();

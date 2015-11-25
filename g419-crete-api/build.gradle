@@ -15,7 +15,7 @@ dependencies {
     compile 'info.debatty:java-string-similarity:0.13'
     compile 'nz.ac.waikato.cms.weka:weka-stable:3.6.12'
     compile project(":g419-corpus")
-    compile project(":g419-tools")
+    compile project(":g419-tools-cli")
     compile project(":g419-liner2-api")
     compile project(":g419-external-dependencies")
 }

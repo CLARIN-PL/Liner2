@@ -3,7 +3,7 @@ package g419.liner2.daemon;
 import g419.corpus.Logger;
 import g419.lib.cli.CommonOptions;
 import g419.lib.cli.ParameterException;
-import g419.lib.cli.action.Action;
+import g419.lib.cli.Action;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;

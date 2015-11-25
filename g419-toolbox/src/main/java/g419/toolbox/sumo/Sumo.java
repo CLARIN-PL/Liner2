@@ -19,7 +19,7 @@ public class Sumo {
 
     private final Pattern subclassRelPattern = Pattern.compile("^\\p{Z}*\\(subclass (\\p{L}+) (\\p{L}+)\\)\\p{Z}*$");
     private Graph graph = new Graph();
-    private boolean caseSensitive = true;
+    private boolean caseSensitive = false;
 
     public Sumo(String mapping) throws IOException, DataFormatException {
         File mappingFile = new File(mapping);
@@ -145,6 +145,11 @@ public class Sumo {
     public boolean isClassOrSubclassOf(Set<String> subclasses, String upperClass){
     	if ( this.caseSensitive == false ){
     		upperClass = upperClass.toLowerCase();
+    		Set<String> subclassesLower = new HashSet<String>();
+    		for ( String cl : subclasses ){
+    			subclassesLower.add(cl.toLowerCase());
+    		}
+    		subclasses = subclassesLower;
     	}
         if(subclasses.contains(upperClass)){
             return true;

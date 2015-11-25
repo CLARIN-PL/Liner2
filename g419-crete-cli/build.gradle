@@ -21,8 +21,8 @@ jar {
 dependencies {
     compile 'commons-cli:commons-cli:1.2'
     compile project(":g419-corpus")
-    compile project(":g419-tools")
     compile project(":g419-lib-cli")
+    compile project(":g419-tools-cli")
     compile project(":g419-crete-api")
 }
 

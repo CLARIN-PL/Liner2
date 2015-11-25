@@ -35,6 +35,9 @@ public class Graph {
     		// Nie ma podklas, więc zwracam false
     		return false;
     	}
+    	else if ( directSubclasses.contains(child) ){
+    		return true;
+    	}
     	for ( String directSubclass : directSubclasses ){
     		if ( this.isSubclassOf(child, directSubclass) ){
     			return true;

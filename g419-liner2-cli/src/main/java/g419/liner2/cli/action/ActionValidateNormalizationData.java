@@ -5,8 +5,9 @@ import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
+import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.lib.cli.action.Action;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.OptionBuilder;

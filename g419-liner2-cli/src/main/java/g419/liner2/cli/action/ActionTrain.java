@@ -1,7 +1,7 @@
 package g419.liner2.cli.action;
 
+import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.lib.cli.action.Action;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.factory.ChunkerManager;
 

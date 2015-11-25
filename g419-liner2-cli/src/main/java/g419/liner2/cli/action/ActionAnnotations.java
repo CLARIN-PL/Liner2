@@ -7,8 +7,8 @@ import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
+import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.lib.cli.action.Action;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.features.AnnotationFeatureGenerator;
 
