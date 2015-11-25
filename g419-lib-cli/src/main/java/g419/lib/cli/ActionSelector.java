@@ -5,6 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.HashMap;
 
+import org.apache.commons.cli.MissingOptionException;
+
 import g419.corpus.TerminateException;
 
 public class ActionSelector {
@@ -53,7 +55,7 @@ public class ActionSelector {
                 catch (TerminateException e){
                     System.out.println(e.getMessage());
                 }
-                catch (ParseException e) {
+                catch (ParseException | MissingOptionException e) {
                 	System.out.println(this.credits);
                     System.out.println();
                     System.out.println(String.format("[Options parse error] %s\n", e.getMessage()));
