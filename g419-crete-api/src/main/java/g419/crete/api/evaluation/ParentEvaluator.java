@@ -9,6 +9,7 @@ import g419.corpus.structure.AnnotationCluster.ReturningStrategy;
 import g419.corpus.structure.AnnotationClusterSet;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.TokenAttributeIndex;
+import g419.crete.api.annotation.AbstractAnnotationSelector;
 import g419.liner2.api.tools.FscoreEvaluator;
 
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Ewaluator metryki PARENT dla koreferencji
@@ -169,50 +172,31 @@ public class ParentEvaluator extends FscoreEvaluator{
 	
 	////
 	
-	private RelationUnitCriterion identifyingUnitsCriteria;
-	private RelationUnitCriterion referencingUnitsCriteria;
+//	private RelationUnitCriterion identifyingUnitsCriteria;
+//	private RelationUnitCriterion referencingUnitsCriteria;
+
+	private AbstractAnnotationSelector identifyingSelector;
+	private AbstractAnnotationSelector referencingSelector;
 	private AnnotationMapper mapper;
 	
-	public ParentEvaluator(RelationUnitCriterion identifyingUnitsCriteria, RelationUnitCriterion referencingUnitsCriteria, Comparator<Annotation> annotationMatcher){
+	public ParentEvaluator(AbstractAnnotationSelector identifyingSelector, AbstractAnnotationSelector referencingSelector, Comparator<Annotation> annotationMatcher){
 		super();
-		this.identifyingUnitsCriteria = identifyingUnitsCriteria;
-		this.referencingUnitsCriteria = referencingUnitsCriteria;
+
+		this.identifyingSelector = identifyingSelector;
+		this.referencingSelector = referencingSelector;
+
+		// TODO: refactor
 		ArrayList<Pattern> annotationTypes = new ArrayList<Pattern>();
 		annotationTypes.add(Pattern.compile("nam.*"));
 		annotationTypes.add(Pattern.compile(".*nam"));
 		annotationTypes.add(Pattern.compile("anafora_wyznacznik"));
 		annotationTypes.add(Pattern.compile("anafora_verb_null.*"));
+		annotationTypes.add(Pattern.compile("mention"));
 		this.mapper = new AnnotationMapper(annotationMatcher, annotationTypes);
 		
-		personNam = new ArrayList<Pattern>();
-		personNam.add(Pattern.compile("person_nam"));
-		personNam.add(Pattern.compile("nam_liv_person"));
-		
-		personLastFirstNam = new ArrayList<Pattern>();
-		personLastFirstNam.add(Pattern.compile("person_first_nam"));
-		personLastFirstNam.add(Pattern.compile("person_last_nam"));
-		personLastFirstNam.add(Pattern.compile("person_add_nam"));
-		personLastFirstNam.add(Pattern.compile("nam_liv_person_first"));
-		personLastFirstNam.add(Pattern.compile("nam_liv_person_last"));
-		personLastFirstNam.add(Pattern.compile("nam_liv_person_add"));
+
 	}
-	
-	public Set<Annotation> extractUnits(Document document, RelationUnitCriterion criterion){
-		Set<Annotation> units = new HashSet<Annotation>();
-		for(Annotation annotation: document.getAnnotations())
-			if(criterion.isSatisfied(annotation)) units.add(annotation);
-		
-		return units;
-	}
-	
-	public Set<Annotation> extractIdentifyingUnits(Document document){
-		return extractUnits(document, this.identifyingUnitsCriteria);
-	}
-	
-	public Set<Annotation> extractReferencingUnits(Document document){
-		return extractUnits(document, this.referencingUnitsCriteria);
-	}
-	
+
 	public Set<Annotation> extractIgnoredUnits(Document document, Set<Annotation> identifyingUnits, Set<Annotation> referencingUnits){
 		Set<Annotation> ignoredUnits = new HashSet<Annotation>();
 		for(Annotation annotation: document.getAnnotations())
@@ -227,16 +211,16 @@ public class ParentEvaluator extends FscoreEvaluator{
 	 * @param parallelAnnotations Kolekcja anotacji, które występują w obydwu dokumentach
 	 * @return Wzmianki występujące tylko w podanym dokumencie
 	 */
-	public ArrayList<Annotation> getTwinlessMentions(Document document, Collection<Annotation> parallelAnnotations){
-		ArrayList<Annotation> result = new ArrayList<Annotation>();
-		ArrayList<Annotation> documentAnnotations = document.getAnnotations();
-		
-		for(Annotation documentAnnotation: documentAnnotations)
-			if(!parallelAnnotations.contains(documentAnnotation))
-				result.add(documentAnnotation);
-		
-		return result;
-	}
+//	public ArrayList<Annotation> getTwinlessMentions(Document document, Collection<Annotation> parallelAnnotations){
+//		ArrayList<Annotation> result = new ArrayList<Annotation>();
+//		ArrayList<Annotation> documentAnnotations = document.getAnnotations();
+//
+//		for(Annotation documentAnnotation: documentAnnotations)
+//			if(!parallelAnnotations.contains(documentAnnotation))
+//				result.add(documentAnnotation);
+//
+//		return result;
+//	}
 	
 	/**
 	 * 
@@ -302,7 +286,44 @@ public class ParentEvaluator extends FscoreEvaluator{
 
 		return systemResponseDiscourseEntityMapping;
 	}
-	
+
+
+	/**
+	 * Extracting units of given type from system document given units from referencing document.
+	 *
+	 * Identifying units in system document is a sum of intersection of referencing and system documents' identifying units and twinless system identifying units
+	 * Referencing units in system document is a sum of intersection of referencing and system documents' referencing units and twinless system referencing units
+	 *
+	 * That is mentions which are in reference document and are marked as non-identifying cannot be marked as identifying in system response and the same holds for referencing mentions
+	 *
+	 * @param systemDocumentUnits Mentions of given type from system document
+	 * @param referenceDocumentUnits Mentions of given type from reference document
+	 * @param systemToReferenceMapping Mapping of mentions from system document to reference document
+	 * @return set of mentions that belong to given type consistently with the type annotation for reference document
+	 */
+	private Set<Annotation> extractUnits(Set<Annotation> systemDocumentUnits, Set<Annotation> referenceDocumentUnits, HashMap<Annotation, Annotation> systemToReferenceMapping){
+		HashSet<Annotation> unitsSet = new HashSet<>();
+
+		// Wzmianki danego rodzaju w dokumencie systemowym, które nie występują w dokumencie referencyjnym - twinless mentions
+		Set<Annotation> systemTwinlessUnits = systemDocumentUnits.stream().filter(annotation -> !systemToReferenceMapping.containsKey(annotation)).collect(Collectors.toSet());
+
+		// Zmapowane wzmianki systemowe danego rodzaju, które nie są twinless mentions
+		Set<Annotation> systemNonTwinlessMapped = systemDocumentUnits.stream()
+				.filter(annotation -> systemToReferenceMapping.containsKey(annotation))
+				.map(annotation -> systemToReferenceMapping.get(annotation))
+				.collect(Collectors.toSet());
+
+		// Wzmianki danego rodzaju w dokumencie systemowym, które są tego samego rodzaju w dokumencie wzorcowym
+		systemNonTwinlessMapped.retainAll(referenceDocumentUnits);
+
+		// Dodaj oba zbiory
+		unitsSet.addAll(systemTwinlessUnits);
+		unitsSet.addAll(systemNonTwinlessMapped);
+
+		return unitsSet;
+	}
+
+
 	/**
 	 * 
 	 * @param initialRelationClusterSet
@@ -322,7 +343,7 @@ public class ParentEvaluator extends FscoreEvaluator{
 	 * @param systemRelations
 	 * @param referenceRelations
 	 */
-	private void calculateScore(Set<Relation> systemRelations, Set<Relation> referenceRelations, HashMap<Annotation, Annotation> systemToReferenceMapping, HashMap<Annotation, Integer> discourseEntityMapping, HashMap<Annotation, Integer> systemDiscourseEntityMapping){
+	private void calculateScore(String docId, Set<Relation> systemRelations, Set<Relation> referenceRelations, HashMap<Annotation, Annotation> systemToReferenceMapping, HashMap<Annotation, Integer> discourseEntityMapping, HashMap<Annotation, Integer> systemDiscourseEntityMapping){
 		int localTruePositives = 0;
 		int localFalsePositives = 0;
 		int localFalseNegatives = 0;
@@ -346,7 +367,7 @@ public class ParentEvaluator extends FscoreEvaluator{
 					// Found
 					localTruePositives++;
 					found = true;
-					System.out.println(systemRelation);
+//					System.out.println(systemRelation);
 					break;
 				}
 			}
@@ -365,35 +386,7 @@ public class ParentEvaluator extends FscoreEvaluator{
 		float localRecall = safeDiv(localTruePositives, localTruePositives + localFalseNegatives, 0.0f);
 		float localF = safeDiv(2 * localPrecision * localRecall, localPrecision + localRecall, 0.0f);
 		
-		System.out.println(String.format("Score for document: Precision=%.2f (%d/%d), Recall=%.2f (%d/%d), F=%.2f", localPrecision*100, localTruePositives, localTruePositives+localFalsePositives, localRecall*100, localTruePositives, localTruePositives + localFalseNegatives, localF*100));
-	}
-	
-	/**
-	 * Naprawia nadmierne znakowanie person*_*nam
-	 * @param document
-	 */
-	public void completePersonNamRelations(Document document){
-		for(Sentence sentence : document.getSentences()){
-			Set<Annotation> lastFirstNam = sentence.getAnnotations(personLastFirstNam); 
-			Set<Annotation> persNam = sentence.getAnnotations(personNam);
-			
-			for(Annotation lfAnn : lastFirstNam){
-				for(Annotation pAnn : persNam){
-					boolean cross = false;
-					for(Integer tokenId : lfAnn.getTokens()){
-						if(pAnn.getTokens().contains(tokenId)){
-							cross = true;
-							break;
-						}
-					}
-					
-					if(cross){
-						Relation corefAdd = new Relation(lfAnn, pAnn, Relation.COREFERENCE);
-						document.addRelation(corefAdd);
-					}
-				}
-			}
-		}
+		System.out.println(String.format("Score for document " + docId + ": \tPrecision = %.2f \t (%d/%d),  \t Recall=%.2f \t  (%d/%d), \t F=%.2f", localPrecision*100, localTruePositives, localTruePositives+localFalsePositives, localRecall*100, localTruePositives, localTruePositives + localFalseNegatives, localF*100));
 	}
 	
 	/**
@@ -410,7 +403,7 @@ public class ParentEvaluator extends FscoreEvaluator{
 		 *  - dla zagnieżdżonych person_last_nam w person_nam
 		 */
 		
-		completePersonNamRelations(referenceDocument);
+//		completePersonNamRelations(referenceDocument);
 		
 		/**
 		 *  TODO: parallelization of mentions
@@ -439,12 +432,12 @@ public class ParentEvaluator extends FscoreEvaluator{
 		//  *Referencing units*
 		//	*Ignored units* - not needed
 		
-		Set<Annotation> referenceIdentifyingUnits = extractIdentifyingUnits(referenceDocument);
-		Set<Annotation> referenceReferencingUnits = extractReferencingUnits(referenceDocument);
+		Set<Annotation> referenceIdentifyingUnits = new HashSet<>(identifyingSelector.selectAnnotations(referenceDocument));
+		Set<Annotation> referenceReferencingUnits = new HashSet<>(referencingSelector.selectAnnotations(referenceDocument));
 		
-		Set<Annotation> systemIdentifyingUnits = extractIdentifyingUnits(systemResult);
-		Set<Annotation> systemReferencingUnits = extractReferencingUnits(systemResult);
-		
+		Set<Annotation> systemIdentifyingUnits = extractUnits(new HashSet<>(identifyingSelector.selectAnnotations(systemResult)), referenceIdentifyingUnits, systemToReferenceMapping);
+		Set<Annotation> systemReferencingUnits = extractUnits(new HashSet<>(referencingSelector.selectAnnotations(systemResult)), referenceReferencingUnits, systemToReferenceMapping);
+
 		// 2. Create reference clustering of identifying units
 		Set<AnnotationCluster> referenceIdentifyingUnitsClusters = clusterIdentifyingUnits(referenceIdentifyingUnits, referenceDocument);
 		
@@ -456,18 +449,18 @@ public class ParentEvaluator extends FscoreEvaluator{
 		
 		// 5. Create reference clustering
 		AnnotationClusterSet referenceRelations = AnnotationClusterSet.fromRelationSet(referenceDocument.getRelations(Relation.COREFERENCE));
-		System.out.println(referenceRelations);
+//		System.out.println(referenceRelations);
 		// 6. Create reference relation set from referencing units to identifying units (discourse entities)
 		Set<Relation> referenceDiscourseEntitiesRelations = extractDiscourseEntityRelations(referenceRelations, referenceIdentifyingUnits, referenceReferencingUnits, discourseEntityMapping);
 		
 		// 7. Create system result clustering
 		AnnotationClusterSet systemResultRelations = AnnotationClusterSet.fromRelationSet(systemResult.getRelations()); //Relation.COREFERENCE --ikar ustawia domyślnie pusty atrybut set=""
-		System.out.println(systemResultRelations);
+//		System.out.println(systemResultRelations);
 		// 8. Create system relation set from referencing units to identifying units
 		Set<Relation> systemDiscourseEntitiesRelations = extractDiscourseEntityRelations(systemResultRelations, systemIdentifyingUnits, systemReferencingUnits, systemDiscourseEntityMapping);
 		
 		// 9. Compare relations
-		calculateScore(systemDiscourseEntitiesRelations, referenceDiscourseEntitiesRelations, systemToReferenceMapping, discourseEntityMapping, systemDiscourseEntityMapping);
+		calculateScore(systemResult.getName(), systemDiscourseEntitiesRelations, referenceDiscourseEntitiesRelations, systemToReferenceMapping, discourseEntityMapping, systemDiscourseEntityMapping);
 		
 		
 	}

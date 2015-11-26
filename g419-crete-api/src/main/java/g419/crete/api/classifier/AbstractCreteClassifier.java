@@ -29,9 +29,10 @@ public abstract class AbstractCreteClassifier<M, I, L> {
 		trainingInstances.addAll(instances);
 		trainingInstanceLabels.addAll(labels);
 	}
-	
+
 	// Trenowanie i klasyfikacja
 	public abstract List<L> classify(List<I> instances);
+	public abstract L classify(I instance);
 	public abstract void train();
 	public abstract Class<I> getInstanceClass();
 	public abstract Class<L> getLabelClass();

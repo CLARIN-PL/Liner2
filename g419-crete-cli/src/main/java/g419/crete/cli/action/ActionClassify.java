@@ -22,6 +22,7 @@ import g419.crete.api.instance.converter.factory.item.MentionPairClassificationW
 import g419.crete.api.instance.generator.ClusterClassificationInstanceGenerator;
 import g419.crete.api.instance.generator.CreteInstanceGeneratorFactory;
 import g419.crete.api.instance.generator.MentionPairInstanceGenerator;
+import g419.crete.api.refine.CoverAnnotationDocumentRefiner;
 import g419.crete.api.resolver.AbstractCreteResolver;
 import g419.crete.api.resolver.factory.CreteResolverFactory;
 import g419.crete.api.resolver.factory.NullResolverItem;
@@ -29,7 +30,7 @@ import g419.crete.api.resolver.factory.WekaJ48MentionPairResolverItem;
 import g419.crete.api.resolver.factory.WekaJ48ResolverItem;
 import g419.crete.api.resolver.factory.WekaRandomForestMentionPairClusterClassifyItem;
 import g419.lib.cli.CommonOptions;
-import g419.lib.cli.Action;
+import g419.lib.cli.action.Action;
 import g419.liner2.api.features.TokenFeatureGenerator;
 
 import java.util.ArrayList;
@@ -142,7 +143,6 @@ public class ActionClassify extends Action {
         
         initializeResolvers();
 		
-//        String modelPath = CreteOptions.getOptions().getProperties().getProperty(MODEL_PATH);
         WekaModelSerializer model = new WekaModelSerializer(null);
         model.load(this.classifier_file);
 	
@@ -153,113 +153,48 @@ public class ActionClassify extends Action {
 		String converterName = CreteOptions.getOptions().getProperties().getProperty("converter");
         AbstractCreteResolver<?, ?, ?, ?> resolver = CreteResolverFactory.getFactory().getResolver(resolverName, classifierName, generatorName, converterName, features, model);
 		
-		// Quick Fix for NamedEntities
-//		resolver = CreteResolverFactory.getFactory().getResolver("j48_mention_pair_classify", "j48_mention_pair", "mention_pair_generator", "mention_pair_to_weka_instance", features, model);
-//		resolver = new NullResolver()
-		
-		// Instantiate resolvers
-		String[] resolverNames = new String[]{}; //temp
-		List<AbstractCreteResolver<?, ?, ?, ?>> resolvers = new ArrayList<>();
-		for(String resolverName2 : resolverNames){
-			// TODO:
-		}
-		
-
 		// Selektor wzmianek do usunięcia przed przetwarzaniem
 		AbstractAnnotationSelector preFilterSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(PRE_FILTER_SELECTOR));
 		// Selektory nazw osób
-		AbstractAnnotationSelector personNamSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(PERSON_NAM_SELECTOR));
-        AbstractAnnotationSelector personNamInSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(PERSON_NAM_IN_SELECTOR));
+//		AbstractAnnotationSelector personNamSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(PERSON_NAM_SELECTOR));
+//        AbstractAnnotationSelector personNamInSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(PERSON_NAM_IN_SELECTOR));
         // Selector of mentions to be classified 
         // Selektor wzmianek do klasyfikacji
         AbstractAnnotationSelector selector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(BASIC_SELECTOR));
         // Selector of mentions to be overriden with basic selector annotations
         // Selektor do nadpisywania relacji ????
-        AbstractAnnotationSelector overrideSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(OVERRIDE_SELECTOR));
+//        AbstractAnnotationSelector overrideSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(OVERRIDE_SELECTOR));
         // Selector of singleton mentions to be considered as singleton clusters
         // Selektor singletonów --- do tworzenia klastrów zawierających pojedyncze wzmianki
         AbstractAnnotationSelector singletonSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(SINGLETON_SELECTOR));
-        
-        // Read document
-//        Document ps = reader.nextDocument();
-//        while(ps != null){
-//	        // Prepare document for classification
-//	        // 1. Remove undesired annotations
-//	        // 1. Usuwanie niepożądanych wzmianek --- przed wszystkimi resolverami
-//	        ps.removeAnnotations(preFilterSelector.selectAnnotations(ps));
-//	        // 2. Refine the person names annotations
-//	        // 2. Poprawianie zagnieżdżeń w nazwach osób
-//	        ps.refinePersonNamRelations(true);
-//	        // 3. Process document through all resolvers
-//	        // 3. Przetwórz dokument resolverami koreferencji
-//	        for(AbstractCreteResolver<?, ?, ?, ?>  documentResolver : resolvers){
-//	        	// Selector of mentions to be classified 
-//	            // Selektor wzmianek do klasyfikacji
-//	            AbstractAnnotationSelector selector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(BASIC_SELECTOR));
-//	            // Selector of mentions to be overriden with basic selector annotations
-//	            // Selektor do nadpisywania relacji ????
-//	            AbstractAnnotationSelector overrideSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(OVERRIDE_SELECTOR));
-//	            // Selector of singleton mentions to be considered as singleton clusters
-//	            // Selektor singletonów --- do tworzenia klastrów zawierających pojedyncze wzmianki
-//	            AbstractAnnotationSelector singletonSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(SINGLETON_SELECTOR));
-//	            if(overrideSelector != null){
-//	            	// Rewire relations on mentions under consideration
-//	                // Przepnij relacje na rozważanych wzmiankach
-//	                ps = rewireRelations(ps, selector, overrideSelector, false);
-//	                // Remove from clusters all mentions not to be classified
-//	                // Usuń z klastrów relacyjnych wszystkie wzmianki, które nie będą klasyfikowane
-//	                ps.filterAnnotationClusters(overrideSelector.selectAnnotations(ps));
-//	            }
-//	            else{
-//	            	ps.filterAnnotationClusters(selector.selectAnnotations(ps));
-//	            }
-//	            
-//	        	
-//	            // Resolve coreference
-//	            // Rozwiąż koreferencję
-//	        	documentResolver.resolveDocument(ps, selector, singletonSelector);
-//	        }
-//	        
-//	        // 4. Save document
-//	        // 4. Zapisz dokument
-//	        writer.writeDocument(ps);
-//	        
-//	        // 5. Go to next document
-//	        // 5. Idź do następnego dokumentu
-//	        ps = reader.nextDocument();
-//        }
-        
+
+		//---------------------- INITIALIZE DOCUMENT REFINER -----------------------------
+		CoverAnnotationDocumentRefiner refiner = new CoverAnnotationDocumentRefiner(preFilterSelector);
+
+		//---------------------- PROCESS DOCUMENT -----------------------------
         Document ps = reader.nextDocument();
         while ( ps != null ){
+			//---------------------- PREPROCESS DOCUMENT ----------------------------
 			if ( gen != null ) gen.generateFeatures(ps);
-			// Usuń niepożądane anotacje
 			List<Annotation> preFilteredAnnotations = preFilterSelector.selectAnnotations(ps);
-			ps.removeAnnotations(preFilteredAnnotations);
-			// Przepnij relacje i usuń nazwy własne wewnętrzne nam_liv_person_* wewnątrz nam_liv_person
-			ps.refinePersonNamRelations(true);
-//			ps = rewireRelations(ps, personNamInSelector, personNamSelector, true);
-			if(overrideSelector != null){
-				// Przepnij relacje na rozważanych wzmiankach
-				ps = rewireRelations(ps, selector, overrideSelector, false);
-				// Usuń z klastrów wszystkie wzmianki, które będą klasyfikowane
-				ps.filterAnnotationClusters(overrideSelector.selectAnnotations(ps));
-				// Znajdź odpowiednie relacje koreferencji
-				ps = resolver.resolveDocument(ps, overrideSelector, singletonSelector);
-			}
-			else{
-				// Usuń z klastrów wszystkie wzmianki, które będą klasyfikowane
-				ps.filterAnnotationClusters(selector.selectAnnotations(ps));
-				// Znajdź odpowiednie relacje koreferencji
-				ps = resolver.resolveDocument(ps, selector, singletonSelector);
-			}
+			ps = refiner.refineDocument(ps);
+			ps.filterAnnotationClusters(selector.selectAnnotations(ps));
+
+			//---------------------- CLASSIFY/RESOLVE DOCUMENT ----------------------------
+			ps = resolver.resolveDocument(ps, selector, singletonSelector);
+
+			//---------------------- POSTPROCESS DOCUMENT ----------------------------
+
 			// Oddaj relacje usunięte przed klasyfikacją relacji
 			HashMap<Sentence, AnnotationSet> chunkings = new HashMap<>();
 			ps.getParagraphs().forEach(p -> p.getSentences()	.forEach(s -> chunkings.put(s, new AnnotationSet(s))));
 			preFilteredAnnotations.forEach(a -> chunkings.get(a.getSentence()).addChunk(a));
 			ps.addAnnotations(chunkings);
-			// Zapisz wynikowy dokument
+
+			//---------------------- SAVE DOCUMENT ----------------------------
 			writer.writeDocument(ps);
-			// Przejdź do następnego dokumentu
+
+			//---------------------- GO TO NEXT DOCUMENT ----------------------------
 			ps = reader.nextDocument();
 		}
         

@@ -42,7 +42,8 @@ public class MentionPairInstanceGenerator extends AbstractCreteInstanceGenerator
 		List<MentionPairClassificationInstance> negativeInstances  = namedEntitySelector.selectAnnotations(document) 
 //				document.getAnnotations()
 				.parallelStream()
-				.filter(annotation -> comparator.compare(annotation, mention) < 0)
+//				.filter(annotation -> comparator.compare(annotation, mention) < 0)
+				.filter(annotation -> !annotation.equals(mention))
 				.filter(annotation -> !clusters.inSameCluster(mention, annotation))
 				.sorted(comparator)
 				// Apply limit only to training data
@@ -60,7 +61,8 @@ public class MentionPairInstanceGenerator extends AbstractCreteInstanceGenerator
 		List<MentionPairClassificationInstance> positiveInstances = namedEntitySelector.selectAnnotations(document) 
 //				document.getAnnotations()
 				.parallelStream()
-				.filter(annotation -> training || comparator.compare(annotation, mention) < 0)
+//				.filter(annotation -> training || comparator.compare(annotation, mention) < 0)
+				.filter(annotation -> !annotation.equals(mention))
 				.filter(annotation -> clusters.inSameCluster(mention, annotation))
 				.sorted(comparator)
 				// Apply limit only to training data
@@ -83,6 +85,12 @@ public class MentionPairInstanceGenerator extends AbstractCreteInstanceGenerator
 		List<MentionPairClassificationInstance> instances = new ArrayList<>();
 		instances.addAll(positiveInstances);
 		instances.addAll(negativeInstances);
+
+
+
+
+
+
 		return instances;
 		
 //		negativeInstances.addAll(positiveInstances);

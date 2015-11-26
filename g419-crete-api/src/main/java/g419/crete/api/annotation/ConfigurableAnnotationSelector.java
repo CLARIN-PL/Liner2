@@ -28,11 +28,23 @@ public class ConfigurableAnnotationSelector extends AbstractAnnotationSelector{
 	public List<Annotation> selectAnnotations(Document document) {
 		ArrayList<Annotation> selectedAnnotations = new ArrayList<Annotation>();
 		for(Annotation annotation : document.getAnnotations(patterns))
-			for(AnnotationDescription description : descriptions)
-				if(description.match(annotation)) 
+			if(matches(annotation))
 					selectedAnnotations.add(annotation);
 		
 		return selectedAnnotations;
+	}
+
+	@Override
+	public boolean matches(Annotation annotation) {
+		boolean typeMatch = patterns.stream().anyMatch(p -> p.matcher(annotation.getType()).matches());
+		if(!typeMatch) return false;
+
+		boolean descriptionMatch = false;
+		for(AnnotationDescription description : descriptions)
+			if(description.match(annotation))
+				descriptionMatch = true;
+
+		return typeMatch && descriptionMatch;
 	}
 
 }

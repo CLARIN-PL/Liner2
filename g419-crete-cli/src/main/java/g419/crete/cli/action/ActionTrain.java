@@ -20,12 +20,13 @@ import g419.crete.api.instance.converter.factory.item.MentionPairClassificationW
 import g419.crete.api.instance.generator.ClusterClassificationInstanceGenerator;
 import g419.crete.api.instance.generator.CreteInstanceGeneratorFactory;
 import g419.crete.api.instance.generator.MentionPairInstanceGenerator;
+import g419.crete.api.refine.CoverAnnotationDocumentRefiner;
 import g419.crete.api.trainer.AbstractCreteTrainer;
 import g419.crete.api.trainer.factory.CreteTrainerFactory;
 import g419.crete.api.trainer.factory.WekaJ48ClusterMentionTrainerItem;
 import g419.crete.api.trainer.factory.WekaJ48MentionPairTrainerItem;
 import g419.lib.cli.CommonOptions;
-import g419.lib.cli.Action;
+import g419.lib.cli.action.Action;
 import g419.liner2.api.features.TokenFeatureGenerator;
 
 import java.util.ArrayList;
@@ -89,6 +90,7 @@ public class ActionTrain extends Action {
 	}
 
 	public void initializeTrainers(){
+		// --------------- TRAINERS -----------------------------------
 		CreteTrainerFactory.getFactory().register("j48_cluster_classify", new WekaJ48ClusterMentionTrainerItem());
 		CreteTrainerFactory.getFactory().register("j48_mention_pair_classify", new WekaJ48MentionPairTrainerItem());
 		// --------------- CLASSIFIERS -----------------------------------
@@ -107,6 +109,7 @@ public class ActionTrain extends Action {
 	
 	@Override
 	public void run() throws Exception {
+		//---------------------- INITIALIZE GENERAL OPTIONS -----------------------------
 		AbstractDocumentReader reader = getInputReader();
 		AbstractDocumentWriter writer = getOutputWriter();
         TokenFeatureGenerator gen = null;
@@ -118,122 +121,87 @@ public class ActionTrain extends Action {
         	gen = new TokenFeatureGenerator(CreteOptions.getOptions().getFeatures().get(TOKENS));
         }
 
+		//---------------------- INITIALIZE FEATURES -----------------------------
         ArrayList<String> features = new ArrayList<String>();
         features.addAll(CreteOptions.getOptions().getFeatures().get(ANNOTATION_PAIRS).values());
         features.addAll(CreteOptions.getOptions().getFeatures().get(ANNOTATIONS).values());
         features.addAll(CreteOptions.getOptions().getFeatures().get(CLUSTERS).values());
         features.addAll(CreteOptions.getOptions().getFeatures().get(CLUSTER_MENTION_PAIRS).values());
-        
+
+		//---------------------- INITIALIZE CRETE FRAMEWORK -----------------------------
         initializeTrainers();
-        // Zero trainer
-//        AbstractCreteTrainer<?, ?, ?, ?> trainer = CreteTrainerFactory.getFactory().getTrainer("j48_cluster_classify", "j48_cluster", "mention_cluster_generator", "mention_cluster_to_weka_instance", features);
-        String resolverName = CreteOptions.getOptions().getProperties().getProperty("resolver");
+
+		//---------------------- INITIALIZE TRAINER -----------------------------
+        String trainerName = CreteOptions.getOptions().getProperties().getProperty("trainer");
 		String classifierName = CreteOptions.getOptions().getProperties().getProperty("classifier");
 		String generatorName = CreteOptions.getOptions().getProperties().getProperty("generator");
 		String converterName = CreteOptions.getOptions().getProperties().getProperty("converter");
-        AbstractCreteTrainer<?, ?, ?, ?> trainer = CreteTrainerFactory.getFactory().getTrainer(resolverName, classifierName, generatorName, converterName, features);
-        
-        
-//        //  Instantiate trainers
-// 		String[] trainerNames = CreteOptions.getOptions().getProperties().getProperty(TRAINER_NAMES).split(",");
-// 		List<AbstractCreteTrainer<?, ?, ?, ?>> trainers = new ArrayList<>();
-// 		for(String trainerName : trainerNames){
-// 			String classifierName;
-// 			String generatorName;
-// 			String converterName;
-// 			AbstractCreteTrainer<?, ?, ?, ?> trainer = CreteTrainerFactory.getFactory().getTrainer(trainerName, classifierName, generatorName, converterName, features);
-// 			trainers.add(trainer);
-// 		}
-        
+        AbstractCreteTrainer<?, ?, ?, ?> trainer = CreteTrainerFactory.getFactory().getTrainer(trainerName, classifierName, generatorName, converterName, features);
 
+		//---------------------- INITIALIZE SELECTORS-----------------------------
+		// Selector for discarding given annotations from training documents
         AbstractAnnotationSelector preFilterSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(PRE_FILTER_SELECTOR));
+		// Selector for annotations for which the coreference relation will be considered
         AbstractAnnotationSelector selector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(BASIC_SELECTOR));
-        AbstractAnnotationSelector overrideSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(OVERRIDE_SELECTOR));
+		// Selector for overriding th
+//        AbstractAnnotationSelector overrideSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(OVERRIDE_SELECTOR));
         AbstractAnnotationSelector singletonSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(SINGLETON_SELECTOR));
-        AbstractAnnotationSelector personNamSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(PERSON_NAM_SELECTOR));
-        AbstractAnnotationSelector personNamInSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(PERSON_NAM_IN_SELECTOR));
-        
-        
-//        Document ps = reader.nextDocument();
-//        while ( ps != null ){
-//        	// Generate document features for tokens
-//        	if ( gen != null ) gen.generateFeatures(ps);
-//        	// Remove undesired annotations
-//        	ps.removeAnnotations(preFilterSelector.selectAnnotations(ps));
-//        	// Refine the person named entities nested annotations
-//        	ps.refinePersonNamRelations(true);
-//        	
-//        	//
-//        	for(AbstractCreteTrainer<?, ?, ?, ?> trainer : trainers){
-//        		AbstractAnnotationSelector selector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(BASIC_SELECTOR));
-//                AbstractAnnotationSelector overrideSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(OVERRIDE_SELECTOR));
-//                AbstractAnnotationSelector singletonSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(SINGLETON_SELECTOR));
-//                
-//        	}
-//        	
-//        	ps = reader.nextDocument();
-//		}
-        	
-        Document ps = reader.nextDocument();
+//        AbstractAnnotationSelector personNamSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(PERSON_NAM_SELECTOR));
+//        AbstractAnnotationSelector personNamInSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(PERSON_NAM_IN_SELECTOR));
+
+		//---------------------- INITIALIZE DOCUMENT REFINER -----------------------------
+		CoverAnnotationDocumentRefiner refiner = new CoverAnnotationDocumentRefiner(preFilterSelector);// args:prefilterSelector
+
+		//---------------------- PROCESS DOCUMENTS -----------------------------
+		Document ps = reader.nextDocument();
+
+
         while ( ps != null ){
-			if ( gen != null ) gen.generateFeatures(ps);
-			// Usuń niepożądane anotacje
-			ps.removeAnnotations(preFilterSelector.selectAnnotations(ps));
-			// Przepnij relacje i usuń nazwy własne wewnętrzne nam_liv_person_* wewnątrz nam_liv_person
-//			ps = rewireRelations(ps, personNamInSelector, personNamSelector, true);
-			ps.refinePersonNamRelations(true);
-			if(overrideSelector != null){
-				// Przepnij relacje na rozważanych wzmiankach
-				ps = rewireRelations(ps, selector, overrideSelector, false);
-				// Utwórz i dodaj instancje uczące dla danego dokumentu
-				trainer.addDocumentTrainingInstances(ps, overrideSelector, singletonSelector);
-			}
-			else{
-				// Utwórz i dodaj instancje uczące dla danego dokumentu
-				trainer.addDocumentTrainingInstances(ps, selector, singletonSelector);
-			}
-			
+            System.out.println(ps.getName());
+            //---------------------- PREPROCESS DOCUMENT -----------------------------
+            if ( gen != null ) gen.generateFeatures(ps);
+			ps = refiner.refineDocument(ps);
+
+            trainer.addDocumentTrainingInstances(ps, selector, singletonSelector);
+
 			// Przejdź do następnego dokumentu
 			ps = reader.nextDocument();
 		}
         
 		trainer.train();
 		Serializer trainedModel = trainer.getTrainedModel();
-//		String modelPath = CreteOptions.getOptions().getProperties().getProperty(MODEL_PATH);
 		trainedModel.persist(this.classifier_file);
 		
 		reader.close();
 		writer.close();
-		
-//		System.out.println("Hello world");
 	}
 	
-	// TODO: FIXME vide 00101768.xml
-	private Document rewireRelations(Document document, AbstractAnnotationSelector relationalAnnotations, AbstractAnnotationSelector nonrelationalAnnotations, boolean removeNonRelational){
-		List<Annotation> relAnnotations = relationalAnnotations.selectAnnotations(document);
-		List<Annotation> targetAnnotations = nonrelationalAnnotations.selectAnnotations(document);
-		
-		List<Annotation> toRemove = new ArrayList<Annotation>();
-		
-		for(Annotation rAnn : relAnnotations){
-			boolean found = false;
-			for(Annotation potentialTarget : rAnn.getSentence().getChunks()){
-				if(potentialTarget.getTokens().equals(rAnn.getTokens()) && targetAnnotations.contains(potentialTarget)){
-					document.rewireSingleRelations(rAnn, potentialTarget);
-					found = true;
-				}
-			}
-			if(!found) {
-				rAnn.setType("anafora_verb_null");
-			}
-			// TODO: FIXME: nie usuwaj anotacji, które nie mają odpowiednika, który je pokrywa !!!
-			if(found && removeNonRelational) toRemove.add(rAnn);
-		}
-		
-		if(removeNonRelational) document.removeAnnotations(toRemove);
-		
-		return document;
-	}
+//	// TODO: FIXME vide 00101768.xml
+//	private Document rewireRelations(Document document, AbstractAnnotationSelector relationalAnnotations, AbstractAnnotationSelector nonrelationalAnnotations, boolean removeNonRelational){
+//		List<Annotation> relAnnotations = relationalAnnotations.selectAnnotations(document);
+//		List<Annotation> targetAnnotations = nonrelationalAnnotations.selectAnnotations(document);
+//
+//		List<Annotation> toRemove = new ArrayList<Annotation>();
+//
+//		for(Annotation rAnn : relAnnotations){
+//			boolean found = false;
+//			for(Annotation potentialTarget : rAnn.getSentence().getChunks()){
+//				if(potentialTarget.getTokens().equals(rAnn.getTokens()) && targetAnnotations.contains(potentialTarget)){
+//					document.rewireSingleRelations(rAnn, potentialTarget);
+//					found = true;
+//				}
+//			}
+//			if(!found) {
+//				rAnn.setType("anafora_verb_null");
+//			}
+//			// TODO: FIXME: nie usuwaj anotacji, które nie mają odpowiednika, który je pokrywa !!!
+//			if(found && removeNonRelational) toRemove.add(rAnn);
+//		}
+//
+//		if(removeNonRelational) document.removeAnnotations(toRemove);
+//
+//		return document;
+//	}
 	
 	/**
      * Get document writer defined with the -o and -t options.

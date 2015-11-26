@@ -7,9 +7,9 @@ import java.util.List;
 
 public class AllAnnotationSelector extends AbstractAnnotationSelector{
 
-	@Override
-	public List<Annotation> selectAnnotations(Document document) {
+	@Override public List<Annotation> selectAnnotations(Document document) {
 		return document.getAnnotations();
 	}
+	@Override public boolean matches(Annotation annotation) {return true;}
 
 }

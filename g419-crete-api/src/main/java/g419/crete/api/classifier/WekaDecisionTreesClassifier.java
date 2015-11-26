@@ -1,8 +1,10 @@
 package g419.crete.api.classifier;
 
 import g419.crete.api.classifier.serialization.WekaModelSerializer;
+import libsvm.LibSVM;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
+import weka.classifiers.functions.supportVector.PolyKernel;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.J48graft;
 import weka.classifiers.trees.RandomForest;
@@ -22,6 +24,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -49,7 +52,7 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 			Instance instance = clasInst.instance(i);
 			try {
 //				System.out.println(instance);
-				System.out.println(cls.classifyInstance(instance));
+//				System.out.println(cls.classifyInstance(instance));
 				labels.add((int)Math.round(cls.classifyInstance(instance)));
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -57,6 +60,11 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 		}
 		
 		return labels;
+	}
+
+	@Override
+	public Integer classify(Instance instance) {
+		return classify(Arrays.asList(new Instance[]{instance})).get(0);
 	}
 
 	private void exportInstances(Instances instances, String path) throws IOException{
@@ -234,6 +242,9 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 		   
 		   J48graft j48 = new J48graft();
 		   RandomForest rf = new RandomForest();
+
+
+
 		   rf.setNumTrees(200);
 		   Classifier cls = (Classifier) rf;
 		   

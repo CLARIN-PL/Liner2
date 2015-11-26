@@ -2,12 +2,12 @@ package g419.crete.cli;
 
 import g419.corpus.TerminateException;
 import g419.crete.cli.action.ActionClassify;
-import g419.crete.cli.action.ActionCrossValidate;
+//import g419.crete.cli.action.ActionCrossValidate;
 import g419.crete.cli.action.ActionEvalParent;
 import g419.crete.cli.action.ActionPipe;
 import g419.crete.cli.action.ActionPrepareGold;
 import g419.crete.cli.action.ActionTrain;
-import g419.lib.cli.Action;
+import g419.lib.cli.action.Action;
 
 import java.util.HashMap;
 
@@ -28,7 +28,7 @@ public class Main {
     	main.registerAction(new ActionTrain());
     	main.registerAction(new ActionClassify());
     	main.registerAction(new ActionEvalParent());
-    	main.registerAction(new ActionCrossValidate());
+//    	main.registerAction(new ActionCrossValidate());
     	main.registerAction(new ActionPrepareGold());
     	
     	
@@ -76,10 +76,10 @@ public class Main {
     
     public void printCredits(){
 		System.out.println("*-----------------------------------------------------------------------------------------------*");
-		System.out.println("* todo                                                                                          *");
+		System.out.println("* Coreference Resolution and Enhanced Toolkit with Evaluation  *");
 		System.out.println("*                                                                                               *");
-		System.out.println("* Authors: todo                                                                                 *");
-		System.out.println("* Contact: todo                                                                                 *");
+		System.out.println("* Authors: Adam Kaczmarek                                          *");
+		System.out.println("* Contact: adam.kaczmarek@pwr.edu.pl                                                                                 *");
 		System.out.println("*                                                                                               *");
 		System.out.println("*          G4.19 Research Group, Wrocław University of Technology                               *");
 		System.out.println("*-----------------------------------------------------------------------------------------------*");

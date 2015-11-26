@@ -12,13 +12,18 @@ public class PatternAnnotationSelector extends AbstractAnnotationSelector{
 	private List<Pattern> types;
 	
 	public PatternAnnotationSelector(String[] patterns){
-		types = new ArrayList<Pattern>();
+		types = new ArrayList<>();
 		for(String pattern : patterns) types.add(Pattern.compile(pattern));
 	}
 	
 	@Override
 	public List<Annotation> selectAnnotations(Document document) {
 		return document.getAnnotations(types);
+	}
+
+	@Override
+	public boolean matches(Annotation annotation) {
+		return types.contains(annotation.getType());
 	}
 
 }
