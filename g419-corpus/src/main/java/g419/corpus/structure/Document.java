@@ -129,7 +129,7 @@ public class Document{
 			sentences.addAll(paragraph.getSentences());
 		return sentences;
 	}
-	
+
 	public void removeAnnotations(List<Annotation> annotations){
 		for(Annotation annotation : annotations)
 			annotation.getSentence().getChunks().remove(annotation);
@@ -203,7 +203,12 @@ public class Document{
     public void addRelation(Relation relation){
     	this.relations.addRelation(relation);
     }
-    
+
+	/**
+	 * Removes given annotations from relational clusters and refreshes
+	 * documents' relation set
+	 * @param annotations
+	 */
     public void filterAnnotationClusters(List<Annotation> annotations){
     	AnnotationClusterSet clusterSet = AnnotationClusterSet.fromRelationSet(relations);
     	clusterSet.removeAnnotations(annotations);
@@ -243,27 +248,27 @@ public class Document{
 			this.relations.refresh();
 	}
 	
-	public void rewireRelations(List<Annotation> relAnnotations, List<Annotation> targetAnnotations, boolean removeNonRelational){
- 		
-		
-		List<Annotation> toRemove = new ArrayList<Annotation>();
- 		
- 		for(Annotation rAnn : relAnnotations){
- 			boolean found = false;
- 			for(Annotation potentialTarget : rAnn.getSentence().getChunks()){
- 				if(potentialTarget.getTokens().equals(rAnn.getTokens()) && targetAnnotations.contains(potentialTarget)){
- 					found  = true;
- 					rewireSingleRelations(rAnn, potentialTarget);
- 					if(removeNonRelational) toRemove.add(rAnn);
- 				}
- 			}
-// 			if(!found) {
-//				rAnn.setType("anafora_verb_null");
-//			}
- 		}
- 		
- 		if(removeNonRelational) removeAnnotations(toRemove);
- 	}
+//	public void rewireRelations(List<Annotation> relAnnotations, List<Annotation> targetAnnotations, boolean removeNonRelational){
+//
+//
+//		List<Annotation> toRemove = new ArrayList<Annotation>();
+//
+// 		for(Annotation rAnn : relAnnotations){
+// 			boolean found = false;
+// 			for(Annotation potentialTarget : rAnn.getSentence().getChunks()){
+// 				if(potentialTarget.getTokens().equals(rAnn.getTokens()) && targetAnnotations.contains(potentialTarget)){
+// 					found  = true;
+// 					rewireSingleRelations(rAnn, potentialTarget);
+// 					if(removeNonRelational) toRemove.add(rAnn);
+// 				}
+// 			}
+//// 			if(!found) {
+////				rAnn.setType("anafora_verb_null");
+////			}
+// 		}
+//
+// 		if(removeNonRelational) removeAnnotations(toRemove);
+// 	}
 	
 	
 	/**

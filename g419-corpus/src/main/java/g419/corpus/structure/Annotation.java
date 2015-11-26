@@ -1,10 +1,7 @@
 package g419.corpus.structure;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Klasa reprezentuje anotację jako ciągłą sekwencję tokenów w zdaniu.
@@ -171,7 +168,7 @@ public class Annotation {
 	public boolean equals(Object object) {
 		Annotation chunk = (Annotation) object;
 		if(chunk == null) return false;
-		if(this.getSentence().getId() != chunk.getSentence().getId())
+		if(!this.getSentence().getId().equals(chunk.getSentence().getId()))
 			return false;
 		else if (!this.tokens.equals(chunk.getTokens()))
 			return false;
@@ -222,6 +219,12 @@ public class Annotation {
 	public TreeSet<Integer> getTokens(){
 		return this.tokens;
 	}
+
+	/**
+	 * We should rename this function and 'getTokens()'
+	 * @return
+	 */
+	public List<Token> getTokenTokens(){return this.tokens.stream().map(i -> this.sentence.getTokens().get(i)).collect(Collectors.toList());}
 
 	public Sentence getSentence() {
 		return this.sentence;

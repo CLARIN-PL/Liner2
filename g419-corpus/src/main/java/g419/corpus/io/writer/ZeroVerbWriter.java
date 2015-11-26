@@ -32,6 +32,7 @@ public class ZeroVerbWriter extends AbstractDocumentWriter{
 	
 	private static boolean delAglt = false;
 	private static boolean delQub = false;
+	private static boolean delVerb = false;
 	
 	private static String docid = ""; 
 	
@@ -58,8 +59,9 @@ public class ZeroVerbWriter extends AbstractDocumentWriter{
 		TokenAttributeIndex ai = s.getAttributeIndex();
 //		System.out.println(s.annotationsToString());
 		LinkedHashSet<Annotation> zeroAnnotations = s.getAnnotations(Arrays.asList(new Pattern[]{
-				Pattern.compile("anafora_verb_null.*"), 
-				Pattern.compile("anafora_wyznacznik")
+//				Pattern.compile("anafora_verb_null.*"),
+//				Pattern.compile("anafora_wyznacznik")
+				Pattern.compile("mention")
 		}));
 		TreeSet<Integer> zeroTokens = new TreeSet<>();
 		for(Annotation zeroAnnotation : zeroAnnotations){
@@ -119,43 +121,6 @@ public class ZeroVerbWriter extends AbstractDocumentWriter{
 					}
 				}
 		
-		if(pos.startsWith(AGLT_CLASS) && !delAglt){
-			zeroVerbCount++;
-			String prec = "", foll = "";
-			boolean precQub = false, follVb = false, fem = false, sg = false, pri = false, sec = false, ter = true;
-			
-			pri = ctag.contains("|pri|") || ctag.startsWith("pri|") || ctag.endsWith("|pri");
-			sec = ctag.contains("|sec|") || ctag.startsWith("sec|") || ctag.endsWith("|sec");
-			ter = !pri && !sec;
-			
-			try{
-				prec = sentence.getTokens().get(tokenIndex - 2).getOrth();
-				precQub = QUB_CLASS.equalsIgnoreCase(ai.getAttributeValue(sentence.getTokens().get(tokenIndex - 2), "ctag").split(":")[0]);
-			}catch(Exception e){}
-			
-			for(int i = tokenIndex; i < sentence.getTokenNumber(); i++){
-				Token vst = sentence.getTokens().get(i);
-				follVb = verbPos.contains(ai.getAttributeValue(vst, "ctag").split(":")[0]);
-				if(follVb){
-//					System.out.println(ctag);
-//					System.out.println(ai.getAttributeValue(vst, "ctag"));
-					fem = ai.getAttributeValue(vst, "ctag").contains(":f:") || ai.getAttributeValue(vst, "ctag").startsWith("f:") || ai.getAttributeValue(vst, "ctag").endsWith(":f");
-					sg = ai.getAttributeValue(vst, "ctag").contains(":sg:") || ai.getAttributeValue(vst, "ctag").startsWith("sg:") || ai.getAttributeValue(vst, "ctag").endsWith(":sg");
-//					System.out.println(ai.getAttributeValue(vst, "ctag") + ":" + (pri?"pri":(sec?"sec":"ter")));
-					foll = vst.getOrth();
-					break;
-				}
-			}
-			
-//			if(fem) System.out.println("FEM");
-//			if(sg) System.out.println("SG");
-//			System.out.print();
-			if(precQub && follVb) System.out.println(prec + " " + orth + " " + foll +  "  --->  " + foll + prec + orth);
-			else if (follVb) System.out.println(prec + " " + orth + " " + foll +  "  --->  " + prec + " " + foll + (fem||!sg?"":"e") + orth);
-			else System.out.println(docid + " SHIT: " + prec + " " + orth + " " + foll);
-			
-		}
-				
 		if(pos.startsWith(AGLT_CLASS) && delAglt){
 			delAglt = false;
 			return "";
@@ -166,7 +131,10 @@ public class ZeroVerbWriter extends AbstractDocumentWriter{
 			return "";
 		}
 		
-		
+		if(verbPos.contains(pos) && !pos.equalsIgnoreCase(AGLT_CLASS) && !pos.equalsIgnoreCase(QUB_CLASS) && delVerb){
+			delVerb = false;
+			return "";
+		}
 //			}
 //		}
 		//TODO: ctag dla interp conj, etc.
@@ -174,10 +142,15 @@ public class ZeroVerbWriter extends AbstractDocumentWriter{
 		
 		if(verbPos.contains(pos) && !pos.equalsIgnoreCase(AGLT_CLASS)){
 			// 1. verb + aglt
-			if(tokenIndex + 1 < sentence.getTokens().size()){
+			if(tokenIndex < sentence.getTokens().size()){
 				Token agltCandidate = sentence.getTokens().get(tokenIndex);
 				if(AGLT_CLASS.equalsIgnoreCase(ai.getAttributeValue(agltCandidate, "ctag").split(":")[0])){
-					String person = ai.getAttributeValue(agltCandidate, "person");
+					String agltCtag = ai.getAttributeValue(agltCandidate, "ctag");
+
+					String person = "ter";
+					if(agltCtag.startsWith("pri:") || agltCtag.endsWith(":pri") || agltCtag.contains(":pri:")) person = "pri";
+					if(agltCtag.startsWith("sec:") || agltCtag.endsWith(":sec") || agltCtag.contains(":sec:")) person = "sec";
+
 					pos = pos +  "|" + person;
 					orth = orth + ai.getAttributeValue(agltCandidate, "orth");
 					delAglt = true;
@@ -186,7 +159,7 @@ public class ZeroVerbWriter extends AbstractDocumentWriter{
 			}
 			
 			// 2. verb + qub + aglt
-			if(tokenIndex + 2 < sentence.getTokens().size()){
+			if(tokenIndex + 1 < sentence.getTokens().size()){
 				Token qubCandidate = sentence.getTokens().get(tokenIndex);
 				Token agltCandidate = sentence.getTokens().get(tokenIndex + 1);
 				if(AGLT_CLASS.equalsIgnoreCase(ai.getAttributeValue(agltCandidate, "ctag").split(":")[0]) && QUB_CLASS.equalsIgnoreCase(ai.getAttributeValue(qubCandidate, "ctag").split(":")[0])){
@@ -212,8 +185,56 @@ public class ZeroVerbWriter extends AbstractDocumentWriter{
 //				System.out.println(orth);
 			}
 		}
-				
-		
+		else if (pos.equalsIgnoreCase(AGLT_CLASS)){
+			// Aglutynant
+			String prec = "", foll = "";
+			boolean precQub = false, follVb = false, fem = false, sg = false, pri = false, sec = false, ter = true;
+
+			pri = ctag.contains("|pri|") || ctag.startsWith("pri|") || ctag.endsWith("|pri");
+			sec = ctag.contains("|sec|") || ctag.startsWith("sec|") || ctag.endsWith("|sec");
+			ter = !pri && !sec;
+
+			try{
+				prec = sentence.getTokens().get(tokenIndex - 2).getOrth();
+				precQub = QUB_CLASS.equalsIgnoreCase(ai.getAttributeValue(sentence.getTokens().get(tokenIndex - 2), "ctag").split(":")[0]);
+			}catch(Exception e){}
+
+			for(int i = tokenIndex; i < Math.min(i+5, sentence.getTokenNumber()); i++){
+				Token vst = sentence.getTokens().get(i);
+				follVb = verbPos.contains(ai.getAttributeValue(vst, "ctag").split(":")[0]);
+				if(follVb){
+					fem = ai.getAttributeValue(vst, "ctag").contains(":f:") || ai.getAttributeValue(vst, "ctag").startsWith("f:") || ai.getAttributeValue(vst, "ctag").endsWith(":f");
+					sg = ai.getAttributeValue(vst, "ctag").contains(":sg:") || ai.getAttributeValue(vst, "ctag").startsWith("sg:") || ai.getAttributeValue(vst, "ctag").endsWith(":sg");
+					foll = vst.getOrth();
+					break;
+				}
+			}
+
+			if(precQub && follVb){
+//				System.out.println("FIRST RULE: " + prec + " " + orth + " " + foll +  "  --->  " + foll + prec + orth);
+				System.out.println(docid + " FIRST RULE ALT: " + prec + " " + orth + " " + foll +  "  --->  " + prec + " " +  foll + (fem||!sg?"":"e") + orth);
+				orth =  foll + (fem||!sg?"":"e") + orth;
+				delVerb = true;
+			}
+			else if (follVb){
+				System.out.println(docid +" SECOND RULE: " + prec + " " + orth + " " + foll +  "  --->  " + prec + " " + foll + (fem||!sg?"":"e") + orth);
+				orth = foll + (fem||!sg?"":"e") + orth;
+				delVerb = true;
+			}
+			else System.out.println(docid + " SHIT: " + prec + " " + orth + " " + foll);
+
+			label = "V";
+			if(zeroVerb) {
+				label = "Z";
+//				zeroVerbCount++;
+				undelZeroAglt++;
+			}
+			else{
+				System.out.println("NONZERO AGLT FIX");
+			}
+		}
+
+
 		return String.format("%d\t%s\t%s\t%s\t%s\t%s\n", tokenIndex, orth, base, pos, ctag, label);
 //		return String.format("%d\t%s\t%s\t%s\t%s\t%s\t_\t_\t_\t_\n", tokenIndex, orth, base, pos, posext, ctag);
 	};
