@@ -4,39 +4,16 @@ import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
-import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
 import g419.crete.api.CreteOptions;
 import g419.crete.api.annotation.AbstractAnnotationSelector;
 import g419.crete.api.annotation.AnnotationSelectorFactory;
-import g419.crete.api.classifier.factory.ClassifierFactory;
-import g419.crete.api.classifier.factory.item.WekaJ48ClassifierItem;
-import g419.crete.api.classifier.serialization.WekaModelSerializer;
-import g419.crete.api.instance.ClusterClassificationInstance;
-import g419.crete.api.instance.MentionPairClassificationInstance;
-import g419.crete.api.instance.converter.factory.CreteInstanceConverterFactory;
-import g419.crete.api.instance.converter.factory.item.ClusterClassificationWekaInstanceConverterItem;
-import g419.crete.api.instance.converter.factory.item.MentionPairClassificationWekaInstanceConverterItem;
-import g419.crete.api.instance.generator.ClusterClassificationInstanceGenerator;
-import g419.crete.api.instance.generator.CreteInstanceGeneratorFactory;
-import g419.crete.api.instance.generator.MentionPairInstanceGenerator;
 import g419.crete.api.refine.CoverAnnotationDocumentRefiner;
-import g419.crete.api.resolver.AbstractCreteResolver;
-import g419.crete.api.resolver.factory.CreteResolverFactory;
-import g419.crete.api.resolver.factory.NullResolverItem;
-import g419.crete.api.resolver.factory.WekaJ48MentionPairResolverItem;
-import g419.crete.api.resolver.factory.WekaJ48ResolverItem;
+import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.lib.cli.action.Action;
 import g419.liner2.api.features.TokenFeatureGenerator;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
-
-import weka.core.Instance;
 
 /**
  * Akcja klasyfikacji koreferencji w dokumentach.

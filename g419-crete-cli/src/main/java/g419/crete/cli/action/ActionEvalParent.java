@@ -7,19 +7,16 @@ import g419.corpus.structure.AnnotationTokenListComparator;
 import g419.corpus.structure.Document;
 import g419.crete.api.CreteOptions;
 import g419.crete.api.annotation.AbstractAnnotationSelector;
-import g419.crete.api.annotation.AllAnnotationSelector;
 import g419.crete.api.annotation.AnnotationSelectorFactory;
 import g419.crete.api.evaluation.ParentEvaluator;
-import g419.crete.api.evaluation.ParentEvaluator.*;
 import g419.crete.api.refine.CoverAnnotationDocumentRefiner;
 import g419.lib.cli.CommonOptions;
-import g419.lib.cli.action.Action;
+import g419.lib.cli.Action;
 import g419.liner2.api.features.TokenFeatureGenerator;
 
 import java.io.*;
 import java.util.*;
 
-import javafx.util.Pair;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 
@@ -31,20 +28,18 @@ public class ActionEvalParent extends Action {
 	public static final String NO_ANNOTATION_SELECTOR = "no_annotation_selector";
 
 	private String input_file = null;
-    private String input_format = null;
 
 	public ActionEvalParent() {
 		super("eval-parent");
 		this.options.addOption(CommonOptions.getInputFileNameOption());
-        this.options.addOption(CommonOptions.getModelFileOption());
-	}
+		this.options.addOption(CommonOptions.getModelFileOption());
+    }
 
 	@Override
 	public void parseOptions(String[] args) throws Exception {
 		CommandLine line = new DefaultParser().parse(this.options, args);
 		parseDefault(line);
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
-        this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
         CreteOptions.getOptions().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
 	}
 

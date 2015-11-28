@@ -4,7 +4,6 @@ import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
-import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
 import g419.crete.api.CreteOptions;
 import g419.crete.api.annotation.AbstractAnnotationSelector;
@@ -25,12 +24,11 @@ import g419.crete.api.trainer.AbstractCreteTrainer;
 import g419.crete.api.trainer.factory.CreteTrainerFactory;
 import g419.crete.api.trainer.factory.WekaJ48ClusterMentionTrainerItem;
 import g419.crete.api.trainer.factory.WekaJ48MentionPairTrainerItem;
+import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.lib.cli.action.Action;
 import g419.liner2.api.features.TokenFeatureGenerator;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
@@ -47,15 +45,8 @@ public class ActionTrain extends Action {
 	
 	public static final String PRE_FILTER_SELECTOR = "prefilter_selector";
 	public static final String BASIC_SELECTOR = "selector";
-	public static final String OVERRIDE_SELECTOR = "override_selector";
 	public static final String SINGLETON_SELECTOR = "singleton_selector";
-	
-	public static final String PERSON_NAM_SELECTOR = "person_nam_selector";
-	public static final String PERSON_NAM_IN_SELECTOR = "person_nam_in_selector";
-	
-	public static final String TRAINER_NAMES = "trainers";
-//	public static final String MODEL_PATH = "model_path";
-	
+
 	private String input_file = null;
     private String input_format = null;
     private String output_file = null;
@@ -65,7 +56,6 @@ public class ActionTrain extends Action {
 	
 	public ActionTrain() {
 		super("train");
-		
 		this.options.addOption(CommonOptions.getInputFileFormatOption());
         this.options.addOption(CommonOptions.getInputFileNameOption());
         this.options.addOption(CommonOptions.getOutputFileFormatOption());
@@ -110,8 +100,8 @@ public class ActionTrain extends Action {
 	@Override
 	public void run() throws Exception {
 		//---------------------- INITIALIZE GENERAL OPTIONS -----------------------------
-		AbstractDocumentReader reader = getInputReader();
-		AbstractDocumentWriter writer = getOutputWriter();
+		AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(input_file, input_format);
+		AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(output_file, output_format);
         TokenFeatureGenerator gen = null;
         CreteOptions.getOptions();
         CreteOptions.getOptions().getFeatures();
@@ -144,10 +134,7 @@ public class ActionTrain extends Action {
 		// Selector for annotations for which the coreference relation will be considered
         AbstractAnnotationSelector selector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(BASIC_SELECTOR));
 		// Selector for overriding th
-//        AbstractAnnotationSelector overrideSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(OVERRIDE_SELECTOR));
         AbstractAnnotationSelector singletonSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(SINGLETON_SELECTOR));
-//        AbstractAnnotationSelector personNamSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(PERSON_NAM_SELECTOR));
-//        AbstractAnnotationSelector personNamInSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(PERSON_NAM_IN_SELECTOR));
 
 		//---------------------- INITIALIZE DOCUMENT REFINER -----------------------------
 		CoverAnnotationDocumentRefiner refiner = new CoverAnnotationDocumentRefiner(preFilterSelector);// args:prefilterSelector
@@ -175,67 +162,4 @@ public class ActionTrain extends Action {
 		reader.close();
 		writer.close();
 	}
-	
-//	// TODO: FIXME vide 00101768.xml
-//	private Document rewireRelations(Document document, AbstractAnnotationSelector relationalAnnotations, AbstractAnnotationSelector nonrelationalAnnotations, boolean removeNonRelational){
-//		List<Annotation> relAnnotations = relationalAnnotations.selectAnnotations(document);
-//		List<Annotation> targetAnnotations = nonrelationalAnnotations.selectAnnotations(document);
-//
-//		List<Annotation> toRemove = new ArrayList<Annotation>();
-//
-//		for(Annotation rAnn : relAnnotations){
-//			boolean found = false;
-//			for(Annotation potentialTarget : rAnn.getSentence().getChunks()){
-//				if(potentialTarget.getTokens().equals(rAnn.getTokens()) && targetAnnotations.contains(potentialTarget)){
-//					document.rewireSingleRelations(rAnn, potentialTarget);
-//					found = true;
-//				}
-//			}
-//			if(!found) {
-//				rAnn.setType("anafora_verb_null");
-//			}
-//			// TODO: FIXME: nie usuwaj anotacji, które nie mają odpowiednika, który je pokrywa !!!
-//			if(found && removeNonRelational) toRemove.add(rAnn);
-//		}
-//
-//		if(removeNonRelational) document.removeAnnotations(toRemove);
-//
-//		return document;
-//	}
-	
-	/**
-     * Get document writer defined with the -o and -t options.
-     * @return
-     * @throws Exception
-     */
-    protected AbstractDocumentWriter getOutputWriter() throws Exception{
-        AbstractDocumentWriter writer;
-
-        if ( output_format.startsWith("batch:") && !input_format.startsWith("batch:") ) {
-            throw new Exception("Output format `batch:` (-o) is valid only for `batch:` input format (-i).");
-        }
-        if (output_file == null){
-            writer = WriterFactory.get().getStreamWriter(System.out, output_format);
-        }
-        else if (output_format.equals("arff")){
-//            ToDo: format w postaci arff:{PLIK Z TEMPLATEM}
-            writer = null;
-//            CrfTemplate arff_template = LinerOptions.getGlobal().getArffTemplate();
-//            writer = WriterFactory.get().getArffWriter(output_file, arff_template);
-        }
-        else{
-            writer = WriterFactory.get().getStreamWriter(output_file, output_format);
-        }
-        return writer;
-    }
-
-    /**
-     * Get document reader defined with the -i and -f options.
-     * @return
-     * @throws Exception
-     */
-    protected AbstractDocumentReader getInputReader() throws Exception{
-        return ReaderFactory.get().getStreamReader(this.input_file, this.input_format);
-    }
-
 }
