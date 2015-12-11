@@ -1,10 +1,8 @@
 package g419.crete.api.classifier;
 
 import g419.crete.api.classifier.serialization.WekaModelSerializer;
-import libsvm.LibSVM;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
-import weka.classifiers.functions.supportVector.PolyKernel;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.J48graft;
 import weka.classifiers.trees.RandomForest;
@@ -24,26 +22,25 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 
-public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Integer>{
+public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Double>{
 		
 	public WekaDecisionTreesClassifier(List<String> features) {
 		super(features);
 	}
 
 	@Override
-	public List<Integer> classify(List<Instance> instances) {
+	public List<Double> classify(List<Instance> instances) {
 		
 		Instances clasInst = new Instances(this.instances); 
 		for(Instance instance : instances) clasInst.add(instance);
 		
 		clasInst.setClass(attributes.get(attributes.size() - 1));
 		
-		ArrayList<Integer> labels = new ArrayList<Integer>();
+		ArrayList<Double> labels = new ArrayList<>();
 		
 		Classifier cls = this.model.getModel();
 
@@ -53,7 +50,7 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 			try {
 //				System.out.println(instance);
 //				System.out.println(cls.classifyInstance(instance));
-				labels.add((int)Math.round(cls.classifyInstance(instance)));
+				labels.add(Double.valueOf(Math.round(cls.classifyInstance(instance))));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -62,10 +59,10 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 		return labels;
 	}
 
-	@Override
-	public Integer classify(Instance instance) {
-		return classify(Arrays.asList(new Instance[]{instance})).get(0);
-	}
+//	@Override
+//	public Integer classify(Instance instance) {
+//		return classify(Arrays.asList(new Instance[]{instance})).get(0);
+//	}
 
 	private void exportInstances(Instances instances, String path) throws IOException{
 		ArffSaver saver = new ArffSaver();
@@ -91,7 +88,7 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 		for(int i = 0; i < this.trainingInstances.size(); i++){
 			Instance instance = this.trainingInstances.get(i);
 			instance.setDataset(tInstances);
-			Integer oldLabel = this.trainingInstanceLabels.get(i);
+			Double oldLabel = this.trainingInstanceLabels.get(i);
 			String newLabel = oldLabel > 0 ? "COREF" : "NON_COREF";
 			instance.setClassValue(newLabel);
 			tInstances.add(instance);
@@ -164,7 +161,7 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 		for(int i = 0; i < this.trainingInstances.size(); i++){
 			Instance instance = this.trainingInstances.get(i);
 			instance.setDataset(randData);
-			Integer oldLabel = this.trainingInstanceLabels.get(i);
+			Double oldLabel = this.trainingInstanceLabels.get(i);
 			String newLabel = oldLabel > 0 ? "COREF" : "NON_COREF";
 			instance.setClassValue(newLabel);
 			randData.add(instance);
@@ -301,6 +298,6 @@ public class WekaDecisionTreesClassifier extends WekaClassifier<Classifier, Inte
 	     tv.fitToScreen();
 	}
 
-	@Override public Class<Integer> getLabelClass() {return Integer.class;}
+	@Override public Class<Double> getLabelClass() {return Double.class;}
 	
 }

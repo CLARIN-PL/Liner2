@@ -8,10 +8,10 @@ import java.util.List;
 import weka.classifiers.Classifier;
 import weka.core.Instance;
 
-public class WekaJ48ClassifierItem implements IClassifierFactoryItem<Classifier, Instance, Integer>{
+public class WekaJ48ClassifierItem implements IClassifierFactoryItem<Classifier, Instance, Double>{
 
 	@Override
-	public AbstractCreteClassifier<Classifier, Instance, Integer> createClassifier(List<String> features) {
+	public AbstractCreteClassifier<Classifier, Instance, Double> createClassifier(List<String> features) {
 		return new WekaDecisionTreesClassifier(features);
 	}
 

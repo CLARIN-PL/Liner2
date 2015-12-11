@@ -8,10 +8,10 @@ import g419.crete.api.instance.converter.MentionPairClassificationWekaInstanceCo
 import g419.crete.api.instance.converter.factory.item.ICreteInstanceConverterFactoryItem;
 import weka.core.Instance;
 
-public class MentionPairClassificationWekaInstanceConverterItem implements	ICreteInstanceConverterFactoryItem<MentionPairClassificationInstance, Instance> {
+public class MentionPairClassificationWekaInstanceConverterItem implements	ICreteInstanceConverterFactoryItem<MentionPairClassificationInstance<?>, Instance> {
 
 	@Override
-	public AbstractCreteInstanceConverter<MentionPairClassificationInstance, Instance> createConverter(AbstractCreteClassifier<?, Instance, ?> classifier) {
+	public AbstractCreteInstanceConverter<MentionPairClassificationInstance<?>, Instance> createConverter(AbstractCreteClassifier<?, Instance, ?> classifier) {
 		return new MentionPairClassificationWekaInstanceConverter((WekaClassifier<?, ?>) classifier);
 	}
 

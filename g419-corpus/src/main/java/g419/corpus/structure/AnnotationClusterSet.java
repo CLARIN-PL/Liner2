@@ -16,6 +16,7 @@ import java.util.Set;
  * Opisuje relacje na poziomie dokumentu
  */
 
+// TODO: przerobić na automatyczne tworzenie klastrów singletonowych
 public class AnnotationClusterSet {
 
 	private String relationType;
@@ -88,7 +89,17 @@ public class AnnotationClusterSet {
 		if(cluster1 != null  && cluster2 != null) return cluster1.equals(cluster2);
 		return false;
 	}
-	
+
+	private AnnotationCluster getDefaultSingletonCluster(Annotation singletonMention){
+		AnnotationCluster cluster = new AnnotationCluster(this.relationType, this.relationSet);
+		cluster.addAnnotation(singletonMention);
+		return cluster;
+	}
+
+	public AnnotationCluster getClusterWithAnnotation(Annotation annotation){
+		return annotationInCluster.getOrDefault(annotation, getDefaultSingletonCluster(annotation));
+	}
+
 	public Set<AnnotationCluster> getClustersWithAnnotations(Set<Annotation> annotations){
 		Set<AnnotationCluster> clustersWithAnnotations = new HashSet<AnnotationCluster>();
 		for(Annotation annotation: annotations)
@@ -105,7 +116,21 @@ public class AnnotationClusterSet {
 		
 		return relationClusterSet;
 	}
-	
+
+	//TODO: move AbstractAnnotationSelector to g419-corpus
+	public static AnnotationClusterSet fromRelationSet(RelationSet relations, List<Annotation> singletons) {
+		AnnotationClusterSet relationClusterSet = new AnnotationClusterSet();
+
+		for(Relation relation: relations.getRelations())
+			relationClusterSet.addRelation(relation);
+
+		for(Annotation singleton : singletons)
+			if(!relationClusterSet.annotationInCluster.containsKey(singleton))
+				relationClusterSet.addRelationCluster(relationClusterSet.getDefaultSingletonCluster(singleton));
+
+		return relationClusterSet;
+	}
+
 	/**
 	 *  Method for creating AnnotationClusterSet for all given relations 
 	 *  and including all given mentions - mentions that are not in any

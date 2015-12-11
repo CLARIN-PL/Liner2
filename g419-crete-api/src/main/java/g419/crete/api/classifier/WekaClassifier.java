@@ -4,6 +4,7 @@ import g419.crete.api.features.AbstractFeature;
 import g419.crete.api.features.factory.FeatureFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -69,6 +70,7 @@ public abstract class WekaClassifier<T, L> extends AbstractCreteClassifier<T, In
 			return new Attribute(feature.getName());
 		}
 	}
-	
+
+	public L classify(Instance instance) { return classify(Arrays.asList(new Instance[]{instance})).get(0);}
 	@Override public Class<Instance> getInstanceClass() { return Instance.class;}
 }

@@ -28,6 +28,7 @@ public class CoverAnnotationDocumentRefiner {
     }
 
     public void fixPair(Annotation transformedAnnotation, Annotation finalAnnotation, Document document){
+//        System.out.println(transformedAnnotation + " --> " + finalAnnotation);
         document.rewireSingleRelations(transformedAnnotation, finalAnnotation);
     }
 
