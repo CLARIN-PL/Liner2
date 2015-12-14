@@ -5,9 +5,14 @@ import g419.corpus.structure.AnnotationCluster;
 import g419.crete.api.features.AbstractFeature;
 import g419.crete.api.features.clustermention.following.ClusterMentionClosestFollowingPreceededBySubordConj;
 
+import g419.crete.api.features.factory.FeatureFactory;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class ClusterMentionClosestFollowingPreceededBySubordConjItem implements IFeatureFactoryItem<Pair<Annotation, AnnotationCluster>, Boolean> {
+//	static{
+//		FeatureFactory.getFactory().register(new ClusterMentionClosestFollowingPreceededBySubordConjItem(2));
+//	}
+
 
 	private final int lookup;
 	

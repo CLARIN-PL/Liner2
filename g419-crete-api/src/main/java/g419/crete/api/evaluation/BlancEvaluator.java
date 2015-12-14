@@ -6,27 +6,23 @@ import g419.corpus.structure.AnnotationClusterSet;
 import g419.corpus.structure.Document;
 import g419.crete.api.annotation.AbstractAnnotationSelector;
 import g419.crete.api.annotation.AnnotationSelectorFactory;
+import g419.crete.api.annotation.mapper.AnnotationMapper;
+import g419.crete.api.evaluation.factory.EvaluatorFactory;
 import g419.liner2.api.tools.FscoreEvaluator;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.stream.Collectors;
 
-public class BlancEvaluator extends FscoreEvaluator{
-
-	protected final ParentEvaluator.AnnotationMapper mapper;
+public class BlancEvaluator extends FscoreEvaluator implements IEvaluator{
+	protected final AnnotationMapper mapper;
 
 	private final String printFormat = "%s:\t Recall: (%s/%s) %.2f%%\t Precision: (%s/%s) %.2f%%\t F1: %.2f%%";
 
-	public BlancEvaluator(ParentEvaluator.AnnotationMapper mapper){
+	public BlancEvaluator(AnnotationMapper mapper){
 		this.mapper = mapper;
 	}
-
-//	public int combinations2(int n){
-//		return ((n-1) * n) >> 1;
-//	}
 
 	public void evaluate(Document systemResult, Document referenceDocument){
 
@@ -90,7 +86,7 @@ public class BlancEvaluator extends FscoreEvaluator{
 				// Ilość nieodnalezionych niepoprawnych linków dla bieżącej anotacji
 				int trueNegativeLinks = referenceDocument.getAnnotations().size() - 1 - truePositiveLinks - falsePositiveLinks - falseNegativeLinks;
 
-				// 5(6){1} + 5(6){1} + 4(5){2}
+
 
 //				System.out.println(truePositiveLinks);
 //				System.out.println(trueNegativeLinks);
@@ -105,18 +101,18 @@ public class BlancEvaluator extends FscoreEvaluator{
 			}
 		}
 
-		System.out.println(truePositive);
-		System.out.println(trueNegative);
-		System.out.println(falsePositive);
-		System.out.println(falseNegative);
+//		System.out.println(truePositive);
+//		System.out.println(trueNegative);
+//		System.out.println(falsePositive);
+//		System.out.println(falseNegative);
 		truePositive >>= 1;
 		trueNegative >>= 1;
 		falsePositive >>= 1;
 		falseNegative >>= 1;
-		System.out.println(truePositive);
-		System.out.println(trueNegative);
-		System.out.println(falsePositive);
-		System.out.println(falseNegative);
+//		System.out.println(truePositive);
+//		System.out.println(trueNegative);
+//		System.out.println(falsePositive);
+//		System.out.println(falseNegative);
 
 
 		this.truePositives += truePositive;

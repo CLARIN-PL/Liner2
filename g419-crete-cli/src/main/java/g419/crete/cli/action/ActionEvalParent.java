@@ -3,29 +3,40 @@ package g419.crete.cli.action;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Annotation;
+import g419.corpus.structure.AnnotationExactMatchComparator;
 import g419.corpus.structure.AnnotationTokenListComparator;
 import g419.corpus.structure.Document;
 import g419.crete.api.CreteOptions;
-import g419.crete.api.annotation.AbstractAnnotationSelector;
 import g419.crete.api.annotation.AnnotationSelectorFactory;
-import g419.crete.api.evaluation.ParentEvaluator;
+import g419.crete.api.annotation.comparator.factory.AnnotationComparatorFactory;
+import g419.crete.api.annotation.mapper.AnnotationMapper;
+import g419.crete.api.evaluation.IEvaluator;
+import g419.crete.api.evaluation.factory.EvaluatorFactory;
 import g419.crete.api.refine.CoverAnnotationDocumentRefiner;
-import g419.lib.cli.CommonOptions;
 import g419.lib.cli.Action;
+import g419.lib.cli.CommonOptions;
 import g419.liner2.api.features.TokenFeatureGenerator;
-
-import java.io.*;
-import java.util.*;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Comparator;
+import java.util.InputMismatchException;
+import java.util.LinkedHashMap;
 
 
 public class ActionEvalParent extends Action {
 
-	public static final String IDENTIFYING_SELECTOR = "identifying_selector";
-	public static final String REFERENCING_SELECTOR = "referencing_selector";
-	public static final String NO_ANNOTATION_SELECTOR = "no_annotation_selector";
+	public static final String EVALUATOR = "evaluator";
+	public static final String PRE_FILTER_SELECTOR = "prefilter_selector";
+	public static final String MAPPER_SELECTOR = "mapper_selector";
+	public static final String MATCHER = "matcher";
+
 
 	private String input_file = null;
 
@@ -56,6 +67,13 @@ public class ActionEvalParent extends Action {
 		return files;
 	}
 
+	private void verifyPath(Document referenceDocument, Document systemDocument) throws InputMismatchException{
+		Path referencePath = Paths.get(referenceDocument.getName());
+		Path systemPath = Paths.get(systemDocument.getName());
+
+//		if(!referencePath.getFileName().equals(systemPath.getFileName())) throw new InputMismatchException();
+	}
+
 	@Override
 	public void run() throws Exception {
 		// Input preprocessing
@@ -81,21 +99,30 @@ public class ActionEvalParent extends Action {
 		TokenFeatureGenerator gen = new TokenFeatureGenerator(features);
 
 		// Annotation comparator
-		// TODO: refactor (Factory)
-		Comparator<Annotation> matcher = new AnnotationTokenListComparator(!sysTEI); // for ccl -> true, for tei -> false
+		Comparator<Annotation> matcher = AnnotationComparatorFactory.getFactory().getComparator(CreteOptions.getOptions().getProperties().getProperty(MATCHER));
+		AnnotationMapper mapper = new AnnotationMapper(
+				matcher,
+				AnnotationSelectorFactory.getFactory().getInitializedSelector(
+						CreteOptions.getOptions().getProperties().getProperty(MAPPER_SELECTOR)
+				)
+		);
 
-		// Selectors
-		AbstractAnnotationSelector identifyingSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(IDENTIFYING_SELECTOR));
-		AbstractAnnotationSelector referencingSelector = AnnotationSelectorFactory.getFactory().getInitializedSelector(CreteOptions.getOptions().getProperties().getProperty(REFERENCING_SELECTOR));
 
-		// Refiner
-		CoverAnnotationDocumentRefiner refiner = new CoverAnnotationDocumentRefiner(AnnotationSelectorFactory.getFactory().getInitializedSelector(NO_ANNOTATION_SELECTOR));
+
+
+		// Refiner new PatternAnnotationSelector(new String[]{"anafora_wyznacznik", "anafora_verb_null.*"})
+		CoverAnnotationDocumentRefiner refiner = new CoverAnnotationDocumentRefiner(
+				AnnotationSelectorFactory.getFactory().getInitializedSelector(
+						CreteOptions.getOptions().getProperties().getProperty(PRE_FILTER_SELECTOR)
+				)
+		);
 
 		// Evaluator
-		ParentEvaluator evaluator = new ParentEvaluator(identifyingSelector, referencingSelector, matcher);
+		IEvaluator evaluator = EvaluatorFactory.getFactory().getEvaluator(CreteOptions.getOptions().getProperties().getProperty(EVALUATOR), mapper);
 
 		// Loop over all document pairs and evaluate
 		while(referenceDocument != null && systemResponseDocument != null){
+			verifyPath(referenceDocument,systemResponseDocument);
 //			if(!referenceDocument.getName().equals(systemResponseDocument.getName())){throw new NullPointerException();}
 
 			// Generate features
@@ -107,8 +134,13 @@ public class ActionEvalParent extends Action {
 			systemResponseDocument = refiner.refineDocument(systemResponseDocument);
 
 			// Evaluate
-			evaluator.evaluate(systemResponseDocument, referenceDocument);
 
+			try {
+				evaluator.evaluate(systemResponseDocument, referenceDocument);
+			}
+			catch(Exception ex){
+				ex.printStackTrace();
+			}
 			// Read next pair of documents
 			referenceDocument = goldReader.nextDocument();
 			systemResponseDocument = sysReader.nextDocument();

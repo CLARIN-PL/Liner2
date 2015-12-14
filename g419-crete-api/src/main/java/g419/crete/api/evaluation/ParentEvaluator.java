@@ -7,23 +7,14 @@ import g419.corpus.structure.AnnotationCluster;
 import g419.corpus.structure.AnnotationCluster.ReturnRelationsToDistinctEntities;
 import g419.corpus.structure.AnnotationCluster.ReturningStrategy;
 import g419.corpus.structure.AnnotationClusterSet;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.TokenAttributeIndex;
 import g419.crete.api.annotation.AbstractAnnotationSelector;
-import g419.crete.api.annotation.PatternAnnotationSelector;
+import g419.crete.api.annotation.mapper.AnnotationMapper;
 import g419.liner2.api.tools.FscoreEvaluator;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.regex.Pattern;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -38,62 +29,19 @@ import java.util.stream.Collectors;
  */
 
 
-public class ParentEvaluator extends FscoreEvaluator{
-	
-	public static class AnnotationMapper{
-		Comparator<Annotation> comparator;
-		AbstractAnnotationSelector selector;
-//		List<Pattern> annotationTypes;
-
-		boolean teiRemap;
-		
-//		public AnnotationMapper(Comparator<Annotation> comparator, List<Pattern> annotationTypes){
-//			this.annotationTypes = annotationTypes;
-//			this.comparator = comparator;
-//			this.teiRemap = true;
-//		}
-
-		public AnnotationMapper(Comparator<Annotation> comparator, AbstractAnnotationSelector selector){
-			this.selector = selector;
-			this.comparator = comparator;
-			this.teiRemap = true;
-		}
-		
-		/*
-		 * Zwraca mapowanie z anotacji dokumentu systemowego na anotacje w dokumencie referencyjnym
-		 */
-		public HashMap<Annotation, Annotation> createMapping(Document referenceDocument, Document systemDocument){
-			HashMap<Annotation, Annotation> mapping = new HashMap<Annotation, Annotation>();
-			
-			for(Annotation sysAnnotation: selector.selectAnnotations(systemDocument)){
-				for(Annotation refAnnotation: selector.selectAnnotations(referenceDocument)){
-					if(comparator.compare(refAnnotation, sysAnnotation) == 0){
-						// Przeniesione porównanie zdań
-//						if(systemDocument.getSentences().indexOf(sysAnnotation.getSentence()) == referenceDocument.getSentences().indexOf(refAnnotation.getSentence())){
-							if(this.teiRemap && refAnnotation.getType().endsWith("nam")){
-								sysAnnotation.setType(refAnnotation.getType());
-							}
-							mapping.put(sysAnnotation, refAnnotation);
-							break;
-//						}
-					}
-				}
-			}
-			
-			return mapping;
-		}
-	}
+public class ParentEvaluator extends FscoreEvaluator implements IEvaluator{
 
 	private AbstractAnnotationSelector identifyingSelector;
 	private AbstractAnnotationSelector referencingSelector;
 	public AnnotationMapper mapper;
 	
-	public ParentEvaluator(AbstractAnnotationSelector identifyingSelector, AbstractAnnotationSelector referencingSelector, Comparator<Annotation> annotationMatcher){
+	public ParentEvaluator(AbstractAnnotationSelector identifyingSelector, AbstractAnnotationSelector referencingSelector, AnnotationMapper mapper){
 		super();
 
 		this.identifyingSelector = identifyingSelector;
 		this.referencingSelector = referencingSelector;
-		this.mapper = new AnnotationMapper(annotationMatcher, new PatternAnnotationSelector(new String[]{"nam.*", ".*nam", "anafora_wyznacznik", "anafora_verb_null.*", "mention"}));
+		this.mapper = mapper;
+//				new AnnotationMapper(annotationMatcher, new PatternAnnotationSelector(new String[]{"nam.*", ".*nam", "anafora_wyznacznik", "anafora_verb_null.*", "mention"}));
 		
 
 	}

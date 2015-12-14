@@ -1,6 +1,7 @@
 description = "g419-crete-cli -- konsolowy interfejs dla g419-crete-api"
 
 apply plugin: 'application'
+apply plugin: 'idea'
 
 main = "g419.crete.cli.Main"
 
@@ -18,8 +19,20 @@ jar {
     }
 }
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories{
+    mavenCentral()
+    maven {
+        url "http://streamreasoning.org/maven/"
+    }
+}
+
+
 dependencies {
     compile 'commons-cli:commons-cli:1.2'
+    compile 'com.google.guava:guava:18.0'
     compile project(":g419-corpus")
     compile project(":g419-lib-cli")
     compile project(":g419-tools-cli")

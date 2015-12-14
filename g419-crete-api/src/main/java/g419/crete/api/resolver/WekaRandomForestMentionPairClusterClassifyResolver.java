@@ -35,26 +35,26 @@ public class WekaRandomForestMentionPairClusterClassifyResolver extends Abstract
 
 	}
 
-	static class CSVwriter{
-		public static void write(String[][] data, List<String> labels, String filename){
-			try {
-				BufferedWriter br = new BufferedWriter(new FileWriter(filename));
-				StringBuilder sb = new StringBuilder();
-				sb.append(String.join(", ", labels));
-				sb.append("\n");
-
-				for (int i = 0; i < data.length; i++) {
-					sb.append(String.join(", ", Arrays.asList(data[i])));
-					sb.append("\n");
-					//				for(int j = 0; j < data[i].length; j++){
-				}
-				br.write(sb.toString());
-				br.close();
-			}catch(Exception ex){
-				ex.printStackTrace();
-			}
-		}
-	}
+//	static class CSVwriter{
+//		public static void write(String[][] data, List<String> labels, String filename){
+//			try {
+//				BufferedWriter br = new BufferedWriter(new FileWriter(filename));
+//				StringBuilder sb = new StringBuilder();
+//				sb.append(String.join(", ", labels));
+//				sb.append("\n");
+//
+//				for (int i = 0; i < data.length; i++) {
+//					sb.append(String.join(", ", Arrays.asList(data[i])));
+//					sb.append("\n");
+//					//				for(int j = 0; j < data[i].length; j++){
+//				}
+//				br.write(sb.toString());
+//				br.close();
+//			}catch(Exception ex){
+//				ex.printStackTrace();
+//			}
+//		}
+//	}
 
 	@Override
 	public Document resolveDocument(Document document, AbstractAnnotationSelector selector, AbstractAnnotationSelector singletonSelector){
