@@ -102,7 +102,7 @@ public class ActionClassify extends Action {
 		// ------------------ GENERATORS -------------------------------
 		CreteInstanceGeneratorFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Integer.class, "mention_cluster_generator", new ClusterClassificationInstanceGenerator());
 		CreteInstanceGeneratorFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Integer.class, "mention_cluster_classify_generator", new ClusterClassificationInstanceGenerator());
-		CreteInstanceGeneratorFactory.getFactory().registerInstance(MentionPairClassificationInstance.class, Integer.class, "mention_pair_generator", new MentionPairInstanceGenerator(1, -1, false));
+		CreteInstanceGeneratorFactory.getFactory().registerInstance(MentionPairClassificationInstance.class, Integer.class, "mention_pair_generator", new MentionPairInstanceGenerator(1.0, -1.0, false));
 		CreteInstanceGeneratorFactory.getFactory().registerInstance(MentionPairClassificationInstance.class, Double.class, "logistic_mention_pair_generator", new MentionPairInstanceGenerator(1.0, -1.0, true));
 		// ----------------- CONVERTERS --------------------------------
 		CreteInstanceConverterFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Instance.class, "mention_cluster_to_weka_instance", new ClusterClassificationWekaInstanceConverterItem());
