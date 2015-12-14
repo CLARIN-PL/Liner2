@@ -3,8 +3,6 @@ package g419.crete.cli.action;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Annotation;
-import g419.corpus.structure.AnnotationExactMatchComparator;
-import g419.corpus.structure.AnnotationTokenListComparator;
 import g419.corpus.structure.Document;
 import g419.crete.api.CreteOptions;
 import g419.crete.api.annotation.AnnotationSelectorFactory;
@@ -30,7 +28,7 @@ import java.util.InputMismatchException;
 import java.util.LinkedHashMap;
 
 
-public class ActionEvalParent extends Action {
+public class ActionEval extends Action {
 
 	public static final String EVALUATOR = "evaluator";
 	public static final String PRE_FILTER_SELECTOR = "prefilter_selector";
@@ -40,8 +38,8 @@ public class ActionEvalParent extends Action {
 
 	private String input_file = null;
 
-	public ActionEvalParent() {
-		super("eval-parent");
+	public ActionEval() {
+		super("eval");
 		this.options.addOption(CommonOptions.getInputFileNameOption());
 		this.options.addOption(CommonOptions.getModelFileOption());
     }
