@@ -12,7 +12,7 @@ public class MentionPairClassificationWekaInstanceConverterItem implements	ICret
 
 	@Override
 	public AbstractCreteInstanceConverter<MentionPairClassificationInstance<?>, Instance> createConverter(AbstractCreteClassifier<?, Instance, ?> classifier) {
-		return new MentionPairClassificationWekaInstanceConverter((WekaClassifier<?, ?>) classifier);
+		return new MentionPairClassificationWekaInstanceConverter((WekaClassifier) classifier);
 	}
 
 }

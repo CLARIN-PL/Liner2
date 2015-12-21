@@ -1,4 +1,4 @@
-package g419.crete.api.annotation.comparator.factory;
+package g419.crete.api.annotation.comparator.factory.item;
 
 import g419.corpus.structure.Annotation;
 

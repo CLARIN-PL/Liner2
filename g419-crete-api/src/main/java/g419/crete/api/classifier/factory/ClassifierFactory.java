@@ -17,18 +17,13 @@ public class ClassifierFactory {
 	private HashMap<String, IClassifierFactoryItem<?, ?, ?>> instances;
 	
 	private ClassifierFactory(){
-		instances = new HashMap<String, IClassifierFactoryItem<?,?,?>>();
+		instances = new HashMap<>();
 	}
 	
 	public static ClassifierFactory getFactory(){return FactoryHolder.FACTORY;}
 	
 	public <M extends Object, I extends Object, L extends Object> void register(String name, IClassifierFactoryItem<M, I, L> classifierItem){
 		instances.put(name, classifierItem);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public <M extends Object, I extends Object, L extends Object> AbstractCreteClassifier<M, I, L> getClassifier(String name){
-		return (AbstractCreteClassifier<M, I, L>) instances.get(name);
 	}
 	
 	@SuppressWarnings("unchecked")

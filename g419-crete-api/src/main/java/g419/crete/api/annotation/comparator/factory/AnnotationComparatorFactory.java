@@ -1,7 +1,7 @@
 package g419.crete.api.annotation.comparator.factory;
 
 import g419.corpus.structure.Annotation;
-import g419.crete.api.annotation.comparator.factory.item.AnnotationExactComparatorItem;
+import g419.crete.api.annotation.comparator.factory.item.*;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -17,6 +17,9 @@ public class AnnotationComparatorFactory {
         comparators = new HashMap<>();
         comparators.put("token_list_comparator_ccl", new AnnotationTokenListComparatorItem(false));
         comparators.put("token_list_comparator_tei", new AnnotationTokenListComparatorItem(true));
+        comparators.put("head_comparator_ccl", new AnnotationHeadComparatorItem(false));
+        comparators.put("head_comparator_tei", new AnnotationHeadComparatorItem(true));
+        comparators.put("postion_comparator", new AnnotationPositionComparatorItem());
         comparators.put("exact_comparator", new AnnotationExactComparatorItem());
     }
 

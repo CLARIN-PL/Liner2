@@ -9,8 +9,9 @@ import g419.crete.api.CreteOptions;
 import g419.crete.api.annotation.AbstractAnnotationSelector;
 import g419.crete.api.annotation.AnnotationSelectorFactory;
 import g419.crete.api.classifier.factory.ClassifierFactory;
-import g419.crete.api.classifier.factory.item.WekaJ48ClassifierItem;
+import g419.crete.api.classifier.factory.item.WekaRandomForestClassifierItem;
 import g419.crete.api.classifier.factory.item.WekaLogisticRegressionClassifierItem;
+import g419.crete.api.classifier.factory.item.WekaSmoClassifierItem;
 import g419.crete.api.classifier.serialization.Serializer;
 import g419.crete.api.instance.ClusterClassificationInstance;
 import g419.crete.api.instance.MentionPairClassificationInstance;
@@ -32,6 +33,8 @@ import g419.liner2.api.features.TokenFeatureGenerator;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import weka.core.Instance;
+import weka.filters.supervised.instance.Resample;
+import weka.filters.supervised.instance.SMOTE;
 
 import java.util.ArrayList;
 
@@ -82,13 +85,14 @@ public class ActionTrain extends Action {
 
 	public void initializeTrainers(){
 		// --------------- TRAINERS -----------------------------------
-		CreteTrainerFactory.getFactory().register("j48_cluster_classify", new WekaJ48ClusterMentionTrainerItem());
-		CreteTrainerFactory.getFactory().register("j48_mention_pair_classify", new WekaJ48MentionPairTrainerItem());
+		CreteTrainerFactory.getFactory().register("randomforest_cluster_classify", new WekaJ48ClusterMentionTrainerItem());
+		CreteTrainerFactory.getFactory().register("randomforest_mention_pair_classify", new WekaJ48MentionPairTrainerItem());
 		CreteTrainerFactory.getFactory().register("logistic_mention_pair_classify", new LogisticMentionPairTrainerItem());
 		// --------------- CLASSIFIERS -----------------------------------
-		ClassifierFactory.getFactory().register("j48_cluster", new WekaJ48ClassifierItem());
-		ClassifierFactory.getFactory().register("j48_mention_pair", new WekaJ48ClassifierItem());
+		ClassifierFactory.getFactory().register("randomforest_cluster", new WekaRandomForestClassifierItem());
+		ClassifierFactory.getFactory().register("randomforest_mention_pair", new WekaRandomForestClassifierItem());
 		ClassifierFactory.getFactory().register("logistic_mention_pair", new WekaLogisticRegressionClassifierItem());
+		ClassifierFactory.getFactory().register("logistic_mention_pair_smo", new WekaSmoClassifierItem());
 //		ClassifierFactory.getFactory().register("lemur_ranking", new LemurClassifierItem());
 		// ------------------ GENERATORS -------------------------------
 		CreteInstanceGeneratorFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Integer.class, "mention_cluster_generator", new ClusterClassificationInstanceGenerator());

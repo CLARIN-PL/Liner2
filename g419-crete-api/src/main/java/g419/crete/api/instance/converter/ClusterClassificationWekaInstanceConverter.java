@@ -7,7 +7,7 @@ import weka.core.Instance;
 
 public class ClusterClassificationWekaInstanceConverter extends AbstractCreteInstanceConverter<ClusterClassificationInstance, Instance>{
 
-	public ClusterClassificationWekaInstanceConverter(WekaClassifier<?,?> cls) {
+	public ClusterClassificationWekaInstanceConverter(WekaClassifier cls) {
 		super(cls);
 	}
 

@@ -43,7 +43,10 @@ public class CreteOptions {
 	
 	protected HashMap<String, List<AnnotationDescription>> selectors;
 	public HashMap<String, List<AnnotationDescription>> getSelectors(){ return selectors;}
-	
+
+	protected HashMap<String, String> classifierParameters;
+	public HashMap<String, String> getClassifierParameters(){ return classifierParameters;}
+
 	
 	public static final String POSTFIX_FEATURES = "_features";
 	public static final String PREFIX_ANNOTATION_TYPE = "annotation_type_";
@@ -62,6 +65,7 @@ public class CreteOptions {
 	public static final String SECTION_MAIN = "main";
 	public static final String SECTION_INCLUDE = "include";
 	public static final String SECTION_FEATURES = "features";
+	public static final String SECTION_CLASSIFIER_PARAMETERS = "classifier_parameters";
 	
 	
 	
@@ -85,6 +89,13 @@ public class CreteOptions {
             this.features = new HashMap<String, LinkedHashMap<String, String>>();
             for(Entry<String, String> entry : features.entrySet())
             	this.features.put(entry.getKey().replace(POSTFIX_FEATURES, ""), parseFeatures(entry.getValue().replace("{INI_PATH}", filename)));
+
+			Ini.Section classifier_parameters = ini.get(SECTION_CLASSIFIER_PARAMETERS);
+			if(classifier_parameters != null) {
+				this.classifierParameters = new HashMap<>();
+				for(Entry<String, String> entry : classifier_parameters.entrySet())
+					this.classifierParameters.put(entry.getKey(), entry.getValue());
+			}
             
 		}
 		catch(Exception ex){

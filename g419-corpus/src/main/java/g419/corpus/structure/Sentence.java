@@ -33,7 +33,7 @@ public class Sentence {
 	String id = null;
 	
 	/* Tymczasowe obejście braku odniesienia do dokumentu z poziomu klasy Annotation */
-	Document document = null;
+	Document document;
 
     private static Comparator<Annotation> annotationComparator = new Comparator<Annotation>() {
         public int compare(Annotation a, Annotation b) {

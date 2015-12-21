@@ -6,7 +6,7 @@ import weka.core.Instance;
 
 public class MentionPairClassificationWekaInstanceConverter  extends AbstractCreteInstanceConverter<MentionPairClassificationInstance<?>, Instance>{
 
-	public MentionPairClassificationWekaInstanceConverter(WekaClassifier<?,?> cls) {
+	public MentionPairClassificationWekaInstanceConverter(WekaClassifier cls) {
 		super(cls);
 	}
 
