@@ -12,7 +12,9 @@ import g419.crete.api.CreteOptions;
 import g419.crete.api.annotation.AbstractAnnotationSelector;
 import g419.crete.api.annotation.AnnotationSelectorFactory;
 import g419.crete.api.classifier.factory.ClassifierFactory;
-import g419.crete.api.classifier.factory.item.WekaJ48ClassifierItem;
+import g419.crete.api.classifier.factory.item.WekaRandomForestClassifierItem;
+import g419.crete.api.classifier.factory.item.WekaLogisticRegressionClassifierItem;
+import g419.crete.api.classifier.factory.item.WekaSmoClassifierItem;
 import g419.crete.api.classifier.serialization.WekaModelSerializer;
 import g419.crete.api.instance.ClusterClassificationInstance;
 import g419.crete.api.instance.MentionPairClassificationInstance;
@@ -24,23 +26,17 @@ import g419.crete.api.instance.generator.CreteInstanceGeneratorFactory;
 import g419.crete.api.instance.generator.MentionPairInstanceGenerator;
 import g419.crete.api.refine.CoverAnnotationDocumentRefiner;
 import g419.crete.api.resolver.AbstractCreteResolver;
-import g419.crete.api.resolver.factory.CreteResolverFactory;
-import g419.crete.api.resolver.factory.NullResolverItem;
-import g419.crete.api.resolver.factory.WekaJ48MentionPairResolverItem;
-import g419.crete.api.resolver.factory.WekaJ48ResolverItem;
-import g419.crete.api.resolver.factory.WekaRandomForestMentionPairClusterClassifyItem;
-import g419.lib.cli.CommonOptions;
+import g419.crete.api.resolver.factory.*;
 import g419.lib.cli.Action;
+import g419.lib.cli.CommonOptions;
 import g419.liner2.api.features.TokenFeatureGenerator;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import weka.core.Instance;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-
-import weka.core.Instance;
 
 /**
  * Akcja klasyfikacji koreferencji w dokumentach.
@@ -99,15 +95,18 @@ public class ActionClassify extends Action {
 		CreteResolverFactory.getFactory().register("randomforest_mentionpair_cluster_classify", new WekaRandomForestMentionPairClusterClassifyItem());
 		CreteResolverFactory.getFactory().register("null_resolver", new NullResolverItem());
 		// --------------- CLASSIFIERS -----------------------------------
-		ClassifierFactory.getFactory().register("j48_cluster", new WekaJ48ClassifierItem());
-		ClassifierFactory.getFactory().register("j48_mention_pair", new WekaJ48ClassifierItem());
+		ClassifierFactory.getFactory().register("j48_cluster", new WekaRandomForestClassifierItem());
+		ClassifierFactory.getFactory().register("j48_mention_pair", new WekaRandomForestClassifierItem());
+		ClassifierFactory.getFactory().register("logistic_mention_pair", new WekaLogisticRegressionClassifierItem());
+		ClassifierFactory.getFactory().register("logistic_mention_pair_smo", new WekaSmoClassifierItem());
 		// ------------------ GENERATORS -------------------------------
 		CreteInstanceGeneratorFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Integer.class, "mention_cluster_generator", new ClusterClassificationInstanceGenerator());
 		CreteInstanceGeneratorFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Integer.class, "mention_cluster_classify_generator", new ClusterClassificationInstanceGenerator());
-		CreteInstanceGeneratorFactory.getFactory().registerInstance(MentionPairClassificationInstance.class, Integer.class, "mention_pair_generator", new MentionPairInstanceGenerator(false));
+		CreteInstanceGeneratorFactory.getFactory().registerInstance(MentionPairClassificationInstance.class, Integer.class, "mention_pair_generator", new MentionPairInstanceGenerator(1.0, -1.0, false));
+		CreteInstanceGeneratorFactory.getFactory().registerInstance(MentionPairClassificationInstance.class, Double.class, "logistic_mention_pair_generator", new MentionPairInstanceGenerator(1.0, -1.0, true));
 		// ----------------- CONVERTERS --------------------------------
 		CreteInstanceConverterFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Instance.class, "mention_cluster_to_weka_instance", new ClusterClassificationWekaInstanceConverterItem());
-		CreteInstanceConverterFactory.getFactory().registerInstance(MentionPairClassificationInstance.class, Instance.class, "mention_pair_to_weka_instance", new MentionPairClassificationWekaInstanceConverterItem());
+		CreteInstanceConverterFactory.getFactory().registerInstance(MentionPairClassificationInstance.getCls(), Instance.class, "mention_pair_to_weka_instance", new MentionPairClassificationWekaInstanceConverterItem());
 	}
 
 

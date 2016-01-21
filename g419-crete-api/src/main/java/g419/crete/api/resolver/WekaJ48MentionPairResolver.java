@@ -5,6 +5,7 @@ import g419.corpus.structure.Document;
 import g419.corpus.structure.Relation;
 import g419.crete.api.annotation.AbstractAnnotationSelector;
 import g419.crete.api.instance.MentionPairClassificationInstance;
+import g419.crete.api.instance.generator.MentionPairInstanceGenerator;
 import g419.crete.api.resolver.disambiguator.IDisambiguator;
 import g419.crete.api.resolver.disambiguator.MentionPairClosestDisambiguator;
 
@@ -15,13 +16,13 @@ import java.util.stream.IntStream;
 import weka.classifiers.Classifier;
 import weka.core.Instance;
 
-public class WekaJ48MentionPairResolver extends AbstractCreteResolver<Classifier, MentionPairClassificationInstance, Instance, Integer>{
+public class WekaJ48MentionPairResolver extends AbstractCreteResolver<Classifier, MentionPairClassificationInstance<Integer>, Instance, Integer>{
 
 	private int totalPositive;
 	private int totalAccepted;
 	
 	// TODO: Fix the initialization
-	private IDisambiguator<MentionPairClassificationInstance> disambiguator = new MentionPairClosestDisambiguator();
+	private IDisambiguator<MentionPairClassificationInstance<Integer>> disambiguator = new MentionPairClosestDisambiguator();
 		
 	@Override
 	public Document resolveDocument(Document document, AbstractAnnotationSelector selector, AbstractAnnotationSelector singletonSelector) {
@@ -33,11 +34,11 @@ public class WekaJ48MentionPairResolver extends AbstractCreteResolver<Classifier
 	
 	
 	@Override
-	protected Document resolveMention(Document document, Annotation mention, List<MentionPairClassificationInstance> instancesForMention) {
+	protected Document resolveMention(Document document, Annotation mention, List<MentionPairClassificationInstance<Integer>> instancesForMention) {
 		System.out.println("Mention: " + mention);
 		for(MentionPairClassificationInstance instance : instancesForMention) System.out.println(instance.getAntecedent());
 		List<Integer> labels = this.classifier.classify(this.converter.convertInstances(instancesForMention));
- 		List<MentionPairClassificationInstance> correctPairs = IntStream
+ 		List<MentionPairClassificationInstance<Integer>> correctPairs = IntStream
 				.range(0, labels.size())
 				.parallel()
 				// TODO: fixme for positive label recognition
@@ -46,7 +47,7 @@ public class WekaJ48MentionPairResolver extends AbstractCreteResolver<Classifier
 				.mapToObj(index -> instancesForMention.get(index))
 				.collect(Collectors.toList());
 		
-		MentionPairClassificationInstance chosenInstance = disambiguator.disambiguate(correctPairs);
+		MentionPairClassificationInstance<Integer> chosenInstance = disambiguator.disambiguate(correctPairs);
 		
 		if(chosenInstance == null) return document; // Return unchanged document (mention does not have coreferential cluster)
 		
@@ -62,7 +63,10 @@ public class WekaJ48MentionPairResolver extends AbstractCreteResolver<Classifier
 	}
 	
 	@Override public Class<Classifier> getModelClass() {return Classifier.class;}
-	@Override public Class<MentionPairClassificationInstance> getAbstractInstanceClass() {return MentionPairClassificationInstance.class;}
+	@Override public Class<MentionPairClassificationInstance<Integer>> getAbstractInstanceClass() {
+		MentionPairClassificationInstance<Integer> inst = new MentionPairClassificationInstance<>();
+		return (Class<MentionPairClassificationInstance<Integer>>) inst.getClass();
+	}
 	@Override public Class<Instance> getClassifierInstanceClass() {return Instance.class;}
 	@Override public Class<Integer> getLabelClass() {return Integer.class;	}
 

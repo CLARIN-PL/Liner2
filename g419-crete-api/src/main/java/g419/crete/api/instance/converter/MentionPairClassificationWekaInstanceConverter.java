@@ -4,9 +4,9 @@ import g419.crete.api.classifier.WekaClassifier;
 import g419.crete.api.instance.MentionPairClassificationInstance;
 import weka.core.Instance;
 
-public class MentionPairClassificationWekaInstanceConverter  extends AbstractCreteInstanceConverter<MentionPairClassificationInstance, Instance>{
+public class MentionPairClassificationWekaInstanceConverter  extends AbstractCreteInstanceConverter<MentionPairClassificationInstance<?>, Instance>{
 
-	public MentionPairClassificationWekaInstanceConverter(WekaClassifier<?,?> cls) {
+	public MentionPairClassificationWekaInstanceConverter(WekaClassifier cls) {
 		super(cls);
 	}
 

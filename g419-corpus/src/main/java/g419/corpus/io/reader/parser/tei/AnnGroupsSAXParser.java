@@ -128,7 +128,7 @@ public class AnnGroupsSAXParser extends DefaultHandler {
             String target = attributes.getValue("target");
             String type = attributes.getValue("type");
             this.currentGroupTokens.add(target);
-            if ( type.equals("head") || type.equals("semh") ){
+            if ( "head".equals(type) || "semh".equals(type) ){
             	this.headIds.put(this.currentGroupId, target);
             }
         }
@@ -187,7 +187,8 @@ public class AnnGroupsSAXParser extends DefaultHandler {
     }
     
     private Integer getHead(String elementKey){
-    	String[] cols = elementKey.split("#");
+        if(elementKey == null) return 0;
+        String[] cols = elementKey.split("#");
     	if ( elementKey.startsWith("ann_words.xml") ){
     		return this.tokenIdsMap.get(this.wordsIdsMap.get(cols[1]).get(0));
     	}

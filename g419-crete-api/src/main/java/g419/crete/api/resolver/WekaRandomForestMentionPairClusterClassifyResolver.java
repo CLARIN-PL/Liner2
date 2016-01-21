@@ -1,8 +1,5 @@
 package g419.crete.api.resolver;
 
-import com.apporiented.algorithm.clustering.Cluster;
-import com.apporiented.algorithm.clustering.Distance;
-import com.apporiented.algorithm.clustering.visualization.DendrogramPanel;
 import g419.corpus.structure.*;
 import g419.crete.api.annotation.AbstractAnnotationSelector;
 import g419.crete.api.instance.MentionPairClassificationInstance;
@@ -11,17 +8,13 @@ import weka.clusterers.Clusterer;
 import weka.clusterers.HierarchicalClusterer;
 import weka.core.*;
 
-import javax.swing.*;
-import javax.swing.text.html.CSS;
-import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.*;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-public class WekaRandomForestMentionPairClusterClassifyResolver extends AbstractCreteResolver<Classifier, MentionPairClassificationInstance,  Instance, Integer> {
+public class WekaRandomForestMentionPairClusterClassifyResolver extends AbstractCreteResolver<Classifier, MentionPairClassificationInstance<Double>,  Instance, Double> {
 
 	static class NamedDistanceFunction extends EuclideanDistance {
 
@@ -42,27 +35,6 @@ public class WekaRandomForestMentionPairClusterClassifyResolver extends Abstract
 
 	}
 
-	static class CSVwriter{
-		public static void write(String[][] data, List<String> labels, String filename){
-			try {
-				BufferedWriter br = new BufferedWriter(new FileWriter(filename));
-				StringBuilder sb = new StringBuilder();
-				sb.append(String.join(", ", labels));
-				sb.append("\n");
-
-				for (int i = 0; i < data.length; i++) {
-					sb.append(String.join(", ", Arrays.asList(data[i])));
-					sb.append("\n");
-					//				for(int j = 0; j < data[i].length; j++){
-				}
-				br.write(sb.toString());
-				br.close();
-			}catch(Exception ex){
-				ex.printStackTrace();
-			}
-		}
-	}
-
 	@Override
 	public Document resolveDocument(Document document, AbstractAnnotationSelector selector, AbstractAnnotationSelector singletonSelector){
 		System.out.println("Classifying document: "+document.getName());
@@ -78,7 +50,7 @@ public class WekaRandomForestMentionPairClusterClassifyResolver extends Abstract
 
 		int currentMentionIndex = 0;
 		for(Annotation mention : mentions) {
-			List<MentionPairClassificationInstance> instancesForMention = this.generator.generateInstancesForMention(document, mention, mentions, singletons);
+			List<MentionPairClassificationInstance<Double>> instancesForMention = this.generator.generateInstancesForMention(document, mention, mentions, singletons);
 			int currentInstanceIndex = 0;
 			int skip = 0;
 			while(currentInstanceIndex <= instancesForMention.size()) {
@@ -110,7 +82,7 @@ public class WekaRandomForestMentionPairClusterClassifyResolver extends Abstract
 				else {
 //					System.out.println(instances[i][j]);
 //					if(instances[i][j] == null) System.out.println(String.format("Null instance at coordinates (%d, %d)",i, j));
-					int classificationResult =  classifier.classify(this.converter.convertSingleInstance(instances[i][j]));
+					double classificationResult =  classifier.classify(this.converter.convertSingleInstance(instances[i][j]));
 					System.out.println(
 						String.format(
 								"Classification result for mention pair %s and %s is %s",
@@ -229,9 +201,9 @@ public class WekaRandomForestMentionPairClusterClassifyResolver extends Abstract
 
 	private double scoreClustering(HashMap<Integer, List<Instance>> clusters, DistanceFunction distanceFunction){
 		int ccount = 0;
-		int clusteringScore = 0;
+		double clusteringScore = 0;
 		for(Map.Entry<Integer, List<Instance>> cluster : clusters.entrySet()){
-			int clusterScore = 0;
+			double clusterScore = 0;
 			for(Instance instance1 : cluster.getValue()){
 				for(Instance instance2 : cluster.getValue()) {
 					if(!instance1.equals(instance2)) clusterScore += distanceFunction.distance(instance1, instance2);
@@ -261,38 +233,19 @@ public class WekaRandomForestMentionPairClusterClassifyResolver extends Abstract
 		return instance;
 	}
 
-	private void showCluster(Cluster cluster){
-		JFrame frame = new JFrame();
-		frame.setSize(400, 300);
-		frame.setLocation(400, 300);
-		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-		JPanel content = new JPanel();
-		DendrogramPanel dp = new DendrogramPanel();
-
-		frame.setContentPane(content);
-		content.setBackground(Color.red);
-		content.setLayout(new BorderLayout());
-		content.add(dp, BorderLayout.CENTER);
-		dp.setBackground(Color.WHITE);
-		dp.setLineColor(Color.BLACK);
-		dp.setScaleValueDecimals(0);
-		dp.setScaleValueInterval(1);
-		dp.setShowDistances(false);
-
-		dp.setModel(cluster);
-		frame.setVisible(true);
-	}
 
 	@Override
-	protected Document resolveMention(Document document, Annotation mention, List<MentionPairClassificationInstance> instancesForMention) {
+	protected Document resolveMention(Document document, Annotation mention, List<MentionPairClassificationInstance<Double>> instancesForMention) {
 		System.err.println("Call to undefined function resolveMention in WekaRandomForestMentionPariClusterClassifyResolver");
 		return null;
 	}
 
 	@Override public Class<Classifier> getModelClass() {return Classifier.class;}
-	@Override public Class<MentionPairClassificationInstance> getAbstractInstanceClass() {return MentionPairClassificationInstance.class;}
+	@Override public Class<MentionPairClassificationInstance<Double>> getAbstractInstanceClass() {
+		MentionPairClassificationInstance<Integer> inst = new MentionPairClassificationInstance<>();
+		return (Class<MentionPairClassificationInstance<Double>>) inst.getClass();
+	}
 	@Override public Class<Instance> getClassifierInstanceClass() {return Instance.class;}
-	@Override public Class<Integer> getLabelClass() {return Integer.class;}
+	@Override public Class<Double> getLabelClass() {return Double.class;}
 
 }

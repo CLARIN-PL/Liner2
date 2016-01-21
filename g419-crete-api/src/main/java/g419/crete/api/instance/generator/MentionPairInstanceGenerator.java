@@ -12,22 +12,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MentionPairInstanceGenerator extends AbstractCreteInstanceGenerator<MentionPairClassificationInstance, Integer> {
+public class MentionPairInstanceGenerator<L> extends AbstractCreteInstanceGenerator<MentionPairClassificationInstance<L>, L> {
 
-	public static final Integer POSITIVE_LABEL = 1;
-	public static final Integer NEGATIVE_LABEL = -1;
+	private final L POSITIVE_LABEL;
+	private final L NEGATIVE_LABEL;
 	
 	private final boolean training;
 	private final AbstractAnnotationSelector namedEntitySelector = AnnotationSelectorFactory.getFactory().getInitializedSelector("named_entity_selector");
 	
-	public MentionPairInstanceGenerator(boolean train){
-//		this.training = train;
+	public MentionPairInstanceGenerator(L positiveLabel, L negativeLabel, boolean train){
+		POSITIVE_LABEL = positiveLabel;
+		NEGATIVE_LABEL = negativeLabel;
 		this.training = false;
 	}
 	
 	@Override
-	public List<MentionPairClassificationInstance> generateInstances(Document document, AbstractAnnotationSelector mentionSelector, 	AbstractAnnotationSelector singletonSelector) {
-		List<MentionPairClassificationInstance> instances = new ArrayList<>();
+	public List<MentionPairClassificationInstance<L>> generateInstances(Document document, AbstractAnnotationSelector mentionSelector, 	AbstractAnnotationSelector singletonSelector) {
+		List<MentionPairClassificationInstance<L>> instances = new ArrayList<>();
 		for(Annotation mention : mentionSelector.selectAnnotations(document))
 			instances.addAll(generateInstancesForMention(document, mention, null, singletonSelector.selectAnnotations(document)));
 		
@@ -35,11 +36,11 @@ public class MentionPairInstanceGenerator extends AbstractCreteInstanceGenerator
 	}
 
 	@Override
-	public List<MentionPairClassificationInstance> generateInstancesForMention(Document document, Annotation mention, 	List<Annotation> allMentionsClassified, List<Annotation> singletons) {
+	public List<MentionPairClassificationInstance<L>> generateInstancesForMention(Document document, Annotation mention, 	List<Annotation> allMentionsClassified, List<Annotation> singletons) {
 		AnnotationPositionComparator comparator = new AnnotationPositionComparator();
 		AnnotationClusterSet clusters = AnnotationClusterSet.fromRelationSet(document.getRelations());
 		
-		List<MentionPairClassificationInstance> negativeInstances  = namedEntitySelector.selectAnnotations(document) 
+		List<MentionPairClassificationInstance<L>> negativeInstances  = namedEntitySelector.selectAnnotations(document)
 //				document.getAnnotations()
 				.parallelStream()
 //				.filter(annotation -> comparator.compare(annotation, mention) < 0)
@@ -49,7 +50,7 @@ public class MentionPairInstanceGenerator extends AbstractCreteInstanceGenerator
 				// Apply limit only to training data
 				.limit(training ? 2: 1000)
 				.map(antecedent -> 
-					new MentionPairClassificationInstance(
+					new MentionPairClassificationInstance<>(
 						mention, 
 						antecedent, 
 						NEGATIVE_LABEL, 
@@ -58,7 +59,7 @@ public class MentionPairInstanceGenerator extends AbstractCreteInstanceGenerator
 				)
 				.collect(Collectors.toList());
 		
-		List<MentionPairClassificationInstance> positiveInstances = namedEntitySelector.selectAnnotations(document) 
+		List<MentionPairClassificationInstance<L>> positiveInstances = namedEntitySelector.selectAnnotations(document)
 //				document.getAnnotations()
 				.parallelStream()
 //				.filter(annotation -> training || comparator.compare(annotation, mention) < 0)
@@ -68,7 +69,7 @@ public class MentionPairInstanceGenerator extends AbstractCreteInstanceGenerator
 				// Apply limit only to training data
 				.limit(training ? 10: 1000)
 				.map(antecedent -> 
-					new MentionPairClassificationInstance(
+					new MentionPairClassificationInstance<>(
 						mention, 
 						antecedent, 
 						POSITIVE_LABEL, 
@@ -82,7 +83,7 @@ public class MentionPairInstanceGenerator extends AbstractCreteInstanceGenerator
 			int y = x;
 		}
 		
-		List<MentionPairClassificationInstance> instances = new ArrayList<>();
+		List<MentionPairClassificationInstance<L>> instances = new ArrayList<>();
 		instances.addAll(positiveInstances);
 		instances.addAll(negativeInstances);
 

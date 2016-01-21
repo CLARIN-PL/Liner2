@@ -1,19 +1,22 @@
 package g419.crete.api.features.representation;
 
 import g419.crete.api.classifier.AbstractCreteClassifier;
+import g419.crete.api.classifier.WekaClassifier;
 import g419.crete.api.classifier.WekaDecisionTreesClassifier;
 import g419.crete.api.features.AbstractFeature;
 import weka.core.Attribute;
 import weka.core.Instance;
 
+import java.util.List;
+
 
 public class WekaInstanceFeatureRepresentation extends IFeatureRepresentation<Instance>{
 
-	WekaDecisionTreesClassifier classifier;
+	WekaClassifier classifier;
 	
 	public WekaInstanceFeatureRepresentation(AbstractCreteClassifier<?, Instance, ?> classifier) {
 		super(classifier);
-		this.classifier = ((WekaDecisionTreesClassifier)classifier);
+		this.classifier = ((WekaClassifier)classifier);
 		repr = new Instance(this.classifier.getAttributes().size());
 	}
 
@@ -22,7 +25,8 @@ public class WekaInstanceFeatureRepresentation extends IFeatureRepresentation<In
 	}
 	
 	private Attribute getAttribute(AbstractFeature<?, ?> feature){
-		return this.classifier.getAttributes().get(this.classifier.getAttributeIndex(feature.getName()));
+		List<Attribute> attributeList = this.classifier.getAttributes();
+		return attributeList.get(this.classifier.getAttributeIndex(feature.getName()));
 	}
 	
 	@Override

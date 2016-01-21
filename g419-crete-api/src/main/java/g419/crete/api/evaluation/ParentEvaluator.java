@@ -7,22 +7,14 @@ import g419.corpus.structure.AnnotationCluster;
 import g419.corpus.structure.AnnotationCluster.ReturnRelationsToDistinctEntities;
 import g419.corpus.structure.AnnotationCluster.ReturningStrategy;
 import g419.corpus.structure.AnnotationClusterSet;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.TokenAttributeIndex;
 import g419.crete.api.annotation.AbstractAnnotationSelector;
+import g419.crete.api.annotation.mapper.AnnotationMapper;
 import g419.liner2.api.tools.FscoreEvaluator;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map.Entry;
 import java.util.Set;
-import java.util.regex.Pattern;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -37,162 +29,19 @@ import java.util.stream.Collectors;
  */
 
 
-public class ParentEvaluator extends FscoreEvaluator{
-	
-	List<Pattern> personLastFirstNam;
-	List<Pattern> personNam;
-	
-	public static interface RelationUnitCriterion {
-		public boolean isSatisfied(Annotation annotation);
-	}
-
-	
-	public static class NamedEntityCriterion implements RelationUnitCriterion{
-		public static final String name = "NamedEntity";
-
-		@Override
-		public boolean isSatisfied(Annotation annotation) {
-			return annotation.getType().startsWith("nam") || annotation.getType().endsWith("nam");
-		}
-		
-		
-	}
-	
-	public static class NonZeroCriterion implements RelationUnitCriterion{
-		public static final String name = "NonZero";
-
-		@Override
-		public boolean isSatisfied(Annotation annotation) {
-			if(!"anafora_wyznacznik".equalsIgnoreCase(annotation.getType())) return false; // Tylko anafora_wyznacznik (bez *_nam)
-			if(annotation.getTokens().size() > 1) return true; // Zał.: tylko AgP mają więcej niż 1 token
-			TokenAttributeIndex ai = annotation.getSentence().getAttributeIndex();
-			int headIndex = annotation.getTokens().first();
-			String headPos = "";
-			try{
-				headPos = ai.getAttributeValue(annotation.getSentence().getTokens().get(headIndex), "pos");
-			}
-			catch(IndexOutOfBoundsException ex){
-				headPos = ai.getAttributeValue(annotation.getSentence().getTokens().get(headIndex), "tagTool");
-			}
-			
-			
-			return !"verb".equals(headPos); //&& !"fin".equals(headPos) && !"praet".equals(headPos) && !"winien".equals(headPos) && !"bedzie".equals(headPos);
-		}
-	}
-	
-	public static class PronounAndZeroCriterion implements RelationUnitCriterion{
-		public static final String name = "PronZero";
-
-		@Override
-		public boolean isSatisfied(Annotation annotation) {
-			TokenAttributeIndex ai = annotation.getSentence().getAttributeIndex();
-			//TODO: uwagaa na getHead() -> może zwracać 0 co powoduje błędy
-			String headPos = ai.getAttributeValue(annotation.getSentence().getTokens().get(annotation.getHead()), "pos");
-			
-			return "pron".equals(headPos) || "verb".equals(headPos);
-		}
-	}
-	
-	public static class AgpPronounAndZeroCriterion implements RelationUnitCriterion{
-		public static final String name = "AgPPronZero";
-
-		@Override
-		public boolean isSatisfied(Annotation annotation) {
-			return "anafora_wyznacznik".equals(annotation.getType()) || "anafora_verb_null".equalsIgnoreCase(annotation.getType()) || "anafora_verb_null_in".equalsIgnoreCase(annotation.getType());
-		}
-	}
-	
-	public static class ZeroCriterion implements RelationUnitCriterion{
-		public static final String name = "Zero";
-		public static final NonZeroCriterion nonZero = new NonZeroCriterion();
-		
-		@Override
-		public boolean isSatisfied(Annotation annotation) {
-			if("anafora_verb_null".equalsIgnoreCase(annotation.getType())) return true;
-			if("anafora_verb_null_in".equalsIgnoreCase(annotation.getType())) return true;
-			if(Pattern.matches("anafora_verb_null.*", annotation.getType())) return true;
-			
-			
-			if(!"anafora_wyznacznik".equalsIgnoreCase(annotation.getType())) return false; // Tylko anafora_wyznacznik (bez *_nam)
-			if(annotation.getTokens().size() > 1) return false; // Zał.: tylko AgP mają więcej niż 1 token
-			TokenAttributeIndex ai = annotation.getSentence().getAttributeIndex();
-			int headIndex = annotation.getTokens().first();
-			String headPos = "";
-			try{
-				headPos = ai.getAttributeValue(annotation.getSentence().getTokens().get(headIndex), "pos");
-			}
-			catch(IndexOutOfBoundsException ex){
-				headPos = ai.getAttributeValue(annotation.getSentence().getTokens().get(headIndex), "tagTool");
-			}
-			
-			
-			return "verb".equals(headPos);
-//			return false;
-		}
-			
-		
-	}
-	
-	public static class AnnotationMapper{
-		Comparator<Annotation> comparator;
-		List<Pattern> annotationTypes;
-		boolean teiRemap;
-		
-		public AnnotationMapper(Comparator<Annotation> comparator, List<Pattern> annotationTypes){
-			this.annotationTypes = annotationTypes;
-			this.comparator = comparator;
-			this.teiRemap = true;
-		}
-		
-		
-		/*
-		 * Zwraca mapowanie z anotacji dokumentu systemowego na anotacje w dokumencie referencyjnym
-		 */
-		private HashMap<Annotation, Annotation> createMapping(Document referenceDocument, Document systemDocument){
-			HashMap<Annotation, Annotation> mapping = new HashMap<Annotation, Annotation>();
-			
-			for(Annotation sysAnnotation: systemDocument.getAnnotations(annotationTypes)){
-				for(Annotation refAnnotation: referenceDocument.getAnnotations(annotationTypes)){
-					if(comparator.compare(refAnnotation, sysAnnotation) == 0){
-						// Przeniesione porównanie zdań
-						if(systemDocument.getSentences().indexOf(sysAnnotation.getSentence()) == referenceDocument.getSentences().indexOf(refAnnotation.getSentence())){
-							if(this.teiRemap && refAnnotation.getType().endsWith("nam")){
-								sysAnnotation.setType(refAnnotation.getType());
-							}
-							mapping.put(sysAnnotation, refAnnotation);
-							break;
-						}
-					}
-				}
-			}
-			
-			return mapping;
-		}
-	}
-	
-	////
-	
-//	private RelationUnitCriterion identifyingUnitsCriteria;
-//	private RelationUnitCriterion referencingUnitsCriteria;
+public class ParentEvaluator extends FscoreEvaluator implements IEvaluator{
 
 	private AbstractAnnotationSelector identifyingSelector;
 	private AbstractAnnotationSelector referencingSelector;
-	private AnnotationMapper mapper;
+	public AnnotationMapper mapper;
 	
-	public ParentEvaluator(AbstractAnnotationSelector identifyingSelector, AbstractAnnotationSelector referencingSelector, Comparator<Annotation> annotationMatcher){
+	public ParentEvaluator(AbstractAnnotationSelector identifyingSelector, AbstractAnnotationSelector referencingSelector, AnnotationMapper mapper){
 		super();
 
 		this.identifyingSelector = identifyingSelector;
 		this.referencingSelector = referencingSelector;
-
-		// TODO: refactor
-		ArrayList<Pattern> annotationTypes = new ArrayList<Pattern>();
-		annotationTypes.add(Pattern.compile("nam.*"));
-		annotationTypes.add(Pattern.compile(".*nam"));
-		annotationTypes.add(Pattern.compile("anafora_wyznacznik"));
-		annotationTypes.add(Pattern.compile("anafora_verb_null.*"));
-		annotationTypes.add(Pattern.compile("mention"));
-		this.mapper = new AnnotationMapper(annotationMatcher, annotationTypes);
+		this.mapper = mapper;
+//				new AnnotationMapper(annotationMatcher, new PatternAnnotationSelector(new String[]{"nam.*", ".*nam", "anafora_wyznacznik", "anafora_verb_null.*", "mention"}));
 		
 
 	}

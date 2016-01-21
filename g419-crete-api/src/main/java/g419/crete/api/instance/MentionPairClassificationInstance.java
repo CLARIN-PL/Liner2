@@ -11,11 +11,13 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
-public class MentionPairClassificationInstance extends AbstractCreteInstance<Integer>{
+public class MentionPairClassificationInstance<L> extends AbstractCreteInstance<L>{
 
 	private MentionPair mentionPair;
-	
-	public MentionPairClassificationInstance(Annotation firstAnnotation, Annotation secondAnnotation, Integer label, List<String> featureNames) {
+
+	public MentionPairClassificationInstance(){}
+
+	public MentionPairClassificationInstance(Annotation firstAnnotation, Annotation secondAnnotation, L label, List<String> featureNames) {
 		super(label, featureNames);
 		this.mentionPair = new MentionPair(new ImmutablePair<Annotation, Annotation>(firstAnnotation, secondAnnotation));
 		extractFeatures();
@@ -39,4 +41,8 @@ public class MentionPairClassificationInstance extends AbstractCreteInstance<Int
 		return getAntecedent().toString();
 	}
 
+	public static Class<MentionPairClassificationInstance<?>> getCls(){
+		MentionPairClassificationInstance<?> mpci = new MentionPairClassificationInstance<>();
+		return (Class<MentionPairClassificationInstance<?>>) mpci.getClass();
+	}
 }

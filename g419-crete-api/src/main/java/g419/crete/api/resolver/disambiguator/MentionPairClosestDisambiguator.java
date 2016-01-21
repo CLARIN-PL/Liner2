@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class MentionPairClosestDisambiguator implements IDisambiguator<MentionPairClassificationInstance>{
+public class MentionPairClosestDisambiguator implements IDisambiguator<MentionPairClassificationInstance<Integer>>{
 
 	static class MentionPairClosestComparator implements Comparator<MentionPairClassificationInstance>{
 
@@ -22,7 +22,7 @@ public class MentionPairClosestDisambiguator implements IDisambiguator<MentionPa
 	}	
 	
 	@Override
-	public MentionPairClassificationInstance disambiguate(List<MentionPairClassificationInstance> instances) {
+	public MentionPairClassificationInstance<Integer> disambiguate(List<MentionPairClassificationInstance<Integer>> instances) {
 		
 		if(instances == null || instances.size() <= 0) return null;
 	

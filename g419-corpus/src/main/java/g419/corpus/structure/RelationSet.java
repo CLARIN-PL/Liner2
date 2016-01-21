@@ -39,7 +39,7 @@ public class RelationSet {
 		addAnnotationRelation(this.outgoingRelations, relation.getAnnotationFrom(), relation);
 		addAnnotationRelation(this.incomingRelations, relation.getAnnotationTo(), relation);
 	}
-	
+
 	public void refresh(){
 		incomingRelations = new HashMap<Annotation, TreeSet<Relation>>();
 		outgoingRelations = new HashMap<Annotation, TreeSet<Relation>>();

@@ -11,7 +11,7 @@ public class ClusterClassificationWekaInstanceConverterItem implements ICreteIns
 
 	@Override
 	public AbstractCreteInstanceConverter<ClusterClassificationInstance, Instance> createConverter(AbstractCreteClassifier<?, Instance, ?> classifier) {
-		return new ClusterClassificationWekaInstanceConverter((WekaClassifier<?, ?>) classifier);
+		return new ClusterClassificationWekaInstanceConverter((WekaClassifier) classifier);
 	}
 
 }

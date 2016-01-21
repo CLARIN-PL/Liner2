@@ -10,7 +10,7 @@ public abstract class AbstractCreteClassifier<M, I, L> {
 	
 	protected List<I> trainingInstances;
 	protected List<L> trainingInstanceLabels;
-	
+
 	
 	public AbstractCreteClassifier(){
 		this.trainingInstances = new ArrayList<I>();
