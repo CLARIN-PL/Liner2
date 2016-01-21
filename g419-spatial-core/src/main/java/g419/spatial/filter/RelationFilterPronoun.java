@@ -1,6 +1,6 @@
 package g419.spatial.filter;
 
-import g419.spatial.structure.SpatialRelation;
+import g419.spatial.structure.SpatialExpression;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -17,7 +17,7 @@ public class RelationFilterPronoun implements IRelationFilter {
 	}
 		
 	@Override
-	public boolean pass(SpatialRelation relation) {
+	public boolean pass(SpatialExpression relation) {
 		return !this.pronouns.contains(relation.getLandmark().getHeadToken().getDisambTag().getPos())
 				&& !this.pronouns.contains(relation.getTrajector().getHeadToken().getDisambTag().getPos());
 	}

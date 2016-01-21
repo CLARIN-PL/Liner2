@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.zip.DataFormatException;
 
 import g419.spatial.io.CsvSpatialSchemeParser;
-import g419.spatial.structure.SpatialRelation;
+import g419.spatial.structure.SpatialExpression;
 import g419.spatial.structure.SpatialRelationSchema;
 import g419.spatial.structure.SpatialRelationSchemaMatcher;
 import g419.toolbox.sumo.NamToSumo;
@@ -54,12 +54,12 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
 	}
 		
 	@Override
-	public boolean pass(SpatialRelation relation) {		
+	public boolean pass(SpatialExpression relation) {		
 		List<SpatialRelationSchema> matching = this.match(relation);
 		return matching.size() > 0;
 	}
 	
-	public List<SpatialRelationSchema> match(SpatialRelation relation){
+	public List<SpatialRelationSchema> match(SpatialExpression relation){
 		String landmark = relation.getLandmark().getSentence().getTokens().get(relation.getLandmark().getHead()).getDisambTag().getBase();
 		String trajector = relation.getTrajector().getSentence().getTokens().get(relation.getTrajector().getHead()).getDisambTag().getBase();
 		Set<String> landmarkConcepts = this.wts.getConcept(landmark);

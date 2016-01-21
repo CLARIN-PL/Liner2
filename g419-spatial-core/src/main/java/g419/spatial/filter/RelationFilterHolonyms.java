@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import g419.spatial.structure.SpatialRelation;
+import g419.spatial.structure.SpatialExpression;
 import g419.toolbox.wordnet.NamToWordnet;
 import g419.toolbox.wordnet.Wordnet3;
 import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRaw;
@@ -28,7 +28,7 @@ public class RelationFilterHolonyms implements IRelationFilter {
 	}
 		
 	@Override
-	public boolean pass(SpatialRelation relation) {
+	public boolean pass(SpatialExpression relation) {
 		
 		// Utwórz listę holonimów landmarka
 		Set<String> holonyms = new HashSet<String>();		

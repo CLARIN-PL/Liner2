@@ -4,26 +4,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 import g419.liner2.api.tools.FscoreEvaluator;
-import g419.spatial.structure.SpatialRelation;
+import g419.spatial.structure.SpatialExpression;
 
 public class FscoreEvaluator2 {
 
-	Map<String, SpatialRelation> gold = new HashMap<String, SpatialRelation>();
-	Map<String, SpatialRelation> decision = new HashMap<String, SpatialRelation>();
+	Map<String, SpatialExpression> gold = new HashMap<String, SpatialExpression>();
+	Map<String, SpatialExpression> decision = new HashMap<String, SpatialExpression>();
 	
-	public void addGold(SpatialRelation relation){
+	public void addGold(SpatialExpression relation){
 		this.gold.put(relation.getKey(), relation);
 	}
 
-	public void addDecision(SpatialRelation relation){
+	public void addDecision(SpatialExpression relation){
 		this.decision.put(relation.getKey(), relation);
 	}
 
-	public boolean containsAsGold(SpatialRelation relation){
+	public boolean containsAsGold(SpatialExpression relation){
 		return this.gold.containsKey(relation.getKey());
 	}
 
-	public boolean containsAsDecision(SpatialRelation relation){
+	public boolean containsAsDecision(SpatialExpression relation){
 		return this.decision.containsKey(relation.getKey());
 	}
 	

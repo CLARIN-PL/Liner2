@@ -1,6 +1,6 @@
 package g419.spatial.filter;
 
-import g419.spatial.structure.SpatialRelation;
+import g419.spatial.structure.SpatialExpression;
 
 public interface IRelationFilter {
 
@@ -10,6 +10,6 @@ public interface IRelationFilter {
 	 * @param relation Obiekt reprezentujący relację.
 	 * @return true, jeżeli zaszedł warunek filtru.
 	 */
-	public boolean pass(SpatialRelation relation);
+	public boolean pass(SpatialExpression relation);
 	
 }

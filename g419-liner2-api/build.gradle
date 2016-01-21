@@ -1,4 +1,4 @@
-description = "g419-liner2-api -- biblioteka ze strukturą pliku, czytnikami i piśnikami"
+description = "g419-liner2-api"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8

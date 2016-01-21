@@ -13,8 +13,10 @@ import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.spatial.structure.SpatialRelation;
+import g419.liner2.api.tools.parser.MaltParser;
+import g419.spatial.structure.SpatialExpression;
 import g419.spatial.tools.SpatialRelationRecognizer;
+import g419.toolbox.wordnet.Wordnet3;
 
 public class ActionSpatial extends Action {
 	
@@ -23,7 +25,10 @@ public class ActionSpatial extends Action {
 	
 	private String filename = null;
 	private String inputFormat = null;
-	
+
+	private String maltparserModel = null;
+	private String wordnetPath = null;
+
 	/**
 	 * 
 	 */
@@ -31,7 +36,9 @@ public class ActionSpatial extends Action {
 		super("spatial");
 		this.setDescription("recognize spatial relations");
 		this.options.addOption(this.getOptionInputFilename());		
-		this.options.addOption(CommonOptions.getInputFileFormatOption());		
+		this.options.addOption(CommonOptions.getInputFileFormatOption());
+		this.options.addOption(CommonOptions.getMaltparserModelFileOption());
+		this.options.addOption(CommonOptions.getWordnetOption(true));		
 	}
 	
 	/**
@@ -53,12 +60,16 @@ public class ActionSpatial extends Action {
         parseDefault(line);
         this.filename = line.getOptionValue(ActionSpatial.OPTION_FILENAME);
         this.inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
+        this.maltparserModel = line.getOptionValue(CommonOptions.OPTION_MALT);
+        this.wordnetPath = line.getOptionValue(CommonOptions.OPTION_WORDNET);
     }
 
 	@Override
 	public void run() throws Exception {
+		Wordnet3 wordnet = new Wordnet3(this.wordnetPath);
+		MaltParser malt = new MaltParser(this.maltparserModel);		
+		SpatialRelationRecognizer recognizer = new SpatialRelationRecognizer(malt, wordnet);
 		AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(this.filename, this.inputFormat);				
-		SpatialRelationRecognizer recognizer = new SpatialRelationRecognizer();
 				
 		Document document = null;
 		while ( ( document = reader.nextDocument() ) != null ){					
@@ -69,9 +80,9 @@ public class ActionSpatial extends Action {
 			for (Paragraph paragraph : document.getParagraphs()){
 				for (Sentence sentence : paragraph.getSentences()){
 					
-					List<SpatialRelation> relations = recognizer.recognize(sentence);
+					List<SpatialExpression> relations = recognizer.recognize(sentence);
 					
-					for ( SpatialRelation rel : relations ){
+					for ( SpatialExpression rel : relations ){
 						System.out.println(rel.toString());
 					}
 				}

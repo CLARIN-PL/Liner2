@@ -2,7 +2,6 @@ package g419.lib.cli;
 
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Option.Builder;
-import org.apache.commons.cli.OptionBuilder;
 
 /**
  * This class contains methods to generate Option objects for common options.
@@ -41,64 +40,50 @@ public class CommonOptions {
     public static final String OPTION_WORDNET = "w";
     public static final String OPTION_WORDNET_LONG = "wordnet";
 
+    public static final String OPTION_MALT = "M";
+    public static final String OPTION_MALT_LONG = "malt";
 
 	public static Option getOutputFileNameOption(){
-		OptionBuilder.withArgName("filename");
-		OptionBuilder.hasArg();
-		OptionBuilder.withDescription("path to an output file");
-		OptionBuilder.withLongOpt(CommonOptions.OPTION_OUTPUT_FILE_LONG);
-		return OptionBuilder.create(CommonOptions.OPTION_OUTPUT_FILE);		
+		return Option.builder(CommonOptions.OPTION_OUTPUT_FILE)
+				.longOpt(CommonOptions.OPTION_OUTPUT_FILE_LONG)
+				.hasArg().argName("filename").desc("path to an output file").build();
 	}
 
     public static Option getOutputFileFormatOption(){       
-        OptionBuilder.withArgName("filename");
-        OptionBuilder.hasArg();
-        OptionBuilder.withDescription("output format [iob, ccl, arff, tokens, tuples, tei, batch:{format}]");
-        OptionBuilder.withLongOpt(CommonOptions.OPTION_OUTPUT_FORMAT_LONG);
-        return OptionBuilder.create(CommonOptions.OPTION_OUTPUT_FORMAT);
+		return Option.builder(CommonOptions.OPTION_OUTPUT_FORMAT)
+				.longOpt(CommonOptions.OPTION_OUTPUT_FORMAT_LONG)
+				.hasArg().argName("filename").desc("output format [iob, ccl, arff, tokens, tuples, tei, batch:{format}]").build();
     }
 
 	public static Option getInputFileNameOption(){
-		OptionBuilder.withArgName("filename");
-		OptionBuilder.hasArg();
-		OptionBuilder.withDescription("read input from file");
-		OptionBuilder.withLongOpt(CommonOptions.OPTION_INPUT_FILE_LONG);
-		OptionBuilder.isRequired();
-		return OptionBuilder.create(OPTION_INPUT_FILE);
+		return Option.builder(CommonOptions.OPTION_INPUT_FILE)
+				.longOpt(CommonOptions.OPTION_INPUT_FILE_LONG)
+				.hasArg().argName("filename").desc("read input from file").build();
 	}
 	
 	public static Option getInputFileFormatOption(){
-		OptionBuilder.withArgName("format");
-		OptionBuilder.hasArg();
-		OptionBuilder.withDescription("input format [iob, ccl, plain, plain:maca, plain:wcrft, tei, batch:{format}]");
-		OptionBuilder.withLongOpt(CommonOptions.OPTION_INPUT_FORMAT_LONG);
-		return OptionBuilder.create(OPTION_INPUT_FORMAT);
+		return Option.builder(CommonOptions.OPTION_INPUT_FORMAT)
+				.longOpt(CommonOptions.OPTION_INPUT_FORMAT_LONG)
+				.hasArg().argName("format").desc("input format [iob, ccl, plain, plain:maca, plain:wcrft, tei, batch:{format}]").build();
 	}
 
     public static Option getFeaturesOption(){
-        OptionBuilder.withArgName("features");
-        OptionBuilder.hasArg();
-        OptionBuilder.withDescription("a file with a list of features");
-        OptionBuilder.withLongOpt(CommonOptions.OPTION_FEATURES_LONG);
-        return OptionBuilder.create(CommonOptions.OPTION_FEATURES);
+		return Option.builder(CommonOptions.OPTION_FEATURES)
+				.longOpt(CommonOptions.OPTION_FEATURES_LONG)
+				.hasArg().argName("features").desc("a file with a list of features").build();
     }
 
     public static Option getClassifierModelFile(){
-    	OptionBuilder.withArgName("classifier model");
-    	OptionBuilder.hasArg();
-        OptionBuilder.withDescription("file with classifier model");
-        OptionBuilder.withLongOpt(CommonOptions.OPTION_CLASSIFIER_MODEL_LONG);
-//        OptionBuilder.isRequired();
-        return OptionBuilder.create(CommonOptions.OPTION_CLASSIFIER_MODEL);
+		return Option.builder(CommonOptions.OPTION_CLASSIFIER_MODEL)
+				.longOpt(CommonOptions.OPTION_CLASSIFIER_MODEL_LONG)
+				.hasArg().argName("classifier model").desc("file with classifier model").build();
     }
     
     public static Option getModelFileOption(){
-    	OptionBuilder.withArgName("model");
-    	OptionBuilder.hasArg();
-        OptionBuilder.withDescription("file with model configuration");
-        OptionBuilder.withLongOpt(CommonOptions.OPTION_MODEL_LONG);
-        OptionBuilder.isRequired();
-        return OptionBuilder.create(CommonOptions.OPTION_MODEL);
+		return Option.builder(CommonOptions.OPTION_MODEL)
+				.longOpt(CommonOptions.OPTION_MODEL_LONG)
+				.required()
+				.hasArg().argName("model").desc("file with model configuration").build();
     }
 
     public static Option getWordnetOption(boolean required){
@@ -111,24 +96,26 @@ public class CommonOptions {
     }
 
     public static Option getVerboseOption(){
-        OptionBuilder.withLongOpt(OPTION_VERBOSE_LONG);
-        OptionBuilder.withDescription("print help");
-        return OptionBuilder.create(OPTION_VERBOSE);
+		return Option.builder(CommonOptions.OPTION_VERBOSE)
+				.longOpt(CommonOptions.OPTION_VERBOSE_LONG)
+				.desc("print help").build();
     }
 
     public static Option getVerboseDeatilsOption(){
-    	OptionBuilder.withDescription("verbose processed sentences data");
-        OptionBuilder.withLongOpt(OPTION_VERBOSE_DETAILS_LONG);
-        return OptionBuilder.create(OPTION_VERBOSE_DETAILS);
+		return Option.builder(CommonOptions.OPTION_VERBOSE_DETAILS)
+				.longOpt(CommonOptions.OPTION_VERBOSE_DETAILS_LONG)
+				.desc("verbose processed sentences data").build();
     }
 
 	public static Option getInputFileFormatOptionWithAnnotations(){
-		OptionBuilder.withArgName("format");
-		OptionBuilder.hasArg();
-		OptionBuilder.withDescription("input format [iob, ccl, tei, batch:{format}]");
-		OptionBuilder.withLongOpt(CommonOptions.OPTION_INPUT_FORMAT_LONG);
-		return OptionBuilder.create(OPTION_INPUT_FORMAT);
+		return Option.builder(CommonOptions.OPTION_INPUT_FORMAT)
+				.longOpt(CommonOptions.OPTION_INPUT_FORMAT_LONG)
+				.hasArg().argName("format").desc("input format [iob, ccl, tei, batch:{format}]").build();
 	}
 
+	public static Option getMaltparserModelFileOption(){
+        return Option.builder(OPTION_MALT).longOpt(OPTION_MALT_LONG).hasArg().argName("filename")
+        		.desc("path to maltparser model").required().build();
+	}
 
 }

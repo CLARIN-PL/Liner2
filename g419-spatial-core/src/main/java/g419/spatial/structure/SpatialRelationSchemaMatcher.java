@@ -25,7 +25,7 @@ public class SpatialRelationSchemaMatcher {
 	 * @param relation
 	 * @return
 	 */
-	public List<SpatialRelationSchema> matchAll(SpatialRelation relation){
+	public List<SpatialRelationSchema> matchAll(SpatialExpression relation){
 		List<SpatialRelationSchema> matching = new LinkedList<SpatialRelationSchema>();
 		
 		for ( SpatialRelationSchema pattern : this.patterns ){
@@ -44,7 +44,7 @@ public class SpatialRelationSchemaMatcher {
 	 * @param sumo
 	 * @return
 	 */
-	public static boolean matches(SpatialRelation relation, SpatialRelationSchema pattern, Sumo sumo){
+	public static boolean matches(SpatialExpression relation, SpatialRelationSchema pattern, Sumo sumo){
 
 		String preposition = relation.getSpatialIndicator().getText().toLowerCase();
 		if ( relation.getRegion() != null && relation.getRegion().getHeadToken().getDisambTag().getBase().equals("teren") ){

@@ -24,12 +24,14 @@ import g419.corpus.structure.Sentence;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.api.tools.FscoreEvaluator;
+import g419.liner2.api.tools.parser.MaltParser;
 import g419.spatial.filter.IRelationFilter;
-import g419.spatial.structure.SpatialRelation;
+import g419.spatial.structure.SpatialExpression;
 import g419.spatial.structure.SpatialRelationSchema;
 import g419.spatial.tools.FscoreEvaluator2;
 import g419.spatial.tools.SpatialRelationRecognizer;
 import g419.spatial.tools.SpatialResources;
+import g419.toolbox.wordnet.Wordnet3;
 
 public class ActionEval extends Action {
 	
@@ -44,6 +46,9 @@ public class ActionEval extends Action {
 	
 	private Set<String> objectPos = new HashSet<String>();
 	
+	private String maltparserModel = null;
+	private String wordnetPath = null;
+	
 	/**
 	 * 
 	 */
@@ -52,6 +57,8 @@ public class ActionEval extends Action {
 		this.setDescription("recognize spatial relations");
 		this.options.addOption(this.getOptionInputFilename());		
 		this.options.addOption(CommonOptions.getInputFileFormatOption());
+		this.options.addOption(CommonOptions.getMaltparserModelFileOption());
+		this.options.addOption(CommonOptions.getWordnetOption(true));
 		
 		this.annotationsPrep.add(Pattern.compile("^PrepNG.*"));
 		this.annotationsNg.add(Pattern.compile("^NG.*"));
@@ -80,12 +87,16 @@ public class ActionEval extends Action {
         parseDefault(line);
         this.filename = line.getOptionValue(ActionEval.OPTION_FILENAME);
         this.inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
+        this.maltparserModel = line.getOptionValue(CommonOptions.OPTION_MALT);
+        this.wordnetPath = line.getOptionValue(CommonOptions.OPTION_WORDNET);
     }
 
 	@Override
 	public void run() throws Exception {
 		AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(this.filename, this.inputFormat);
-		SpatialRelationRecognizer recognizer = new SpatialRelationRecognizer();
+		Wordnet3 wordnet = new Wordnet3(this.wordnetPath);
+		MaltParser malt = new MaltParser(this.maltparserModel);		
+		SpatialRelationRecognizer recognizer = new SpatialRelationRecognizer(malt, wordnet);
 		Set<String> regions = SpatialResources.getRegions();
 		
 		FscoreEvaluator2 evalTotal = new FscoreEvaluator2();
@@ -98,13 +109,13 @@ public class ActionEval extends Action {
 			System.out.println("Document: " + document.getName());
 			System.out.println("=======================================");
 			
-			List<SpatialRelation> gold = this.getSpatialRelations(document);
+			List<SpatialExpression> gold = this.getSpatialRelations(document);
 			
 			if ( gold.size() == 0 ){
 				continue;
 			}
 						
-			for ( SpatialRelation relation : gold ){
+			for ( SpatialExpression relation : gold ){
 				evalTotal.addGold(relation);
 				evalNoSeedTotal.addGold(relation);
 			}
@@ -112,7 +123,7 @@ public class ActionEval extends Action {
 			for (Paragraph paragraph : document.getParagraphs()){
 				for (Sentence sentence : paragraph.getSentences()){
 					
-					List<SpatialRelation> relations = recognizer.findCandidates(sentence);
+					List<SpatialExpression> relations = recognizer.findCandidates(sentence);
 					
 					if ( relations.size() > 0 ){
 						System.out.println();
@@ -120,14 +131,14 @@ public class ActionEval extends Action {
 						System.out.println("-----------------------------------------------------------------------------");
 						System.out.println();
 						
-						for ( SpatialRelation relation : gold ){
+						for ( SpatialExpression relation : gold ){
 							if ( relation.getLandmark().getSentence() == sentence) {
 								System.out.println(relation.toString() + " " + relation.getKey());
 							}
 						}
 						System.out.println();
 						
-						for ( SpatialRelation rel : relations ){
+						for ( SpatialExpression rel : relations ){
 							String status = "OK    ";
 							String filterName = "";
 							String eval = "";
@@ -240,9 +251,9 @@ public class ActionEval extends Action {
 	 * @param document
 	 * @return
 	 */
-	private List<SpatialRelation> getSpatialRelations(Document document){
+	private List<SpatialExpression> getSpatialRelations(Document document){
 		
-		List<SpatialRelation> srs = new ArrayList<SpatialRelation>();
+		List<SpatialExpression> srs = new ArrayList<SpatialExpression>();
 		Map<Annotation, Annotation> landmarks = new HashMap<Annotation, Annotation>();
 		Map<Annotation, List<Annotation>> trajectors = new HashMap<Annotation, List<Annotation>>();
 		Map<Annotation, Annotation> regions = new HashMap<Annotation, Annotation>();
@@ -279,7 +290,7 @@ public class ActionEval extends Action {
 					// Zignoruje relacje, w któryj trajector lub landmark nie są substem lub ignem
 					if ( objectPos.contains(tr.getHeadToken().getDisambTag().getPos()) 
 							&& objectPos.contains(landmark.getHeadToken().getDisambTag().getPos()) ){					
-						srs.add(new SpatialRelation("Gold", tr, indicator, landmark));
+						srs.add(new SpatialExpression("Gold", tr, indicator, landmark));
 					}
 				}
 			}

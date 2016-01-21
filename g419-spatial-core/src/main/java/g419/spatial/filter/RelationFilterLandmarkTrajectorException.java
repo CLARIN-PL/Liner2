@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import g419.spatial.structure.SpatialRelation;
+import g419.spatial.structure.SpatialExpression;
 
 /**
  * Filtr sprawdza, czy przyimek występuje przed potencjalnych landmarkiem.
@@ -23,7 +23,7 @@ public class RelationFilterLandmarkTrajectorException implements IRelationFilter
 	}
 		
 	@Override
-	public boolean pass(SpatialRelation relation) {
+	public boolean pass(SpatialExpression relation) {
 		return !this.exceptions.contains(relation.getTrajector().getHeadToken().getDisambTag().getBase())
 				&& !this.exceptions.contains(relation.getLandmark().getHeadToken().getDisambTag().getBase());
 	}

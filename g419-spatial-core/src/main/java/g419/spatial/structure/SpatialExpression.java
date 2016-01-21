@@ -12,7 +12,7 @@ import java.util.Set;
  * @author czuk
  *
  */
-public class SpatialRelation{
+public class SpatialExpression{
 	
 	private String type = null;
 	private Annotation trajector = null;
@@ -23,7 +23,7 @@ public class SpatialRelation{
 	private Set<String> landmarkConcepts = new HashSet<String>();
 	private Set<SpatialRelationSchema> filtres = new HashSet<SpatialRelationSchema>();
 	
-	public SpatialRelation(String type, Annotation trajector, Annotation spatialIndicator, Annotation landmark){
+	public SpatialExpression(String type, Annotation trajector, Annotation spatialIndicator, Annotation landmark){
 		this.type = type;
 		this.trajector = trajector;
 		this.spatialIndicator = spatialIndicator;

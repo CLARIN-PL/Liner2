@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.MissingResourceException;
 import java.util.Set;
 
-import g419.spatial.structure.SpatialRelation;
+import g419.spatial.structure.SpatialExpression;
 
 public class RelationFilterSpatialIndicator implements IRelationFilter {
 
@@ -35,7 +35,7 @@ public class RelationFilterSpatialIndicator implements IRelationFilter {
 	}
 		
 	@Override
-	public boolean pass(SpatialRelation relation) {
+	public boolean pass(SpatialExpression relation) {
 		String si = relation.getSpatialIndicator().getText().toLowerCase();
 		return this.spatialIndicators.contains(si);
 	}
