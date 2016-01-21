@@ -14,6 +14,8 @@ public class CrfTemplate {
 	ArrayList<String> featureNames = new ArrayList<String>();
 	Hashtable<String, String[]> features = new Hashtable<String, String[]>();
     TokenAttributeIndex attributeIndex;
+    
+    boolean appendFeatureNameToValue = true;
 	
 	public void addFeature(String description) throws Exception {
         Logger.log("(TemplateFactory) Adding feature:" + description);
@@ -163,6 +165,9 @@ public class CrfTemplate {
                         }
                     }
                     int newAttrIdx = newAttributeIndex.getIndex(newFeatureName);
+                    if ( this.appendFeatureNameToValue ){
+                    	featureValue = featureName+"::"+featureValue;
+                    }
                     newToken.setAttributeValue(newAttrIdx, featureValue);
                 }
                 else{ // cechy proste
@@ -178,6 +183,9 @@ public class CrfTemplate {
                         if ((k + idx >= 0) && (k + idx < tokens.size()))
                             featureValue = tokens.get(k+idx).getAttributeValue(attributeIndex.getIndex(featureName));
                         int newAttrIdx = newAttributeIndex.getIndex(newFeatureName);
+                        if ( this.appendFeatureNameToValue ){
+                        	featureValue = featureName+"::"+featureValue;
+                        }
                         newToken.setAttributeValue(newAttrIdx, featureValue);
                     }
                 }

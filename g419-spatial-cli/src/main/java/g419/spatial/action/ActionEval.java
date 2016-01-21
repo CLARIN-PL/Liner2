@@ -26,7 +26,7 @@ import g419.lib.cli.CommonOptions;
 import g419.liner2.api.tools.FscoreEvaluator;
 import g419.spatial.filter.IRelationFilter;
 import g419.spatial.structure.SpatialRelation;
-import g419.spatial.structure.SpatialRelationPattern;
+import g419.spatial.structure.SpatialRelationSchema;
 import g419.spatial.tools.FscoreEvaluator2;
 import g419.spatial.tools.SpatialRelationRecognizer;
 import g419.spatial.tools.SpatialResources;
@@ -175,7 +175,7 @@ public class ActionEval extends Action {
 							eval += duplicate;
 							
 							StringBuilder sb = new StringBuilder();
-							for ( SpatialRelationPattern p : recognizer.getSemanticFilter().match(rel) ){
+							for ( SpatialRelationSchema p : recognizer.getSemanticFilter().match(rel) ){
 								if ( sb.length() > 0 ){
 									sb.append(" & ");
 								}

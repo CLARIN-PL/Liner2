@@ -57,7 +57,9 @@ public class WriterFactory {
 		else if (outputFormat.equals("tuples"))
 			return new TuplesStreamWriter(out);
 		else if (outputFormat.equals("json"))
-			return new JSONStreamWriter(out);
+			return new JsonStreamWriter(out);
+		else if (outputFormat.equals("json-frames"))
+			return new JsonFramesStreamWriter(out);
 		else if (outputFormat.equals("tokens"))
 			return new TokensStreamWriter(out);
         else if (outputFormat.equals("arff"))

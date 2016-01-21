@@ -16,11 +16,11 @@ import java.util.Map;
  * Drukowanie wyników w postaci obiektu JSON.
  * @author Jan Kocoń
  */
-public class JSONStreamWriter extends AbstractDocumentWriter {
+public class JsonStreamWriter extends AbstractDocumentWriter {
 	private BufferedWriter ow;
 	private int sentenceOffset = 0;
 
-	public JSONStreamWriter(OutputStream os){
+	public JsonStreamWriter(OutputStream os){
 		this.ow = new BufferedWriter(new OutputStreamWriter(os));
 	}
 

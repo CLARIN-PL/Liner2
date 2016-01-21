@@ -49,6 +49,9 @@ public class BatchWriter extends AbstractDocumentWriter {
         else if(format.equals("tei")){
             extension = "";
         }
+        else if(format.equals("json-frames")){
+            extension = ".txt";
+        }
         else if(format.equals("verb_eval")){
             extension = ".az";
         }

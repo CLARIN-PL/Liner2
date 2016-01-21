@@ -10,12 +10,12 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.maltparser.core.helper.HashSet;
 
-public class SpatialRelationPatternMatcher {
+public class SpatialRelationSchemaMatcher {
 
-	private List<SpatialRelationPattern> patterns = null;
+	private List<SpatialRelationSchema> patterns = null;
 	private Sumo sumo = null;
 	
-	public SpatialRelationPatternMatcher(List<SpatialRelationPattern> patterns, Sumo sumo){
+	public SpatialRelationSchemaMatcher(List<SpatialRelationSchema> patterns, Sumo sumo){
 		this.patterns = patterns;
 		this.sumo = sumo;
 	}
@@ -25,11 +25,11 @@ public class SpatialRelationPatternMatcher {
 	 * @param relation
 	 * @return
 	 */
-	public List<SpatialRelationPattern> matchAll(SpatialRelation relation){
-		List<SpatialRelationPattern> matching = new LinkedList<SpatialRelationPattern>();
+	public List<SpatialRelationSchema> matchAll(SpatialRelation relation){
+		List<SpatialRelationSchema> matching = new LinkedList<SpatialRelationSchema>();
 		
-		for ( SpatialRelationPattern pattern : this.patterns ){
-			if ( SpatialRelationPatternMatcher.matches(relation, pattern, this.sumo)){
+		for ( SpatialRelationSchema pattern : this.patterns ){
+			if ( SpatialRelationSchemaMatcher.matches(relation, pattern, this.sumo)){
 				matching.add(pattern);
 			}
 		}
@@ -44,7 +44,7 @@ public class SpatialRelationPatternMatcher {
 	 * @param sumo
 	 * @return
 	 */
-	public static boolean matches(SpatialRelation relation, SpatialRelationPattern pattern, Sumo sumo){
+	public static boolean matches(SpatialRelation relation, SpatialRelationSchema pattern, Sumo sumo){
 
 		String preposition = relation.getSpatialIndicator().getText().toLowerCase();
 		if ( relation.getRegion() != null && relation.getRegion().getHeadToken().getDisambTag().getBase().equals("teren") ){

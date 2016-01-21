@@ -15,6 +15,7 @@ public class Document{
 	TokenAttributeIndex attributeIndex = null;
 	ArrayList<Paragraph> paragraphs = new ArrayList<Paragraph>();
 	DocumentDescriptor documentDescriptor = new DocumentDescriptor();
+	Set<Frame> frames = new HashSet<Frame>();
 	
 	/* Zbiór relacji */
 	RelationSet relations = new RelationSet();
@@ -79,6 +80,10 @@ public class Document{
 	
 	public ArrayList<Paragraph> getParagraphs() {
 		return this.paragraphs;
+	}
+	
+	public Set<Frame> getFrames(){
+		return this.frames;
 	}
 	
 	public void setAttributeIndex(TokenAttributeIndex attributeIndex) {
@@ -248,28 +253,6 @@ public class Document{
 			this.relations.refresh();
 	}
 	
-//	public void rewireRelations(List<Annotation> relAnnotations, List<Annotation> targetAnnotations, boolean removeNonRelational){
-//
-//
-//		List<Annotation> toRemove = new ArrayList<Annotation>();
-//
-// 		for(Annotation rAnn : relAnnotations){
-// 			boolean found = false;
-// 			for(Annotation potentialTarget : rAnn.getSentence().getChunks()){
-// 				if(potentialTarget.getTokens().equals(rAnn.getTokens()) && targetAnnotations.contains(potentialTarget)){
-// 					found  = true;
-// 					rewireSingleRelations(rAnn, potentialTarget);
-// 					if(removeNonRelational) toRemove.add(rAnn);
-// 				}
-// 			}
-//// 			if(!found) {
-////				rAnn.setType("anafora_verb_null");
-////			}
-// 		}
-//
-// 		if(removeNonRelational) removeAnnotations(toRemove);
-// 	}
-	
 	
 	/**
 	 * Scalanie relacji dla anotacji typu *person_nam* z wewnętrznymi anotacjami 
@@ -288,7 +271,7 @@ public class Document{
 			Set<Annotation> lastFirstNam = sentence.getAnnotations(personLastFirstNam); 
 			Set<Annotation> persNam = sentence.getAnnotations(personNam);
 			
-			List<Annotation> toRemove = new ArrayList<>();
+			List<Annotation> toRemove = new ArrayList<Annotation>();
 			
 			// Dla każdej anotacji bardziej granularnej od nam_liv_person (imię, nazwisko etc.)
 			for(Annotation lfAnn : lastFirstNam){

@@ -19,7 +19,6 @@ import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Relation;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.lib.cli.Action;
@@ -27,7 +26,6 @@ import g419.lib.cli.CommonOptions;
 import g419.liner2.api.Liner2;
 import g419.liner2.api.chunker.IobberChunker;
 import g419.liner2.api.features.tokens.ClassFeature;
-import g419.liner2.api.tools.FscoreEvaluator;
 import g419.liner2.api.tools.parser.MaltParser;
 import g419.liner2.api.tools.parser.MaltSentence;
 import g419.liner2.api.tools.parser.MaltSentenceLink;
@@ -39,8 +37,7 @@ import g419.spatial.filter.RelationFilterPronoun;
 import g419.spatial.filter.RelationFilterSemanticPattern;
 import g419.spatial.filter.RelationFilterSpatialIndicator;
 import g419.spatial.structure.SpatialRelation;
-import g419.spatial.structure.SpatialRelationPattern;
-import g419.spatial.tools.FscoreEvaluator2;
+import g419.spatial.structure.SpatialRelationSchema;
 import g419.toolbox.sumo.Sumo;
 import g419.toolbox.wordnet.NamToWordnet;
 import g419.toolbox.wordnet.Wordnet3;
@@ -241,7 +238,7 @@ public class ActionDiscoverSchema extends Action {
 							
 							if ( pass ){
 								StringBuilder sb = new StringBuilder();
-								for ( SpatialRelationPattern p : semanticFilter.match(rel) ){
+								for ( SpatialRelationSchema p : semanticFilter.match(rel) ){
 									if ( sb.length() > 0 ){
 										sb.append(" & ");
 									}

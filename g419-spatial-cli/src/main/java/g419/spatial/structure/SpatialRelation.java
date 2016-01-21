@@ -2,6 +2,7 @@ package g419.spatial.structure;
 
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Token;
+import g419.spatial.filter.IRelationFilter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,6 +21,7 @@ public class SpatialRelation{
 	private Annotation landmark = null;
 	private Annotation region = null;
 	private Set<String> landmarkConcepts = new HashSet<String>();
+	private Set<SpatialRelationSchema> filtres = new HashSet<SpatialRelationSchema>();
 	
 	public SpatialRelation(String type, Annotation trajector, Annotation spatialIndicator, Annotation landmark){
 		this.type = type;
@@ -29,7 +31,7 @@ public class SpatialRelation{
 	}
 
 	public String getType(){
-		return type;
+		return this.type;
 	}
 	
 	public Set<String> getTrajectorConcepts(){
@@ -58,6 +60,9 @@ public class SpatialRelation{
 	
 	public Annotation getLandmark() {
 		return landmark;
+	}
+	public Set<SpatialRelationSchema> getSchemas(){
+		return this.filtres;
 	}
 
 	public void setLandmark(Annotation landmark) {

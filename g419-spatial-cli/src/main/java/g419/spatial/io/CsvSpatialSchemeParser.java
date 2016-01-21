@@ -1,7 +1,7 @@
 package g419.spatial.io;
 
-import g419.spatial.structure.SpatialRelationPattern;
-import g419.spatial.structure.SpatialRelationPatternMatcher;
+import g419.spatial.structure.SpatialRelationSchema;
+import g419.spatial.structure.SpatialRelationSchemaMatcher;
 import g419.toolbox.sumo.Sumo;
 
 import java.io.BufferedReader;
@@ -53,7 +53,7 @@ public class CsvSpatialSchemeParser {
 	 * @return 
 	 * @throws IOException
 	 */
-	public SpatialRelationPatternMatcher parse() throws IOException{
+	public SpatialRelationSchemaMatcher parse() throws IOException{
 		// Kolumny zawierające uogólnione koncepty dla trajektorów i landmarków
 		int columnTrajector = 12;
 		int columnLandmark = 14;
@@ -63,7 +63,7 @@ public class CsvSpatialSchemeParser {
 			columnTrajector = 13;
 			columnLandmark = 15;			
 		}
-		List<SpatialRelationPattern> patterns = new LinkedList<SpatialRelationPattern>();
+		List<SpatialRelationSchema> patterns = new LinkedList<SpatialRelationSchema>();
 		
 		CSVParser csv = new CSVParser(this.reader, CSVFormat.DEFAULT);
 		
@@ -116,7 +116,7 @@ public class CsvSpatialSchemeParser {
 			Set<String> landmarkConcepts = this.parseConcepts(id, landmarkIds);
 			
 			if ( trajectorConcepts.size() > 0 && landmarkConcepts.size() > 0 ){
-				patterns.add(new SpatialRelationPattern(id, cas, sis, trajectorConcepts, landmarkConcepts));
+				patterns.add(new SpatialRelationSchema(id, cas, sis, trajectorConcepts, landmarkConcepts));
 			}
 			else if ( trajectorConcepts.size() == 0 ){
 				Logger.getLogger(this.getClass()).warn(String.format("Pusty zbiór trajector (schemat %s)", id));
@@ -129,7 +129,7 @@ public class CsvSpatialSchemeParser {
 		csv.close();
 		
 		logger.info(String.format("Liczba wczytanych wzorców: %d", patterns.size()));
-		return new SpatialRelationPatternMatcher(patterns, this.sumo);
+		return new SpatialRelationSchemaMatcher(patterns, this.sumo);
 	}	
 	
 	/**

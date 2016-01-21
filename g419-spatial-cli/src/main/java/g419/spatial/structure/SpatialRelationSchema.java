@@ -9,7 +9,7 @@ import java.util.Set;
  * @author czuk
  *
  */
-public class SpatialRelationPattern {
+public class SpatialRelationSchema {
 
 	String name = null;
 	String cas = null;
@@ -17,7 +17,7 @@ public class SpatialRelationPattern {
 	Set<String> landmarkConcepts = null;
 	Set<String> trajectorConcepts = null;
 	
-	public SpatialRelationPattern(String name, String cas, Set<String> indicators, Set<String> trajectorConcepts, Set<String> landmarkConcepts){
+	public SpatialRelationSchema(String name, String cas, Set<String> indicators, Set<String> trajectorConcepts, Set<String> landmarkConcepts){
 		this.name = name;
 		this.cas = cas;
 		this.indicators = indicators;

@@ -1,14 +1,18 @@
 package g419.spatial.action;
 
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
 
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
+import g419.corpus.io.writer.AbstractDocumentWriter;
+import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.Document;
+import g419.corpus.structure.Frame;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
 import g419.lib.cli.Action;
@@ -16,33 +20,26 @@ import g419.lib.cli.CommonOptions;
 import g419.spatial.structure.SpatialRelation;
 import g419.spatial.tools.SpatialRelationRecognizer;
 
-public class ActionSpatial extends Action {
+public class ActionPipe extends Action {
 	
-	private final static String OPTION_FILENAME_LONG = "filename";
-	private final static String OPTION_FILENAME = "f";
-	
-	private String filename = null;
+	private String inputFilename = null;
 	private String inputFormat = null;
+	
+	private String outputFilename = null;
+	private String outputFormat = null;
 	
 	/**
 	 * 
 	 */
-	public ActionSpatial() {
-		super("spatial");
-		this.setDescription("recognize spatial relations");
-		this.options.addOption(this.getOptionInputFilename());		
-		this.options.addOption(CommonOptions.getInputFileFormatOption());		
+	public ActionPipe() {
+		super("pipe");
+		this.setDescription("recognize spatial expressions and add them to the document as a set of frames");
+		this.options.addOption(CommonOptions.getInputFileNameOption());		
+		this.options.addOption(CommonOptions.getInputFileFormatOption());
+		this.options.addOption(CommonOptions.getOutputFileFormatOption());
+		this.options.addOption(CommonOptions.getOutputFileNameOption());
 	}
 	
-	/**
-	 * Create Option object for input file name.
-	 * @return Object for input file name parameter.
-	 */
-	private Option getOptionInputFilename(){
-		return Option.builder(ActionSpatial.OPTION_FILENAME).hasArg().argName("FILENAME").required()
-						.desc("path to the input file").longOpt(OPTION_FILENAME_LONG).build();			
-	}
-
 	/**
 	 * Parse action options
 	 * @param arg0 The array with command line parameters
@@ -51,15 +48,25 @@ public class ActionSpatial extends Action {
 	public void parseOptions(String[] args) throws Exception {
         CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
-        this.filename = line.getOptionValue(ActionSpatial.OPTION_FILENAME);
+        this.inputFilename = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
+        this.outputFilename = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
+        this.outputFormat = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT);
     }
 
 	@Override
 	public void run() throws Exception {
-		AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(this.filename, this.inputFormat);				
+		AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(this.inputFilename, this.inputFormat);				
 		SpatialRelationRecognizer recognizer = new SpatialRelationRecognizer();
+		AbstractDocumentWriter writer = null;
 				
+		if ( this.outputFilename == null ){
+			writer = WriterFactory.get().getStreamWriter(System.out, this.outputFormat);
+		}
+		else{
+			writer = WriterFactory.get().getStreamWriter(this.outputFilename, this.outputFormat);
+		}
+		
 		Document document = null;
 		while ( ( document = reader.nextDocument() ) != null ){					
 			System.out.println("=======================================");
@@ -72,11 +79,14 @@ public class ActionSpatial extends Action {
 					List<SpatialRelation> relations = recognizer.recognize(sentence);
 					
 					for ( SpatialRelation rel : relations ){
-						System.out.println(rel.toString());
+						Frame f = SpatialRelationRecognizer.convertSpatialToFrame(rel);
+						document.getFrames().add(f);
 					}
 				}
-			}		
+			}
+			writer.writeDocument(document);
 		}
+		writer.close();
 			
 		reader.close();
 	}

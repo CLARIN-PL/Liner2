@@ -190,6 +190,7 @@ public class AnnWordsSAXParser extends DefaultHandler{
     			tokens.add(this.tokenIdsMap.get(tokenKey));
     		}
     		Annotation an = new Annotation(tokens, word.getType(), word.getSentence());
+    		an.setCategory("word");
     		word.getSentence().addChunk(an);
     	}
     }

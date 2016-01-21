@@ -1,6 +1,7 @@
 package g419.lib.cli;
 
 import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Option.Builder;
 import org.apache.commons.cli.OptionBuilder;
 
 /**
@@ -36,6 +37,9 @@ public class CommonOptions {
     
     public static final String OPTION_CLASSIFIER_MODEL = "c";
     public static final String OPTION_CLASSIFIER_MODEL_LONG = "classifier_model";
+
+    public static final String OPTION_WORDNET = "w";
+    public static final String OPTION_WORDNET_LONG = "wordnet";
 
 
 	public static Option getOutputFileNameOption(){
@@ -95,6 +99,15 @@ public class CommonOptions {
         OptionBuilder.withLongOpt(CommonOptions.OPTION_MODEL_LONG);
         OptionBuilder.isRequired();
         return OptionBuilder.create(CommonOptions.OPTION_MODEL);
+    }
+
+    public static Option getWordnetOption(boolean required){
+    	Builder b = Option.builder(OPTION_WORDNET).longOpt(OPTION_WORDNET_LONG)
+    			.hasArg().argName("path").desc("path to a folder with a wordnet in Princeton format");
+    	if ( required ){
+    		b = b.required();
+    	}
+        return b.build();
     }
 
     public static Option getVerboseOption(){

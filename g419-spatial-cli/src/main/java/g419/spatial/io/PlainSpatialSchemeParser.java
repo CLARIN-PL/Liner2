@@ -1,7 +1,7 @@
 package g419.spatial.io;
 
-import g419.spatial.structure.SpatialRelationPattern;
-import g419.spatial.structure.SpatialRelationPatternMatcher;
+import g419.spatial.structure.SpatialRelationSchema;
+import g419.spatial.structure.SpatialRelationSchemaMatcher;
 import g419.toolbox.sumo.Sumo;
 
 import java.io.BufferedReader;
@@ -33,9 +33,9 @@ public class PlainSpatialSchemeParser {
 		return this.currentLine;
 	}
 	
-	public SpatialRelationPatternMatcher parse() throws IOException{
+	public SpatialRelationSchemaMatcher parse() throws IOException{
 		this.nextLine();
-		List<SpatialRelationPattern> patterns = new LinkedList<SpatialRelationPattern>();
+		List<SpatialRelationSchema> patterns = new LinkedList<SpatialRelationSchema>();
 		
 		while ( this.currentLine != null ){
 			if ( this.currentLine.startsWith("si:") ){
@@ -60,7 +60,7 @@ public class PlainSpatialSchemeParser {
 				Set<String> landmarkConcepts = this.parseConcepts(this.currentLine.substring(3).trim());
 				
 				if ( trajectorConcepts.size() > 0 && landmarkConcepts.size() > 0 ){
-					patterns.add(new SpatialRelationPattern(String.join("-", sis), "loc", sis, trajectorConcepts, landmarkConcepts));
+					patterns.add(new SpatialRelationSchema(String.join("-", sis), "loc", sis, trajectorConcepts, landmarkConcepts));
 				}
 				else if ( trajectorConcepts.size() == 0 ){
 					this.logWarning("Pusty zbiór trajectorConcept");
@@ -79,7 +79,7 @@ public class PlainSpatialSchemeParser {
 		}
 		
 		logger.info(String.format("Liczba wczytanych wzorców: %d", patterns.size()));
-		return new SpatialRelationPatternMatcher(patterns, this.sumo);
+		return new SpatialRelationSchemaMatcher(patterns, this.sumo);
 	}	
 	
 	private Set<String> parseConcepts(String line){

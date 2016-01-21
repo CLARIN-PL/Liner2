@@ -8,16 +8,20 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Semaphore;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.maltparser.core.exception.MaltChainedException;
 
+import g419.corpus.schema.kpwr.KpwrSpatial;
 import g419.corpus.structure.Annotation;
+import g419.corpus.structure.Frame;
 import g419.corpus.structure.Relation;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.liner2.api.features.tokens.ClassFeature;
+import g419.liner2.api.features.tokens.TokenPrefix;
 import g419.liner2.api.tools.parser.MaltParser;
 import g419.liner2.api.tools.parser.MaltSentence;
 import g419.liner2.api.tools.parser.MaltSentenceLink;
@@ -29,6 +33,7 @@ import g419.spatial.filter.RelationFilterPrepositionBeforeLandmark;
 import g419.spatial.filter.RelationFilterPronoun;
 import g419.spatial.filter.RelationFilterSemanticPattern;
 import g419.spatial.structure.SpatialRelation;
+import g419.spatial.structure.SpatialRelationSchema;
 import g419.toolbox.wordnet.NamToWordnet;
 import g419.toolbox.wordnet.Wordnet3;
 
@@ -123,7 +128,32 @@ public class SpatialRelationRecognizer {
 			}				
 		}
 		return finalRelations;
-	}		
+	}
+	
+	/**
+	 * Konwertuje strukturę SpatialRelation do uniwersalnego formatu Frame.
+	 * @param relation
+	 * @return
+	 */
+	public static Frame convertSpatialToFrame(SpatialRelation relation){
+		Frame f = new Frame(KpwrSpatial.SPATIAL_FRAME_TYPE);
+		f.setSlot(KpwrSpatial.SPATIAL_INDICATOR, relation.getSpatialIndicator());
+		f.setSlot(KpwrSpatial.SPATIAL_LANDMARK, relation.getLandmark());
+		f.setSlot(KpwrSpatial.SPATIAL_TRAJECTOR, relation.getTrajector());
+		f.setSlot(KpwrSpatial.SPATIAL_REGION, relation.getRegion());
+		
+		f.setSlotAttribute(KpwrSpatial.SPATIAL_TRAJECTOR, "sumo", String.join(", ",relation.getTrajectorConcepts()));
+		f.setSlotAttribute(KpwrSpatial.SPATIAL_LANDMARK, "sumo", String.join(", ",relation.getLandmarkConcepts()));
+		f.setSlotAttribute("debug", "pattern", relation.getType());
+		
+		Set<String> schemas = new HashSet<String>();
+		for ( SpatialRelationSchema schema : relation.getSchemas() ){
+			schemas.add(schema.getName());
+		}
+		f.setSlotAttribute("debug", "schema", String.join("; ", schemas));
+		
+		return f;
+	}
 
 	/**
 	 * 
@@ -178,7 +208,6 @@ public class SpatialRelationRecognizer {
 				chunkNamesTokens.put(n, an);					
 			}
 		}
-
 		
 		/* Zaindeksuj pierwsze tokeny anotacji NG* */
 		Map<Integer, List<Annotation>> mapTokenIdToAnnotations = new HashMap<Integer, List<Annotation>>();
@@ -197,7 +226,7 @@ public class SpatialRelationRecognizer {
 		// Second Iteration only
 		
 		relations.addAll( this.findCandidatesFirstNgAnyPrepNg(sentence, mapTokenIdToAnnotations, chunkNpTokens, chunkPrepTokens) );
-		relations.addAll( this.findCandidatesByMalt(sentence, maltSentence));
+		relations.addAll( this.findCandidatesByMalt(sentence, maltSentence, chunkPrepTokens, chunkNamesTokens, mapTokenIdToAnnotations));
 		
 
 		relations.addAll( this.findCandidatesNgPpasPrepNg(
@@ -263,6 +292,8 @@ public class SpatialRelationRecognizer {
 							// Wszystko po prawje staje się nową anotacją NG
 							Annotation newRegion = new Annotation(rel.getLandmark().getHead(), "NG", sentence);
 							Annotation newLandmark = new Annotation(rel.getLandmark().getHead()+1, rel.getLandmark().getEnd(), "NG", sentence);
+							sentence.addChunk(newRegion);
+							sentence.addChunk(newLandmark);
 							this.logger.info("REPLACE_REGION_INNER_SUBST_IGN" + rel.getLandmark().toString() + " => " + newLandmark);
 							rel.setLandmark(newLandmark);
 							rel.setRegion(newRegion);
@@ -983,7 +1014,8 @@ public class SpatialRelationRecognizer {
 	 * @param maltSentence
 	 * @return
 	 */
-	public List<SpatialRelation> findCandidatesByMalt(Sentence sentence, MaltSentence maltSentence){
+	public List<SpatialRelation> findCandidatesByMalt(Sentence sentence, MaltSentence maltSentence,
+			Map<Integer, Annotation> chunkPrepTokens, Map<Integer, Annotation> chunkNamesTokens, Map<Integer, List<Annotation>> mapTokenIdToAnnotations){
 		List<SpatialRelation> srs = new ArrayList<SpatialRelation>();
 		for (int i=0; i< sentence.getTokens().size(); i++){
 			Token token = sentence.getTokens().get(i);
@@ -1030,12 +1062,36 @@ public class SpatialRelationRecognizer {
 			if ( landmarks.size() > 0 && trajectors.size() > 0 && indicator != null ){
 				for ( Integer landmark : landmarks ){
 					for ( Integer trajector : trajectors ){
-						SpatialRelation sr = new SpatialRelation(
-								type + typeLM + typeTR, 
-								new Annotation(trajector, "TR", sentence), 
-								new Annotation(indicator, "SI", sentence), 
-								new Annotation(landmark, "LM", sentence));
-						srs.add(sr);
+						/* Ustal spatial indicator */
+						Annotation si = chunkPrepTokens.get(indicator);
+						if ( si == null ){
+							si = new Annotation(indicator, "SI", sentence);
+							sentence.addChunk(si);
+						}
+						
+						/* Ustal trajector */
+						Annotation tr = null;
+						List<Annotation> trs = mapTokenIdToAnnotations.get(trajector);
+						if ( trs != null ){
+							tr = trs.get(0);
+						}
+						if ( tr == null ){
+							tr = new Annotation(trajector, "TR", sentence);
+							sentence.addChunk(tr);
+						}
+						
+						/* Ustal landmark */
+						Annotation lm = null;
+						List<Annotation> lms = mapTokenIdToAnnotations.get(landmark);
+						if ( lms != null ){
+							lm = lms.get(0);
+						}
+						if ( lm == null ){
+							lm = new Annotation(landmark, "LM", sentence);
+							sentence.addChunk(lm);
+						}
+						
+						srs.add(new SpatialRelation(type + typeLM + typeTR, tr, si, lm));
 					}
 				}
 			}

@@ -10,8 +10,8 @@ import java.util.zip.DataFormatException;
 
 import g419.spatial.io.CsvSpatialSchemeParser;
 import g419.spatial.structure.SpatialRelation;
-import g419.spatial.structure.SpatialRelationPattern;
-import g419.spatial.structure.SpatialRelationPatternMatcher;
+import g419.spatial.structure.SpatialRelationSchema;
+import g419.spatial.structure.SpatialRelationSchemaMatcher;
 import g419.toolbox.sumo.NamToSumo;
 import g419.toolbox.sumo.Sumo;
 import g419.toolbox.sumo.WordnetToSumo;
@@ -20,7 +20,7 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
 
 	WordnetToSumo wts = null;
 	Sumo sumo = new Sumo(false);
-	SpatialRelationPatternMatcher patternMatcher = null;
+	SpatialRelationSchemaMatcher patternMatcher = null;
 	NamToSumo namToSumo = new NamToSumo();
 		
 	public RelationFilterSemanticPattern() throws IOException{
@@ -40,7 +40,7 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
 	 * @return
 	 * @throws IOException
 	 */
-	private SpatialRelationPatternMatcher getPatternMatcher() throws IOException{
+	private SpatialRelationSchemaMatcher getPatternMatcher() throws IOException{
 		String location = "/g419/spatial/resources/spatial_schemes.csv";
 		InputStream resource = this.getClass().getResourceAsStream(location);
 		boolean general = true;
@@ -55,11 +55,11 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
 		
 	@Override
 	public boolean pass(SpatialRelation relation) {		
-		List<SpatialRelationPattern> matching = this.match(relation);
+		List<SpatialRelationSchema> matching = this.match(relation);
 		return matching.size() > 0;
 	}
 	
-	public List<SpatialRelationPattern> match(SpatialRelation relation){
+	public List<SpatialRelationSchema> match(SpatialRelation relation){
 		String landmark = relation.getLandmark().getSentence().getTokens().get(relation.getLandmark().getHead()).getDisambTag().getBase();
 		String trajector = relation.getTrajector().getSentence().getTokens().get(relation.getTrajector().getHead()).getDisambTag().getBase();
 		Set<String> landmarkConcepts = this.wts.getConcept(landmark);
@@ -81,7 +81,8 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
 			relation.getTrajectorConcepts().addAll(trajetorTypeConcepts);
 		}
 		
-		List<SpatialRelationPattern> matching = this.patternMatcher.matchAll(relation);
+		List<SpatialRelationSchema> matching = this.patternMatcher.matchAll(relation);
+		relation.getSchemas().addAll(matching);
 				
 		return matching;		
 	}

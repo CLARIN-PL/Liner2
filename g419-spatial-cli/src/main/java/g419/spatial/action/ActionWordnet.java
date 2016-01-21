@@ -57,11 +57,17 @@ public class ActionWordnet extends Action {
 			for ( PrincetonDataRaw synset : synsets ){
 				System.out.println();
 				System.out.println("Synset: " + String.join(", ", w.getLexicalUnits(synset)) + "; Domena=" + synset.domain);
-				Set<String> words = new TreeSet<String>();
+				Set<String> holonyms = new TreeSet<String>();
 				for ( PrincetonDataRaw s : w.getHolonyms(synset) ){
-					words.addAll(w.getLexicalUnits(s));
+					holonyms.addAll(w.getLexicalUnits(s));
 				}
-				System.out.println("Holonimy: " + String.join(", ", words));
+				System.out.println("Holonimy: " + String.join(", ", holonyms));
+
+				Set<String> hiperonyms = new TreeSet<String>();
+				for ( PrincetonDataRaw s : w.getAllSynsets(synset, Wordnet3.REL_HYPERNYM) ){
+					hiperonyms.addAll(w.getLexicalUnits(s));
+				}
+				System.out.println("Hiperonimy: " + String.join(", ", hiperonyms));
 			}
 						
 			System.out.println();
