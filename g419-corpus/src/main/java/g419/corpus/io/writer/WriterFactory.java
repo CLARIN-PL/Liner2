@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.zip.GZIPOutputStream;
 
 
 public class WriterFactory {
@@ -24,8 +25,14 @@ public class WriterFactory {
 	 * @return
 	 */
 	public AbstractDocumentWriter getStreamWriter(String outputFile, String outputFormat) throws Exception {
+		boolean gzOutput = false;
+		if ( outputFormat.endsWith(":gz") ){
+			gzOutput = true;
+			outputFormat = outputFormat.substring(0, outputFormat.length()-3);
+		}
+		
         if (outputFormat.equals("tei")){
-            return getTEIWriter(outputFile);
+            return getTEIWriter(outputFile, gzOutput);
         }
         else if (outputFormat.startsWith("batch:")){
             String format = outputFormat.substring(6);
@@ -35,43 +42,49 @@ public class WriterFactory {
         	return getCclRelWriter(outputFile);
         }
         else{
-            return getStreamWriter(getOutputStream(outputFile), outputFormat);
+            return getStreamWriter(getOutputStream(outputFile, false), outputFormat);
         }
 	}
 
     public AnnotationArffWriter getArffAnnotationWriter(String outputFile, List<String> features) throws Exception {
-        return new AnnotationArffWriter(getOutputStream(outputFile), features);
+        return new AnnotationArffWriter(getOutputStream(outputFile, false), features);
     }
 	
 	public AbstractDocumentWriter getStreamWriter(OutputStream out, String outputFormat) throws Exception {
+		OutputStream outWrapped = out;
+		if ( outputFormat.endsWith(":gz") ){
+			outWrapped = new GZIPOutputStream(out);
+			outputFormat = outputFormat.substring(0, outputFormat.length() - 3);
+		}
+		 
         if (outputFormat.equals("ccl"))
-			return new CclStreamWriter(out);
+			return new CclStreamWriter(outWrapped);
         else if (outputFormat.equals("iob"))
-			return new IobStreamWriter(out);
+			return new IobStreamWriter(outWrapped);
         else if (outputFormat.equals("conll"))
-			return new ConllStreamWriter(out);
+			return new ConllStreamWriter(outWrapped);
         else if (outputFormat.equals("zero_verb"))
-			return new ZeroVerbWriter(out);
+			return new ZeroVerbWriter(outWrapped);
 		else if (outputFormat.equals("iob-tab"))
-			return new IobTabStreamWriter(out);
+			return new IobTabStreamWriter(outWrapped);
 		else if (outputFormat.equals("tuples"))
-			return new TuplesStreamWriter(out);
+			return new TuplesStreamWriter(outWrapped);
 		else if (outputFormat.equals("json"))
-			return new JsonStreamWriter(out);
+			return new JsonStreamWriter(outWrapped);
 		else if (outputFormat.equals("json-frames"))
-			return new JsonFramesStreamWriter(out);
+			return new JsonFramesStreamWriter(outWrapped);
 		else if (outputFormat.equals("tokens"))
-			return new TokensStreamWriter(out);
+			return new TokensStreamWriter(outWrapped);
         else if (outputFormat.equals("arff"))
-            return new ArffStreamWriter(out);
+            return new ArffStreamWriter(outWrapped);
         else if (outputFormat.equals("verb_eval"))
-            return new MinosVerbEvalWriter(out);
+            return new MinosVerbEvalWriter(outWrapped);
         else if (outputFormat.equals("simple_rel"))
-        	return new SimpleRelationClusterSetWriter(out);
+        	return new SimpleRelationClusterSetWriter(outWrapped);
         else if (outputFormat.equals("relation-tuples"))
-        	return new RelationTuplesWriter(out);
+        	return new RelationTuplesWriter(outWrapped);
         else if (outputFormat.equals("conll"))
-        	return new ConllStreamWriter(out);
+        	return new ConllStreamWriter(outWrapped);
 		else		
 			throw new Exception("Output format " + outputFormat + " not recognized.");
 	}
@@ -85,6 +98,10 @@ public class WriterFactory {
 	}
 
     public AbstractDocumentWriter getTEIWriter(String outputFolder) throws Exception{
+    	return this.getTEIWriter(outputFolder, false);
+    }
+
+    public AbstractDocumentWriter getTEIWriter(String outputFolder, boolean gz) throws Exception{
         if(outputFolder == null){
             throw new FileNotFoundException("TEI format requires existing folder as a target (-t) parameter value)");
         }
@@ -92,24 +109,37 @@ public class WriterFactory {
         if ( !folder.exists() ){
         	folder.mkdirs();
         }
-        OutputStream text = getOutputStream(new File(outputFolder,"text.xml").getPath());
-        OutputStream annSegmentation = getOutputStream(new File(outputFolder,"ann_segmentation.xml").getPath());
-        OutputStream annMorphosyntax = getOutputStream(new File(outputFolder,"ann_morphosyntax.xml").getPath());
-        OutputStream annNamed = getOutputStream(new File(outputFolder,"ann_named.xml").getPath());
-        OutputStream annMentions = getOutputStream(new File(outputFolder,"ann_mentions.xml").getPath());
-        OutputStream annChunks = getOutputStream(new File(outputFolder,"ann_chunks.xml").getPath());
-        OutputStream annCoreference = getOutputStream(new File(outputFolder,"ann_coreference.xml").getPath());
-        OutputStream annRelations = getOutputStream(new File(outputFolder,"ann_relations.xml").getPath());
+        String gzExt = gz ? ".gz" : "";
+        OutputStream text = getOutputStream(
+        		new File(outputFolder,"text.xml" + gzExt).getPath(), gz);
+        OutputStream annSegmentation = getOutputStream(
+        		new File(outputFolder,"ann_segmentation.xml" + gzExt).getPath(), gz);
+        OutputStream annMorphosyntax = getOutputStream(
+        		new File(outputFolder,"ann_morphosyntax.xml" + gzExt).getPath(), gz);
+        OutputStream annNamed = getOutputStream(
+        		new File(outputFolder,"ann_named.xml" + gzExt).getPath(), gz);
+        OutputStream annMentions = getOutputStream(
+        		new File(outputFolder,"ann_mentions.xml" + gzExt).getPath(), gz);
+        OutputStream annChunks = getOutputStream(
+        		new File(outputFolder,"ann_chunks.xml" + gzExt).getPath(), gz);
+        OutputStream annCoreference = getOutputStream(
+        		new File(outputFolder,"ann_coreference.xml" + gzExt).getPath(), gz);
+        OutputStream annRelations = getOutputStream(
+        		new File(outputFolder,"ann_relations.xml" + gzExt).getPath(), gz);
         return new TEIStreamWriter(text, annSegmentation, annMorphosyntax, annNamed, 
         		annMentions, annChunks, annCoreference, annRelations, new File(outputFolder).getName());
     }
-	
-	private OutputStream getOutputStream(String outputFile) throws Exception {
+
+	private OutputStream getOutputStream(String outputFile, boolean gz) throws Exception {
 		if ((outputFile == null) || (outputFile.isEmpty()))
 			return System.out;
 		else {
 			try {
-				return new FileOutputStream(outputFile);
+				OutputStream output = new FileOutputStream(outputFile); 
+				if ( gz ){
+					output = new GZIPOutputStream(output);
+				}
+				return output;
 			} catch (IOException ex) {
 				throw new Exception("Unable to write output file: " + outputFile);
 			}

@@ -1,6 +1,7 @@
 description = "g419-corpus -- biblioteka ze strukturą pliku, czytnikami i piśnikami"
 
 dependencies {
+    compile 'log4j:log4j:1.2.17'
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'org.ini4j:ini4j:0.5.2'
     compile 'org.json:json:20141113'

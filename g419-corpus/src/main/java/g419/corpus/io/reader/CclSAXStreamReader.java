@@ -9,12 +9,18 @@ import g419.corpus.structure.TokenAttributeIndex;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
+
 
 public class CclSAXStreamReader extends AbstractDocumentReader {
 	
 	private Document document;
 	
-	public CclSAXStreamReader(String uri, InputStream cclDocument, InputStream cclDescriptor, InputStream cclRelations) throws DataFormatException, IOException {
+	public CclSAXStreamReader(String uri, InputStream cclDocument, InputStream cclDescriptor, InputStream cclRelations) throws DataFormatException, ParserConfigurationException, SAXException, IOException {
+		Logger.getLogger(this.getClass()).info(cclDocument.getClass().toString());
 		TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
 		attributeIndex.addAttribute("orth");
 		attributeIndex.addAttribute("base");

@@ -1,18 +1,19 @@
 package g419.corpus.io.reader;
 
-import g419.corpus.io.DataFormatException;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.TokenAttributeIndex;
-
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import g419.corpus.io.DataFormatException;
+import g419.corpus.structure.Document;
+import g419.corpus.structure.TokenAttributeIndex;
 
 
 /**
@@ -24,7 +25,7 @@ public class BatchReader extends AbstractDocumentReader {
     private int fileIndex=0;
     private List<String> files = new ArrayList<String>();
     private File root = null;
-    private String format;
+    private String format = null;
 
     /**
      * 
@@ -74,12 +75,12 @@ public class BatchReader extends AbstractDocumentReader {
     	while ( this.fileIndex < this.files.size() ){
 	    	if ( this.fileIndex < this.files.size() ){
 	        	String name = this.files.get(this.fileIndex++);
-	            String root = this.root.getAbsolutePath();
+	            //String root = this.root.getAbsolutePath();
 	            String path;
 	            if(name.startsWith("/")) {
 	                path = name;
 	                File tmp = new File(path);
-	                root = tmp.getParent();
+	                //root = tmp.getParent();
 	                name = tmp.getName();
 	            }
 	            else {
@@ -87,20 +88,13 @@ public class BatchReader extends AbstractDocumentReader {
 	            }
 	    		try{
 		            AbstractDocumentReader reader = null;
-		            if(this.format.equals("tei")){
-		                reader = ReaderFactory.get().getTEIStreamReader(path, name);
-		            }
-		            else{
-		                reader = ReaderFactory.get().getStreamReader(name, new FileInputStream(path), root, this.format);
-		            }
+		            reader = ReaderFactory.get().getStreamReader(path, this.format);
 		    		Document document = reader.nextDocument();
 		            reader.close();
 		    		return document;
 	    		}
 	    		catch(Exception ex){
-	    			// TODO zamienić na Logger
-	    			System.err.println("Błąd odczytu pliku: " + path);
-	    			System.err.println(ex.getMessage());
+	    			Logger.getLogger(this.getClass()).error("Błąd odczytu pliku: " + path, ex);
 	    		}
 	    	}
     	}
