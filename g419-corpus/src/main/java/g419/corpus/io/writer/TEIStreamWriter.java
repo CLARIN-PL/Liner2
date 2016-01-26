@@ -1,7 +1,9 @@
 package g419.corpus.io.writer;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -117,23 +119,23 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         
         XMLOutputFactory xmlof = XMLOutputFactory.newFactory();
         try {
-            this.textWriter = xmlof.createXMLStreamWriter(text);
-            this.annSegmentationWriter = xmlof.createXMLStreamWriter(annSegmentation);
-            this.annMorphosyntaxWriter = xmlof.createXMLStreamWriter(annMorphosyntax);
+            this.textWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(text)));
+            this.annSegmentationWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annSegmentation)));
+            this.annMorphosyntaxWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annMorphosyntax)));
             if(this.annNamed != null){ 
-            	this.annNamedWriter = xmlof.createXMLStreamWriter(annNamed);
+            	this.annNamedWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annNamed)));
             }
             if(this.annMentions != null){ 
-            	this.annMentionsWriter = xmlof.createXMLStreamWriter(annMentions);
+            	this.annMentionsWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annMentions)));
             }
             if(this.annChunks != null){ 
-            	this.annChunksWriter = xmlof.createXMLStreamWriter(annChunks);
+            	this.annChunksWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annChunks)));
             }
             if(this.annCoreference != null){ 
-            	this.annCoreferenceWriter = xmlof.createXMLStreamWriter(annCoreference);
+            	this.annCoreferenceWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annCoreference)));
             }
             if(this.annRelations != null){ 
-            	this.annRelationsWriter = xmlof.createXMLStreamWriter(annRelations);
+            	this.annRelationsWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annRelations)));
             }
         } catch (XMLStreamException ex) {
             ex.printStackTrace();

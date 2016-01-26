@@ -39,9 +39,13 @@ public class Document{
 		this.relations = relations;
 	}
 	
+	public void setName(String name){
+		this.name = name;
+	}
+	
 	/**
 	 * Get the name of document source. If the document was read from a file, 
-	 * it is a path to the file. 
+	 * it is a relative path to the file. 
 	 * @return source of the document
 	 */
 	public String getName(){

@@ -1,14 +1,11 @@
 package g419.corpus.io.writer;
 
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
-
 
 public class WriterFactory {
 
@@ -19,37 +16,48 @@ public class WriterFactory {
 	public static WriterFactory get(){
 		return WriterFactory.factory; 
 	}
-	
+
 	/**
-	 * TODO
+	 * Tworzy piśnik dla określonego formatu outputFormat i lokalizacji outputFile.
+	 * Jeżeli outputFile jest nullem, to strumieniem wyjściowym jest System.out.
+	 * 
+	 * @param outputFile
+	 * @param outputFormat
 	 * @return
+	 * @throws Exception
 	 */
 	public AbstractDocumentWriter getStreamWriter(String outputFile, String outputFormat) throws Exception {
-		boolean gzOutput = false;
-		if ( outputFormat.endsWith(":gz") ){
-			gzOutput = true;
-			outputFormat = outputFormat.substring(0, outputFormat.length()-3);
-		}
-		
-        if (outputFormat.equals("tei")){
-            return getTEIWriter(outputFile, gzOutput);
-        }
-        else if (outputFormat.startsWith("batch:")){
+		if (outputFormat.startsWith("batch:")){
             String format = outputFormat.substring(6);
             return new BatchWriter(outputFile, format);
         }
-        else if("ccl_rel".equals(outputFormat)){
-        	return getCclRelWriter(outputFile);
-        }
-        else{
-            return getStreamWriter(getOutputStream(outputFile, false), outputFormat);
-        }
+		else{
+			boolean gzOutput = false;
+			String outputFormatNoGz = outputFormat; 
+			if ( outputFormat.endsWith(":gz") ){
+				gzOutput = true;
+				outputFormatNoGz = outputFormat.substring(0, outputFormat.length()-3);
+			}
+			
+	        if ( "tei".equals(outputFormatNoGz) ){
+	            return this.getTEIWriter(outputFile, gzOutput);
+	        }
+	        else if ( "ccl_rel".equals(outputFormatNoGz) ){
+	        	return this.getCclRelWriter(outputFile, gzOutput);
+	        }
+	        else{
+	            return this.getStreamWriter(this.getOutputStreamFileOrOut(outputFile), outputFormat);
+	        }			
+		}		
 	}
 
-    public AnnotationArffWriter getArffAnnotationWriter(String outputFile, List<String> features) throws Exception {
-        return new AnnotationArffWriter(getOutputStream(outputFile, false), features);
-    }
-	
+    /**
+     * Zwraca piśnik dla formatu outputFormat. Dane zapisywane są do strumieia out.
+     * @param out
+     * @param outputFormat
+     * @return
+     * @throws Exception
+     */
 	public AbstractDocumentWriter getStreamWriter(OutputStream out, String outputFormat) throws Exception {
 		OutputStream outWrapped = out;
 		if ( outputFormat.endsWith(":gz") ){
@@ -88,18 +96,30 @@ public class WriterFactory {
 		else		
 			throw new Exception("Output format " + outputFormat + " not recognized.");
 	}
+
+	/**
+	 * Zwraca piśnik do zapisu danych w formacie Arff.
+	 * @param outputFile
+	 * @param features
+	 * @return
+	 * @throws Exception
+	 */
+    public AnnotationArffWriter getArffAnnotationWriter(String outputFile, List<String> features) throws Exception {
+        return new AnnotationArffWriter(getOutputStreamGz(outputFile, false), features);
+    }
 	
-	public AbstractDocumentWriter getCclRelWriter(String outputFile) throws FileNotFoundException{
-		String outputXml = outputFile;
-		String outputRelXml = outputFile.replace(".xml", ".rel.xml");		
-		OutputStream out = new FileOutputStream(outputXml);
-		OutputStream outRel = new FileOutputStream(outputRelXml);
+    /**
+     * Zwraca piśnik do formatu ccl. Dane zapisywane są do dwóch plików: .xml i .rel.xml.
+     * @param outputFile
+     * @param gz
+     * @return
+     * @throws Exception
+     */
+	public AbstractDocumentWriter getCclRelWriter(String outputFile, boolean gz) throws Exception{
+		OutputStream out = this.getOutputStreamGz(outputFile, gz);
+		OutputStream outRel = this.getOutputStreamGz(outputFile.replace(".xml", ".rel.xml"), gz);
 		return new CclStreamWriter(out, outRel);
 	}
-
-    public AbstractDocumentWriter getTEIWriter(String outputFolder) throws Exception{
-    	return this.getTEIWriter(outputFolder, false);
-    }
 
     public AbstractDocumentWriter getTEIWriter(String outputFolder, boolean gz) throws Exception{
         if(outputFolder == null){
@@ -110,39 +130,52 @@ public class WriterFactory {
         	folder.mkdirs();
         }
         String gzExt = gz ? ".gz" : "";
-        OutputStream text = getOutputStream(
+        OutputStream text = getOutputStreamGz(
         		new File(outputFolder,"text.xml" + gzExt).getPath(), gz);
-        OutputStream annSegmentation = getOutputStream(
+        OutputStream annSegmentation = getOutputStreamGz(
         		new File(outputFolder,"ann_segmentation.xml" + gzExt).getPath(), gz);
-        OutputStream annMorphosyntax = getOutputStream(
+        OutputStream annMorphosyntax = getOutputStreamGz(
         		new File(outputFolder,"ann_morphosyntax.xml" + gzExt).getPath(), gz);
-        OutputStream annNamed = getOutputStream(
+        OutputStream annNamed = getOutputStreamGz(
         		new File(outputFolder,"ann_named.xml" + gzExt).getPath(), gz);
-        OutputStream annMentions = getOutputStream(
+        OutputStream annMentions = getOutputStreamGz(
         		new File(outputFolder,"ann_mentions.xml" + gzExt).getPath(), gz);
-        OutputStream annChunks = getOutputStream(
+        OutputStream annChunks = getOutputStreamGz(
         		new File(outputFolder,"ann_chunks.xml" + gzExt).getPath(), gz);
-        OutputStream annCoreference = getOutputStream(
+        OutputStream annCoreference = getOutputStreamGz(
         		new File(outputFolder,"ann_coreference.xml" + gzExt).getPath(), gz);
-        OutputStream annRelations = getOutputStream(
+        OutputStream annRelations = getOutputStreamGz(
         		new File(outputFolder,"ann_relations.xml" + gzExt).getPath(), gz);
         return new TEIStreamWriter(text, annSegmentation, annMorphosyntax, annNamed, 
         		annMentions, annChunks, annCoreference, annRelations, new File(outputFolder).getName());
     }
 
-	private OutputStream getOutputStream(String outputFile, boolean gz) throws Exception {
+    /**
+     * Tworzy strumień do zapisu danych. Jeżeli gz jest true, to strumień zostaje opakowany w obiekt GZIPOutputStream.
+     * @param outputFile
+     * @param gz
+     * @return
+     * @throws Exception
+     */
+	private OutputStream getOutputStreamGz(String outputFile, boolean gz) throws Exception {
+		OutputStream output = new FileOutputStream(outputFile); 
+		if ( gz ){
+			output = new GZIPOutputStream(output);
+		}
+		return output;
+	}
+	
+	/**
+	 * Zwraca strumień do zapisu danych w zależności od wartości outputFile.
+	 * @param outputFile nazwa pliku lub null
+	 * @return System.out jeżeli outputFile jest nullem, wpp obiekt FileOutputStream dla outputFile.
+	 * @throws FileNotFoundException
+	 */
+	private OutputStream getOutputStreamFileOrOut(String outputFile) throws FileNotFoundException{
 		if ((outputFile == null) || (outputFile.isEmpty()))
 			return System.out;
 		else {
-			try {
-				OutputStream output = new FileOutputStream(outputFile); 
-				if ( gz ){
-					output = new GZIPOutputStream(output);
-				}
-				return output;
-			} catch (IOException ex) {
-				throw new Exception("Unable to write output file: " + outputFile);
-			}
+			return new FileOutputStream(outputFile);
 		}
 	}
 }

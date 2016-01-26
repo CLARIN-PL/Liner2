@@ -9,8 +9,10 @@ import g419.corpus.structure.Tag;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,7 +80,7 @@ public class CclStreamWriter extends AbstractDocumentWriter {
     
 	private void openRelXml(){
 		try {
-			this.xmlRelw = this.xmlof.createXMLStreamWriter(osRel);
+			this.xmlRelw = this.xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(osRel)));
 			xmlRelw.writeStartDocument("UTF-8", "1.0");
 			xmlRelw.writeCharacters("\n");
 			xmlRelw.writeStartElement(TAG_RELATIONS);

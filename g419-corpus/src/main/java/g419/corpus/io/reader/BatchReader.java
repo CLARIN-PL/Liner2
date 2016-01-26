@@ -90,6 +90,7 @@ public class BatchReader extends AbstractDocumentReader {
 		            AbstractDocumentReader reader = null;
 		            reader = ReaderFactory.get().getStreamReader(path, this.format);
 		    		Document document = reader.nextDocument();
+		    		document.setName(name);
 		            reader.close();
 		    		return document;
 	    		}

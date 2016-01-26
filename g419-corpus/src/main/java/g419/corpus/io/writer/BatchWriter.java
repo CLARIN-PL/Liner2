@@ -27,33 +27,48 @@ public class BatchWriter extends AbstractDocumentWriter {
 	 * @param outputIndex -- path that will be appended to the document URI
 	 */
 	public BatchWriter(String outputIndex, String format) throws IOException {
+        this.format = format;
+        boolean gz = false;
+
+        String outputFormatNoGz = format; 
+		if ( format.endsWith(":gz") ){
+			outputFormatNoGz = format.substring(0, format.length()-3);
+			gz = true;
+		}
+		
         File index = new File(outputIndex);
+        if ( !index.getParentFile().exists() ){
+        	index.getParentFile().mkdirs();
+        }
         this.outputRootFolder = index.getAbsoluteFile().getParent();
         indexWriter = new BufferedWriter(new FileWriter(index, false));
-        this.format = format;
-        if(format.equals("ccl") || format.equals("ccl_rel")){
+        if(outputFormatNoGz.equals("ccl") || outputFormatNoGz.equals("ccl_rel")){
             extension = ".xml";
         }
-        else if(format.equals("iob")){
+        else if(outputFormatNoGz.equals("iob")){
             extension = ".iob";
         }
-        else if(format.equals("tuples")){
+        else if(outputFormatNoGz.equals("tuples")){
             extension = ".txt";
         }
-        else if(format.equals("tokens")){
+        else if(outputFormatNoGz.equals("tokens")){
             extension = ".txt";
         }
-        else if(format.equals("arff")){
+        else if(outputFormatNoGz.equals("arff")){
             extension = ".arff";
         }
-        else if(format.equals("tei")){
+        else if(outputFormatNoGz.equals("tei")){
             extension = "";
         }
-        else if(format.equals("json-frames")){
+        else if(outputFormatNoGz.equals("json-frames")){
             extension = ".txt";
         }
-        else if(format.equals("verb_eval")){
+        else if(outputFormatNoGz.equals("verb_eval")){
             extension = ".az";
+        }
+        
+        if ( !"tei".equals(outputFormatNoGz) && gz ){
+        	extension += ".gz";
         }
 
 	}
@@ -82,23 +97,15 @@ public class BatchWriter extends AbstractDocumentWriter {
             int dotIdx = name.lastIndexOf("."); // if input format is tei 'name' is directory, not file
             name = (dotIdx != -1 ? name.substring(0, dotIdx) : name)  + this.extension;
             File file = new File(this.outputRootFolder, name);
+            if ( !file.getParentFile().exists() ){
+            	file.getParentFile().mkdirs();
+            }
 			try {
-                AbstractDocumentWriter writer;
-                if (this.format.equals("tei")){
-                    file.mkdirs();
-                    writer = WriterFactory.get().getTEIWriter(file.getAbsolutePath());
-                }
-                else if( this.format.equals("ccl_rel")){
-                	file.getParentFile().mkdirs();
-                	writer = WriterFactory.get().getCclRelWriter(file.getAbsolutePath());
-                }
-                else{
-                    file.getParentFile().mkdirs();
-                    writer = WriterFactory.get().getStreamWriter(new FileOutputStream(file), this.format);
-                }
+                AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(file.getAbsolutePath(), this.format);
 				writer.writeDocument(document);
 				writer.close();
                 indexWriter.write(name+"\n");
+                indexWriter.flush();
 			} catch (FileNotFoundException e) {
 				System.err.println("Error: FileNotFoundException " + e.getMessage());
 				e.printStackTrace();

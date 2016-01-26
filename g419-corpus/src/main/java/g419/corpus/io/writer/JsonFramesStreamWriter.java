@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.zip.GZIPOutputStream;
 
 import com.google.gson.Gson;
 
@@ -27,9 +28,11 @@ import g419.corpus.structure.Token;
  * @author 
  */
 public class JsonFramesStreamWriter extends AbstractDocumentWriter {
-	private BufferedWriter ow;
+	private BufferedWriter ow = null;
+	private OutputStream os = null;
 	
 	public JsonFramesStreamWriter(OutputStream os){
+		this.os = os;
 		this.ow = new BufferedWriter(new OutputStreamWriter(os));
 	}
 
@@ -155,6 +158,9 @@ public class JsonFramesStreamWriter extends AbstractDocumentWriter {
 	public void close() {
 		try {
 			this.ow.flush();
+			this.ow.close();
+			//((GZIPOutputStream)this.os).finish();
+			this.os.close();
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
