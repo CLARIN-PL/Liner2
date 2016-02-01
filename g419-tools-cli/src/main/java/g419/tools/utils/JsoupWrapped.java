@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.openqa.selenium.WebDriver;
 
 public class JsoupWrapped {
 
@@ -53,7 +54,22 @@ public class JsoupWrapped {
 		
 		return doc;
 	}
-	
+
+	public static Document getWithSelenium(WebDriver driver, String url){
+		boolean repeat = true;
+		String html = null;
+		driver.get(url);		
+		while (repeat){
+			html = driver.getPageSource();
+			if ( html.contains("To continue, please type the characters below:") ){
+				
+			}
+			else{
+				repeat = false;
+			}
+		}		
+		return Jsoup.parse(html);
+	}	
 	
 	public static void br2nl(Document document) {
 	    document.outputSettings(new Document.OutputSettings().prettyPrint(false));//makes html() preserve linebreaks and spacing

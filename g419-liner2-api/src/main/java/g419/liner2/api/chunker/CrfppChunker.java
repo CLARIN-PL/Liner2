@@ -67,7 +67,6 @@ public class CrfppChunker extends Chunker
 	private AnnotationSet chunk(Sentence sentence){
 		AnnotationSet chunking = new AnnotationSet(sentence);
         HashMap<String, Annotation> annsByType = new HashMap<String, Annotation>();
-        Logger.log("CRF++ chunk: " + sentence.toString());
         // Prepare date and send them to the API
         tagger.clear();
 		String val = null;

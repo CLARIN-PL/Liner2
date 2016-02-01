@@ -30,7 +30,7 @@ public class RelationFilterHolonyms implements IRelationFilter {
 	@Override
 	public boolean pass(SpatialExpression relation) {
 		
-		// Utwórz listę holonimów landmarka
+		// Utwórz listę holonimów landmarka		
 		Set<String> holonyms = new HashSet<String>();		
 		Set<PrincetonDataRaw> synsetsTrajector = this.nam2wordnet.getSynsets(relation.getLandmark().getType());
 		for ( PrincetonDataRaw synset : synsetsTrajector ){

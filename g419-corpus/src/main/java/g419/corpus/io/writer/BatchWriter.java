@@ -19,8 +19,9 @@ public class BatchWriter extends AbstractDocumentWriter {
 
 	private String outputRootFolder = null;
 	private String format;
-    private String extension;
+    private String extension = "txt";
     private BufferedWriter indexWriter;
+    private String gzExtension = "";
 
 	/**
 	 * 
@@ -42,7 +43,7 @@ public class BatchWriter extends AbstractDocumentWriter {
         }
         this.outputRootFolder = index.getAbsoluteFile().getParent();
         indexWriter = new BufferedWriter(new FileWriter(index, false));
-        if(outputFormatNoGz.equals("ccl") || outputFormatNoGz.equals("ccl_rel")){
+        if(outputFormatNoGz.startsWith("ccl") ){
             extension = ".xml";
         }
         else if(outputFormatNoGz.equals("iob")){
@@ -68,7 +69,7 @@ public class BatchWriter extends AbstractDocumentWriter {
         }
         
         if ( !"tei".equals(outputFormatNoGz) && gz ){
-        	extension += ".gz";
+        	this.gzExtension += ".gz";
         }
 
 	}
@@ -104,7 +105,7 @@ public class BatchWriter extends AbstractDocumentWriter {
                 AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(file.getAbsolutePath(), this.format);
 				writer.writeDocument(document);
 				writer.close();
-                indexWriter.write(name+"\n");
+                indexWriter.write(name + this.gzExtension + "\n");
                 indexWriter.flush();
 			} catch (FileNotFoundException e) {
 				System.err.println("Error: FileNotFoundException " + e.getMessage());

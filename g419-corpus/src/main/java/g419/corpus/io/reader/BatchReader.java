@@ -75,23 +75,25 @@ public class BatchReader extends AbstractDocumentReader {
     	while ( this.fileIndex < this.files.size() ){
 	    	if ( this.fileIndex < this.files.size() ){
 	        	String name = this.files.get(this.fileIndex++);
-	            //String root = this.root.getAbsolutePath();
 	            String path;
 	            if(name.startsWith("/")) {
 	                path = name;
 	                File tmp = new File(path);
-	                //root = tmp.getParent();
 	                name = tmp.getName();
 	            }
 	            else {
 	                path = new File(this.root, name).getAbsolutePath();
 	            }
 	    		try{
+	    			Logger.getLogger(this.getClass()).info("Reading: " + path);
 		            AbstractDocumentReader reader = null;
 		            reader = ReaderFactory.get().getStreamReader(path, this.format);
 		    		Document document = reader.nextDocument();
+		    		if ( name.endsWith(".gz") ){
+		    			name = name.substring(0, name.length()-3);
+		    		}
 		    		document.setName(name);
-		            reader.close();
+		            reader.close();		            
 		    		return document;
 	    		}
 	    		catch(Exception ex){

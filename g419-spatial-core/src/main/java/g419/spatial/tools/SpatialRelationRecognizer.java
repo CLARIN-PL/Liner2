@@ -42,9 +42,8 @@ public class SpatialRelationRecognizer {
 	List<IRelationFilter> filters = null;
 	RelationFilterSemanticPattern semanticFilter = null;
 	
-	private List<Pattern> annotationsPrep = new LinkedList<Pattern>();
-	private List<Pattern> annotationsNg = new LinkedList<Pattern>();
-	
+	private Pattern annotationsPrep = Pattern.compile("^PrepNG.*$");	
+	private Pattern annotationsNg = Pattern.compile("^NG.*$");	
 	private Pattern patternAnnotationNam = Pattern.compile("^nam(_.*|$)");
 	
 	private Set<String> objectPos = new HashSet<String>();
@@ -70,7 +69,6 @@ public class SpatialRelationRecognizer {
 		NamToWordnet nam2wordnet = new NamToWordnet(wordnet);
 		
 		this.filters = new LinkedList<IRelationFilter>();
-		//filters.add(new RelationFilterSpatialIndicator());
 		this.filters.add(new RelationFilterPronoun());
 		this.filters.add(new RelationFilterDifferentObjects());
 		this.filters.add(this.semanticFilter);
@@ -229,7 +227,6 @@ public class SpatialRelationRecognizer {
 				mapTokenIdToAnnotations.get(n).add(an);
 			}
 		}
-		
 		
 		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
 

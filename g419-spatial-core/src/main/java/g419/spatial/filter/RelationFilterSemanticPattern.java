@@ -3,11 +3,13 @@ package g419.spatial.filter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashSet;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.zip.DataFormatException;
 
+import g419.corpus.structure.Tag;
 import g419.spatial.io.CsvSpatialSchemeParser;
 import g419.spatial.structure.SpatialExpression;
 import g419.spatial.structure.SpatialRelationSchema;
@@ -60,11 +62,22 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
 	}
 	
 	public List<SpatialRelationSchema> match(SpatialExpression relation){
-		String landmark = relation.getLandmark().getSentence().getTokens().get(relation.getLandmark().getHead()).getDisambTag().getBase();
-		String trajector = relation.getTrajector().getSentence().getTokens().get(relation.getTrajector().getHead()).getDisambTag().getBase();
-		Set<String> landmarkConcepts = this.wts.getConcept(landmark);
+		Set<String> landmarkConcepts = new HashSet<String>();
+		for ( Tag tag : relation.getLandmark().getSentence().getTokens().get(relation.getLandmark().getHead()).getTags() ){
+			Set<String> concepts = this.wts.getConcept(tag.getBase());
+			if ( concepts != null ){
+				landmarkConcepts.addAll( concepts );
+			}
+		}
 		Set<String> landmarkTypeConcepts = this.namToSumo.getConcept(relation.getLandmark().getType());
-		Set<String> trajetorConcepts = this.wts.getConcept(trajector);
+		
+		Set<String> trajetorConcepts = new HashSet<String>();
+		for ( Tag tag : relation.getTrajector().getSentence().getTokens().get(relation.getTrajector().getHead()).getTags() ){
+			Set<String> concepts = this.wts.getConcept(tag.getBase());
+			if ( concepts != null ){
+				trajetorConcepts.addAll( concepts );
+			}
+		}
 		Set<String> trajetorTypeConcepts = this.namToSumo.getConcept(relation.getTrajector().getType());
 		
 		if ( landmarkConcepts != null ){ 

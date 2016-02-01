@@ -198,7 +198,8 @@ public class CclSaxParser extends DefaultHandler {
                     if(sentId == null){
                         sentId = "unknown_sentence_id";
                     }
-//                    System.out.println(uri + ":" +  sentId + ":t" + idx + " | Warning: Invalid annotation category in property: " + propertyKey + " - property has been skipped");
+                    //System.out.println("Token attribute " + propertyKey + " = " + tmpProps.get(propertyKey));
+                    currentToken.setProp(propertyKey, tmpProps.get(propertyKey));
                 }
             }
         }

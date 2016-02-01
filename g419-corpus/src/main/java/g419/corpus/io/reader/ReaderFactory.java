@@ -96,17 +96,17 @@ public class ReaderFactory {
 			InputStream desc = getInputStream(root, uri.replace(".xml", ".ini"), gz);
 			return new CclSAXStreamReader(uri, in, desc, null);
 		}
-		else if (inputFormat.equals("ccl_rel")){
+		else if (inputFormat.equals("cclrel")){
 			InputStream rel = getInputStream(root, uri.replace(root, "").replace(".xml", ".rel.xml"), gz);
 			InputStream desc = getInputStream(root, uri.replace(".xml", ".ini"), gz);
 			return new CclSAXStreamReader(uri, in, desc, rel);
 		}
-		else if (inputFormat.equals("ccl_relr")){
+		else if (inputFormat.equals("cclrelr")){
 			InputStream rel = getInputStream(root, uri.replace(".xml", ".rel_r"), gz);
 			InputStream desc = getInputStream(root, uri.replace(".xml", ".ini"), gz);
 			return new CclSAXStreamReader(uri, in, desc, rel);
 		}
-		else if (inputFormat.equals("ccl_relcls")){
+		else if (inputFormat.equals("cclrelcls")){
 			InputStream rel = getInputStream(root, uri.replace(".xml", ".rel_cls"), gz);
 			InputStream desc = getInputStream(root, uri.replace(".xml", ".ini"), gz);
 			return new CclSAXStreamReader(uri, in, desc, rel);

@@ -7,6 +7,8 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
+import org.apache.commons.io.FilenameUtils;
+
 public class WriterFactory {
 
 	private static final WriterFactory factory = new WriterFactory();
@@ -42,8 +44,11 @@ public class WriterFactory {
 	        if ( "tei".equals(outputFormatNoGz) ){
 	            return this.getTEIWriter(outputFile, gzOutput);
 	        }
-	        else if ( "ccl_rel".equals(outputFormatNoGz) ){
-	        	return this.getCclRelWriter(outputFile, gzOutput);
+	        else if ( "cclrel".equals(outputFormatNoGz) ){
+	        	return this.getCclRelWriter(outputFile, gzOutput, false);
+	        }
+	        else if ( "cclrel-disamb".equals(outputFormatNoGz) ){
+	        	return this.getCclRelWriter(outputFile, gzOutput, true);
 	        }
 	        else{
 	            return this.getStreamWriter(this.getOutputStreamFileOrOut(outputFile), outputFormat);
@@ -67,6 +72,8 @@ public class WriterFactory {
 		 
         if (outputFormat.equals("ccl"))
 			return new CclStreamWriter(outWrapped);
+        if (outputFormat.equals("ccl-disamb"))
+			return new CclStreamWriter(outWrapped, true);
         else if (outputFormat.equals("iob"))
 			return new IobStreamWriter(outWrapped);
         else if (outputFormat.equals("conll"))
@@ -115,10 +122,13 @@ public class WriterFactory {
      * @return
      * @throws Exception
      */
-	public AbstractDocumentWriter getCclRelWriter(String outputFile, boolean gz) throws Exception{
-		OutputStream out = this.getOutputStreamGz(outputFile, gz);
-		OutputStream outRel = this.getOutputStreamGz(outputFile.replace(".xml", ".rel.xml"), gz);
-		return new CclStreamWriter(out, outRel);
+	public AbstractDocumentWriter getCclRelWriter(String outputFile, boolean gz, boolean disambOnly) throws Exception{
+		OutputStream out = this.getOutputStreamGz(outputFile, gz);		
+		String relFilename = FilenameUtils.getBaseName(outputFile) + ".rel." + FilenameUtils.getExtension(outputFile);
+		String relPath = new File(new File(outputFile).getParentFile(), relFilename).getPath();
+		System.out.println(relPath);
+		OutputStream outRel = this.getOutputStreamGz(relPath, gz);
+		return new CclStreamWriter(out, outRel, disambOnly);
 	}
 
     public AbstractDocumentWriter getTEIWriter(String outputFolder, boolean gz) throws Exception{
@@ -129,23 +139,22 @@ public class WriterFactory {
         if ( !folder.exists() ){
         	folder.mkdirs();
         }
-        String gzExt = gz ? ".gz" : "";
         OutputStream text = getOutputStreamGz(
-        		new File(outputFolder,"text.xml" + gzExt).getPath(), gz);
+        		new File(outputFolder,"text.xml").getPath(), gz);
         OutputStream annSegmentation = getOutputStreamGz(
-        		new File(outputFolder,"ann_segmentation.xml" + gzExt).getPath(), gz);
+        		new File(outputFolder,"ann_segmentation.xml").getPath(), gz);
         OutputStream annMorphosyntax = getOutputStreamGz(
-        		new File(outputFolder,"ann_morphosyntax.xml" + gzExt).getPath(), gz);
+        		new File(outputFolder,"ann_morphosyntax.xml").getPath(), gz);
         OutputStream annNamed = getOutputStreamGz(
-        		new File(outputFolder,"ann_named.xml" + gzExt).getPath(), gz);
+        		new File(outputFolder,"ann_named.xml").getPath(), gz);
         OutputStream annMentions = getOutputStreamGz(
-        		new File(outputFolder,"ann_mentions.xml" + gzExt).getPath(), gz);
+        		new File(outputFolder,"ann_mentions.xml").getPath(), gz);
         OutputStream annChunks = getOutputStreamGz(
-        		new File(outputFolder,"ann_chunks.xml" + gzExt).getPath(), gz);
+        		new File(outputFolder,"ann_chunks.xml").getPath(), gz);
         OutputStream annCoreference = getOutputStreamGz(
-        		new File(outputFolder,"ann_coreference.xml" + gzExt).getPath(), gz);
+        		new File(outputFolder,"ann_coreference.xml").getPath(), gz);
         OutputStream annRelations = getOutputStreamGz(
-        		new File(outputFolder,"ann_relations.xml" + gzExt).getPath(), gz);
+        		new File(outputFolder,"ann_relations.xml").getPath(), gz);
         return new TEIStreamWriter(text, annSegmentation, annMorphosyntax, annNamed, 
         		annMentions, annChunks, annCoreference, annRelations, new File(outputFolder).getName());
     }
@@ -158,7 +167,7 @@ public class WriterFactory {
      * @throws Exception
      */
 	private OutputStream getOutputStreamGz(String outputFile, boolean gz) throws Exception {
-		OutputStream output = new FileOutputStream(outputFile); 
+		OutputStream output = new FileOutputStream(outputFile + (gz ? ".gz" : "")); 
 		if ( gz ){
 			output = new GZIPOutputStream(output);
 		}
