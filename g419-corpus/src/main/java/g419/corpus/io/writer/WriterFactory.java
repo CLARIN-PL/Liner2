@@ -145,6 +145,8 @@ public class WriterFactory {
         		new File(outputFolder,"ann_segmentation.xml").getPath(), gz);
         OutputStream annMorphosyntax = getOutputStreamGz(
         		new File(outputFolder,"ann_morphosyntax.xml").getPath(), gz);
+        OutputStream annProps = getOutputStreamGz(
+        		new File(outputFolder,"ann_props.xml").getPath(), gz);
         OutputStream annNamed = getOutputStreamGz(
         		new File(outputFolder,"ann_named.xml").getPath(), gz);
         OutputStream annMentions = getOutputStreamGz(
@@ -155,7 +157,7 @@ public class WriterFactory {
         		new File(outputFolder,"ann_coreference.xml").getPath(), gz);
         OutputStream annRelations = getOutputStreamGz(
         		new File(outputFolder,"ann_relations.xml").getPath(), gz);
-        return new TEIStreamWriter(text, annSegmentation, annMorphosyntax, annNamed, 
+        return new TEIStreamWriter(text, annSegmentation, annMorphosyntax, annProps, annNamed, 
         		annMentions, annChunks, annCoreference, annRelations, new File(outputFolder).getName());
     }
 

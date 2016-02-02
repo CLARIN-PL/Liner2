@@ -58,10 +58,14 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     private final String TAG_VALT	      = "vAlt";
     private final String TAG_POINTER	  = "ptr";
     private final String TAG_BINARY		  = "binary";
+    
+    private final String ATTR_CORESP	= "coresp";
+    private final String ATTR_NAME	= "name";
 
     private XMLStreamWriter textWriter;
     private XMLStreamWriter annSegmentationWriter;
     private XMLStreamWriter annMorphosyntaxWriter;
+    private XMLStreamWriter annPropsWriter;
     private XMLStreamWriter annNamedWriter;
     private XMLStreamWriter annMentionsWriter;
     private XMLStreamWriter annChunksWriter;
@@ -70,6 +74,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     private OutputStream text;
     private OutputStream annSegmentation;
     private OutputStream annMorphosyntax;
+    private OutputStream annProps;
     private OutputStream annNamed;
     private OutputStream annMentions;
     private OutputStream annChunks;
@@ -93,12 +98,14 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     private int chunkNr = 0;
     
     public TEIStreamWriter(OutputStream text, OutputStream annSegmentation, OutputStream annMorphosyntax, 
+    		OutputStream annProps,
     		OutputStream annNamed, OutputStream annMentions, OutputStream annChunks, 
     		OutputStream annCoreference, OutputStream annRelations, String documentName) {
         this.documentName = documentName;
         this.text = text;
         this.annSegmentation = annSegmentation;
         this.annMorphosyntax = annMorphosyntax;
+        this.annProps = annProps;
         this.annNamed = annNamed;
         this.annMentions = annMentions;
         this.annChunks = annChunks;
@@ -122,6 +129,9 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
             this.textWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(text)));
             this.annSegmentationWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annSegmentation)));
             this.annMorphosyntaxWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annMorphosyntax)));
+            if ( this.annProps != null ) {
+            	this.annPropsWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annProps)));
+            }
             if(this.annNamed != null){ 
             	this.annNamedWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annNamed)));
             }
@@ -195,7 +205,16 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
 	            annNamedWriter.writeStartElement(TAG_BODY);
 	            annNamedWriter.writeCharacters("\n");
             }
-            
+
+            if(annPropsWriter != null){
+            	writeCommonOpening(annPropsWriter);
+            	annPropsWriter.writeAttribute("xml:lang", "pl");
+            	annPropsWriter.writeCharacters("\n");
+	            this.indent(3, annPropsWriter);
+	            annPropsWriter.writeStartElement(TAG_BODY);
+	            annPropsWriter.writeCharacters("\n");
+            }
+
             if(annMentionsWriter != null){
             	writeCommonOpening(annMentionsWriter);
 	            annMentionsWriter.writeAttribute("xml:lang", "pl");
@@ -699,7 +718,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         annSegmentationWriter.writeCharacters("\n");
 
         String morphId = "morph_" + currentIds.get("tokenId");
-        currentIds.put("morphId",morphId );
+        currentIds.put("morphId", morphId );
         this.indent(6, annMorphosyntaxWriter);
         annMorphosyntaxWriter.writeStartElement(TAG_SEGMENT);
         annMorphosyntaxWriter.writeAttribute("corresp", "ann_segmentation.xml#segm_" + currentIds.get("tokenId"));
@@ -788,6 +807,27 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
             writeEndElementLine(i, annMorphosyntaxWriter);
         }
         wholeParagraph.append(orth);
+        
+        /* Zapisz propsy */
+        if ( tok.getProps().size() > 0 ){
+        	this.indent(1, this.annPropsWriter);
+        	this.annPropsWriter.writeStartElement(TAG_SEGMENT);
+        	this.annPropsWriter.writeAttribute(ATTR_CORESP, "ann_morphosyntax.xml#" + morphId);
+        	this.annPropsWriter.writeCharacters("\n");
+        	for ( String name : tok.getProps().keySet() ){
+        		String value = tok.getProps().get(name);
+        		this.indent(2, this.annPropsWriter);
+        		this.annPropsWriter.writeStartElement(TAG_FEATURE);
+        		this.annPropsWriter.writeAttribute(ATTR_NAME, name);
+        		this.annPropsWriter.writeCharacters(value);
+        		this.annPropsWriter.writeEndElement();
+        		this.annPropsWriter.writeCharacters("\n");
+        		//System.out.println("  " + name + "=" + value);
+        	}
+        	this.indent(1, this.annPropsWriter);
+        	this.annPropsWriter.writeEndElement();
+        	this.annPropsWriter.writeCharacters("\n");
+        }
     }
 
     public void writeLexeme(TEILex lex, HashMap<String, String> currentIds, int currentIndent) throws XMLStreamException {
@@ -860,6 +900,9 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
             writeClosing(textWriter, 4);
             writeClosing(annSegmentationWriter, 3);
             writeClosing(annMorphosyntaxWriter, 3);
+            if(annPropsWriter != null){
+            	writeClosing(annPropsWriter, 1);
+            }
             if(annNamedWriter != null){
             	writeClosing(annNamedWriter, 3);
             }
@@ -879,6 +922,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
             this.closeStream(this.text, textWriter);
             this.closeStream(this.annSegmentation, this.annSegmentationWriter);
             this.closeStream(this.annMorphosyntax, this.annMorphosyntaxWriter);
+            this.closeStream(this.annProps, this.annPropsWriter);
             this.closeStream(this.annNamed, this.annNamedWriter);
             this.closeStream(this.annMentions, this.annMentionsWriter);
             this.closeStream(this.annChunks, this.annChunksWriter);
