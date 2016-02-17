@@ -14,7 +14,7 @@ import java.util.Vector;
  * Created by michal on 11/20/14.
  */
 public abstract class DaemonThread extends Thread{
-    protected static final int DEFAULT_MAX_THREADS = 5;
+    public static final int DEFAULT_MAX_THREADS = 5;
 
     int maxThreads;
     protected Vector<WorkingThread> workingThreads;

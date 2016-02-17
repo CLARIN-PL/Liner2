@@ -1,8 +1,9 @@
-package g419.liner2.daemon;
+package g419.liner2.daemon.action;
 
 import g419.corpus.Logger;
 import g419.lib.cli.CommonOptions;
 import g419.lib.cli.ParameterException;
+import g419.liner2.daemon.SQLDaemonThread;
 import g419.lib.cli.Action;
 
 import org.apache.commons.cli.CommandLine;
