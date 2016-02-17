@@ -78,7 +78,7 @@ public class ChunkerEvaluator {
 	/**
 	 * 
 	 */
-	private void evaluate(Sentence sentence, AnnotationSet chunking, AnnotationSet chunkingRef) {
+	public void evaluate(Sentence sentence, AnnotationSet chunking, AnnotationSet chunkingRef) {
 
 		// tylko na potrzeby wyświetlania szczegółów
 		HashSet<Annotation> myTruePositives = new HashSet<Annotation>();

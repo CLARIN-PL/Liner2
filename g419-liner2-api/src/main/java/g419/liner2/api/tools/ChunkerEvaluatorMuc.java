@@ -117,7 +117,7 @@ public class ChunkerEvaluatorMuc {
 	/**
 	 * 
 	 */
-	private void evaluate(Sentence sentence, AnnotationSet chunking, AnnotationSet chunkingRef) {
+	public void evaluate(Sentence sentence, AnnotationSet chunking, AnnotationSet chunkingRef) {
         HashSet<String> newTypes = chunkingRef.getAnnotationTypes();
         newTypes.addAll(chunking.getAnnotationTypes());
         newTypes.removeAll(this.types);
@@ -291,8 +291,8 @@ public class ChunkerEvaluatorMuc {
 			float r = (float)this.globalTruePositives / ((float)this.globalTruePositives + (float)this.globalFalseNegatives);
 			float f = 2*p*r / ( p + r);
 
-			System.out.println(String.format("        *TOTAL*              & %4d & %4d & %4d &   %6.2f%% & %6.2f%% & %6.2f%%", 
-					this.globalTruePositives, this.globalFalsePositives, this.globalFalseNegatives, p*100 , r*100, f*100));
+			System.out.println(String.format("        %-30s & %7d & %7d & %7d &   %6.2f%% & %6.2f%% & %6.2f%% \\\\", 
+					"*TOTAL*", this.globalTruePositives, this.globalFalsePositives, this.globalFalseNegatives, p*100 , r*100, f*100));
 		}		
 		System.out.println("\n");
 	}
