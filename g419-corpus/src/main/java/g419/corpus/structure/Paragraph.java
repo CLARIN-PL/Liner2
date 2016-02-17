@@ -7,7 +7,7 @@ import java.util.Set;
 public class Paragraph {
 
 	private String id = null;
-	private TokenAttributeIndex attributeIndex = null;
+	private TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
 	private HashMap<String,String> chunkMetaData = new HashMap<String, String>();
 	
 	private ArrayList<Sentence> sentences = new ArrayList<Sentence>(); 

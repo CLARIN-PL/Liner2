@@ -19,6 +19,13 @@ public class TokenAttributeIndex {
 	HashMap<String, Integer> nameToIndex = new HashMap<String, Integer>();	
 
 	/**
+	 * Domyślny indeks zawiera jedną domyślną cechę "orth".
+	 */
+	public TokenAttributeIndex(){
+		this.addAttribute("orth");
+	}
+	
+	/**
 	 * TODO
 	 * Dodaje nowy atrybut do indeksu i zwraca jego numer porządkowy (indeks).
 	 * @param name -- unikalna nazwa atrybutu

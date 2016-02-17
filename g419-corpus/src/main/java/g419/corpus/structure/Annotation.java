@@ -173,7 +173,9 @@ public class Annotation {
 	public boolean equals(Object object) {
 		Annotation chunk = (Annotation) object;
 		if(chunk == null) return false;
-		if(!this.getSentence().getId().equals(chunk.getSentence().getId()))
+		if( this.getSentence().getId() != null
+				&& chunk.getSentence().getId() != null
+				&& !this.getSentence().getId().equals(chunk.getSentence().getId()))
 			return false;
 		else if (!this.tokens.equals(chunk.getTokens()))
 			return false;

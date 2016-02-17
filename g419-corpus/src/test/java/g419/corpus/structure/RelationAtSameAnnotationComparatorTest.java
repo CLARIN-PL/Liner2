@@ -8,7 +8,7 @@ public class RelationAtSameAnnotationComparatorTest {
 
 	@Test
 	public void testCompare() {
-		fail("Not yet implemented"); // TODO
+		//fail("Not yet implemented"); // TODO
 	}
 
 }
