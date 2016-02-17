@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
 import g419.corpus.io.DataFormatException;
@@ -92,7 +93,7 @@ public class BatchReader extends AbstractDocumentReader {
 		    		if ( name.endsWith(".gz") ){
 		    			name = name.substring(0, name.length()-3);
 		    		}
-		    		document.setName(name);
+		    		document.setName(FilenameUtils.removeExtension(name));
 		            reader.close();		            
 		    		return document;
 	    		}

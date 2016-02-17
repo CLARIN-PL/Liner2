@@ -95,17 +95,16 @@ public class BatchWriter extends AbstractDocumentWriter {
 			System.err.println("Error: Document name is not specified (null value)");
 		}
 		else{
-            int dotIdx = name.lastIndexOf("."); // if input format is tei 'name' is directory, not file
-            name = (dotIdx != -1 ? name.substring(0, dotIdx) : name)  + this.extension;
-            File file = new File(this.outputRootFolder, name);
+            File file = new File(this.outputRootFolder, name + this.extension);
             if ( !file.getParentFile().exists() ){
             	file.getParentFile().mkdirs();
             }
 			try {
+				//System.out.println("====> " + file.getAbsolutePath());
                 AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(file.getAbsolutePath(), this.format);
 				writer.writeDocument(document);
 				writer.close();
-                indexWriter.write(name + this.gzExtension + "\n");
+                indexWriter.write(name + this.extension + this.gzExtension + "\n");
                 indexWriter.flush();
 			} catch (FileNotFoundException e) {
 				System.err.println("Error: FileNotFoundException " + e.getMessage());

@@ -110,15 +110,16 @@ public class PlainTextStreamReader extends AbstractDocumentReader {
 			File tager_input = File.createTempFile("wcrft_input", ".txt");
 			BufferedWriter tager_writer = new BufferedWriter(
 					new FileWriter(tager_input));
-
 			tager_writer.write(cSeq, 0, cSeq.length());
 			tager_writer.close();
+			
 			String cmd = "";
 			if (analyzer.equals("wcrft")){
 				cmd = String.format("wcrft-app nkjp_e2.ini -i text -o ccl %s > %s.tag", tager_input.getAbsolutePath(), tager_input.getAbsolutePath());
 			}
 			else if(analyzer.equals("maca")){
-				cmd =  "maca-analyse -qs morfeusz-nkjp-official -o ccl";
+				cmd =  String.format("maca-analyse -qs morfeusz-nkjp-official -o ccl < %s > %s.tag", tager_input.getAbsolutePath(), tager_input.getAbsolutePath());
+				System.out.println(cmd);
 			}
 			else{
 				throw new Exception("Unrecognized analyzer: " + analyzer);
@@ -126,9 +127,6 @@ public class PlainTextStreamReader extends AbstractDocumentReader {
 			
 			Process tager = Runtime.getRuntime().exec(cmd);
 			tager.waitFor();
-			
-			//InputStream tager_in = tager.getInputStream();			
-			//AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(docName, tager_in, "ccl");
 			
 			AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(docName, new FileInputStream(new File(tager_input.getAbsolutePath() + ".tag")), "ccl");
 			Document doc = reader.nextDocument();

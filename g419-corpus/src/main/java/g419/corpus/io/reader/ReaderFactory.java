@@ -113,6 +113,8 @@ public class ReaderFactory {
 		}
 		else if (inputFormat.equals("iob"))
 			return new IobStreamReader(in);
+		else if (inputFormat.equals("csv"))
+			return new CsvStreamReader(in);
 		else if (inputFormat.equals("plain"))
 			return new PlainTextStreamReader(uri, in, "none");
 		else if (inputFormat.equals("plain:maca"))

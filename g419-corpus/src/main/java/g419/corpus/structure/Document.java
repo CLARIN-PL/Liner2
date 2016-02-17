@@ -13,7 +13,7 @@ public class Document{
 	String name = null;
 	String uri = null;
 	TokenAttributeIndex attributeIndex = null;
-	ArrayList<Paragraph> paragraphs = new ArrayList<Paragraph>();
+	List<Paragraph> paragraphs = new ArrayList<Paragraph>();
 	DocumentDescriptor documentDescriptor = new DocumentDescriptor();
 	Set<Frame> frames = new HashSet<Frame>();
 	
@@ -25,14 +25,14 @@ public class Document{
 		this.attributeIndex = attributeIndex;
 	}
 	
-	public Document(String name, ArrayList<Paragraph> paragraphs, TokenAttributeIndex attributeIndex){
+	public Document(String name, List<Paragraph> paragraphs, TokenAttributeIndex attributeIndex){
 		this.name = name;
 		this.paragraphs = paragraphs;
 		for(Paragraph paragraph: paragraphs) paragraph.setDocument(this);
 		this.attributeIndex = attributeIndex;
 	}
 	
-	public Document(String name, ArrayList<Paragraph> paragraphs, TokenAttributeIndex attributeIndex, RelationSet relations){
+	public Document(String name, List<Paragraph> paragraphs, TokenAttributeIndex attributeIndex, RelationSet relations){
 		this.name = name;
 		this.paragraphs = paragraphs;
 		this.attributeIndex = attributeIndex;
@@ -82,7 +82,7 @@ public class Document{
 		return this.attributeIndex;
 	}
 	
-	public ArrayList<Paragraph> getParagraphs() {
+	public List<Paragraph> getParagraphs() {
 		return this.paragraphs;
 	}
 	
