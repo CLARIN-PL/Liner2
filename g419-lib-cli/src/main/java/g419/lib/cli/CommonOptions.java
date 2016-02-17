@@ -58,9 +58,15 @@ public class CommonOptions {
 	public static Option getInputFileNameOption(){
 		return Option.builder(CommonOptions.OPTION_INPUT_FILE)
 				.longOpt(CommonOptions.OPTION_INPUT_FILE_LONG)
-				.hasArg().argName("filename").desc("read input from file").build();
+				.hasArg().argName("filename").desc("path to a file to read").build();
 	}
-	
+
+	public static Option getInputFileNamesOption(){
+		return Option.builder(CommonOptions.OPTION_INPUT_FILE)
+				.longOpt(CommonOptions.OPTION_INPUT_FILE_LONG)
+				.hasArgs().argName("filenames").desc("list of paths, i.e. 'path1 path2 path3 ...'").build();
+	}
+
 	public static Option getInputFileFormatOption(){
 		return Option.builder(CommonOptions.OPTION_INPUT_FORMAT)
 				.longOpt(CommonOptions.OPTION_INPUT_FORMAT_LONG)
