@@ -76,7 +76,7 @@ public class ActionRegions extends Action {
 						if ( tokens.get(i).getDisambTag().getPos().equals("prep")
 								&& regions.contains(tokens.get(i+1).getDisambTag().getBase()) ){
 							String base = tokens.get(i+2).getDisambTag().getBase();
-							Set<String> concepts = wordnetToSumo.getConcept(base);
+							Set<String> concepts = wordnetToSumo.getLemmaConcepts(base);
 							Set<String> superConcepts = new HashSet<String>();
 							if ( concepts != null ){
 								for ( String concept : concepts ){

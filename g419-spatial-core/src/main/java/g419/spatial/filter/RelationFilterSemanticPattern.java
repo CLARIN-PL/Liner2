@@ -9,6 +9,8 @@ import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.zip.DataFormatException;
 
+import g419.corpus.schema.kpwr.KpwrWsd;
+import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Tag;
 import g419.spatial.io.CsvSpatialSchemeParser;
 import g419.spatial.structure.SpatialExpression;
@@ -61,38 +63,14 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
 		return matching.size() > 0;
 	}
 	
-	public List<SpatialRelationSchema> match(SpatialExpression relation){
-		Set<String> landmarkConcepts = new HashSet<String>();
-		for ( Tag tag : relation.getLandmark().getSentence().getTokens().get(relation.getLandmark().getHead()).getTags() ){
-			Set<String> concepts = this.wts.getConcept(tag.getBase());
-			if ( concepts != null ){
-				landmarkConcepts.addAll( concepts );
-			}
-		}
-		Set<String> landmarkTypeConcepts = this.namToSumo.getConcept(relation.getLandmark().getType());
-		
-		Set<String> trajetorConcepts = new HashSet<String>();
-		for ( Tag tag : relation.getTrajector().getSentence().getTokens().get(relation.getTrajector().getHead()).getTags() ){
-			Set<String> concepts = this.wts.getConcept(tag.getBase());
-			if ( concepts != null ){
-				trajetorConcepts.addAll( concepts );
-			}
-		}
-		Set<String> trajetorTypeConcepts = this.namToSumo.getConcept(relation.getTrajector().getType());
-		
-		if ( landmarkConcepts != null ){ 
-			relation.getLandmarkConcepts().addAll(landmarkConcepts);
-		}
-		if ( landmarkTypeConcepts != null ){
-			relation.getLandmarkConcepts().addAll(landmarkTypeConcepts);
-		}
-		
-		if ( trajetorConcepts != null ){
-			relation.getTrajectorConcepts().addAll(trajetorConcepts);
-		}
-		if ( trajetorTypeConcepts != null ){
-			relation.getTrajectorConcepts().addAll(trajetorTypeConcepts);
-		}
+	/**
+	 * 
+	 * @param relation
+	 * @return
+	 */
+	public List<SpatialRelationSchema> match(SpatialExpression relation){	
+		relation.getLandmarkConcepts().addAll(this.getAnnotationConcepts(relation.getLandmark()));
+		relation.getTrajectorConcepts().addAll(this.getAnnotationConcepts(relation.getTrajector()));
 		
 		List<SpatialRelationSchema> matching = this.patternMatcher.matchAll(relation);
 		relation.getSchemas().addAll(matching);
@@ -100,6 +78,53 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
 		return matching;		
 	}
 	
+	/**
+	 * Zwraca zbiór pojęć SUMO dla wskazanej anotacji.
+	 * @param an
+	 * @return
+	 */
+	public Set<String> getAnnotationConcepts(Annotation an){
+		Set<String> allConcepts = new HashSet<String>();
+		
+		String synsetId = an.getHeadToken().getProps().get(KpwrWsd.TOKEN_PROP_SYNSET_ID);
+		//synsetId = null;
+		if ( synsetId != null ){
+			Set<String> wsdConcepts = this.wts.getSynsetConcepts(synsetId);
+			if ( wsdConcepts != null ){
+				allConcepts.addAll(wsdConcepts);
+			}
+		}
+		else{
+			/* Pojęcia SUMO po lematach głowy anotacji */
+			/* ... wszystkie interpretacje */
+//			for ( Tag tag : an.getHeadToken().getTags() ){
+//				Set<String> lemmaConcepts = this.wts.getLemmaConcepts(tag.getBase());
+//				if ( lemmaConcepts != null ){
+//					allConcepts.addAll( lemmaConcepts );
+//				}
+//			}
+			/* ... tylko tagi oznaczone jako disamb */
+			for ( Tag tag : an.getHeadToken().getDisambTags() ){
+			Set<String> lemmaConcepts = this.wts.getLemmaConcepts(tag.getBase());
+			if ( lemmaConcepts != null ){
+				allConcepts.addAll( lemmaConcepts );
+			}
+		}
+		}
+		
+		/* Pojęcia SUMO po kategorii anotacji */
+		Set<String> typeConcepts = this.namToSumo.getConcept(an.getType());
+		if ( typeConcepts != null ){
+			allConcepts.addAll(typeConcepts);
+		}
+		
+		return allConcepts;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public Sumo getSumo(){
 		return this.sumo;
 	}
