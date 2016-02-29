@@ -67,24 +67,16 @@ public class Sentence {
 		return this.id;
 	}
 
+	/**
+	 * Zwraca pozycję zdania w dokumencie.
+	 * @return
+	 */
 	public int getOrd(){
-		if(this.id.startsWith("sentence")){
-			return Integer.parseInt(this.id.substring(8));
+		if ( this.document != null ){
+			return this.document.getSentences().indexOf(this);
 		}
-		
-		if(this.id.startsWith("sent")){
-			return Integer.parseInt(this.id.substring(4));
-		}
-		
-		if(this.id.startsWith("s")){
-			return Integer.parseInt(this.id.substring(1));
-		}
-		try{
-			return Integer.parseInt(this.id);
-		}
-		catch(NumberFormatException ex){
-			String sentenceNumId = this.id.split("-")[1].split("\\.")[1];
-			return Integer.parseInt(sentenceNumId);
+		else{
+			return -1;
 		}
 	}
 	

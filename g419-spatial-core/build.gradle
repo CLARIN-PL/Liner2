@@ -1,0 +1,19 @@
+description = "g419-spatial-core"
+
+repositories{
+    mavenCentral()
+    maven {
+        url "http://streamreasoning.org/maven/"
+    }
+}
+
+dependencies {
+    compile 'commons-cli:commons-cli:1.2'
+    compile 'log4j:log4j:1.2.17'
+    compile 'org.apache.commons:commons-csv:1.2'
+    compile project(":g419-corpus")
+    compile project(":g419-lib-cli")
+    compile project(":g419-toolbox")
+    compile project(":g419-liner2-api")
+    compile project(":g419-external-dependencies")
+}

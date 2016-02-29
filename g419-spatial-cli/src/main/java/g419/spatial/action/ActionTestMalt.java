@@ -22,7 +22,7 @@ import g419.liner2.api.features.tokens.ClassFeature;
 import g419.liner2.api.tools.parser.MaltParser;
 import g419.liner2.api.tools.parser.MaltSentence;
 import g419.liner2.api.tools.parser.MaltSentenceLink;
-import g419.spatial.structure.SpatialRelation;
+import g419.spatial.structure.SpatialExpression;
 
 public class ActionTestMalt extends Action {
 	
@@ -75,8 +75,8 @@ public class ActionTestMalt extends Action {
 					MaltSentence maltSentence = new MaltSentence(sentence, new HashSet<Annotation>());
 					malt.parse(maltSentence);
 					
-					List<SpatialRelation> srs = this.findByMalt(sentence, maltSentence);
-					for ( SpatialRelation sr : srs){
+					List<SpatialExpression> srs = this.findByMalt(sentence, maltSentence);
+					for ( SpatialExpression sr : srs){
 						System.out.println(sr.toString());
 					}
 				}
@@ -93,8 +93,8 @@ public class ActionTestMalt extends Action {
 	 * @param maltSentence
 	 * @return
 	 */
-	public List<SpatialRelation> findByMalt(Sentence sentence, MaltSentence maltSentence){
-		List<SpatialRelation> srs = new ArrayList<SpatialRelation>();
+	public List<SpatialExpression> findByMalt(Sentence sentence, MaltSentence maltSentence){
+		List<SpatialExpression> srs = new ArrayList<SpatialExpression>();
 		for (int i=0; i< sentence.getTokens().size(); i++){
 			Token token = sentence.getTokens().get(i);
 			List<Integer> landmarks = new ArrayList<Integer>();
@@ -140,7 +140,7 @@ public class ActionTestMalt extends Action {
 			if ( landmarks.size() > 0 && trajectors.size() > 0 && indicator != null ){
 				for ( Integer landmark : landmarks ){
 					for ( Integer trajector : trajectors ){
-						SpatialRelation sr = new SpatialRelation(
+						SpatialExpression sr = new SpatialExpression(
 								type + typeLM + typeTR, 
 								new Annotation(trajector, "trajector", sentence), 
 								new Annotation(indicator, "indicator", sentence), 

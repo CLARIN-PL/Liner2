@@ -1,5 +1,23 @@
 package g419.corpus.io.writer;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.zip.GZIPOutputStream;
+
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
+import g419.corpus.io.writer.tei.Interps;
+import g419.corpus.io.writer.tei.Pair;
+import g419.corpus.io.writer.tei.TEILex;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationCluster;
 import g419.corpus.structure.AnnotationClusterSet;
@@ -8,21 +26,8 @@ import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Relation;
 import g419.corpus.structure.RelationSet;
 import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Tag;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 
 /**
  * Created with IntelliJ IDEA.
@@ -53,10 +58,14 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     private final String TAG_VALT	      = "vAlt";
     private final String TAG_POINTER	  = "ptr";
     private final String TAG_BINARY		  = "binary";
+    
+    private final String ATTR_CORESP	= "coresp";
+    private final String ATTR_NAME	= "name";
 
     private XMLStreamWriter textWriter;
     private XMLStreamWriter annSegmentationWriter;
     private XMLStreamWriter annMorphosyntaxWriter;
+    private XMLStreamWriter annPropsWriter;
     private XMLStreamWriter annNamedWriter;
     private XMLStreamWriter annMentionsWriter;
     private XMLStreamWriter annChunksWriter;
@@ -65,6 +74,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     private OutputStream text;
     private OutputStream annSegmentation;
     private OutputStream annMorphosyntax;
+    private OutputStream annProps;
     private OutputStream annNamed;
     private OutputStream annMentions;
     private OutputStream annChunks;
@@ -87,19 +97,15 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     private int mentionNr = 0;
     private int chunkNr = 0;
     
-    public TEIStreamWriter(OutputStream text, 
-    		OutputStream annSegmentation, 
-    		OutputStream annMorphosyntax, 
-    		OutputStream annNamed, 
-    		OutputStream annMentions,
-    		OutputStream annChunks, 
-    		OutputStream annCoreference, 
-    		OutputStream annRelations,
-    		String documentName) {
+    public TEIStreamWriter(OutputStream text, OutputStream annSegmentation, OutputStream annMorphosyntax, 
+    		OutputStream annProps,
+    		OutputStream annNamed, OutputStream annMentions, OutputStream annChunks, 
+    		OutputStream annCoreference, OutputStream annRelations, String documentName) {
         this.documentName = documentName;
         this.text = text;
         this.annSegmentation = annSegmentation;
         this.annMorphosyntax = annMorphosyntax;
+        this.annProps = annProps;
         this.annNamed = annNamed;
         this.annMentions = annMentions;
         this.annChunks = annChunks;
@@ -120,23 +126,26 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         
         XMLOutputFactory xmlof = XMLOutputFactory.newFactory();
         try {
-            this.textWriter = xmlof.createXMLStreamWriter(text);
-            this.annSegmentationWriter = xmlof.createXMLStreamWriter(annSegmentation);
-            this.annMorphosyntaxWriter = xmlof.createXMLStreamWriter(annMorphosyntax);
+            this.textWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(text)));
+            this.annSegmentationWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annSegmentation)));
+            this.annMorphosyntaxWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annMorphosyntax)));
+            if ( this.annProps != null ) {
+            	this.annPropsWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annProps)));
+            }
             if(this.annNamed != null){ 
-            	this.annNamedWriter = xmlof.createXMLStreamWriter(annNamed);
+            	this.annNamedWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annNamed)));
             }
             if(this.annMentions != null){ 
-            	this.annMentionsWriter = xmlof.createXMLStreamWriter(annMentions);
+            	this.annMentionsWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annMentions)));
             }
             if(this.annChunks != null){ 
-            	this.annChunksWriter = xmlof.createXMLStreamWriter(annChunks);
+            	this.annChunksWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annChunks)));
             }
             if(this.annCoreference != null){ 
-            	this.annCoreferenceWriter = xmlof.createXMLStreamWriter(annCoreference);
+            	this.annCoreferenceWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annCoreference)));
             }
             if(this.annRelations != null){ 
-            	this.annRelationsWriter = xmlof.createXMLStreamWriter(annRelations);
+            	this.annRelationsWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annRelations)));
             }
         } catch (XMLStreamException ex) {
             ex.printStackTrace();
@@ -172,12 +181,6 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
             this.indent(3, textWriter);
             textWriter.writeStartElement(TAG_BODY);
             textWriter.writeCharacters("\n");
-//            this.indent(4, textWriter);
-//            textWriter.writeStartElement(TAG_DIV);
-//            textWriter.writeAttribute("type", "article");
-//            textWriter.writeAttribute("xml:id", "div-1");
-//            textWriter.writeCharacters("\n");
-
 
             writeCommonOpening(annSegmentationWriter);
             annSegmentationWriter.writeAttribute("xml:lang", "pl");
@@ -202,7 +205,16 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
 	            annNamedWriter.writeStartElement(TAG_BODY);
 	            annNamedWriter.writeCharacters("\n");
             }
-            
+
+            if(annPropsWriter != null){
+            	writeCommonOpening(annPropsWriter);
+            	annPropsWriter.writeAttribute("xml:lang", "pl");
+            	annPropsWriter.writeCharacters("\n");
+	            this.indent(3, annPropsWriter);
+	            annPropsWriter.writeStartElement(TAG_BODY);
+	            annPropsWriter.writeCharacters("\n");
+            }
+
             if(annMentionsWriter != null){
             	writeCommonOpening(annMentionsWriter);
 	            annMentionsWriter.writeAttribute("xml:lang", "pl");
@@ -303,9 +315,9 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
 
     @Override
     public void writeDocument(Document document){
-    	for ( Paragraph paragraph : document.getParagraphs() )
+    	for ( Paragraph paragraph : document.getParagraphs() ){
     		this.writeParagraph(paragraph);
-    	
+    	}    	
     	try {
 			this.writeCoreferenceRelations(document.getRelations(Relation.COREFERENCE));
 			this.writeRelations(document.getRelations().getRelations());
@@ -597,6 +609,20 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         writeEndElementLine(--annMentionsIndent, annChunksWriter);      
     }    
     
+    /**
+     * 	<!-- płace kontrolerów  -->
+     *   <seg xml:id="mention_2">
+     *     <fs type="mention">
+     *       <f name="semh" fVal="ann_morphosyntax.xml#morph_1.1.5-seg"/>
+     *     </fs>
+     *     <ptr target="ann_morphosyntax.xml#morph_1.1.5-seg"/>
+     *     <ptr target="ann_morphosyntax.xml#morph_1.1.6-seg"/>
+     *   </seg>
+     * @param ann
+     * @param annotationId
+     * @param tokenTEIIds
+     * @throws XMLStreamException
+     */
     private void writeMention(Annotation ann, String annotationId, HashMap<Integer, String> tokenTEIIds) throws XMLStreamException {
     	this.mentionIds.put(ann, annotationId);
     	this.mentionRefs.put(ann, "ann_mentions.xml#" + annotationId);
@@ -633,17 +659,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
             annMentionsWriter.writeAttribute("target", "ann_morphosyntax.xml#" + tokenTEIIds.get(tokenIdx));
             annMentionsWriter.writeCharacters("\n");
         }
-        writeEndElementLine(--annMentionsIndent, annMentionsWriter);
-        
-        
-//    	<!-- płace kontrolerów  -->
-//        <seg xml:id="mention_2">
-//          <fs type="mention">
-//            <f name="semh" fVal="ann_morphosyntax.xml#morph_1.1.5-seg"/>
-//          </fs>
-//          <ptr target="ann_morphosyntax.xml#morph_1.1.5-seg"/>
-//          <ptr target="ann_morphosyntax.xml#morph_1.1.6-seg"/>
-//        </seg>
+        writeEndElementLine(--annMentionsIndent, annMentionsWriter);               
     }
     
     public void writeAnnotation(Annotation ann, String annotationId, HashMap<Integer, String> tokenTEIIds) throws XMLStreamException {
@@ -702,7 +718,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         annSegmentationWriter.writeCharacters("\n");
 
         String morphId = "morph_" + currentIds.get("tokenId");
-        currentIds.put("morphId",morphId );
+        currentIds.put("morphId", morphId );
         this.indent(6, annMorphosyntaxWriter);
         annMorphosyntaxWriter.writeStartElement(TAG_SEGMENT);
         annMorphosyntaxWriter.writeAttribute("corresp", "ann_segmentation.xml#segm_" + currentIds.get("tokenId"));
@@ -746,18 +762,18 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         Interps interps = new Interps(tok.getTags());
         int annMorphoSyntaxIndent = 9;
 
-        if (interps.lexemes.size() > 1){
+        if (interps.getLexemes().size() > 1){
             this.indent(annMorphoSyntaxIndent++, annMorphosyntaxWriter);
             annMorphosyntaxWriter.writeStartElement(TAG_VALT);
             annMorphosyntaxWriter.writeCharacters("\n");
         }
         int lexId = 0;
-        for(TEILex lex: interps.lexemes){
+        for(TEILex lex: interps.getLexemes()){
             currentIds.put("lexId", morphId + "_" + (lexId++) + "-lex");
             writeLexeme(lex, currentIds, annMorphoSyntaxIndent);
         }
 
-        if (interps.lexemes.size() > 1){
+        if (interps.getLexemes().size() > 1){
             writeEndElementLine(--annMorphoSyntaxIndent, annMorphosyntaxWriter);
         }
 
@@ -775,7 +791,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         annMorphosyntaxWriter.writeCharacters("\n");
         this.indent(10, annMorphosyntaxWriter);
         annMorphosyntaxWriter.writeEmptyElement(TAG_FEATURE);
-        annMorphosyntaxWriter.writeAttribute("fVal", "#" + morphId + "_" + interps.disambIdx + "-msd");
+        annMorphosyntaxWriter.writeAttribute("fVal", "#" + morphId + "_" + interps.getDisambIdx() + "-msd");
         annMorphosyntaxWriter.writeAttribute("name", "choice");
         annMorphosyntaxWriter.writeCharacters("\n");
         this.indent(10, annMorphosyntaxWriter);
@@ -784,13 +800,34 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         annMorphosyntaxWriter.writeCharacters("\n");
         this.indent(11, annMorphosyntaxWriter);
         annMorphosyntaxWriter.writeStartElement(TAG_STRING);
-        annMorphosyntaxWriter.writeCharacters(interps.disamb);
+        annMorphosyntaxWriter.writeCharacters(interps.getDisamb());
         annMorphosyntaxWriter.writeEndElement();
         annMorphosyntaxWriter.writeCharacters("\n");
         for(int i=10; i > 5; i--){
             writeEndElementLine(i, annMorphosyntaxWriter);
         }
         wholeParagraph.append(orth);
+        
+        /* Zapisz propsy */
+        if ( tok.getProps().size() > 0 ){
+        	this.indent(1, this.annPropsWriter);
+        	this.annPropsWriter.writeStartElement(TAG_SEGMENT);
+        	this.annPropsWriter.writeAttribute(ATTR_CORESP, "ann_morphosyntax.xml#" + morphId);
+        	this.annPropsWriter.writeCharacters("\n");
+        	for ( String name : tok.getProps().keySet() ){
+        		String value = tok.getProps().get(name);
+        		this.indent(2, this.annPropsWriter);
+        		this.annPropsWriter.writeStartElement(TAG_FEATURE);
+        		this.annPropsWriter.writeAttribute(ATTR_NAME, name);
+        		this.annPropsWriter.writeCharacters(value);
+        		this.annPropsWriter.writeEndElement();
+        		this.annPropsWriter.writeCharacters("\n");
+        		//System.out.println("  " + name + "=" + value);
+        	}
+        	this.indent(1, this.annPropsWriter);
+        	this.annPropsWriter.writeEndElement();
+        	this.annPropsWriter.writeCharacters("\n");
+        }
     }
 
     public void writeLexeme(TEILex lex, HashMap<String, String> currentIds, int currentIndent) throws XMLStreamException {
@@ -799,25 +836,30 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         annMorphosyntaxWriter.writeAttribute("type", "lex");
         annMorphosyntaxWriter.writeAttribute("xml:id", currentIds.get("lexId"));
         annMorphosyntaxWriter.writeCharacters("\n");
+        
         this.indent(++currentIndent, annMorphosyntaxWriter);
         annMorphosyntaxWriter.writeStartElement(TAG_FEATURE);
         annMorphosyntaxWriter.writeAttribute("name", "base");
         annMorphosyntaxWriter.writeCharacters("\n");
+        
         this.indent(++currentIndent, annMorphosyntaxWriter);
         annMorphosyntaxWriter.writeStartElement(TAG_STRING);
-        annMorphosyntaxWriter.writeCharacters(lex.base);
+        annMorphosyntaxWriter.writeCharacters(lex.getBase());
         annMorphosyntaxWriter.writeEndElement();
         annMorphosyntaxWriter.writeCharacters("\n");
         writeEndElementLine(--currentIndent, annMorphosyntaxWriter);
+        
         this.indent(currentIndent, annMorphosyntaxWriter);
         annMorphosyntaxWriter.writeStartElement(TAG_FEATURE);
         annMorphosyntaxWriter.writeAttribute("name", "ctag");
         annMorphosyntaxWriter.writeCharacters("\n");
+        
         this.indent(++currentIndent, annMorphosyntaxWriter);
         annMorphosyntaxWriter.writeEmptyElement(TAG_SYMBOL);
-        annMorphosyntaxWriter.writeAttribute("value", lex.ctag);
+        annMorphosyntaxWriter.writeAttribute("value", lex.getCtag());
         annMorphosyntaxWriter.writeCharacters("\n");
         writeEndElementLine(--currentIndent, annMorphosyntaxWriter);
+        
         this.indent(currentIndent, annMorphosyntaxWriter);
         annMorphosyntaxWriter.writeStartElement(TAG_FEATURE);
         annMorphosyntaxWriter.writeAttribute("name", "msd");
@@ -828,7 +870,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
             annMorphosyntaxWriter.writeCharacters("\n");
         }
         currentIndent++;
-        for(Pair<String, Integer> entry: lex.msdList){
+        for(Pair<String, Integer> entry: lex.getMsds()){
             String msd = entry.getFirst();
             int msdIdx = entry.getSecond();
             this.indent(currentIndent, annMorphosyntaxWriter);
@@ -858,6 +900,9 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
             writeClosing(textWriter, 4);
             writeClosing(annSegmentationWriter, 3);
             writeClosing(annMorphosyntaxWriter, 3);
+            if(annPropsWriter != null){
+            	writeClosing(annPropsWriter, 1);
+            }
             if(annNamedWriter != null){
             	writeClosing(annNamedWriter, 3);
             }
@@ -874,28 +919,15 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
             	writeClosing(annRelationsWriter, 3);
             }
 
-            textWriter.close();
-            annSegmentationWriter.close();
-            annMorphosyntaxWriter.close();
-            if (annNamedWriter != null){ 
-            	annNamedWriter.close();
-            }
-            if (annMentionsWriter != null){ 
-            	annMentionsWriter.close();
-            }
-            if (annChunksWriter != null){ 
-            	annChunksWriter.close();
-            }
-            if (annCoreferenceWriter != null){ 
-            	annCoreferenceWriter.close();
-            }
-            if (annRelationsWriter != null){ 
-            	annCoreferenceWriter.close();
-            }
-
-            text.close();
-            annMorphosyntax.close();
-            annNamed.close();
+            this.closeStream(this.text, textWriter);
+            this.closeStream(this.annSegmentation, this.annSegmentationWriter);
+            this.closeStream(this.annMorphosyntax, this.annMorphosyntaxWriter);
+            this.closeStream(this.annProps, this.annPropsWriter);
+            this.closeStream(this.annNamed, this.annNamedWriter);
+            this.closeStream(this.annMentions, this.annMentionsWriter);
+            this.closeStream(this.annChunks, this.annChunksWriter);
+            this.closeStream(this.annCoreference, this.annCoreferenceWriter);
+            this.closeStream(this.annRelations, this.annRelationsWriter);
         } catch (XMLStreamException ex) {
             ex.printStackTrace();
         } catch (IOException ex) {
@@ -909,7 +941,6 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
                 this.indent(indent--, xmlw);
                 xmlw.writeEndElement();
                 xmlw.writeCharacters("\n");
-
             }
             xmlw.writeEndDocument();
         } catch (XMLStreamException e) {
@@ -923,152 +954,13 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
                 xmlw.writeCharacters(" ");
     }
 
-
-
-    private class Interps{
-
-        ArrayList<TEILex> lexemes;
-        String disamb;
-        int disambIdx;
-
-        public Interps(ArrayList<Tag> tags){
-            tagsToTEI(tags);
-        }
-
-        public void tagsToTEI(ArrayList<Tag> tags){
-            lexemes = new ArrayList<TEILex>();
-            int msdIdx = 0;
-            for (Tag tag: tags){
-                String base = tag.getBase();
-                String[] ctag = tag.getCtag().split(":");
-                String TEIctag = ctag[0];
-                String msd;
-                if (ctag.length > 1){
-                    msd =  tag.getCtag().substring(TEIctag.length()+1);
-                }
-                else{
-                    msd = "";
-                }
-
-                if (disamb == null && tag.getDisamb()){
-                    disambIdx = msdIdx;
-                    disamb = base+":"+TEIctag+":"+msd;
-                }
-
-                boolean foundMatch = false;
-                for(TEILex lex: lexemes){
-                    if (lex.match(base, TEIctag)){
-                        foundMatch = true;
-                        lex.addMsd(msd, msdIdx++);
-                        break;
-                    }
-                }
-                if (!foundMatch){
-                    TEILex newLex = new TEILex(base, TEIctag);
-                    newLex.addMsd(msd, msdIdx++);
-                    lexemes.add(newLex);
-                }
-            }
-
-            if (disamb == null){
-                TEILex firstLex = lexemes.get(0);
-                disamb = firstLex.base+":"+firstLex.ctag+":"+firstLex.msdList.get(0).getFirst();
-            }
-        }
-    }
-
-    private class TEILex{
-
-        String base;
-        String ctag;
-        ArrayList<Pair<String, Integer>> msdList;
-        boolean disamb;
-        int disambMsdIdx;
-
-        public TEILex(String base, String ctag){
-            this.base = base;
-            this.ctag = ctag;
-            msdList = new ArrayList<Pair<String, Integer>>();
-            disamb = false;
-        }
-
-        public boolean isDisamb(){
-            return disamb;
-        }
-
-        public void setDisambTrue(int msdIdx){
-            if(!disamb){
-                disamb = true;
-                disambMsdIdx = msdIdx;
-            }
-        }
-
-
-        public void addMsd(String msd, int idx){
-            msdList.add(new Pair<String, Integer>(msd, idx));
-        }
-
-        public boolean match(String base, String ctag){
-            return this.base.equals(base) && this.ctag.equals(ctag);
-        }
-
-        public int msdSize() {
-            return msdList.size();
-        }
+    private void closeStream(OutputStream stream, XMLStreamWriter writer) throws XMLStreamException, IOException{
+    	if ( writer != null ){
+    		writer.close();
+    	}
+    	if ( stream != null && stream instanceof GZIPOutputStream ){
+    		((GZIPOutputStream)stream).finish();
+    	}
     }
     
-    private class Pair<A, B> {
-        private A first;
-        private B second;
-
-        public Pair(A first, B second) {
-            super();
-            this.first = first;
-            this.second = second;
-        }
-
-        public int hashCode() {
-            int hashFirst = first != null ? first.hashCode() : 0;
-            int hashSecond = second != null ? second.hashCode() : 0;
-
-            return (hashFirst + hashSecond) * hashSecond + hashFirst;
-        }
-
-        public boolean equals(Object other) {
-            if (other instanceof Pair) {
-                @SuppressWarnings("unchecked")
-				Pair<A, B> otherPair = (Pair<A, B>) other;
-                return
-                        ((  this.first == otherPair.first ||
-                                ( this.first != null && otherPair.first != null &&
-                                        this.first.equals(otherPair.first))) &&
-                                (	this.second == otherPair.second ||
-                                        ( this.second != null && otherPair.second != null &&
-                                                this.second.equals(otherPair.second))) );
-            }
-
-            return false;
-        }
-
-        public String toString()
-        {
-            return "(" + first + ", " + second + ")";
-        }
-
-        public A getFirst() {
-            return first;
-        }
-
-        public void setFirst(A first) {
-            this.first = first;
-        }
-
-        public B getSecond() {
-            return second;
-        }
-
-        public void setSecond(B second) {
-            this.second = second;
-        }
-    }
 }

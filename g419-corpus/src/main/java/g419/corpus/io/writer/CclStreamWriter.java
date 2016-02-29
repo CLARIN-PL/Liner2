@@ -9,8 +9,10 @@ import g419.corpus.structure.Tag;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,23 +64,44 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 	private XMLOutputFactory xmlof = null;
 	private boolean indent = true;
     private final String[] requiredAttributes = new String[]{"orth", "base", "ctag"};
+    private boolean disambOnly = false;
 	
     public CclStreamWriter(OutputStream os) {
 		this.os = os;
 		this.xmlof = XMLOutputFactory.newFactory();
 		annotationSentChannelIdx = new HashMap<Annotation, HashMap<String, Integer>>();
 	}
-	
+
+    /**
+     * 
+     * @param os
+     * @param disambOnly jeżeli true, to zapisywane są tylko te tagi morfologiczne, które zostały oznaczone jako disamb.
+     */
+    public CclStreamWriter(OutputStream os, boolean disambOnly) {
+		this.os = os;
+		this.xmlof = XMLOutputFactory.newFactory();
+		annotationSentChannelIdx = new HashMap<Annotation, HashMap<String, Integer>>();
+		this.disambOnly = disambOnly;
+	}
+
     public CclStreamWriter(OutputStream os, OutputStream rel){
     	this.os = os;
     	this.osRel = rel;
     	this.xmlof = XMLOutputFactory.newFactory();
     	annotationSentChannelIdx = new HashMap<Annotation, HashMap<String, Integer>>();
     }
-    
+
+    public CclStreamWriter(OutputStream os, OutputStream rel, boolean disambOnly){
+    	this.os = os;
+    	this.osRel = rel;
+    	this.xmlof = XMLOutputFactory.newFactory();
+    	annotationSentChannelIdx = new HashMap<Annotation, HashMap<String, Integer>>();
+    	this.disambOnly = disambOnly;
+    }
+   
 	private void openRelXml(){
 		try {
-			this.xmlRelw = this.xmlof.createXMLStreamWriter(osRel);
+			this.xmlRelw = this.xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(osRel)));
 			xmlRelw.writeStartDocument("UTF-8", "1.0");
 			xmlRelw.writeCharacters("\n");
 			xmlRelw.writeStartElement(TAG_RELATIONS);
@@ -265,7 +288,6 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 			if (!channels.contains(chunk.getType()))
 				channels.add(chunk.getType());
 		}
-//		Collections.sort(channels);
 		
 		ArrayList<Token> tokens = sentence.getTokens();
 		for (int i = 0; i < tokens.size(); i++)
@@ -287,15 +309,11 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 		writeText(token.getOrth());
 		xmlw.writeEndElement();
 		xmlw.writeCharacters("\n");
-		boolean written = false;
 		for (Tag tag : token.getTags()){
-			if(tag.getDisamb()){
-				writeTag(tag);
-				written = true;
-				break;
+			if( this.disambOnly == false || tag.getDisamb() ){
+				this.writeTag(tag);
 			}
 		}
-		if(!written) writeTag(token.getTags().get(0));
 		
 		Annotation[] tokenchannels = new Annotation[channels.size()];
 		for (Annotation chunk : chunks) {
@@ -303,7 +321,6 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 				tokenchannels[channels.indexOf(chunk.getType())] = chunk;
 		}
 
-//		Collections.sort(sortedChannels);
 		for (int chanIdx = 0; chanIdx < channels.size(); chanIdx++) {
 			this.indent(4);
 			xmlw.writeStartElement(TAG_ANN);
@@ -366,8 +383,9 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 	private void writeTag(Tag tag) throws XMLStreamException {
 		this.indent(4);
 		xmlw.writeStartElement(TAG_TAG);
-		if (tag.getDisamb())
+		if (tag.getDisamb()){
 			xmlw.writeAttribute(TAG_DISAMB, "1");
+		}
 		xmlw.writeStartElement(TAG_BASE);
 		writeText(tag.getBase());
 		xmlw.writeEndElement();

@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.cli.MissingOptionException;
+import org.apache.commons.cli.UnrecognizedOptionException;
 
 import g419.corpus.TerminateException;
 
@@ -55,10 +58,10 @@ public class ActionSelector {
                 catch (TerminateException e){
                     System.out.println(e.getMessage());
                 }
-                catch (ParseException | MissingOptionException e) {
+                catch (ParseException | MissingOptionException | UnrecognizedOptionException e) {
                 	System.out.println(this.credits);
                     System.out.println();
-                    System.out.println(String.format("[Options parse error] %s\n", e.getMessage()));
+                    System.out.println(String.format("[Option error] %s\n", e.getMessage()));
                     tool.printOptions();
                     System.out.println();
                 }
@@ -108,7 +111,13 @@ public class ActionSelector {
 
         String newLine = String.format("   %"+maxLength+"s    ", " ");
 
+        Set<String> actionNames = new TreeSet<String>();
         for (Action tool : this.actions.values()){
+        	actionNames.add(tool.getName());
+        }
+        
+        for (String name : actionNames){
+        	Action tool = this.actions.get(name);
             System.out.println(String.format(lineFormat,
                     tool.getName(),
                     tool.getDescription()).replaceAll("#", "\n" + newLine));

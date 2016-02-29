@@ -164,7 +164,7 @@ public class ActionTrain extends Action {
 		}
         
 		trainer.train();
-		Serializer trainedModel = trainer.getTrainedModel();
+		Serializer<?> trainedModel = trainer.getTrainedModel();
 		trainedModel.persist(this.classifier_file);
 		
 		reader.close();

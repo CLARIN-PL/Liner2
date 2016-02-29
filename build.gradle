@@ -1,3 +1,5 @@
+import org.gradle.plugins.ide.eclipse.model.ProjectDependency
+
 buildscript {
     repositories { jcenter() }
     dependencies {
@@ -81,6 +83,13 @@ allprojects {
             archives it
         }
     }
+}
+
+eclipse {
+   classpath {
+      // Tworzy główny .classpath z wszystkimi zależnościami podprojektów
+      plusConfigurations += subprojects.collect { it.configurations.compile }
+   }
 }
 
 task libZip(type: Zip, dependsOn: build){

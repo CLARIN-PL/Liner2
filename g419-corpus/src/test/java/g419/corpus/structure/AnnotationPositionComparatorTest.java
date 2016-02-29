@@ -12,15 +12,15 @@ public class AnnotationPositionComparatorTest {
 		int equal = 0;
 		int greater = 1;
 		
-		Sentence sentence1 = new Sentence();
+		Sentence sentence1 = SentenceTest.getSampleSentence();
 		sentence1.setId("sentence1");
-		Sentence sentence2 = new Sentence();
+		Sentence sentence2 = SentenceTest.getSampleSentence();
 		sentence2.setId("sentence2");
 
 		int begin1 = 0;
 		int end1 = 0;
-		int begin2 = 5;
-		int end2 = 10;
+		int begin2 = 1;
+		int end2 = 2;
 		String type = "";
 		Annotation annotation1 = new Annotation(begin1, end1, type, sentence1);
 		Annotation annotation2 = new Annotation(begin1, end1, type, sentence1);

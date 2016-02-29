@@ -1,20 +1,24 @@
 package g419.corpus.io.reader;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+
 import g419.corpus.io.DataFormatException;
 import g419.corpus.io.reader.parser.CclRelationSaxParser;
 import g419.corpus.io.reader.parser.CclSaxParser;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.TokenAttributeIndex;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 
 public class CclSAXStreamReader extends AbstractDocumentReader {
 	
 	private Document document;
 	
-	public CclSAXStreamReader(String uri, InputStream cclDocument, InputStream cclDescriptor, InputStream cclRelations) throws DataFormatException, IOException {
+	public CclSAXStreamReader(String uri, InputStream cclDocument, InputStream cclDescriptor, InputStream cclRelations) throws DataFormatException, ParserConfigurationException, SAXException, IOException {
 		TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
 		attributeIndex.addAttribute("orth");
 		attributeIndex.addAttribute("base");

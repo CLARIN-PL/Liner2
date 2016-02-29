@@ -127,7 +127,7 @@ public class MaltFeatureGenerator {
     		else{
     			int index = path.getMatchedNodes().get(node);
     			String base = sentence.getTokens().get(index).getDisambTag().getBase();
-    			Set<String> concepts = serdel.getConcept(base);
+    			Set<String> concepts = serdel.getLemmaConcepts(base);
     			if ( concepts != null ){
     				Set<String> elements = new HashSet<String>();
     				for ( String concept : concepts ){

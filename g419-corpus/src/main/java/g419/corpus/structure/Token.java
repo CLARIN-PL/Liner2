@@ -1,6 +1,10 @@
 package g419.corpus.structure;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Reprezentuje token, z których składa się zdanie (Sentence)
@@ -20,6 +24,7 @@ public class Token {
         setAttributeValue(attrIdx.getIndex("orth"), orth);
         addTag(firstTag);
     }
+
     /* Indeks atrybutów */
     public TokenAttributeIndex attrIdx;
 
@@ -28,6 +33,9 @@ public class Token {
 	
 	/* Lista analiz morfologicznych, jeżeli dostępna. */
 	ArrayList<Tag> tags = new ArrayList<Tag>();
+
+	/* Opcjonalne cechy nazwanych atrybutów */
+	Map<String, String> props = new HashMap<String, String>();
 	
 	/* Oznaczenie, czy między bieżącym a następnym tokenem był biały znak. */
 	boolean noSpaceAfter = false; 
@@ -52,10 +60,10 @@ public class Token {
 		return attributes.get(index);
 	}
 
-    public String getAttributeValue(String attr){
-        int index = this.attrIdx.getIndex(attr);
-        return getAttributeValue(index);
-    }
+	public String getAttributeValue(String attr){
+        	int index = this.attrIdx.getIndex(attr);
+        	return getAttributeValue(index);
+    	}
 	
 	public int getNumAttributes() {
 		return attributes.size();
@@ -65,6 +73,14 @@ public class Token {
 		return this.id;
 	}
 	
+	public Map<String, String> getProps(){
+		return this.props;
+	}
+
+	public void setProp(String name, String value){
+		this.props.put(name, value);
+	}
+
 	/**
 	 * TODO
 	 * Funkcja pomocnicza zwraca wartość pierwszego atrybutu.
@@ -104,7 +120,17 @@ public class Token {
 		}
 		return null;
 	}
-	
+
+	public Set<Tag> getDisambTags() {
+		Set<Tag> tags = new HashSet<Tag>();
+		for ( Tag tag : this.tags ){
+			if ( tag.getDisamb() ){
+				tags.add(tag);
+			}
+		}		
+		return tags;
+	}
+
 	public void packAtributes(int size){
 		while(getNumAttributes()<size)
 			attributes.add(null);

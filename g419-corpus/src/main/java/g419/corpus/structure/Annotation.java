@@ -13,6 +13,11 @@ public class Annotation {
 	 * Typ oznakowania.
 	 */
 	private String type = null;
+	
+	/**
+	 * Kategoria anotacji, np. word, group, chunk, ne
+	 */
+	private String category = null;
 
 	/**
 	 * Zdanie, do którego należy chunk.
@@ -168,7 +173,9 @@ public class Annotation {
 	public boolean equals(Object object) {
 		Annotation chunk = (Annotation) object;
 		if(chunk == null) return false;
-		if(!this.getSentence().getId().equals(chunk.getSentence().getId()))
+		if( this.getSentence().getId() != null
+				&& chunk.getSentence().getId() != null
+				&& !this.getSentence().getId().equals(chunk.getSentence().getId()))
 			return false;
 		else if (!this.tokens.equals(chunk.getTokens()))
 			return false;
@@ -237,6 +244,10 @@ public class Annotation {
 	public String getType() {
 		return this.type;
 	}
+	
+	public String getCategory() {
+		return this.category;
+	}
 
 	/**
 	 * Zwraca treść chunku, jako konkatenację wartości pierwszych atrybutów.
@@ -289,6 +300,10 @@ public class Annotation {
 
 	public void setType(String type){
 		this.type = type.toLowerCase();
+	}
+	
+	public void setCategory(String category){
+		this.category = category;
 	}
 
 	public static Annotation[] sortChunks(HashSet<Annotation> chunkSet) {

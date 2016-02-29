@@ -25,7 +25,10 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'commons-cli:commons-cli:1.2'
     compile 'commons-io:commons-io:2.4'
+    compile 'org.jsoup:jsoup:1.8.3'
     compile project(":g419-corpus")
     compile project(":g419-lib-cli")
     compile project(":g419-liner2-api")
+    compile files('../lib/bzip2.jar')
+    compile files('../lib/wikixmlj-r43.jar')
 }

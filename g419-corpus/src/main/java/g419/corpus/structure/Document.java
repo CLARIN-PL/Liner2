@@ -13,8 +13,9 @@ public class Document{
 	String name = null;
 	String uri = null;
 	TokenAttributeIndex attributeIndex = null;
-	ArrayList<Paragraph> paragraphs = new ArrayList<Paragraph>();
+	List<Paragraph> paragraphs = new ArrayList<Paragraph>();
 	DocumentDescriptor documentDescriptor = new DocumentDescriptor();
+	Set<Frame> frames = new HashSet<Frame>();
 	
 	/* Zbiór relacji */
 	RelationSet relations = new RelationSet();
@@ -24,23 +25,27 @@ public class Document{
 		this.attributeIndex = attributeIndex;
 	}
 	
-	public Document(String name, ArrayList<Paragraph> paragraphs, TokenAttributeIndex attributeIndex){
+	public Document(String name, List<Paragraph> paragraphs, TokenAttributeIndex attributeIndex){
 		this.name = name;
 		this.paragraphs = paragraphs;
 		for(Paragraph paragraph: paragraphs) paragraph.setDocument(this);
 		this.attributeIndex = attributeIndex;
 	}
 	
-	public Document(String name, ArrayList<Paragraph> paragraphs, TokenAttributeIndex attributeIndex, RelationSet relations){
+	public Document(String name, List<Paragraph> paragraphs, TokenAttributeIndex attributeIndex, RelationSet relations){
 		this.name = name;
 		this.paragraphs = paragraphs;
 		this.attributeIndex = attributeIndex;
 		this.relations = relations;
 	}
 	
+	public void setName(String name){
+		this.name = name;
+	}
+	
 	/**
 	 * Get the name of document source. If the document was read from a file, 
-	 * it is a path to the file. 
+	 * it is a relative path to the file. 
 	 * @return source of the document
 	 */
 	public String getName(){
@@ -77,8 +82,12 @@ public class Document{
 		return this.attributeIndex;
 	}
 	
-	public ArrayList<Paragraph> getParagraphs() {
+	public List<Paragraph> getParagraphs() {
 		return this.paragraphs;
+	}
+	
+	public Set<Frame> getFrames(){
+		return this.frames;
 	}
 	
 	public void setAttributeIndex(TokenAttributeIndex attributeIndex) {

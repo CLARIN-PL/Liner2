@@ -6,16 +6,24 @@ import g419.corpus.io.reader.parser.tei.AnnGroupsSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnMentionsSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnMorphosyntaxSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnNamedSAXParser;
+import g419.corpus.io.reader.parser.tei.AnnPropsSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnRelationsSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnSegmentationSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnWordsSAXParser;
 import g419.corpus.structure.Document;
+import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.RelationSet;
 import g419.corpus.structure.Sentence;
+import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 
 /**
@@ -29,6 +37,7 @@ public class TEIStreamReader extends  AbstractDocumentReader{
     public TEIStreamReader(
     		String uri,
     		InputStream annMorphosyntax, 
+    		InputStream annProps,
     		InputStream annSegmentation, 
     		InputStream annNamed, 
     		InputStream annMentions, 
@@ -54,6 +63,7 @@ public class TEIStreamReader extends  AbstractDocumentReader{
         AnnWordsSAXParser wordsParser = null;
         AnnMentionsSAXParser mentionParser = null;
         AnnChunksSAXParser chunksParser = null;
+        AnnPropsSAXParser propsParser = null;
 
         /* Read words from the ann_words.xml file */
         if ( annWords != null ){
@@ -107,6 +117,31 @@ public class TEIStreamReader extends  AbstractDocumentReader{
         this.document.setUri(uri);
         for ( Sentence sentence : this.document.getSentences() ){
         	sentence.setDocument(document);
+        }
+                
+        if ( annProps != null ){
+        	try {
+				propsParser = new AnnPropsSAXParser(annProps);
+				Map<String, Map<String, String>> props = propsParser.getProps();
+				for ( Paragraph p : document.getParagraphs() ){
+					for ( Sentence s : p.getSentences() ){
+						for ( Token t : s.getTokens() ){
+							Map<String, String> tokenProps = props.get(t.getId());
+							if ( tokenProps != null ){
+								for ( String name : tokenProps.keySet() ){
+									t.setProp(name, tokenProps.get(name));
+								}
+							}
+						}
+					}
+				}
+			} catch (ParserConfigurationException e) {
+				e.printStackTrace();
+			} catch (SAXException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
         }
     }
 

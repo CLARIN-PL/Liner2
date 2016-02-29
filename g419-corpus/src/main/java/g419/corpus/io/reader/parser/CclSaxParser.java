@@ -76,28 +76,19 @@ public class CclSaxParser extends DefaultHandler {
     Map<String, Annotation> annotationsPerToken;
     String propKey;
 
-    public CclSaxParser(String uri, InputStream is, TokenAttributeIndex attributeIndex) throws DataFormatException {
+    public CclSaxParser(String uri, InputStream is, TokenAttributeIndex attributeIndex) throws DataFormatException, ParserConfigurationException, SAXException, IOException {
         this.uri = uri;
         this.is = is;
         this.attributeIndex = attributeIndex;
         paragraphs = new ArrayList<Paragraph>();
-        parseDocument();
+        this.parseDocument();
         this.document = new Document(uri, this.paragraphs, this.attributeIndex);
     }
 
-    private void parseDocument() throws DataFormatException {
+    private void parseDocument() throws DataFormatException, ParserConfigurationException, SAXException, IOException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
-        try {
-            SAXParser parser = factory.newSAXParser();
-            parser.parse(is,this);
-        } catch (ParserConfigurationException e) {
-            throw new DataFormatException("Parse error (ParserConfigurationException)");
-        } catch (SAXException e) {
-            e.printStackTrace();
-            throw new DataFormatException("Parse error (SAXException)");
-        } catch (IOException e) {
-            throw new DataFormatException("Parse error (IOException)");
-        }
+        SAXParser parser = factory.newSAXParser();
+        parser.parse(is,this);
     }
 
     @Override
@@ -207,7 +198,8 @@ public class CclSaxParser extends DefaultHandler {
                     if(sentId == null){
                         sentId = "unknown_sentence_id";
                     }
-//                    System.out.println(uri + ":" +  sentId + ":t" + idx + " | Warning: Invalid annotation category in property: " + propertyKey + " - property has been skipped");
+                    //System.out.println("Token attribute " + propertyKey + " = " + tmpProps.get(propertyKey));
+                    currentToken.setProp(propertyKey, tmpProps.get(propertyKey));
                 }
             }
         }

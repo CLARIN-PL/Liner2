@@ -19,7 +19,6 @@ import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Relation;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.lib.cli.Action;
@@ -27,7 +26,6 @@ import g419.lib.cli.CommonOptions;
 import g419.liner2.api.Liner2;
 import g419.liner2.api.chunker.IobberChunker;
 import g419.liner2.api.features.tokens.ClassFeature;
-import g419.liner2.api.tools.FscoreEvaluator;
 import g419.liner2.api.tools.parser.MaltParser;
 import g419.liner2.api.tools.parser.MaltSentence;
 import g419.liner2.api.tools.parser.MaltSentenceLink;
@@ -38,9 +36,8 @@ import g419.spatial.filter.RelationFilterPrepositionBeforeLandmark;
 import g419.spatial.filter.RelationFilterPronoun;
 import g419.spatial.filter.RelationFilterSemanticPattern;
 import g419.spatial.filter.RelationFilterSpatialIndicator;
-import g419.spatial.structure.SpatialRelation;
-import g419.spatial.structure.SpatialRelationPattern;
-import g419.spatial.tools.FscoreEvaluator2;
+import g419.spatial.structure.SpatialExpression;
+import g419.spatial.structure.SpatialRelationSchema;
 import g419.toolbox.sumo.Sumo;
 import g419.toolbox.wordnet.NamToWordnet;
 import g419.toolbox.wordnet.Wordnet3;
@@ -189,7 +186,7 @@ public class ActionDiscoverSchema extends Action {
 					}
 					
 					
-					List<SpatialRelation> relations = new LinkedList<SpatialRelation>();
+					List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
 
 					// Second Iteration only
 					
@@ -205,7 +202,7 @@ public class ActionDiscoverSchema extends Action {
 					this.replaceNgWithNames(sentence, relations);
 					
 					if ( relations.size() > 0 ){
-						for ( SpatialRelation rel : relations ){
+						for ( SpatialExpression rel : relations ){
 							
 							boolean pass = true;
 							
@@ -241,7 +238,7 @@ public class ActionDiscoverSchema extends Action {
 							
 							if ( pass ){
 								StringBuilder sb = new StringBuilder();
-								for ( SpatialRelationPattern p : semanticFilter.match(rel) ){
+								for ( SpatialRelationSchema p : semanticFilter.match(rel) ){
 									if ( sb.length() > 0 ){
 										sb.append(" & ");
 									}
@@ -265,7 +262,7 @@ public class ActionDiscoverSchema extends Action {
 	 * @param sentence
 	 * @param relations
 	 */
-	private void replaceNgWithNames(Sentence sentence, List<SpatialRelation> relations){
+	private void replaceNgWithNames(Sentence sentence, List<SpatialExpression> relations){
 		Map<String, Annotation> names = new HashMap<String, Annotation>();
 		for ( Annotation an : sentence.getAnnotations(this.patternAnnotationNam) ){
 			String key = String.format("%d:%d", an.getBegin(), an.getEnd());
@@ -276,7 +273,7 @@ public class ActionDiscoverSchema extends Action {
 				names.put(key, an);
 			}
 		}
-		for ( SpatialRelation relation : relations ){
+		for ( SpatialExpression relation : relations ){
 			// Sprawdź landmark
 			String landmarkKey = String.format("%d:%d",relation.getLandmark().getBegin(), relation.getLandmark().getEnd());
 			Annotation landmarkName = names.get(landmarkKey);
@@ -322,11 +319,11 @@ public class ActionDiscoverSchema extends Action {
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialRelation> findCandidatesNgAnyPrepNg(Sentence sentence, 
+	public List<SpatialExpression> findCandidatesNgAnyPrepNg(Sentence sentence, 
 			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
 			Map<Integer, Annotation> chunkNpTokens, 
 			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialRelation> relations = new LinkedList<SpatialRelation>();
+		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
 		/* Szukaj wzorców NG* prep NG* */
 		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
 			Annotation preposition = chunkPrepTokens.get(an.getBegin());
@@ -369,11 +366,11 @@ public class ActionDiscoverSchema extends Action {
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialRelation> findCandidatesNgPrepNgNoNp(Sentence sentence, 
+	public List<SpatialExpression> findCandidatesNgPrepNgNoNp(Sentence sentence, 
 			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
 			Map<Integer, Annotation> chunkNpTokens, 
 			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialRelation> relations = new LinkedList<SpatialRelation>();
+		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
 		/* Szukaj wzorców NG* prep NG* */
 		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
 			Annotation preposition = chunkPrepTokens.get(an.getBegin());
@@ -402,11 +399,11 @@ public class ActionDiscoverSchema extends Action {
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialRelation> findCandidatesNgPrepNgDiffNp(Sentence sentence, 
+	public List<SpatialExpression> findCandidatesNgPrepNgDiffNp(Sentence sentence, 
 			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
 			Map<Integer, Annotation> chunkNpTokens, 
 			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialRelation> relations = new LinkedList<SpatialRelation>();
+		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
 		/* Szukaj wzorców NG* prep NG* */
 		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
 			Annotation preposition = chunkPrepTokens.get(an.getBegin());
@@ -436,11 +433,11 @@ public class ActionDiscoverSchema extends Action {
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialRelation> findCandidatesPrepNgNgDiffNp(Sentence sentence, 
+	public List<SpatialExpression> findCandidatesPrepNgNgDiffNp(Sentence sentence, 
 			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
 			Map<Integer, Annotation> chunkNpTokens, 
 			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialRelation> relations = new LinkedList<SpatialRelation>();
+		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
 		/* Szukaj wzorców NG* prep NG* */
 		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
 			Annotation preposition = chunkPrepTokens.get(an.getBegin());
@@ -468,12 +465,12 @@ public class ActionDiscoverSchema extends Action {
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialRelation> findCandidatesNgPrepNgPpasPrepNg(Sentence sentence, 
+	public List<SpatialExpression> findCandidatesNgPrepNgPpasPrepNg(Sentence sentence, 
 			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
 			Map<Integer, Annotation> chunkNpTokens, 
 			Map<Integer, Annotation> chunkPrepTokens,
 			Map<Integer, Annotation> chunkPpasTokens){				
-		List<SpatialRelation> relations = new LinkedList<SpatialRelation>();
+		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
 		/* Szukaj wzorców NG* prep NG* */
 		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
 			Annotation preposition = chunkPrepTokens.get(an.getBegin());
@@ -521,11 +518,11 @@ public class ActionDiscoverSchema extends Action {
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialRelation> findCandidatesNgPrepNgCommaPrepNg(Sentence sentence, 
+	public List<SpatialExpression> findCandidatesNgPrepNgCommaPrepNg(Sentence sentence, 
 			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
 			Map<Integer, Annotation> chunkNpTokens, 
 			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialRelation> relations = new LinkedList<SpatialRelation>();
+		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
 		/* Szukaj wzorców NG* prep NG* */
 		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
 			Annotation preposition = chunkPrepTokens.get(an.getBegin());
@@ -581,11 +578,11 @@ public class ActionDiscoverSchema extends Action {
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialRelation> findCandidatesNgPrepNgPrepNg(Sentence sentence, 
+	public List<SpatialExpression> findCandidatesNgPrepNgPrepNg(Sentence sentence, 
 			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
 			Map<Integer, Annotation> chunkNpTokens, 
 			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialRelation> relations = new LinkedList<SpatialRelation>();
+		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
 		/* Szukaj wzorców NG* prep NG* */
 		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
 			Annotation preposition = chunkPrepTokens.get(an.getBegin());
@@ -634,11 +631,11 @@ public class ActionDiscoverSchema extends Action {
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialRelation> findCandidatesNgNgPrepNg(Sentence sentence, 
+	public List<SpatialExpression> findCandidatesNgNgPrepNg(Sentence sentence, 
 			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
 			Map<Integer, Annotation> chunkNpTokens, 
 			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialRelation> relations = new LinkedList<SpatialRelation>();
+		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
 		/* Szukaj wzorców NG* prep NG* */
 		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
 			Annotation preposition = chunkPrepTokens.get(an.getBegin());
@@ -681,11 +678,11 @@ public class ActionDiscoverSchema extends Action {
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialRelation> findCandidatesFirstNgAnyPrepNg(Sentence sentence, 
+	public List<SpatialExpression> findCandidatesFirstNgAnyPrepNg(Sentence sentence, 
 			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
 			Map<Integer, Annotation> chunkNpTokens, 
 			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialRelation> relations = new LinkedList<SpatialRelation>();
+		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
 		/* Szukaj wzorców NG* prep NG* */
 		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
 			Annotation preposition = chunkPrepTokens.get(an.getBegin());
@@ -736,11 +733,11 @@ public class ActionDiscoverSchema extends Action {
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialRelation> findCandidatesPrepNgNg(Sentence sentence, 
+	public List<SpatialExpression> findCandidatesPrepNgNg(Sentence sentence, 
 			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
 			Map<Integer, Annotation> chunkNpTokens, 
 			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialRelation> relations = new LinkedList<SpatialRelation>();
+		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
 		/* Szukaj wzorców prep NG* NG* */
 		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
 			Annotation preposition = chunkPrepTokens.get(an.getBegin());
@@ -767,11 +764,11 @@ public class ActionDiscoverSchema extends Action {
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialRelation> findCandidatesNgPrepNg(Sentence sentence, 
+	public List<SpatialExpression> findCandidatesNgPrepNg(Sentence sentence, 
 			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
 			Map<Integer, Annotation> chunkNpTokens, 
 			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialRelation> relations = new LinkedList<SpatialRelation>();
+		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
 		/* Szukaj wzorców prep NG* NG* */
 		for ( Annotation landmark : sentence.getAnnotations(this.annotationsNg) ){
 			
@@ -801,11 +798,11 @@ public class ActionDiscoverSchema extends Action {
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialRelation> findCandidatesPrepNgVerbfinNg(Sentence sentence, 
+	public List<SpatialExpression> findCandidatesPrepNgVerbfinNg(Sentence sentence, 
 			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
 			Map<Integer, Annotation> chunkVerbfinTokens, 
 			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialRelation> relations = new LinkedList<SpatialRelation>();
+		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
 		/* Szukaj wzorców prep NG* NG* */
 		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
 			Annotation preposition = chunkPrepTokens.get(an.getBegin());
@@ -833,11 +830,11 @@ public class ActionDiscoverSchema extends Action {
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialRelation> findCandidatesNgVerbfinPrepNg(Sentence sentence, 
+	public List<SpatialExpression> findCandidatesNgVerbfinPrepNg(Sentence sentence, 
 			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
 			Map<Integer, Annotation> chunkVerbfinTokens, 
 			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialRelation> relations = new LinkedList<SpatialRelation>();
+		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
 		/* Szukaj wzorców prep NG* NG* */
 		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
 			Annotation preposition = chunkPrepTokens.get(an.getBegin());
@@ -867,12 +864,12 @@ public class ActionDiscoverSchema extends Action {
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialRelation> findCandidatesNgPpasPrepNg(Sentence sentence, 
+	public List<SpatialExpression> findCandidatesNgPpasPrepNg(Sentence sentence, 
 			Map<Integer, List<Annotation>> mapTokenIdToAnnotations,
 			Map<Integer, Annotation> chunkNpTokens,
 			Map<Integer, Annotation> chunkPpasTokens, 
 			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialRelation> relations = new LinkedList<SpatialRelation>();
+		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
 		/* Szukaj wzorców prep NG* NG* */
 		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
 			Annotation preposition = chunkPrepTokens.get(an.getBegin());
@@ -906,12 +903,12 @@ public class ActionDiscoverSchema extends Action {
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialRelation> findCandidatesNgPactPrepNg(Sentence sentence, 
+	public List<SpatialExpression> findCandidatesNgPactPrepNg(Sentence sentence, 
 			Map<Integer, List<Annotation>> mapTokenIdToAnnotations,
 			Map<Integer, Annotation> chunkNpTokens,
 			Map<Integer, Annotation> chunkPactTokens, 
 			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialRelation> relations = new LinkedList<SpatialRelation>();
+		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
 		/* Szukaj wzorców prep NG* NG* */
 		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
 			Annotation preposition = chunkPrepTokens.get(an.getBegin());
@@ -947,8 +944,8 @@ public class ActionDiscoverSchema extends Action {
 	 * @param maltSentence
 	 * @return
 	 */
-	public List<SpatialRelation> findCandidatesByMalt(Sentence sentence, MaltSentence maltSentence){
-		List<SpatialRelation> srs = new ArrayList<SpatialRelation>();
+	public List<SpatialExpression> findCandidatesByMalt(Sentence sentence, MaltSentence maltSentence){
+		List<SpatialExpression> srs = new ArrayList<SpatialExpression>();
 		for (int i=0; i< sentence.getTokens().size(); i++){
 			Token token = sentence.getTokens().get(i);
 			List<Integer> landmarks = new ArrayList<Integer>();
@@ -994,7 +991,7 @@ public class ActionDiscoverSchema extends Action {
 			if ( landmarks.size() > 0 && trajectors.size() > 0 && indicator != null ){
 				for ( Integer landmark : landmarks ){
 					for ( Integer trajector : trajectors ){
-						SpatialRelation sr = new SpatialRelation(
+						SpatialExpression sr = new SpatialExpression(
 								type + typeLM + typeTR, 
 								new Annotation(trajector, "TR", sentence), 
 								new Annotation(indicator, "SI", sentence), 
@@ -1015,12 +1012,12 @@ public class ActionDiscoverSchema extends Action {
 	 * @param preposition
 	 * @return
 	 */
-	private List<SpatialRelation> generateAllCombinations(String type, List<Annotation> trajectors, List<Annotation> landmarks, Annotation preposition){
-		List<SpatialRelation> relations = new ArrayList<SpatialRelation>();
+	private List<SpatialExpression> generateAllCombinations(String type, List<Annotation> trajectors, List<Annotation> landmarks, Annotation preposition){
+		List<SpatialExpression> relations = new ArrayList<SpatialExpression>();
 		if ( trajectors != null && landmarks != null ){
 			for ( Annotation trajector : trajectors ){
 				for ( Annotation landmark : landmarks ){
-					SpatialRelation sr = new SpatialRelation(type, trajector, preposition, landmark);
+					SpatialExpression sr = new SpatialExpression(type, trajector, preposition, landmark);
 					relations.add(sr);						
 				}
 			}

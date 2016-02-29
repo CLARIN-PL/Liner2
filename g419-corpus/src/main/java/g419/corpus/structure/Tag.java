@@ -6,6 +6,7 @@ public class Tag {
 	String ctag = null;
 	boolean disamb = false;
 	String pos = "";
+	String cas = "";
 	
 	public Tag()	{}
 	
@@ -17,6 +18,9 @@ public class Tag {
 		// ToDo: specyficzne dla tagu nkjp
 		String[] parts = ctag.split(":");
 		this.pos = parts[0];
+		if ( parts.length > 2 ){
+			this.cas = parts[2];
+		}
 	}
 	
 	public String getBase()	{ 
@@ -33,6 +37,10 @@ public class Tag {
 	
 	public String getPos(){ 
 		return this.pos; 
+	}
+	
+	public String getCase(){
+		return this.cas;
 	}
 
     public void setDisamb(boolean disamb){

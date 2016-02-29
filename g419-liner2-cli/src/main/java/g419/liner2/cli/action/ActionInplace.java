@@ -1,5 +1,7 @@
 package g419.liner2.cli.action;
 
+import java.io.File;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 
@@ -69,6 +71,9 @@ public class ActionInplace extends Action{
 
         Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
 
+        String outputTmpIndex = this.input_file + ".tmp";
+        AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(outputTmpIndex, this.input_format);
+        
 		Document document = null;
 		while ( (document = reader.nextDocument()) != null ){
 			System.out.println(document.getUri());
@@ -76,12 +81,16 @@ public class ActionInplace extends Action{
 				gen.generateFeatures(document);
 			}
 			chunker.chunkInPlace(document);
-			AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(document.getUri(), "tei");
 			writer.writeDocument(document);
-			writer.close();
 		}
 
 		reader.close();
+		writer.close();
+		
+		File tmp = new File(outputTmpIndex);
+		if ( tmp.exists() ){
+			tmp.delete();
+		}
 	}
 		
 }

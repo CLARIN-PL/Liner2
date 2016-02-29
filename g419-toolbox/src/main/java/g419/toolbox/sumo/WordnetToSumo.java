@@ -14,33 +14,45 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
+import java.util.zip.GZIPInputStream;
 
 /**
- * Created by michal on 6/2/15.
+ * 
  */
 public class WordnetToSumo {
 
     private Pattern synsetUnitPatern = Pattern.compile("(\\{|\\p{Z})(([^\\p{Z}]+)-([0-9]+))");
-    private HashMap<String, HashSet<String>> wordMapping;
-    private HashMap<String, HashSet<String>> wordSenseMapping;
+    /* Mapowanie lematów słów w zbiór pojęć */
+    private HashMap<String, Set<String>> wordMapping = null;
+    
+    /* Mapowanie lemat+sens, np. firma-1 w zbiór pojęć */
+    private HashMap<String, Set<String>> wordSenseMapping;
+    
+    /* Mapowanie id synsetu w zbiór pojęć */
+    private HashMap<String, Set<String>> synsetIdMapping = null;
 
     /**
-     * Wczytuje mapowanie z domyślnym modelem, tj. mapping-26.05.2015-Serdel.csv
+     * Wczytuje mapowanie z domyślnym modelem, tj. mapping-26.05.2015-Serdel.csv.gz
      * @throws IOException
      * @throws DataFormatException
      */
     public WordnetToSumo() throws IOException, DataFormatException {
-    	this.wordMapping = new HashMap<String, HashSet<String>>();
-    	this.wordSenseMapping = new HashMap<String, HashSet<String>>();
-		String location = "/mapping-26.05.2015-Serdel.csv";
+    	this.wordMapping = new HashMap<String, Set<String>>();
+    	this.wordSenseMapping = new HashMap<String, Set<String>>();
+    	this.synsetIdMapping = new HashMap<String, Set<String>>();
+    	
+		//String location = "/mapping-26.05.2015-Serdel.csv.gz";
+		String location = "/mapping-28.01.2016-Serdel.csv.gz";
 		InputStream resource = this.getClass().getResourceAsStream(location);
+		GZIPInputStream gzip = new GZIPInputStream(resource);
 	
 	    if (resource == null) {
 	        throw new MissingResourceException("Resource not found: " + location,
 	                this.getClass().getName(), location);
 	    }
-	    Reader serdelReader = new InputStreamReader( resource );
+	    Reader serdelReader = new InputStreamReader( gzip );
 	    this.parseMapping(serdelReader);
+	    serdelReader.close();
     }
     
     
@@ -51,8 +63,8 @@ public class WordnetToSumo {
      * @throws DataFormatException
      */
     public WordnetToSumo(String serdelMapping) throws IOException, DataFormatException {
-    	this.wordMapping = new HashMap<String, HashSet<String>>();
-    	this.wordSenseMapping = new HashMap<String, HashSet<String>>();
+    	this.wordMapping = new HashMap<String, Set<String>>();
+    	this.wordSenseMapping = new HashMap<String, Set<String>>();
         File mapping = new File(serdelMapping);
         if(mapping.exists()){
         	Reader serdelReader = null;
@@ -74,44 +86,53 @@ public class WordnetToSumo {
      * @throws DataFormatException
      */
     public WordnetToSumo(Reader serdelReader) throws IOException, DataFormatException {
-    	this.wordMapping = new HashMap<String, HashSet<String>>();
-    	this.wordSenseMapping = new HashMap<String, HashSet<String>>();
+    	this.wordMapping = new HashMap<String, Set<String>>();
+    	this.wordSenseMapping = new HashMap<String, Set<String>>();
         this.parseMapping(serdelReader);
     }
 
-    public Set<String> getConcept(String word){
+    public Set<String> getLemmaConcepts(String word){
         return wordMapping.get(word);
     }
 
     public Set<String> getConcept(String word, int sense){
         return wordSenseMapping.get(word+"-"+sense);
     }
+    
+    public Set<String> getSynsetConcepts(String synsetId){
+    	return this.synsetIdMapping.get(synsetId);
+    }
 
     private void parseMapping(Reader mappingReader) throws IOException, DataFormatException {
         BufferedReader reader = new BufferedReader(mappingReader);
+        /* Pierwsze linia to nagłówek, więc pomijam */
         String line = reader.readLine();
-        while(line != null){
+        while( (line = reader.readLine()) != null){
             String[] attrs = line.split(";");
-            if(!attrs[attrs.length - 1].equals("R")){
-                String sumoClass = attrs[attrs.length - 2];
+            if( attrs.length > 3 ){ //&& !attrs[attrs.length - 1].equals("R")){
+                String synsetId = attrs[0].trim();
+            	String sumoClass = attrs[attrs.length - 2];
                 String synset = attrs[2];
                 HashMap<String, String> synsetUnits = parseSynset(synset);
+                /* Dodaj mapowanie dla lematów i lematów+sene */
                 for(String wordAndSense: synsetUnits.keySet()){
-                    if(wordAndSense.equals("a-1")){
-                        System.out.println(synset);
-                    }
                     addMapping(wordAndSense, sumoClass, wordSenseMapping);
                     addMapping(synsetUnits.get(wordAndSense), sumoClass, wordMapping);
                 }
+                /* Dodaj mapowanie dla identyfikatora synsetu */
+                Set<String> classes = this.synsetIdMapping.get(synsetId);
+                if ( classes == null ){
+                	classes = new HashSet<String>();
+                	this.synsetIdMapping.put(synsetId, classes);
+                }
+                classes.add(sumoClass);
             }
-            line = reader.readLine();
         }
     }
 
-    private void addMapping(String key, String sumoClass, HashMap<String, HashSet<String>> mapping){
+    private void addMapping(String key, String sumoClass, HashMap<String, Set<String>> mapping){
         if(mapping.containsKey(key)){
             mapping.get(key).add(sumoClass);
-//            System.out.println(key + " MULTIPLE CLASSES: " + Arrays.toString(mapping.get(key).toArray()));
         }
         else{
             HashSet<String> classes = new HashSet<String>();
