@@ -95,8 +95,8 @@ public class ActionTrain extends Action {
 		ClassifierFactory.getFactory().register("logistic_mention_pair_smo", new WekaSmoClassifierItem());
 //		ClassifierFactory.getFactory().register("lemur_ranking", new LemurClassifierItem());
 		// ------------------ GENERATORS -------------------------------
-		CreteInstanceGeneratorFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Integer.class, "mention_cluster_generator", new ClusterClassificationInstanceGenerator());
-		CreteInstanceGeneratorFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Integer.class, "mention_cluster_classify_generator", new ClusterClassificationInstanceGenerator());
+		CreteInstanceGeneratorFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Double.class, "mention_cluster_generator", new ClusterClassificationInstanceGenerator());
+		CreteInstanceGeneratorFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Double.class, "mention_cluster_classify_generator", new ClusterClassificationInstanceGenerator());
 		CreteInstanceGeneratorFactory.getFactory().registerInstance(MentionPairClassificationInstance.class, Integer.class, "mention_pair_generator", new MentionPairInstanceGenerator(1.0, -1.0, true));
 		CreteInstanceGeneratorFactory.getFactory().registerInstance(MentionPairClassificationInstance.class, Double.class, "logistic_mention_pair_generator", new MentionPairInstanceGenerator(1.0, -1.0, true));
 		// ----------------- CONVERTERS --------------------------------

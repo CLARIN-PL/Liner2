@@ -16,10 +16,10 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 
-public class ClusterClassificationInstance extends AbstractCreteInstance<Integer>{
+public class ClusterClassificationInstance extends AbstractCreteInstance<Double>{
 	
-	protected Integer POSITIVE_LABEL = 1;
-	protected Integer NEGATIVE_LABEL = -1;
+	protected Double POSITIVE_LABEL = 1.0;
+	protected Double NEGATIVE_LABEL = -1.0;
 	
 	private Mention mention;
 	public Mention getMention(){return mention;}
@@ -40,7 +40,7 @@ public class ClusterClassificationInstance extends AbstractCreteInstance<Integer
 		this.mentionClusterPair = new MentionClusterPair(new ImmutablePair<Annotation, AnnotationCluster>(mention, cluster));
 	}
 	
-	public ClusterClassificationInstance(Annotation mention, AnnotationCluster cluster, Integer label, List<String> features){
+	public ClusterClassificationInstance(Annotation mention, AnnotationCluster cluster, Double label, List<String> features){
 		super(label, features);
 		this.mention = new Mention(mention);
 		this.cluster = new Cluster(cluster);

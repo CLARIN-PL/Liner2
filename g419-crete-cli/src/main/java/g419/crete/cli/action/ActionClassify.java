@@ -90,19 +90,19 @@ public class ActionClassify extends Action {
 	}
 
 	public void initializeResolvers() {
-		CreteResolverFactory.getFactory().register("j48_cluster_classify", new WekaJ48ResolverItem());
-		CreteResolverFactory.getFactory().register("j48_mention_pair_classify", new WekaJ48MentionPairResolverItem());
+		CreteResolverFactory.getFactory().register("randomforest_cluster_classify", new WekaJ48ResolverItem());
+		CreteResolverFactory.getFactory().register("randomforest_mention_pair_classify", new WekaJ48MentionPairResolverItem());
 		CreteResolverFactory.getFactory().register("randomforest_mentionpair_cluster_classify", new WekaRandomForestMentionPairClusterClassifyItem());
 		CreteResolverFactory.getFactory().register("null_resolver", new NullResolverItem());
 		// --------------- CLASSIFIERS -----------------------------------
-		ClassifierFactory.getFactory().register("j48_cluster", new WekaRandomForestClassifierItem());
-		ClassifierFactory.getFactory().register("j48_mention_pair", new WekaRandomForestClassifierItem());
+		ClassifierFactory.getFactory().register("randomforest_cluster", new WekaRandomForestClassifierItem());
+		ClassifierFactory.getFactory().register("randomforest_mention_pair", new WekaRandomForestClassifierItem());
 		ClassifierFactory.getFactory().register("logistic_mention_pair", new WekaLogisticRegressionClassifierItem());
 		ClassifierFactory.getFactory().register("logistic_mention_pair_smo", new WekaSmoClassifierItem());
 		// ------------------ GENERATORS -------------------------------
-		CreteInstanceGeneratorFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Integer.class, "mention_cluster_generator", new ClusterClassificationInstanceGenerator());
-		CreteInstanceGeneratorFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Integer.class, "mention_cluster_classify_generator", new ClusterClassificationInstanceGenerator());
-		CreteInstanceGeneratorFactory.getFactory().registerInstance(MentionPairClassificationInstance.class, Integer.class, "mention_pair_generator", new MentionPairInstanceGenerator(1.0, -1.0, false));
+		CreteInstanceGeneratorFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Double.class, "mention_cluster_generator", new ClusterClassificationInstanceGenerator());
+		CreteInstanceGeneratorFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Double.class, "mention_cluster_classify_generator", new ClusterClassificationInstanceGenerator());
+		CreteInstanceGeneratorFactory.getFactory().registerInstance(MentionPairClassificationInstance.class, Double.class, "mention_pair_generator", new MentionPairInstanceGenerator(1.0, -1.0, false));
 		CreteInstanceGeneratorFactory.getFactory().registerInstance(MentionPairClassificationInstance.class, Double.class, "logistic_mention_pair_generator", new MentionPairInstanceGenerator(1.0, -1.0, true));
 		// ----------------- CONVERTERS --------------------------------
 		CreteInstanceConverterFactory.getFactory().registerInstance(ClusterClassificationInstance.class, Instance.class, "mention_cluster_to_weka_instance", new ClusterClassificationWekaInstanceConverterItem());

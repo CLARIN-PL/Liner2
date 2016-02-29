@@ -13,11 +13,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import weka.classifiers.Classifier;
 import weka.core.Instance;
 
-public class WekaJ48SequentialResolver extends AbstractCreteResolver<Classifier, ClusterClassificationInstance, Instance, Integer>{
+public class WekaJ48SequentialResolver extends AbstractCreteResolver<Classifier, ClusterClassificationInstance, Instance, Double>{
 
 	private int totalPositive;
 	private int totalAccepted;
@@ -107,7 +108,7 @@ public class WekaJ48SequentialResolver extends AbstractCreteResolver<Classifier,
 	
 	@Override
 	protected Document resolveMention(Document document, Annotation mention, List<ClusterClassificationInstance> instancesForMention) {
- 		List<Integer> labels = this.classifier.classify(this.converter.convertInstances(instancesForMention));
+ 		List<Double> labels = this.classifier.classify(this.converter.convertInstances(instancesForMention));
 		ArrayList<ClusterClassificationInstance> correctPairs = new ArrayList<ClusterClassificationInstance>();
 		
 //		if(firstMention){
@@ -139,6 +140,6 @@ public class WekaJ48SequentialResolver extends AbstractCreteResolver<Classifier,
 	@Override public Class<Classifier> getModelClass() {return Classifier.class;}
 	@Override public Class<ClusterClassificationInstance> getAbstractInstanceClass() {return ClusterClassificationInstance.class;}
 	@Override public Class<Instance> getClassifierInstanceClass() {return Instance.class;}
-	@Override public Class<Integer> getLabelClass() {return Integer.class;	}
+	@Override public Class<Double> getLabelClass() {return Double.class;	}
 
 }

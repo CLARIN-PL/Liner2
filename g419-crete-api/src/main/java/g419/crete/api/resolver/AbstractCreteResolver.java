@@ -18,8 +18,11 @@ import java.util.List;
 // TODO: change to AbstractCreteMentionFocusedResolver
 public abstract class AbstractCreteResolver<M, T extends AbstractCreteInstance<L>, I, L> {
 
+	// TODO: Zostawić
 	protected AbstractCreteClassifier<M, I, L> classifier;
+	// TODO: Zostawić
 	protected AbstractCreteInstanceGenerator<T, L> generator;
+	// TODO: przenieść do Klasyfikatora !
 	protected AbstractCreteInstanceConverter<T, I> converter;
 	
 	public void setUp(AbstractCreteClassifier<M, I, L> clas, AbstractCreteInstanceGenerator<T, L> gen, AbstractCreteInstanceConverter<T, I> conv){

@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ClusterClassificationInstanceGenerator extends AbstractCreteInstanceGenerator<ClusterClassificationInstance, Integer>{
+public class ClusterClassificationInstanceGenerator extends AbstractCreteInstanceGenerator<ClusterClassificationInstance, Double>{
 
-	public static final Integer POSITIVE_LABEL = 1;
-	public static final Integer NEGATIVE_LABEL = -1;
+	public static final Double POSITIVE_LABEL = 1.0;
+	public static final Double NEGATIVE_LABEL = -1.0;
 	
 	public final int negativeLimit;
 	
@@ -60,7 +60,7 @@ public class ClusterClassificationInstanceGenerator extends AbstractCreteInstanc
 		for(AnnotationCluster cluster : clusters){
 			AnnotationCluster preceedingCluster = cluster.getPreceedingCluster(mention, mentions); 
 			if(preceedingCluster.getAnnotations().size() > 0){
-				Integer label;
+				Double label;
 				if(cluster.getAnnotations().contains(mention)){
 					label = POSITIVE_LABEL;
 				}
