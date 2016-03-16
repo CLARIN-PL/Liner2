@@ -44,7 +44,7 @@ public class SpatialRelationRecognizer {
 	
 	private Pattern annotationsPrep = Pattern.compile("^PrepNG.*$");	
 	private Pattern annotationsNg = Pattern.compile("^NG.*$");	
-	private Pattern patternAnnotationNam = Pattern.compile("^nam(_.*|$)");
+	private Pattern patternAnnotationNam = Pattern.compile("^nam(_(fac|liv|loc|pro|oth).*|$)");
 	
 	private Set<String> objectPos = new HashSet<String>();
 	private Set<String> regions = SpatialResources.getRegions();
@@ -310,6 +310,15 @@ public class SpatialRelationRecognizer {
 			}
 		}
 		
+		// Usuń kandydatów, dla których spatial indicator jest częścią nazwy
+		List<SpatialExpression> toRemove = new ArrayList<SpatialExpression>();
+		for ( SpatialExpression spatial : relations ){
+			if ( chunkNamesTokens.get(spatial.getSpatialIndicator().getHead()) != null ){
+				toRemove.add(spatial);
+			}
+		}
+		relations.removeAll(toRemove);
+		
 		// Jeżeli frazy NG pokrywają się z nam_, to podmień anotacje
 		this.replaceNgWithNames(sentence, relations, chunkNamesTokens);
 		
@@ -338,6 +347,7 @@ public class SpatialRelationRecognizer {
 			Annotation trajectorName = names.get(trajectorKey);
 			if ( trajectorName != null && trajectorName != relation.getTrajector() ){
 				Logger.getLogger(this.getClass()).info(String.format("Replace %s (%s) with nam (%s)", relation.getTrajector().getType(), relation.getTrajector(), trajectorName));
+				trajectorName.setHead(relation.getTrajector().getHead());
 				relation.setTrajector(trajectorName);
 			}
 		}
