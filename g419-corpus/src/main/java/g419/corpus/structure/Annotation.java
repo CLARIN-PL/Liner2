@@ -47,6 +47,10 @@ public class Annotation {
 
 	private Map<String, String> metadata = new HashMap<String, String>();
 
+	public Annotation(){
+
+	}
+
 	public Annotation(int begin, int end, String type, Sentence sentence){
 		for(int i = begin; i <= end; i++){
 			this.tokens.add(i);
@@ -186,6 +190,8 @@ public class Annotation {
 		return true;
 	}
 
+
+
     @Override
     public int hashCode() {
         return (this.getText() + this.tokens.toString() + this.getType() + this.getSentence().getId()).hashCode();
@@ -209,6 +215,11 @@ public class Annotation {
 
 	public boolean metaDataMatches(Annotation other){
 		return this.metadata.equals(other.metadata);
+	}
+
+	public boolean metaDataMatchesKey(String key, Annotation other){
+
+		return this.metadata.getOrDefault(key, "none1").equals(other.metadata.getOrDefault(key, "none2"));
 	}
 
 	public String getId(){

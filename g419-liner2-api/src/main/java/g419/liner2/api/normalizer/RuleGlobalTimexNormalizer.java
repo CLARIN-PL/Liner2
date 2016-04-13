@@ -114,6 +114,14 @@ public class RuleGlobalTimexNormalizer extends NormalizingChunker {
                     update(annotation.getMetadata("val"));
                 }
             }
+            else {
+                String result = null;
+                String lval = annotation.getMetadata("lval");
+                String baseText = annotation.getBaseText();
+                if (lval != null) {
+                    annotation.setMetadata("val", lval);
+                }
+            }
         }
     }
 

@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 
 import org.chasen.crfpp.Tagger;
 
-public class CrfppChunker extends Chunker 
+public class CrfppChunker extends Chunker
 	implements TrainableChunkerInterface, DeserializableChunkerInterface, SerializableChunkerInterface {
 	
 	private File trainingFile = null;

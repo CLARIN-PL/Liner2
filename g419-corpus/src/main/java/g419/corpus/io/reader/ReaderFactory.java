@@ -177,7 +177,8 @@ public class ReaderFactory {
 				if ( gz && !inputFile.endsWith(".gz") ){
 					inputFile += ".gz";					 
 				}
-				File file = new File(inputFolder, inputFile);
+				//File file = new File(inputFolder, inputFile); todo: checking of existence returns always 'false' before ini reading!!
+				File file = new File(inputFile);
 				InputStream stream = null;
 				if ( file.exists() ){
 					stream = new FileInputStream(file);
