@@ -78,8 +78,118 @@ public class ActionNormalizerEval2 extends Action{
         return outputList;
 	}
 
-
     public void run() throws Exception{
+
+        if ( !LinerOptions.isGlobalOption(LinerOptions.OPTION_USED_CHUNKER) ){
+            throw new ParameterException("Parameter 'chunker' in 'main' section of model not set");
+        }
+
+        TokenFeatureGenerator gen = null;
+
+        if (!LinerOptions.getGlobal().features.isEmpty()){
+            gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
+        }
+
+		/* Create all defined chunkers. */
+        ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
+        cm.loadChunkers();
+
+        Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
+
+        ArrayList<Document> d1 = read_documents();
+
+        float tp = 0, fp = 0, fn = 0, pr, re, fs;
+        for (Document d : d1) {
+
+            HashMap<Sentence, AnnotationSet> referenceChunks = d.getChunkings();
+            //d.removeMetadata("lval");
+            d.removeAnnotations();
+            gen.generateFeatures(d);
+            chunker.prepare(d);
+            Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date", "t3_time", "t3_duration"));
+            HashMap<Sentence, AnnotationSet> chunkings = chunker.chunk(d);
+            for (Sentence s : d.getSentences()) {
+                Set<Annotation> referenceAnnotationSet = new HashSet<>();
+                Set<Annotation> chunkerAnnotationSet = new HashSet<>();
+
+                referenceAnnotationSet.addAll(referenceChunks.get(s).chunkSet().stream()
+                        .filter(p -> typeSet.contains(p.getType()))
+                        .collect(Collectors.toSet()));
+                chunkerAnnotationSet.addAll(chunkings.get(s).chunkSet().stream()
+                        .filter(p -> typeSet.contains(p.getType()))
+                        .collect(Collectors.toSet()));
+
+                Set<Annotation> tpRefSet = new HashSet<>();
+                Set<Annotation> tpChunkSet = new HashSet<>();
+                Set<Annotation> fpChunkSet = new HashSet<>();
+                Set<Annotation> fnRefSet = new HashSet<>();
+                for (Annotation referenceAnnotation : referenceAnnotationSet){
+                    for (Annotation chunkerAnnotation : chunkerAnnotationSet){
+
+                        //Strict
+                        /*if (referenceAnnotation.equals(chunkerAnnotation)){
+                            tpRefSet.add(referenceAnnotation);
+                            tpChunkSet.add(chunkerAnnotation);
+                        }
+                        */
+
+                        //Relaxed (only extents)
+                        /*if (referenceAnnotation.getType().equals(chunkerAnnotation.getType()) &&
+                                referenceAnnotation.getTokens().stream()
+                                        .filter(p -> chunkerAnnotation.getTokens().contains(p))
+                                        .collect(Collectors.toSet()).size() > 0){
+                            tpRefSet.add(referenceAnnotation);
+                            tpChunkSet.add(chunkerAnnotation);
+                        }*/
+
+                        //Relaxed (LVAL)
+                        /*if (referenceAnnotation.getType().equals(chunkerAnnotation.getType()) &&
+                            referenceAnnotation.getTokens().stream()
+                                    .filter(p -> chunkerAnnotation.getTokens().contains(p))
+                                    .collect(Collectors.toSet()).size() > 0 &&
+                            referenceAnnotation.metaDataMatchesKey("lval", chunkerAnnotation)){
+                            tpRefSet.add(referenceAnnotation);
+                            tpChunkSet.add(chunkerAnnotation);
+                        }*/
+
+                        //Relaxed (VAL)
+                        if (referenceAnnotation.getType().equals(chunkerAnnotation.getType()) &&
+                            referenceAnnotation.getTokens().stream()
+                                    .filter(p -> chunkerAnnotation.getTokens().contains(p))
+                                    .collect(Collectors.toSet()).size() > 0 &&
+                            referenceAnnotation.metaDataMatchesKey("val", chunkerAnnotation)){
+                            tpRefSet.add(referenceAnnotation);
+                            tpChunkSet.add(chunkerAnnotation);
+                        }
+                    }
+                }
+                fpChunkSet.addAll(chunkerAnnotationSet.stream()
+                        .filter(p -> !tpChunkSet.contains(p))
+                        .collect(Collectors.toSet())
+                );
+                fnRefSet.addAll(referenceAnnotationSet.stream()
+                                .filter(p -> !tpRefSet.contains(p))
+                                .collect(Collectors.toSet())
+                );
+                tp += tpRefSet.size();
+                fp += fpChunkSet.size();
+                fn += fnRefSet.size();
+
+            }
+        }
+        pr = tp / (tp + fp);
+        re = tp / (tp + fn);
+        fs = 2 * pr * re / (pr + re);
+        int a = 0;
+
+
+
+
+    }
+
+
+
+    public void run2() throws Exception{
 
         if ( !LinerOptions.isGlobalOption(LinerOptions.OPTION_USED_CHUNKER) ){
             throw new ParameterException("Parameter 'chunker' in 'main' section of model not set");
