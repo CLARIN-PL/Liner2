@@ -47,7 +47,8 @@ public final class RuleSet {
                             "Expression "+expression+" was matched by more than one rule! It was already matched "+
                                 "by rule "+matchedRule.name+" and now it was matched by "+rule.name+"!"
                     );
-                    throw up;
+                    //todo: catch this exception later
+                    //throw up;
                 }
         if (matchedRule==null) {
             log.info("No rule matching expression '"+expression+"' was found! Returning null.");

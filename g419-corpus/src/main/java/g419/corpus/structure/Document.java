@@ -165,6 +165,17 @@ public class Document{
 
     }
 
+	/**
+	 * Removes metadata from chunks with given name
+	 */
+	public void removeMetadata(String key) {
+		for (Paragraph paragraph : this.paragraphs)
+			for (Sentence sentence : paragraph.getSentences())
+				for (Annotation annotation : sentence.chunks)
+					annotation.getMetadata().remove(key);
+
+	}
+
     /**
      * Retreives Annotation given sentence id, channel and annotation index in channel
      */
