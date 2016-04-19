@@ -46,6 +46,7 @@ public class ChunkerFactory {
         this.items.add(new ChunkerFactoryItemChunkRel());
         this.items.add(new ChunkerFactoryItemRulesChunker());
         this.items.add(new RBNormalizerFactoryItem());
+        this.items.add(new ChunkerFactoryItemRuleRoad());
         this.items.add(new GlobalTimexNormalizerFactoryItem());
         this.items.add(new GlobalRuleTimexNormalizerFactoryItem());
 	}

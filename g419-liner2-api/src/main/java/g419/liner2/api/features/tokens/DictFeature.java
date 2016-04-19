@@ -1,16 +1,14 @@
 package g419.liner2.api.features.tokens;
 
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-import g419.liner2.api.tools.TrieDictNode;
-
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import g419.corpus.structure.Sentence;
+import g419.corpus.structure.Token;
+import g419.liner2.api.tools.TrieDictNode;
 
 
 public class DictFeature extends TokenInSentenceFeature{
@@ -37,27 +35,7 @@ public class DictFeature extends TokenInSentenceFeature{
             this.dict = loadedDicts.get(dictFile.getName());
         }
         else{
-            BufferedReader inFile = new BufferedReader(new FileReader(path));
-            String entry = inFile.readLine();
-            String[] words;
-            while (entry != null){
-
-                words = entry.split(" ");
-                if (words.length == 1)
-                    this.dict.addChild(entry, true);
-                else{
-                    int wordIdx = 0;
-                    TrieDictNode dictNode = this.dict;
-                    while ( wordIdx < words.length - 1){
-                        dictNode.addChild(words[wordIdx], false);
-                        dictNode = dictNode.getChild(words[wordIdx]);
-                        wordIdx++;
-                    }
-                    dictNode.addChild(words[wordIdx], true);
-                }
-                entry = inFile.readLine();
-            }
-            inFile.close();
+        	this.dict = TrieDictNode.loadPlain(path);        	
             loadedDicts.put(dictFile.getName(), this.dict);
         }
 	}
