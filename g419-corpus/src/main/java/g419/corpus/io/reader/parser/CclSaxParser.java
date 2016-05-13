@@ -114,6 +114,8 @@ public class CclSaxParser extends DefaultHandler {
         }
         else if (elementName.equalsIgnoreCase(TAG_SENTENCE)) {
             currentSentence = new Sentence();
+            currentSentence.setParagraph(currentParagraph);
+            currentSentence.setDocument(this.document);
             annotations = new Hashtable<String, Annotation>();
             idx =0;
             currentSentence.setId(attributes.getValue(TAG_ID));

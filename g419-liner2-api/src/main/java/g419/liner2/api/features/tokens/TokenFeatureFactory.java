@@ -74,6 +74,18 @@ public class TokenFeatureFactory {
         	return new Agr1Feature(feature);
         else if (feature.equals("nospace"))
         	return new NoSpaceFeature();
+		else if (feature.equals("paragraph_type"))
+			return new ParagraphTypeFeature(feature);
+		else if (feature.equals("base_number"))
+			return new BaseNumberFeature(feature);
+		else if (feature.startsWith("is_annotation")){
+			String[] fData = feature.split("-");
+			if(fData.length != 2)
+				throw new DataFormatException("Invalid feature description: "+feature);
+			else {
+				return new IsAnnotationFeature(feature, fData[1]);
+			}
+		}
         else if (feature.endsWith(".txt")){
     		String[] fData = feature.split(":");
     		if(fData.length != 3)
@@ -135,6 +147,19 @@ public class TokenFeatureFactory {
 			String name = feature.substring(0, colonIdx);
 			String rule = feature.substring(colonIdx + 1);
 			return new TestRuleFeature(name, rule);
+		}
+		else if (feature.startsWith("key_value")){
+			String[] fData = feature.split(":");
+			if(fData.length != 3)
+				throw new DataFormatException("Invalid feature description: "+feature);
+			int sourceFeatureIndex;
+			if(fData[1].equals("orth"))
+				sourceFeatureIndex = 0;
+			else if(fData[1].equals("base"))
+				sourceFeatureIndex = 1;
+			else // "ctag"
+				sourceFeatureIndex = 2;
+			return new KeyValueFeature(fData[0], fData[2], sourceFeatureIndex);
 		}
         else 
 			throw new DataFormatException("Invalid feature: "+feature);
