@@ -16,6 +16,8 @@ public class Document{
 	List<Paragraph> paragraphs = new ArrayList<Paragraph>();
 	DocumentDescriptor documentDescriptor = new DocumentDescriptor();
 	Set<Frame> frames = new HashSet<Frame>();
+
+	private HashMap<String, Integer> bases = null;
 	
 	/* Zbiór relacji */
 	RelationSet relations = new RelationSet();
@@ -165,6 +167,22 @@ public class Document{
 
     }
 
+	public void removeAnnotations2(List<Pattern> types) {
+		for (Paragraph paragraph : this.paragraphs)
+			for (Sentence sentence : paragraph.getSentences()){
+				LinkedHashSet<Annotation> newAnnotationSet = new LinkedHashSet<Annotation>();
+				for (Annotation a : sentence.chunks){
+					for (Pattern p : types){
+						if(!p.matcher(a.getType()).find()){
+							newAnnotationSet.add(a);
+						}
+					}
+				}
+				sentence.chunks = newAnnotationSet;
+			}
+
+	}
+
 	/**
 	 * Removes metadata from chunks with given name
 	 */
@@ -270,5 +288,24 @@ public class Document{
 	
 	public DocumentDescriptor getDocumentDescriptor() {
 		return documentDescriptor;
+	}
+
+	public int getBaseCount(String base){
+		if (this.bases == null){
+			this.bases = new HashMap<>();
+			for (Paragraph p : this.paragraphs){
+				for (Sentence s : p.getSentences()){
+					for (Token t : s.getTokens()){
+						String lemma = t.getAttributeValue("base");
+						if (this.bases.containsKey(lemma))
+							this.bases.put(lemma, this.bases.get(lemma) + 1);
+						else this.bases.put(lemma, 1);
+					}
+				}
+			}
+		}
+		if (this.bases.containsKey(base))
+			return this.bases.get(base);
+		return 0;
 	}
 }

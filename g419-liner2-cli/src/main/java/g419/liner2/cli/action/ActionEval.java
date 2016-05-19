@@ -158,7 +158,8 @@ public class ActionEval extends Action{
             HashMap<Sentence, AnnotationSet> referenceChunks = ps.getChunkings();
 
     		/* Remove annotations from data */
-            ps.removeAnnotations();
+            //ps.removeAnnotations();
+            ps.removeAnnotations2(LinerOptions.getGlobal().types);
 
     		/* Generate features */
             timer.startTimer("Feature generation");

@@ -35,6 +35,9 @@ public class Sentence {
 	/* Tymczasowe obejście braku odniesienia do dokumentu z poziomu klasy Annotation */
 	Document document;
 
+	/* Paragraf w którym jest zdanie*/
+	Paragraph paragraph;
+
     private static Comparator<Annotation> annotationComparator = new Comparator<Annotation>() {
         public int compare(Annotation a, Annotation b) {
             if (a.getTokens().size() == b.getTokens().size()) {
@@ -117,6 +120,19 @@ public class Sentence {
         }
         return returning;
     }
+
+	/*
+	Sprawdza, czy token o podanym indeksie jest chunkiem typu 'type'
+	 */
+	public boolean isChunkAt(int idx, String type) {
+		Iterator<Annotation> i_chunk = chunks.iterator();
+		while (i_chunk.hasNext()) {
+			Annotation currentChunk = i_chunk.next();
+			if (currentChunk.getTokens().contains(idx) && currentChunk.getType().equals(type))
+				return true;
+		}
+		return false;
+	}
 
     public ArrayList<Annotation> getChunksAt(int idx, List<Pattern> types, boolean sorted){
         ArrayList<Annotation> result = getChunksAt(idx, types);
@@ -291,6 +307,14 @@ public class Sentence {
 	
 	public Document getDocument(){
 		return this.document;
+	}
+
+	public void setParagraph(Paragraph p){
+		this.paragraph = p;
+	}
+
+	public Paragraph getParagraph(){
+		return this.paragraph;
 	}
 
 }
