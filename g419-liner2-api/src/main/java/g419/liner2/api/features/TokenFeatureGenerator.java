@@ -18,16 +18,15 @@ import java.util.LinkedList;
 
 public class TokenFeatureGenerator {
 
-    public static final ArrayList<String> sourceFeatures = new ArrayList<String>(){/**
-		 * 
-		 */
+    public static final ArrayList<String> sourceFeatures = new ArrayList<String>(){
 		private static final long serialVersionUID = 1L;
 
-	{
-        add("orth");
-        add("base");
-        add("ctag");
-    }};
+		{
+			add("orth");
+			add("base");
+			add("ctag");
+		}
+	};
 
     protected ArrayList<TokenFeature> tokenGenerators = new ArrayList<TokenFeature>();
     protected ArrayList<TokenInSentenceFeature> sentenceGenerators

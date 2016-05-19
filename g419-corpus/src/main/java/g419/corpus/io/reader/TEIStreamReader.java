@@ -19,10 +19,13 @@ import g419.corpus.structure.TokenAttributeIndex;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 
@@ -33,6 +36,7 @@ public class TEIStreamReader extends  AbstractDocumentReader{
 
     private TokenAttributeIndex attributeIndex;
     private Document document;
+    private List<InputStream> streams = new ArrayList<InputStream>();
     
     public TEIStreamReader(
     		String uri,
@@ -48,6 +52,17 @@ public class TEIStreamReader extends  AbstractDocumentReader{
     		InputStream annRelations,
     		String docName) throws DataFormatException {
         
+    	streams.add(annMorphosyntax);
+    	streams.add(annProps);
+    	streams.add(annSegmentation);
+    	streams.add(annNamed);
+    	streams.add(annMentions);
+    	streams.add(annChunks);
+    	streams.add(annCoreference);
+    	streams.add(annWords);
+    	streams.add(annGroups);
+    	streams.add(annRelations);
+    	
     	this.attributeIndex = new TokenAttributeIndex();
         this.attributeIndex.addAttribute("orth");
         this.attributeIndex.addAttribute("base");
@@ -64,7 +79,7 @@ public class TEIStreamReader extends  AbstractDocumentReader{
         AnnMentionsSAXParser mentionParser = null;
         AnnChunksSAXParser chunksParser = null;
         AnnPropsSAXParser propsParser = null;
-
+        
         /* Read words from the ann_words.xml file */
         if ( annWords != null ){
         	wordsParser = new AnnWordsSAXParser(docName, 
@@ -152,7 +167,15 @@ public class TEIStreamReader extends  AbstractDocumentReader{
 
     @Override
     public void close() throws DataFormatException {
-
+    	for ( InputStream stream : this.streams ){
+    		if ( stream != null ){
+    			try {
+					stream.close();
+				} catch (IOException e) {
+					Logger.getLogger(this.getClass()).error("Unable to close stream");
+				}
+    		}
+    	}
     }
 
 	@Override

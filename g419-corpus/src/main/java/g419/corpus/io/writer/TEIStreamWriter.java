@@ -961,6 +961,9 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     	if ( stream != null && stream instanceof GZIPOutputStream ){
     		((GZIPOutputStream)stream).finish();
     	}
+    	if ( stream != null ){
+    		stream.close();
+    	}
     }
     
 }

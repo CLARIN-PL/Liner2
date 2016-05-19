@@ -177,8 +177,8 @@ public class ReaderFactory {
 				if ( gz && !inputFile.endsWith(".gz") ){
 					inputFile += ".gz";					 
 				}
-				//File file = new File(inputFolder, inputFile); todo: checking of existence returns always 'false' before ini reading!!
-				File file = new File(inputFile);
+				File file = new File(inputFolder, inputFile); //todo: checking of existence returns always 'false' before ini reading!!
+				//File file = new File(inputFile);
 				InputStream stream = null;
 				if ( file.exists() ){
 					stream = new FileInputStream(file);
@@ -190,7 +190,7 @@ public class ReaderFactory {
 				else
 					return null;
 			} catch (IOException ex) {
-				throw new Exception("Unable to read input file: " + inputFile);
+				throw new Exception("Unable to read input file: " + inputFile + " (" + ex.getMessage() + ")");
 			}
 		}
 	}

@@ -20,9 +20,10 @@ public class TokenAttributeIndex {
 
 	/**
 	 * Domyślny indeks zawiera jedną domyślną cechę "orth".
+	 * TODO Tworzenie domyślnego indeksu powinno być robione poprzez factory
 	 */
-	public TokenAttributeIndex(){
-		this.addAttribute("orth");
+	public TokenAttributeIndex(){		
+		//this.addAttribute("orth");
 	}
 	
 	/**

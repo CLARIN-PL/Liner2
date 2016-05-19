@@ -160,14 +160,16 @@ public class CrfTemplate {
                         int attrIdx = attributeIndex.getIndex(windowDesc[i]);
                         int idx = Integer.parseInt(windowDesc[i+1]);
                         if ((k + idx >= 0) && (k + idx < tokens.size())) {
-                            if (featureValue.length() > 0) featureValue += "#";
+                            if (featureValue.length() > 0){ 
+                            	featureValue += "#";
+                            }
+                            if ( this.appendFeatureNameToValue ){
+                            	featureValue += featureName+"::"+idx+"::";
+                            }
                             featureValue += tokens.get(k+idx).getAttributeValue(attrIdx);
                         }
                     }
                     int newAttrIdx = newAttributeIndex.getIndex(newFeatureName);
-                    if ( this.appendFeatureNameToValue ){
-                    	featureValue = featureName+"::"+featureValue;
-                    }
                     newToken.setAttributeValue(newAttrIdx, featureValue);
                 }
                 else{ // cechy proste
@@ -184,7 +186,7 @@ public class CrfTemplate {
                             featureValue = tokens.get(k+idx).getAttributeValue(attributeIndex.getIndex(featureName));
                         int newAttrIdx = newAttributeIndex.getIndex(newFeatureName);
                         if ( this.appendFeatureNameToValue ){
-                        	featureValue = featureName+"::"+featureValue;
+                        	featureValue = featureName+"::"+idx+"::"+featureValue;
                         }
                         newToken.setAttributeValue(newAttrIdx, featureValue);
                     }

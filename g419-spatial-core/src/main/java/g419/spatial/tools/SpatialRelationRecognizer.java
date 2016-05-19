@@ -2,6 +2,7 @@ package g419.spatial.tools;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -175,12 +176,15 @@ public class SpatialRelationRecognizer {
 		MaltSentence maltSentence = new MaltSentence(sentence);
 		this.malt.parse(maltSentence);
 
-		/* Zaindeksuj frazy np */
+		/* Zaindeksuj różne typy fraz */
 		Map<Integer, Annotation> chunkNpTokens = new HashMap<Integer, Annotation>();
 		Map<Integer, Annotation> chunkVerbfinTokens = new HashMap<Integer, Annotation>();
 		Map<Integer, Annotation> chunkPrepTokens = new HashMap<Integer, Annotation>();
 		Map<Integer, Annotation> chunkPpasTokens = new HashMap<Integer, Annotation>();
 		Map<Integer, Annotation> chunkPactTokens = new HashMap<Integer, Annotation>();
+		Map<Integer, Annotation> chunkNamesTokens = new HashMap<Integer, Annotation>();
+		Map<Integer, List<Annotation>> chunkNgTokens = new HashMap<Integer, List<Annotation>>();
+		
 		for ( Annotation an : sentence.getChunks() ){
 			if ( an.getType().equals("chunk_np") ){
 				for ( Integer n = an.getBegin(); n <= an.getEnd(); n++){
@@ -210,7 +214,6 @@ public class SpatialRelationRecognizer {
 		}
 
 		/* Zaindeksuj tokeny jednostek identyfikacyjnych */
-		Map<Integer, Annotation> chunkNamesTokens = new HashMap<Integer, Annotation>();
 		for ( Annotation an : sentence.getAnnotations(this.patternAnnotationNam) ){
 			for ( Integer n = an.getBegin(); n <= an.getEnd(); n++){
 				chunkNamesTokens.put(n, an);					
@@ -218,28 +221,29 @@ public class SpatialRelationRecognizer {
 		}
 		
 		/* Zaindeksuj pierwsze tokeny anotacji NG* */
-		Map<Integer, List<Annotation>> mapTokenIdToAnnotations = new HashMap<Integer, List<Annotation>>();
 		for ( Annotation an : sentence.getAnnotations(this.annotationsNg) ){
 			for ( Integer n = an.getBegin(); n <= an.getEnd(); n++){
-				if ( !mapTokenIdToAnnotations.containsKey(n) ){
-					mapTokenIdToAnnotations.put(n, new LinkedList<Annotation>());
+				if ( !chunkNgTokens.containsKey(n) ){
+					chunkNgTokens.put(n, new LinkedList<Annotation>());
 				}
-				mapTokenIdToAnnotations.get(n).add(an);
+				chunkNgTokens.get(n).add(an);
 			}
 		}
 		
 		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
 
-		// Second Iteration only
+		// Second Iteration only		
+		relations.addAll( this.findCandidatesFirstNgAnyPrepNg(sentence, chunkNgTokens, chunkNpTokens, chunkPrepTokens) );
+		relations.addAll( this.findCandidatesByMalt(sentence, maltSentence, chunkPrepTokens, chunkNamesTokens, chunkNgTokens));
 		
-		relations.addAll( this.findCandidatesFirstNgAnyPrepNg(sentence, mapTokenIdToAnnotations, chunkNpTokens, chunkPrepTokens) );
-		relations.addAll( this.findCandidatesByMalt(sentence, maltSentence, chunkPrepTokens, chunkNamesTokens, mapTokenIdToAnnotations));
-		
-
 		relations.addAll( this.findCandidatesNgPpasPrepNg(
-				sentence, mapTokenIdToAnnotations, chunkNpTokens, chunkPpasTokens, chunkPrepTokens));
+				sentence, chunkNgTokens, chunkNpTokens, chunkPpasTokens, chunkPrepTokens));
 		relations.addAll( this.findCandidatesNgPactPrepNg(
-				sentence, mapTokenIdToAnnotations, chunkNpTokens, chunkPactTokens, chunkPrepTokens));
+				sentence, chunkNgTokens, chunkNpTokens, chunkPactTokens, chunkPrepTokens));
+
+		// Eksperymentalnie
+		//relations.addAll( this.findCandidatesAllCombinations());
+
 
 		// Sprawdź, czy landmarkiem jest region. Jeżeli tak, to przesuń landmark na najbliższych ign lub subst
 		for ( SpatialExpression rel : relations ){
@@ -258,7 +262,7 @@ public class SpatialRelationRecognizer {
 					Annotation ng = null;
 					int j = rel.getLandmark().getHead() + 1;
 					while ( j <= rel.getLandmark().getEnd() && ng == null ){
-						List<Annotation> innerNgs = mapTokenIdToAnnotations.get(j);
+						List<Annotation> innerNgs = chunkNgTokens.get(j);
 						if ( innerNgs != null ){
 							for (Annotation an : innerNgs ){
 								if ( an.getBegin() > rel.getLandmark().getHead() ){
@@ -271,7 +275,7 @@ public class SpatialRelationRecognizer {
 					if ( ng != null ){
 						this.logger.info("REPLACE_REGION_INNER_NG" + rel.getLandmark().toString() + " => " + ng.toString());
 						Annotation newLandmark = null;
-						List<Annotation> newLandmakrs = mapTokenIdToAnnotations.get(rel.getLandmark().getHead());
+						List<Annotation> newLandmakrs = chunkNgTokens.get(rel.getLandmark().getHead());
 						if ( newLandmakrs != null ){
 							for (Annotation an : newLandmakrs ){
 								if ( an != rel.getLandmark() && (newLandmark == null || newLandmark.getTokens().size() < an.getTokens().size() ) ){
@@ -325,6 +329,15 @@ public class SpatialRelationRecognizer {
 		return relations;
 	}
 	
+	/**
+	 * Generuje wszystkie możliwe kombinacje NG + PrepNG
+	 * @return
+	 */
+	private Collection<? extends SpatialExpression> findCandidatesAllCombinations() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	/**
 	 * Dla fraz NG, które pokrywają się z nazwą własną, zmienia NG na nazwę.
 	 * @param sentence

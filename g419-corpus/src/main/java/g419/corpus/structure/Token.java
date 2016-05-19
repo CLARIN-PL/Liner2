@@ -185,4 +185,9 @@ public class Token {
 	public boolean isWrapped(){
 		return this.getClass().isInstance(WrappedToken.class);
 	}
+	
+	public TokenAttributeIndex getAttributeIndex(){
+		return this.attrIdx;
+	}
+	
 }

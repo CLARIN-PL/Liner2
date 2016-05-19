@@ -38,7 +38,7 @@ public class BatchWriter extends AbstractDocumentWriter {
 		}
 		
         File index = new File(outputIndex);
-        if ( !index.getParentFile().exists() ){
+        if ( !index.getAbsoluteFile().getParentFile().exists() ){
         	index.getParentFile().mkdirs();
         }
         this.outputRootFolder = index.getAbsoluteFile().getParent();

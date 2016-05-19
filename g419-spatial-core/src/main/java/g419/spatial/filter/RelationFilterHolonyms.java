@@ -30,14 +30,15 @@ public class RelationFilterHolonyms implements IRelationFilter {
 	@Override
 	public boolean pass(SpatialExpression relation) {
 		
-		// Utwórz listę holonimów landmarka		
-		Set<String> holonyms = new HashSet<String>();		
-		Set<PrincetonDataRaw> synsetsTrajector = this.nam2wordnet.getSynsets(relation.getLandmark().getType());
-		for ( PrincetonDataRaw synset : synsetsTrajector ){
+		/* Utwórz listę holonimów landmarka */		
+		Set<String> holonyms = new HashSet<String>();
+		// Holonimy z dla kategorii jednostki
+		for ( PrincetonDataRaw synset : this.nam2wordnet.getSynsets(relation.getLandmark().getType()) ){
 			for ( PrincetonDataRaw holonym : this.wordnet.getHolonyms(synset) ){
 				holonyms.addAll(this.wordnet.getLexicalUnits(holonym));
 			}			
 		}
+		// Holonimy dla głowy, jeżeli nie ma kategorii jednostki
 		if ( holonyms.size() == 0 ){
 			for ( PrincetonDataRaw synset : this.wordnet.getSynsets(relation.getLandmark().getHeadToken().getDisambTag().getBase()) ){
 				for ( PrincetonDataRaw holonym : this.wordnet.getHolonyms(synset) ){
@@ -49,7 +50,11 @@ public class RelationFilterHolonyms implements IRelationFilter {
 		holonyms.removeAll(this.wordnet.getSynsets(relation.getLandmark().getHeadToken().getDisambTag().getBase()));
 		
 		// Jednostki trajectora
-		Set<PrincetonDataRaw> synsets = this.nam2wordnet.getSynsets(relation.getTrajector().getType());
+		Set<PrincetonDataRaw> synsets = this.nam2wordnet.getSynsets(
+				relation.getTrajector().getType());
+		
+		//System.out.println(synsets);
+		//System.out.println(holonyms);
 		
 		if ( synsets.size() > 0 ){
 			Set<String> trajectors = new HashSet<String>();
@@ -60,13 +65,15 @@ public class RelationFilterHolonyms implements IRelationFilter {
 			}
 			for ( String word : trajectors ){
 				if ( holonyms.contains(word) ){
+					//System.out.println("Contain: " + word);
 					return false;
 				}				
 			}
 			return true;
 		}
 		else{
-			return !holonyms.contains(relation.getTrajector().getHeadToken().getDisambTag().getBase());
+			return !holonyms.contains(
+					relation.getTrajector().getHeadToken().getDisambTag().getBase());
 		}
 	}
 	
