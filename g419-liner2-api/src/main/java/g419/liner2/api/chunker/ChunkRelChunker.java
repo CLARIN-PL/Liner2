@@ -56,7 +56,7 @@ public class ChunkRelChunker extends Chunker {
 		}
 				
 		try {
-			AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(tmpFileName, "ccl_rel");
+			AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(tmpFileName, "cclrel");
 			Document relationsDocument = reader.nextDocument();
 			document.setRelations(relationsDocument.getRelations());
 			reader.close();

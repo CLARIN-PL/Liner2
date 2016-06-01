@@ -96,7 +96,7 @@ public class WriterFactory {
             return new MinosVerbEvalWriter(outWrapped);
         else if (outputFormat.equals("simple_rel"))
         	return new SimpleRelationClusterSetWriter(outWrapped);
-        else if (outputFormat.equals("relation-tuples"))
+        else if (outputFormat.equals("tuples-relations"))
         	return new RelationTuplesWriter(outWrapped);
         else if (outputFormat.equals("conll"))
         	return new ConllStreamWriter(outWrapped);

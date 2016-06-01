@@ -11,4 +11,6 @@ public class KpwrSpatial {
 	public static String SPATIAL_TRAJECTOR = "trajector";
 	
 	public static String SPATIAL_REGION = "region";
+	
+	public static String SPATIAL_ANNOTATION_SPATIAL_OBJECT = "spatial_object";
 }

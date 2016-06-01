@@ -21,4 +21,7 @@ public class WebSelenium implements IWeb {
 		this.driver.close();
 	}
 	
+	public WebDriver getDriver(){
+		return this.driver;
+	}
 }

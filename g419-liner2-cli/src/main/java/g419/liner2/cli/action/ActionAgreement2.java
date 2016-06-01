@@ -67,7 +67,7 @@ public class ActionAgreement2 extends Action {
 		
 		for ( int i1 = 0; i1<input_files.length; i1++){
 			for ( int i2 = i1+1; i2<input_files.length; i2++){				
-		        ChunkerEvaluator globalEval = new ChunkerEvaluator(types, true);
+		        ChunkerEvaluator globalEval = new ChunkerEvaluator(types, false);
 		        ChunkerEvaluatorMuc globalEvalMuc = new ChunkerEvaluatorMuc(types);
 		             
 				String referenceSet = input_files[i1];

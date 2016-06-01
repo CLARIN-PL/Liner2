@@ -51,7 +51,11 @@ public class Sentence {
     public Sentence()	{
     	
     }
-	
+
+    public Sentence(TokenAttributeIndex attrIndex)	{
+    	this.attributeIndex = attrIndex;
+    }
+
 	public void addChunk(Annotation chunk) {
 		chunks.add(chunk);
 	}

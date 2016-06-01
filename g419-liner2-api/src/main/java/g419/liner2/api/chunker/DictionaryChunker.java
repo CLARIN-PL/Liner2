@@ -47,7 +47,6 @@ public class DictionaryChunker extends Chunker
 	}
 	
 	private AnnotationSet chunkSentence(Sentence sentence) {
-		//System.out.println("chunkSentence");
 		AnnotationSet chunking = new AnnotationSet(sentence);
 		ArrayList<Token> tokens = sentence.getTokens();
 		int sentenceLength = sentence.getTokenNumber();

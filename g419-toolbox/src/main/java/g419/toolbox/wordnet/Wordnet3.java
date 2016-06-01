@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -63,6 +64,18 @@ public class Wordnet3 {
         } catch (Exception e) {
             e.printStackTrace();
         }
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public List<PrincetonDataRaw> getSynsets(){
+		List<PrincetonDataRaw> synsets = new ArrayList<PrincetonDataRaw>();
+		for ( Map<String, PrincetonDataRaw> map : this.data.values() ){
+			synsets.addAll(map.values());
+		}
+		return synsets;
 	}
 	
 	/**
@@ -135,8 +148,12 @@ public class Wordnet3 {
 	public Set<PrincetonDataRaw> getDirectSynsets(PrincetonDataRaw synset, String relation){
 		Set<PrincetonDataRaw> synstens = new HashSet<PrincetonDataRaw>();
 		for(PrincetonDataRelationRaw rel: synset.relations)
-			if(rel.type.startsWith(relation))
-				synstens.add(data.get(rel.pos).get(rel.offset));
+			if(rel.type.startsWith(relation)){
+				PrincetonDataRaw direct = data.get(rel.pos).get(rel.offset);
+				if ( direct != null ){
+					synstens.add(direct);
+				}
+			}
 		return synstens;		
 		
 	}

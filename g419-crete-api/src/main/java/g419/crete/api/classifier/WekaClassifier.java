@@ -162,7 +162,7 @@ public abstract class WekaClassifier extends AbstractCreteClassifier<Classifier,
 				dataset = Filter.useFilter(dataset, filter);
 			}
 //			tInstances = Filter.useFilter(instances, getResampler(tInstances));
-			exportInstances(dataset, "/home/akaczmarek/data/rawinstances_named_merge_filtered.arff");
+			exportInstances(dataset, "/tmp/crete_rawinstances_named_merge_filtered.arff");
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -174,9 +174,13 @@ public abstract class WekaClassifier extends AbstractCreteClassifier<Classifier,
 	public void train() {
 		try{
 			// Prepare dataset
+			System.out.println("Filter dataset ... ");
 			Instances tInstances = filterDataset(prepareDataset(), getFilters(instances));
+			classifier.setDebug(true);
+			System.out.println("Build classifier ... ");
 			classifier.buildClassifier(tInstances);
 			displayDebugInfo(classifier, tInstances);
+			System.out.println("Done. ");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
