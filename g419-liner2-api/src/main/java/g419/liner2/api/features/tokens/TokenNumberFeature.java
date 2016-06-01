@@ -6,9 +6,9 @@ import g419.corpus.structure.Token;
 import java.util.ArrayList;
 
 
-public class BaseNumberFeature extends TokenInSentenceFeature{
+public class TokenNumberFeature extends TokenInSentenceFeature{
 
-	public BaseNumberFeature(String name){
+	public TokenNumberFeature(String name){
 		super(name);
 	}
 
@@ -22,7 +22,7 @@ public class BaseNumberFeature extends TokenInSentenceFeature{
 		while (tokenIdx < sentence.getTokenNumber()) {
 			Token t = tokens.get(tokenIdx);
 			String base = t.getAttributeValue("base");
-			t.setAttributeValue(thisFeatureIdx, sentence.getDocument().getBaseCount(base) > 1 ? "1" : "0");
+			t.setAttributeValue(thisFeatureIdx, tokenIdx + "");
 			tokenIdx++;
 		}
 	}

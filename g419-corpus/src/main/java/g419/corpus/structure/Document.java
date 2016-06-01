@@ -18,7 +18,9 @@ public class Document{
 	Set<Frame> frames = new HashSet<Frame>();
 
 	private HashMap<String, Integer> bases = null;
-	
+	private HashMap<String, Integer> titleBases = null;
+	private int tokenNumber = 0;
+
 	/* Zbiór relacji */
 	RelationSet relations = new RelationSet();
 	
@@ -296,6 +298,7 @@ public class Document{
 			for (Paragraph p : this.paragraphs){
 				for (Sentence s : p.getSentences()){
 					for (Token t : s.getTokens()){
+						this.tokenNumber += 1;
 						String lemma = t.getAttributeValue("base");
 						if (this.bases.containsKey(lemma))
 							this.bases.put(lemma, this.bases.get(lemma) + 1);
@@ -306,6 +309,30 @@ public class Document{
 		}
 		if (this.bases.containsKey(base))
 			return this.bases.get(base);
+		return 0;
+	}
+
+	public int getTokenNumber(){
+		return this.tokenNumber;
+	}
+
+
+	public int isInTitle(String base){
+		if (this.titleBases == null){
+			this.titleBases = new HashMap<>();
+			for (Paragraph p : this.paragraphs){
+				if (p.getChunkMetaData("type").equals("title")){
+					for (Sentence s : p.getSentences()){
+						for (Token t : s.getTokens()){
+							String lemma = t.getAttributeValue("base");
+							this.titleBases.put(lemma, 1);
+						}
+					}
+				}
+			}
+		}
+		if (this.titleBases.containsKey(base))
+			return this.titleBases.get(base);
 		return 0;
 	}
 }

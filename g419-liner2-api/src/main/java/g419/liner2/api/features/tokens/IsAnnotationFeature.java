@@ -29,10 +29,15 @@ public class IsAnnotationFeature extends TokenInSentenceFeature{
 
 
 		int tokenIdx = 0;
+		int prevTokenIdx = -1;
 		while (tokenIdx < sentence.getTokenNumber()){
+			boolean isCurrentChunk = sentence.isChunkAt(tokenIdx, this.type);
+			boolean isPreviousChunk = prevTokenIdx > -1 ? sentence.isChunkAt(prevTokenIdx, this.type) : false;
 			tokens.get(tokenIdx).setAttributeValue(thisFeatureIdx,
-					sentence.isChunkAt(tokenIdx, this.type) ? "1" : "0");
+					(!isPreviousChunk && isCurrentChunk) ? "B" :
+					(isPreviousChunk && isCurrentChunk) ? "I" : "O");
 			tokenIdx++;
+			prevTokenIdx++;
 		}
 	}
 

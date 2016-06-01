@@ -30,7 +30,7 @@ public class KeyValueFeature extends TokenFeature{
 	public String generate(Token token, TokenAttributeIndex index){
 		String key = token.getAttributeValue(this.sourceFeatureIdx);
 		if (!loadedDicts.containsKey(key))
-			return "NULL";
+			return "16.139694";
 		else
 			return loadedDicts.get(key);
 	}

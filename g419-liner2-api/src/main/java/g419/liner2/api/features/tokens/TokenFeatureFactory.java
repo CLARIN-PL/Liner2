@@ -78,6 +78,12 @@ public class TokenFeatureFactory {
 			return new ParagraphTypeFeature(feature);
 		else if (feature.equals("base_number"))
 			return new BaseNumberFeature(feature);
+		else if (feature.equals("in_title"))
+			return new InTitleFeature(feature);
+		else if (feature.equals("sentence_type"))
+			return new SentenceTypeFeature(feature);
+		else if (feature.equals("token_number"))
+			return new TokenNumberFeature(feature);
 		else if (feature.startsWith("is_annotation")){
 			String[] fData = feature.split("-");
 			if(fData.length != 2)
@@ -161,6 +167,8 @@ public class TokenFeatureFactory {
 				sourceFeatureIndex = 2;
 			return new KeyValueFeature(fData[0], fData[2], sourceFeatureIndex);
 		}
+		else if (feature.equals("tfidf"))
+			return new TfIdfFeature(feature);
         else 
 			throw new DataFormatException("Invalid feature: "+feature);
 	}
