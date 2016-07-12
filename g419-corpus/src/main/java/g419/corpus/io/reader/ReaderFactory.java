@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.zip.GZIPInputStream;
 
 
@@ -93,22 +94,22 @@ public class ReaderFactory {
 			in = new GZIPInputStream(in);
 		}
 		if (inputFormat.equals("ccl")){
-			InputStream desc = getInputStream(root, uri.replace(".xml", ".ini"), gz);
+			InputStream desc = getInputStream(root, Paths.get(uri).getFileName().toString().replace(".xml", ".ini"), gz);
 			return new CclSAXStreamReader(uri, in, desc, null);
 		}
 		else if (inputFormat.equals("cclrel")){
 			InputStream rel = getInputStream(root, uri.replace(root, "").replace(".xml", ".rel.xml"), gz);
-			InputStream desc = getInputStream(root, uri.replace(".xml", ".ini"), gz);
+			InputStream desc = getInputStream(root, Paths.get(uri).getFileName().toString().replace(".xml", ".ini"), gz);
 			return new CclSAXStreamReader(uri, in, desc, rel);
 		}
 		else if (inputFormat.equals("cclrelr")){
 			InputStream rel = getInputStream(root, uri.replace(".xml", ".rel_r"), gz);
-			InputStream desc = getInputStream(root, uri.replace(".xml", ".ini"), gz);
+			InputStream desc = getInputStream(root, Paths.get(uri).getFileName().toString().replace(".xml", ".ini"), gz);
 			return new CclSAXStreamReader(uri, in, desc, rel);
 		}
 		else if (inputFormat.equals("cclrelcls")){
 			InputStream rel = getInputStream(root, uri.replace(".xml", ".rel_cls"), gz);
-			InputStream desc = getInputStream(root, uri.replace(".xml", ".ini"), gz);
+			InputStream desc = getInputStream(root, Paths.get(uri).getFileName().toString().replace(".xml", ".ini"), gz);
 			return new CclSAXStreamReader(uri, in, desc, rel);
 		}
 		else if (inputFormat.equals("iob"))
