@@ -18,50 +18,24 @@ public class RuleGlobalTimexNormalizer extends NormalizingChunker {
     static final Pattern dateRegex;
     static final Map<String, List<Rule>> rulesPerType;
 
-//    static final List<Rule> dateRules;
-//    static final List<Rule> generalRules;
-//    static final List<Rule> timeRules;
 
     static {
         logger = LoggerFactory.getLogger(RuleGlobalTimexNormalizer.class);
         dateRegex = Pattern.compile("(\\d\\d\\d\\d\\-\\d\\d\\-\\d\\d)");
-//        dateRules = Arrays.<Rule>asList(
-//                new DateRule1(),
-//                new DateRule2(),
-//                new DateRule3(),
-//                new DateRule4(),
-//                new DateRule5()
-//        );
-//        generalRules = Arrays.<Rule>asList(
-//                new DateRule6(),
-//                new DateRule7(),
-//                new DateRule8(),
-//                new DateRule9(),
-//                new DateRule10(),
-//                new DateRule11()
-//        );
-//        timeRules = Arrays.<Rule>asList(
-//                new TimeRule1(),
-//                new TimeRule2(),
-//                new TimeRule3(),
-//                new TimeRule4(),
-//                new TimeRule5(),
-//                new TimeRule6()
-//        );
         rulesPerType = new HashMap<>();
         //if we use setWeekday instead of closestWeekday, we get 2 TP more (unless we use rule 10 and 11)
-        rulesPerType.put("t3_date", Arrays.<Rule>asList(  //849/317/0
-                new DateRule1(), //846/320/0
-                new DateRule2(), //820/346/0
-                new DateRule3(), //883/283/0
-                new DateRule4(), //887/279/0
-                new DateRule5(), //884/282/0
-                new DateRule6(), //865/301/0
-                new DateRule7(), //863/303/0
-                new DateRule8(), //817/349/0
-                new DateRule9(), //818/348/0
-                new DateRule10(),//819/347/0
-                new DateRule11() //819/347/0
+        rulesPerType.put("t3_date", Arrays.<Rule>asList(
+                new DateRule1(),
+                new DateRule2(),
+                new DateRule3(),
+                new DateRule4(),
+                new DateRule5(),
+                new DateRule6(),
+                new DateRule7(),
+                new DateRule8(),
+                new DateRule9(),
+                new DateRule10(),
+                new DateRule11()
         ));
         rulesPerType.put("t3_time", Arrays.<Rule>asList(
                 new TimeRule1(),
@@ -85,12 +59,6 @@ public class RuleGlobalTimexNormalizer extends NormalizingChunker {
     public void normalize(Annotation annotation) {
         if (shouldNormalize(annotation)) {
             List<Rule> rules = rulesPerType.get(annotation.getType());
-//            List<Rule> rules = new ArrayList<>();
-//            if (annotation.getType() == "t3_date")
-//                rules.addAll(dateRules);
-//            rules.addAll(generalRules);
-//            if (annotation.getType() == "t3_time")
-//                rules.addAll(dateRules);
             if (rules != null) {
                 String result = null;
                 String lval = annotation.getMetadata("lval");
@@ -98,12 +66,8 @@ public class RuleGlobalTimexNormalizer extends NormalizingChunker {
                 if (lval != null) {
                     for (Rule rule : rules){
                         if (rule.matches(lval, baseText)){
-//                            if (lval.equals("xxxx-12-10TEV"))
-//                                throw new RuntimeException(""+rule.getClass()+" ; "+baseText+" ; "+lval);
                             result = rule.normalize(lval, baseText, previous, first, creationDate);
                             if (result!=null) {
-//                                if (result.equals("2006-01-17"))
-//                                    getClass();
                                 annotation.setMetadata("val", result);
                                 break;
                             }
@@ -141,7 +105,6 @@ public class RuleGlobalTimexNormalizer extends NormalizingChunker {
         String dateStr = document.getDocumentDescriptor().getDescription().get("date");
         if (dateStr != null)
             creationDate = dateStr;
-//            first = previous = dateStr.trim();
         logger.debug("New document, creation = "+ creationDate);
 
     }

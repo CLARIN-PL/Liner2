@@ -86,8 +86,8 @@ public class CascadeChunker extends Chunker implements Normalizer {
 		ps.setRelations(document.getRelations());
 		
 		return chunkings;
-	}	
-
+	}
+    
     @Override
     public List<Pattern> getNormalizedChunkTypes() {
         List<Pattern> out = new ArrayList<>();

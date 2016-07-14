@@ -343,6 +343,7 @@ public class Annotation {
         Annotation cloned = new Annotation(getBegin(), getEnd(), getType(), this.sentence);
         cloned.setId(this.id);
         cloned.setHead(this.head);
+		cloned.setMetadata(new HashMap<>(this.getMetadata()));
         return cloned;
     }
 
