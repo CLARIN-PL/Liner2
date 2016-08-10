@@ -84,8 +84,8 @@ public class WriterFactory {
 			return new IobTabStreamWriter(outWrapped);
 		else if (outputFormat.equals("tuples"))
 			return new TuplesStreamWriter(outWrapped);
-		else if (outputFormat.equals("json"))
-			return new JsonStreamWriter(outWrapped);
+		else if (outputFormat.equals("json-annotations"))
+			return new JsonAnnotationsStreamWriter(outWrapped);
 		else if (outputFormat.equals("json-frames"))
 			return new JsonFramesStreamWriter(outWrapped);
 		else if (outputFormat.equals("tokens"))
