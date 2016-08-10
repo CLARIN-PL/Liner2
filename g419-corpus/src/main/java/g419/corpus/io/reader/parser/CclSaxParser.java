@@ -53,8 +53,8 @@ public class CclSaxParser extends DefaultHandler {
     private final String TAG_PROP           = "prop";
     private final String ATTR_KEY           = "key";
 
-    ArrayList<Paragraph> paragraphs;
-    Paragraph currentParagraph = null;
+    protected ArrayList<Paragraph> paragraphs = new ArrayList<Paragraph>();
+    private Paragraph currentParagraph = null;
     Sentence currentSentence = null;
     HashMap<String,String> chunkMetaData;
     Hashtable<String, Annotation> annotations;
@@ -80,7 +80,6 @@ public class CclSaxParser extends DefaultHandler {
         this.uri = uri;
         this.is = is;
         this.attributeIndex = attributeIndex;
-        paragraphs = new ArrayList<Paragraph>();
         this.parseDocument();
         this.document = new Document(uri, this.paragraphs, this.attributeIndex);
     }
@@ -95,6 +94,7 @@ public class CclSaxParser extends DefaultHandler {
     public InputSource resolveEntity (String publicId, String systemId){
         return new InputSource(new StringReader(""));
     }
+    
     @Override
     public void startElement(String s, String s1, String elementName, Attributes attributes) throws SAXException {
         tmpValue = "";
@@ -154,6 +154,7 @@ public class CclSaxParser extends DefaultHandler {
     public void endElement(String s, String s1, String element) throws SAXException {
         if (element.equals(TAG_PARAGRAPH)) {
             paragraphs.add(currentParagraph);
+            this.onParagraphRead();
         }
         else if (element.equalsIgnoreCase(TAG_SENTENCE)) {
             for (Annotation chunk : annotations.values()){
@@ -250,6 +251,13 @@ public class CclSaxParser extends DefaultHandler {
     public Document getDocument(){
         if (!foundSentenceId) Logger.log("Generated sentence ids for document:" + uri);
         return this.document;
+    }
+    
+    /**
+     * Funkcja wywoływana jest po wczytaniu paragrafu (chunku).
+     */
+    public void onParagraphRead(){
+    	
     }
 
     class AnnChan {
