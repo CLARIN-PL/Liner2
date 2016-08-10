@@ -85,7 +85,7 @@ public class BatchReader extends AbstractDocumentReader {
                 path = new File(this.root, name).getAbsolutePath();
             }
     		try{
-    			Logger.getLogger(this.getClass()).info("Reading: " + path);
+    			Logger.getLogger(this.getClass()).info(String.format("Reading %d from %d: %s", this.fileIndex+1,  this.files.size(), path));
 	            AbstractDocumentReader reader = null;
 	            reader = ReaderFactory.get().getStreamReader(path, this.format);
 	    		Document document = reader.nextDocument();
