@@ -297,24 +297,42 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 		xmlw.writeCharacters("\n");
 	}
 	
+	/**
+	 * Zapisuje dane tokenu do strumienia xmlw.
+	 * @param idx
+	 * @param token
+	 * @param chunks
+	 * @param channels
+	 * @throws XMLStreamException
+	 */
 	private void writeToken(int idx, Token token, HashSet<Annotation> chunks, ArrayList<String> channels)
 		throws XMLStreamException {
+		
+		/* Wcięcie i tag rozpoczynający token */
 		this.indent(3);
 		xmlw.writeStartElement(TAG_TOKEN);
-		if (token.getId() != null)
+		
+		/* Identyfikator tokenu */
+		if (token.getId() != null){
 			xmlw.writeAttribute(TAG_ID, token.getId());
+		}
 		xmlw.writeCharacters("\n");
+		
+		/* Forma ortograficzna */
 		this.indent(4);
 		xmlw.writeStartElement(TAG_ORTH);
 		writeText(token.getOrth());
 		xmlw.writeEndElement();
 		xmlw.writeCharacters("\n");
+		
+		/* Tagi morfologiczne */
 		for (Tag tag : token.getTags()){
 			if( this.disambOnly == false || tag.getDisamb() ){
 				this.writeTag(tag);
 			}
 		}
 		
+		/* Anotacje */
 		Annotation[] tokenchannels = new Annotation[channels.size()];
 		for (Annotation chunk : chunks) {
 			if (chunk.getTokens().contains(idx))
@@ -369,10 +387,22 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 			}
 		}
 		
+		/* Atrybuty tokenu */
+		for ( String propKey : token.getProps().keySet() ){
+			this.indent(4);
+			xmlw.writeStartElement(TAG_PROP);
+			xmlw.writeAttribute(ATTR_KEY, propKey);
+			xmlw.writeCharacters(token.getProps().get(propKey));
+			xmlw.writeEndElement();
+			xmlw.writeCharacters("\n");
+		}
+		
+		/* Tag zamykający token */
 		this.indent(3);
 		xmlw.writeEndElement();
 		xmlw.writeCharacters("\n");
 
+		/* Tag no space po zamknięciu tokenu */
 		if (token.getNoSpaceAfter()) {
 			this.indent(3);
 			xmlw.writeEmptyElement(TAG_NS);
@@ -380,6 +410,11 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 		}
 	}
 	
+	/**
+	 * Zapisuje tag do strumienia xmlw.
+	 * @param tag
+	 * @throws XMLStreamException
+	 */
 	private void writeTag(Tag tag) throws XMLStreamException {
 		this.indent(4);
 		xmlw.writeStartElement(TAG_TAG);
@@ -410,14 +445,21 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 	}
 	
 	private void indentRel(int repeat) throws XMLStreamException{
-		if (this.indent)
+		if (this.indent){
 			for (int i=0; i<repeat; i++)
 				xmlRelw.writeCharacters(" ");
+		}
 	}
 	
+	/**
+	 * Wstawia do strumienia określoną liczbę spacji.
+	 * @param repeat
+	 * @throws XMLStreamException
+	 */
 	private void indent(int repeat) throws XMLStreamException{
-		if (this.indent)
+		if (this.indent){
 			for (int i=0; i<repeat; i++)
 				xmlw.writeCharacters(" ");
+		}
 	}
 }
