@@ -9,6 +9,8 @@ import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.io.FilenameUtils;
 
+import g419.corpus.io.UnknownFormatException;
+
 public class WriterFactory {
 
 	private static final WriterFactory factory = new WriterFactory();
@@ -84,6 +86,8 @@ public class WriterFactory {
 			return new IobTabStreamWriter(outWrapped);
 		else if (outputFormat.equals("tuples"))
 			return new TuplesStreamWriter(outWrapped);
+		else if (outputFormat.equals("json"))
+			return new JsonStreamWriter(outWrapped);
 		else if (outputFormat.equals("json-annotations"))
 			return new JsonAnnotationsStreamWriter(outWrapped);
 		else if (outputFormat.equals("json-frames"))
@@ -101,7 +105,7 @@ public class WriterFactory {
         else if (outputFormat.equals("conll"))
         	return new ConllStreamWriter(outWrapped);
 		else		
-			throw new Exception("Output format " + outputFormat + " not recognized.");
+			throw new UnknownFormatException("Output format " + outputFormat + " not recognized.");
 	}
 
 	/**

@@ -94,7 +94,13 @@ public class ReaderFactory {
 			in = new GZIPInputStream(in);
 		}
 		if (inputFormat.equals("ccl")){
-			InputStream desc = getInputStream(root, Paths.get(uri).getFileName().toString().replace(".xml", ".ini"), gz);
+			InputStream desc = null;
+			String cclPath = Paths.get(uri).getFileName().toString();
+			if ( cclPath.endsWith(".xml") ){
+				// Sama podmiana bez sprawdzenia rozszerzenia powoduje, że dla pliku z innym rozszerzenie niż xml
+				// jako ini brany jest plik ccl.
+				desc = getInputStream(root, Paths.get(uri).getFileName().toString().replace(".xml", ".ini"), gz);
+			}
 			return new CclSAXStreamReader(uri, in, desc, null);
 		}
 		else if (inputFormat.equals("cclrel")){
@@ -180,6 +186,7 @@ public class ReaderFactory {
 				}
 				File file = new File(inputFolder, inputFile); //todo: checking of existence returns always 'false' before ini reading!!
 				//File file = new File(inputFile);
+				System.out.println(file.getAbsolutePath());
 				InputStream stream = null;
 				if ( file.exists() ){
 					stream = new FileInputStream(file);
