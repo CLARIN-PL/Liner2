@@ -12,6 +12,10 @@ public class TrieDictNode {
 	private HashMap<String,TrieDictNode> children = new HashMap<String,TrieDictNode>();
 	private boolean terminal;
 
+	public TrieDictNode(){
+		this.terminal = false;
+	}
+
 	public TrieDictNode(boolean terminal){
 		this.terminal = terminal;
 	}

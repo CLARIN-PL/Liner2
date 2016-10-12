@@ -22,6 +22,7 @@ public class ChunkerFactory {
 	private ArrayList<ChunkerFactoryItem> items = new ArrayList<ChunkerFactoryItem>();
 	
 	private ChunkerFactory(){
+		// TODO automatycznie dodać obiekty dziedziczące po ChunkerFactoryItem z pakietu factory
 		this.items.add(new ChunkerFactoryItemAdu());
         this.items.add(new ChunkerFactoryItemAnnotationRename());
 		this.items.add(new ChunkerFactoryItemAnnotationClassifier());
@@ -45,6 +46,7 @@ public class ChunkerFactory {
         this.items.add(new ChunkerFactoryItemIobber());
         this.items.add(new ChunkerFactoryItemChunkRel());
         this.items.add(new ChunkerFactoryItemRulesChunker());
+        this.items.add(new ChunkerFactoryItemRuleTitle());
         this.items.add(new RBNormalizerFactoryItem());
         this.items.add(new ChunkerFactoryItemRuleRoad());
         this.items.add(new GlobalTimexNormalizerFactoryItem());

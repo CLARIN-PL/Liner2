@@ -108,7 +108,17 @@ public class Token {
 	public ArrayList<Tag> getTags() {
 		return tags;
 	}
-	
+
+    public Set<String> getDisambBases(){
+    	Set<String> bases = new HashSet<String>();
+    	for ( Tag tag : this.tags ){
+    		if ( tag.getDisamb() ){
+    			bases.add(tag.getBase());
+    		}
+    	}
+    	return bases;
+    }
+    
 	public Tag getDisambTag() {
 		for ( Tag tag : this.tags ){
 			if ( tag.getDisamb() ){
