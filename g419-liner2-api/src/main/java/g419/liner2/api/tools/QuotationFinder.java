@@ -12,9 +12,9 @@ import g419.corpus.structure.Token;
  */
 public class QuotationFinder{
 
-	Pattern patternQuoteSingle = Pattern.compile("^[‘’'‘’‚’]$");
-	Pattern patternQuoteDouble = Pattern.compile("^[“”\"“””„““”]$");
-	Pattern patternQuoteOther = Pattern.compile("^[«»]$");
+	public static Pattern patternQuoteSingle = Pattern.compile("^[‘’'‘’‚’]$");
+	public static Pattern patternQuoteDouble = Pattern.compile("^[“”\"“””„““”]$");
+	public static Pattern patternQuoteOther = Pattern.compile("^[«»]$");
 
 	/**
 	 * Sprawdza, czy poczynając od pozycji startPos w zdaniu znajduje się fragment

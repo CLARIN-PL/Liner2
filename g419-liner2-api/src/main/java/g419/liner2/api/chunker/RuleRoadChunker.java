@@ -1,6 +1,5 @@
 package g419.liner2.api.chunker;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -25,10 +24,13 @@ public class RuleRoadChunker extends Chunker {
 	private TrieDictNode dictPrefixOuter = new TrieDictNode(false);
 	private TrieDictNode dictPrefixInner = new TrieDictNode(false);
 	private TrieDictNode dictPrefixList = new TrieDictNode(false);
-	private Set<String> roadListSeparators = new HashSet<String>(); 
+	private Set<String> roadListSeparators = new HashSet<String>();
 	
-	public RuleRoadChunker(TrieDictNode node) {
+	private String annotationType = KpwrNer.NER_FAC_ROAD;
+	
+	public RuleRoadChunker(String annotationType, TrieDictNode node) {
 		this.dictRoads = node;
+		this.annotationType = annotationType;
 		
 		this.dictPrefixOuter.addPhrase("ulica".split(" "));
 		this.dictPrefixOuter.addPhrase("ulicą".split(" "));
@@ -156,7 +158,7 @@ public class RuleRoadChunker extends Chunker {
 			if ( prefixLength > 0 ){
 				int roadLength = this.match(this.dictRoads, sentence.getTokens(), index+prefixLength, true);
 				if ( roadLength > 0 ){
-					an = new Annotation(index+prefixLength, index+prefixLength+roadLength-1, KpwrNer.NER_FAC_ROAD, sentence);
+					an = new Annotation(index+prefixLength, index+prefixLength+roadLength-1, this.annotationType, sentence);
 				}				
 			}
 		}
@@ -167,7 +169,7 @@ public class RuleRoadChunker extends Chunker {
 			if ( prefixLength > 0 ){
 				int roadLength = this.match(this.dictRoads, sentence.getTokens(), index+prefixLength, true);
 				if ( roadLength > 0 ){
-					an = new Annotation(index, index+prefixLength+roadLength-1, KpwrNer.NER_FAC_ROAD, sentence);
+					an = new Annotation(index, index+prefixLength+roadLength-1, this.annotationType, sentence);
 				}				
 			}
 		}
@@ -186,7 +188,7 @@ public class RuleRoadChunker extends Chunker {
 		if ( an == null ){
 			int matched = this.match(this.dictRoads, sentence.getTokens(), index, true);
 			if ( matched > 0 ){
-				an = new Annotation(index, index+matched-1, KpwrNer.NER_FAC_ROAD, sentence);
+				an = new Annotation(index, index+matched-1, this.annotationType, sentence);
 			}
 		}
 		return an;

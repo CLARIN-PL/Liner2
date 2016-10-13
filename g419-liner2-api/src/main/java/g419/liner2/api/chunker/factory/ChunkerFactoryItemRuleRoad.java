@@ -12,6 +12,9 @@ import g419.liner2.api.tools.TrieDictNode;
  */
 public class ChunkerFactoryItemRuleRoad extends ChunkerFactoryItem {
 
+	public static String PARAM_ANNOTATION = "annotation";
+	public static String PARAM_DICTIONARY = "dictionary";
+
 	public ChunkerFactoryItemRuleRoad() {
 		super("rule-road");
 	}
@@ -19,8 +22,9 @@ public class ChunkerFactoryItemRuleRoad extends ChunkerFactoryItem {
 	@Override
 	public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
         TrieDictNode dict = null;
+        String annotationType = null;
         
-        String dictionaryPath = description.get("dictionary");
+        String dictionaryPath = description.get(PARAM_DICTIONARY);
         if ( dictionaryPath == null ){
         	dict = new TrieDictNode(false);
         	Logger.getLogger(this.getClass()).error("Brak parametru 'dictionary' w opisie chunkera rule-road");
@@ -29,7 +33,9 @@ public class ChunkerFactoryItemRuleRoad extends ChunkerFactoryItem {
         	dict = TrieDictNode.loadPlain(dictionaryPath);
         }
         
-        return new RuleRoadChunker(dict);
+        annotationType = description.get(PARAM_ANNOTATION);
+        
+        return new RuleRoadChunker(annotationType, dict);
 	}
 
 }
