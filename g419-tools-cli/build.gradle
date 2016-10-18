@@ -28,7 +28,7 @@ dependencies {
     compile 'org.jsoup:jsoup:1.8.3'
     compile project(":g419-corpus")
     compile project(":g419-lib-cli")
-    compile project(":g419-liner2-api")
+    compile project(":g419-liner2-core")
     compile files('../lib/bzip2.jar')
     compile files('../lib/wikixmlj-r43.jar')
     runtime 'org.slf4j:slf4j-log4j12:1.7.2'

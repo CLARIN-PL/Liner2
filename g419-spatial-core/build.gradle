@@ -14,6 +14,6 @@ dependencies {
     compile project(":g419-corpus")
     compile project(":g419-lib-cli")
     compile project(":g419-toolbox")
-    compile project(":g419-liner2-api")
+    compile project(":g419-liner2-core")
     compile project(":g419-external-dependencies")
 }
