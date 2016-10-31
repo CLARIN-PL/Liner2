@@ -94,7 +94,7 @@ public class CrfppChunker extends Chunker
 
 		// Reads the output of parsing
         for (int i = 0; i < tagger.size(); ++i) {
-            String label = tagger.y2(i);
+            String label = tagger.y2(i);            
             if(label.equals("O")){
                 annsByType = new HashMap<String, Annotation>();
             }
@@ -107,6 +107,7 @@ public class CrfppChunker extends Chunker
                         Annotation newAnn = new Annotation(i, annType, sentence);
                         chunking.addChunk(newAnn);
                         annsByType.put(annType, newAnn);
+                       	newAnn.setConfidence(tagger.prob(i));
                     }
                     else if(m.group(1).equals("I")){
                         if(annsByType.containsKey(annType))
@@ -228,7 +229,7 @@ public class CrfppChunker extends Chunker
      */
 	@Override
     public void deserialize(String model_filename){
-    	String parameters = String.format("-m %s -v 3 -n 64", model_filename);
+    	String parameters = String.format("-m %s -v 3 -n 1", model_filename);
     	this.tagger = new Tagger(parameters);
     }
 

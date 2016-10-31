@@ -462,12 +462,12 @@ public class ChunkerEvaluator {
 		Logger.log("Chunks:");
 
 		for (Annotation chunk : Annotation.sortChunks(truePositives)) {
-			Logger.log(String.format("  TruePositive %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
-				chunk.getEnd()+1, printChunk(chunk)));
+			Logger.log(String.format("  TruePositive %s [%d,%d] = %s (confidence=%.2f)", chunk.getType(), chunk.getBegin()+1,
+				chunk.getEnd()+1, printChunk(chunk), chunk.getConfidence()));
 		}
 		for (Annotation chunk : Annotation.sortChunks(falsePositives)) {
-			Logger.log(String.format("  FalsePositive %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
-				chunk.getEnd()+1, printChunk(chunk)));
+			Logger.log(String.format("  FalsePositive %s [%d,%d] = %s (confidence=%.2f)", chunk.getType(), chunk.getBegin()+1,
+				chunk.getEnd()+1, printChunk(chunk), chunk.getConfidence()));
 		}
 		for (Annotation chunk : Annotation.sortChunks(falseNegatives)) {
 			Logger.log(String.format("  FalseNegative %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,

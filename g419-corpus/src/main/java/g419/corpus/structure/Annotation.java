@@ -44,6 +44,13 @@ public class Annotation {
 	 * Informacja czy anotacja ma oznaczoną głowę.
 	 */
 	private boolean hasHead = false;
+	
+	/**
+	 * Wartość określająca pewność co do istnienia anotacji. 
+	 * Głównie używane przy autoamtycznym rozpoznawaniu anotacji w tekście.
+	 */
+	private double confidence = 1.0;
+	
 
 	private Map<String, String> metadata = new HashMap<String, String>();
 
@@ -95,6 +102,22 @@ public class Annotation {
 
 	public void assignHead(){
 		this.assignHead(false);
+	}
+
+	/**
+	 * Ustaw pewność co do istnienia anotacji.
+	 * @param confidence
+	 */
+	public void setConfidence(double confidence){
+		this.confidence = confidence;
+	}
+
+	/**
+	 * Zwraca wartość określającą pewność istnienia anotacji.
+	 * @return
+	 */
+	public double getConfidence(){
+		return this.confidence;
 	}
 	
 	/**
