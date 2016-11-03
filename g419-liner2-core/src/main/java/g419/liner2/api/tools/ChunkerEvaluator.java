@@ -52,7 +52,12 @@ public class ChunkerEvaluator {
 	private int sentenceNum = 0;
     private String currentDocId = "";
 
-	private boolean quiet = false;		// print sentence results?
+    /* Określa, czy szczegóły oceny mają by ukryte */
+	private boolean quiet = false;
+	
+	/* Określa, czy mają być wypisywane wyłącznie zdania z błędami (FP i/lub FN). */
+	private boolean errorsOnly = false;
+	
 	private List<Pattern> patterns = new ArrayList<Pattern>();
     private HashSet<String> types = new HashSet<String>();
 	
@@ -64,7 +69,19 @@ public class ChunkerEvaluator {
         this.patterns = types;
         this.quiet = quiet;
     }
-	
+
+    /**
+     * 
+     * @param types Lista typów anotacji do oceny
+     * @param quiet Jeżeli true, to logi z oceny nie zostają drukowane.
+     * @param errorsOnly Jeżeli true, to wypisuje tylko zdania z błędami.
+     */
+    public ChunkerEvaluator(List<Pattern> types, boolean quiet, boolean errorsOnly) {
+        this.patterns = types;
+        this.quiet = quiet;
+        this.errorsOnly = errorsOnly;
+    }
+
 	/**
 	 * Ocenia nerowanie całego dokumentu.
 	 */
@@ -186,11 +203,16 @@ public class ChunkerEvaluator {
             }
         }
         
-		if (!this.quiet)
+		if (!this.quiet && (!this.errorsOnly || testedChunkSet.size() > 0 || trueChunkSet.size() > 0 )){
 			printSentenceResults(sentence, sentence.getId(), myTruePositives, testedChunkSet, trueChunkSet);
+		}
 				
 	}
 
+	/**
+	 * 
+	 * @param newTypes
+	 */
     private void updateTypes(HashSet<String> newTypes){
         for(String newType: newTypes){
             if(!this.types.contains(newType)){
@@ -426,7 +448,7 @@ public class ChunkerEvaluator {
 	}
 	
     /**
-     * 
+     * Wypisuje wynik porównania rozpoznanych anotacji z wzorcowym zbiorem anotacji dla danego zdania.
      * @param sentence
      * @param paragraphId
      * @param truePositives

@@ -29,7 +29,9 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
@@ -43,10 +45,14 @@ import org.apache.commons.io.IOUtils;
  */
 public class ActionEval extends Action{
 
-    private String input_file = null;
-    private String input_format = null;
+    private String inputFile = null;
+    private String inputFormat = null;
+    private boolean errorsOnly = false;
+    
+    private static final String PARAM_ERRORS_ONLY = "e";
+    private static final String PARAM_ERRORS_ONLY_LONG = "errors-only";
 
-    @SuppressWarnings("static-access")
+    //@SuppressWarnings("static-access")
 	public ActionEval() {
 		super("eval");
         this.setDescription("evaluates chunkers against a specific set of documents (-i batch:FORMAT, -i FORMAT) #or perform cross validation (-i cv:{format})");
@@ -55,16 +61,16 @@ public class ActionEval extends Action{
         this.options.addOption(CommonOptions.getInputFileNameOption());
         this.options.addOption(CommonOptions.getModelFileOption());
         this.options.addOption(CommonOptions.getVerboseDeatilsOption());
-
-
+        this.options.addOption(Option.builder(PARAM_ERRORS_ONLY).longOpt(PARAM_ERRORS_ONLY_LONG).desc("print only sentence with errors").build());
 	}
 
 	@Override
 	public void parseOptions(String[] args) throws ParseException {
-        CommandLine line = new GnuParser().parse(this.options, args);
+        CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
-        this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
-        this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
+        this.inputFile = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
+        this.inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
+        this.errorsOnly = line.hasOption(PARAM_ERRORS_ONLY_LONG);
         LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
         if(line.hasOption(CommonOptions.OPTION_VERBOSE_DETAILS)){
             Logger.verboseDetails = true;
@@ -96,12 +102,12 @@ public class ActionEval extends Action{
         }
     	System.out.println();
 
-        if (this.input_format.startsWith("cv:")){
+        if (this.inputFormat.startsWith("cv:")){
             ChunkerEvaluator globalEval = new ChunkerEvaluator(LinerOptions.getGlobal().types, true);
             ChunkerEvaluatorMuc globalEvalMuc = new ChunkerEvaluatorMuc(LinerOptions.getGlobal().types);
 
-            this.input_format = this.input_format.substring(3);
-            LinerOptions.getGlobal().setCVDataFormat(this.input_format);
+            this.inputFormat = this.inputFormat.substring(3);
+            LinerOptions.getGlobal().setCVDataFormat(this.inputFormat);
             ArrayList<List<String>> folds = loadFolds();
             for(int i=0; i < folds.size(); i++){
                 timer.startTimer("fold "+ (i + 1));
@@ -109,10 +115,10 @@ public class ActionEval extends Action{
                 String trainSet = getTrainingSet(i, folds);
                 String testSet = getTestingSet(i, folds);
                 ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
-                cm.loadTrainData(new BatchReader(IOUtils.toInputStream(trainSet), "", this.input_format), gen);
-                cm.loadTestData(new BatchReader(IOUtils.toInputStream(testSet), "", this.input_format), gen);
-                AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet), "", this.input_format);
-                evaluate(reader, gen, cm, globalEval, globalEvalMuc);
+                cm.loadTrainData(new BatchReader(IOUtils.toInputStream(trainSet), "", this.inputFormat), gen);
+                cm.loadTestData(new BatchReader(IOUtils.toInputStream(testSet), "", this.inputFormat), gen);
+                AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet), "", this.inputFormat);
+                evaluate(reader, gen, cm, globalEval, globalEvalMuc, errorsOnly);
                 timer.stopTimer();
 
 
@@ -126,16 +132,16 @@ public class ActionEval extends Action{
         }
         else{
             ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
-            cm.loadTestData(ReaderFactory.get().getStreamReader(this.input_file, this.input_format), gen);
-            evaluate(ReaderFactory.get().getStreamReader(this.input_file, this.input_format),
-                    gen, cm, null, null);
+            cm.loadTestData(ReaderFactory.get().getStreamReader(this.inputFile, this.inputFormat), gen);
+            evaluate(ReaderFactory.get().getStreamReader(this.inputFile, this.inputFormat),
+                    gen, cm, null, null, errorsOnly);
         }
 
 
 	}
 
     private void evaluate(AbstractDocumentReader dataReader, TokenFeatureGenerator gen, ChunkerManager cm,
-                          ChunkerEvaluator globalEval, ChunkerEvaluatorMuc globalEvalMuc) throws Exception {
+                          ChunkerEvaluator globalEval, ChunkerEvaluatorMuc globalEvalMuc, boolean errorsOnly) throws Exception {
         ProcessingTimer timer = new ProcessingTimer();
         timer.startTimer("Model loading");
         cm.loadChunkers();
@@ -144,7 +150,7 @@ public class ActionEval extends Action{
 
 
     	/* Create all defined chunkers. */
-        ChunkerEvaluator eval = new ChunkerEvaluator(LinerOptions.getGlobal().types);
+        ChunkerEvaluator eval = new ChunkerEvaluator(LinerOptions.getGlobal().types, false, errorsOnly);
         ChunkerEvaluatorMuc evalMuc = new ChunkerEvaluatorMuc(LinerOptions.getGlobal().types);
 
         timer.startTimer("Data reading");
@@ -202,7 +208,7 @@ public class ActionEval extends Action{
     private ArrayList<List<String>> loadFolds() throws IOException, DataFormatException {
         ArrayList<List<String>> folds = new ArrayList<List<String>>();
         /** Wczytaj listy plików */
-        File sourceFile = new File(this.input_file);
+        File sourceFile = new File(this.inputFile);
         String root = sourceFile.getParentFile().getAbsolutePath();
         BufferedReader bf = new BufferedReader(new InputStreamReader(new FileInputStream(sourceFile)));
 
@@ -210,7 +216,7 @@ public class ActionEval extends Action{
         while ( line != null ){
             String[] fileData = line.split("\t");
             if(fileData.length != 2){
-                throw new DataFormatException("Incorrect line in folds file: "+this.input_file+"\\"+line+"\nProper line format: {file_name}\\t{fold_nr}");
+                throw new DataFormatException("Incorrect line in folds file: "+this.inputFile+"\\"+line+"\nProper line format: {file_name}\\t{fold_nr}");
             }
             String file = fileData[0];
             int fold = Integer.parseInt(fileData[1]);
