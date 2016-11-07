@@ -8,6 +8,9 @@ import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.corpus.Logger;
+import g419.liner2.api.chunker.interfaces.DeserializableChunkerInterface;
+import g419.liner2.api.chunker.interfaces.SerializableChunkerInterface;
+import g419.liner2.api.chunker.interfaces.TrainableChunkerInterface;
 import g419.liner2.api.tools.TemplateFactory;
 
 import java.io.BufferedReader;

@@ -21,7 +21,6 @@ public class ChunkerFactoryItemDictFullCompile extends ChunkerFactoryItem {
         String modelFile = description.get("store");
 
         FullDictionaryChunker chunker = new FullDictionaryChunker();
-//            chunker.setModelFilename(modelFile);
         Logger.log("--> Compiling dictionary from file=" + dictFile);
         chunker.loadDictionary(dictFile);
         Logger.log("--> Saving chunker to file=" + modelFile);

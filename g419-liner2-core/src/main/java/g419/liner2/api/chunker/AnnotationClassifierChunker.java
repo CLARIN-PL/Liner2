@@ -5,6 +5,9 @@ import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
+import g419.liner2.api.chunker.interfaces.DeserializableChunkerInterface;
+import g419.liner2.api.chunker.interfaces.SerializableChunkerInterface;
+import g419.liner2.api.chunker.interfaces.TrainableChunkerInterface;
 import g419.liner2.api.features.AnnotationFeatureGenerator;
 
 import java.io.FileInputStream;

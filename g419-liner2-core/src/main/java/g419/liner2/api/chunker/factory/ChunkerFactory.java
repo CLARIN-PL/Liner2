@@ -1,17 +1,20 @@
 package g419.liner2.api.chunker.factory;
 
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.ini4j.Ini;
+
+import com.google.common.reflect.ClassPath;
+
+import g419.corpus.Logger;
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.ensemble.CascadeChunker;
 import g419.liner2.api.chunker.ensemble.MajorityVotingChunker;
 import g419.liner2.api.chunker.ensemble.UnionChunker;
-import g419.corpus.Logger;
-import org.ini4j.Ini;
-import g419.liner2.api.normalizer.factory.GlobalRuleTimexNormalizerFactoryItem;
-import g419.liner2.api.normalizer.factory.GlobalTimexNormalizerFactoryItem;
-import g419.liner2.api.normalizer.factory.RBNormalizerFactoryItem;
-
-import java.util.ArrayList;
 
 
 public class ChunkerFactory {
@@ -21,57 +24,71 @@ public class ChunkerFactory {
 	
 	private ArrayList<ChunkerFactoryItem> items = new ArrayList<ChunkerFactoryItem>();
 	
-	private ChunkerFactory(){
-		// TODO automatycznie dodać obiekty dziedziczące po ChunkerFactoryItem z pakietu factory
-		this.items.add(new ChunkerFactoryItemAdu());
-        this.items.add(new ChunkerFactoryItemAnnotationRename());
-		this.items.add(new ChunkerFactoryItemAnnotationClassifier());
-		this.items.add(new ChunkerFactoryItemEnsamble());
-		this.items.add(new ChunkerFactoryItemHeuristic());
-		this.items.add(new ChunkerFactoryItemCrfppFix());
-		this.items.add(new ChunkerFactoryItemCrfpp());
-		this.items.add(new ChunkerFactoryItemDictCompile());
-		this.items.add(new ChunkerFactoryItemDictLoad());
-		this.items.add(new ChunkerFactoryItemDictFullCompile());
-		this.items.add(new ChunkerFactoryItemDictFullLoad());
-		this.items.add(new ChunkerFactoryItemPropagate());
-		this.items.add(new ChunkerFactoryItemWccl());
-		this.items.add(new ChunkerFactoryItemMinos());
-		this.items.add(new ChunkerFactoryItemAnnotationAdder());
-		this.items.add(new ChunkerFactoryItemAnnotationAdderWithZero());
-		this.items.add(new ChunkerFactoryItemAnnotationAdderOnlyZero());
-		this.items.add(new ChunkerFactoryItemNullChunker());
-        this.items.add(new ChunkerFactoryItemAnnotationCRFClassifier());
-        this.items.add(new ChunkerFactoryItemMapping());
-        this.items.add(new ChunkerFactoryItemIobber());
-        this.items.add(new ChunkerFactoryItemChunkRel());
-        this.items.add(new ChunkerFactoryItemRemoveNested());
-        this.items.add(new ChunkerFactoryItemRulesChunker());
-        this.items.add(new ChunkerFactoryItemRuleTitle());
-        this.items.add(new RBNormalizerFactoryItem());
-        this.items.add(new ChunkerFactoryItemRuleRoad());
-        this.items.add(new GlobalTimexNormalizerFactoryItem());
-        this.items.add(new GlobalRuleTimexNormalizerFactoryItem());
+	private ChunkerFactory() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, IOException{
+		this.items.addAll(this.findFactoryItems("g419.liner2.api.chunker.factory"));
+	}
+
+	/**
+	 * Zwraca listę obiektów dziedziczących po klasie ChunkerFactoryItem znajdujących się we wskazanym pakiecie.
+	 * @param packageName Nazwa pakietu, w którym będa wyszukiwane klasy.
+	 * @return lista obiektów będących rozszerzeniem klasy ChunkerFactoryItem.
+	 * @throws ClassNotFoundException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws IOException
+	 */
+	public List<ChunkerFactoryItem> findFactoryItems(String packageName) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, IOException{
+    	ClassLoader loader = Thread.currentThread().getContextClassLoader();    	
+    	List<ChunkerFactoryItem> items = new ArrayList<ChunkerFactoryItem>();
+    	for ( final ClassPath.ClassInfo info : ClassPath.from(loader).getTopLevelClasses(packageName) ){    		
+    		Class<?> cl = loader.loadClass(info.getName());
+    		if ( cl.getSuperclass() == ChunkerFactoryItem.class ){    		    			
+    			items.add((ChunkerFactoryItem) cl.getConstructor().newInstance(new Object[]{}));
+    		}
+    	}
+		return items;
 	}
 	
 	/**
 	 * Get current ChunkerFactory. If the factory does not exist then create it.
 	 * @return
+	 * @throws IOException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws ClassNotFoundException 
 	 */
-	private static ChunkerFactory get(){
-		if ( ChunkerFactory.factory == null )
+	private static ChunkerFactory get() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, IOException{
+		if ( ChunkerFactory.factory == null ){
 			ChunkerFactory.factory = new ChunkerFactory();
+		}
 		return ChunkerFactory.factory;
 	}
 	
 	/**
 	 * Get human-readable description of chunker commands.
 	 * @return
+	 * @throws IOException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws ClassNotFoundException 
 	 */
-	public static String getDescription(){
+	public static String getDescription() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, IOException{
 		StringBuilder sb = new StringBuilder();
-		for (ChunkerFactoryItem item : ChunkerFactory.get().items)
+		for (ChunkerFactoryItem item : ChunkerFactory.get().items){
 			sb.append("  " + item.getType() + "\n");
+		}
 		return sb.toString();
 	}
 	

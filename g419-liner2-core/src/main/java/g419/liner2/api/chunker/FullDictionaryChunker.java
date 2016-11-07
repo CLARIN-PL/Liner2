@@ -7,6 +7,8 @@ import g419.corpus.structure.Document;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
+import g419.liner2.api.chunker.interfaces.DeserializableChunkerInterface;
+import g419.liner2.api.chunker.interfaces.SerializableChunkerInterface;
 import g419.corpus.Logger;
 
 import java.io.BufferedReader;

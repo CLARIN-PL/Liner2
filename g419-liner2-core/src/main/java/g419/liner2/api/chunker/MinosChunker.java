@@ -707,7 +707,7 @@ public class MinosChunker extends Chunker {
 		}
 		
 		public boolean hasChunkrelSubject(Document document){
-			ArrayList<Annotation> chunkVP = this.sentence.getChunksAt(sentence.getTokens().indexOf(this.verb), Arrays.asList(Pattern.compile("chunk_vp")));
+			List<Annotation> chunkVP = this.sentence.getChunksAt(sentence.getTokens().indexOf(this.verb), Arrays.asList(Pattern.compile("chunk_vp")));
 			if(chunkVP.isEmpty()) return false;
 			Set<Relation> relationsFromChunkVP = document.getRelations().getOutgoingRelations(chunkVP.get(0));
 			for(Relation relation : relationsFromChunkVP)

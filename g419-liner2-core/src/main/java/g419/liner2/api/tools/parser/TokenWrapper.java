@@ -1,15 +1,17 @@
 package g419.liner2.api.tools.parser;
 
-import g419.corpus.structure.*;
-import g419.liner2.api.features.tokens.ClassFeature;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
+import g419.corpus.structure.Annotation;
+import g419.corpus.structure.Sentence;
+import g419.corpus.structure.Token;
+import g419.corpus.structure.TokenAttributeIndex;
+import g419.corpus.structure.WrappedToken;
+import g419.liner2.api.features.tokens.ClassFeature;
 
 /**
  * Created by michal on 1/9/15.
@@ -27,7 +29,7 @@ public class TokenWrapper {
         ArrayList<Token> oldTokens = sentence.getTokens();
         int sentenceIndex=0;
         while ( sentenceIndex<sentence.getTokenNumber() ){
-            ArrayList<Annotation> tokenAnnsToWrap = getLongestAnns(sentence.getChunksAt(sentenceIndex, annotationTypes));
+            List<Annotation> tokenAnnsToWrap = getLongestAnns(sentence.getChunksAt(sentenceIndex, annotationTypes));
             if(tokenAnnsToWrap.isEmpty()){
                 wrappedSent.addToken(oldTokens.get(sentenceIndex));
                 newTokenIndexes.put(sentenceIndex, sentenceIndex);
@@ -92,7 +94,7 @@ public class TokenWrapper {
         return ign != null ? ign : tokens.get(0);
     }
 
-    private static ArrayList<Annotation> getLongestAnns(ArrayList<Annotation> annotations){
+    private static List<Annotation> getLongestAnns(List<Annotation> annotations){
         HashMap<Annotation, Integer> annsLen = new HashMap<Annotation, Integer>();
         int maxLen = 0;
         for(Annotation ann: annotations){
@@ -102,7 +104,7 @@ public class TokenWrapper {
                 maxLen = annLen;
             }
         }
-        ArrayList<Annotation> longestAnns = new ArrayList<Annotation>();
+        List<Annotation> longestAnns = new ArrayList<Annotation>();
         for(Annotation ann: annsLen.keySet()){
             if(annsLen.get(ann) == maxLen){
                 longestAnns.add(ann);

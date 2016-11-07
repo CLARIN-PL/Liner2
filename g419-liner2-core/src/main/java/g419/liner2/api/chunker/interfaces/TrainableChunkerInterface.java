@@ -1,4 +1,4 @@
-package g419.liner2.api.chunker;
+package g419.liner2.api.chunker.interfaces;
 
 import g419.corpus.structure.Document;
 
