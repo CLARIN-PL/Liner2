@@ -23,6 +23,9 @@ import java.text.NumberFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.varia.NullAppender;
+
 /**
  * Chunking in pipe mode.
  *
@@ -35,7 +38,6 @@ public class ActionNormalizerEval3 extends Action {
     private String point_from = null;
     private String point_what = null;
     private String point_how = null;
-
 
 
     public static final String OPTION_CONFIGURATION = "c";
@@ -91,6 +93,10 @@ public class ActionNormalizerEval3 extends Action {
 
     public void run() throws Exception {
 
+        //static private Logger log = LoggerFactory.getLogger(RuleSet.class);
+        Logger.getRootLogger().removeAllAppenders();
+        Logger.getRootLogger().addAppender(new NullAppender());
+
         if (!LinerOptions.isGlobalOption(LinerOptions.OPTION_USED_CHUNKER)) {
             throw new ParameterException("Parameter 'chunker' in 'main' section of model not set");
         }
@@ -111,20 +117,19 @@ public class ActionNormalizerEval3 extends Action {
 
         double intersectionSize = 0, systemSize = 0, referenceSize = 0;
         for (Document referenceDocument : documents) {
+            //System.out.println("Document: " + referenceDocument.getName());
             gen.generateFeatures(referenceDocument);
             chunker.prepare(referenceDocument);
             Document cloneDocument = referenceDocument.clone();
 
             if (this.point_from.equals("TEXT"))
                 cloneDocument.removeAnnotations();
-            else if (this.point_from.equals("ANN")){
+            else if (this.point_from.equals("ANN")) {
                 cloneDocument.removeMetadata("lval");
                 cloneDocument.removeMetadata("val");
-            }
-            else if (this.point_from.equals("LVAL")){
+            } else if (this.point_from.equals("LVAL")) {
                 cloneDocument.removeMetadata("val");
             }
-
 
 
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date", "t3_time", "t3_duration", "t3_set"));
@@ -179,6 +184,21 @@ public class ActionNormalizerEval3 extends Action {
                                         referenceAnnotation.metaDataMatchesKey("lval", systemAnnotation)) {
                                     intersectionSize += 1;
                                 }
+                                //log!
+                                if (referenceAnnotation.getType().equals(systemAnnotation.getType()) &&
+                                        referenceAnnotation.getTokens().stream()
+                                                .filter(p -> systemAnnotation.getTokens().contains(p))
+                                                .collect(Collectors.toSet()).size() > 0) {
+                                    System.out.println(
+                                                    referenceAnnotation.getType() + "\t" +
+                                                    referenceDocument.getName() + "\t" +
+                                                    referenceAnnotation.toString() + "\t" +
+                                                    referenceAnnotation.getMetadata().get("lval") + "\t" +
+                                                    systemAnnotation.getMetadata().get("lval") + "\t" +
+                                                    referenceAnnotation.metaDataMatchesKey("lval", systemAnnotation)
+                                    );
+                                }
+
                             } else if (this.point_what.equals("VAL")) {
                                 // (3) How many entity attributes are correctly identified - VAL
                                 if (referenceAnnotation.getType().equals(systemAnnotation.getType()) &&
@@ -187,6 +207,20 @@ public class ActionNormalizerEval3 extends Action {
                                                 .collect(Collectors.toSet()).size() > 0 &&
                                         referenceAnnotation.metaDataMatchesKey("val", systemAnnotation)) {
                                     intersectionSize += 1;
+                                }
+                                //log!
+                                if (referenceAnnotation.getType().equals(systemAnnotation.getType()) &&
+                                        referenceAnnotation.getTokens().stream()
+                                                .filter(p -> systemAnnotation.getTokens().contains(p))
+                                                .collect(Collectors.toSet()).size() > 0) {
+                                    System.out.println(
+                                            referenceAnnotation.getType() + "\t" +
+                                                    referenceDocument.getName() + "\t" +
+                                                    referenceAnnotation.toString() + "\t" +
+                                                    referenceAnnotation.getMetadata().get("val") + "\t" +
+                                                    systemAnnotation.getMetadata().get("val") + "\t" +
+                                                    referenceAnnotation.metaDataMatchesKey("val", systemAnnotation)
+                                    );
                                 }
                             }
                         }
@@ -202,9 +236,9 @@ public class ActionNormalizerEval3 extends Action {
         double fmeasure = 2 * precision * recall / (precision + recall);
         int o = 0;
         NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
-        System.out.println(format.format(precision * 100));
-        System.out.println(format.format(recall * 100));
-        System.out.println(format.format(fmeasure * 100));
+        //System.out.println(format.format(precision * 100));
+        //System.out.println(format.format(recall * 100));
+        //System.out.println(format.format(fmeasure * 100));
 
         //System.out.println(precision + " " + recall + " " + fmeasure);
         //System.out.format("%,5f", precision);

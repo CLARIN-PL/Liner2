@@ -1,7 +1,7 @@
 package g419.liner2.api.normalizer.rbn;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -10,7 +10,7 @@ import java.util.*;
  * normalizing symbols.
  */
 public final class RuleSet {
-    static private Logger log = LoggerFactory.getLogger(RuleSet.class);
+    //static private Logger log = LoggerFactory.getLogger(RuleSet.class);
 
     /**
      * Immutable map from rule names to rule objects. Represents "rules" section of JSON file.
@@ -51,16 +51,16 @@ public final class RuleSet {
                     //throw up;
                 }
         if (matchedRule==null) {
-            log.info("No rule matching expression '"+expression+"' was found! Returning null.");
+            //log.info("No rule matching expression '"+expression+"' was found! Returning null.");
             return null;
         }
-        log.info("Normalizing expression '"+expression+"' with rule "+matchedRule.name);
+        //log.info("Normalizing expression '"+expression+"' with rule "+matchedRule.name);
         String normalized = matchedRule.normalize(expression);
-        log.info("Result of rule usage: "+normalized);
+        //log.info("Result of rule usage: "+normalized);
         for (Map.Entry<String, String> entry: normalization.entrySet()){
             normalized = normalized.replaceAll(entry.getKey(), entry.getValue());
         }
-        log.info("Result of values normalization: "+normalized);
+        //log.info("Result of values normalization: "+normalized);
         return normalized;
     }
 

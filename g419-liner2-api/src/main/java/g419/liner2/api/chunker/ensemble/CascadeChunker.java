@@ -87,7 +87,7 @@ public class CascadeChunker extends Chunker implements Normalizer {
 		
 		return chunkings;
 	}
-    
+
     @Override
     public List<Pattern> getNormalizedChunkTypes() {
         List<Pattern> out = new ArrayList<>();
