@@ -74,9 +74,17 @@ public class CommonOptions {
 	}
 
     public static Option getFeaturesOption(){
-		return Option.builder(CommonOptions.OPTION_FEATURES)
+    	return getFeaturesOption(false);
+    }
+
+    public static Option getFeaturesOption(boolean required){
+    	Option.Builder op = Option.builder(CommonOptions.OPTION_FEATURES)
 				.longOpt(CommonOptions.OPTION_FEATURES_LONG)
-				.hasArg().argName("features").desc("a file with a list of features").build();
+				.hasArg().argName("features").desc("a file with a list of features");
+    	if ( required ){
+    		op = op.required();
+    	}
+		return op.build();
     }
 
     public static Option getClassifierModelFile(){

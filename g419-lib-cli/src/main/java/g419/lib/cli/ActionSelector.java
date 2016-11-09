@@ -15,6 +15,7 @@ import org.apache.commons.io.comparator.LastModifiedFileComparator;
 import org.apache.commons.lang3.StringUtils;
 
 import g419.corpus.TerminateException;
+import g419.corpus.io.UnknownFormatException;
 
 public class ActionSelector {
 
@@ -59,8 +60,11 @@ public class ActionSelector {
                     tool.parseOptions(args);
                     tool.run();
                 }
+                catch (UnknownFormatException e){
+                	System.err.println("Error: " + e.getMessage());
+                }
                 catch (TerminateException e){
-                    System.out.println(e.getMessage());
+                    System.err.println("Error: " + e.getMessage());
                 }
                 catch (ParseException | MissingOptionException | UnrecognizedOptionException e) {
                 	System.out.println(this.credits);
@@ -70,8 +74,10 @@ public class ActionSelector {
                     System.out.println();
                 }
                 catch (Exception e) {
-                    System.out.println(e);
+                	System.err.println("Error: " + e.getMessage());
+                	System.err.println(StringUtils.repeat("-", 60));
                     e.printStackTrace();
+                    System.err.println(StringUtils.repeat("-", 60));
                 }
             }
         }    	

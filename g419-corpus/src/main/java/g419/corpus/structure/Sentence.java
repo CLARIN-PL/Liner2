@@ -94,13 +94,27 @@ public class Sentence {
     public boolean hasId(){ 
     	return id != null; 
     }
-	
-	/*
-	 * Zwraca chunk dla podanego indeksu tokenu.
-	 * TODO zmienić parametr na token?
+
+	/**
+	 * Return a list of annotations which contain a token with given index.
 	 */
-	public ArrayList<Annotation> getChunksAt(int idx, List<Pattern> types) {
-        ArrayList<Annotation> returning = new ArrayList<Annotation>();
+	public List<Annotation> getChunksAt(int idx) {
+        List<Annotation> returning = new ArrayList<Annotation>();
+        Iterator<Annotation> i_chunk = chunks.iterator();
+        while (i_chunk.hasNext()) {
+            Annotation currentChunk = i_chunk.next();
+            if (currentChunk.getTokens().contains(idx)) {
+            	returning.add(currentChunk);
+            }
+        }
+        return returning;
+    }
+	
+	/**
+	 * Return a list of annotations which contain a token with given index.
+	 */
+	public List<Annotation> getChunksAt(int idx, List<Pattern> types) {
+        List<Annotation> returning = new ArrayList<Annotation>();
         Iterator<Annotation> i_chunk = chunks.iterator();
         while (i_chunk.hasNext()) {
             Annotation currentChunk = i_chunk.next();
@@ -134,16 +148,53 @@ public class Sentence {
 		return false;
 	}
 
-    public ArrayList<Annotation> getChunksAt(int idx, List<Pattern> types, boolean sorted){
-        ArrayList<Annotation> result = getChunksAt(idx, types);
+	/**
+	 * 
+	 * @param idx
+	 * @param types
+	 * @param sorted
+	 * @return
+	 */
+    public List<Annotation> getChunksAt(int idx, List<Pattern> types, boolean sorted){
+        List<Annotation> result = getChunksAt(idx, types);
         if(sorted){
             sortTokenAnnotations(result);
         }
         return result;
     }
 
+    /**
+     * 
+     * @param tokenIdx
+     * @return
+     */
+    public String getTokenClassLabel(int tokenIdx){
+        List<Annotation> tokenAnnotations = getChunksAt(tokenIdx);
+
+        if (tokenAnnotations.isEmpty()){
+            return "O";
+        }
+        else {
+            List<String> classLabels = new ArrayList<String>();
+            sortTokenAnnotations(tokenAnnotations);
+            for(Annotation ann: tokenAnnotations){
+                String classLabel = "";
+                if (ann.getBegin() == tokenIdx) {
+                    classLabel += "B-";
+                }
+                else {
+                    classLabel += "I-";
+                }
+                classLabel += ann.getType();
+                classLabels.add(classLabel);
+            }
+            return  StringUtils.join(classLabels, "#");
+        }
+    }
+    
+    
     public String getTokenClassLabel(int tokenIdx, List<Pattern> types){
-        ArrayList<Annotation> tokenAnnotations = getChunksAt(tokenIdx, types, true);
+        List<Annotation> tokenAnnotations = getChunksAt(tokenIdx, types, true);
 
         if (tokenAnnotations.isEmpty()){
             return "O";
@@ -168,7 +219,7 @@ public class Sentence {
 
     }
 
-    private void sortTokenAnnotations(ArrayList<Annotation> tokenAnnotations){
+    private void sortTokenAnnotations(List<Annotation> tokenAnnotations){
         Collections.sort(tokenAnnotations, annotationComparator);
     }
 

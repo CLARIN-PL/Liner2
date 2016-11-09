@@ -1,0 +1,29 @@
+description = "g419-crete-api -- API dla modułu do rozpoznawania koreferencji o nazwie CRETE"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+apply plugin: 'idea'
+
+repositories{
+    mavenCentral()
+    maven {
+        url "http://streamreasoning.org/maven/"
+    }
+}
+
+dependencies {
+    compile 'org.apache.commons:commons-lang3:3.3.2'
+    compile 'commons-io:commons-io:2.4'
+    compile 'org.ini4j:ini4j:0.5.2'
+//    compile 'edu.berkeley.compbio:jlibsvm:0.911'
+    compile 'info.debatty:java-string-similarity:0.13'
+    compile 'nz.ac.waikato.cms.weka:weka-stable:3.6.12'
+//    compile 'net.sourceforge:javaml:0.1.7'
+//    compile 'com.apporiented:hierarchical-clustering:1.1.0'
+    compile project(":g419-corpus")
+    compile project(":g419-tools-cli")
+    compile project(":g419-liner2-core")
+    compile project(":g419-external-dependencies")
+}
+
