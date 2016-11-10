@@ -25,7 +25,7 @@ import g419.liner2.api.chunker.factory.ChunkerManager;
 import g419.liner2.api.features.TokenFeatureGenerator;
 import g419.liner2.api.tools.*;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
 
@@ -49,7 +49,7 @@ public class ActionLearningCurve extends Action {
 
 	@Override
 	public void parseOptions(String[] args) throws ParseException {
-		CommandLine line = new GnuParser().parse(this.options, args);
+		CommandLine line = new DefaultParser().parse(this.options, args);
 		parseDefault(line);
 		this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
 		this.input_format = line.getOptionValue(

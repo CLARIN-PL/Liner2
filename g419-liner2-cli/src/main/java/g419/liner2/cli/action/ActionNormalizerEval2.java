@@ -13,7 +13,7 @@ import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.factory.ChunkerManager;
 import g419.liner2.api.features.TokenFeatureGenerator;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 
 import java.util.*;
 import java.util.stream.Collector;
@@ -46,7 +46,7 @@ public class ActionNormalizerEval2 extends Action{
 
 	@Override
 	public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new GnuParser().parse(this.options, args);
+        CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
         this.output_file = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
         this.output_format = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT, "ccl");
@@ -315,16 +315,16 @@ public class ActionNormalizerEval2 extends Action{
 
         }
 
-        float p1 = tp1 / (float)(tp1 + fp1);
-        float r1 = tp1 / (float)(tp1 + fn1);
+        float p1 = tp1 / (tp1 + fp1);
+        float r1 = tp1 / (tp1 + fn1);
         float f1 = 2 * p1 * r1 / (p1 + r1);
 
-        float p2 = tp2 / (float)(tp2 + fp2);
-        float r2 = tp2 / (float)(tp2 + fn2);
+        float p2 = tp2 / (tp2 + fp2);
+        float r2 = tp2 / (tp2 + fn2);
         float f2 = 2 * p2 * r2 / (p2 + r2);
 
-        float p3 = tp3 / (float)(tp3 + fp3);
-        float r3 = tp3 / (float)(tp3 + fn3);
+        float p3 = tp3 / (tp3 + fp3);
+        float r3 = tp3 / (tp3 + fn3);
         float f3 = 2 * p3 * r3 / (p3 + r3);
 
         int i = 0;

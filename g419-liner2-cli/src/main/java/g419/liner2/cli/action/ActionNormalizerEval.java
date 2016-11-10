@@ -13,8 +13,8 @@ import g419.liner2.api.tools.*;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
 
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -40,22 +40,19 @@ public class ActionNormalizerEval extends Action {
         this.options.addOption(CommonOptions.getInputFileNameOption());
         this.options.addOption(CommonOptions.getModelFileOption());
         this.options.addOption(CommonOptions.getVerboseDeatilsOption());
-        this.options.addOption(OptionBuilder.withArgName("filename").hasArg().
-                withLongOpt("misses").
-                withDescription("Path to file in which misses will be saved (for model tweaking)").
-                create("misses")
-        );
-        this.options.addOption(OptionBuilder.withArgName("keys").hasArg().
-                withLongOpt("metaKeys").
-                withDescription("Set of metadata keys (joined with ;), used as view while comparing normalization results.").
-                create("metaKeys")
-        );
-
+        this.options.addOption(Option.builder("misses")
+                .argName("filename").hasArg().longOpt("misses")
+                .desc("Path to file in which misses will be saved (for model tweaking)")
+                .build());
+        this.options.addOption(Option.builder("metaKeys")
+                .argName("keys").hasArg().longOpt("metaKeys")
+                .desc("Set of metadata keys (joined with ;), used as view while comparing normalization results.")
+                .build());
     }
 
     @Override
     public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new GnuParser().parse(this.options, args);
+        CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");

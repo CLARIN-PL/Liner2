@@ -16,7 +16,7 @@ import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.factory.ChunkerManager;
 import g419.liner2.api.features.TokenFeatureGenerator;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 
 import java.text.NumberFormat;
@@ -51,13 +51,16 @@ public class ActionNormalizerEval3 extends Action {
         this.options.addOption(CommonOptions.getInputFileNameOption());
         this.options.addOption(CommonOptions.getFeaturesOption());
         this.options.addOption(CommonOptions.getModelFileOption());
-        this.options.addOption(Option.builder(OPTION_CONFIGURATION).longOpt(OPTION_CONFIGURATION_LONG).hasArg().argName("POINT:WHAT:HOW")
-                .desc("WHAT will be compared and from what POINT, e.g.: TEXT:ANN:STRICT, TEXT:VAL:RELAXED, ANN:LVAL:RELAXED, LVAL:VAL:RELAXED").build());
+        this.options.addOption(Option.builder(OPTION_CONFIGURATION)
+                .longOpt(OPTION_CONFIGURATION_LONG)
+                .hasArg().argName("POINT:WHAT:HOW")
+                .desc("WHAT will be compared and from what POINT, e.g.: TEXT:ANN:STRICT, " +
+                        "TEXT:VAL:RELAXED, ANN:LVAL:RELAXED, LVAL:VAL:RELAXED").build());
     }
 
     @Override
     public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new GnuParser().parse(this.options, args);
+        CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
@@ -94,6 +97,7 @@ public class ActionNormalizerEval3 extends Action {
     public void run() throws Exception {
 
         //static private Logger log = LoggerFactory.getLogger(RuleSet.class);
+        //todo: remove these two lines
         Logger.getRootLogger().removeAllAppenders();
         Logger.getRootLogger().addAppender(new NullAppender());
 

@@ -6,23 +6,16 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.regex.Pattern;
 
 import g419.corpus.Logger;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
 
-import g419.corpus.io.DataFormatException;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.BatchReader;
 import g419.corpus.io.reader.ReaderFactory;
@@ -35,12 +28,7 @@ import g419.corpus.structure.Token;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.api.LinerOptions;
-import g419.liner2.api.chunker.Chunker;
-import g419.liner2.api.chunker.factory.ChunkerFactory;
-import g419.liner2.api.chunker.factory.ChunkerManager;
-import g419.liner2.api.features.TokenFeatureGenerator;
 import g419.liner2.api.tools.ChunkerEvaluator;
-import g419.liner2.api.tools.ChunkerEvaluatorMuc;
 import g419.liner2.api.tools.ProcessingTimer;
 
 public class ActionAgreement extends Action {
@@ -62,7 +50,7 @@ public class ActionAgreement extends Action {
 
 	@Override
 	public void parseOptions(String[] args) throws ParseException {
-		CommandLine line = new GnuParser().parse(this.options, args);
+		CommandLine line = new DefaultParser().parse(this.options, args);
 		parseDefault(line);
 		input_files = line.getOptionValues(CommonOptions.OPTION_INPUT_FILE);
 

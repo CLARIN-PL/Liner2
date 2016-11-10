@@ -9,14 +9,14 @@ import g419.liner2.api.features.tokens.CaseFeature;
 import g419.liner2.api.features.tokens.ClassFeature;
 import g419.liner2.api.tools.ValueComparator;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.*;
-import java.util.stream.Stream;
 import java.util.zip.DataFormatException;
 
 /**
@@ -54,29 +54,28 @@ public class ActionLemmatize extends Action {
         this.options.addOption(CommonOptions.getInputFileNameOption());
         this.options.addOption(CommonOptions.getOutputFileNameOption());
 
-        OptionBuilder.withArgName("wrapped");
-        OptionBuilder.hasArg();
-        OptionBuilder.withDescription("file with wrapped annotations");
-        OptionBuilder.withLongOpt(OPTION_WRAPPED_LONG);
-        this.options.addOption(OptionBuilder.create(OPTION_WRAPPED));
+        this.options.addOption(Option.builder(OPTION_WRAPPED)
+                .argName("wrapped").hasArg()
+                .desc("file with wrapped annotations")
+                .longOpt(OPTION_WRAPPED_LONG)
+                .build());
 
-        OptionBuilder.withArgName("measure");
-        OptionBuilder.isRequired();
-        OptionBuilder.hasArg();
-        OptionBuilder.withDescription("name of measure for distance between tokens (dist1, dist2)");
-        OptionBuilder.withLongOpt(OPTION_DISTANCE_MEASURE_LONG);
-        this.options.addOption(OptionBuilder.create(OPTION_DISTANCE_MEASURE));
+        this.options.addOption(Option.builder(OPTION_DISTANCE_MEASURE)
+                .argName("measure").hasArg()
+                .required()
+                .desc("name of measure for distance between tokens (dist1, dist2)")
+                .longOpt(OPTION_DISTANCE_MEASURE_LONG)
+                .build());
 
-        OptionBuilder.withArgName("suffixes");
-        OptionBuilder.hasArg();
-        OptionBuilder.withDescription("suffix pairs for names inflection");
-        OptionBuilder.withLongOpt(OPTION_SUFFIXES_LONG);
-        this.options.addOption(OptionBuilder.create(OPTION_SUFFIXES));
-
+        this.options.addOption(Option.builder(OPTION_SUFFIXES)
+                .argName("suffixes").hasArg()
+                .desc("suffix pairs for names inflection")
+                .longOpt(OPTION_SUFFIXES_LONG)
+                .build());
     }
     @Override
     public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new GnuParser().parse(this.options, args);
+        CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
         this.output_file = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);

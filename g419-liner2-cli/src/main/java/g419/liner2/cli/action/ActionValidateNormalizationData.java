@@ -9,8 +9,8 @@ import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -27,21 +27,16 @@ public class ActionValidateNormalizationData extends Action {
 
         this.options.addOption(CommonOptions.getInputFileFormatOption());
         this.options.addOption(CommonOptions.getInputFileNameOption());
-        this.options.addOption(OptionBuilder.withArgName("types").hasArg().
-                        withLongOpt("types").
-                        withDescription("Annotation types that will be analyzed (separated with ;)").
-                        create("t")
-        );
-        this.options.addOption(OptionBuilder.withArgName("metaKey").hasArg().
-                        withLongOpt("metaKey").
-                        withDescription("Metadata key that will be analysed (just pass 'lemma' here for now)").
-                        create("m")
-        );
+
+        this.options.addOption(Option.builder("t").argName("types").hasArg().longOpt("types").
+                desc("Annotation types that will be analyzed (separated with ;)").build());
+        this.options.addOption(Option.builder("m").argName("metaKey").hasArg().longOpt("metaKey").
+                desc("Metadata key that will be analysed (just pass 'lemma' here for now)").build());
     }
 
     @Override
     public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new GnuParser().parse(this.options, args);
+        CommandLine line = new DefaultParser().parse(this.options, args);
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
         if (!line.hasOption("t")) {
@@ -99,14 +94,12 @@ public class ActionValidateNormalizationData extends Action {
                         tuples.put(tuple.getKey(), new ArrayList<Tuple>());
                     tuples.get(tuple.getKey()).add(tuple);
                 }
-            //System.gc();
         }
         println("Size:", tuples.size());
         while (!tuples.isEmpty()) {
             String key = tuples.keySet().iterator().next();
             List<Tuple> matching = tuples.get(key);
             tuples.remove(key);
-            //System.gc();
             compareWithEachOther(key, matching);
         }
     }

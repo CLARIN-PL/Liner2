@@ -6,7 +6,7 @@ import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.factory.ChunkerManager;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.ParseException;
 
 /**
@@ -24,7 +24,7 @@ public class ActionTrain extends Action{
 
 	@Override
 	public void parseOptions(String[] args) throws ParseException {
-        CommandLine line = new GnuParser().parse(this.options, args);
+		CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
         LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
 	}

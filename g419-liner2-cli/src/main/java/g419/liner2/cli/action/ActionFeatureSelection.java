@@ -4,7 +4,6 @@ import g419.corpus.Logger;
 import g419.corpus.io.DataFormatException;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.BatchReader;
-import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.CrfTemplate;
 import g419.corpus.structure.Document;
@@ -14,11 +13,9 @@ import g419.lib.cli.CommonOptions;
 import g419.lib.cli.ParameterException;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
-import g419.liner2.api.chunker.CrfppChunker;
 import g419.liner2.api.chunker.factory.ChunkerManager;
 import g419.liner2.api.features.TokenFeatureGenerator;
 import g419.liner2.api.tools.*;
-//import g419.corpus.structure.CrfTemplate;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -30,11 +27,9 @@ import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
-import org.ini4j.Ini;
 import org.ini4j.Profile.Section;
 
 /**
@@ -62,7 +57,7 @@ public class ActionFeatureSelection extends Action {
 
 	@Override
 	public void parseOptions(String[] args) throws ParseException {
-		CommandLine line = new GnuParser().parse(this.options, args);
+		CommandLine line = new DefaultParser().parse(this.options, args);
 		parseDefault(line);
 		this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
 		LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
@@ -81,7 +76,6 @@ public class ActionFeatureSelection extends Action {
 		}
 		Iterator<Entry<String, CrfTemplate>> it = templates.entrySet()
 				.iterator();
-		//LinerOptions.getGlobal().chunkersDescriptions.
 		Iterator<Section> cit = LinerOptions.getGlobal().chunkersDescriptions.iterator();
 		List<Pattern> ll = l.getTypes();
 		Section c = null;

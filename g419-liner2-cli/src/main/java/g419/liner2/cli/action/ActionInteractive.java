@@ -14,19 +14,17 @@ import g419.lib.cli.CommonOptions;
 import g419.lib.cli.ParameterException;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
-import g419.liner2.api.chunker.factory.ChunkerFactory;
 import g419.liner2.api.chunker.factory.ChunkerManager;
 import g419.liner2.api.features.TokenFeatureGenerator;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
@@ -71,7 +69,7 @@ public class ActionInteractive extends Action{
 
 	@Override
 	public void parseOptions(String[] args) throws ParseException {
-        CommandLine line = new GnuParser().parse(this.options, args);
+		CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
         this.output_format = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT, "ccl");
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "plain:wcrft");

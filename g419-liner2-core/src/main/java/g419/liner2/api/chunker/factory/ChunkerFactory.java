@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import g419.liner2.api.normalizer.factory.AbstractNormalizerFactoryItem;
 import org.ini4j.Ini;
 
 import com.google.common.reflect.ClassPath;
@@ -26,6 +27,7 @@ public class ChunkerFactory {
 	
 	private ChunkerFactory() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, IOException{
 		this.items.addAll(this.findFactoryItems("g419.liner2.api.chunker.factory"));
+        this.items.addAll(this.findNormalisationFactoryItems("g419.liner2.api.normalizer.factory"));
 	}
 
 	/**
@@ -46,13 +48,26 @@ public class ChunkerFactory {
     	List<ChunkerFactoryItem> items = new ArrayList<ChunkerFactoryItem>();
     	for ( final ClassPath.ClassInfo info : ClassPath.from(loader).getTopLevelClasses(packageName) ){    		
     		Class<?> cl = loader.loadClass(info.getName());
-    		if ( cl.getSuperclass() == ChunkerFactoryItem.class ){    		    			
+    		if ( cl.getSuperclass() == ChunkerFactoryItem.class ){
     			items.add((ChunkerFactoryItem) cl.getConstructor().newInstance(new Object[]{}));
     		}
     	}
 		return items;
 	}
-	
+
+    public List<ChunkerFactoryItem> findNormalisationFactoryItems(String packageName) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, IOException{
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        List<ChunkerFactoryItem> items = new ArrayList<ChunkerFactoryItem>();
+        for ( final ClassPath.ClassInfo info : ClassPath.from(loader).getTopLevelClasses(packageName) ){
+            Class<?> cl = loader.loadClass(info.getName());
+            if ( cl.getSuperclass() == AbstractNormalizerFactoryItem.class ){
+                items.add((ChunkerFactoryItem) cl.getConstructor().newInstance(new Object[]{}));
+            }
+        }
+        return items;
+    }
+
+
 	/**
 	 * Get current ChunkerFactory. If the factory does not exist then create it.
 	 * @return

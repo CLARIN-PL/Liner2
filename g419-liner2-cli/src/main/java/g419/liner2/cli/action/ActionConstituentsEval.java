@@ -1,6 +1,5 @@
 package g419.liner2.cli.action;
 
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 import g419.corpus.Logger;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
@@ -12,18 +11,14 @@ import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.factory.ChunkerManager;
 import g419.liner2.api.features.TokenFeatureGenerator;
 import g419.liner2.api.normalizer.Normalizer;
-import g419.liner2.api.tools.NormalizerEvaluator;
 import g419.liner2.api.tools.ParameterException;
-import g419.liner2.api.tools.ProcessingTimer;
 import g419.liner2.api.tools.Result;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
 
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,21 +40,19 @@ public class ActionConstituentsEval extends Action {
         this.options.addOption(CommonOptions.getInputFileNameOption());
         this.options.addOption(CommonOptions.getModelFileOption());
         this.options.addOption(CommonOptions.getVerboseDeatilsOption());
-        this.options.addOption(OptionBuilder.withArgName("inKeys").hasArg().
-                        withLongOpt("inKeys").
-                        withDescription("Set of metadata keys (joined with ;), used as input annotation metadata").
-                        create("inKeys")
-        );
-        this.options.addOption(OptionBuilder.withArgName("outKeys").hasArg().
-                        withLongOpt("outKeys").
-                        withDescription("Set of metadata keys (joined with ;), used as output annotation metadata").
-                        create("outKeys")
-        );
+        this.options.addOption(Option.builder("inKeys").argName("inKeys")
+                .hasArg().longOpt("inKeys").desc("Set of metadata keys (joined with ;), " +
+                        "used as input annotation metadata")
+                .build());
+        this.options.addOption(Option.builder("outKeys").argName("outKeys")
+                .hasArg().longOpt("outKeys").desc("Set of metadata keys (joined with ;), " +
+                        "used as output annotation metadata")
+                .build());
     }
 
     @Override
     public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new GnuParser().parse(this.options, args);
+        CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");

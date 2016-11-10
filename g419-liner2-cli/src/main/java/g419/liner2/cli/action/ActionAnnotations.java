@@ -16,14 +16,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.*;
 
 /**
  * Generates an ARFF file with a list of annotations of defined types 
@@ -46,20 +42,20 @@ public class ActionAnnotations extends Action {
 	public ActionAnnotations() {
 		super("annotations");
 		this.setDescription("generates an arff file with a list of annotations and their features");
-		
-		OptionBuilder.withArgName("annotation_features");
-		OptionBuilder.hasArg();
-		OptionBuilder.withDescription("a file with a list of annotation features");
-		OptionBuilder.withLongOpt(ActionAnnotations.OPTION_ANNOTATION_FEATURE_LONG);
-		OptionBuilder.isRequired();
-        this.options.addOption(OptionBuilder.create(ActionAnnotations.OPTION_ANNOTATION_FEATURE));
-		
-        OptionBuilder.withArgName("types");
-        OptionBuilder.hasArg();
-        OptionBuilder.withDescription("a file with a list of annotation name patterns");
-        OptionBuilder.withLongOpt(OPTION_TYPES_LONG);
-        this.options.addOption(OptionBuilder.create(OPTION_TYPES));
-        
+        this.options.addOption(Option.builder(ActionAnnotations.OPTION_ANNOTATION_FEATURE)
+                .argName(ActionAnnotations.OPTION_ANNOTATION_FEATURE_LONG)
+                .hasArg().desc("a file with a list of annotation features")
+                .longOpt(ActionAnnotations.OPTION_ANNOTATION_FEATURE_LONG)
+                .required()
+                .build());
+
+        this.options.addOption(Option.builder(ActionAnnotations.OPTION_TYPES)
+                .argName(ActionAnnotations.OPTION_TYPES_LONG)
+                .hasArg()
+                .desc("a file with a list of annotation name patterns")
+                .longOpt(ActionAnnotations.OPTION_TYPES_LONG)
+                .build());
+
         this.options.addOption(CommonOptions.getOutputFileNameOption());
         this.options.addOption(CommonOptions.getInputFileFormatOption());
         this.options.addOption(CommonOptions.getInputFileNameOption());
@@ -67,7 +63,7 @@ public class ActionAnnotations extends Action {
 
 	@Override
 	public void parseOptions(String[] args) throws ParseException, IOException {
-		CommandLine line = new GnuParser().parse(this.options, args);
+        CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
