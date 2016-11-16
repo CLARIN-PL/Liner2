@@ -2,10 +2,7 @@ package g419.liner2.cli.action;
 
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
-import g419.corpus.io.writer.AbstractDocumentWriter;
-import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.Annotation;
-import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 import g419.lib.cli.Action;
@@ -95,8 +92,6 @@ public class ActionNormalizerEval3 extends Action {
     }
 
     public void run() throws Exception {
-
-        //static private Logger log = LoggerFactory.getLogger(RuleSet.class);
         //todo: remove these two lines
         Logger.getRootLogger().removeAllAppenders();
         Logger.getRootLogger().addAppender(new NullAppender());
@@ -135,12 +130,11 @@ public class ActionNormalizerEval3 extends Action {
                 cloneDocument.removeMetadata("val");
             }
 
-
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date", "t3_time", "t3_duration", "t3_set"));
-            //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date"));
+            Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date"));
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_time"));
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_duration"));
-            Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date", "t3_time", "t3_duration"));
+            //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date", "t3_time", "t3_duration"));
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_set"));
             chunker.chunkInPlace(cloneDocument);
             //HashMap<Sentence, AnnotationSet> chunkings = chunker.chunk(cloneDocument);
@@ -193,6 +187,7 @@ public class ActionNormalizerEval3 extends Action {
                                         referenceAnnotation.getTokens().stream()
                                                 .filter(p -> systemAnnotation.getTokens().contains(p))
                                                 .collect(Collectors.toSet()).size() > 0) {
+                                    if (!referenceAnnotation.metaDataMatchesKey("lval", systemAnnotation))
                                     System.out.println(
                                                     referenceAnnotation.getType() + "\t" +
                                                     referenceDocument.getName() + "\t" +

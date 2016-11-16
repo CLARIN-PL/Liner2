@@ -3,14 +3,9 @@ package g419.liner2.api.normalizer.rbn;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 
 /**
@@ -20,7 +15,6 @@ import java.util.regex.Matcher;
  * Non-public methods are static for the sake of efficiency.
  */
 public final class RuleSetLoader {
-    static private Logger log = LoggerFactory.getLogger(RuleSetLoader.class);
     static private RuleSetLoader instance;
 
     private RuleSetLoader() {}
@@ -37,15 +31,14 @@ public final class RuleSetLoader {
 
     /**
      * No sanity check is performed - if file was malformed, you'll be sorry.
-     * @param path Absolute path to loaded file. Will be used while including other files
      * @param reader Reader of JSON file with normalization rules
      * @return RuleSet object
      * @throws java.io.FileNotFoundException when included file doesn't exist
      */
     protected RuleSet load(File baseDir, Reader reader) throws FileNotFoundException {
         JSONObject parsed = (JSONObject) JSONValue.parse(reader);
-        Map<String, Rule> rules = new HashMap<String, Rule>();
-        Map<String, String> normalization = new HashMap<String, String>();
+        Map<String, Rule> rules = new LinkedHashMap<String, Rule>();
+        Map<String, String> normalization = new LinkedHashMap<String, String>();
         doInclude(baseDir, parsed, rules, normalization);
         String regexEscape = (String) parsed.get("regexEscape");
         Map<String, String> patterns = getPatterns(parsed, regexEscape);
@@ -55,6 +48,7 @@ public final class RuleSetLoader {
     }
 
     /**
+     * @param path Absolute path to loaded file. Will be used while including other files
      * @see #load(java.io.File, java.io.Reader)
      * @throws java.io.FileNotFoundException when given path doesn't exist
      */
@@ -99,10 +93,8 @@ public final class RuleSetLoader {
                 Object value = ((Map.Entry) entry).getValue();
                 if (value instanceof String){           // explicit pattern
                     out.put(key, escaped((String) value, regexEscape));
-                    log.debug("PUT "+key+" -> "+out.get(key));
                 } else if (value instanceof List){      // pattern as List
                     out.put(key, escaped(join((List) value, "|"), regexEscape));
-                    log.debug("PUT "+key+" -> "+out.get(key));
                 } else if (value instanceof Map){       // group of patterns
                     for (Object entry2: ((Map)value).entrySet()) {
                         String key2 = (String) (((Map.Entry) entry2).getKey());
@@ -112,7 +104,6 @@ public final class RuleSetLoader {
                         } else if (value2 instanceof List) {
                             out.put(key2, escaped(join((List) value2, "|"), regexEscape));
                         }
-                        log.debug("PUT "+key2+" -> "+out.get(key2));
                     }
                 }
             }
@@ -121,31 +112,36 @@ public final class RuleSetLoader {
     }
 
     static private void loadRules(Map<String, Rule> rules, JSONObject parsed, Map<String, String> patterns, String regexEscape){
-        Map rulesDef = (JSONObject) parsed.get("rules");
+        ArrayList<JSONObject> rulesDef = (JSONArray) parsed.get("rules");
         if (rulesDef!=null){
-            for (Object entry: rulesDef.entrySet()){
-                String name = (String)(((Map.Entry) entry).getKey());
-                Map value = (JSONObject)((Map.Entry) entry).getValue();
-                String extract = escaped((String)value.get("extract"), regexEscape);
-                String normalize = (String)value.get("normalize");
-                rules.put(name, new Rule(name, injectPatterns(extract, patterns), normalize));
+            for (JSONObject obj: rulesDef){
+                for (Object entry : obj.entrySet()){
+                    String name = (String)(((Map.Entry) entry).getKey());
+                    Map value = (JSONObject)((Map.Entry) entry).getValue();
+                    String extract = escaped((String)value.get("extract"), regexEscape);
+                    String normalize = (String)value.get("normalize");
+                    rules.put(name, new Rule(name, injectPatterns(extract, patterns), normalize));
+                }
             }
         }
     }
 
     static private void loadNormalization(Map<String, String> normalization, JSONObject parsed){
-        Map normalizationDef = (JSONObject) parsed.get("normalization");
+        //Map normalizationDef = (JSONObject) parsed.get("normalization");
+        ArrayList<JSONObject> normalizationDef = (JSONArray) parsed.get("normalization");
         if (normalizationDef!=null){
-            for (Object entry: normalizationDef.entrySet()){
-                String key = (String)(((Map.Entry) entry).getKey());
-                Object value = ((Map.Entry) entry).getValue();
-                if (value instanceof String){           // explicit pattern
-                    normalization.put(key, (String) value);
-                } else if (value instanceof Map){       // group of patterns
-                    for (Object entry2: ((Map)value).entrySet()) {
-                        String key2 = (String) (((Map.Entry) entry2).getKey());
-                        String value2 = (String)((Map.Entry) entry2).getValue();
-                        normalization.put(key2, (String) value2);
+            for (JSONObject obj: normalizationDef) {
+                for (Object entry : obj.entrySet()) {
+                    String key = (String) (((Map.Entry) entry).getKey());
+                    Object value = ((Map.Entry) entry).getValue();
+                    if (value instanceof String) {           // explicit pattern
+                        normalization.put(key, (String) value);
+                    } else if (value instanceof Map) {       // group of patterns
+                        for (Object entry2 : ((Map) value).entrySet()) {
+                            String key2 = (String) (((Map.Entry) entry2).getKey());
+                            String value2 = (String) ((Map.Entry) entry2).getValue();
+                            normalization.put(key2, (String) value2);
+                        }
                     }
                 }
             }

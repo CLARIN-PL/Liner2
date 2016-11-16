@@ -1,7 +1,5 @@
 package g419.liner2.api.normalizer.rbn;
 
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -10,7 +8,6 @@ import java.util.*;
  * normalizing symbols.
  */
 public final class RuleSet {
-    //static private Logger log = LoggerFactory.getLogger(RuleSet.class);
 
     /**
      * Immutable map from rule names to rule objects. Represents "rules" section of JSON file.

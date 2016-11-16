@@ -1,0 +1,166 @@
+{
+  "regexEscape": "%",
+  "rules": [
+    {
+      "writtenFullDateFULL": {
+        "extract": ".*%s$reDay[.]?%s+$reMonthName[.]?%s+$reCentury$re2Digits.*",
+        "normalize": "@group(2)@group(3)-@group(1)-@group(0)"
+      }
+    }, 
+    {
+      "writtenSeasonYear": {
+        "extract": ".*$rePartOfYear%s+$reCentury$re2Digits.*",
+        "normalize": "@group(1)@group(2)-@group(0)"
+      }
+    },     
+    {
+      "writtenSeason": {
+        "extract": ".*$rePartOfYear.*",
+        "normalize": "xxxx-@group(0)"
+      }
+    },
+    {
+      "writtenPartDateFULL": {
+        "extract": ".*$reMonthName[.]?%s+$reCentury$re2Digits.*",
+        "normalize": "@group(1)@group(2)-@group(0)"
+      }
+    },         
+    {
+      "writtenPartDateFULL2": {
+        "extract": ".*$reCentury$re2Digits.*",
+        "normalize": "@group(0)@group(1)"
+      }
+    },     
+    {
+      "often1": {
+        "extract": "ostatni weekend",
+        "normalize": "-0000-W01-WE"
+      }
+    },
+    
+  ],
+  "patterns": {
+      "reDay": [
+      "[012]%d",
+      "3[01]",
+      "%d",
+      "[dwudziesty|trzydziesty]? pierwszy",
+      "[dwudziesty]? drugi",
+      "[dwudziesty]? trzeci",
+      "[dwudziesty]? czwarty",
+      "[dwudziesty]? piąty",
+      "[dwudziesty]? piaty",
+      "[dwudziesty]? szósty",
+      "[dwudziesty]? szosty",
+      "[dwudziesty]? siódmy",
+      "[dwudziesty]? siodmy",
+      "[dwudziesty]? ósmy",
+      "[dwudziesty]? osmy",
+      "[dwudziesty]? dziewiąty",
+      "[dwudziesty]? dziewiaty",
+      "pierwszy",
+      "dziesiąty",
+      "dziesiaty",
+      "jedenasty",
+      "dwunasty",
+      "trzynasty",
+      "czternasty",
+      "piętnasty",
+      "pietnasty",
+      "szesnasty",
+      "siedemnasty",
+      "osiemnasty",
+      "dziewiętnasty",
+      "dziewietnasty",
+      "dwudziesty",
+      "trzydziesty"
+    ],
+    "reCentury": "[12]%d",
+    "re2Digits": "%d%d",
+    "reMonthNumber": [
+      "0%d",
+      "10",
+      "11",
+      "12"
+    ],
+    "reDayNumber": [
+      "[012]?%d",
+      "3[01]"
+    ],
+    "reYear": [
+      "%d%d%d%d"
+    ],
+    "reMonthName": [
+      "1[012]",
+      "0%d",
+      "%d",
+      "styczeń",
+      "Styczeń",
+      "styczen",
+      "styczniowy",
+      "luty",
+      "Luty",
+      "lutowy",
+      "marzec",
+      "Marzec",
+      "marcowy",
+      "kwiecień",
+      "Kwiecień",
+      "kwiecien",
+      "kwietniowy",
+      "Maj",
+      "maj",
+      "majowy",
+      "czerwiec",
+      "Czerwiec",
+      "czerwcowy",
+      "czerwcowego",
+      "lipiec",
+      "Lipiec",
+      "lipcowy",
+      "sierpień",
+      "Sierpień",
+      "sierpien",
+      "sierpniowy",
+      "wrzesień",
+      "Wrzesień",
+      "wrzesien",
+      "wrześniowy",
+      "październik",
+      "Październik",
+      "październikowy",
+      "pazdziernik",
+      "listopad",
+      "Listopad",
+      "listopadowy",
+      "grudzień",
+      "Grudzień",
+      "grudzien",
+      "grudniowy",
+      "stycznia",
+      "lutego",
+      "marca",
+      "kwietnia",
+      "maja",
+      "czerwca",
+      "lipca",
+      "sierpnia",
+      "września",
+      "wrzesnia",
+      "października",
+      "pazdziernika",
+      "listopada",
+      "grudnia"
+    ],
+   "rePartOfYear": [
+      "zima",
+      "zimowy",
+      "lato",
+      "letni",
+      "jesień",
+      "jesienny",
+      "wiosna",
+      "wiosenny"
+    ]
+  }
+}
