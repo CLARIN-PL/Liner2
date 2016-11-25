@@ -1,14 +1,15 @@
 package g419.liner2.api.chunker;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 
 /**
@@ -32,7 +33,7 @@ public class AduChunker extends Chunker {
 	}
 
 	private AnnotationSet chunkSentence(Sentence sentence) {
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		int sentenceLength = sentence.getTokenNumber();
 

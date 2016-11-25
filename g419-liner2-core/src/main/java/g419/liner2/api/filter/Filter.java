@@ -1,9 +1,10 @@
 package g419.liner2.api.filter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Token;
-
-import java.util.ArrayList;
 
 
 public abstract class Filter {
@@ -38,7 +39,7 @@ public abstract class Filter {
 	 */
 	static public Annotation filter(Annotation chunk, ArrayList<Filter> filters) {
     	StringBuilder sb = new StringBuilder();
-    	ArrayList<Token> tokens = chunk.getSentence().getTokens();
+    	List<Token> tokens = chunk.getSentence().getTokens();
     	for (int i = chunk.getBegin(); i <= chunk.getEnd(); i++) {
     		Token token = tokens.get(i);
     		sb.append(token.getOrth() + (token.getNoSpaceAfter() ? "" : " "));

@@ -10,6 +10,7 @@ import g419.crete.api.structure.AnnotationUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -38,7 +39,7 @@ public class ClusterMentionClosestFollowingFollowedByCoordConj extends AbstractC
 		}
 		
 		TokenAttributeIndex ai  = closestFollowing.getSentence().getAttributeIndex();
-		ArrayList<Token> tokens = closestFollowing.getSentence().getTokens();
+		List<Token> tokens = closestFollowing.getSentence().getTokens();
 		
 		int inputIndex = closestFollowing.getEnd();
 		int searchEnd = Math.min(inputIndex + lookupDistance, closestFollowing.getSentence().getTokens().size());

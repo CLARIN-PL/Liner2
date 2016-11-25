@@ -10,6 +10,7 @@ import g419.corpus.structure.TokenAttributeIndex;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Pattern;
 
 
@@ -85,7 +86,7 @@ public class HeuristicChunker extends Chunker {
 	 */
 	private AnnotationSet ruleNamUpperCamelCase(Sentence sentence) {
 		AnnotationSet chunking = new AnnotationSet(sentence);
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		TokenAttributeIndex attributeIndex = sentence.getAttributeIndex();
 		
 		for (int i = 0; i < tokens.size(); i++) {
@@ -104,7 +105,7 @@ public class HeuristicChunker extends Chunker {
 	 */
 	private AnnotationSet ruleNamParanthesis(Sentence sentence) {
 		AnnotationSet chunking = new AnnotationSet(sentence);
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		TokenAttributeIndex attributeIndex = sentence.getAttributeIndex();
 		
 		for (int i = 1; i < tokens.size(); i++) {
@@ -139,7 +140,7 @@ public class HeuristicChunker extends Chunker {
 	 */
 	private AnnotationSet ruleNamAllUpper(Sentence sentence) {
 		AnnotationSet chunking = new AnnotationSet(sentence);
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		int iHasLoweCase = ai.getIndex("has_lower_case");
 		int iPattern = ai.getIndex("pattern");
@@ -199,7 +200,7 @@ public class HeuristicChunker extends Chunker {
 	 
 	private AnnotationSet ruleGeneralIgnDict(Sentence sentence) {
 		AnnotationSet chunking = new AnnotationSet(sentence);
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		TokenAttributeIndex attributeIndex = sentence.getAttributeIndex();
 
 		for (int i = 0; i < tokens.size(); i++) {
@@ -249,7 +250,7 @@ public class HeuristicChunker extends Chunker {
 	 */
 	private AnnotationSet ruleGeneralCamelBase(Sentence sentence) {
 		AnnotationSet chunking = new AnnotationSet(sentence);
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		TokenAttributeIndex attributeIndex = sentence.getAttributeIndex();
 
 		for (int i = 0; i < tokens.size(); i++) {
@@ -294,7 +295,7 @@ public class HeuristicChunker extends Chunker {
 	
 	private AnnotationSet ruleRoadPrefix(Sentence sentence) {
 		AnnotationSet chunking = new AnnotationSet(sentence);
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		TokenAttributeIndex attributeIndex = sentence.getAttributeIndex();
 		
 		for (int i = 1; i < tokens.size(); i++) {
@@ -325,7 +326,7 @@ public class HeuristicChunker extends Chunker {
 	 */
 	private AnnotationSet rulePersonPanFirstLastNoun(Sentence sentence){
 		AnnotationSet chunking = new AnnotationSet(sentence);
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
 		int indexPersonFirstNam = ai.getIndex("person_first_nam");
@@ -360,7 +361,7 @@ public class HeuristicChunker extends Chunker {
 	 */
 	private AnnotationSet rulePersonPanInitialLast(Sentence sentence){
 		AnnotationSet chunking = new AnnotationSet(sentence);
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
 		int indexPersonLastNam = ai.getIndex("person_last_nam");
@@ -395,7 +396,7 @@ public class HeuristicChunker extends Chunker {
 	 */
 	private AnnotationSet rulePersonFirstLast(Sentence sentence){
 		AnnotationSet chunking = new AnnotationSet(sentence);
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
 		int indexPersonLastNam = ai.getIndex("person_last_nam");
@@ -424,7 +425,7 @@ public class HeuristicChunker extends Chunker {
 	 */
 	private AnnotationSet rulePersonFirstLastMaiden(Sentence sentence){
 		AnnotationSet chunking = new AnnotationSet(sentence);
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
 		int indexPersonLastNam = ai.getIndex("person_last_nam");
@@ -455,7 +456,7 @@ public class HeuristicChunker extends Chunker {
 	 */
 	private AnnotationSet rulePersonNounFirstLast(Sentence sentence){
 		AnnotationSet chunking = new AnnotationSet(sentence);
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
 		int indexPersonLastNam = ai.getIndex("person_last_nam");
@@ -483,7 +484,7 @@ public class HeuristicChunker extends Chunker {
 	 */
 	private AnnotationSet rulePersonNounFirstInitialLast(Sentence sentence){
 		AnnotationSet chunking = new AnnotationSet(sentence);
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
 		int indexPersonLastNam = ai.getIndex("person_last_nam");
@@ -510,7 +511,7 @@ public class HeuristicChunker extends Chunker {
 	
 	private AnnotationSet ruleCityPrefix(Sentence sentence){
 		AnnotationSet chunking = new AnnotationSet(sentence);
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
 		int indexBase = ai.getIndex("base");
@@ -541,7 +542,7 @@ public class HeuristicChunker extends Chunker {
 	 */
 	private AnnotationSet ruleCityPostal(Sentence sentence){
 		AnnotationSet chunking = new AnnotationSet(sentence);
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
 		int indexOrth = ai.getIndex("orth");
@@ -568,7 +569,7 @@ public class HeuristicChunker extends Chunker {
 	
 	private AnnotationSet ruleRoadPrefixNumber(Sentence sentence){
 		AnnotationSet chunking = new AnnotationSet(sentence);
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
 		int indexOrth = ai.getIndex("orth");

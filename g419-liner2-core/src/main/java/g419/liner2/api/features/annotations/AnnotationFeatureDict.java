@@ -1,17 +1,15 @@
 package g419.liner2.api.features.annotations;
 
 
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.zip.DataFormatException;
+import java.util.List;
+
+import g419.corpus.structure.Annotation;
+import g419.corpus.structure.Token;
 
 /**
  * Created with IntelliJ IDEA.
@@ -61,7 +59,7 @@ public class AnnotationFeatureDict extends AnnotationAtomicFeature {
             return "E";
         }
         else{
-            ArrayList<Token> sentenceTokens = an.getSentence().getTokens();
+            List<Token> sentenceTokens = an.getSentence().getTokens();
             for(int tokenIdx: an.getTokens()){
                 String tokenText = sentenceTokens.get(tokenIdx).getAttributeValue(form).toLowerCase();
                 if(entries.contains(tokenText)){

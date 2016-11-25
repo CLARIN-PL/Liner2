@@ -1,12 +1,23 @@
 package g419.liner2.api.chunker;
 
-import g419.corpus.structure.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import g419.corpus.structure.Annotation;
+import g419.corpus.structure.AnnotationSet;
+import g419.corpus.structure.Document;
+import g419.corpus.structure.Paragraph;
+import g419.corpus.structure.Sentence;
+import g419.corpus.structure.Token;
+import g419.corpus.structure.TokenAttributeIndex;
 import g419.liner2.api.features.AnnotationFeatureGenerator;
 import g419.liner2.api.features.TokenFeatureGenerator;
 import g419.liner2.api.features.TokenToAnnotationFeatureGenerator;
-
-import java.util.*;
-import java.util.regex.Pattern;
 
 /**
 * Created by michal on 8/21/14.
@@ -165,7 +176,7 @@ public class AnnotationCRFClassifierChunker extends Chunker {
 
         }
         LinkedHashMap<String, HashMap<Annotation, String>> annotationFeatures = this.annotationFeatureGenerator.generate(sent, annotations);
-        ArrayList<Token> tokens = sent.getTokens();
+        List<Token> tokens = sent.getTokens();
         for(String featureName: annotationFeatures.keySet()){
             HashMap<Annotation, String> feature = annotationFeatures.get(featureName);
             for(Annotation ann: feature.keySet()){

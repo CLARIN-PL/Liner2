@@ -52,7 +52,7 @@ public class CrfppFix extends Chunker {
 	 * @param sentence Zdanie, na którym zostaną wykonane reguły korygujące
 	 */
 	private void ruleNamFixQuotation(Sentence sentence) {
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		for (Annotation an : sentence.getAnnotations(this.types)){
 			
 			/* Anotacja kończy się cydzysłowem -- sprawdz, czy w anotacji jest cudzysłów otwierający */

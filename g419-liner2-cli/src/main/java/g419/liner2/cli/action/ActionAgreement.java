@@ -9,13 +9,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 
-import g419.corpus.Logger;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
 
+import g419.corpus.Logger;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.BatchReader;
 import g419.corpus.io.reader.ReaderFactory;
@@ -208,8 +209,8 @@ public class ActionAgreement extends Action {
 	}
 
 	private boolean compareSentences(Sentence firstSentence, Sentence secondSentence) {
-		ArrayList<Token> firstSentenceTokens = firstSentence.getTokens();
-		ArrayList<Token> seconsSentenceTokens = secondSentence.getTokens();
+		List<Token> firstSentenceTokens = firstSentence.getTokens();
+		List<Token> seconsSentenceTokens = secondSentence.getTokens();
 
 		boolean match = firstSentenceTokens.size() == seconsSentenceTokens.size();
 		for (int i = 0; match && i < firstSentenceTokens.size() && i < seconsSentenceTokens.size(); i++)

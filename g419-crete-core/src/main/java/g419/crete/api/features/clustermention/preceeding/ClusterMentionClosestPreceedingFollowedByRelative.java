@@ -1,15 +1,15 @@
 package g419.crete.api.features.clustermention.preceeding;
 
+import java.util.List;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationCluster;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
 import g419.crete.api.features.clustermention.AbstractClusterMentionFeature;
 import g419.crete.api.structure.AnnotationUtil;
-
-import java.util.ArrayList;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 public class ClusterMentionClosestPreceedingFollowedByRelative extends AbstractClusterMentionFeature<Boolean>{
 	
@@ -29,7 +29,7 @@ public class ClusterMentionClosestPreceedingFollowedByRelative extends AbstractC
 		}
 		
 		TokenAttributeIndex ai  = closestPreceeding.getSentence().getAttributeIndex();
-		ArrayList<Token> tokens = closestPreceeding.getSentence().getTokens();
+		List<Token> tokens = closestPreceeding.getSentence().getTokens();
 		
 		int inputIndex = closestPreceeding.getEnd();
 		int searchEnd = Math.min(inputIndex + lookupDistance, closestPreceeding.getSentence().getTokens().size());

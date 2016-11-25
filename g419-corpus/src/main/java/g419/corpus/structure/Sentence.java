@@ -24,7 +24,7 @@ public class Sentence {
 	TokenAttributeIndex attributeIndex = null;
 	
 	/* Sekwencja tokenów wchodzących w skład zdania */
-	ArrayList<Token> tokens = new ArrayList<Token>();
+	List<Token> tokens = new ArrayList<Token>();
 	
 	/* Zbiór anotacji */
 	LinkedHashSet<Annotation> chunks = new LinkedHashSet<Annotation>();
@@ -273,7 +273,7 @@ public class Sentence {
 		return tokens.size();
 	}
 	
-	public ArrayList<Token> getTokens() {
+	public List<Token> getTokens() {
 		return tokens;
 	}
 	
@@ -333,7 +333,7 @@ public class Sentence {
 		return sb.toString().trim();
 	}
 
-	public void setTokens(ArrayList<Token> newTokens){
+	public void setTokens(List<Token> newTokens){
         tokens = newTokens;
     }
 

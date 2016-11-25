@@ -45,7 +45,7 @@ public class AnnotationWrapConverter extends Converter {
         HashSet<Token> wrappedTokens = new HashSet<>();
         HashSet<Token> annotatedTokens = new HashSet<>();
         HashMap<Token, String> newAnns = new HashMap<>();
-        ArrayList<Token> sentenceTokens = sentence.getTokens();
+        List<Token> sentenceTokens = sentence.getTokens();
         HashMap<String, LinkedHashMap<String, HashSet<String>>> bases = new HashMap<>();
         for(Annotation ann: sentence.getChunks()){
             if(ann.getBegin() != ann.getEnd()){

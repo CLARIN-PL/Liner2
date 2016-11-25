@@ -72,7 +72,7 @@ public class IkarAnnotationAdderChunker extends Chunker {
 	
 	public boolean crossNamOrMention(Annotation annotation){
 		boolean cross = false;
-		ArrayList<Token> sentenceTokens = annotation.getSentence().getTokens();
+		List<Token> sentenceTokens = annotation.getSentence().getTokens();
 		for(int tokenId : annotation.getTokens()){
 			if(annotation.getSentence().getChunksAt(tokenId, mentionTypes).size() > 0){
 				cross = true;

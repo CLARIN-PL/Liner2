@@ -1,9 +1,9 @@
 package g419.liner2.api.features.tokens;
 
+import java.util.List;
+
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
-
-import java.util.ArrayList;
 
 
 public class Agr1Feature extends TokenInSentenceFeature{
@@ -17,7 +17,7 @@ public class Agr1Feature extends TokenInSentenceFeature{
 		int caseIdx = sentence.getAttributeIndex().addAttribute("case");
 		int numberIdx = sentence.getAttributeIndex().addAttribute("number");
 		int genderIdx = sentence.getAttributeIndex().addAttribute("gender");
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		tokens.get(0).setAttributeValue(thisFeatureIdx, "NULL");
 		for (int i=1; i<sentence.getTokenNumber(); i++){
 			String caseValThis = tokens.get(i).getAttributeValue(caseIdx);

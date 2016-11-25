@@ -519,7 +519,7 @@ public class ChunkerEvaluator {
 	 * @return
 	 */
 	private String printChunk(Annotation chunk) {
-		ArrayList<Token> tokens = chunk.getSentence().getTokens();
+		List<Token> tokens = chunk.getSentence().getTokens();
 		StringBuilder result = new StringBuilder();
 		for (int i = chunk.getBegin(); i <= chunk.getEnd(); i++)
 			result.append(tokens.get(i).getOrth() + " ");

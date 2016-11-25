@@ -8,6 +8,7 @@ import g419.crete.api.features.AbstractFeature;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class AnnotationFeaturePreceedingConjunctionByLike extends AbstractFeature<Annotation, Boolean>{
@@ -21,7 +22,7 @@ public class AnnotationFeaturePreceedingConjunctionByLike extends AbstractFeatur
 		this.value = false;
 		
 		TokenAttributeIndex ai  = input.getSentence().getAttributeIndex();
-		ArrayList<Token> tokens = input.getSentence().getTokens();
+		List<Token> tokens = input.getSentence().getTokens();
 		
 		int inputIndex = input.getBegin();
 		int searchStart = Math.max(0, inputIndex - lookupDistance);

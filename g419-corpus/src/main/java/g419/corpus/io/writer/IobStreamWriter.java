@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class IobStreamWriter extends AbstractDocumentWriter {
@@ -81,7 +82,7 @@ public class IobStreamWriter extends AbstractDocumentWriter {
 	}
 	
 	private void writeSentence(Sentence sentence) throws IOException {
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		for (int i = 0; i < tokens.size(); i++) {
 			writeToken(i, tokens.get(i), sentence);
 		}

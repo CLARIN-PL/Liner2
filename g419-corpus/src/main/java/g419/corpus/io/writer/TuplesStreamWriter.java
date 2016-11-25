@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /*
@@ -68,7 +69,7 @@ public class TuplesStreamWriter extends AbstractDocumentWriter {
 	private void writeChunk(Annotation c, Sentence s) throws IOException {
 		int begin = this.sentenceOffset;
 		int end = this.sentenceOffset;
-		ArrayList<Token> tokens = s.getTokens();
+		List<Token> tokens = s.getTokens();
 		for (int i = 0; i < c.getBegin(); i++)
 			begin += tokens.get(i).getOrth().length();
 		end = begin;

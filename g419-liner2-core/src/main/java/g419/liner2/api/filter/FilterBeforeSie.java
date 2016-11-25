@@ -1,9 +1,9 @@
 package g419.liner2.api.filter;
 
+import java.util.List;
+
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Token;
-
-import java.util.ArrayList;
 
 
 public class FilterBeforeSie extends Filter {
@@ -23,7 +23,7 @@ public class FilterBeforeSie extends Filter {
 
 	@Override
 	public Annotation pass(Annotation chunk, CharSequence cSeq) {
-		ArrayList<Token> tokens = chunk.getSentence().getTokens();
+		List<Token> tokens = chunk.getSentence().getTokens();
 		// jeśli po chunku nic nie ma
 		if (chunk.getEnd() == tokens.size()-1)
 			return chunk;

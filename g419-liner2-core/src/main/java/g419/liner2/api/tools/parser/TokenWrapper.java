@@ -26,7 +26,7 @@ public class TokenWrapper {
         wrappedSent.setAttributeIndex(attrIdx);
         HashMap<Integer, Integer> newTokenIndexes = new HashMap<Integer, Integer>();
         HashSet<Integer> notWrappedTokens = new HashSet<Integer>();
-        ArrayList<Token> oldTokens = sentence.getTokens();
+        List<Token> oldTokens = sentence.getTokens();
         int sentenceIndex=0;
         while ( sentenceIndex<sentence.getTokenNumber() ){
             List<Annotation> tokenAnnsToWrap = getLongestAnns(sentence.getChunksAt(sentenceIndex, annotationTypes));

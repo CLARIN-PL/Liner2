@@ -1,11 +1,11 @@
 package g419.crete.api.features.annotations;
 
+import java.util.List;
+
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
 import g419.crete.api.features.AbstractFeature;
-
-import java.util.ArrayList;
 
 public class AnnotationFeatureFirstVerbInSentence extends AbstractFeature<Annotation, Boolean> {
 
@@ -15,7 +15,7 @@ public class AnnotationFeatureFirstVerbInSentence extends AbstractFeature<Annota
 	public void generateFeature(Annotation input) {
 		this.value = false;
 		TokenAttributeIndex ai = input.getSentence().getAttributeIndex();
-		ArrayList<Token> sentenceTokens = input.getSentence().getTokens();
+		List<Token> sentenceTokens = input.getSentence().getTokens();
 		int inputIndex = input.getBegin();
 		for(int currIndex = 0; currIndex < inputIndex; currIndex++){
 			Token currentToken = sentenceTokens.get(currIndex);

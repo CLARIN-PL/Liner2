@@ -89,7 +89,7 @@ public class MinosChunker extends Chunker {
 	private AnnotationSet chunkSentence(Sentence sentence) throws MaltChainedException{
 		AnnotationSet chunking = new AnnotationSet(sentence);
 		
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		TokenAttributeIndex ai = sentence.getAttributeIndex();
 		
 		/** Malt Parser **/

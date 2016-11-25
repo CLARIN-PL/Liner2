@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by michal on 5/22/15.
@@ -101,7 +102,7 @@ public class RulesChunker extends Chunker {
         for(TestRuleFeature rule: rules){
             sentCopy.getAttributeIndex().addAttribute(rule.getName());
             rule.generate(sentCopy);
-            ArrayList<Token> sentTokens = sentCopy.getTokens();
+            List<Token> sentTokens = sentCopy.getTokens();
 
             for(int i=0; i<sentTokens.size(); i++){
                 String label = sentTokens.get(i).getAttributeValue(rule.getName());
@@ -201,7 +202,7 @@ public class RulesChunker extends Chunker {
 //            }
 //            System.exit(0);
         }
-        ArrayList<Token> sentTokens = sent.getTokens();
+        List<Token> sentTokens = sent.getTokens();
         for(int i=0; i<sentTokens.size(); i++){
             int ourRule = tokenRules.get(i);
             int properRule = rulesD.get(tokensCount + i);

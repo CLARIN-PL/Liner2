@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.zip.DataFormatException;
 
@@ -289,7 +290,7 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 				channels.add(chunk.getType());
 		}
 		
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		for (int i = 0; i < tokens.size(); i++)
 			writeToken(i, tokens.get(i), chunks, channels);
 		this.indent(2);

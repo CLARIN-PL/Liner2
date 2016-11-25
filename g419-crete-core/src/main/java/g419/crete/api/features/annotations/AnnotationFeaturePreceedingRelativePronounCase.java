@@ -1,6 +1,5 @@
 package g419.crete.api.features.annotations;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,7 +8,6 @@ import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
 import g419.crete.api.features.AbstractFeature;
 import g419.crete.api.features.enumvalues.Case;
-import g419.crete.api.features.enumvalues.MentionType;
 
 public class AnnotationFeaturePreceedingRelativePronounCase extends AbstractFeature<Annotation, Case>{
 	
@@ -19,7 +17,7 @@ public class AnnotationFeaturePreceedingRelativePronounCase extends AbstractFeat
 	public void generateFeature(Annotation input) {
 		this.value  = Case.OTHER;
 		TokenAttributeIndex ai = input.getSentence().getAttributeIndex();
-		ArrayList<Token> tokens = input.getSentence().getTokens();
+		List<Token> tokens = input.getSentence().getTokens();
 		
 		for(int i = 0; i < input.getBegin(); i++){
 			Token token = tokens.get(i);

@@ -297,7 +297,7 @@ public class Annotation {
 	 * @return
 	 */
 	public String getText(boolean markHead){
-		ArrayList<Token> tokens = this.sentence.getTokens();
+		List<Token> tokens = this.sentence.getTokens();
 		StringBuilder text = new StringBuilder();
 		for (int i : this.tokens) {
 			Token token = tokens.get(i);
@@ -315,7 +315,7 @@ public class Annotation {
 	}
 	
     public String getBaseText(){
-        ArrayList<Token> tokens = this.sentence.getTokens();
+        List<Token> tokens = this.sentence.getTokens();
         StringBuilder text = new StringBuilder();
         TokenAttributeIndex index = this.sentence.getAttributeIndex();
         for (int i : this.tokens) {

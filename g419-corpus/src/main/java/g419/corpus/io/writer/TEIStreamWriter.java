@@ -452,7 +452,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
 	        annChunksWriter.writeCharacters("\n");
         }
 
-        ArrayList<Token> sentenceTokens = sent.getTokens();
+        List<Token> sentenceTokens = sent.getTokens();
         HashMap<Integer, String> tokenTEIIds = new HashMap<Integer, String>();
         boolean noPreviousSpace = false;
         for(int i=0; i < sent.getTokenNumber(); i++){

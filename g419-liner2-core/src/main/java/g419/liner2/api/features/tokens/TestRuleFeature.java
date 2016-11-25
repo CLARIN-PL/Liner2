@@ -1,11 +1,12 @@
 package g419.liner2.api.features.tokens;
 
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import g419.corpus.structure.Sentence;
+import g419.corpus.structure.Token;
 
 /**
  * Created by michal on 5/14/15.
@@ -46,7 +47,7 @@ public class TestRuleFeature extends TokenInSentenceFeature {
 
     @Override
     public void generate(Sentence sentence) {
-        ArrayList<Token> tokens = sentence.getTokens();
+        List<Token> tokens = sentence.getTokens();
         tokenLoop:
         for (int tokenIdx=0; tokenIdx<sentence.getTokenNumber(); tokenIdx++){
 //            System.out.println(tokens.get(tokenIdx).getOrth() + " >>>>>>>>>>>>>");
@@ -63,7 +64,7 @@ public class TestRuleFeature extends TokenInSentenceFeature {
         }
     }
 
-    private boolean featureMatches(int feat, int tokenIdx, ArrayList<Token> tokens){
+    private boolean featureMatches(int feat, int tokenIdx, List<Token> tokens){
         String operator = operators.get(feat);
         String tokenValue;
         if(tokenIdx < 0 || tokenIdx >= tokens.size()){

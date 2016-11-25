@@ -1,16 +1,6 @@
 package g419.liner2.api.chunker;
 
 
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.AnnotationSet;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-import g419.liner2.api.chunker.interfaces.DeserializableChunkerInterface;
-import g419.liner2.api.chunker.interfaces.SerializableChunkerInterface;
-import g419.corpus.Logger;
-
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -21,6 +11,17 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+
+import g419.corpus.Logger;
+import g419.corpus.structure.Annotation;
+import g419.corpus.structure.AnnotationSet;
+import g419.corpus.structure.Document;
+import g419.corpus.structure.Paragraph;
+import g419.corpus.structure.Sentence;
+import g419.corpus.structure.Token;
+import g419.liner2.api.chunker.interfaces.DeserializableChunkerInterface;
+import g419.liner2.api.chunker.interfaces.SerializableChunkerInterface;
 
 
 /**
@@ -37,7 +38,7 @@ public class FullDictionaryChunker extends Chunker
 	
 	private AnnotationSet chunkSentence(Sentence sentence) {
 		AnnotationSet chunking = new AnnotationSet(sentence);
-		ArrayList<Token> tokens = sentence.getTokens();
+		List<Token> tokens = sentence.getTokens();
 		int sentenceLength = sentence.getTokenNumber();
 		
 		// [długość] -> początek => n-gram

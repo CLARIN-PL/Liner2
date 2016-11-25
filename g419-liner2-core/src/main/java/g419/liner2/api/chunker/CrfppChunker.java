@@ -1,5 +1,19 @@
 package g419.liner2.api.chunker;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.chasen.crfpp.Tagger;
+
+import g419.corpus.Logger;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.CrfTemplate;
@@ -7,22 +21,10 @@ import g419.corpus.structure.Document;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
-import g419.corpus.Logger;
 import g419.liner2.api.chunker.interfaces.DeserializableChunkerInterface;
 import g419.liner2.api.chunker.interfaces.SerializableChunkerInterface;
 import g419.liner2.api.chunker.interfaces.TrainableChunkerInterface;
 import g419.liner2.api.tools.TemplateFactory;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.chasen.crfpp.Tagger;
 
 public class CrfppChunker extends Chunker
 	implements TrainableChunkerInterface, DeserializableChunkerInterface, SerializableChunkerInterface {
@@ -153,7 +155,7 @@ public class CrfppChunker extends Chunker
     	
     	for (Paragraph paragraph : paragraphSet.getParagraphs())
     		for (Sentence sentence : paragraph.getSentences()) {
-    			ArrayList<Token> tokens = sentence.getTokens();    			
+    			List<Token> tokens = sentence.getTokens();    			
     			for (int i = 0; i < tokens.size(); i++) {
     				String oStr = "";    				
     				for (String feature: usedFeatures){

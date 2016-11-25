@@ -104,6 +104,8 @@ public class WriterFactory {
         	return new RelationTuplesWriter(outWrapped);
         else if (outputFormat.equals("conll"))
         	return new ConllStreamWriter(outWrapped);
+        else if (outputFormat.equals("csv-relations"))
+        	return new CsvRelationsWriter(outWrapped);
 		else		
 			throw new UnknownFormatException("Output format " + outputFormat + " not recognized.");
 	}

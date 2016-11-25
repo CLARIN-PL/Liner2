@@ -1,11 +1,11 @@
 package g419.crete.api.features.annotations;
 
+import java.util.List;
+
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
 import g419.crete.api.features.AbstractFeature;
-
-import java.util.ArrayList;
 
 public class AnnotationFeatureFollowingRelativePronounDistance extends AbstractFeature<Annotation, Integer> {
 
@@ -15,7 +15,7 @@ public class AnnotationFeatureFollowingRelativePronounDistance extends AbstractF
 	public void generateFeature(Annotation input) {
 		this.value = 100;
 		TokenAttributeIndex ai = input.getSentence().getAttributeIndex();
-		ArrayList<Token> tokens = input.getSentence().getTokens();
+		List<Token> tokens = input.getSentence().getTokens();
 		int totalTokens = tokens.size();
 		
 		for(int i = input.getEnd(); i <  totalTokens; i++){

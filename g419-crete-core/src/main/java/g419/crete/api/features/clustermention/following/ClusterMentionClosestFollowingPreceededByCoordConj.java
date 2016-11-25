@@ -1,18 +1,18 @@
 package g419.crete.api.features.clustermention.following;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationCluster;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
 import g419.crete.api.features.clustermention.AbstractClusterMentionFeature;
 import g419.crete.api.structure.AnnotationUtil;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 public class ClusterMentionClosestFollowingPreceededByCoordConj extends AbstractClusterMentionFeature<Boolean>{
 
@@ -38,7 +38,7 @@ public class ClusterMentionClosestFollowingPreceededByCoordConj extends Abstract
 		}
 		
 		TokenAttributeIndex ai  = closestFollowing.getSentence().getAttributeIndex();
-		ArrayList<Token> tokens = closestFollowing.getSentence().getTokens();
+		List<Token> tokens = closestFollowing.getSentence().getTokens();
 		
 		int inputIndex = closestFollowing.getBegin();
 		int searchStart = Math.max(0, inputIndex - lookupDistance);

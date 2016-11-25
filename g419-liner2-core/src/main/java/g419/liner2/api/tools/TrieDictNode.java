@@ -48,15 +48,6 @@ public class TrieDictNode {
 		this.terminal = terminal;
 	}
 	
-	/**
-	 * TODO: Czy ta metod jest poprawna?
-	 */
-	public String toString(){
-		String out = this.children.toString();
-		for(TrieDictNode c: this.children.values())
-			out += c.toString();
-		return this.children.toString();
-	}
 	
 	/**
 	 * 

@@ -6,6 +6,7 @@ import g419.corpus.io.DataFormatException;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.TreeSet;
 
 
@@ -143,7 +144,7 @@ public class CrfTemplate {
         for (Annotation chunk : sentence.getChunks())
             newSentence.addChunk(chunk);
 
-        ArrayList<Token> tokens = sentence.getTokens();
+        List<Token> tokens = sentence.getTokens();
         for (int k = 0; k < tokens.size(); k++) {
             Token newToken = new Token(newAttributeIndex);
             for (Tag tag : tokens.get(k).getTags())

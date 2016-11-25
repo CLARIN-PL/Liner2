@@ -1,9 +1,9 @@
 package g419.liner2.api.filter;
 
+import java.util.List;
+
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Token;
-
-import java.util.ArrayList;
 
 
 public class FilterCutRoadPrefix extends Filter {
@@ -19,7 +19,7 @@ public class FilterCutRoadPrefix extends Filter {
 
 	@Override
 	public Annotation pass(Annotation chunk, CharSequence charSeq) {
-		ArrayList<Token> tokens = chunk.getSentence().getTokens();
+		List<Token> tokens = chunk.getSentence().getTokens();
 		int begin = chunk.getBegin();
 		int end = chunk.getEnd();
 		if (end - begin > 2)
