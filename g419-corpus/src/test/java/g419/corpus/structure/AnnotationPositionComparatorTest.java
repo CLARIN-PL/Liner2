@@ -12,9 +12,10 @@ public class AnnotationPositionComparatorTest {
 		int equal = 0;
 		int greater = 1;
 		
-		Sentence sentence1 = SentenceTest.getSampleSentence();
+		Sentence sentence1 = SentenceTest.getSampleSentence(new TokenAttributeIndex());
 		sentence1.setId("sentence1");
-		Sentence sentence2 = SentenceTest.getSampleSentence();
+		
+		Sentence sentence2 = SentenceTest.getSampleSentence(new TokenAttributeIndex());
 		sentence2.setId("sentence2");
 
 		int begin1 = 0;

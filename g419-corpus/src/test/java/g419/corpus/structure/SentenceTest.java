@@ -1,7 +1,5 @@
 package g419.corpus.structure;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 public class SentenceTest {
@@ -120,10 +118,11 @@ public class SentenceTest {
 	 * Tworzy przykładowe zdanie "Ala ma kota.".
 	 * @return
 	 */
-	public static Sentence getSampleSentence(){
-		Sentence sentence = new Sentence();
-		TokenAttributeIndex index = new TokenAttributeIndex();
-		index.addAttribute("orth");
+	public static Sentence getSampleSentence(TokenAttributeIndex index){
+		Sentence sentence = new Sentence(index);
+		if ( index.getIndex("orth") == -1){
+			index.addAttribute("orth");
+		}
 		sentence.addToken(new Token("Ala", new Tag("Ala", "subst:sg:nom:f", true), index));
 		sentence.addToken(new Token("ma", new Tag("mieć", "fin:sg:ter:imperf", true), index));
 		sentence.addToken(new Token("kota", new Tag("kot", "subst:sg:gen:m2", true), index));

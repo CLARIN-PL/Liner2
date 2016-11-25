@@ -39,8 +39,8 @@ public class DocumentTest {
 		TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
 		Document document = new Document(name, attributeIndex);
 
-		Sentence sentence1 = SentenceTest.getSampleSentence();
-		Sentence sentence2 = SentenceTest.getSampleSentence();
+		Sentence sentence1 = SentenceTest.getSampleSentence(attributeIndex);
+		Sentence sentence2 = SentenceTest.getSampleSentence(attributeIndex);
 		int begin1 = 0;
 		int begin2 = 2;
 		String type1 = "type1";
@@ -75,8 +75,8 @@ public class DocumentTest {
 		TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
 		Document document = new Document(name, attributeIndex);
 
-		Sentence sentence1 = SentenceTest.getSampleSentence();
-		Sentence sentence2 = SentenceTest.getSampleSentence();
+		Sentence sentence1 = SentenceTest.getSampleSentence(attributeIndex);
+		Sentence sentence2 = SentenceTest.getSampleSentence(attributeIndex);
 		int begin1 = 0;
 		int begin2 = 2;
 		String type1 = "type1";
@@ -176,8 +176,8 @@ public class DocumentTest {
 		TokenAttributeIndex attributeIndex1 = new TokenAttributeIndex();
 		Document document = new Document(name, attributeIndex1);
 		
-		Sentence sentence1 = SentenceTest.getSampleSentence();
-		Sentence sentence2 = SentenceTest.getSampleSentence();
+		Sentence sentence1 = SentenceTest.getSampleSentence(attributeIndex1);
+		Sentence sentence2 = SentenceTest.getSampleSentence(attributeIndex1);
 		int begin1 = 0;
 		int begin2 = 2;
 		String type1 = "type1";
@@ -211,11 +211,13 @@ public class DocumentTest {
 	@Test
 	public void testAddAnnotations() {
 		String name = "Test name";
-		TokenAttributeIndex attributeIndex1 = new TokenAttributeIndex();
-		Document document = new Document(name, attributeIndex1);
 		
-		Sentence sentence1 = SentenceTest.getSampleSentence();
-		Sentence sentence2 = SentenceTest.getSampleSentence();
+		TokenAttributeIndex index = new TokenAttributeIndex();
+		
+		Sentence sentence1 = SentenceTest.getSampleSentence(index);
+		Sentence sentence2 = SentenceTest.getSampleSentence(index);
+		
+		Document document = new Document(name, index);
 		
 		Paragraph p = new Paragraph("p1");
 		p.addSentence(sentence1);
@@ -262,8 +264,8 @@ public class DocumentTest {
 		TokenAttributeIndex attributeIndex1 = new TokenAttributeIndex();
 		Document document = new Document(name, attributeIndex1);
 		
-		Sentence sentence1 = SentenceTest.getSampleSentence();
-		Sentence sentence2 = SentenceTest.getSampleSentence();
+		Sentence sentence1 = SentenceTest.getSampleSentence(attributeIndex1);
+		Sentence sentence2 = SentenceTest.getSampleSentence(attributeIndex1);
 
 		Paragraph p = new Paragraph("p1");
 		p.addSentence(sentence1);

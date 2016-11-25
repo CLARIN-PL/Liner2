@@ -21,8 +21,12 @@ public class Token {
     public Token(String orth, Tag firstTag, TokenAttributeIndex attrIdx){
         this.attrIdx = attrIdx;
         packAtributes(attrIdx.getLength());
-        setAttributeValue(attrIdx.getIndex("orth"), orth);
-        addTag(firstTag);
+        int index = attrIdx.getIndex("orth");
+        if ( index == -1 ){
+        	throw new Error("TokenAttribute Index does not contain the 'orth' attribute");
+        }
+        this.setAttributeValue(index, orth);
+        this.addTag(firstTag);
     }
 
     /* Indeks atrybutów */
