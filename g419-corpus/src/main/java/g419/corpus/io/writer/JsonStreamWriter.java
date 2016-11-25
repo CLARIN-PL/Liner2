@@ -69,7 +69,7 @@ public class JsonStreamWriter extends AbstractDocumentWriter {
 		Map<Token, String> tokenIds = this.generateTokenIds(document);
 		Map<Annotation, String> annotationIds = this.generateAnnotationIds(document);
 		
-		Map<String, Collection> doc = new HashMap<String, Collection>();
+		Map<String, Collection<?>> doc = new HashMap<String, Collection<?>>();
 		doc.put(JsonStreamWriter.ATTR_CHUNKS, this.getChunks(document, tokenIds));
 		doc.put(JsonStreamWriter.ATTR_ANNOTATIONS, this.getAnnotations(document, tokenIds, annotationIds));
 		try {

@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.zip.GZIPOutputStream;
 
 import com.google.gson.Gson;
 
@@ -42,7 +41,7 @@ public class JsonFramesStreamWriter extends AbstractDocumentWriter {
 		Map<Token, String> tokenIds = this.generateTokenIds(document);
 		Map<Annotation, String> annotationIds = this.generateAnnotationIds(document);
 		
-		Map<String, Collection> doc = new HashMap<String, Collection>();
+		Map<String, Collection<?>> doc = new HashMap<String, Collection<?>>();
 		doc.put("tokens", this.getTokens(document, tokenIds));
 		doc.put("frames", this.getFrames(document, annotationIds));
 		doc.put("annotations", this.getAnnotations(document, tokenIds, annotationIds));

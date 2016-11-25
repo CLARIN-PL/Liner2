@@ -12,7 +12,7 @@ public class ValueComparator {
      * throw NullPointerException if Map contains null values
      * It also sort values even if they are duplicates
      */
-    public static <K extends Comparable,V extends Comparable> Map<K,V> sortByValues(Map<K,V> map, boolean invertOrder){
+    public static <K extends Comparable<K>,V extends Comparable<V>> Map<K,V> sortByValues(Map<K,V> map, boolean invertOrder){
         List<Map.Entry<K,V>> entries = new LinkedList<>(map.entrySet());
 
         Collections.sort(entries, new Comparator<Map.Entry<K, V>>() {

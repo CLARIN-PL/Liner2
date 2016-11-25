@@ -317,9 +317,11 @@ public class ActionLemmatize extends Action {
                             int lcp = longestCommonPrefix(name_token.toLowerCase(), oth_name_token.toLowerCase());
                             String name_suffix = name_token.substring(lcp).toLowerCase();
                             String oth_name_suffix = oth_name_token.substring(lcp).toLowerCase();
-                            LinkedHashSet<String> namesSuffixes = new LinkedHashSet<String>(){{
-                                add(name_suffix);
-                                add(oth_name_suffix);}};
+
+                            LinkedHashSet<String> namesSuffixes = new LinkedHashSet<String>();
+                            namesSuffixes.add(name_suffix);
+                            namesSuffixes.add(oth_name_suffix);
+                            
                             for(HashSet<String> suffixPair: suffixes){
                                 if(suffixPair.equals(namesSuffixes)){
                                     if(suffixPair.iterator().next().equals(name_suffix)){
@@ -527,10 +529,10 @@ public class ActionLemmatize extends Action {
 
     private int longestCommonPrefixWithInflection(String a, String b){
         int lcp = longestCommonPrefix(a, b);
-        LinkedHashSet<String> namesSuffixes = new LinkedHashSet<String>(){{
-                                            add(a.substring(lcp).toLowerCase());
-            add(b.substring(lcp).toLowerCase());}};
-        for(HashSet<String> suffixPair: suffixes){
+        LinkedHashSet<String> namesSuffixes = new LinkedHashSet<String>();
+        namesSuffixes.add(a.substring(lcp).toLowerCase());                              
+        namesSuffixes.add(b.substring(lcp).toLowerCase());
+        for(HashSet<String> suffixPair : suffixes){
             if(suffixPair.equals(namesSuffixes)){
                 return Math.max(a.length(), b.length());
             }

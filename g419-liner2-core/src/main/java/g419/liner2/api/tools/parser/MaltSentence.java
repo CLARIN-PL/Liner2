@@ -30,7 +30,10 @@ public class MaltSentence {
 
     public MaltSentence(Sentence sent, Set<Annotation> sentenceAnnotations) {
 
-        Sentence wrappedSent = TokenWrapper.wrapAnnotations(sent, new ArrayList<Pattern>(){{add(allAnnotationsPattern);}});        
+    	ArrayList<Pattern> patterns = new ArrayList<Pattern>();
+    	patterns.add(this.allAnnotationsPattern);
+    	
+        Sentence wrappedSent = TokenWrapper.wrapAnnotations(sent, patterns);        
         List<String[]> coNLLTokens = convertToCoNLL(wrappedSent);
 
         String[] dataForMalt = new String[coNLLTokens.size()];
@@ -167,7 +170,7 @@ public class MaltSentence {
         nkjpToCoNLLPos.put("numcol", "numcol");
         nkjpToCoNLLPos.put("prep", "prep");
         nkjpToCoNLLPos.put("qub", "qub");
-        nkjpToCoNLLPos.put("xxx", "xxx");
+        nkjpToCoNLLPos.put("xxx", "xxx"); 
         return nkjpToCoNLLPos;
     }
 
