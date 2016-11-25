@@ -29,7 +29,7 @@ public class Main {
         info.append("* Tools for spatial expression recognition and related                                          *\n");
         info.append("*                                                                                               *\n");
         info.append("* Authors: Michał Marcińczuk (2015–2016)                                                        *\n");
-        info.append("* Contact: michal.marcinczuk@pwr.wroc.pl                                                        *\n");
+        info.append("* Contact: michal.marcinczuk@pwr.edu.pl                                                        *\n");
         info.append("*                                                                                               *\n");
         info.append("*          G4.19 Research Group, Wrocław University of Technology                               *\n");
         info.append("*-----------------------------------------------------------------------------------------------*\n");
