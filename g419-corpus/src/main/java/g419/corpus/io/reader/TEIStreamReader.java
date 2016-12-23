@@ -4,6 +4,7 @@ import g419.corpus.io.DataFormatException;
 import g419.corpus.io.reader.parser.tei.AnnChunksSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnGroupsSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnMentionsSAXParser;
+import g419.corpus.io.reader.parser.tei.AnnMetadataSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnMorphosyntaxSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnNamedSAXParser;
 import g419.corpus.io.reader.parser.tei.AnnPropsSAXParser;
@@ -40,6 +41,7 @@ public class TEIStreamReader extends  AbstractDocumentReader{
     
     public TEIStreamReader(
     		String uri,
+    		InputStream annMetadata,
     		InputStream annMorphosyntax, 
     		InputStream annProps,
     		InputStream annSegmentation, 
@@ -52,6 +54,7 @@ public class TEIStreamReader extends  AbstractDocumentReader{
     		InputStream annRelations,
     		String docName) throws DataFormatException {
         
+    	streams.add(annMetadata);
     	streams.add(annMorphosyntax);
     	streams.add(annProps);
     	streams.add(annSegmentation);
@@ -158,6 +161,21 @@ public class TEIStreamReader extends  AbstractDocumentReader{
 				e.printStackTrace();
 			}
         }
+        
+        if ( annMetadata != null ){
+        	try{
+        		AnnMetadataSAXParser metadataParser = new AnnMetadataSAXParser(annMetadata);
+        		Map<String, String> metadata = metadataParser.getMetadata();
+        		for ( String name : metadata.keySet()){
+        			document.getDocumentDescriptor().setMetadata(name, metadata.get(name));
+        		}
+        	}
+        	catch(Exception ex){
+        		// TODO
+        		ex.printStackTrace();
+        	}
+        }
+        
     }
 
     @Override

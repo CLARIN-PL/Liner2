@@ -164,8 +164,9 @@ public class ReaderFactory {
         InputStream annWords = this.getInputStream(inputFolder, "ann_words.xml", gz);
         InputStream annRelations = this.getInputStream(inputFolder, "ann_relations.xml", gz);
         InputStream annProps = this.getInputStream(inputFolder, "ann_props.xml", gz);
+        InputStream annMetadata = this.getInputStream(inputFolder, "metadata.xml", gz);
 
-        return new TEIStreamReader(inputFolder, annMorphosyntax, annProps, annSegmentation, annNamed, annMentions, annChunks,
+        return new TEIStreamReader(inputFolder, annMetadata, annMorphosyntax, annProps, annSegmentation, annNamed, annMentions, annChunks,
         		annCoreference, annWords, annGroups, annRelations, docname);
     }
 
