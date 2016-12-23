@@ -101,6 +101,9 @@ public class ReaderFactory {
 				// jako ini brany jest plik ccl.
 				desc = getInputStream(root, Paths.get(uri).getFileName().toString().replace(".xml", ".ini"), gz);
 			}
+			else if ( cclPath.endsWith(".tag") ){
+				desc = getInputStream(root, Paths.get(uri).getFileName().toString().replace(".tag", ".ini"), gz);
+			}
 			return new CclSAXStreamReader(uri, in, desc, null);
 		}
 		else if (inputFormat.equals("cclrel")){

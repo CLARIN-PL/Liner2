@@ -7,6 +7,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
@@ -58,11 +59,13 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     private final String TAG_VALT	      = "vAlt";
     private final String TAG_POINTER	  = "ptr";
     private final String TAG_BINARY		  = "binary";
+    private final String TAG_METADATA     = "metadata";
     
     private final String ATTR_CORESP	= "coresp";
     private final String ATTR_NAME	= "name";
 
     private XMLStreamWriter textWriter;
+    private XMLStreamWriter metadataWriter;
     private XMLStreamWriter annSegmentationWriter;
     private XMLStreamWriter annMorphosyntaxWriter;
     private XMLStreamWriter annPropsWriter;
@@ -72,6 +75,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     private XMLStreamWriter annCoreferenceWriter;
     private XMLStreamWriter annRelationsWriter;
     private OutputStream text;
+    private OutputStream metadata;
     private OutputStream annSegmentation;
     private OutputStream annMorphosyntax;
     private OutputStream annProps;
@@ -97,12 +101,13 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     private int mentionNr = 0;
     private int chunkNr = 0;
     
-    public TEIStreamWriter(OutputStream text, OutputStream annSegmentation, OutputStream annMorphosyntax, 
+    public TEIStreamWriter(OutputStream text, OutputStream metadata, OutputStream annSegmentation, OutputStream annMorphosyntax, 
     		OutputStream annProps,
     		OutputStream annNamed, OutputStream annMentions, OutputStream annChunks, 
     		OutputStream annCoreference, OutputStream annRelations, String documentName) {
         this.documentName = documentName;
         this.text = text;
+        this.metadata = metadata;
         this.annSegmentation = annSegmentation;
         this.annMorphosyntax = annMorphosyntax;
         this.annProps = annProps;
@@ -129,6 +134,9 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
             this.textWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(text)));
             this.annSegmentationWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annSegmentation)));
             this.annMorphosyntaxWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annMorphosyntax)));
+            if ( this.metadata != null ){
+            	this.metadataWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(metadata)));
+            }
             if ( this.annProps != null ) {
             	this.annPropsWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annProps)));
             }
@@ -196,6 +204,15 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
             this.indent(3, annMorphosyntaxWriter);
             annMorphosyntaxWriter.writeStartElement(TAG_BODY);
             annMorphosyntaxWriter.writeCharacters("\n");
+
+            if(metadataWriter != null){
+            	writeCommonOpening(metadataWriter);
+            	metadataWriter.writeAttribute("xml:lang", "pl");
+            	metadataWriter.writeCharacters("\n");
+	            this.indent(3, metadataWriter);
+	            metadataWriter.writeStartElement(TAG_BODY);
+	            metadataWriter.writeCharacters("\n");
+            }
 
             if(annNamedWriter != null){
             	writeCommonOpening(annNamedWriter);
@@ -272,6 +289,18 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         xmlw.writeStartElement(TAG_TEXT);
     }
 
+    private void writeMetadata(Map<String, String> metadata) throws XMLStreamException{
+    	if ( this.metadataWriter != null ){
+	    	for ( String key : metadata.keySet() ){
+	    		this.metadataWriter.writeStartElement(TAG_METADATA);
+	    		this.metadataWriter.writeAttribute("name", key);
+	    		this.metadataWriter.writeAttribute("value", metadata.get(key));
+	    		this.metadataWriter.writeEndElement();
+	    		this.metadataWriter.writeCharacters("\n");
+	    	}
+    	}
+    }
+    
     private void writeParagraphStart(String paragraphId) throws XMLStreamException {
         this.indent(5, textWriter);
         textWriter.writeStartElement(TAG_PARAGRAPH);
@@ -314,11 +343,12 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     }
 
     @Override
-    public void writeDocument(Document document){
+    public void writeDocument(Document document) {
     	for ( Paragraph paragraph : document.getParagraphs() ){
     		this.writeParagraph(paragraph);
     	}    	
     	try {
+        	this.writeMetadata(document.getDocumentDescriptor().getMetadata());
 			this.writeCoreferenceRelations(document.getRelations(Relation.COREFERENCE));
 			this.writeRelations(document.getRelations().getRelations());
 		} catch (XMLStreamException e) {
@@ -900,6 +930,9 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
             writeClosing(textWriter, 4);
             writeClosing(annSegmentationWriter, 3);
             writeClosing(annMorphosyntaxWriter, 3);
+            if(metadataWriter != null){
+            	writeClosing(metadataWriter, 1);
+            }
             if(annPropsWriter != null){
             	writeClosing(annPropsWriter, 1);
             }
@@ -918,8 +951,9 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
             if(annRelationsWriter != null){
             	writeClosing(annRelationsWriter, 3);
             }
-
+            
             this.closeStream(this.text, textWriter);
+            this.closeStream(this.metadata, this.metadataWriter);
             this.closeStream(this.annSegmentation, this.annSegmentationWriter);
             this.closeStream(this.annMorphosyntax, this.annMorphosyntaxWriter);
             this.closeStream(this.annProps, this.annPropsWriter);
