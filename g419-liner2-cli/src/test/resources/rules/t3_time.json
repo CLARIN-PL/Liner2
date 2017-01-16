@@ -5,6 +5,7 @@
     "./t3_time/full_hours_no_separator.json",
     "./t3_time/partsOfDay.json",
     "./t3_time/hours_spelled.json",
-    "./t3_time/hours_spelled_prefixed.json"
+    "./t3_time/hours_spelled_prefixed.json",
+    "./t3_time/hours_spelled_prefixed2.json"
   ]
 }

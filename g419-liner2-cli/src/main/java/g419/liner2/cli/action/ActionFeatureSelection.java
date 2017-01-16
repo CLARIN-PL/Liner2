@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
 import org.ini4j.Profile.Section;
@@ -44,6 +45,7 @@ public class ActionFeatureSelection extends Action {
 	private HashMap<String, CrfTemplate> templates = new HashMap<String, CrfTemplate>();
 	private String chunker = "c1";
 	private TokenFeatureGenerator gen;
+	private String[] restoreFeatures = null;
 
 	public ActionFeatureSelection() {
 		super("selection");
@@ -52,6 +54,9 @@ public class ActionFeatureSelection extends Action {
 		this.options.addOption(CommonOptions.getInputFileNameOption());
 		this.options.addOption(CommonOptions.getModelFileOption());
 		this.options.addOption(CommonOptions.getVerboseDeatilsOption());
+		this.options.addOption(Option.builder("R")
+				.longOpt("restore")
+				.hasArg().argName("features").desc("start with the selected features (comma separated)").build());
 
 	}
 
@@ -63,6 +68,10 @@ public class ActionFeatureSelection extends Action {
 		LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
 		if(line.hasOption(CommonOptions.OPTION_VERBOSE_DETAILS)){
 			Logger.verboseDetails = true;
+		}
+		if (line.hasOption("R")){
+			this.restoreFeatures = line.getOptionValue("R").split(",");
+			System.out.println("a");
 		}
 	}
 
@@ -219,6 +228,17 @@ public class ActionFeatureSelection extends Action {
 		}
 		ct.getFeatureNames().clear();
 		ct.getFeatures().clear();
+
+		if (this.restoreFeatures != null){
+			for (String feature : restoreFeatures){
+				ct.getFeatureNames().add(feature);
+				ct.getFeatures().put(feature,
+						features.get(feature));
+				featureNames.remove(feature);
+				features.remove(feature);
+			}
+		}
+
 		float globalBestFMeasure = 0.0f;
 		float localBestFMeasure = 0.0f;
 		String localBestFeatureName = null;

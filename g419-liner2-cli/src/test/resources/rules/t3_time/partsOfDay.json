@@ -1,26 +1,42 @@
 {
   "regexEscape": "%",
-  "rules": {
-    "partOfDay": {
-      "extract": "$rePartOfDay",
-      "normalize": "xxxx-xx-xxT@group(0)"
+  "rules": [
+    {
+      "partOfDay": {
+        "extract": "$rePartOfDay",
+        "normalize": "xxxx-xx-xxT@group(0)"
+      }
     },
-    "describedPartOfDay": {
-      "extract": "$reDescription%s+$rePartOfDay",
-      "normalize": "xxxx-xx-xxT@group(1)"
+    {
+      "describedPartOfDay": {
+        "extract": "$reDescription%s+$rePartOfDay",
+        "normalize": "xxxx-xx-xxT@group(1)"
+      }
     },
-    "neighbouringPartOfDay": {
-      "extract": "$reNeighbourDays%s$rePartOfDay",
-      "normalize": "@group(0)T@group(1)"
+    {
+      "neighbouringPartOfDay": {
+        "extract": "$reNeighbourDays%s$rePartOfDay",
+        "normalize": "@group(0)T@group(1)"
+      }
+    },
+    {
+      "neighbouringPartOfDay2": {
+        "extract": "$rePartOfDay%s$reNeighbourDays",
+        "normalize": "@group(1)T@group(0)"
+      }
     }
-  },
+    
+  ],
   "patterns": {
     "reDescription": [
       "cały"
     ],
     "reNeighbourDays": [
+      "dziś",
+      "dzisiaj",
       "dzisiejszy",
       "ten sam dzień",
+      "ten dzień",
       "wczoraj",
       "wczorajszy",
       "jutrzejszy",
@@ -32,93 +48,131 @@
       "czwartkowy",
       "piątkowy",
       "sobotni",
-      "niedzielny"
+      "niedzielny",
+      "nazajutrz",
+      "następny dzień",
+      "poprzedni dzień"      
     ],
     "rePartOfDay": [
-      "noc",
       "nocny",
       "północ",
       "polnoc",
       "pólnoc",
       "połnoc",
+      "o północ",
+      "po północ",
+      "w noc",
+      "noc",
+      "późny po%s*południe",
+      "po%s*południe",
+      "około południe",
       "południe",
       "poludnie",
       "rano",
       "wieczór",
-      "wieczor",
       "wieczorowy",
       "wieczorny",
-      "ranek",
+      "wieczor",
       "poranek",
+      "ranek",
       "poranny",
       "przedpołudniowy",
       "przedpoludniowy",
-      "po%s*południe",
+      "godzina południowy",
+      "godzina popołudniowy",
       "popołudniowy",
-      "popoludniowy"
+      "popoludniowy",
+      "w godzina ranny",
+      "świt"
     ]
   },
-  "normalization": {
-    "partOfDay": {
-      "noc(ny)?": "NI",
-      "północ": "MI",
-      "polnoc": "MI",
-      "pólnoc": "MI",
-      "połnoc": "MI",
-      "Tpołudnie": "TMI",
-      "Tpoludnie": "TMI",
-      "rano": "MO",
-      "wieczór": "EV",
-      "wieczor": "EV",
-      "wieczorowy": "EV",
-      "wieczorny": "EV",
-      "poranek": "MO",
-      "poranny": "MO",
-      "ranek": "MO",
-      "przedpołudniowy": "MO",
-      "przedpoludniowy": "MO",
-      "popołudnie": "AF",
-      "po południe": "AF",
-      "popołudniowy": "AF",
-      "popoludniowy": "AF"
+  "normalization": [
+    {
+      "partOfDayFirst": {
+        "północ": "24:00",
+        "polnoc": "24:00",
+        "pólnoc": "24:00",
+        "połnoc": "24:00",
+        "o północ": "24:00",        
+        "po północ": "NI",        
+        "wieczór": "EV",
+        "wieczorowy": "EV",
+        "wieczorny": "EV",
+        "poranek": "MO",
+        "przedpołudniowy": "MO",
+        "przedpoludniowy": "MO",
+        "późny popołudnie": "AF",
+        "po południe": "AF",
+        "godzina popołudniowy" : "AF",
+        "godzina południowy" : "MI"
+        
+      }    
     },
-    "neighbourDays": {
-      "dzisiejszy": "+0000-00-00",
-      "ten sam dzień": "+0000-00-00",
-      "jutrzejszy": "+0000-00-01",
-      "jutro": "+0000-00-01",
-      "wczoraj": "-0000-00-01",
-      "wczorajszy": "-0000-00-01",
-      "przedwczorajszy": "-0000-00-02",
-      "poniedziałkowy": "xxxx-Wxx-1",
-      "wtorkowy": "xxxx-Wxx-2",
-      "środowy": "xxxx-Wxx-3",
-      "czwartkowy": "xxxx-Wxx-4",
-      "piątkowy": "xxxx-Wxx-5",
-      "sobotni": "xxxx-Wxx-6",
-      "niedzielny": "xxxx-Wxx-7"
+    {
+      "partOfDay": {
+        "noc(ny)?": "NI",
+        "w noc" : "NI",
+        "Tokoło południe": "TMI",
+        "Tpołudnie": "TMI",
+        "Tpoludnie": "TMI",
+        "rano": "MO",
+        "wieczor": "EV",
+        "poranny": "MO",
+        "ranek": "MO",
+        "w godzina ranny" : "MO",
+        "świt" : "MO",
+        "popołudniowy": "AF",
+        "popoludniowy": "AF",
+        "popołudnie": "AF"
+      }
+    }, 
+    {
+      "neighbourDays": {
+        "dziś": "+0000-00-00",
+        "dzisiaj": "+0000-00-00",
+        "dzisiejszy": "+0000-00-00",
+        "ten sam dzień": "+0000-00-00",
+        "ten dzień": "+0000-00-00",
+        "jutrzejszy": "+0000-00-01",
+        "jutro": "+0000-00-01",
+        "wczoraj": "-0000-00-01",
+        "wczorajszy": "-0000-00-01",
+        "przedwczorajszy": "-0000-00-02",
+        "poniedziałkowy": "xxxx-Wxx-1",
+        "wtorkowy": "xxxx-Wxx-2",
+        "środowy": "xxxx-Wxx-3",
+        "czwartkowy": "xxxx-Wxx-4",
+        "piątkowy": "xxxx-Wxx-5",
+        "sobotni": "xxxx-Wxx-6",
+        "niedzielny": "xxxx-Wxx-7",
+        "nazajutrz" : "+0000-00-01",
+        "następny dzień" : "+0000-00-01",
+        "poprzedni dzień" : "-0000-00-01"
+      }
     },
-    "leadingHourZero": {
-      "t0:": "t00:",
-      "t1:": "t01:",
-      "t2:": "t02:",
-      "t3:": "t03:",
-      "t4:": "t04:",
-      "t5:": "t05:",
-      "t6:": "t06:",
-      "t7:": "t07:",
-      "t8:": "t08:",
-      "t9:": "t09:",
-      "T0:": "T00:",
-      "T1:": "T01:",
-      "T2:": "T02:",
-      "T3:": "T03:",
-      "T4:": "T04:",
-      "T5:": "T05:",
-      "T6:": "T06:",
-      "T7:": "T07:",
-      "T8:": "T08:",
-      "T9:": "T09:"
+    {
+      "leadingHourZero": {
+        "t0:": "t00:",
+        "t1:": "t01:",
+        "t2:": "t02:",
+        "t3:": "t03:",
+        "t4:": "t04:",
+        "t5:": "t05:",
+        "t6:": "t06:",
+        "t7:": "t07:",
+        "t8:": "t08:",
+        "t9:": "t09:",
+        "T0:": "T00:",
+        "T1:": "T01:",
+        "T2:": "T02:",
+        "T3:": "T03:",
+        "T4:": "T04:",
+        "T5:": "T05:",
+        "T6:": "T06:",
+        "T7:": "T07:",
+        "T8:": "T08:",
+        "T9:": "T09:"
+      }
     }
-  }
+  ]
 }
