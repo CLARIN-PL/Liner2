@@ -9,6 +9,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.openqa.selenium.WebDriver;
 
+import net.sourceforge.htmlunit.corejs.javascript.JavaScriptException;
+
 public class JsoupWrapped {
 
 	/**
@@ -60,12 +62,22 @@ public class JsoupWrapped {
 		String html = null;
 		driver.get(url);		
 		while (repeat){
-			html = driver.getPageSource();
-			if ( html.contains("To continue, please type the characters below:") ){
-				
+			try{
+				html = driver.getPageSource();
+				try {
+					Thread.sleep(10000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if ( html.contains("To continue, please type the characters below:") ){
+					
+				}
+				else{
+					repeat = false;
+				}
 			}
-			else{
-				repeat = false;
+			catch (Exception ex){
+
 			}
 		}		
 		return Jsoup.parse(html);

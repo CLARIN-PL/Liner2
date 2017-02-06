@@ -9,6 +9,7 @@ public class WebSelenium implements IWeb {
 	private WebDriver driver = null;
 	
 	public WebSelenium() {
+		System.setProperty("webdriver.gecko.driver","/home/czuk/nlp/tools/geckodriver");
 		this.driver = new FirefoxDriver();
 	}
 	
