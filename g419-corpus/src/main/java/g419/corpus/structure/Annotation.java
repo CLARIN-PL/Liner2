@@ -1,5 +1,7 @@
 package g419.corpus.structure;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -326,6 +328,18 @@ public class Annotation {
         }
         return text.toString();
     }
+
+	// Returns space-separated chain of bases
+	public String getSimpleBaseText(){
+		List<Token> tokens = this.sentence.getTokens();
+		List<String> text = new LinkedList<>();
+		TokenAttributeIndex index = this.sentence.getAttributeIndex();
+		for (int i : this.tokens) {
+			Token token = tokens.get(i);
+			text.add(token.getAttributeValue(index.getIndex("base")));
+		}
+		return StringUtils.join(text, " ");
+	}
 
 	public void setId(String id){
 		this.id = id;

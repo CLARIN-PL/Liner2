@@ -1,39 +1,55 @@
 {
   "regexEscape": "%",
-  "rules": {
-    "vagueHourWithMinutes-no-separator": {
-      "extract": "$reVagueHour$reMinutes",
-      "normalize": "xxxx-xx-xxt@group(0):@group(1)"
+  "rules": [
+    {
+      "vagueHourWithMinutes-no-separator": {
+        "extract": "$reVagueHour$reMinutes",
+        "normalize": "xxxx-xx-xxt@group(0):@group(1)"
+      }
     },
-    "knownHourWithMinutes-no-separator": {
-      "extract": "$reKnownHour$reMinutes",
-      "normalize": "xxxx-xx-xxT@group(0):@group(1)"
+    {
+      "knownHourWithMinutes-no-separator": {
+        "extract": "$reKnownHour$reMinutes",
+        "normalize": "xxxx-xx-xxT@group(0):@group(1)"
+      }
     },
-    "noonOrMidnight-no-separator": {
-      "extract": "12(00)?",
-      "normalize": "xxxx-xx-xxt12:00"
+    {
+      "noonOrMidnight-no-separator": {
+        "extract": "12(00)?",
+        "normalize": "xxxx-xx-xxt12:00"
+      }
     },
-    "afterTwelve-no-separator": {
-      "extract": "12$reNonZeroMinutes",
-      "normalize": "xxxx-xx-xxT12:@group(0)"
+    {
+      "afterTwelve-no-separator": {
+        "extract": "12$reNonZeroMinutes",
+        "normalize": "xxxx-xx-xxT12:@group(0)"
+      }
     },
-    "vagueHourWithMinutesPrefixed-no-separator": {
-      "extract": "$prefix%s+$reVagueHour$reMinutes",
-      "normalize": "xxxx-xx-xxt@group(1):@group(2)"
+    {
+      "vagueHourWithMinutesPrefixed-no-separator": {
+        "extract": "$prefix%s+$reVagueHour$reMinutes",
+        "normalize": "xxxx-xx-xxt@group(1):@group(2)"
+      }
     },
-    "knownHourWithMinutesPrefixed-no-separator": {
-      "extract": "$prefix%s+$reKnownHour$reMinutes",
-      "normalize": "xxxx-xx-xxT@group(1):@group(2)"
+    {
+      "knownHourWithMinutesPrefixed-no-separator": {
+        "extract": "$prefix%s+$reKnownHour$reMinutes",
+        "normalize": "xxxx-xx-xxT@group(1):@group(2)"
+      }
     },
-    "noonOrMidnightPrefixed-no-separator": {
-      "extract": "$prefix%s+12(00)?",
-      "normalize": "xxxx-xx-xxt12:00"
+    {
+      "noonOrMidnightPrefixed-no-separator": {
+        "extract": "$prefix%s+12(00)?",
+        "normalize": "xxxx-xx-xxt12:00"
+      }
     },
-    "afterTwelvePrefixed-no-separator": {
-      "extract": "$prefix%s+12$reNonZeroMinutes",
-      "normalize": "xxxx-xx-xxT12:@group(1)"
+    {
+      "afterTwelvePrefixed-no-separator": {
+        "extract": "$prefix%s+12$reNonZeroMinutes",
+        "normalize": "xxxx-xx-xxT12:@group(1)"
+      }
     }
-  },
+  ],
   "patterns": {
     "reVagueHour": [
       "0?%d",
@@ -50,28 +66,30 @@
       "godzina[.]?"
     ]
   },
-  "normalization": {
-    "leadingHourZero": {
-      "t0:": "t00:",
-      "t1:": "t01:",
-      "t2:": "t02:",
-      "t3:": "t03:",
-      "t4:": "t04:",
-      "t5:": "t05:",
-      "t6:": "t06:",
-      "t7:": "t07:",
-      "t8:": "t08:",
-      "t9:": "t09:",
-      "T0:": "T00:",
-      "T1:": "T01:",
-      "T2:": "T02:",
-      "T3:": "T03:",
-      "T4:": "T04:",
-      "T5:": "T05:",
-      "T6:": "T06:",
-      "T7:": "T07:",
-      "T8:": "T08:",
-      "T9:": "T09:"
+  "normalization": [
+    {
+      "leadingHourZero": {
+        "t0:": "t00:",
+        "t1:": "t01:",
+        "t2:": "t02:",
+        "t3:": "t03:",
+        "t4:": "t04:",
+        "t5:": "t05:",
+        "t6:": "t06:",
+        "t7:": "t07:",
+        "t8:": "t08:",
+        "t9:": "t09:",
+        "T0:": "T00:",
+        "T1:": "T01:",
+        "T2:": "T02:",
+        "T3:": "T03:",
+        "T4:": "T04:",
+        "T5:": "T05:",
+        "T6:": "T06:",
+        "T7:": "T07:",
+        "T8:": "T08:",
+        "T9:": "T09:"
+      }
     }
-  }
+  ]
 }

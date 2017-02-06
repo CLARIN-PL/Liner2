@@ -131,8 +131,9 @@ public class ActionNormalizerEval3 extends Action {
             }
 
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date", "t3_time", "t3_duration", "t3_set"));
-            Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date"));
+            //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date"));
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_time"));
+            Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date", "t3_time"));
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_duration"));
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date", "t3_time", "t3_duration"));
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_set"));
@@ -235,12 +236,12 @@ public class ActionNormalizerEval3 extends Action {
         double fmeasure = 2 * precision * recall / (precision + recall);
         int o = 0;
         NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
-        //System.out.println(format.format(precision * 100));
-        //System.out.println(format.format(recall * 100));
-        //System.out.println(format.format(fmeasure * 100));
+        System.out.println(format.format(precision * 100));
+        System.out.println(format.format(recall * 100));
+        System.out.println(format.format(fmeasure * 100));
 
-        //System.out.println(precision + " " + recall + " " + fmeasure);
-        //System.out.format("%,5f", precision);
+        System.out.println(precision + " " + recall + " " + fmeasure);
+        System.out.format("%,5f", precision);
 
     }
 

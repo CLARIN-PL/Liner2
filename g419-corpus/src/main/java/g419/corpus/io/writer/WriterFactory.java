@@ -71,7 +71,6 @@ public class WriterFactory {
 			outWrapped = new GZIPOutputStream(out);
 			outputFormat = outputFormat.substring(0, outputFormat.length() - 3);
 		}
-		 
         if (outputFormat.equals("ccl"))
 			return new CclStreamWriter(outWrapped);
         if (outputFormat.equals("ccl-disamb"))

@@ -4,199 +4,283 @@
   "comment": "przed ostatnimi cyframi dodałem znak '=', żeby słowo 'trzy' było zapisane jako '=trzy' - dzięki temu normalizując '=trzy' na '3' nie zamienimy 'trzy' w 'trzydzieści'",
   "rules": [
     {
-      "(1-9):00-prefixed": {
-        "extract": "godzina[.]?%s+$re2LT10st%s*$reZero?%s*$reZero?$",
+      "(1-9):00": {
+        "extract": ".*$re2LT10st%s*$reZero?%s*$reZero?.*",
         "normalize": "xxxx-xx-xxt0@group(0):00"
       }
     },
     {
-      "(1-9):(1-9)-prefixed": {
-        "extract": "godzina[.]?%s+$re2LT10st%s+$reLT10$",
+      "(1-9):(1-9)": {
+        "extract": ".*$re2LT10st%s+$reLT10.*",
         "normalize": "xxxx-xx-xxt0@group(0):0=@group(1)"
       }
     },
     {
-      "(1-9):0(1-9)-prefixed": {
-        "extract": "godzina[.]?%s+$re2LT10st%s+$reZero%s+$reLT10$",
+      "(1-9):0(1-9)": {
+        "extract": ".*$re2LT10st%s+$reZero%s+$reLT10.*",
         "normalize": "xxxx-xx-xxt0@group(0):0=@group(2)"
       }
     },
     {
-      "(1-9):(1-5)0-prefixed": {
-        "extract": "godzina[.]?%s+$re2LT10st%s+$reTens$",
+      "(1-9):(1-5)0": {
+        "extract": ".*$re2LT10st%s+$reTens.*",
         "normalize": "xxxx-xx-xxt0@group(0):@group(1)0"
       }
     },
     {
-      "(1-9):(1-5)(1-9)-prefixed": {
+      "(1-9):(1-5)(1-9)": {
         "comment": "it is more (1-9):(2-5)(1-9) as ...:1(1-9) is covered in rule below; same applies to other ...:(1-5)(1-9) rules",
-        "extract": "godzina[.]?%s+$re2LT10st%s+$reTens%s+$reLT10$",
+        "extract": ".*$re2LT10st%s+$reTens%s+$reLT10.*",
         "normalize": "xxxx-xx-xxt0@group(0):@group(1)=@group(2)"
       }
     },
     {
-      "(1-9):1(1-9)-prefixed": {
-        "extract": "godzina[.]?%s+$re2LT10st%s+$reTeens$",
+      "(1-9):1(1-9)": {
+        "extract": ".*$re2LT10st%s+$reTeens.*",
         "normalize": "xxxx-xx-xxt0@group(0):@group(1)"
       }
     },
     {
-      "1(01):00-prefixed": {
-        "extract": "godzina[.]?%s+$reTenthEleventh%s*$reZero?%s*$reZero?$",
+      "1(01):00": {
+        "extract": ".*$reTenthEleventh%s*$reZero?%s*$reZero?.*",
         "normalize": "xxxx-xx-xxt@group(0):00"
       }
     },
     {
-      "12:00-prefixed": {
-        "extract": "godzina[.]?%s+$reTwelth%s*$reZero?%s*$reZero?$",
+      "12:00": {
+        "extract": ".*$reTwelth%s*$reZero?%s*$reZero?.*",
         "normalize": "xxxx-xx-xxt@group(0):00"
       }
     },
     {
-      "1(012):(1-9)-prefixed": {
-        "extract": "godzina[.]?%s+$reTenthEleventhTwelth%s+$reLT10$",
+      "1(012):(1-9)": {
+        "extract": ".*$reTenthEleventhTwelth%s+$reLT10.*",
         "normalize": "xxxx-xx-xxt@group(0):0=@group(1)"
       }
     },
     {
-      "1(012):0(1-9)-prefixed": {
-        "extract": "godzina[.]?%s+$reTenthEleventhTwelth%s+$reZero%s+$reLT10$",
+      "1(012):0(1-9)": {
+        "extract": ".*$reTenthEleventhTwelth%s+$reZero%s+$reLT10.*",
         "normalize": "xxxx-xx-xxt@group(0):0=@group(2)"
       }
     },
     {
-      "1(012):(1-5)0-prefixed": {
-        "extract": "godzina[.]?%s+$reTenthEleventhTwelth%s+$reTens$",
+      "1(012):(1-5)0": {
+        "extract": ".*$reTenthEleventhTwelth%s+$reTens.*",
         "normalize": "xxxx-xx-xxt@group(0):@group(1)0"
       }
     },
     {
-      "1(012):(1-5)(1-9)-prefixed": {
+      "1(012):(1-5)(1-9)": {
         "comment": "see (1-9):(1-5)(1-9)",
-        "extract": "godzina[.]?%s+$reTenthEleventhTwelth%s+$reTens%s$reLT10$",
+        "extract": ".*$reTenthEleventhTwelth%s+$reTens%s$reLT10.*",
         "normalize": "xxxx-xx-xxt@group(0):@group(1)=@group(2)"
       }
     },
     {
-      "1(012):1(1-9)-prefixed": {
-        "extract": "godzina[.]?%s+$reTenthEleventhTwelth%s+$reTeens$",
+      "1(012):1(1-9)": {
+        "extract": ".*$reTenthEleventhTwelth%s+$reTeens.*",
         "normalize": "xxxx-xx-xxt@group(0):@group(1)"
       }
     },
     {
-      "1(3-9):00-prefixed": {
-        "extract": "godzina[.]?%s+$reTeenth%s*$reZero?%s*$reZero?$",
+      "1(3-9):00": {
+        "extract": ".*$reTeenth%s*$reZero?%s*$reZero?.*",
         "normalize": "xxxx-xx-xxT@group(0):00"
       }
     },
     {
-      "1(3-9):(1-9)-prefixed": {
-        "extract": "godzina[.]?%s+$reTeenth%s+$reLT10$",
+      "1(3-9):(1-9)": {
+        "extract": ".*$reTeenth%s+$reLT10.*",
         "normalize": "xxxx-xx-xxT@group(0):0=@group(1)"
       }
     },
     {
-      "1(3-9):0(1-9)-prefixed": {
-        "extract": "godzina[.]?%s+$reTeenth%s+$reZero%s+$reLT10$",
+      "1(3-9):0(1-9)": {
+        "extract": ".*$reTeenth%s+$reZero%s+$reLT10.*",
         "normalize": "xxxx-xx-xxT@group(0):0=@group(2)"
       }
     },
     {
-      "1(3-9):(1-5)0-prefixed": {
-        "extract": "godzina[.]?%s+$reTeenth%s+$reTens$",
+      "1(3-9):(1-5)0": {
+        "extract": ".*$reTeenth%s+$reTens.*",
         "normalize": "xxxx-xx-xxT@group(0):@group(1)0"
       }
     },
     {
-      "1(3-9):(1-5)(1-9)-prefixed": {
+      "1(3-9):(1-5)(1-9)": {
         "comment": "see (1-9):(1-5)(1-9)",
-        "extract": "godzina[.]?%s+$reTeenth%s+$reTens%s+$reLT10$",
+        "extract": ".*$reTeenth%s+$reTens%s+$reLT10.*",
         "normalize": "xxxx-xx-xxT@group(0):@group(1)=@group(2)"
       }
     },
     {
-      "1(3-9):1(1-9)-prefixed": {
-        "extract": "godzina[.]?%s+$reTeenth%s+$reTeens$",
+      "1(3-9):1(1-9)": {
+        "extract": ".*$reTeenth%s+$reTeens.*",
         "normalize": "xxxx-xx-xxT@group(0):@group(1)"
       }
     },
     {
-      "20:00-prefixed": {
-        "extract": "godzina[.]?%s+$reTwentieth%s*$reZero?%s*$reZero?$",
+      "20:00": {
+        "extract": ".*$reTwentieth%s*$reZero?%s*$reZero?.*",
         "normalize": "xxxx-xx-xxT@group(0)0:00"
       }
     },
     {
-      "20:(1-9)-prefixed": {
-        "extract": "godzina[.]?%s+$reTwentieth%s+$reLT10$",
+      "20:(1-9)": {
+        "extract": ".*$reTwentieth%s+$reLT10.*",
         "normalize": "xxxx-xx-xxT@group(0)0:0=@group(1)"
       }
     },
     {
-      "20:0(1-9)-prefixed": {
-        "extract": "godzina[.]?%s+$reTwentieth%s+$reZero%s+$reLT10$",
+      "20:0(1-9)": {
+        "extract": ".*$reTwentieth%s+$reZero%s+$reLT10.*",
         "normalize": "xxxx-xx-xxT@group(0)0:0=@group(2)"
       }
     },
     {
-      "20:(1-5)0-prefixed": {
-        "extract": "godzina[.]?%s+$reTwentieth%s+$reTens$",
+      "20:(1-5)0": {
+        "extract": ".*$reTwentieth%s+$reTens.*",
         "normalize": "xxxx-xx-xxT@group(0)0:@group(1)0"
       }
     },
     {
-      "20:(1-5)(1-9)-prefixed": {
+      "20:(1-5)(1-9)": {
         "comment": "see (1-9):(1-5)(1-9)",
-        "extract": "godzina[.]?%s+$reTwentieth%s+$reTens%s+$reLT10$",
+        "extract": ".*$reTwentieth%s+$reTens%s+$reLT10.*",
         "normalize": "xxxx-xx-xxT@group(0)0:@group(1)=@group(2)"
       }
     },
     {
-      "20:1(1-9)-prefixed": {
-        "extract": "godzina[.]?%s+$reTwentieth%s+$reTeens$",
+      "20:1(1-9)": {
+        "extract": ".*$reTwentieth%s+$reTeens.*",
         "normalize": "xxxx-xx-xxT@group(0)0:@group(1)"
       }
     },
     {
-      "2(1-4):00-prefixed": {
-        "extract": "godzina[.]?%s+$reTwentyPrefix%s+$reFirstToFourth%s*$reZero?%s*$reZero?$",
+      "2(1-4):00": {
+        "extract": ".*$reTwentyPrefix%s+$reFirstToFourth%s*$reZero?%s*$reZero?.*",
         "normalize": "xxxx-xx-xxT@group(0)@group(1):00"
       }
     },
     {
-      "2(1-4):(1-9)-prefixed": {
-        "extract": "godzina[.]?%s+$reTwentyPrefix%s+$reFirstToFourth%s+$reLT10$",
+      "2(1-4):(1-9)": {
+        "extract": ".*$reTwentyPrefix%s+$reFirstToFourth%s+$reLT10.*",
         "normalize": "xxxx-xx-xxT@group(0)@group(1):0=@group(2)"
       }
     },
     {
-      "2(1-4):0(1-9)-prefixed": {
-        "extract": "godzina[.]?%s+$reTwentyPrefix%s+$reFirstToFourth%s+%reZero%s+$reLT10$",
+      "2(1-4):0(1-9)": {
+        "extract": ".*$reTwentyPrefix%s+$reFirstToFourth%s+%reZero%s+$reLT10.*",
         "normalize": "xxxx-xx-xxT@group(0)@group(1):0=@group(3)"
       }
     },
     {
-      "2(1-4):(1-5)0-prefixed": {
-        "extract": "godzina[.]?%s+$reTwentyPrefix%s+$reFirstToFourth%s+$reTens$",
+      "2(1-4):(1-5)0": {
+        "extract": ".*$reTwentyPrefix%s+$reFirstToFourth%s+$reTens.*",
         "normalize": "xxxx-xx-xxT@group(0)@group(1):@group(2)0"
       }
     },
     {
-      "2(1-4):(1-5)(1-9)-prefixed": {
+      "2(1-4):(1-5)(1-9)": {
         "comment": "see (1-9):(1-5)(1-9)",
-        "extract": "godzina[.]?%s+$reTwentyPrefix%s+$reFirstToFourth%s+$reTens%s+$reLT10$",
+        "extract": ".*$reTwentyPrefix%s+$reFirstToFourth%s+$reTens%s+$reLT10.*",
         "normalize": "xxxx-xx-xxT@group(0)@group(1):@group(2)=@group(3)"
       }
     },
     {
-      "2(1-4):1(1-9)-prefixed": {
-        "extract": "godzina[.]?%s+$reTwentyPrefix%s+$reFirstToFourth%s+$reTeens$",
+      "2(1-4):1(1-9)": {
+        "extract": ".*$reTwentyPrefix%s+$reFirstToFourth%s+$reTeens.*",
         "normalize": "xxxx-xx-xxT@group(0)@group(1):@group(2)"
       }
-    }
+    },
+    {
+      ":00": {
+        "extract": ".*$reZero%s*$reZero?.*",
+        "normalize": "xxxx-xx-xxtxx:00"
+      }
+    },
+    {
+      ":(1-9)": {
+        "extract": ".*$reLT10.*",
+        "normalize": "xxxx-xx-xxtxx:0=@group(0)"
+      }
+    },
+    {
+      ":0(1-9)": {
+        "extract": ".*$reZero%s+$reLT10.*",
+        "normalize": "xxxx-xx-xxtxx:0=@group(1)"
+      }
+    },
+    {
+      ":(1-5)0": {
+        "extract": ".*$reTens.*",
+        "normalize": "xxxx-xx-xxtxx:@group(0)0"
+      }
+    },
+    {
+      ":(1-5)(1-9)": {
+        "comment": "see (1-9):(1-5)(1-9)",
+        "extract": ".*$reTens%s+$reLT10.*",
+        "normalize": "xxxx-xx-xxtxx:@group(0)=@group(1)"
+      }
+    },
+    {
+      ":1(1-9)": {
+        "extract": ".*$reTeens.*",
+        "normalize": "xxxx-xx-xxtxx:@group(0)"
+      }
+    },
+    {
+      "godzina": {
+        "extract": "godzina",
+        "normalize": "xxxx-xx-xxtxx"
+      }
+    },
+    {
+      "ta godzina": {
+        "extract": "ta godzina",
+        "normalize": "+0000-00-00T+00"
+      }
+    },
+    {
+      "(1-9):00": {
+        "extract": ".*$re2LT10st.*",
+        "normalize": "xxxx-xx-xxt0@group(0):00"
+      }
+    }, 
+    {
+      "(10-12):00": {
+        "extract": ".*$reTenthEleventhTwelth.*",
+        "normalize": "xxxx-xx-xxt@group(0):00"
+      }
+    },    
+    {
+      "(13-19):00": {
+        "extract": ".*$reTeenth.*",
+        "normalize": "xxxx-xx-xxT@group(0):00"
+      }
+    },
+    {
+      "20:00": {
+        "extract": ".*$reTwentieth.*",
+        "normalize": "xxxx-xx-xxT@group(0)0:00"
+      }
+    },    
+    {
+      "2(1-4):00": {
+        "extract": ".*$reTwentyPrefix%s+$reFirstToFourth.*",
+        "normalize": "xxxx-xx-xxT@group(0)@group(1)"
+      }
+    },    
   ],
   "comments": {
-    "TODO": "zadbaj o polskie znaki i normalizacje"
+    "comment": "zadbaj o polskie znaki i normalizacje",
+    "reHourMinuteSeparator": "[.:]",
+    "prefix": [
+      "godz[.]?",
+      "godzina"
+    ]
   },
   "patterns": {
     "reZero": [
@@ -234,10 +318,12 @@
     "reTenthEleventhTwelth": [
       "dziesiąty",
       "jedenasty",
-      "dwunasty"
+      "dwunasty",
+      "jedenasta"
     ],
     "reTwelth": [
-      "dwunasty"
+      "dwunasty",
+      "dwunasta"
     ],
     "reTens": [
       "dziesięć",
@@ -336,6 +422,26 @@
         "dwudziesty": "2",
         "dwudziesta[:]": "20:"
       }
-    }
+    },
+    {
+      "teens2": {
+        "jedenasty": "11",
+        "jedenasta": "11",
+        "dwunasty": "12",
+        "trzynasty": "13",
+        "czternasty": "14",
+        "piętnasty": "15",
+        "szesnasty": "16",
+        "siedemnasty": "17",
+        "osiemnasty": "18",
+        "dziewiętnasty": "19",
+      }
+    },
+    {
+      "tens2": {
+        "dziesiąty": "10",
+        "dwudziesty": "2",
+      }
+    }    
   ]
 }
