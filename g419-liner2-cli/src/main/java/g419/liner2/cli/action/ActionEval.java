@@ -6,6 +6,7 @@ import g419.corpus.io.DataFormatException;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.BatchReader;
 import g419.corpus.io.reader.ReaderFactory;
+import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
@@ -162,8 +163,8 @@ public class ActionEval extends Action{
             HashMap<Sentence, AnnotationSet> referenceChunks = ps.getChunkings();
 
     		/* Remove annotations from data */
-            //ps.removeAnnotations();
-            ps.removeAnnotations2(LinerOptions.getGlobal().types);
+            ps.removeAnnotations();
+            //ps.removeAnnotations2(LinerOptions.getGlobal().types);
 
     		/* Generate features */
             timer.startTimer("Feature generation");

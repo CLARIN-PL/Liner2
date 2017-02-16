@@ -74,11 +74,15 @@ public class CascadeChunker extends Chunker implements Normalizer {
 		for ( int i=0; i<document.getSentences().size(); i++ ){
 			Sentence sentence = ps.getSentences().get(i);
 			AnnotationSet set = new AnnotationSet(sentence);
-			for ( Annotation an : document.getSentences().get(i).getChunks() )
+			for ( Annotation an : document.getSentences().get(i).getChunks() ){
 				if ( !sentence.getChunks().contains(an) ){
                     an.setSentence(sentence);
                     set.addChunk(an);
+                } else {
+                	// TODO
+                	// System.out.println("Ignore: " + an.toString());
                 }
+			}
 			chunkings.put(sentence, set);
 		}
 		
