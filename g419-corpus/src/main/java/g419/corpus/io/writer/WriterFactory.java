@@ -113,7 +113,9 @@ public class WriterFactory {
 				return new CsvRelationsWriter(outWrapped);
 			case "annotations-tsv":
 				return new AnnotationTsvStreamWriter(outWrapped);
-			default:		
+			case "bsnlp":
+				return new BSNLPStreamWriter(outWrapped);
+			default:
 				throw new UnknownFormatException("Output format " + outputFormat + " not recognized.");
 		}
 	}
