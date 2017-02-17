@@ -1,6 +1,6 @@
 package g419.liner2.cli.action;
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Document;
@@ -58,7 +58,7 @@ public class ActionNormalizerEval extends Action {
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
         LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
         if(line.hasOption(CommonOptions.OPTION_VERBOSE_DETAILS)) {
-            Logger.verboseDetails = true;
+            ConsolePrinter.verboseDetails = true;
         }
         this.missPrinter = line.hasOption("misses") ?
                 new PrintWriter(new FileOutputStream(line.getOptionValue("misses"), false)) :
@@ -111,7 +111,7 @@ public class ActionNormalizerEval extends Action {
             throw up;
         }
         manager.resetChunkers();
-        Logger.log("Using normalizer: "+normalizer);
+        ConsolePrinter.log("Using normalizer: "+normalizer);
         return normalizer;
 
     }

@@ -1,6 +1,6 @@
 package g419.liner2.cli.action;
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.corpus.io.DataFormatException;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.BatchReader;
@@ -67,7 +67,7 @@ public class ActionFeatureSelection extends Action {
 		this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
 		LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
 		if(line.hasOption(CommonOptions.OPTION_VERBOSE_DETAILS)){
-			Logger.verboseDetails = true;
+			ConsolePrinter.verboseDetails = true;
 		}
 		if (line.hasOption("R")){
 			this.restoreFeatures = line.getOptionValue("R").split(",");

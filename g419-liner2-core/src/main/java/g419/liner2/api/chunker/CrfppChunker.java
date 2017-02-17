@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 import org.chasen.crfpp.Tagger;
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.CrfTemplate;
@@ -127,14 +127,14 @@ public class CrfppChunker extends Chunker
 		            
     @Override
 	public void train() throws Exception {
-        Logger.log("Training CRF classifer using features:\n" + this.template.printFeatures());
+        ConsolePrinter.log("Training CRF classifer using features:\n" + this.template.printFeatures());
     	this.trainingFileWriter.close();
 		this.compileTagger();
     }
 
     @Override
     public void addTrainingData(Document paragraphSet) {
-        Logger.log("Loading training data for CRF from document:" + paragraphSet.getName());
+        ConsolePrinter.log("Loading training data for CRF from document:" + paragraphSet.getName());
 //        System.out.println(paragraphSet.getAttributeIndex().allAtributes().toString());
     	// Utwórz tymczasowy plik do zapisu danych treningowych
     	if ( this.trainingFileWriter == null ){
@@ -211,7 +211,7 @@ public class CrfppChunker extends Chunker
             BufferedReader error = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 			String line;
             while ((line = input.readLine()) != null) {
-                Logger.log(line);
+                ConsolePrinter.log(line);
             }
             
             boolean wasError = false;

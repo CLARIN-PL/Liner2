@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.lib.cli.ParameterException;
 import g419.liner2.api.chunker.AnnotationRenameChunker;
 import g419.liner2.api.chunker.Chunker;
@@ -26,7 +26,7 @@ public class ChunkerFactoryItemAnnotationRename extends ChunkerFactoryItem {
         String chunkername = description.get("base-chunker");
         String file = description.get("file");
         Map<String, String> rename = this.loadAnnotationRename(file);
-        Logger.log("--> AnnotationRenameChunker on  " + chunkername);
+        ConsolePrinter.log("--> AnnotationRenameChunker on  " + chunkername);
 
         Chunker baseChunker = cm.getChunkerByName(chunkername);
         if (baseChunker == null){

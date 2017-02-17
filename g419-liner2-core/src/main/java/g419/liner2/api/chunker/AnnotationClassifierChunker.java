@@ -1,6 +1,6 @@
 package g419.liner2.api.chunker;
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
@@ -129,7 +129,7 @@ public class AnnotationClassifierChunker extends Chunker
     
     @Override
 	public void train() throws Exception {
-        Logger.log("AnnoatationClassifier: training model");
+        ConsolePrinter.log("AnnoatationClassifier: training model");
     	this.filter = new StringToNominal();
     	filter.setAttributeRange("first-" + this.featureGenerator.getFeaturesCount());
     	filter.setInputFormat(instances);
@@ -210,7 +210,7 @@ public class AnnotationClassifierChunker extends Chunker
 	 * @throws Exception 
 	 */
 	public void classify(HashMap<Sentence, AnnotationSet> annotationsBySentence) throws Exception{
-        Logger.log("AnnoatationClassifier: classifying data");
+        ConsolePrinter.log("AnnoatationClassifier: classifying data");
         if(fva == null){
             fva = this.getAttributesDefinition();
         }
@@ -258,7 +258,7 @@ public class AnnotationClassifierChunker extends Chunker
 
 	@Override
 	public void addTrainingData(Document document) throws Exception {
-        Logger.log("AnnoatationClassifier: Loading training data for from document:" + document.getName());
+        ConsolePrinter.log("AnnoatationClassifier: Loading training data for from document:" + document.getName());
         updateClassDomain(document);
         for ( Sentence sentence : document.getSentences() ){
             LinkedHashMap<String, HashMap<Annotation, String>> allFeatures = this.featureGenerator.generate(sentence, sentence.getChunks());

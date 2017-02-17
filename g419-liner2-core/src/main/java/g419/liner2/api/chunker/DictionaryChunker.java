@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
@@ -158,9 +158,9 @@ public class DictionaryChunker extends Chunker
                     }
                     line = dictReader.readLine();
                 }
-                Logger.log("Dictionary chunker compiled.", true);
-                Logger.log("Added: " + added, true);
-                Logger.log("Skipped: " + (amb + com) + " of which " + amb + " ambigous, " + com + " common.", true);
+                ConsolePrinter.log("Dictionary chunker compiled.", true);
+                ConsolePrinter.log("Added: " + added, true);
+                ConsolePrinter.log("Skipped: " + (amb + com) + " of which " + amb + " ambigous, " + com + " common.", true);
                 dictReader.close();
             } catch (IOException ex) {
                 ex.printStackTrace();

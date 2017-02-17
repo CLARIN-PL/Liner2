@@ -354,7 +354,7 @@ public class Annotation {
 		this.category = category;
 	}
 
-	public static Annotation[] sortChunks(HashSet<Annotation> chunkSet) {
+	public static Annotation[] sortChunks(Set<Annotation> chunkSet) {
 		int size = chunkSet.size();
 		Annotation[] sorted = new Annotation[size];
 		int idx = 0;

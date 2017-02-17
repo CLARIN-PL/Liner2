@@ -11,7 +11,7 @@ import g419.liner2.api.chunker.CrfppChunker;
 import g419.liner2.api.converter.Converter;
 import g419.liner2.api.converter.factory.ConverterFactory;
 import g419.liner2.api.features.TokenFeatureGenerator;
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.liner2.api.tools.TemplateFactory;
 
 import java.io.BufferedReader;
@@ -67,14 +67,14 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
     private Chunker load(Profile.Section description, ChunkerManager cm, TokenFeatureGenerator gen) throws Exception {
         String store = description.get("store");
 
-        Logger.log("--> CRFPP Chunker deserialize from " + store);
+        ConsolePrinter.log("--> CRFPP Chunker deserialize from " + store);
 
         CrfTemplate template = getTemplate(description, cm, gen);
         CrfppChunker chunker = new CrfppChunker(description.containsKey("features") ? loadUsedFeatures(description.get("features")) : template.getUsedFeatures());
         chunker.deserialize(store);
         chunker.setTemplate(template);
         
-        Logger.log("--> CRFPP Chunker deserialize done ");
+        ConsolePrinter.log("--> CRFPP Chunker deserialize done ");
 
         return chunker;
     }
@@ -87,7 +87,7 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
      * @throws Exception
      */
     private Chunker train(Profile.Section description, ChunkerManager cm, TokenFeatureGenerator gen) throws Exception {
-        Logger.log("--> CRFPP Chunker train");
+        ConsolePrinter.log("--> CRFPP Chunker train");
 
         Converter trainingDataConverter = null;
         if ( description.containsKey("training-data-converter") ){
@@ -136,7 +136,7 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
             types = LinerOptions.getGlobal().parseTypes(description.get("types"));
         }
 
-        Logger.log("--> Training on file=" + inputFile);
+        ConsolePrinter.log("--> Training on file=" + inputFile);
 
         CrfTemplate template = getTemplate(description, cm, gen);
         CrfppChunker chunker = new CrfppChunker(threads, types, description.containsKey("features") ? loadUsedFeatures(description.get("features")) :template.getUsedFeatures());

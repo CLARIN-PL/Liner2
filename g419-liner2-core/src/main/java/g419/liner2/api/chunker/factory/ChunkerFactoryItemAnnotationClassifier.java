@@ -8,7 +8,7 @@ import g419.lib.cli.ParameterException;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.AnnotationClassifierChunker;
 import g419.liner2.api.chunker.Chunker;
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class ChunkerFactoryItemAnnotationClassifier extends ChunkerFactoryItem {
 
 	@Override
 	public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
-		Logger.log("Training annotation classifier");
+		ConsolePrinter.log("Training annotation classifier");
 
         String inputClassifier = description.get("base-chunker");
         Chunker baseChunker = null;
@@ -106,7 +106,7 @@ public class ChunkerFactoryItemAnnotationClassifier extends ChunkerFactoryItem {
         }
 
 
-        Logger.log("--> Training on file=" + inputFile);
+        ConsolePrinter.log("--> Training on file=" + inputFile);
         chunker.setTypes(types);
         for(Document document: trainData) {
             chunker.updateClassDomain(document);

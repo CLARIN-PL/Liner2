@@ -11,7 +11,7 @@ import org.ini4j.Ini;
 
 import com.google.common.reflect.ClassPath;
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.ensemble.CascadeChunker;
 import g419.liner2.api.chunker.ensemble.MajorityVotingChunker;
@@ -114,7 +114,7 @@ public class ChunkerFactory {
 	 * @throws Exception 
 	 */
 	public static Chunker createChunker(Ini.Section description, ChunkerManager cm) throws Exception{
-		Logger.log("-> Setting up chunker: " + description.getName());
+		ConsolePrinter.log("-> Setting up chunker: " + description.getName());
 		for (ChunkerFactoryItem item : ChunkerFactory.get().items) {
             if ( item.getType().equals(description.get(CHUNKER_TYPE)) ) {
 				Chunker chunker =  item.getChunker(description, cm);

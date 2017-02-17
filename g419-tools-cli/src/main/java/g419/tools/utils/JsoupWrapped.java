@@ -47,7 +47,7 @@ public class JsoupWrapped {
 				ex.printStackTrace();
 			}
 		}
-		catch (IOException ex) {
+		catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		if (doc == null ){

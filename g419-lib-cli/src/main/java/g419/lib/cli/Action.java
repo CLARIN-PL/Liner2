@@ -1,6 +1,6 @@
 package g419.lib.cli;
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
@@ -48,7 +48,7 @@ public abstract class Action {
     protected void parseDefault(CommandLine line){
 		checkOptionRepetition(line);
         if(line.hasOption(CommonOptions.OPTION_VERBOSE)){
-            Logger.verbose = true;
+            ConsolePrinter.verbose = true;
         }
     }
 	

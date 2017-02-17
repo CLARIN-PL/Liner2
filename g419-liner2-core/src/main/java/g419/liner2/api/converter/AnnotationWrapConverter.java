@@ -1,6 +1,6 @@
 package g419.liner2.api.converter;
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.corpus.structure.*;
 import g419.liner2.api.features.tokens.ClassFeature;
 import g419.liner2.api.tools.parser.MaltSentence;

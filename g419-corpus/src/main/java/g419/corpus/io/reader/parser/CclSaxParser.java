@@ -1,6 +1,6 @@
 package g419.corpus.io.reader.parser;
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.corpus.io.DataFormatException;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
@@ -10,8 +10,10 @@ import g419.corpus.structure.Tag;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,7 +88,7 @@ public class CclSaxParser extends DefaultHandler {
 
     private void parseDocument() throws DataFormatException, ParserConfigurationException, SAXException, IOException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
-        SAXParser parser = factory.newSAXParser();
+        SAXParser parser = factory.newSAXParser();        
         parser.parse(is,this);
     }
 
@@ -249,7 +251,7 @@ public class CclSaxParser extends DefaultHandler {
 
 
     public Document getDocument(){
-        if (!foundSentenceId) Logger.log("Generated sentence ids for document:" + uri);
+        if (!foundSentenceId) ConsolePrinter.log("Generated sentence ids for document:" + uri);
         return this.document;
     }
     

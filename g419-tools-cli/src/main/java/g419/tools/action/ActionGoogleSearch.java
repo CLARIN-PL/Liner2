@@ -1,8 +1,11 @@
 package g419.tools.action;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
@@ -25,11 +28,14 @@ public class ActionGoogleSearch extends Action {
 	private final String OPTION_QUERY = "q";
 	private final String OPTION_WORKDIR_LONG = "workdir";
 	private final String OPTION_WORKDIR = "w";
+	private final String OPTION_PHRASE_LONG = "phrase";
+	private final String OPTION_PHRASE = "p";
 	
 	private String query = null;
 	private String workdir = null;
+	private Set<String> phrases = new HashSet<String>();
 
-	private String link = "https://www.google.pl/search?q=%s&start=%d";
+	private String link = "https://www.google.pl/search?q=%s&start=%d&filter=0";
 	
 	public ActionGoogleSearch() {
 		super("google-search");
@@ -37,7 +43,9 @@ public class ActionGoogleSearch extends Action {
         this.options.addOption(Option.builder(OPTION_QUERY).longOpt(OPTION_QUERY_LONG).hasArg().argName("phrase")
         		.desc("fraza do znalezienia").required().required().build());
         this.options.addOption(Option.builder(OPTION_WORKDIR).longOpt(OPTION_WORKDIR_LONG).hasArg().argName("path")
-        		.desc("ścieżka do katalogu roboczego").required().build());	}
+        		.desc("ścieżka do katalogu roboczego").required().build());
+		this.options.addOption(Option.builder(OPTION_PHRASE).longOpt(OPTION_PHRASE_LONG).hasArg().argName("path")
+				.desc("wymagane frazy w treści").required().build());	}
 	
 	/**
 	 * Parse action options
@@ -49,11 +57,23 @@ public class ActionGoogleSearch extends Action {
         parseDefault(line);
         this.query = line.getOptionValue(OPTION_QUERY_LONG);
         this.workdir = line.getOptionValue(OPTION_WORKDIR_LONG);
+        
+        String phrases = line.getOptionValue(OPTION_PHRASE);
+        if ( phrases == null ){
+        	phrases = "";
+        }
+        else{
+        	phrases = phrases.replaceAll("_", " ").toLowerCase();
+        }
+        for ( String phrase : phrases.split(",")){
+        	this.phrases.add(phrase.trim());
+        }
     }
 
 	@Override
 	public void run() throws Exception {
 		File workdirSource = null;
+		File workdirText = null;
 		if ( this.workdir != null ){
 			File workdir = new File(this.workdir);
 			if ( !workdir.exists() ){
@@ -62,6 +82,10 @@ public class ActionGoogleSearch extends Action {
 			workdirSource = new File(workdir, "source");
 			if ( !workdirSource.exists() ){
 				workdirSource.mkdirs();
+			}
+			workdirText = new File(workdir, "text");
+			if ( !workdirText.exists() ){
+				workdirText.mkdirs();
 			}
 		}
 		
@@ -81,10 +105,16 @@ public class ActionGoogleSearch extends Action {
 			keepSearching = doc.select(".navend a#pnnext").size() > 0;
 			for ( Element e : elements ){
 				String href = e.attr("href");
+				if ( href.startsWith("/") ){
+					href = "https://www.google.pl" + href;
+				}
 				
 				Document docPage = JsoupWrapped.get(href);
+				String pagePath = href.replaceAll("[^a-zA-Z0-9-]", "_");
+				if ( pagePath.length() > 240 ){
+					pagePath = pagePath.substring(0, 240);
+				}
 				if ( workdirSource != null && docPage != null ){
-					String pagePath = href.replaceAll("[^a-zA-Z0-9-]", "_");
 					File pageFolder = new File(workdirSource, pagePath);
 					if ( !pageFolder.exists() ){
 						pageFolder.mkdirs();
@@ -92,7 +122,7 @@ public class ActionGoogleSearch extends Action {
 					FileUtils.write(new File(pageFolder, "index.html"), docPage.html());
 				}
 
-				List<String> snippets = this.findSnippetsOnPage(docPage, phrases);
+				List<String> snippets = this.findSnippetsOnPage(docPage, this.phrases);
 				if ( snippets.size() > 0 ){
 					System.out.println();					
 					System.out.println("##==================");
@@ -103,6 +133,14 @@ public class ActionGoogleSearch extends Action {
 						System.out.println(snippet);
 						System.out.println("##------------------");					
 					}
+					
+					String content = String.join("\n\n", snippets);
+					StringBuilder sb = new StringBuilder("[metadata]\n");
+					sb.append("source = " + href);
+					
+					Files.write(content, new File(workdirText, pagePath + ".txt"), Charset.forName("utf8"));
+					Files.write(sb.toString(), new File(workdirText, pagePath + ".ini"), Charset.forName("utf8"));
+					
 				}
 			}
 			page += 10;
@@ -136,14 +174,15 @@ public class ActionGoogleSearch extends Action {
 	 * @param phrases
 	 * @return
 	 */
-	public List<String> findSnippetsOnPage(Document doc, String[] phrases){
+	public List<String> findSnippetsOnPage(Document doc, Set<String> phrases){
 		List<String> snippets = new ArrayList<String>();
 		for ( String block : this.getTextBlocsk(doc) ) {
-			boolean found = true;
+			boolean found = false;
 			String textLower = block.toLowerCase();
 			for ( String word : phrases ){
-				if ( !textLower.contains(word) ){
-					found = false;
+				if ( textLower.contains(word) ){
+					found = true;
+					break;
 				}
 			}
 			if ( found ){

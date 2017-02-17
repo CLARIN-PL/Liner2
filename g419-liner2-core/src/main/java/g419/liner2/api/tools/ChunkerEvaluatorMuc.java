@@ -1,7 +1,7 @@
 package g419.liner2.api.tools;
 
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.corpus.structure.*;
 
 import java.util.*;
@@ -318,8 +318,8 @@ public class ChunkerEvaluatorMuc {
         String sentenceHeader = "(ChunkerEvaluatorMuc) Sentence #" + this.sentenceNum + " from " + currentDocId;
 		if (paragraphId != null)
 			sentenceHeader += " from " + paragraphId;
-		Logger.log(sentenceHeader);
-		Logger.log("");
+		ConsolePrinter.log(sentenceHeader);
+		ConsolePrinter.log("");
 		StringBuilder tokenOrths = new StringBuilder();
 		StringBuilder tokenNums = new StringBuilder();
 		int idx = 0;
@@ -334,39 +334,39 @@ public class ChunkerEvaluatorMuc {
 			tokenOrths.append(tokenOrth + " ");
 			tokenNums.append(tokenNum + " ");
 		}
-		Logger.log("Text  : " + tokenOrths.toString().trim());
-		Logger.log("Tokens: " + tokenNums.toString().trim());
-		Logger.log("");
-		Logger.log("Chunks:");
+		ConsolePrinter.log("Text  : " + tokenOrths.toString().trim());
+		ConsolePrinter.log("Tokens: " + tokenNums.toString().trim());
+		ConsolePrinter.log("");
+		ConsolePrinter.log("Chunks:");
 		
 		for (Annotation chunk : Annotation.sortChunks(truePositives)) {
-			Logger.log(String.format("  TruePositive %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
+			ConsolePrinter.log(String.format("  TruePositive %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk)));
 		}
 		for (Annotation chunk : Annotation.sortChunks(falsePositives)) {
-			Logger.log(String.format("  FalsePositive %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
+			ConsolePrinter.log(String.format("  FalsePositive %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk)));
 		}
 		for (Annotation chunk : Annotation.sortChunks(falseNegatives)) {
-			Logger.log(String.format("  FalseNegative %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
+			ConsolePrinter.log(String.format("  FalseNegative %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk)));
 		}
 		
-		Logger.log("");
-		Logger.log("Features:", true);
+		ConsolePrinter.log("");
+		ConsolePrinter.log("Features:", true);
 		StringBuilder featuresHeader = new StringBuilder("       ");
 		for (int i = 0; i < sentence.getAttributeIndex().getLength(); i++)
 			featuresHeader.append(String.format("[%d]_%s ", i+1, sentence.getAttributeIndex().getName(i)));
-		Logger.log(featuresHeader.toString(), true);
+		ConsolePrinter.log(featuresHeader.toString(), true);
 		
 		idx = 0;
 		for (Token token : sentence.getTokens()) {
 			StringBuilder tokenFeatures = new StringBuilder(String.format("  %3d) ", ++idx));
 			for (int i = 0; i < token.getNumAttributes(); i++)
 				tokenFeatures.append(String.format("[%d]_%s ", i+1, token.getAttributeValue(i)));
-			Logger.log(tokenFeatures.toString(), true);
+			ConsolePrinter.log(tokenFeatures.toString(), true);
 		}
-		Logger.log("", true);
+		ConsolePrinter.log("", true);
 	}
 	
 	private String printChunk(Annotation chunk) {

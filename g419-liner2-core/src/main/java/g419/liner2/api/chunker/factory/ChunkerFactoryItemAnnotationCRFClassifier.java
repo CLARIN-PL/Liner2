@@ -9,7 +9,7 @@ import g419.liner2.api.chunker.AnnotationCRFClassifierChunker;
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.CrfppChunker;
 import g419.liner2.api.features.TokenFeatureGenerator;
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.liner2.api.tools.TemplateFactory;
 import org.ini4j.Ini;
 
@@ -80,7 +80,7 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
 
         String store = description.get("store");
 
-        Logger.log("--> CRFPP Chunker deserialize from " + store);
+        ConsolePrinter.log("--> CRFPP Chunker deserialize from " + store);
         CrfppChunker baseChunker = new CrfppChunker(loadUsedFeatures(description.get("crf-features")));
         baseChunker.deserialize(store);
         CrfTemplate template = createTemplate(description.get("template"), description.get("context"));
@@ -92,7 +92,7 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
     }
 
     private Chunker train(Ini.Section description, ChunkerManager cm) throws Exception {
-        Logger.log("--> CRFPP annotation classifier train");
+        ConsolePrinter.log("--> CRFPP annotation classifier train");
 
         String inputFile = description.get("training-data");
         String inputFormat;
@@ -119,7 +119,7 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
         CrfppChunker baseChunker = new CrfppChunker(Integer.parseInt(description.get("threads")), list, loadUsedFeatures(description.get("crf-features")));
         baseChunker.setTrainingDataFilename(description.get("store-training-data"));
         baseChunker.setModelFilename(modelFilename);
-        Logger.log("--> Training on file=" + inputFile);
+        ConsolePrinter.log("--> Training on file=" + inputFile);
 
         CrfTemplate template = createTemplate(description.get("template"), description.get("context"));
         baseChunker.setTemplate(template);

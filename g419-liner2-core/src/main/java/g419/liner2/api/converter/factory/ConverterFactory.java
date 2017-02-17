@@ -1,7 +1,7 @@
 package g419.liner2.api.converter.factory;
 
 import g419.liner2.api.converter.*;
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 
 import java.util.ArrayList;
 
@@ -28,7 +28,7 @@ public class ConverterFactory {
     }};
 
     public static Converter createConverter(String description){
-        Logger.log("-> Setting up converter: " + description);
+        ConsolePrinter.log("-> Setting up converter: " + description);
         for (ConverterFactoryItem item : items) {
             if ( item.matchPattern(description) ) {
                 Converter converter =  item.getConverter();

@@ -20,7 +20,7 @@ public class ChunkerFactoryItemRemoveNested extends ChunkerFactoryItem {
 
 	@Override
 	public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
-        g419.corpus.Logger.log("--> RemoveNested chunker");
+        g419.corpus.ConsolePrinter.log("--> RemoveNested chunker");
         
         List<Pattern> types = new ArrayList<Pattern>(); 
         

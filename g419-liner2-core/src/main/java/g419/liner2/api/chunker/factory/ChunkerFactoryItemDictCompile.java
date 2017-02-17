@@ -3,7 +3,7 @@ package g419.liner2.api.chunker.factory;
 
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.DictionaryChunker;
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import org.ini4j.Ini;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class ChunkerFactoryItemDictCompile extends ChunkerFactoryItem {
 
 	@Override
 	public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
-        Logger.log("--> Dictionary Chunker compile");
+        ConsolePrinter.log("--> Dictionary Chunker compile");
 
         String dictFile = description.get("dict");
         String commonsFile = description.get("common");
@@ -34,9 +34,9 @@ public class ChunkerFactoryItemDictCompile extends ChunkerFactoryItem {
 
         DictionaryChunker chunker = new DictionaryChunker(types);
 //            chunker.setModelFilename(modelFile);
-        Logger.log("--> Compiling dictionary from file=" + dictFile);
+        ConsolePrinter.log("--> Compiling dictionary from file=" + dictFile);
         chunker.loadDictionary(dictFile, commonsFile);
-        Logger.log("--> Saving chunker to file=" + modelFile);
+        ConsolePrinter.log("--> Saving chunker to file=" + modelFile);
         chunker.serialize(modelFile);
 
         return chunker;

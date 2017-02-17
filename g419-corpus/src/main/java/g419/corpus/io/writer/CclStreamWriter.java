@@ -117,14 +117,13 @@ public class CclStreamWriter extends AbstractDocumentWriter {
 			xmlRelw.writeEndDocument();
 			xmlRelw.close();
 		} catch (XMLStreamException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	private void openXml() {
 		try {
-			this.xmlw = this.xmlof.createXMLStreamWriter(os);
+			this.xmlw = this.xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(os)));
 			xmlw.writeStartDocument("UTF-8", "1.0");
 			xmlw.writeCharacters("\n");
 			xmlw.writeDTD("<!DOCTYPE chunkList SYSTEM \"ccl.dtd\">");

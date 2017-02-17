@@ -1,7 +1,7 @@
 package g419.liner2.cli.action;
 
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.corpus.io.DataFormatException;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.BatchReader;
@@ -72,7 +72,7 @@ public class ActionEval extends Action{
         this.errorsOnly = line.hasOption(PARAM_ERRORS_ONLY_LONG);
         LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
         if(line.hasOption(CommonOptions.OPTION_VERBOSE_DETAILS)){
-            Logger.verboseDetails = true;
+            ConsolePrinter.verboseDetails = true;
         }
 	}
 	

@@ -8,7 +8,7 @@ import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.factory.ChunkerManager;
 import g419.liner2.api.features.TokenFeatureGenerator;
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.liner2.api.tools.ProcessingTimer;
 
 /**
@@ -56,7 +56,7 @@ public class ActionTime extends ActionPipe{
     	timer.stopTimer();
 
     	while ( ps != null ){
-    		Logger.log("Loaded URI: " + ps.getName());
+    		ConsolePrinter.log("Loaded URI: " + ps.getName());
     		timer.addTokens(ps);
     		
     		// Generate features

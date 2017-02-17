@@ -1,6 +1,14 @@
 package g419.corpus;
 
-public class Logger {
+/**
+ * Contains a set of methods for printing text to the console. 
+ * It wraps all direct calls of System.out.println in case
+ * a redirect to different stream will be required.
+ * 
+ * @author Michał Marcińczuk
+ *
+ */
+public class ConsolePrinter {
 
     public static boolean verbose = false;
     public static boolean verboseDetails = false;
@@ -10,7 +18,7 @@ public class Logger {
 	 * @param text
 	 */
 	public static void log(String text){ 
-		Logger.log(text, false);
+		ConsolePrinter.log(text, false);
 	}
 
 	/**
@@ -19,8 +27,16 @@ public class Logger {
 	 * @param details
 	 */
 	public static void log(String text, boolean details){
-		if (verboseDetails || (!details && verbose) )
+		if (verboseDetails || (!details && verbose) ){
 			System.out.println(text);
+		}
 	}
 
+	/**
+	 * Prints line on System.out
+	 * @param line
+	 */
+	public static void println(String line){
+		System.out.println(line);
+	}
 }

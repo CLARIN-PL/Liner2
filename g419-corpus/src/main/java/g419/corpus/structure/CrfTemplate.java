@@ -1,7 +1,7 @@
 package g419.corpus.structure;
 
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.corpus.io.DataFormatException;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class CrfTemplate {
     boolean appendFeatureNameToValue = true;
 	
 	public void addFeature(String description) throws Exception {
-        Logger.log("(TemplateFactory) Adding feature:" + description);
+        ConsolePrinter.log("(TemplateFactory) Adding feature:" + description);
 		String[] featureUnits = description.split("/");
 		if (featureUnits.length < 1)
 			throw new Exception("Invalid template description: " + description);
