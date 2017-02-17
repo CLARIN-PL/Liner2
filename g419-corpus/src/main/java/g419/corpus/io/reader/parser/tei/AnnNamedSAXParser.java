@@ -116,7 +116,7 @@ public class AnnNamedSAXParser extends DefaultHandler {
 
         if (element.equals(TAG_SEGMENT)) {
             Annotation ann = new Annotation(annotatedTokens.get(0), annotationType, currentSentence);
-            ann.setCategory("ne");
+            ann.setGroup("ne");
             for(int i=1; i<annotatedTokens.size(); i++){
                 ann.addToken(annotatedTokens.get(i));
             }

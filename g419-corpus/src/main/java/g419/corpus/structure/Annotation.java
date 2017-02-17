@@ -369,8 +369,8 @@ public class Annotation {
 		this.type = type.toLowerCase();
 	}
 	
-	public void setCategory(String category){
-		this.group = category;
+	public void setGroup(String group){
+		this.group = group;
 	}
 
 	public static Annotation[] sortChunks(Set<Annotation> chunkSet) {

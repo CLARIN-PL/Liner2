@@ -338,12 +338,12 @@ public class BsnlpFixChunker extends Chunker {
 	 */
 	private void lemmatize(Annotation an){		
 		if ( this.lemmatizer != null ){
-			String lemma = this.lemmatizer.lemmatize(an.getText());
+			String lemma = this.lemmatizer.lemmatize(an);
 			if ( lemma != null ){
 				an.setLemma(lemma);
 				return;
 			} else if ( BSNLP_PER.equals(an.getType()) ){
-				lemma = this.lemmatizer.lemmatizePersonName(an.getText());
+				lemma = this.lemmatizer.lemmatizePersonName(an);
 				if ( lemma != null ){
 					an.setLemma(lemma);
 					return;
@@ -362,6 +362,7 @@ public class BsnlpFixChunker extends Chunker {
 			}
 		}
 
-		an.setLemma("UNKNOWN");
+		an.setLemma(an.getText());
+		an.setGroup("LEMMA_ORTH");
 	}
 }

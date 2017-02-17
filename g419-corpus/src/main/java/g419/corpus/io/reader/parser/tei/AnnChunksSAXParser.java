@@ -120,7 +120,7 @@ public class AnnChunksSAXParser extends DefaultHandler {
 	            		this.annotatedTokens.get(0), 
 	            		this.annotationType, 
 	            		this.currentSentence);
-	            ann.setCategory("chunk");
+	            ann.setGroup("chunk");
 	            for(int i=1; i<annotatedTokens.size(); i++){
 	                ann.addToken(annotatedTokens.get(i));
 	            }

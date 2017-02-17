@@ -16,6 +16,8 @@ import org.apache.log4j.Logger;
 import com.google.common.io.Files;
 
 import g419.corpus.schema.kpwr.KpwrNer;
+import g419.corpus.structure.Annotation;
+import g419.corpus.structure.Token;
 
 /**
  * 
@@ -88,11 +90,32 @@ public class NeLemmatizer {
 		
 	}
 	
-	public String lemmatize(String name){
-		return this.lemmas.get(name.toLowerCase());
+	/**
+	 * 
+	 * @param an
+	 * @return
+	 */
+	public String lemmatize(Annotation an){
+		return this.lemmas.get(an.getText().toLowerCase());
 	}
 	
-	public String lemmatizePersonName(String name){
-		return this.lemmasPerson.get(name.toLowerCase());
+	/**
+	 * 
+	 * @param an
+	 * @return
+	 */
+	public String lemmatizePersonName(Annotation an){
+		// W pierwszej kolejności lematyzuj z wykorzystaniem słownika
+		String lemma = this.lemmasPerson.get(an.getText().toLowerCase());
+		if ( lemma == null ){
+			// Jeżeli lematyzacja ze słownikiem nie powiodła się,
+			// to sprawdź, czy pierwszy człon nazwy jest w mianowniku.
+			// Jeżeli jest, to zwróć całą nazwę jako lemat
+			Token token = an.getSentence().getTokens().get(an.getBegin());
+			if ( "nom".equals(token.getDisambTag().getCase()) ){
+				lemma = an.getText();
+			}
+		}
+		return lemma;
 	}
 }
