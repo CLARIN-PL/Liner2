@@ -16,6 +16,9 @@ public class KpwrNer {
 	public static final String NER_FAC = "nam_fac";
 	
 	public static final String NER_FAC_ROAD = "nam_fac_road";
+	
+	/** Names of people. */
+	public static final String NER_LIV_PERSON = "nam_liv_person";
 
 	/** Radio station names. */
 	public static final String NER_PRO_MEDIA_RADIO = "nam_pro_media_radio";

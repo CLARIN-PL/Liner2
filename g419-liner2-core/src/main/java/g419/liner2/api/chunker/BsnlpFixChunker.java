@@ -1,12 +1,5 @@
 package g419.liner2.api.chunker;
 
-import g419.corpus.schema.kpwr.KpwrNer;
-import g419.corpus.structure.AnnotationSet;
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,6 +9,15 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
+
+import g419.corpus.schema.kpwr.KpwrNer;
+import g419.corpus.structure.Annotation;
+import g419.corpus.structure.AnnotationSet;
+import g419.corpus.structure.Document;
+import g419.corpus.structure.Sentence;
+import g419.corpus.structure.Tag;
+import g419.corpus.structure.Token;
+import g419.liner2.api.tools.NeLemmatizer;
 
 /**
  * Motody do korekcji typowych błędów popełnianych przez model statystyczny.
@@ -31,15 +33,25 @@ public class BsnlpFixChunker extends Chunker {
 	
 	Map<String, String> renameRules = new HashMap<String, String>();
 	
+	public static final String BSNLP_PREFIX = "bsnlp2017";
 	public static final String BSNLP_PER = "bsnlp2017_per";
 	public static final String BSNLP_LOC = "bsnlp2017_loc";
 	public static final String BSNLP_ORG = "bsnlp2017_org";
 	public static final String BSNLP_MISC = "bsnlp2017_misc";
 
-    public BsnlpFixChunker() {
-    	//renameRules.put(KpwrNer.NER_PRO_MEDIA_WEB, "ignore");
+	private boolean cleanup = false;
+	
+	NeLemmatizer lemmatizer = null;
+	
+	/**
+	 * 
+	 * @param cleanup if true, then annotations other than bsnlp2017_* are removed from documents.
+	 */
+    public BsnlpFixChunker(NeLemmatizer lemmatizer, boolean cleanup) {
     	renameRules.put(KpwrNer.NER_ORG_NATION, BSNLP_PER);
     	renameRules.put(KpwrNer.NER_PRO_MEDIA_RADIO, BSNLP_ORG);
+    	this.cleanup = cleanup;
+    	this.lemmatizer = lemmatizer;
     }
     
     /**
@@ -63,9 +75,25 @@ public class BsnlpFixChunker extends Chunker {
 		this.renameByMaxConfidence(ps);
 		this.renamePersonNames(ps);
 		
+		if ( cleanup ){
+			this.cleanup(ps);
+		}
+		
+		this.lemmatize(ps);
+		
 		return ps.getChunkings();
 	}
 	
+	private void cleanup(Document ps) {
+		List<Annotation> toRemove = new LinkedList<Annotation>();
+		for ( Annotation an : ps.getAnnotations() ){
+			if ( !an.getType().startsWith(BSNLP_PREFIX) ){
+				toRemove.add(an);
+			}
+		}
+		ps.removeAnnotations(toRemove);
+	}
+
 	/**
 	 * For annotations with the same orth set the same category, which has the highest confidence among those annotations. 
 	 * @param ps
@@ -292,5 +320,48 @@ public class BsnlpFixChunker extends Chunker {
 	private boolean equalsTokenBasesAndOrthCase(Token t1, Token t2){
 		return ( Sets.intersection(t1.getDisambBases(), t2.getDisambBases()).size() > 0
 				&& Character.isUpperCase(t1.getOrth().charAt(0)) == Character.isUpperCase(t2.getOrth().charAt(0)));
-	}	
+	}
+	
+	/**
+	 * Lematyzacja nazw własnych.
+	 * @param ps
+	 */
+	private void lemmatize(Document ps){		
+		for ( Annotation an : ps.getAnnotations() ){
+			this.lemmatize(an);
+		}
+	}
+	
+	/**
+	 * Bezkontekstowa lematyzacja pojedynczej nazwy.
+	 * @param an
+	 */
+	private void lemmatize(Annotation an){		
+		if ( this.lemmatizer != null ){
+			String lemma = this.lemmatizer.lemmatize(an.getText());
+			if ( lemma != null ){
+				an.setLemma(lemma);
+				return;
+			} else if ( BSNLP_PER.equals(an.getType()) ){
+				lemma = this.lemmatizer.lemmatizePersonName(an.getText());
+				if ( lemma != null ){
+					an.setLemma(lemma);
+					return;
+				}
+			}
+		}
+
+		if ( an.getTokenTokens().size() == 1 ){
+			Token token = an.getSentence().getTokens().get(an.getBegin()); 
+			for ( Tag tag : token.getDisambTags() ){
+				if ( Character.isUpperCase(tag.getBase().charAt(0) ) ){
+					// Jednoelementowa nazwa, której forma bazowa jest z dużej litery
+					an.setLemma(tag.getBase());
+					return;
+				}
+			}
+		}
+
+		an.setLemma("UNKNOWN");
+	}
 }

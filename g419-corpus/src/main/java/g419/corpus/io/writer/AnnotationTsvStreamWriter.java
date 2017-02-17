@@ -19,9 +19,9 @@ import g419.corpus.structure.Sentence;
  * <ul>
  *  <li>index of first token,</li>
  *  <li>index of last token,</li>
+ *  <li>type,</li>
  * 	<li>text form,</li>
  *  <li>lemma,</li>
- *  <li>type,</li>
  *  <li>group.</li>
  * </ul>
  * 
@@ -80,9 +80,9 @@ public class AnnotationTsvStreamWriter extends AbstractDocumentWriter {
 		StringJoiner joiner = new StringJoiner("\t");
 		joiner.add("" + (this.sentenceIndexOffset + an.getBegin()));
 		joiner.add("" + (this.sentenceIndexOffset + an.getEnd()));
+		joiner.add(an.getType());
 		joiner.add(an.getText());
 		joiner.add(an.getLemma());
-		joiner.add(an.getType());
 		joiner.add(an.getGroup());
 		this.ow.write(joiner.toString() + "\n");
 	}
