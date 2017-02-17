@@ -113,23 +113,20 @@ public class CclSaxParser extends DefaultHandler {
             currentParagraph = new Paragraph(attributes.getValue(TAG_ID));
             currentParagraph.setChunkMetaData(chunkMetaData);
             currentParagraph.setAttributeIndex(attributeIndex);
-        }
-        else if (elementName.equalsIgnoreCase(TAG_SENTENCE)) {
+        } else if (elementName.equalsIgnoreCase(TAG_SENTENCE)) {
             currentSentence = new Sentence();
             currentSentence.setParagraph(currentParagraph);
             currentSentence.setDocument(this.document);
             annotations = new Hashtable<String, Annotation>();
             idx =0;
             currentSentence.setId(attributes.getValue(TAG_ID));
-
-        }
-        else if (elementName.equalsIgnoreCase(TAG_TOKEN)) {
+        } else if (elementName.equalsIgnoreCase(TAG_TOKEN)) {
             currentToken = new Token(attributeIndex);
             currentToken.setId(attributes.getValue(TAG_ID));
             tmpProps = new HashMap<String, String>();
             annotationsPerToken = new HashMap<String, Annotation>();
-        }
-        else if(elementName.equalsIgnoreCase(TAG_TAG)){
+            currentSentence.addToken(currentToken);
+        } else if(elementName.equalsIgnoreCase(TAG_TAG)){
             if (attributes.getValue(TAG_DISAMB) == null)
                 tmpDisamb = false;
             else
@@ -137,13 +134,11 @@ public class CclSaxParser extends DefaultHandler {
                 tmpDisamb = false;
             else
                 tmpDisamb = true;
-        }
-        else if (elementName.equalsIgnoreCase(TAG_ANN)) {
+        } else if (elementName.equalsIgnoreCase(TAG_ANN)) {
             chanName = attributes.getValue(TAG_CHAN);
             chanHead = attributes.getValue(TAG_HEAD) != null ?
                     attributes.getValue(TAG_HEAD) : "0";
-        }
-        else if (elementName.equalsIgnoreCase(TAG_NS)) {
+        } else if (elementName.equalsIgnoreCase(TAG_NS)) {
             if (currentToken != null){
                 currentToken.setNoSpaceAfter(true);
             }
@@ -157,8 +152,7 @@ public class CclSaxParser extends DefaultHandler {
         if (element.equals(TAG_PARAGRAPH)) {
             paragraphs.add(currentParagraph);
             this.onParagraphRead();
-        }
-        else if (element.equalsIgnoreCase(TAG_SENTENCE)) {
+        } else if (element.equalsIgnoreCase(TAG_SENTENCE)) {
             for (Annotation chunk : annotations.values()){
             	chunk.assignHead();
                 currentSentence.addChunk(chunk);
@@ -168,13 +162,11 @@ public class CclSaxParser extends DefaultHandler {
                 if(foundSentenceId){
                     System.out.println("Warning: missing sentence id in " + uri + ":" + currentParagraph.getId() + ":" + currentSentence.getId());
                 }
-            }
-            else{
+            } else{
                 foundSentenceId = true;
             }
             currentParagraph.addSentence(currentSentence);
-        }
-        else if (element.equalsIgnoreCase(TAG_TOKEN)) {
+        } else if (element.equalsIgnoreCase(TAG_TOKEN)) {
             ArrayList<Tag> tags = currentToken.getTags();
             foundDisamb = false;
             for (Tag tag : tags) {
@@ -189,7 +181,6 @@ public class CclSaxParser extends DefaultHandler {
                 currentToken.setAttributeValue(attributeIndex.getIndex("base"), tags.get(0).getBase());
                 currentToken.setAttributeValue(attributeIndex.getIndex("ctag"), tags.get(0).getCtag());
             }
-            currentSentence.addToken(currentToken);
             idx++;
             for (String propertyKey: tmpProps.keySet()){
                 // todo: assert parts.length==2
@@ -197,30 +188,23 @@ public class CclSaxParser extends DefaultHandler {
                 String channel = parts[0];
                 if(annotationsPerToken.keySet().contains(channel)){
                     annotationsPerToken.get(channel).setMetadata(parts[1], tmpProps.get(propertyKey));
-                }
-                else{
+                } else{
                     String sentId = currentSentence.getId();
                     if(sentId == null){
                         sentId = "unknown_sentence_id";
                     }
-                    //System.out.println("Token attribute " + propertyKey + " = " + tmpProps.get(propertyKey));
                     currentToken.setProp(propertyKey, tmpProps.get(propertyKey));
                 }
             }
-        }
-        else if(element.equalsIgnoreCase(TAG_ORTH)){
+        } else if(element.equalsIgnoreCase(TAG_ORTH)){
             currentToken.setAttributeValue(attributeIndex.getIndex("orth"), tmpValue);
-        }
-        else if(element.equalsIgnoreCase(TAG_TAG)){
+        } else if(element.equalsIgnoreCase(TAG_TAG)){
             currentToken.addTag(new Tag(tmpBase,tmpCtag,tmpDisamb));
-        }
-        else if(element.equalsIgnoreCase(TAG_BASE)){
+        } else if(element.equalsIgnoreCase(TAG_BASE)){
             tmpBase = tmpValue;
-        }
-        else if(element.equalsIgnoreCase(TAG_CTAG)){
+        } else if(element.equalsIgnoreCase(TAG_CTAG)){
             tmpCtag = tmpValue;
-        }
-        else if(element.equalsIgnoreCase(TAG_ANN)){
+        } else if(element.equalsIgnoreCase(TAG_ANN)){
             String chanNumber = tmpValue.trim();
             Annotation annotation = null;
             if (!chanNumber.equals("0")){
@@ -228,30 +212,32 @@ public class CclSaxParser extends DefaultHandler {
                 if (annotations.containsKey(ann.toString())){
                     annotation = annotations.get(ann.toString());
                     annotation.addToken(idx);
-                }
-                else {
+                } else {
                     annotation = new Annotation(idx, ann.chan, Integer.parseInt(chanNumber), currentSentence);
                     annotations.put(ann.toString(), annotation);
                 }
-                if(ann.head.equals("1"))
+                if("1".equals(ann.head)){
                     annotations.get(ann.toString()).setHead(idx);
+                }
                 annotationsPerToken.put(chanName, annotation);
             }
 
-        }
-        else if (element.equalsIgnoreCase(TAG_PROP)){
+        } else if (element.equalsIgnoreCase(TAG_PROP)){
             tmpProps.put(propKey, tmpValue);
         }
     }
     @Override
     public void characters(char[] ac, int start, int length) throws SAXException {
-        for(int i=start;i<start+length;i++)
+        for(int i=start;i<start+length;i++){
             tmpValue += ac[i];
+        }
     }
 
 
     public Document getDocument(){
-        if (!foundSentenceId) ConsolePrinter.log("Generated sentence ids for document:" + uri);
+        if (!foundSentenceId) {
+        	ConsolePrinter.log("Generated sentence ids for document:" + uri);
+        }
         return this.document;
     }
     

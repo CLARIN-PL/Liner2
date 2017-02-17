@@ -59,7 +59,6 @@ public class Annotation {
 		this.type = type;
 		this.sentence = sentence;
 		this.assignHead();
-		this.lemma = this.getText();
 	}
 
 	public Annotation(int tokenIndex, String type, Sentence sentence){
@@ -67,7 +66,6 @@ public class Annotation {
 		this.type = type;
 		this.sentence = sentence;
 		this.head = tokenIndex;
-		this.lemma = this.getText();
 	}
 
 	public Annotation(int begin, String type, int channelIdx, Sentence sentence){
@@ -75,7 +73,6 @@ public class Annotation {
 		this.type = type;
 		this.sentence = sentence;
 		this.channelIdx = channelIdx;
-		this.lemma = this.getText();
 	}
 
 	public Annotation(TreeSet<Integer> tokens, String type, Sentence sentence){
@@ -83,7 +80,6 @@ public class Annotation {
 		this.type = type;
 		this.sentence = sentence;
 		this.assignHead();
-		this.lemma = this.getText();
 	}
 
 	public void setChannelIdx(int idx){
@@ -112,11 +108,15 @@ public class Annotation {
 	
 	/**
 	 * Get the value of annotation lemma.
-	 * @param lemma
 	 * @return
 	 */
-	public String getLemma(String lemma){
-		return this.lemma;
+	public String getLemma(){
+		if ( this.lemma == null ){
+			return this.getText();
+		}
+		else{
+			return this.lemma;
+		}
 	}
 	
 	/**
@@ -314,6 +314,9 @@ public class Annotation {
 	 */
 	public String getText(boolean markHead){
 		List<Token> tokens = this.sentence.getTokens();
+		if ( tokens == null ){
+			return "NO_TOKEN_IN_SENTENCE";
+		}
 		StringBuilder text = new StringBuilder();
 		for (int i : this.tokens) {
 			Token token = tokens.get(i);
