@@ -10,9 +10,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,6 +31,7 @@ public class BSNLPStreamWriter extends AbstractDocumentWriter {
 	private BufferedWriter ow = null;
 	/** Current token index inside document */
 	private int sentenceIndexOffset = 0;
+	private Set<String> linesWritten = null;
 
 	public BSNLPStreamWriter(OutputStream os) {
 		this.ow = new BufferedWriter(new OutputStreamWriter(os));
@@ -50,6 +49,7 @@ public class BSNLPStreamWriter extends AbstractDocumentWriter {
 
 	@Override
 	public void writeDocument(Document document){
+		this.linesWritten = new HashSet();
 		// look for document ID
 		String documentID = "0";
 		Matcher matcher = Pattern.compile("\\d+").matcher(document.getName());
@@ -93,7 +93,13 @@ public class BSNLPStreamWriter extends AbstractDocumentWriter {
 		joiner.add(an.getLemma());
 		joiner.add(type);
 		joiner.add("#" + an.getLemma() + "#" + type + "#");
-		this.ow.write(joiner.toString() + "\n");
+		String newLine = joiner.toString() + "\n";
+
+		if (!this.linesWritten.contains(newLine.toLowerCase())){
+			this.linesWritten.add(newLine.toLowerCase());
+			this.ow.write(newLine);
+		}
+
 	}
 
 	@Override
