@@ -37,7 +37,6 @@ public abstract class Action {
 	 * In other case return false. The getErrorMessage() can be used to obtain the 
 	 * error message;
 	 * @param args
-	 * @return
 	 */
 	public abstract void parseOptions(String[] args) throws Exception;
 	

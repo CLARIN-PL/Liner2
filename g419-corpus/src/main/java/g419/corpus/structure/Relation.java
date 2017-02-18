@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Klasa reprezentuje relację pomiędzy dwoma anotacjami 
- * @author Adam Kaczmarek<adamjankaczmarek@gmail.com>
+ * @author Adam Kaczmarek
  *
  */
 public class Relation {

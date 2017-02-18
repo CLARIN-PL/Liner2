@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 /**
  * Porównywarka relacji, służąca do sortowania relacji w zbiorach relacji przypisanych do tej samej anotacji (vide RelationSet)
- * @author Adam Kaczmarek<adamjankaczmarek@gmail.com>
+ * @author Adam Kaczmarek
  *
  */
 public class RelationAtSameAnnotationComparator implements Comparator<Relation> {

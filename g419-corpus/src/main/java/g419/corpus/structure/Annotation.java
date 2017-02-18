@@ -138,7 +138,6 @@ public class Annotation {
 	/**
 	 * Przypisuje głowę do anotacji na podst. równoległej anotacji, lub jako pierwszy token.
 	 * Do użytku z anotacjami "anafora_wyznacznik" na potrzeby piśnika TEI
-	 * @return
 	 */
 	public void assignHead(boolean force){
 		if( !force && hasHead() ){

@@ -33,7 +33,6 @@ public abstract class Filter {
 	/**
 	 * Pass chunk through set of filters.
 	 * @param chunk
-	 * @param sentence
 	 * @param filters
 	 * @return
 	 */

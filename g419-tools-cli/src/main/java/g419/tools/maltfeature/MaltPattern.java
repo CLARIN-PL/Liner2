@@ -143,7 +143,6 @@ public class MaltPattern {
      * 
      * @param sentence
      * @param tokenIdx
-     * @param node
      * @return
      */
     public List<DependencyPath> match(MaltSentence sentence, int tokenIdx){

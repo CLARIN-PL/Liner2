@@ -28,7 +28,6 @@ public class TrieDictFinder {
 	 * 
 	 * Sprawdzane są wartości basów.
 	 * 
-	 * @param tokens
 	 * @param index
 	 * @return
 	 */

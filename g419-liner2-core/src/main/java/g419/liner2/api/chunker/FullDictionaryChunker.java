@@ -114,7 +114,7 @@ public class FullDictionaryChunker extends Chunker
 	
     /**
      * Wczytuje chunker z modelu binarnego.
-     * @param model_filename
+     * @param filename
      */
 	@Override
 	@SuppressWarnings("unchecked")

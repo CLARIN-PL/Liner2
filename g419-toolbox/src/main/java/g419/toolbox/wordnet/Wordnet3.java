@@ -271,7 +271,6 @@ public class Wordnet3 {
 	 * b) holonim każdego hiperonimu synsetu,
 	 * c) 
 	 * @param synset
-	 * @param meronyms
 	 */
 	public void getHolonyms(PrincetonDataRaw synset, Set<PrincetonDataRaw> holonyms, boolean takeHypernyms, boolean takeHyponyms){
 		Set<PrincetonDataRaw> directHypernyms = this.getDirectHypernyms(synset);

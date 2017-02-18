@@ -9,7 +9,7 @@ public class MaltSentenceLink{
 	/**
 	 * Reprezentuje relację
 	 * <code>
-	 * sourceIndex --(relationType)--> targetIndex
+	 * sourceIndex --(relationType)--&gt; targetIndex
 	 * </code> 
 	 * @param sourceIndex
 	 * @param targetIndex

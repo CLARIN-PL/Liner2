@@ -14,7 +14,7 @@ import java.util.List;
  * - Para anotacji
  * - Para anotacja - klaster
  * - 
- * @author Adam Kaczmarek<adamjankaczmarek@gmail.com>
+ * @author Adam Kaczmarek
  *
  */
 public abstract class AbstractCreteInstance<LabelType> {

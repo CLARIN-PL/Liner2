@@ -21,7 +21,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * 
- * @author Adam Kaczmarek<adamjankaczmarek@gmail.com>
+ * @author Adam Kaczmarek
  *
  */
 public class CclRelationSaxParser extends DefaultHandler {

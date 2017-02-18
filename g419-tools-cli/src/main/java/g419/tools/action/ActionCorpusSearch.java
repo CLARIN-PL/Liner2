@@ -33,7 +33,7 @@ public class ActionCorpusSearch extends Action {
 	
 	/**
 	 * Parse action options
-	 * @param arg0 The array with command line parameters
+	 * @param args The array with command line parameters
 	 */
 	@Override
 	public void parseOptions(String[] args) throws Exception {

@@ -14,7 +14,7 @@ import java.util.TreeSet;
  * 
  * Opakowuje anotacje dla pojedynczej encji
  * 
- * @author Adam Kaczmarek<adamjankaczmarek@gmail.com>
+ * @author Adam Kaczmarek
  *
  */
 public class AnnotationCluster {
@@ -132,7 +132,7 @@ public class AnnotationCluster {
 	
 	/**
 	 * Interfejs strategii przypisywania głowy dla klastra
-	 * @author Adam Kaczmarek<adamjankaczmarek@gmail.com>
+	 * @author Adam Kaczmarek
 	 *
 	 */
 	public static interface ReheadingStrategy{
@@ -166,7 +166,7 @@ public class AnnotationCluster {
 	
 	/**
 	 * Interfejs strategii zwracania relacji w klastrze
-	 * @author Adam Kaczmarek<adamjankaczmarek@gmail.com>
+	 * @author Adam Kaczmarek
 	 *
 	 */
 	public static interface ReturningStrategy{
@@ -176,7 +176,7 @@ public class AnnotationCluster {
 	/**
 	 * Strategia zwracania relacji "do głowy"
 	 * Dla każdej anotacji w klastrze tworzona jest relacja z tej anotacji do głowy klastra
-	 * @author Adam Kaczmarek<adamjankaczmarek@gmail.com>
+	 * @author Adam Kaczmarek
 	 *
 	 */
 	public static class ReturnRelationsToHead implements ReturningStrategy{

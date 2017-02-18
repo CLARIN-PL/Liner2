@@ -164,7 +164,6 @@ public class JsonStreamWriter extends AbstractDocumentWriter {
 
 	/**
 	 * 
-	 * @param document
 	 * @param tokenIds
 	 * @return
 	 */

@@ -148,7 +148,6 @@ public class CoverAnnotationDocumentRefiner {
     /**
      * Definiuje mapowanie pomiędzy selektorem dla nierelacyjnych anotacji, które
      * mają być zastąpione przez relacyjne anotacje innego typu
-     * @TODO: ładowanie z pliku konfiguracji
      * @return
      */
     public HashMap<AbstractAnnotationSelector, String> nonRelationalMapping(){

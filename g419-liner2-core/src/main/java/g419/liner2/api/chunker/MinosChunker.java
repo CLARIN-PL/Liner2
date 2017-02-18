@@ -183,7 +183,7 @@ public class MinosChunker extends Chunker {
 	
 	/**
 	 * Wrapper enum for Gender
-	 * @author Adam Kaczmarek<adamjankaczmarek@gmail.com>
+	 * @author Adam Kaczmarek
 	 *
 	 */
 	public enum Gender{

@@ -103,7 +103,6 @@ public class ActionSelector {
 
     /**
      * Register a new action. The action must have unique name.
-     * @param tool -- object used to run the tool.
      */
     public void add(Action action){
         this.actions.put(action.getName(), action);
