@@ -112,7 +112,10 @@ public class Annotation {
 	 */
 	public String getLemma(){
 		if ( this.lemma == null ){
-			return this.getText();
+			if (this.metadata.containsKey("lemma"))
+				return this.metadata.get("lemma");
+			else
+				return this.getText();
 		}
 		else{
 			return this.lemma;

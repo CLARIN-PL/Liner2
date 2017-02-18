@@ -56,6 +56,8 @@ public class ChunkerEvaluator {
 	
 	/* Określa, czy mają być wypisywane wyłącznie zdania z błędami (FP i/lub FN). */
 	private boolean errorsOnly = false;
+
+	private boolean checkLemma = false;
 	
 	private List<Pattern> patterns = new ArrayList<Pattern>();
 	
@@ -82,6 +84,9 @@ public class ChunkerEvaluator {
         this.errorsOnly = errorsOnly;
     }
 
+	public void setCheckLemma(boolean checkLemma){
+		this.checkLemma = checkLemma;
+	}
 	/**
 	 * Ocenia nerowanie całego dokumentu.
 	 */
@@ -132,7 +137,8 @@ public class ChunkerEvaluator {
 		// usuń z danych wszystkie poprawne chunki
 		for (Annotation trueChunk : trueChunkSetIter)
 			for (Annotation testedChunk : testedChunkSetIter)
-				if (trueChunk.equals(testedChunk)) {
+				if (trueChunk.equals(testedChunk) &&
+						(!checkLemma || trueChunk.getLemma().equals(testedChunk.getLemma()))   ) {
 					// wpisz klucz do tablicy, jeśli jeszcze nie ma
 					if (!this.chunksTruePositives.containsKey(testedChunk.getType())) {
 						this.chunksTruePositives.put(testedChunk.getType(), new ArrayList<Annotation>());
@@ -158,7 +164,8 @@ public class ChunkerEvaluator {
 			this.chunksFalsePositives.get(testedChunk.getType()).add(testedChunk);
             Boolean  truePositiveSkippedChannelCheck = false;
             for(Annotation trueChunk : trueChunkSet)
-                if(testedChunk.getTokens().equals(trueChunk.getTokens()) && testedChunk.getSentence().equals(trueChunk.getSentence()))   {
+                if(testedChunk.getTokens().equals(trueChunk.getTokens()) && testedChunk.getSentence().equals(trueChunk.getSentence()) &&
+						(!checkLemma || trueChunk.getLemma().equals(testedChunk.getLemma())))   {
                     this.globalTruePositivesRangeOnly += 1;
                     truePositiveSkippedChannelCheck = true;
                     break;
@@ -179,7 +186,8 @@ public class ChunkerEvaluator {
 
             Boolean  truePositiveSkippedChannelCheck = false;
             for(Annotation testedChunk : testedChunkSet)
-                if(testedChunk.getTokens().equals(trueChunk.getTokens()) && testedChunk.getSentence().equals(trueChunk.getSentence()))   {
+                if(testedChunk.getTokens().equals(trueChunk.getTokens()) && testedChunk.getSentence().equals(trueChunk.getSentence()) &&
+						(!checkLemma || trueChunk.getLemma().equals(testedChunk.getLemma())))   {
                     truePositiveSkippedChannelCheck = true;
                     break;
                 }
@@ -491,7 +499,10 @@ public class ChunkerEvaluator {
 			String errorType = "incorrect boundry";
 			Annotation correctCategory = fnIndex.get(chunk.getBegin(), chunk.getEnd());
 			if ( correctCategory != null ){
-				errorType = String.format("incorrect category: %s => %s", chunk.getType(), correctCategory.getType());
+				if (!chunk.getType().equals(correctCategory.getType()))
+					errorType = String.format("incorrect category: %s => %s", chunk.getType(), correctCategory.getType());
+				else if (!chunk.getLemma().equals(correctCategory.getLemma()))
+					errorType = String.format("incorrect lemma: %s => %s", chunk.getLemma(), correctCategory.getLemma());
 			}
 			ConsolePrinter.log(String.format("  FalsePositive %s [%d,%d] = %s (confidence=%.2f) (%s)", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk), chunk.getConfidence(), errorType));
