@@ -7,6 +7,7 @@ import g419.corpus.structure.Sentence;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -30,7 +31,6 @@ import java.util.regex.Pattern;
 public class BSNLPStreamWriter extends AbstractDocumentWriter {
 	private BufferedWriter ow = null;
 	/** Current token index inside document */
-	private int sentenceIndexOffset = 0;
 	private Set<String> linesWritten = null;
 
 	public BSNLPStreamWriter(OutputStream os) {
@@ -49,10 +49,10 @@ public class BSNLPStreamWriter extends AbstractDocumentWriter {
 
 	@Override
 	public void writeDocument(Document document){
-		this.linesWritten = new HashSet();
+		this.linesWritten = new HashSet<String>();
 		// look for document ID
 		String documentID = "0";
-		Matcher matcher = Pattern.compile("\\d+").matcher(document.getName());
+		Matcher matcher = Pattern.compile("\\d+").matcher((new File(document.getName())).getName());
 		if (matcher.find())
 			documentID = matcher.group();
 		try {
@@ -60,7 +60,6 @@ public class BSNLPStreamWriter extends AbstractDocumentWriter {
 		} catch (IOException ex) {
 			Logger.getLogger(this.getClass()).error("There was an error while writing document ID", ex);
 		}
-        this.sentenceIndexOffset = 0;
 		for (Paragraph paragraph : document.getParagraphs()){
 			for (Sentence sentence : paragraph.getSentences()){
 				Annotation[] chunks = Annotation.sortChunks(sentence.getChunks());
@@ -71,7 +70,6 @@ public class BSNLPStreamWriter extends AbstractDocumentWriter {
 						Logger.getLogger(this.getClass()).error("There was an error while writing an annotation", ex);
 					}
 				}			
-				this.sentenceIndexOffset += sentence.getTokenNumber();			
 			}
 		}
 		try {
