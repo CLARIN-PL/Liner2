@@ -84,7 +84,6 @@ public class Sumo {
     
     /**
      * Zwraca zbiór wszystkich (bezpośrednich i pośrednich) klas nadrzędnych dla wskazanej klasy.
-     * @param concept
      * @return
      */
     public Set<String> getSuperclasses(String currentClass){

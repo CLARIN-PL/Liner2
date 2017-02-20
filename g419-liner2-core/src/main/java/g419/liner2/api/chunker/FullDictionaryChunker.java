@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
@@ -104,8 +104,8 @@ public class FullDictionaryChunker extends Chunker
 				}
 				line = dictReader.readLine();
 			}
-			Logger.log("Full dictionary chunker compiled.", true);
-			Logger.log("Added: " + added, true);
+			ConsolePrinter.log("Full dictionary chunker compiled.", true);
+			ConsolePrinter.log("Added: " + added, true);
 			dictReader.close();
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -114,7 +114,7 @@ public class FullDictionaryChunker extends Chunker
 	
     /**
      * Wczytuje chunker z modelu binarnego.
-     * @param model_filename
+     * @param filename
      */
 	@Override
 	@SuppressWarnings("unchecked")

@@ -1,7 +1,7 @@
 package g419.liner2.api.tools;
 
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.corpus.structure.*;
 
 import java.util.ArrayList;
@@ -9,7 +9,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -37,10 +40,6 @@ public class ChunkerEvaluator {
     private int globalTruePositivesRangeOnly = 0;
     private int globalFalsePositivesRangeOnly = 0;
     private int globalFalseNegativesRangeOnly = 0;
-
-    private float globalPrecisionRangeOnly = 0.0f;
-    private float globalRecallRangeOnly = 0.0f;
-    private float globalFMeasureRangeOnly = 0.0f;
     // >>>
 
     //<<< grupowanie anotacji o granicach wystepujacych juz w korpusie
@@ -57,9 +56,12 @@ public class ChunkerEvaluator {
 	
 	/* Określa, czy mają być wypisywane wyłącznie zdania z błędami (FP i/lub FN). */
 	private boolean errorsOnly = false;
+
+	private boolean checkLemma = false;
 	
 	private List<Pattern> patterns = new ArrayList<Pattern>();
-    private HashSet<String> types = new HashSet<String>();
+	
+    private Set<String> types = new HashSet<String>();
 	
 	public ChunkerEvaluator(List<Pattern> types) {
 		this.patterns = types;
@@ -82,6 +84,9 @@ public class ChunkerEvaluator {
         this.errorsOnly = errorsOnly;
     }
 
+	public void setCheckLemma(boolean checkLemma){
+		this.checkLemma = checkLemma;
+	}
 	/**
 	 * Ocenia nerowanie całego dokumentu.
 	 */
@@ -98,13 +103,13 @@ public class ChunkerEvaluator {
 	public void evaluate(Sentence sentence, AnnotationSet chunking, AnnotationSet chunkingRef) {
 
 		// tylko na potrzeby wyświetlania szczegółów
-		HashSet<Annotation> myTruePositives = new HashSet<Annotation>();
+		Set<Annotation> myTruePositives = new HashSet<Annotation>();
         this.sentenceNum++;
 		// Wybierz anotacje do oceny jeżeli został określony ich typ
-		HashSet<Annotation> chunkingRefSet = new HashSet<Annotation>();
-		HashSet<Annotation> chunkingSet = new HashSet<Annotation>();
+		Set<Annotation> chunkingRefSet = new HashSet<Annotation>();
+		Set<Annotation> chunkingSet = new HashSet<Annotation>();
 
-        HashSet<String> newTypes = chunkingRef.getAnnotationTypes();
+        Set<String> newTypes = chunkingRef.getAnnotationTypes();
         newTypes.addAll(chunking.getAnnotationTypes());
         newTypes.removeAll(this.types);
         updateTypes(newTypes);
@@ -132,7 +137,8 @@ public class ChunkerEvaluator {
 		// usuń z danych wszystkie poprawne chunki
 		for (Annotation trueChunk : trueChunkSetIter)
 			for (Annotation testedChunk : testedChunkSetIter)
-				if (trueChunk.equals(testedChunk)) {
+				if (trueChunk.equals(testedChunk) &&
+						(!checkLemma || trueChunk.getLemma().equals(testedChunk.getLemma()))   ) {
 					// wpisz klucz do tablicy, jeśli jeszcze nie ma
 					if (!this.chunksTruePositives.containsKey(testedChunk.getType())) {
 						this.chunksTruePositives.put(testedChunk.getType(), new ArrayList<Annotation>());
@@ -158,7 +164,8 @@ public class ChunkerEvaluator {
 			this.chunksFalsePositives.get(testedChunk.getType()).add(testedChunk);
             Boolean  truePositiveSkippedChannelCheck = false;
             for(Annotation trueChunk : trueChunkSet)
-                if(testedChunk.getTokens().equals(trueChunk.getTokens()) && testedChunk.getSentence().equals(trueChunk.getSentence()))   {
+                if(testedChunk.getTokens().equals(trueChunk.getTokens()) && testedChunk.getSentence().equals(trueChunk.getSentence()) &&
+						(!checkLemma || trueChunk.getLemma().equals(testedChunk.getLemma())))   {
                     this.globalTruePositivesRangeOnly += 1;
                     truePositiveSkippedChannelCheck = true;
                     break;
@@ -179,7 +186,8 @@ public class ChunkerEvaluator {
 
             Boolean  truePositiveSkippedChannelCheck = false;
             for(Annotation testedChunk : testedChunkSet)
-                if(testedChunk.getTokens().equals(trueChunk.getTokens()) && testedChunk.getSentence().equals(trueChunk.getSentence()))   {
+                if(testedChunk.getTokens().equals(trueChunk.getTokens()) && testedChunk.getSentence().equals(trueChunk.getSentence()) &&
+						(!checkLemma || trueChunk.getLemma().equals(testedChunk.getLemma())))   {
                     truePositiveSkippedChannelCheck = true;
                     break;
                 }
@@ -213,7 +221,7 @@ public class ChunkerEvaluator {
 	 * 
 	 * @param newTypes
 	 */
-    private void updateTypes(HashSet<String> newTypes){
+    private void updateTypes(Set<String> newTypes){
         for(String newType: newTypes){
             if(!this.types.contains(newType)){
                 if(this.patterns != null && !this.patterns.isEmpty()){
@@ -338,8 +346,9 @@ public class ChunkerEvaluator {
 	
 	public int getTruePositive(){
 		int tp = 0;
-		for ( String type : this.chunksTruePositives.keySet())
+		for ( String type : this.chunksTruePositives.keySet()){
 			tp += this.getTruePositive(type);
+		}
 		return tp;
 	}
 
@@ -349,8 +358,9 @@ public class ChunkerEvaluator {
 	
 	public int getFalsePositive(){
 		int fp = 0;
-		for ( String type : this.chunksFalsePositives.keySet())
+		for ( String type : this.chunksFalsePositives.keySet()){
 			fp += this.getFalsePositive(type);
+		}
 		return fp;
 	}
 
@@ -360,8 +370,9 @@ public class ChunkerEvaluator {
 	
 	public int getFalseNegative(){
 		int fn = 0;
-		for ( String type : this.chunksFalseNegatives.keySet())
+		for ( String type : this.chunksFalseNegatives.keySet()){
 			fn += this.getFalseNegatives(type);
+		}
 		return fn;
 	}
 
@@ -376,15 +387,15 @@ public class ChunkerEvaluator {
 	/**
 	 * Drukuje wynik w formacie:
 	 * 
-	 * Annotation        &   TP &   FP &   FN & Precision &   Recall &  F$_1$ \\
+	 * Annotation        &amp;   TP &amp;   FP &amp;   FN &amp; Precision &amp;   Recall &amp;  F$_1$ \\
 	 * \hline
-	 * ROAD_NAM          &  147 &    8 &   36 &   94.84\% &  80.33\% &  86.98\%
-	 * PERSON_LAST_NAM   &  306 &    9 &   57 &   97.14\% &  84.30\% &  90.27\%
-	 * PERSON_FIRST_NAM  &  319 &    3 &   29 &   99.07\% &  91.67\% &  95.22\%
-	 * COUNTRY_NAM       &  160 &   51 &   36 &   75.83\% &  81.63\% &  78.62\%
-	 * CITY_NAM          &  841 &   65 &   75 &   92.83\% &  91.81\% &  92.32\%
+	 * ROAD_NAM          &amp;  147 &amp;    8 &amp;   36 &amp;   94.84\% &amp;  80.33\% &amp;  86.98\%
+	 * PERSON_LAST_NAM   &amp;  306 &amp;    9 &amp;   57 &amp;   97.14\% &amp;  84.30\% &amp;  90.27\%
+	 * PERSON_FIRST_NAM  &amp;  319 &amp;    3 &amp;   29 &amp;   99.07\% &amp;  91.67\% &amp;  95.22\%
+	 * COUNTRY_NAM       &amp;  160 &amp;   51 &amp;   36 &amp;   75.83\% &amp;  81.63\% &amp;  78.62\%
+	 * CITY_NAM          &amp;  841 &amp;   65 &amp;   75 &amp;   92.83\% &amp;  91.81\% &amp;  92.32\%
 	 * \hline
-	 * *TOTAL*           & 1773 &  136 &  233 &   92.88\% &  88.38\% &  90.67\%
+	 * *TOTAL*           &amp; 1773 &amp;  136 &amp;  233 &amp;   92.88\% &amp;  88.38\% &amp;  90.67\%
 	 * 
 	 */
 	public void printResults(){
@@ -392,37 +403,37 @@ public class ChunkerEvaluator {
 		String line = "        %-30s & %7d & %7d & %7d &   %6.2f%% & %6.2f%% & %6.2f%% \\\\";
 		
 		this.printHeader("Exact match evaluation -- annotation span and types evaluation");
-		System.out.println(header);
-		System.out.println("\\hline");
+		ConsolePrinter.println(header);
+		ConsolePrinter.println("\\hline");
 		ArrayList<String> keys = new ArrayList<String>();
 		keys.addAll(this.types);
 		Collections.sort(keys);
 		for (String key : keys) {
-			System.out.println(
+			ConsolePrinter.println(
 				String.format(line, key, 
 				this.getTruePositive(key), this.getFalsePositive(key), this.getFalseNegatives(key), 
 				this.getPrecision(key)*100, this.getRecall(key)*100, this.getFMeasure(key)*100));
 		}
-		System.out.println("\\hline");
-		System.out.println(String.format(line, "*TOTAL*", 
+		ConsolePrinter.println("\\hline");
+		ConsolePrinter.println(String.format(line, "*TOTAL*", 
 			this.getTruePositive(), this.getFalsePositive(), this.getFalseNegative(),
 			this.getPrecision()*100, this.getRecall()*100, this.getFMeasure()*100));
-		System.out.println("\n");
+		ConsolePrinter.println("\n");
 
 		
 		this.printHeader("Annotation span evaluation (annotation types are ignored)");
-        System.out.println(header);
-        System.out.println("\\hline");
-		System.out.println(String.format(line, "*TOTAL*", 
+        ConsolePrinter.println(header);
+        ConsolePrinter.println("\\hline");
+		ConsolePrinter.println(String.format(line, "*TOTAL*", 
         		this.globalTruePositivesRangeOnly, this.globalFalsePositivesRangeOnly, this.globalFalseNegativesRangeOnly,
                 this.getSpanPrecision()*100, this.getSpanRecall()*100, this.getSpanFMeasure()*100));
-		System.out.println("\n");		
+		ConsolePrinter.println("\n");		
     }
 	
 	public void printHeader(String header){
-        System.out.println("======================================================================================");
-        System.out.println("# " + header);
-        System.out.println("======================================================================================");
+        ConsolePrinter.println("======================================================================================");
+        ConsolePrinter.println("# " + header);
+        ConsolePrinter.println("======================================================================================");
 	}
 	
 	/**
@@ -442,8 +453,9 @@ public class ChunkerEvaluator {
 			if (!target.containsKey(key)) {
 				target.put(key, new ArrayList<Annotation>());
 			}
-			for (Annotation chunk : source.get(key))
+			for (Annotation chunk : source.get(key)){
 				target.get(key).add(chunk);
+			}
 		}		
 	}
 	
@@ -455,62 +467,68 @@ public class ChunkerEvaluator {
      * @param falsePositives
      * @param falseNegatives
      */
-	private void printSentenceResults(Sentence sentence, String paragraphId, 
-		HashSet<Annotation> truePositives, HashSet<Annotation> falsePositives, 
-		HashSet<Annotation> falseNegatives) {
-		
+	private void printSentenceResults(Sentence sentence, String paragraphId, Set<Annotation> truePositives, Set<Annotation> falsePositives, Set<Annotation> falseNegatives) {
 		String sentenceHeader = "(ChunkerEvaluator) Sentence #" + this.sentenceNum + " from " + currentDocId;
-		if (paragraphId != null)
+		if (paragraphId != null){
 			sentenceHeader += " from " + paragraphId;
-		Logger.log(sentenceHeader);
-		Logger.log("");
+		}
+		ConsolePrinter.println(sentenceHeader + "\n");
 		StringBuilder tokenOrths = new StringBuilder();
 		StringBuilder tokenNums = new StringBuilder();
 		int idx = 0;
 		for (Token token : sentence.getTokens()) {
-			idx++;
 			String tokenOrth = token.getOrth();
-			String tokenNum = ""+idx;
-			while (tokenOrth.length() < tokenNum.length())
-				tokenOrth += " ";
-			while (tokenNum.length() < tokenOrth.length())
-				tokenNum += "_";
-			tokenOrths.append(tokenOrth + " ");
-			tokenNums.append(tokenNum + " ");
+			String tokenNum = "" + (++idx);
+			tokenOrth += StringUtils.repeat("_", Math.max(0, tokenNum.length() - tokenOrth.length()));
+			tokenNum += StringUtils.repeat("_", Math.max(0, tokenOrth.length() - tokenNum.length()));
+			tokenOrths.append( tokenOrth + " " );
+			tokenNums.append( tokenNum + " " );
 		}
-		Logger.log("Text  : " + tokenOrths.toString().trim());
-		Logger.log("Tokens: " + tokenNums.toString().trim());
-		Logger.log("");
-		Logger.log("Chunks:");
+		ConsolePrinter.log("Text  : " + tokenOrths.toString().trim());
+		ConsolePrinter.log("Tokens: " + tokenNums.toString().trim());
+		ConsolePrinter.log("");
+		ConsolePrinter.log("Chunks:");
+		
+		AnnotationIndex fnIndex = new AnnotationIndex(falseNegatives);
 
 		for (Annotation chunk : Annotation.sortChunks(truePositives)) {
-			Logger.log(String.format("  TruePositive %s [%d,%d] = %s (confidence=%.2f)", chunk.getType(), chunk.getBegin()+1,
+			ConsolePrinter.log(String.format("  TruePositive %s [%d,%d] = %s (confidence=%.2f)", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk), chunk.getConfidence()));
 		}
 		for (Annotation chunk : Annotation.sortChunks(falsePositives)) {
-			Logger.log(String.format("  FalsePositive %s [%d,%d] = %s (confidence=%.2f)", chunk.getType(), chunk.getBegin()+1,
-				chunk.getEnd()+1, printChunk(chunk), chunk.getConfidence()));
+			String errorType = "incorrect boundry";
+			Annotation correctCategory = fnIndex.get(chunk.getBegin(), chunk.getEnd());
+			if ( correctCategory != null ){
+				if (!chunk.getType().equals(correctCategory.getType()))
+					errorType = String.format("incorrect category: %s => %s", chunk.getType(), correctCategory.getType());
+				else if (!chunk.getLemma().equals(correctCategory.getLemma()))
+					errorType = String.format("incorrect lemma: %s => %s", chunk.getLemma(), correctCategory.getLemma());
+			}
+			ConsolePrinter.log(String.format("  FalsePositive %s [%d,%d] = %s (confidence=%.2f) (%s)", chunk.getType(), chunk.getBegin()+1,
+				chunk.getEnd()+1, printChunk(chunk), chunk.getConfidence(), errorType));
 		}
 		for (Annotation chunk : Annotation.sortChunks(falseNegatives)) {
-			Logger.log(String.format("  FalseNegative %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
+			ConsolePrinter.log(String.format("  FalseNegative %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk)));
 		}
 		
-		Logger.log("");
-		Logger.log("Features:", true);
+		ConsolePrinter.log("");
+		ConsolePrinter.log("Features:", true);
 		StringBuilder featuresHeader = new StringBuilder("       ");
-		for (int i = 0; i < sentence.getAttributeIndex().getLength(); i++)
+		for (int i = 0; i < sentence.getAttributeIndex().getLength(); i++){
 			featuresHeader.append(String.format("[%d]_%s ", i+1, sentence.getAttributeIndex().getName(i)));
-		Logger.log(featuresHeader.toString(), true);
+		}
+		ConsolePrinter.log(featuresHeader.toString(), true);
 		
 		idx = 0;
 		for (Token token : sentence.getTokens()) {
 			StringBuilder tokenFeatures = new StringBuilder(String.format("  %3d) ", ++idx));
-			for (int i = 0; i < token.getNumAttributes(); i++)
+			for (int i = 0; i < token.getNumAttributes(); i++){
 				tokenFeatures.append(String.format("[%d]_%s ", i+1, token.getAttributeValue(i)));
-			Logger.log(tokenFeatures.toString(), true);
+			}
+			ConsolePrinter.log(tokenFeatures.toString(), true);
 		}
-		Logger.log("", true);
+		ConsolePrinter.log("", true);
 	}
 	
 	/**

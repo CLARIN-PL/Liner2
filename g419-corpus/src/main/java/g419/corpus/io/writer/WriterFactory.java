@@ -11,6 +11,13 @@ import org.apache.commons.io.FilenameUtils;
 
 import g419.corpus.io.UnknownFormatException;
 
+/**
+ * 
+ * Factory for creating a writer from it's description.
+ * 
+ * @author Michał Marcińczuk
+ *
+ */
 public class WriterFactory {
 
 	private static final WriterFactory factory = new WriterFactory();
@@ -71,42 +78,46 @@ public class WriterFactory {
 			outWrapped = new GZIPOutputStream(out);
 			outputFormat = outputFormat.substring(0, outputFormat.length() - 3);
 		}
-        if (outputFormat.equals("ccl"))
-			return new CclStreamWriter(outWrapped);
-        if (outputFormat.equals("ccl-disamb"))
-			return new CclStreamWriter(outWrapped, true);
-        else if (outputFormat.equals("iob"))
-			return new IobStreamWriter(outWrapped);
-        else if (outputFormat.equals("conll"))
-			return new ConllStreamWriter(outWrapped);
-        else if (outputFormat.equals("zero_verb"))
-			return new ZeroVerbWriter(outWrapped);
-		else if (outputFormat.equals("iob-tab"))
-			return new IobTabStreamWriter(outWrapped);
-		else if (outputFormat.equals("tuples"))
-			return new TuplesStreamWriter(outWrapped);
-		else if (outputFormat.equals("json"))
-			return new JsonStreamWriter(outWrapped);
-		else if (outputFormat.equals("json-annotations"))
-			return new JsonAnnotationsStreamWriter(outWrapped);
-		else if (outputFormat.equals("json-frames"))
-			return new JsonFramesStreamWriter(outWrapped);
-		else if (outputFormat.equals("tokens"))
-			return new TokensStreamWriter(outWrapped);
-        else if (outputFormat.equals("arff"))
-            return new ArffStreamWriter(outWrapped);
-        else if (outputFormat.equals("verb_eval"))
-            return new MinosVerbEvalWriter(outWrapped);
-        else if (outputFormat.equals("simple_rel"))
-        	return new SimpleRelationClusterSetWriter(outWrapped);
-        else if (outputFormat.equals("tuples-relations"))
-        	return new RelationTuplesWriter(outWrapped);
-        else if (outputFormat.equals("conll"))
-        	return new ConllStreamWriter(outWrapped);
-        else if (outputFormat.equals("csv-relations"))
-        	return new CsvRelationsWriter(outWrapped);
-		else		
-			throw new UnknownFormatException("Output format " + outputFormat + " not recognized.");
+		switch (outputFormat){
+			case "ccl":
+				return new CclStreamWriter(outWrapped);
+			case "ccl-disamb":
+				return new CclStreamWriter(outWrapped, true);
+			case "iob":
+				return new IobStreamWriter(outWrapped);
+			case "conll":
+				return new ConllStreamWriter(outWrapped);
+			case "zero_verb":
+				return new ZeroVerbWriter(outWrapped);
+			case "iob-tab":
+				return new IobTabStreamWriter(outWrapped);
+			case "tuples":
+				return new TuplesStreamWriter(outWrapped);
+			case "json":
+				return new JsonStreamWriter(outWrapped);
+			case "json-annotations":
+				return new JsonAnnotationsStreamWriter(outWrapped);
+			case "json-frames":
+				return new JsonFramesStreamWriter(outWrapped);
+			case "tokens":
+				return new TokensStreamWriter(outWrapped);
+			case "arff":
+				return new ArffStreamWriter(outWrapped);
+			case "verb_eval":
+				return new MinosVerbEvalWriter(outWrapped);
+			case "simple_rel":
+				return new SimpleRelationClusterSetWriter(outWrapped);
+			case "tuples-relations":
+				return new RelationTuplesWriter(outWrapped);
+			case "csv-relations":
+				return new CsvRelationsWriter(outWrapped);
+			case "annotations-tsv":
+				return new AnnotationTsvStreamWriter(outWrapped);
+			case "bsnlp":
+				return new BSNLPStreamWriter(outWrapped);
+			default:
+				throw new UnknownFormatException("Output format " + outputFormat + " not recognized.");
+		}
 	}
 
 	/**
@@ -131,7 +142,6 @@ public class WriterFactory {
 		OutputStream out = this.getOutputStreamGz(outputFile, gz);		
 		String relFilename = FilenameUtils.getBaseName(outputFile) + ".rel." + FilenameUtils.getExtension(outputFile);
 		String relPath = new File(new File(outputFile).getParentFile(), relFilename).getPath();
-		System.out.println(relPath);
 		OutputStream outRel = this.getOutputStreamGz(relPath, gz);
 		return new CclStreamWriter(out, outRel, disambOnly);
 	}
@@ -190,9 +200,9 @@ public class WriterFactory {
 	 * @throws FileNotFoundException
 	 */
 	private OutputStream getOutputStreamFileOrOut(String outputFile) throws FileNotFoundException{
-		if ((outputFile == null) || (outputFile.isEmpty()))
+		if ((outputFile == null) || (outputFile.isEmpty())){
 			return System.out;
-		else {
+		} else {
 			return new FileOutputStream(outputFile);
 		}
 	}

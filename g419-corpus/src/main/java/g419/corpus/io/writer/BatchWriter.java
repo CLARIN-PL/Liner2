@@ -67,6 +67,9 @@ public class BatchWriter extends AbstractDocumentWriter {
         else if(outputFormatNoGz.equals("verb_eval")){
             extension = ".az";
         }
+        else if(outputFormatNoGz.equals("bsnlp")){
+            extension = ".txt";
+        }
         
         if ( !"tei".equals(outputFormatNoGz) && gz ){
         	this.gzExtension += ".gz";

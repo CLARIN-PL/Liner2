@@ -4,7 +4,7 @@ package g419.liner2.api.chunker.factory;
 import g419.lib.cli.ParameterException;
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.PropagateChunker;
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 
 import org.ini4j.Ini;
 
@@ -17,7 +17,7 @@ public class ChunkerFactoryItemPropagate extends ChunkerFactoryItem {
 	
 	@Override
 	public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
-        Logger.log("--> Chunk propagation");
+        ConsolePrinter.log("--> Chunk propagation");
 
         String baseChunkerName = description.get("base-chunker");
         Chunker baseChunker = cm.getChunkerByName(baseChunkerName);

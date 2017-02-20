@@ -9,7 +9,7 @@ import g419.liner2.api.features.tokens.Feature;
 import g419.liner2.api.features.tokens.TokenFeature;
 import g419.liner2.api.features.tokens.TokenFeatureFactory;
 import g419.liner2.api.features.tokens.TokenInSentenceFeature;
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -38,7 +38,7 @@ public class TokenFeatureGenerator {
 	 * @param features — array with feature definitions
 	 */
 	public TokenFeatureGenerator(LinkedHashMap<String, String> features){
-        Logger.log("(TokenFeatureGenerator) Loading features...");
+        ConsolePrinter.log("(TokenFeatureGenerator) Loading features...");
         this.featureNames = new ArrayList<String>(features.keySet());
 		for( String sf: sourceFeatures)
 			this.attributeIndex.addAttribute(sf);
@@ -60,7 +60,7 @@ public class TokenFeatureGenerator {
             ex.printStackTrace();
             System.out.println(">> " + ex.getMessage());
 		}
-        Logger.log(featureNames.toString());
+        ConsolePrinter.log(featureNames.toString());
 	}
 	
 	/**

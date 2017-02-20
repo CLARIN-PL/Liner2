@@ -5,7 +5,7 @@ import java.util.Comparator;
 
 /**
  * Porównywarka anotacji służąca do sortowania wg. pozycji w tekście
- * @author Adam Kaczmarek<adamjankaczmarek@gmail.com>
+ * @author Adam Kaczmarek
  *
  */
 public class AnnotationPositionComparator implements Comparator<Annotation>{

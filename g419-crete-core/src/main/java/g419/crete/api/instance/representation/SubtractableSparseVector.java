@@ -46,9 +46,9 @@ public class SubtractableSparseVector extends SparseVector{
 	/**
 	 * Subtract given vector from current vector
 	 * Operation is performed as follows - there can occur one of three cases for each value index:
-	 * 1. Both vectors have set value on index i --> resulting vector has value set to their difference
-	 * 2. Current vector only has set value on index i --> resulting vector has this value unchanged
-	 * 3. Current vector only has set value on index i --> resulting vector has this value with different sign
+	 * 1. Both vectors have set value on index i --&gt; resulting vector has value set to their difference
+	 * 2. Current vector only has set value on index i --&gt; resulting vector has this value unchanged
+	 * 3. Current vector only has set value on index i --&gt; resulting vector has this value with different sign
 	 * @param otherVector
 	 */
 	public void minus(SubtractableSparseVector otherVector){

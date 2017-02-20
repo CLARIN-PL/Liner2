@@ -164,7 +164,7 @@ public class AnnGroupsSAXParser extends DefaultHandler {
     			}
     		}
     		Annotation an = new Annotation(tokens, group.getType(), group.getSentence());
-    		an.setCategory("group");
+    		an.setGroup("group");
     		an.setHead(this.getHead(group.getGroupId()));
     		group.getSentence().addChunk(an);
     	}

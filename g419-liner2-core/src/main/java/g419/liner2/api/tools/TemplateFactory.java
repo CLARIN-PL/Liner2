@@ -1,7 +1,7 @@
 package g419.liner2.api.tools;
 
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.corpus.structure.CrfTemplate;
 import g419.corpus.structure.TokenAttributeIndex;
 
@@ -13,7 +13,7 @@ public class TemplateFactory {
 
     public static CrfTemplate parseTemplate(String templateFile) throws Exception{
 
-        Logger.log("(TemplateFactory) parsing template: " + templateFile);
+        ConsolePrinter.log("(TemplateFactory) parsing template: " + templateFile);
         CrfTemplate template = new CrfTemplate();
         BufferedReader br = new BufferedReader(new FileReader(templateFile));
         StringBuffer sb = new StringBuffer();
@@ -22,7 +22,7 @@ public class TemplateFactory {
             if(!feature.isEmpty() && !feature.startsWith("#")){
                 feature = feature.trim();
                 template.addFeature(feature);
-                Logger.log("(TemplateFactory) feature:" + feature);
+                ConsolePrinter.log("(TemplateFactory) feature:" + feature);
             }
             feature = br.readLine();
         }

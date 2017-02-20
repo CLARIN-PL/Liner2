@@ -204,4 +204,20 @@ public class Token {
 		return this.attrIdx;
 	}
 	
+	/**
+	 * Sprawdza, czy jakakolwiek interpretacja ma jako base wskazany lemat.
+	 *
+	 * @param base Szukany lemat
+	 * @param disambOnly Czy mają być sprawdzane same disamby.
+	 * @return true, if successful
+	 */
+	public boolean hasBase(String base, boolean disambOnly){
+		for ( Tag tag : this.tags ){
+			if ( tag.getBase().equals(base) && (disambOnly == false || tag.getDisamb() == true) ){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

@@ -1,6 +1,6 @@
 package g419.liner2.daemon;
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.lib.cli.ParameterException;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
@@ -56,12 +56,12 @@ public abstract class DaemonThread extends Thread{
     public void finishWorkingThread(WorkingThread callingThread){
         this.workingThreads.remove(callingThread);
         if (this.workingThreads.isEmpty())
-            Logger.log("Sleeping...", false);
+            ConsolePrinter.log("Sleeping...", false);
     }
 
     public void startWorkingThread(){
         if (this.workingThreads.isEmpty()) {
-            Logger.log("Woke up!", false);
+            ConsolePrinter.log("Woke up!", false);
         }
     }
 
@@ -73,6 +73,6 @@ public abstract class DaemonThread extends Thread{
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        Logger.log("Shutting down...", false);
+        ConsolePrinter.log("Shutting down...", false);
     }
 }

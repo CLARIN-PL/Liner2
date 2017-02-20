@@ -151,7 +151,7 @@ public class JsonStreamWriter extends AbstractDocumentWriter {
 			f.put(JsonStreamWriter.ATTR_ID, annotationIds.get(an));
 			f.put("text", an.getText());
 			f.put("type", an.getType());
-			f.put("category", an.getCategory());
+			f.put("category", an.getGroup());
 			Set<String> tokens = new HashSet<String>();
 			for ( Token token : an.getTokenTokens() ){
 				tokens.add(tokenIds.get(token));
@@ -164,7 +164,6 @@ public class JsonStreamWriter extends AbstractDocumentWriter {
 
 	/**
 	 * 
-	 * @param document
 	 * @param tokenIds
 	 * @return
 	 */

@@ -1,6 +1,6 @@
 package g419.liner2.daemon;
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
@@ -66,7 +66,7 @@ public class FileBasedWorkingThread extends WorkingThread {
             TokenFeatureGenerator gen = daemon.featureGenerators.get(model);
             Chunker chunker = daemon.chunkers.get(model);
 
-            Logger.log("Processing request with id: " + to_process.getName() + "with model: " + model, false);
+            ConsolePrinter.log("Processing request with id: " + to_process.getName() + "with model: " + model, false);
             // process text and calculate stats
             Document ps = reader.nextDocument();
             reader.close();
@@ -96,13 +96,13 @@ public class FileBasedWorkingThread extends WorkingThread {
                 e.printStackTrace(writer);
                 writer.close();
             } catch (IOException e1) {
-                Logger.log("Error while creating error log for: " + to_process.getName(), false);
+                ConsolePrinter.log("Error while creating error log for: " + to_process.getName(), false);
                 e1.printStackTrace();
             }
-            Logger.log("Error while processing request: " + to_process.getName(), false);
+            ConsolePrinter.log("Error while processing request: " + to_process.getName(), false);
             e.printStackTrace();
         }
-        Logger.log("Request processing completed: " + to_process.getName(), false);
+        ConsolePrinter.log("Request processing completed: " + to_process.getName(), false);
         to_process.delete();
     }
 }

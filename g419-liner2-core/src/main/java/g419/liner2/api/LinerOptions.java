@@ -86,7 +86,6 @@ public class LinerOptions {
     /**
      * Read configuration from an ini file.
      * @param iniPath
-     * @throws Exception 
      */
     public void parseModelIni(String iniPath){
         try {

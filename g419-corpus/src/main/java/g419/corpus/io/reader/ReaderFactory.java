@@ -205,5 +205,5 @@ public class ReaderFactory {
 				throw new Exception("Unable to read input file: " + inputFile + " (" + ex.getMessage() + ")");
 			}
 		}
-	}
+	}	
 }

@@ -5,7 +5,7 @@ import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.DictionaryChunker;
 import g419.liner2.api.chunker.SmartDictionaryChunker;
 import g419.liner2.api.tools.TrieDictNode;
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import org.ini4j.Ini;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class ChunkerFactoryItemSmartDictionaryCompile extends ChunkerFactoryItem
 
 	@Override
 	public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
-        Logger.log("--> Smart Dictionary Chunker load");
+        ConsolePrinter.log("--> Smart Dictionary Chunker load");
         String filename = description.get(PARAM_DICTIONARY);        
         
         return SmartDictionaryChunker.compile(filename);

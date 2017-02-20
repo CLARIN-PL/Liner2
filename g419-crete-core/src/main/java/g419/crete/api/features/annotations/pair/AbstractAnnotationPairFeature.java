@@ -11,8 +11,8 @@ import org.apache.commons.lang3.tuple.Pair;
  * @author akaczmarek
  *
  * @param <T>
- * @TODO: sprawdzić czy nie ma konfliktów spowodowanych przez type erasure dla Pair występującego w AbstractClusterMentionFeature
- * - w przypadku konfliktu rozważyć przejście z gołych obiektów (Annotation, Pair<Annotation, Cluster>)  na wrappery (Mention, Cluster, MentionPair, etc.)
+ * sprawdzić czy nie ma konfliktów spowodowanych przez type erasure dla Pair występującego w AbstractClusterMentionFeature
+ * - w przypadku konfliktu rozważyć przejście z gołych obiektów (Annotation, Pair&lt;Annotation, Cluster&gt;)  na wrappery (Mention, Cluster, MentionPair, etc.)
  */
 public abstract class AbstractAnnotationPairFeature<T> extends AbstractFeature<Pair<Annotation, Annotation>, T> {
 

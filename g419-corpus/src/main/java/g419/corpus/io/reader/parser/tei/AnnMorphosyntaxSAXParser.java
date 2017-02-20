@@ -1,6 +1,6 @@
 package g419.corpus.io.reader.parser.tei;
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.corpus.io.DataFormatException;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
@@ -73,7 +73,7 @@ public class AnnMorphosyntaxSAXParser extends DefaultHandler{
         try {
             SAXParser parser = factory.newSAXParser();
             parser.parse(is,this);
-            if (!foundSentenceId) Logger.log("Generated sentence ids for document:" + docName);
+            if (!foundSentenceId) ConsolePrinter.log("Generated sentence ids for document:" + docName);
         } catch (ParserConfigurationException e) {
             throw new DataFormatException("Parse error (ParserConfigurationException)");
         } catch (SAXException e) {

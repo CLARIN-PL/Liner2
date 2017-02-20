@@ -10,7 +10,7 @@ import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.features.TokenFeatureGenerator;
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -37,7 +37,7 @@ public class SQLWorkingThread extends WorkingThread {
 
 		try {
 			this.db.connect();
-			Logger.log("Searching for work...", true);
+			ConsolePrinter.log("Searching for work...", true);
 			request = db.getNextRequest(this.daemon.getDaemonId());
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -59,7 +59,7 @@ public class SQLWorkingThread extends WorkingThread {
 			}
 			
 			try {
-				Logger.log("Searching for work...", true);
+				ConsolePrinter.log("Searching for work...", true);
 				request = db.getNextRequest(this.daemon.getDaemonId());
 			} catch (SQLException ex) {
 				ex.printStackTrace();
@@ -81,7 +81,7 @@ public class SQLWorkingThread extends WorkingThread {
 	//}
 
 	private void processRequest(Request request) throws Exception {
-		Logger.log("Processing request with id: " + request.getId(), false);
+		ConsolePrinter.log("Processing request with id: " + request.getId(), false);
 
         String model = request.getModelName();
         if(model.equals("default")){
@@ -124,7 +124,7 @@ public class SQLWorkingThread extends WorkingThread {
 		request.setStats(numTokens, numSentences, numParagraphs, numChunks);
 		request.setText(ous.toString());
 
-		Logger.log("Request processing completed: " + request.getId(), false);
+		ConsolePrinter.log("Request processing completed: " + request.getId(), false);
 	}
 }
 

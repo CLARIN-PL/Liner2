@@ -38,7 +38,6 @@ public class ChunkerManager {
 
     /**
      * Creates a hash of chunkers according to the description
-     * @return
      * @throws Exception
      */
     public void loadChunkers() throws Exception {

@@ -11,7 +11,7 @@ import java.util.Set;
 
 /**
  * Zbiór klastrów anotacji będących w relacji przechodniej.
- * @author Adam Kaczmarek<adamjankaczmarek@gmail.com>
+ * @author Adam Kaczmarek
  *
  * Opisuje relacje na poziomie dokumentu
  */
@@ -137,7 +137,6 @@ public class AnnotationClusterSet {
 	 *  relation are added to resulting set of clusters as singleton clusters
 	 *  consisting of only one annotation
 	 * @param relations Set of considered relations
-	 * @param singletons Set of annotations to be placed into clusters
 	 * @return Set of relational clusters for all given annotations based on passed relations
 	 */
 	public static AnnotationClusterSet fromRelationSetWithSingletons(Document document, String type, String set, RelationSet relations, List<Annotation> singletonAnnotations){

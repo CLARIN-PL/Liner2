@@ -93,7 +93,7 @@ public class JsonFramesStreamWriter extends AbstractDocumentWriter {
 			f.put("id", annotationIds.get(an));
 			f.put("text", an.getText());
 			f.put("type", an.getType());
-			f.put("category", an.getCategory());
+			f.put("category", an.getGroup());
 			Set<String> tokens = new HashSet<String>();
 			for ( Token token : an.getTokenTokens() ){
 				tokens.add(tokenIds.get(token));

@@ -10,7 +10,7 @@ import java.util.TreeSet;
  * - zbioru relacji
  * - relacji indeksowanych anotacją źródłową
  * - relacji indeksowanych anotacją docelową
- * @author Adam Kaczmarek<adamjankaczmarek@gmail.com>
+ * @author Adam Kaczmarek
  *
  */
 public class RelationSet {

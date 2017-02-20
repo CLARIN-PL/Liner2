@@ -15,12 +15,12 @@ import g419.liner2.api.chunker.RuleTitleChunker;
  * 
  * Przykład konfiguracji w pliku ini:
  * 
- * <sample>
+ * <code>
  * [chunker_rule_title]
  * type	   = rule-title
  * annotation = nam
  * prefixes   = {INI_PATH}/data/keywords2/quoted_title_prefix.txt
- * </sample>
+ * </code>
  * 
  * @author Michał Marcińczuk
  */

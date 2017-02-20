@@ -1,7 +1,7 @@
 package g419.liner2.daemon;
 
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.lib.cli.ParameterException;
 
 import java.io.BufferedReader;
@@ -56,8 +56,8 @@ public class SQLDaemonThread extends DaemonThread {
         super.run();
     	// register daemon
 		this.myAddr = this.ip + ":" + this.port;
-		Logger.log("My address: " + this.myAddr, true);
-		Logger.log("Registering daemon...", false);
+		ConsolePrinter.log("My address: " + this.myAddr, true);
+		ConsolePrinter.log("Registering daemon...", false);
 		try {
 			this.db.connect();
 			this.myId = this.db.registerDaemon(this.myAddr);
@@ -67,10 +67,10 @@ public class SQLDaemonThread extends DaemonThread {
 		} catch (ClassNotFoundException ex) {
 			ex.printStackTrace();
 		}
-		Logger.log("Registered with id: " + this.myId, false);
+		ConsolePrinter.log("Registered with id: " + this.myId, false);
     	
 		// start listening for notifications
-		Logger.log("Listening on port: " + port, false);
+		ConsolePrinter.log("Listening on port: " + port, false);
 		try {
 			this.serverSocket = new ServerSocket(this.port);
 		} catch (IOException ex) {
@@ -90,17 +90,17 @@ public class SQLDaemonThread extends DaemonThread {
 				String line = reader.readLine();
 				if (line != null) {
 					if (line.equals("PING")) {
-						Logger.log("Received PING!", true);
+						ConsolePrinter.log("Received PING!", true);
 					}
 					else if (line.equals("NOTIFY")) {
-						Logger.log("Received NOTIFY!", true);
+						ConsolePrinter.log("Received NOTIFY!", true);
 						
 						// start work in a new thread
 						if (this.workingThreads.size() < this.maxThreads)
 							startWorkingThread();
 					}
 					else {
-						Logger.log("Received something weird: " + line, true);
+						ConsolePrinter.log("Received something weird: " + line, true);
 					}
 					// respond to connection
 					writer.write("OK");
@@ -155,7 +155,7 @@ public class SQLDaemonThread extends DaemonThread {
 
 		// close server socket
 		if (this.serverSocket != null) {
-			Logger.log("Closing socket...", false);
+			ConsolePrinter.log("Closing socket...", false);
 			try {
 				this.serverSocket.close();
 			} catch (Exception ex) {
@@ -176,6 +176,6 @@ public class SQLDaemonThread extends DaemonThread {
 			}
 		}
 
-		Logger.log("Done.", false);
+		ConsolePrinter.log("Done.", false);
 	}
 }

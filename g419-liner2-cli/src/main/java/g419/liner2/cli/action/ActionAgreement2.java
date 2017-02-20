@@ -13,7 +13,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.AnnotationSet;
@@ -55,7 +55,7 @@ public class ActionAgreement2 extends Action {
 
 		this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
 		if (line.hasOption(CommonOptions.OPTION_VERBOSE_DETAILS)) {
-			Logger.verboseDetails = true;
+			ConsolePrinter.verboseDetails = true;
 		}
 
 	}

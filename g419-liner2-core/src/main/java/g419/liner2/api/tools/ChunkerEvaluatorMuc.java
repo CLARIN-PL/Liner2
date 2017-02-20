@@ -1,7 +1,7 @@
 package g419.liner2.api.tools;
 
 
-import g419.corpus.Logger;
+import g419.corpus.ConsolePrinter;
 import g419.corpus.structure.*;
 
 import java.util.*;
@@ -253,15 +253,15 @@ public class ChunkerEvaluatorMuc {
 	/**
 	 * Drukuje wynik w formacie:
 	 * 
-	 * Annotation        &  COR &  ACT &  POS & Precision &   Recall &  F$_1$ \\
+	 * Annotation        &amp;  COR &amp;  ACT &amp;  POS &amp; Precision &amp;   Recall &amp;  F$_1$ \\
 	 * \hline
-	 * ROAD_NAM          &  147 &    8 &   36 &   94.84\% &  80.33\% &  86.98\%
-	 * PERSON_LAST_NAM   &  306 &    9 &   57 &   97.14\% &  84.30\% &  90.27\%
-	 * PERSON_FIRST_NAM  &  319 &    3 &   29 &   99.07\% &  91.67\% &  95.22\%
-	 * COUNTRY_NAM       &  160 &   51 &   36 &   75.83\% &  81.63\% &  78.62\%
-	 * CITY_NAM          &  841 &   65 &   75 &   92.83\% &  91.81\% &  92.32\%
+	 * ROAD_NAM          &amp;  147 &amp;    8 &amp;   36 &amp;   94.84\% &amp;  80.33\% &amp;  86.98\%
+	 * PERSON_LAST_NAM   &amp;  306 &amp;    9 &amp;   57 &amp;   97.14\% &amp;  84.30\% &amp;  90.27\%
+	 * PERSON_FIRST_NAM  &amp;  319 &amp;    3 &amp;   29 &amp;   99.07\% &amp;  91.67\% &amp;  95.22\%
+	 * COUNTRY_NAM       &amp;  160 &amp;   51 &amp;   36 &amp;   75.83\% &amp;  81.63\% &amp;  78.62\%
+	 * CITY_NAM          &amp;  841 &amp;   65 &amp;   75 &amp;   92.83\% &amp;  91.81\% &amp;  92.32\%
 	 * \hline
-	 * *TOTAL*           & 1773 &  136 &  233 &   92.88\% &  88.38\% &  90.67\%
+	 * *TOTAL*           &amp; 1773 &amp;  136 &amp;  233 &amp;   92.88\% &amp;  88.38\% &amp;  90.67\%
 	 * 
 	 */
 	public void printResults(){
@@ -318,8 +318,8 @@ public class ChunkerEvaluatorMuc {
         String sentenceHeader = "(ChunkerEvaluatorMuc) Sentence #" + this.sentenceNum + " from " + currentDocId;
 		if (paragraphId != null)
 			sentenceHeader += " from " + paragraphId;
-		Logger.log(sentenceHeader);
-		Logger.log("");
+		ConsolePrinter.log(sentenceHeader);
+		ConsolePrinter.log("");
 		StringBuilder tokenOrths = new StringBuilder();
 		StringBuilder tokenNums = new StringBuilder();
 		int idx = 0;
@@ -334,39 +334,39 @@ public class ChunkerEvaluatorMuc {
 			tokenOrths.append(tokenOrth + " ");
 			tokenNums.append(tokenNum + " ");
 		}
-		Logger.log("Text  : " + tokenOrths.toString().trim());
-		Logger.log("Tokens: " + tokenNums.toString().trim());
-		Logger.log("");
-		Logger.log("Chunks:");
+		ConsolePrinter.log("Text  : " + tokenOrths.toString().trim());
+		ConsolePrinter.log("Tokens: " + tokenNums.toString().trim());
+		ConsolePrinter.log("");
+		ConsolePrinter.log("Chunks:");
 		
 		for (Annotation chunk : Annotation.sortChunks(truePositives)) {
-			Logger.log(String.format("  TruePositive %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
+			ConsolePrinter.log(String.format("  TruePositive %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk)));
 		}
 		for (Annotation chunk : Annotation.sortChunks(falsePositives)) {
-			Logger.log(String.format("  FalsePositive %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
+			ConsolePrinter.log(String.format("  FalsePositive %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk)));
 		}
 		for (Annotation chunk : Annotation.sortChunks(falseNegatives)) {
-			Logger.log(String.format("  FalseNegative %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
+			ConsolePrinter.log(String.format("  FalseNegative %s [%d,%d] = %s", chunk.getType(), chunk.getBegin()+1,
 				chunk.getEnd()+1, printChunk(chunk)));
 		}
 		
-		Logger.log("");
-		Logger.log("Features:", true);
+		ConsolePrinter.log("");
+		ConsolePrinter.log("Features:", true);
 		StringBuilder featuresHeader = new StringBuilder("       ");
 		for (int i = 0; i < sentence.getAttributeIndex().getLength(); i++)
 			featuresHeader.append(String.format("[%d]_%s ", i+1, sentence.getAttributeIndex().getName(i)));
-		Logger.log(featuresHeader.toString(), true);
+		ConsolePrinter.log(featuresHeader.toString(), true);
 		
 		idx = 0;
 		for (Token token : sentence.getTokens()) {
 			StringBuilder tokenFeatures = new StringBuilder(String.format("  %3d) ", ++idx));
 			for (int i = 0; i < token.getNumAttributes(); i++)
 				tokenFeatures.append(String.format("[%d]_%s ", i+1, token.getAttributeValue(i)));
-			Logger.log(tokenFeatures.toString(), true);
+			ConsolePrinter.log(tokenFeatures.toString(), true);
 		}
-		Logger.log("", true);
+		ConsolePrinter.log("", true);
 	}
 	
 	private String printChunk(Annotation chunk) {

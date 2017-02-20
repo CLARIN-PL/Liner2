@@ -2,7 +2,6 @@ package g419.tools.action;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -15,15 +14,8 @@ import java.util.TreeSet;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
-import org.apache.log4j.Logger;
 
-import g419.corpus.io.reader.AbstractDocumentReader;
-import g419.corpus.io.reader.ReaderFactory;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
 import g419.lib.cli.Action;
-import g419.lib.cli.CommonOptions;
 import g419.tools.utils.Counter;
 
 public class ActionMorfeuszInflectionByProbability extends Action {
@@ -42,7 +34,7 @@ public class ActionMorfeuszInflectionByProbability extends Action {
 	
 	/**
 	 * Parse action options
-	 * @param arg0 The array with command line parameters
+	 * @param args The array with command line parameters
 	 */
 	@Override
 	public void parseOptions(String[] args) throws Exception {

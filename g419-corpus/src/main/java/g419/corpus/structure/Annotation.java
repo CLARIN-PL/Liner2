@@ -7,35 +7,31 @@ import java.util.stream.Collectors;
 
 /**
  * Klasa reprezentuje anotację jako ciągłą sekwencję tokenów w zdaniu.
- * @author czuk
+ * 
+ * @author Michał Marcińczuk
  *
  */
 public class Annotation {
-	/**
-	 * Typ oznakowania.
-	 */
+	/** Annotation type, i.e. name of category.  */
 	private String type = null;
 	
-	/**
-	 * Kategoria anotacji, np. word, group, chunk, ne
-	 */
-	private String category = null;
+	/** Name of the group to which belongs the annotation type, ex. word, group, chunk, ne .*/
+	private String group = null;
 
-	/**
-	 * Zdanie, do którego należy chunk.
-	 */
+	/** Sentence to which the annotation belongs. */
 	private Sentence sentence = null;
 
+	/** Unique identifier of the annotation */
 	private String id = null;
-	/**
-	 * Indeksy tokenów.
-	 */
+	
+	/** Indices of tokens which form the annotation. */
 	private TreeSet<Integer> tokens = new TreeSet<Integer>();
 
-	/**
-	 * Indeks głowy anotacji.
-	 */
+	/** Index of a token that is the head of the annotation */
 	private int head;
+	
+	/** Lemmatized form of the annotation */
+	private String lemma = null;	
 
 	/**
 	 * Indeks anotacji w kanale.
@@ -55,10 +51,6 @@ public class Annotation {
 	
 
 	private Map<String, String> metadata = new HashMap<String, String>();
-
-	public Annotation(){
-
-	}
 
 	public Annotation(int begin, int end, String type, Sentence sentence){
 		for(int i = begin; i <= end; i++){
@@ -107,6 +99,30 @@ public class Annotation {
 	}
 
 	/**
+	 * Set the value of annotation lemma.
+	 * @param lemma
+	 */
+	public void setLemma(String lemma){
+		this.lemma = lemma;
+	}
+	
+	/**
+	 * Get the value of annotation lemma.
+	 * @return
+	 */
+	public String getLemma(){
+		if ( this.lemma == null ){
+			if (this.metadata.containsKey("lemma"))
+				return this.metadata.get("lemma");
+			else
+				return this.getText();
+		}
+		else{
+			return this.lemma;
+		}
+	}
+	
+	/**
 	 * Ustaw pewność co do istnienia anotacji.
 	 * @param confidence
 	 */
@@ -125,10 +141,8 @@ public class Annotation {
 	/**
 	 * Przypisuje głowę do anotacji na podst. równoległej anotacji, lub jako pierwszy token.
 	 * Do użytku z anotacjami "anafora_wyznacznik" na potrzeby piśnika TEI
-	 * @return
 	 */
 	public void assignHead(boolean force){
-		// TODO: dlaczego tworzona jest anotacja dla pustego zdania
 		if( !force && hasHead() ){
 			return;
 		}		
@@ -201,17 +215,20 @@ public class Annotation {
 	@Override
 	public boolean equals(Object object) {
 		Annotation chunk = (Annotation) object;
-		if(chunk == null) return false;
+		if (chunk == null){
+			return false;
+		}
 		if( this.getSentence().getId() != null
 				&& chunk.getSentence().getId() != null
-				&& !this.getSentence().getId().equals(chunk.getSentence().getId()))
+				&& !this.getSentence().getId().equals(chunk.getSentence().getId())){
 			return false;
-		else if (!this.tokens.equals(chunk.getTokens()))
+		} else if (!this.tokens.equals(chunk.getTokens())) {
 			return false;
-		else if (!this.getText().equals(chunk.getText()))
+		} else if (!this.getText().equals(chunk.getText())) {
 			return false;
-		else if (!this.type.equals(chunk.getType()))
+		} else if (!this.type.equals(chunk.getType())) {
 			return false;
+		}
 		return true;
 	}
 
@@ -243,7 +260,6 @@ public class Annotation {
 	}
 
 	public boolean metaDataMatchesKey(String key, Annotation other){
-
 		return this.metadata.getOrDefault(key, "none1").equals(other.metadata.getOrDefault(key, "none2"));
 	}
 
@@ -281,8 +297,8 @@ public class Annotation {
 		return this.type;
 	}
 	
-	public String getCategory() {
-		return this.category;
+	public String getGroup() {
+		return this.group;
 	}
 
 	/**
@@ -300,6 +316,9 @@ public class Annotation {
 	 */
 	public String getText(boolean markHead){
 		List<Token> tokens = this.sentence.getTokens();
+		if ( tokens == null ){
+			return "NO_TOKEN_IN_SENTENCE";
+		}
 		StringBuilder text = new StringBuilder();
 		for (int i : this.tokens) {
 			Token token = tokens.get(i);
@@ -310,8 +329,9 @@ public class Annotation {
 			if ( markHead && this.head == i ){
 				text.append("}");
 			}
-			if ((!token.getNoSpaceAfter()) && (i < getEnd()))
+			if ((!token.getNoSpaceAfter()) && (i < getEnd())){
 				text.append(" ");
+			}
 		}
 		return text.toString();
 	}
@@ -323,8 +343,9 @@ public class Annotation {
         for (int i : this.tokens) {
             Token token = tokens.get(i);
             text.append(token.getAttributeValue(index.getIndex("base")));
-            if ((!token.getNoSpaceAfter()) && (i < getEnd()))
+            if ((!token.getNoSpaceAfter()) && (i < getEnd())){
                 text.append(" ");
+            }
         }
         return text.toString();
     }
@@ -350,18 +371,18 @@ public class Annotation {
 		this.type = type.toLowerCase();
 	}
 	
-	public void setCategory(String category){
-		this.category = category;
+	public void setGroup(String group){
+		this.group = group;
 	}
 
-	public static Annotation[] sortChunks(HashSet<Annotation> chunkSet) {
+	public static Annotation[] sortChunks(Set<Annotation> chunkSet) {
 		int size = chunkSet.size();
 		Annotation[] sorted = new Annotation[size];
 		int idx = 0;
 	    for (Annotation c : chunkSet)
 	    	sorted[idx++] = c;
-	    for (int i = 0; i < size; i++)
-	    	for (int j = i+1; j < size; j++)
+	    for (int i = 0; i < size; i++){
+	    	for (int j = i+1; j < size; j++){
 	    		if ((sorted[i].getBegin() > sorted[j].getBegin()) ||
 	    			((sorted[i].getBegin() == sorted[j].getBegin()) &&
 	    			(sorted[i].getEnd() > sorted[j].getEnd()))) {
@@ -369,6 +390,8 @@ public class Annotation {
 	    			sorted[i] = sorted[j];
 	    			sorted[j] = aux;
 	    		}
+	    	}
+	    }
 		return sorted;
 	}
 
@@ -393,35 +416,4 @@ public class Annotation {
     	return true;
     }
 
-//    public List<Annotation> getExactOverlappingAnnotations(){
-//    	return getExactOverlappingAnnotations(Arrays.asList(new Pattern[]{Pattern.compile("*")}));
-//    }
-//    
-//    public List<Annotation> getExactOverlappingAnnotations(List<Pattern> patterns){
-//    	List<Annotation> overlapping = new ArrayList<Annotation>();
-//    	
-//    	for(Annotation potentialOverlap : getSentence().getAnnotations(patterns)){
-//    		// NIe istnieje dokładne pokrycie taką samą anotacją
-//    		if(potentialOverlap.getChannelIdx() != getChannelIdx()){
-//    			if(getTokens().equals(potentialOverlap.getTokens())){
-//    				overlapping.add(potentialOverlap);
-//    			}
-//    		}
-//    	}
-//    	
-//    	return overlapping;
-//    }
-//    
-//    public boolean isOverlappedByAll(List<Pattern> overlapPatterns){
-//    	// TODO: incomplete implementation
-//		boolean overlapByAll = false;
-//		List<Annotation> overlapping = getExactOverlappingAnnotations(overlapPatterns);
-//		
-//		return overlapByAll;
-//	}
-//	
-//	public boolean isOverlappedByAny(List<Pattern> overlapPatterns){
-//		List<Annotation> overlapping = getExactOverlappingAnnotations(overlapPatterns);
-//		return overlapping.size() > 0;
-//	}
 }
