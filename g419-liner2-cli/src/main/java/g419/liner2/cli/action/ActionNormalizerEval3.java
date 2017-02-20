@@ -132,8 +132,8 @@ public class ActionNormalizerEval3 extends Action {
 
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date", "t3_time", "t3_duration", "t3_set"));
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date"));
-            //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_time"));
-            Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date", "t3_time"));
+            Set<String> typeSet = new HashSet<>(Arrays.asList("t3_time"));
+            //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date", "t3_time"));
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_duration"));
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date", "t3_time", "t3_duration"));
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_set"));
@@ -213,14 +213,16 @@ public class ActionNormalizerEval3 extends Action {
                                         referenceAnnotation.getTokens().stream()
                                                 .filter(p -> systemAnnotation.getTokens().contains(p))
                                                 .collect(Collectors.toSet()).size() > 0) {
+                                    if (!referenceAnnotation.metaDataMatchesKey("val", systemAnnotation)){
                                     System.out.println(
                                             referenceAnnotation.getType() + "\t" +
                                                     referenceDocument.getName() + "\t" +
                                                     referenceAnnotation.toString() + "\t" +
+                                                    referenceAnnotation.getMetadata().get("lval") + "\t" +
                                                     referenceAnnotation.getMetadata().get("val") + "\t" +
                                                     systemAnnotation.getMetadata().get("val") + "\t" +
                                                     referenceAnnotation.metaDataMatchesKey("val", systemAnnotation)
-                                    );
+                                    );}
                                 }
                             }
                         }
