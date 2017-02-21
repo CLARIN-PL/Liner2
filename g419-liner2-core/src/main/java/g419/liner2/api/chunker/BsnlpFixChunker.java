@@ -27,10 +27,6 @@ import g419.liner2.api.tools.NeLemmatizer;
  */
 public class BsnlpFixChunker extends Chunker {
 
-	private static final String attrBase = "base";
-	private static final String attrOrth = "orth";
-	private static final String attrCtag = "ctag";
-	
 	Map<String, String> renameRules = new HashMap<String, String>();
 	
 	public static final String BSNLP_PREFIX = "bsnlp2017";
@@ -63,15 +59,8 @@ public class BsnlpFixChunker extends Chunker {
             this.processSentence(sentence);
             this.filterByConfidence(sentence, 0.4);
             this.joinOrgWithLoc(sentence);
-            this.ruleNamJoinByHyphen(sentence);
 		}
-		
-		for ( Annotation an : ps.getAnnotations() ){
-			if ( an.getType().startsWith("bsnlp2017_") ){
-				while ( this.ruleExpandAnnotationToLeft(ps, an)) {}
-			}
-		}
-		
+				
 		this.renameByMaxConfidence(ps);
 		this.renamePersonNames(ps);
 		
@@ -206,123 +195,6 @@ public class BsnlpFixChunker extends Chunker {
 	}
 
 	/**
-	 * Łączy dwie anotacje nam, które połączone są dywizem bez spacji.
-	 * @param sentence Obiekt zdania, na którym zostaną wykonane reguły.
-	 */
-	private void ruleNamJoinByHyphen(Sentence sentence){
-		Map<Integer, List<Annotation>> annotataionIndex = new HashMap<Integer, List<Annotation>>();
-		
-		for (Annotation an : sentence.getChunks()){
-			if ( an.getType().startsWith("bsnlp2017_") ){
-				if ( !annotataionIndex.containsKey(an.getBegin()) )
-					annotataionIndex.put(an.getBegin(), new ArrayList<Annotation>());
-				annotataionIndex.get(an.getBegin()).add(an);
-			}
-		}
-		
-		List<Annotation> toRemove = new LinkedList<Annotation>();
-		for (Annotation an : sentence.getChunks() ){
-			if ( an.getType().startsWith("bsnlp2017_")
-					&& an.getEnd()+1 < sentence.getTokenNumber()
-					&& sentence.getTokens().get(an.getEnd()+1).getOrth().equals("-")
-					&& sentence.getTokens().get(an.getEnd()).getNoSpaceAfter()
-					&& sentence.getTokens().get(an.getEnd()+1).getNoSpaceAfter()
-					&& annotataionIndex.containsKey(an.getEnd()+2)){
-				for (Annotation an2 : annotataionIndex.get(an.getEnd()+2)){
-					for (int idx : an.getTokens())
-						an2.addToken(idx);
-					an2.addToken(an.getEnd()+1);
-				}
-				toRemove.add(an);
-			}
-		}
-		sentence.getChunks().removeAll(toRemove);
-	}	
-	
-	/**
-	 * Sprawdza, czy wskazana anotacja może być rozszerzona o jeden token w lewo. 
-	 * Anotacja może być rozszerzona o token w lewo, jeżeli wszystkie wystąpienia tej anotacji
-	 * w dokumencie są poprzedzone tym samym tokenem (o tej samej formie bazowej i pisane z dużej litery).
-	 * @param document dokument, w oparciu o który dokonywana jest analiza wystąpień
-	 * @param an anotacja do rozszerzenia
-	 * @return true jeżeli anotacja została rozszerzona
-	 */
-	private boolean ruleExpandAnnotationToLeft(Document document, Annotation an){
-		if ( an.getBegin() == 0 ){
-			return false;
-		}
-		String baseBefore = an.getSentence().getTokens().get(an.getBegin()-1).getDisambTag().getBase();
-		int foundAtBeginning = 0;
-		int foundNotBeginning = 0;
-		
-		for ( Sentence sentence : document.getSentences() ){
-			int i=1;
-			while ( i < sentence.getTokenNumber() ){
-				if ( this.matchAnnotationByBase(sentence, i, an) ){
-					if ( sentence.getTokens().get(i-1).hasBase(baseBefore, true)
-						&& Character.isUpperCase(sentence.getTokens().get(i-1).getOrth().charAt(0)) ){
-						if ( i-1 == 0 ){
-							foundAtBeginning++;
-						}
-						else{
-							foundNotBeginning++;
-						}
-					}
-					else{
-						// Znaleziono wystąpienie nazwy, które jest poprzedzone innym tokenem niż token, o który anotacja ma być rozserzona.
-						return false;
-					}
-				}
-				i++;
-			}
-		}
-		if ( foundAtBeginning + foundNotBeginning > 1 && foundNotBeginning > 1){
-			an.addToken(an.getBegin()-1);
-			return true;
-		}
-		else{
-			return false;
-		}
-	}
-	
-	/**
-	 * Sprawdza, czy od pozycji pos w zdaniu sentence znajduje się sekwencja tokenów o takich samych
-	 * formach bazowych co anotacja an z dokładnością do wielkości liter.
-	 *
-	 * @param sentence the sentence
-	 * @param pos the pos
-	 * @param an the an
-	 * @return true, if successful
-	 */
-	private boolean matchAnnotationByBase(Sentence sentence, int pos, Annotation an){
-		int i=0;
-		Sentence anSentence = an.getSentence();
-		for ( int anToken : an.getTokens() ){
-			if ( pos + i < sentence.getTokenNumber()
-					&& this.equalsTokenBasesAndOrthCase(sentence.getTokens().get(pos+i), anSentence.getTokens().get(anToken))){
-				i++;
-			}
-			else{
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	/**
-	 * Sprawdza, czy wskazane tokny mają przynajmniej jeden wspólny base oraz ten sam zapis 
-	 * (tj. czy oba pisane z dużej lub małej litery).
-	 *
-	 * @param t1 the t 1
-	 * @param t2 the t 2
-	 * @return true, jeżeli tokeny mają przynajmniej jeden wspólny base i mają ten sam zapis (wielkość pierwszego znaku)
-	 */
-	private boolean equalsTokenBasesAndOrthCase(Token t1, Token t2){
-		return ( Sets.intersection(t1.getDisambBases(), t2.getDisambBases()).size() > 0
-				&& Character.isUpperCase(t1.getOrth().charAt(0)) == Character.isUpperCase(t2.getOrth().charAt(0)));
-	}
-	
-	/**
 	 * Lematyzacja nazw własnych.
 	 * @param ps
 	 */
@@ -338,17 +210,21 @@ public class BsnlpFixChunker extends Chunker {
 	 */
 	private void lemmatize(Annotation an){		
 		if ( this.lemmatizer != null ){
-			String lemma = this.lemmatizer.lemmatize(an);
-			if ( lemma != null ){
-				an.setLemma(lemma);
-				return;
-			} else if ( BSNLP_PER.equals(an.getType()) ){
+			String lemma = null;
+			if ( BSNLP_PER.equals(an.getType()) ){
 				lemma = this.lemmatizer.lemmatizePersonName(an);
 				if ( lemma != null ){
 					an.setLemma(lemma);
 					return;
 				}
 			}
+			if ( lemma == null ){
+				lemma = this.lemmatizer.lemmatize(an);
+				if ( lemma != null ){
+					an.setLemma(lemma);
+					return;
+				}
+			} 
 		}
 
 		if ( an.getTokenTokens().size() == 1 ){

@@ -138,7 +138,7 @@ public class ChunkerEvaluator {
 		for (Annotation trueChunk : trueChunkSetIter)
 			for (Annotation testedChunk : testedChunkSetIter)
 				if (trueChunk.equals(testedChunk) &&
-						(!checkLemma || trueChunk.getLemma().equals(testedChunk.getLemma()))   ) {
+						(!checkLemma || trueChunk.getLemma().equalsIgnoreCase(testedChunk.getLemma()))   ) {
 					// wpisz klucz do tablicy, jeśli jeszcze nie ma
 					if (!this.chunksTruePositives.containsKey(testedChunk.getType())) {
 						this.chunksTruePositives.put(testedChunk.getType(), new ArrayList<Annotation>());
@@ -165,13 +165,14 @@ public class ChunkerEvaluator {
             Boolean  truePositiveSkippedChannelCheck = false;
             for(Annotation trueChunk : trueChunkSet)
                 if(testedChunk.getTokens().equals(trueChunk.getTokens()) && testedChunk.getSentence().equals(trueChunk.getSentence()) &&
-						(!checkLemma || trueChunk.getLemma().equals(testedChunk.getLemma())))   {
+						(!checkLemma || trueChunk.getLemma().equalsIgnoreCase(testedChunk.getLemma())))   {
                     this.globalTruePositivesRangeOnly += 1;
                     truePositiveSkippedChannelCheck = true;
                     break;
                 }
-            if(!truePositiveSkippedChannelCheck)
+            if(!truePositiveSkippedChannelCheck){
                 this.globalFalsePositivesRangeOnly += 1;
+            }
 		}
 				
 		// w trueChunkSet zostały falseNegatives
@@ -187,12 +188,13 @@ public class ChunkerEvaluator {
             Boolean  truePositiveSkippedChannelCheck = false;
             for(Annotation testedChunk : testedChunkSet)
                 if(testedChunk.getTokens().equals(trueChunk.getTokens()) && testedChunk.getSentence().equals(trueChunk.getSentence()) &&
-						(!checkLemma || trueChunk.getLemma().equals(testedChunk.getLemma())))   {
+						(!checkLemma || trueChunk.getLemma().equalsIgnoreCase(testedChunk.getLemma())))   {
                     truePositiveSkippedChannelCheck = true;
                     break;
                 }
-            if(!truePositiveSkippedChannelCheck)
+            if(!truePositiveSkippedChannelCheck){
                 this.globalFalseNegativesRangeOnly += 1;
+            }
 		}
 
         // zlicznie falsePositives dla anotacji o granicah wystepujacych we wzorcowym korpusie
