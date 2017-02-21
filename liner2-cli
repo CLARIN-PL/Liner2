@@ -6,7 +6,7 @@ jar=`find $DIR/$name/build/libs -name "$name*-all.jar" -type f`
 
 if [ -f "$jar" ] 
 then
-  java -Xss4m -Xmx16192M -jar $jar $@
+  java -Xss4m -Xmx30000M -jar $jar $@
 else
   echo "Jar file not found."
   echo "Run ./gradlew :$name:jar first."

@@ -106,6 +106,8 @@ public class RuleGlobalTimexNormalizer extends NormalizingChunker {
         if (dateStr != null)
             creationDate = dateStr;
         logger.debug("New document, creation = "+ creationDate);
+        previous = null;
+        first = null;
 
     }
 }

@@ -63,6 +63,7 @@ public class GlobalTimexNormalizer extends NormalizingChunker{
 
     @Override
     public void onDocumentEnd(Document document) {
+
         lastDate = null;
     }
 

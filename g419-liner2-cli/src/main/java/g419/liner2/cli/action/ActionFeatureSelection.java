@@ -232,6 +232,7 @@ public class ActionFeatureSelection extends Action {
 		if (this.restoreFeatures != null){
 			for (String feature : restoreFeatures){
 				ct.getFeatureNames().add(feature);
+				//System.out.println("!!" + feature);
 				ct.getFeatures().put(feature,
 						features.get(feature));
 				featureNames.remove(feature);
