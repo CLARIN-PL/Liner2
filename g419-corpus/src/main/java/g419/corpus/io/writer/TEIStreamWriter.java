@@ -101,6 +101,22 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     private int mentionNr = 0;
     private int chunkNr = 0;
     
+    private static final Pattern hyphens = Pattern.compile("[-]+");
+    
+    /**
+     * 
+     * @param text
+     * @param metadata
+     * @param annSegmentation
+     * @param annMorphosyntax
+     * @param annProps
+     * @param annNamed
+     * @param annMentions
+     * @param annChunks
+     * @param annCoreference
+     * @param annRelations
+     * @param documentName
+     */
     public TEIStreamWriter(OutputStream text, OutputStream metadata, OutputStream annSegmentation, OutputStream annMorphosyntax, 
     		OutputStream annProps,
     		OutputStream annNamed, OutputStream annMentions, OutputStream annChunks, 
@@ -130,6 +146,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         this.chunksPatterns.add(Pattern.compile("^chunk_.*"));
         
         XMLOutputFactory xmlof = XMLOutputFactory.newFactory();
+        
         try {
             this.textWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(text)));
             this.annSegmentationWriter = xmlof.createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(annSegmentation)));
@@ -539,7 +556,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     	for(Annotation ann : cluster.getAnnotations()){
     		mentions += ann.getText() + ", ";
     	}
-    	annCoreferenceWriter.writeComment(mentions);
+    	this.writeComment(annCoreferenceWriter, mentions);
     	annCoreferenceWriter.writeCharacters("\n");
     	
     	this.indent(annCoreferenceIndent, annCoreferenceWriter);
@@ -736,7 +753,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         String orth = tok.getOrth();
 
         this.indent(6, annSegmentationWriter);
-        annSegmentationWriter.writeComment(" "+orth+" ");
+        this.writeComment(annSegmentationWriter, " "+orth+" ");
         annSegmentationWriter.writeCharacters("\n");
         this.indent(6, annSegmentationWriter);
         annSegmentationWriter.writeEmptyElement(TAG_SEGMENT);
@@ -781,7 +798,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         }
         
         this.indent(8, annMorphosyntaxWriter);
-        annMorphosyntaxWriter.writeComment(String.format("%s [%s,%s]",orth,tokenStart,orth.length()));
+        this.writeComment(annMorphosyntaxWriter, String.format("%s [%s,%s]",orth,tokenStart,orth.length()));
 
         annMorphosyntaxWriter.writeCharacters("\n");
         this.indent(8, annMorphosyntaxWriter);
@@ -998,6 +1015,18 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
     	if ( stream != null ){
     		stream.close();
     	}
+    }
+    
+    /**
+     * Wraps the XMLStreamWriter.writeComment. Replace sequences of "-" with a single - to avoid
+     * parsing errors.
+     * @param writer
+     * @param writer
+     * @throws XMLStreamException 
+     */
+    private void writeComment(XMLStreamWriter writer, String text) throws XMLStreamException{
+    	text = text.replaceAll("[-]+", "-");
+    	writer.writeComment(text);
     }
     
 }
