@@ -190,7 +190,6 @@ public class ReaderFactory {
 				}
 				File file = new File(inputFolder, inputFile); //todo: checking of existence returns always 'false' before ini reading!!
 				//File file = new File(inputFile);
-				System.out.println(file.getAbsolutePath());
 				InputStream stream = null;
 				if ( file.exists() ){
 					stream = new FileInputStream(file);

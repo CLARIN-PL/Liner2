@@ -13,7 +13,7 @@ import g419.corpus.io.UnknownFormatException;
 
 /**
  * 
- * Factory for creating a writer from it's description.
+ * Factory for creating a writer from its' description.
  * 
  * @author Michał Marcińczuk
  *
@@ -50,17 +50,15 @@ public class WriterFactory {
 				outputFormatNoGz = outputFormat.substring(0, outputFormat.length()-3);
 			}
 			
-	        if ( "tei".equals(outputFormatNoGz) ){
-	            return this.getTEIWriter(outputFile, gzOutput);
-	        }
-	        else if ( "cclrel".equals(outputFormatNoGz) ){
-	        	return this.getCclRelWriter(outputFile, gzOutput, false);
-	        }
-	        else if ( "cclrel-disamb".equals(outputFormatNoGz) ){
-	        	return this.getCclRelWriter(outputFile, gzOutput, true);
-	        }
-	        else{
-	            return this.getStreamWriter(this.getOutputStreamFileOrOut(outputFile), outputFormat);
+			switch (outputFormatNoGz){
+				case "tei":
+					return this.getTEIWriter(outputFile, gzOutput);
+				case "cclrel":
+					return this.getCclRelWriter(outputFile, gzOutput, false);
+				case "cclrel-disamb":
+					return this.getCclRelWriter(outputFile, gzOutput, true);
+				default:
+					return this.getStreamWriter(this.getOutputStreamFileOrOut(outputFile), outputFormat);
 	        }			
 		}		
 	}
@@ -91,6 +89,8 @@ public class WriterFactory {
 				return new ZeroVerbWriter(outWrapped);
 			case "iob-tab":
 				return new IobTabStreamWriter(outWrapped);
+			case "token-hash":
+				return new TokenHashWriter(outWrapped);
 			case "tuples":
 				return new TuplesStreamWriter(outWrapped);
 			case "json":

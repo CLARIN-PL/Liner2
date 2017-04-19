@@ -34,13 +34,15 @@ public class TokensStreamWriter extends AbstractDocumentWriter {
 	
 	@Override
 	public void writeDocument(Document document){
-		for (Paragraph paragraph : document.getParagraphs())
+		for (Paragraph paragraph : document.getParagraphs()){
 			this.writeParagraph(paragraph);
+		}
 	}
 
 	public void writeParagraph(Paragraph paragraph) {
-		for (Sentence s : paragraph.getSentences())
+		for (Sentence s : paragraph.getSentences()){
 			writeSentence(s);
+		}
 	}
 
 	private void writeSentence(Sentence sentence) {
@@ -50,8 +52,9 @@ public class TokensStreamWriter extends AbstractDocumentWriter {
 				response += String.format("[%d,%d,%s]", c.getBegin()+1, c.getEnd()+1,
 					c.getType());
 			}
-			if (response.isEmpty())
+			if (response.isEmpty()){
 				response = "NONE";
+			}
 			this.ow.write(response);
 			this.ow.newLine();
 		} catch (IOException ex) {
