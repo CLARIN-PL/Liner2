@@ -1,0 +1,9 @@
+struct:-1/struct:0
+/hypernym-1:0
+/prefix-3:0
+/hypernym-1:-1
+dict_timex_base:-1/dict_timex_base:0
+/struct:0
+/hypernym-1:1
+/prefix-3:-1
+/top4hyper-4:0
