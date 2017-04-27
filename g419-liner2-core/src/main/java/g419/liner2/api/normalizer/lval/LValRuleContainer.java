@@ -3,6 +3,7 @@ package g419.liner2.api.normalizer.lval;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
+import g419.corpus.structure.Annotation;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.FileNotFoundException;
@@ -46,7 +47,9 @@ public class LValRuleContainer {
     }
 
 
-    public String getLVal(String annBase, String annType){
+    public String getLVal(Annotation annotation){
+        String annBase = annotation.getSimpleBaseText();
+        String annType = annotation.getType();
         List<LValRule> rulesUsed = new LinkedList<>();
         //ostateczne wartości year, month, day, hour
         Map<String, String> globalValues = new HashMap<>();
@@ -55,7 +58,7 @@ public class LValRuleContainer {
                 continue;
             //czy reguła na ciągu base'ów jest spełniona
             Matcher match = rule.pattern.matcher(annBase);
-            if (match.find()){
+            if (match.find() && rule.checkLemmaTags(annotation)){
                 //zapisz użytą regułę
                 rulesUsed.add(rule);
                 Map<String, String> matchDict = new HashMap<>();
@@ -86,97 +89,139 @@ public class LValRuleContainer {
         }
         String lval = "None";
         Map<String, String> matches = globalValues;
-        if (!matches.isEmpty()){
-            lval = "";
-            if (matches.containsKey("year") && !matches.get("year").equals("null")) { //"null" is not a mistake!
-                lval += matches.get("year");
-                if (matches.containsKey("month") && !matches.get("month").equals("null")) {
-                    String month = matches.get("month");
-                    if (StringUtils.isNumeric(month))
-                        month = StringUtils.leftPad(month, 2, "0");
-                    lval += "-" + month;
-                    if (matches.containsKey("day") && !matches.get("day").equals("null")) {
-                        String day = matches.get("day");
-                        if ((StringUtils.isNumeric(month) || month.equals("xx")) && StringUtils.isNumeric(day))
-                            day = StringUtils.leftPad(day, 2, "0");
-                        lval += "-" + day;
+        if (!annType.equals("t3_duration")) {
+            if (!matches.isEmpty()) {
+                lval = "";
+                if (matches.containsKey("year") && !matches.get("year").equals("null")) { //"null" is not a mistake!
+                    lval += matches.get("year");
+                    if (matches.containsKey("month") && !matches.get("month").equals("null")) {
+                        String month = matches.get("month");
+                        if (StringUtils.isNumeric(month))
+                            month = StringUtils.leftPad(month, 2, "0");
+                        lval += "-" + month;
+                        if (matches.containsKey("day") && !matches.get("day").equals("null")) {
+                            String day = matches.get("day");
+                            if ((StringUtils.isNumeric(month) || month.equals("xx")) && StringUtils.isNumeric(day))
+                                day = StringUtils.leftPad(day, 2, "0");
+                            lval += "-" + day;
+                        }
+                    }
+                } else {
+                    if (matches.containsKey("month") && !matches.get("month").equals("null")) {
+                        lval = "xxxx";
+                        String month = matches.get("month");
+                        if (StringUtils.isNumeric(month))
+                            month = StringUtils.leftPad(month, 2, "0");
+                        lval += "-" + month;
+                        if (matches.containsKey("day") && !matches.get("day").equals("null")) {
+                            String day = matches.get("day");
+                            if ((StringUtils.isNumeric(month) || month.equals("xx")) && StringUtils.isNumeric(day))
+                                day = StringUtils.leftPad(day, 2, "0");
+                            lval += "-" + day;
+                        }
+                    } else {
+                        if (matches.containsKey("day") && !matches.get("day").equals("null")) {
+                            String day = matches.get("day");
+                            if (StringUtils.isNumeric(day))
+                                day = StringUtils.leftPad(day, 2, "0");
+                            lval += day;
+                        }
+                    }
+
+                }
+                if (matches.containsKey("part"))
+                    lval += "-" + matches.get("part");
+                if (matches.containsKey("hour")) {
+                    if (lval.isEmpty())
+                        lval = "xxxx-xx-xx";
+                    else if (!matches.containsKey("day"))
+                        lval += "-xx";
+
+                    String hour = matches.get("hour");
+                    if (!hour.equals("null")) {
+                        if (StringUtils.isNumeric(hour)) {
+                            hour = StringUtils.leftPad(hour, 2, "0");
+                            if (Integer.parseInt(hour) < 13 && !matches.containsKey("separator"))
+                                lval += "t" + hour;
+                            else {
+                                if (matches.containsKey("separator") && Integer.parseInt(hour) < 13 && matches.get("separator").equals("EV"))
+                                    lval += "T" + (Integer.parseInt(hour) + 12);
+                                else
+                                    lval += "T" + hour;
+                            }
+                        } else if (hour.equals("xx"))
+                            lval += "t" + hour;
+                        else
+                            lval += "T" + hour;
+                        if (matches.containsKey("minute")) {
+                            String minute = matches.get("minute");
+                            minute = StringUtils.leftPad(minute, 2, "0");
+                            lval += ":" + minute;
+                            if (matches.containsKey("second")) {
+                                String second = matches.get("second");
+                                second = StringUtils.leftPad(second, 2, "0");
+                                lval += ":" + second;
+                            }
+                        }
+                    }
+                } else if (matches.containsKey("minute")) {
+                    if (lval.isEmpty())
+                        lval = "xxxx-xx-xxtxx";
+                    String minute = matches.get("minute");
+                    minute = StringUtils.leftPad(minute, 2, "0");
+                    lval += ":" + minute;
+                    if (matches.containsKey("second")) {
+                        String second = matches.get("second");
+                        second = StringUtils.leftPad(second, 2, "0");
+                        lval += ":" + second;
                     }
                 }
+
+            }
+        }
+        else {
+            lval = "";
+            if (!matches.isEmpty()) {
+                lval += "P";
+                if (matches.containsKey("millenium")){
+                    lval += matches.get("millenium") + "ML";
+                }
+                if (matches.containsKey("century")){
+                    lval += matches.get("century") + "CE";
+                }
+                if (matches.containsKey("year")){
+                    lval += matches.get("year") + "Y";
+                }
+                if (matches.containsKey("month")){
+                    lval += matches.get("month") + "M";
+                }
+                if (matches.containsKey("week")){
+                    lval += matches.get("week") + "W";
+                }
+                if (matches.containsKey("day")){
+                    lval += matches.get("day") + "D";
+                }
+                if (matches.containsKey("evening")){
+                    lval += matches.get("evening") + "EV";
+                }
+                if (matches.containsKey("time")){
+                    lval += "T";
+                }
+                if (matches.containsKey("hour")){
+                    lval += matches.get("hour") + "H";
+                }
+                if (matches.containsKey("minute")){
+                    lval += matches.get("minute") + "M";
+                }
+                if (matches.containsKey("second")){
+                    lval += matches.get("second") + "S";
+                }
+
+
             }
             else {
-                if (matches.containsKey("month") && !matches.get("month").equals("null")) {
-                    lval = "xxxx";
-                    String month = matches.get("month");
-                    if (StringUtils.isNumeric(month))
-                        month = StringUtils.leftPad(month, 2, "0");
-                    lval += "-" + month;
-                    if (matches.containsKey("day") && !matches.get("day").equals("null")) {
-                        String day = matches.get("day");
-                        if ((StringUtils.isNumeric(month) || month.equals("xx")) && StringUtils.isNumeric(day))
-                            day = StringUtils.leftPad(day, 2, "0");
-                        lval += "-" + day;
-                    }
-                }
-                else {
-                    if (matches.containsKey("day") && !matches.get("day").equals("null")) {
-                        String day = matches.get("day");
-                        if (StringUtils.isNumeric(day))
-                            day = StringUtils.leftPad(day, 2, "0");
-                        lval += day;
-                    }
-                }
-
+                lval = "VAGUE";
             }
-            if (matches.containsKey("part"))
-                lval += "-" + matches.get("part");
-            if (matches.containsKey("hour")){
-                if (lval.isEmpty())
-                    lval = "xxxx-xx-xx";
-                else if (!matches.containsKey("day"))
-                    lval += "-xx";
-
-                String hour = matches.get("hour");
-                if (!hour.equals("null")){
-                    if (StringUtils.isNumeric(hour)){
-                        hour = StringUtils.leftPad(hour, 2, "0");
-                        if (Integer.parseInt(hour) < 13 && !matches.containsKey("separator"))
-                            lval += "t" + hour;
-                        else {
-                            if (matches.containsKey("separator") && Integer.parseInt(hour) < 13 && matches.get("separator").equals("EV") )
-                                lval += "T" + (Integer.parseInt(hour) + 12);
-                            else
-                                lval += "T" + hour;
-                        }
-                    }
-                    else if (hour.equals("xx"))
-                        lval += "t" + hour;
-                    else
-                        lval += "T" + hour;
-                    if (matches.containsKey("minute")){
-                        String minute = matches.get("minute");
-                        minute = StringUtils.leftPad(minute, 2, "0");
-                        lval += ":" + minute;
-                        if (matches.containsKey("second")){
-                            String second = matches.get("second");
-                            second = StringUtils.leftPad(second, 2, "0");
-                            lval += ":" + second;
-                        }
-                    }
-                }
-            }
-            else if (matches.containsKey("minute")){
-                if (lval.isEmpty())
-                    lval = "xxxx-xx-xxtxx";
-                String minute = matches.get("minute");
-                minute = StringUtils.leftPad(minute, 2, "0");
-                lval += ":" + minute;
-                if (matches.containsKey("second")){
-                    String second = matches.get("second");
-                    second = StringUtils.leftPad(second, 2, "0");
-                    lval += ":" + second;
-                }
-            }
-
         }
         return lval;
     }
