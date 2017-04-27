@@ -336,32 +336,66 @@ public class Annotation {
 		return text.toString();
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
     public String getBaseText(){
+    	return this.getBaseText(true);
+    }
+
+    /**
+     * 
+     * @param includeNs
+     * @return
+     */
+    public String getBaseText(boolean includeNs){
         List<Token> tokens = this.sentence.getTokens();
         StringBuilder text = new StringBuilder();
         TokenAttributeIndex index = this.sentence.getAttributeIndex();
         for (int i : this.tokens) {
             Token token = tokens.get(i);
             text.append(token.getAttributeValue(index.getIndex("base")));
-            if ((!token.getNoSpaceAfter()) && (i < getEnd())){
+            if ( includeNs == false || (!token.getNoSpaceAfter()) && (i < getEnd())){
                 text.append(" ");
             }
         }
         return text.toString();
     }
 
-	// Returns space-separated chain of bases
-	public String getSimpleBaseText(){
-		List<Token> tokens = this.sentence.getTokens();
-		List<String> text = new LinkedList<>();
-		TokenAttributeIndex index = this.sentence.getAttributeIndex();
-		for (int i : this.tokens) {
-			Token token = tokens.get(i);
-			text.add(token.getAttributeValue(index.getIndex("base")));
-		}
-		return StringUtils.join(text, " ");
-	}
+    /**
+     * Return a space-separated sequence of token ctags.
+     * @return
+     */
+    public String getCtags(){
+        List<Token> tokens = this.sentence.getTokens();
+        StringBuilder text = new StringBuilder();
+        for (int i : this.tokens) {
+            text.append(tokens.get(i).getDisambTag().getCtag());
+            text.append(" ");
+        }
+        return text.toString().trim();
+    }    
 
+    /**
+     * Return a space-separated sequence of ns values.
+     * @return
+     */
+    public String getNss(){
+        List<Token> tokens = this.sentence.getTokens();
+        StringBuilder text = new StringBuilder();
+        for (int i : this.tokens) {
+            text.append(tokens.get(i).getNoSpaceAfter() ? "True" : "False");
+            text.append(" ");
+        }
+        return text.toString().trim();
+    }    
+    
+    
+    /**
+     * 
+     * @param id
+     */
 	public void setId(String id){
 		this.id = id;
 	}

@@ -28,6 +28,8 @@ import org.ini4j.Profile;
 
 public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
 
+	public static final String PARAM_WRAP = "wrap";
+	
 	public ChunkerFactoryItemCrfpp() {
 		super("crfpp");
 	}
@@ -66,11 +68,13 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
 	 */
     private Chunker load(Profile.Section description, ChunkerManager cm, TokenFeatureGenerator gen) throws Exception {
         String store = description.get("store");
+        String wrap = description.get(PARAM_WRAP);
 
         ConsolePrinter.log("--> CRFPP Chunker deserialize from " + store);
 
         CrfTemplate template = getTemplate(description, cm, gen);
-        CrfppChunker chunker = new CrfppChunker(description.containsKey("features") ? loadUsedFeatures(description.get("features")) : template.getUsedFeatures());
+        List<String> features = description.containsKey("features") ? loadUsedFeatures(description.get("features")) : template.getUsedFeatures();
+        CrfppChunker chunker = new CrfppChunker(features, wrap);
         chunker.deserialize(store);
         chunker.setTemplate(template);
         
@@ -88,6 +92,7 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
      */
     private Chunker train(Profile.Section description, ChunkerManager cm, TokenFeatureGenerator gen) throws Exception {
         ConsolePrinter.log("--> CRFPP Chunker train");
+        String wrap = description.get(PARAM_WRAP);
 
         Converter trainingDataConverter = null;
         if ( description.containsKey("training-data-converter") ){
@@ -139,7 +144,8 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         ConsolePrinter.log("--> Training on file=" + inputFile);
 
         CrfTemplate template = getTemplate(description, cm, gen);
-        CrfppChunker chunker = new CrfppChunker(threads, types, description.containsKey("features") ? loadUsedFeatures(description.get("features")) :template.getUsedFeatures());
+        List<String> features = description.containsKey("features") ? loadUsedFeatures(description.get("features")) : template.getUsedFeatures();
+        CrfppChunker chunker = new CrfppChunker(threads, types, features, wrap);
 
         chunker.setTemplate(template);
 
@@ -153,7 +159,7 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
         return chunker;
     }
 
-    private ArrayList<String> loadUsedFeatures(String file) throws IOException {
+    private List<String> loadUsedFeatures(String file) throws IOException {
         ArrayList<String> usedFeatures = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line = reader.readLine();

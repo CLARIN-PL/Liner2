@@ -53,8 +53,10 @@ public class AnnGroupsSAXParser extends DefaultHandler {
     Sentence currentSentence = null;
     String currentGroupId = null;
     String currentAnnotationType = null;
+    String currentAnnotationBase = null;
     String currentFeatureName = null;
     List<String> currentGroupTokens = null;
+    String tmpValue = "";
     
     Map<String, Integer> tokenIdsMap = null;
     Map<String, List<String>> wordsIdsMap = null;
@@ -100,6 +102,7 @@ public class AnnGroupsSAXParser extends DefaultHandler {
 
     @Override
     public void startElement(String s, String s1, String elementName, Attributes attributes) throws SAXException {
+    	this.tmpValue = "";
         if (elementName.equalsIgnoreCase(TAG_PARAGRAPH)) {
             currentParagraph = paragraphs.get(currentParagraphIdx++);
             currentSentenceIdx = 0;
@@ -111,6 +114,7 @@ public class AnnGroupsSAXParser extends DefaultHandler {
         	this.currentGroupId = attributes.getValue("xml:id");
         	this.currentGroupTokens = new LinkedList<String>();
             this.currentAnnotationType = null;
+            this.currentAnnotationBase = null;
             this.groupsTokensId.put(this.currentGroupId, this.currentGroupTokens);
         }
         else if (elementName.equalsIgnoreCase(TAG_FEATURE)) {
@@ -136,12 +140,21 @@ public class AnnGroupsSAXParser extends DefaultHandler {
 
     @Override
     public void endElement(String s, String s1, String element) throws SAXException {
-        if (element.equals(TAG_SEGMENT)) {
-        	this.groups.add(new SentenceGroup(this.currentGroupId, this.currentSentence, this.currentAnnotationType, this.currentGroupTokens));
+        if ( TAG_SEGMENT.equals(element) ) {        	
+        	this.groups.add(
+        			new SentenceGroup(
+        					this.currentGroupId, 
+        					this.currentSentence, 
+        					this.currentAnnotationType, 
+        					this.currentAnnotationBase,
+        					this.currentGroupTokens));
+        }
+        else if ( TAG_STRING.equals(element) && "base".equals(this.currentFeatureName) ){
+        	this.currentAnnotationBase = this.tmpValue;
         }
         else if (element.equalsIgnoreCase(TAG_FEATURE)) {
             currentFeatureName = null;
-        }
+        }        
     }
 
     public ArrayList<Paragraph> getParagraphs(){
@@ -166,6 +179,7 @@ public class AnnGroupsSAXParser extends DefaultHandler {
     		Annotation an = new Annotation(tokens, group.getType(), group.getSentence());
     		an.setGroup("group");
     		an.setHead(this.getHead(group.getGroupId()));
+    		an.setLemma(group.getBase());
     		group.getSentence().addChunk(an);
     	}
     }
@@ -197,16 +211,25 @@ public class AnnGroupsSAXParser extends DefaultHandler {
     	}
     }
     
+    @Override
+    public void characters(char[] ac, int start, int length) throws SAXException {
+        for(int i=start;i<start+length;i++){
+            tmpValue += ac[i];
+        }
+    }
+    
     class SentenceGroup{
     	
     	private String groupId = null;
     	private Sentence sentence = null;
     	private String type = null;
+    	private String base = null;
     	private List<String> keys = null;
     	
-    	public SentenceGroup(String groupId, Sentence sentence, String type, List<String> keys){
+    	public SentenceGroup(String groupId, Sentence sentence, String type, String base, List<String> keys){
     		this.groupId = groupId;
     		this.sentence = sentence;
+    		this.base = base;
     		this.type = type;
     		this.keys = keys;
     	}
@@ -221,6 +244,10 @@ public class AnnGroupsSAXParser extends DefaultHandler {
     	
     	public String getType(){
     		return this.type;
+    	}
+    	
+    	public String getBase(){
+    		return this.base;
     	}
     	
     	public List<String> getKeys(){

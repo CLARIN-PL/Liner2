@@ -95,6 +95,16 @@ public class Token {
 		return attributes.get(attrIdx.getIndex("orth"));
 	}
 	
+	/**
+	 * Gets the element.
+	 *
+	 * @param key the key
+	 * @return the element
+	 */
+	public String getElement(String key){
+		return attributes.get(attrIdx.getIndex(key));
+	}
+	
 	public boolean getNoSpaceAfter() {
 		return this.noSpaceAfter;
 	}

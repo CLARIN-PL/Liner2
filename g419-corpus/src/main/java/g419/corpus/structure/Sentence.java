@@ -238,7 +238,18 @@ public class Sentence {
 		
 		return annotationsForTypes;
 	}
-        
+
+	public LinkedHashSet<Annotation> getAnnotations(String type){
+		LinkedHashSet<Annotation> annotationsForTypes = new LinkedHashSet<Annotation>();
+		for(Annotation annotation : this.chunks){
+			if(type.equals(annotation.getType())){
+				annotationsForTypes.add(annotation);
+			}
+		}
+		
+		return annotationsForTypes;
+	}
+
 	public LinkedHashSet<Annotation> getAnnotations(List<Pattern> types){
 		LinkedHashSet<Annotation> annotationsForTypes = new LinkedHashSet<Annotation>();
 		for(Annotation annotation : this.chunks){

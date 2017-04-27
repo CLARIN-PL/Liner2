@@ -17,11 +17,12 @@ import g419.corpus.structure.Sentence;
  * Writes a set of annotations in a TSV format. 
  * The output consists of the following fields:
  * <ul>
- *  <li>index of first token,</li>
- *  <li>index of last token,</li>
- *  <li>type,</li>
- * 	<li>text form,</li>
  *  <li>lemma,</li>
+ * 	<li>text form,</li>
+ *  <li>token bases,</li>
+ *  <li>ctags,</li>
+ *  <li>nss,</li>
+ *  <li>type,</li>
  *  <li>group.</li>
  * </ul>
  * 
@@ -78,11 +79,14 @@ public class AnnotationTsvStreamWriter extends AbstractDocumentWriter {
 	 */
 	private void writeChunk(Annotation an) throws IOException {
 		StringJoiner joiner = new StringJoiner("\t");
-		joiner.add("" + (this.sentenceIndexOffset + an.getBegin()));
-		joiner.add("" + (this.sentenceIndexOffset + an.getEnd()));
-		joiner.add(an.getType());
-		joiner.add(an.getText());
+		//joiner.add("" + (this.sentenceIndexOffset + an.getBegin()));
+		//joiner.add("" + (this.sentenceIndexOffset + an.getEnd()));
 		joiner.add(an.getLemma());
+		joiner.add(an.getText());
+		joiner.add(an.getBaseText(false));
+		joiner.add(an.getCtags());
+		joiner.add(an.getNss());
+		joiner.add(an.getType());
 		joiner.add(an.getGroup());
 		this.ow.write(joiner.toString() + "\n");
 	}

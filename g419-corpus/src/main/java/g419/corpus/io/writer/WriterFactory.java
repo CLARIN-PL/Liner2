@@ -91,6 +91,8 @@ public class WriterFactory {
 				return new IobTabStreamWriter(outWrapped);
 			case "token-hash":
 				return new TokenHashWriter(outWrapped);
+			case "token-lemma":
+				return new TokenLemmaWriter(outWrapped);
 			case "tuples":
 				return new TuplesStreamWriter(outWrapped);
 			case "json":

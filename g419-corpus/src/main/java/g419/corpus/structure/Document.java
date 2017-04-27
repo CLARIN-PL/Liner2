@@ -144,8 +144,9 @@ public class Document{
 	}
 
 	public void removeAnnotations(List<Annotation> annotations){
-		for(Annotation annotation : annotations)
+		for(Annotation annotation : annotations){
 			annotation.getSentence().getChunks().remove(annotation);
+		}
 	}
 
 	/**
@@ -153,47 +154,47 @@ public class Document{
 	 * @param annotation
 	 */
 	public void removeAnnotations(String annotation) {
-		for (Paragraph paragraph : this.paragraphs)
-			for (Sentence sentence : paragraph.getSentences())
+		for (Paragraph paragraph : this.paragraphs){
+			for (Sentence sentence : paragraph.getSentences()){
 				sentence.removeAnnotations(annotation);
-		
+			}
+		}
 	}
 
     /**
      * Removes all anotation
      */
     public void removeAnnotations() {
-        for (Paragraph paragraph : this.paragraphs)
-            for (Sentence sentence : paragraph.getSentences())
+        for (Paragraph paragraph : this.paragraphs){
+            for (Sentence sentence : paragraph.getSentences()){
                 sentence.chunks = new LinkedHashSet<Annotation>();
-
+            }
+        }
     }
 
-	public void removeAnnotations2(List<Pattern> types) {
-		for (Paragraph paragraph : this.paragraphs)
+    /**
+     * Remove all annotations which type matches one of given type name patterns.
+     * @param types
+     */
+	public void removeAnnotationsByTypePatterns(List<Pattern> types) {
+		for (Paragraph paragraph : this.paragraphs){
 			for (Sentence sentence : paragraph.getSentences()){
-				LinkedHashSet<Annotation> newAnnotationSet = new LinkedHashSet<Annotation>();
-				for (Annotation a : sentence.chunks){
-					for (Pattern p : types){
-						if(!p.matcher(a.getType()).find()){
-							newAnnotationSet.add(a);
-						}
-					}
-				}
-				sentence.chunks = newAnnotationSet;
+				sentence.getChunks().removeAll(sentence.getAnnotations(types));
 			}
-
+		}
 	}
 
 	/**
 	 * Removes metadata from chunks with given name
 	 */
 	public void removeMetadata(String key) {
-		for (Paragraph paragraph : this.paragraphs)
-			for (Sentence sentence : paragraph.getSentences())
-				for (Annotation annotation : sentence.chunks)
+		for (Paragraph paragraph : this.paragraphs){
+			for (Sentence sentence : paragraph.getSentences()){
+				for (Annotation annotation : sentence.chunks){
 					annotation.getMetadata().remove(key);
-
+				}
+			}
+		}
 	}
 
     /**

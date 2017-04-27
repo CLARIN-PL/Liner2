@@ -19,9 +19,9 @@ public class LValNormalizingChunker extends NormalizingChunker {
     @Override
     public void normalize(Annotation annotation) {
         if (shouldNormalize(annotation)) {
-            String baseText = annotation.getSimpleBaseText();
+            String baseText = annotation.getBaseText(false);
             String type = annotation.getType();
-            String normalized = ruleContainer.getLVal(annotation.getSimpleBaseText(), annotation.getType());
+            String normalized = ruleContainer.getLVal(annotation.getBaseText(false), annotation.getType());
             if (normalized != null)
                 annotation.setMetadata("lval", normalized);
         }

@@ -8,9 +8,11 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.chasen.crfpp.Tagger;
 
 import g419.corpus.ConsolePrinter;
@@ -24,6 +26,7 @@ import g419.corpus.structure.Token;
 import g419.liner2.api.chunker.interfaces.DeserializableChunkerInterface;
 import g419.liner2.api.chunker.interfaces.SerializableChunkerInterface;
 import g419.liner2.api.chunker.interfaces.TrainableChunkerInterface;
+import g419.liner2.api.converter.AnnotationWrapConverter;
 import g419.liner2.api.tools.TemplateFactory;
 
 public class CrfppChunker extends Chunker
@@ -39,17 +42,27 @@ public class CrfppChunker extends Chunker
 	private static final int MAX_TOKENS = 1000;
 	private List<Pattern> types = null;
     private String trainingDataFileName = null;
-	private ArrayList<String> usedFeatures;
+	private List<String> usedFeatures;
+	private String wrap = null;
 	
-    public CrfppChunker(ArrayList<String> usedFeatures) {
+    public CrfppChunker(List<String> usedFeatures, String wrap) {
 		this.types = new ArrayList<Pattern>();
 		this.usedFeatures = usedFeatures;
+		this.wrap = wrap;
     }
     
-    public CrfppChunker(int threads, List<Pattern> types, ArrayList<String> usedFeatures){
+    /**
+     * 
+     * @param threads
+     * @param types
+     * @param usedFeatures
+     * @param wrap Annotation name category used to wrap annotation sequences annotated with given name.
+     */
+    public CrfppChunker(int threads, List<Pattern> types, List<String> usedFeatures, String wrap){
 		this.threads = threads;
 		this.types = types;
 		this.usedFeatures = usedFeatures;
+		this.wrap = wrap;
     }
 
     /**
@@ -70,12 +83,31 @@ public class CrfppChunker extends Chunker
 	 * @return set of recognized chunks
 	 */
 	private AnnotationSet chunk(Sentence sentence){
+		Map<Integer, Integer> tokenIndexMapping = new HashMap<Integer, Integer>();
+    	Map<Integer, Annotation> annotationsToWrap = new HashMap<Integer, Annotation>();
+    	if ( wrap != null ){
+    		for ( Annotation an : sentence.getAnnotations(wrap) ){
+    			annotationsToWrap.put(an.getBegin(), an);
+    		}
+    	}
+		
 		AnnotationSet chunking = new AnnotationSet(sentence);
         HashMap<String, Annotation> annsByType = new HashMap<String, Annotation>();
         // Prepare date and send them to the API
         tagger.clear();
 		String val = null;
-		for (Token token : sentence.getTokens()) {
+		int iWrapped = 0;
+		for (int i=0; i<sentence.getTokens().size(); i++) {
+			Token token = sentence.getTokens().get(i);
+			tokenIndexMapping.put(iWrapped++, i);
+			
+			Annotation anWrap = annotationsToWrap.get(i);
+			if ( anWrap != null ){
+				i = anWrap.getEnd();
+				token = anWrap.getHeadToken();
+				Logger.getLogger(this.getClass()).info("Annotation wrapped on chunking: " + anWrap.toString() + " into " + token.getOrth());
+			}
+			
 			StringBuilder oStr = new StringBuilder();
 			for (String feature: usedFeatures){
 				oStr.append(" ");
@@ -95,6 +127,7 @@ public class CrfppChunker extends Chunker
 			}
 			tagger.add(oStr.toString().trim());
 		}
+		tokenIndexMapping.put(iWrapped++, sentence.getTokens().size());
 		tagger.parse();		
 
 		// Reads the output of parsing
@@ -109,14 +142,21 @@ public class CrfppChunker extends Chunker
                 while(m.find()){
                     String annType = m.group(2);
                     if(m.group(1).equals("B")){
-                        Annotation newAnn = new Annotation(i, annType, sentence);
+                    	int from = tokenIndexMapping.get(i);
+                    	int to = tokenIndexMapping.get(i+1)-1;
+                        Annotation newAnn = new Annotation(from, to, annType, sentence);
                         chunking.addChunk(newAnn);
                         annsByType.put(annType, newAnn);
                        	newAnn.setConfidence(tagger.prob(i));
                     }
                     else if(m.group(1).equals("I")){
-                        if(annsByType.containsKey(annType))
-                            annsByType.get(annType).addToken(i);
+                        if(annsByType.containsKey(annType)){
+                        	int from = tokenIndexMapping.get(i);
+                        	int to = tokenIndexMapping.get(i+1)-1;
+                        	for ( int j=from; j<=to; j++ ){
+                        		annsByType.get(annType).addToken(j);
+                        	}
+                        }
                     }
                 }
             }
@@ -135,7 +175,7 @@ public class CrfppChunker extends Chunker
     @Override
     public void addTrainingData(Document paragraphSet) {
         ConsolePrinter.log("Loading training data for CRF from document:" + paragraphSet.getName());
-//        System.out.println(paragraphSet.getAttributeIndex().allAtributes().toString());
+        
     	// Utwórz tymczasowy plik do zapisu danych treningowych
     	if ( this.trainingFileWriter == null ){
     		try {
@@ -155,12 +195,27 @@ public class CrfppChunker extends Chunker
     	
     	for (Paragraph paragraph : paragraphSet.getParagraphs())
     		for (Sentence sentence : paragraph.getSentences()) {
+    			
+    	    	Map<Integer, Annotation> annotationsToWrap = new HashMap<Integer, Annotation>();
+    	    	if ( wrap != null ){
+    	    		for ( Annotation an : sentence.getAnnotations(wrap) ){
+    	    			annotationsToWrap.put(an.getBegin(), an);
+    	    		}
+    	    	}
+    	    	    			
     			List<Token> tokens = sentence.getTokens();    			
     			for (int i = 0; i < tokens.size(); i++) {
     				String oStr = "";    				
     				for (String feature: usedFeatures){
+    					Token token = tokens.get(i);
+    					Annotation anWrap = annotationsToWrap.get(i);
+    					if ( anWrap != null ){
+    						i = anWrap.getEnd();
+    						token = anWrap.getHeadToken();
+    						Logger.getLogger(this.getClass()).info("Annotation wrapped: " + anWrap.toString() + " into " + token.getOrth());
+    					}
 						try {
-							String val = tokens.get(i).getAttributeValue(feature);
+							String val = token.getAttributeValue(feature);
 							if ( val != null)
 								val = val.length()==0 ? "NULL" : val.replaceAll("\\s+", "_");
 							oStr += " " + val;
@@ -168,7 +223,7 @@ public class CrfppChunker extends Chunker
 						catch (ArrayIndexOutOfBoundsException e){
 							System.out.println("Error: Feature used by CRF chunker not in attribute index: " + feature);
 							System.exit(1);
-						}
+						}						
     				}
                     String tokClass = sentence.getTokenClassLabel(i, this.types);
                     oStr += " " + tokClass;

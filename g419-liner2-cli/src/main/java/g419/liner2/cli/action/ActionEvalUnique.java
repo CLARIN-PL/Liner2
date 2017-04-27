@@ -42,30 +42,30 @@ import org.apache.commons.io.IOUtils;
  * @author Michał Marcińczuk
  *
  */
-public class ActionEval extends Action{
+public class ActionEvalUnique extends Action{
 
     private String inputFile = null;
     private String inputFormat = null;
     private boolean errorsOnly = false;
-
-    private boolean checkLemma = false;
     
     private static final String PARAM_ERRORS_ONLY = "e";
     private static final String PARAM_ERRORS_ONLY_LONG = "errors-only";
-    private static final String PARAM_CHECK_LEMMA = "l";
-    private static final String PARAM_CHECK_LEMMA_LONG = "lemma";
 
     //@SuppressWarnings("static-access")
-	public ActionEval() {
-		super("eval");
-        this.setDescription("evaluates chunkers against a specific set of documents (-i batch:FORMAT, -i FORMAT) #or perform cross validation (-i cv:{format})");
+	public ActionEvalUnique() {
+		super("eval-unique");
+		StringBuilder sb = new StringBuilder();
+		sb.append("evaluates chunkers against a specific set of documents (-i batch:FORMAT, -i FORMAT) #");
+		sb.append("or perform cross validation (-i cv:{format}). The evaluation is performed on the sets#");
+		sb.append("with unique annotations, i.e. annotations with the same orth/base are treated as a single annotation");
+		
+        this.setDescription(sb.toString());
 
         this.options.addOption(CommonOptions.getInputFileFormatOption());
         this.options.addOption(CommonOptions.getInputFileNameOption());
         this.options.addOption(CommonOptions.getModelFileOption());
         this.options.addOption(CommonOptions.getVerboseDeatilsOption());
         this.options.addOption(Option.builder(PARAM_ERRORS_ONLY).longOpt(PARAM_ERRORS_ONLY_LONG).desc("print only sentence with errors").build());
-        this.options.addOption(Option.builder(PARAM_CHECK_LEMMA).longOpt(PARAM_CHECK_LEMMA_LONG).desc("evaluate with annotation lemma").build());
 	}
 
 	@Override
@@ -75,7 +75,6 @@ public class ActionEval extends Action{
         this.inputFile = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
         this.errorsOnly = line.hasOption(PARAM_ERRORS_ONLY_LONG);
-        this.checkLemma = line.hasOption(PARAM_CHECK_LEMMA_LONG);
         LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
         if(line.hasOption(CommonOptions.OPTION_VERBOSE_DETAILS)){
             ConsolePrinter.verboseDetails = true;
@@ -100,16 +99,15 @@ public class ActionEval extends Action{
     	System.out.print("Annotations to evaluate:");
         if(LinerOptions.getGlobal().types.isEmpty()){
             System.out.print(" all");
-        } else {
-            for (Pattern pattern : LinerOptions.getGlobal().types){
+        }
+        else{
+            for (Pattern pattern : LinerOptions.getGlobal().types)
                 System.out.print(" " + pattern);
-            }
         }
     	System.out.println();
 
         if (this.inputFormat.startsWith("cv:")){
             ChunkerEvaluator globalEval = new ChunkerEvaluator(LinerOptions.getGlobal().types, true);
-            globalEval.setCheckLemma(this.checkLemma);
             ChunkerEvaluatorMuc globalEvalMuc = new ChunkerEvaluatorMuc(LinerOptions.getGlobal().types);
 
             this.inputFormat = this.inputFormat.substring(3);
@@ -126,6 +124,8 @@ public class ActionEval extends Action{
                 AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet), "", this.inputFormat);
                 evaluate(reader, gen, cm, globalEval, globalEvalMuc, errorsOnly);
                 timer.stopTimer();
+
+
             }
 
             System.out.println("***************************************** SUMMARY *****************************************");
@@ -133,7 +133,8 @@ public class ActionEval extends Action{
             globalEvalMuc.printResults();
             System.out.println("");
             timer.printStats();
-        } else {
+        }
+        else{
             ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
             cm.loadTestData(ReaderFactory.get().getStreamReader(this.inputFile, this.inputFormat), gen);
             evaluate(ReaderFactory.get().getStreamReader(this.inputFile, this.inputFormat),
@@ -154,7 +155,6 @@ public class ActionEval extends Action{
 
     	/* Create all defined chunkers. */
         ChunkerEvaluator eval = new ChunkerEvaluator(LinerOptions.getGlobal().types, false, errorsOnly);
-        eval.setCheckLemma(this.checkLemma);
         ChunkerEvaluatorMuc evalMuc = new ChunkerEvaluatorMuc(LinerOptions.getGlobal().types);
 
         timer.startTimer("Data reading");
@@ -168,8 +168,8 @@ public class ActionEval extends Action{
             HashMap<Sentence, AnnotationSet> referenceChunks = ps.getChunkings();
 
     		/* Remove annotations from data */
-            //ps.removeAnnotations();
-            ps.removeAnnotationsByTypePatterns(LinerOptions.getGlobal().types);
+            ps.removeAnnotations();
+            //ps.removeAnnotations2(LinerOptions.getGlobal().types);
 
     		/* Generate features */
             timer.startTimer("Feature generation");

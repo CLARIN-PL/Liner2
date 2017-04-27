@@ -81,7 +81,7 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
         String store = description.get("store");
 
         ConsolePrinter.log("--> CRFPP Chunker deserialize from " + store);
-        CrfppChunker baseChunker = new CrfppChunker(loadUsedFeatures(description.get("crf-features")));
+        CrfppChunker baseChunker = new CrfppChunker(loadUsedFeatures(description.get("crf-features")), null);
         baseChunker.deserialize(store);
         CrfTemplate template = createTemplate(description.get("template"), description.get("context"));
         baseChunker.setTemplate(template);
@@ -116,7 +116,7 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
         }
         List<Pattern> list = LinerOptions.getGlobal().parseTypes(description.get("types"));
 
-        CrfppChunker baseChunker = new CrfppChunker(Integer.parseInt(description.get("threads")), list, loadUsedFeatures(description.get("crf-features")));
+        CrfppChunker baseChunker = new CrfppChunker(Integer.parseInt(description.get("threads")), list, loadUsedFeatures(description.get("crf-features")), null);
         baseChunker.setTrainingDataFilename(description.get("store-training-data"));
         baseChunker.setModelFilename(modelFilename);
         ConsolePrinter.log("--> Training on file=" + inputFile);
@@ -153,7 +153,7 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
         return  template;
     }
 
-    private ArrayList<String> loadUsedFeatures(String file) throws IOException {
+    private List<String> loadUsedFeatures(String file) throws IOException {
         ArrayList<String> usedFeatures = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line = reader.readLine();
