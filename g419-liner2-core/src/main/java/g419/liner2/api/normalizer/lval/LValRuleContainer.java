@@ -48,7 +48,7 @@ public class LValRuleContainer {
 
 
     public String getLVal(Annotation annotation){
-        String annBase = annotation.getSimpleBaseText();
+        String annBase = annotation.getBaseText(false);
         String annType = annotation.getType();
         List<LValRule> rulesUsed = new LinkedList<>();
         //ostateczne wartości year, month, day, hour

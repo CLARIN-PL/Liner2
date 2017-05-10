@@ -131,11 +131,11 @@ public class ActionNormalizerEval3 extends Action {
             }
 
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date", "t3_time", "t3_duration", "t3_set"));
-            //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date"));
+            Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date"));
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_time"));
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date", "t3_time"));
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_duration"));
-            Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date", "t3_time", "t3_duration"));
+            //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date", "t3_time", "t3_duration"));
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_set"));
             chunker.chunkInPlace(cloneDocument);
             //HashMap<Sentence, AnnotationSet> chunkings = chunker.chunk(cloneDocument);
@@ -192,8 +192,8 @@ public class ActionNormalizerEval3 extends Action {
                                     System.out.println(
                                                     referenceAnnotation.getType() + "\t" +
                                                     referenceDocument.getName() + "\t" +
-                                                    referenceAnnotation.toString() + "\t" +
-                                                    referenceAnnotation.getSimpleBaseText() + "\t" +
+                                                    referenceAnnotation.toString() + "\t|" +
+                                                    referenceAnnotation.getBaseText(false) + "|\t" +
                                                     referenceAnnotation.getMetadata().get("lval") + "\t" +
                                                     systemAnnotation.getMetadata().get("lval") + "\t" +
                                                     referenceAnnotation.metaDataMatchesKey("lval", systemAnnotation)
@@ -219,7 +219,7 @@ public class ActionNormalizerEval3 extends Action {
                                             referenceAnnotation.getType() + "\t" +
                                                     referenceDocument.getName() + "\t" +
                                                     referenceAnnotation.toString() + "\t" +
-                                                    referenceAnnotation.getSimpleBaseText() + "\t" +
+                                                    referenceAnnotation.getBaseText(false) + "\t" +
                                                     referenceAnnotation.getMetadata().get("lval") + "\t" +
                                                     referenceAnnotation.getMetadata().get("val") + "\t" +
                                                     systemAnnotation.getMetadata().get("val") + "\t" +

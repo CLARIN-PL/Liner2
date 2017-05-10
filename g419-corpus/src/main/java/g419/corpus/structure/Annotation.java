@@ -356,7 +356,8 @@ public class Annotation {
         for (int i : this.tokens) {
             Token token = tokens.get(i);
             text.append(token.getAttributeValue(index.getIndex("base")));
-            if ( includeNs == false || (!token.getNoSpaceAfter()) && (i < getEnd())){
+			int a = getEnd();
+            if ( (includeNs == false || !token.getNoSpaceAfter()) && (i < getEnd())){
                 text.append(" ");
             }
         }
