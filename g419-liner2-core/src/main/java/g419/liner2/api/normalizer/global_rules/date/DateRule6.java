@@ -1,6 +1,7 @@
 package g419.liner2.api.normalizer.global_rules.date;
 
 import g419.liner2.api.normalizer.global_rules.AbstractRule;
+import org.joda.time.IllegalFieldValueException;
 
 public class DateRule6 extends AbstractRule {
     @Override
@@ -17,6 +18,9 @@ public class DateRule6 extends AbstractRule {
                     )
             );
         } catch (NumberFormatException nfe){
+            return null;
+        }
+        catch (IllegalFieldValueException ife){
             return null;
         }
     }

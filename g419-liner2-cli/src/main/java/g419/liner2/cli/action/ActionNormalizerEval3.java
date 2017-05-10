@@ -131,11 +131,11 @@ public class ActionNormalizerEval3 extends Action {
             }
 
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date", "t3_time", "t3_duration", "t3_set"));
-            Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date"));
+            //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date"));
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_time"));
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date", "t3_time"));
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_duration"));
-            //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date", "t3_time", "t3_duration"));
+            Set<String> typeSet = new HashSet<>(Arrays.asList("t3_date", "t3_time", "t3_duration"));
             //Set<String> typeSet = new HashSet<>(Arrays.asList("t3_set"));
             chunker.chunkInPlace(cloneDocument);
             //HashMap<Sentence, AnnotationSet> chunkings = chunker.chunk(cloneDocument);

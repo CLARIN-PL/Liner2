@@ -48,7 +48,11 @@ public abstract class AbstractRule implements Rule {
     }
 
     static public int toInt(String i){
-        return Integer.parseInt(i);
+        try {
+            return Integer.parseInt(i);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 
     static public LocalDate fromString(String date){
