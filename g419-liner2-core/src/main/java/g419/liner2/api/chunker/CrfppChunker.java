@@ -281,6 +281,8 @@ public class CrfppChunker extends Chunker
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		templateFile.delete();
+		this.trainingFile.delete();
     }
 
     /**

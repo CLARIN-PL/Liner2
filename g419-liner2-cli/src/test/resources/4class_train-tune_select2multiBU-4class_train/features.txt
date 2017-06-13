@@ -1,8 +1,0 @@
-orth
-base
-ctag
-prefix-3 
-hypernym-1:{INI_PATH}/../data/plwordnet_2_0_2_pwn_format
-struct
-dict_timex_base:base:{INI_PATH}/../data/timex/timex.txt
-top4hyper-4:{INI_PATH}/../data/plwordnet_2_0_2_pwn_format

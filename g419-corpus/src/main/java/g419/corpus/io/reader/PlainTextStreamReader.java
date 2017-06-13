@@ -115,22 +115,27 @@ public class PlainTextStreamReader extends AbstractDocumentReader {
 			
 			String cmd = "";
 			if (analyzer.equals("wcrft")){
-				cmd = String.format("wcrft-app nkjp_e2.ini -i text -o ccl %s > %s.tag", tager_input.getAbsolutePath(), tager_input.getAbsolutePath());
+				cmd = String.format("wcrft-app nkjp_e2.ini -i text -o ccl %s -O %s.tag", tager_input.getAbsolutePath(), tager_input.getAbsolutePath());
 			}
 			else if(analyzer.equals("maca")){
 				cmd =  String.format("maca-analyse -qs morfeusz-nkjp-official -o ccl < %s > %s.tag", tager_input.getAbsolutePath(), tager_input.getAbsolutePath());
-				System.out.println(cmd);
 			}
 			else{
 				throw new Exception("Unrecognized analyzer: " + analyzer);
 			}
-			
 			Process tager = Runtime.getRuntime().exec(cmd);
 			tager.waitFor();
-			
-			AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(docName, new FileInputStream(new File(tager_input.getAbsolutePath() + ".tag")), "ccl");
+			File tagFile = new File(tager_input.getAbsolutePath() + ".tag");
+			FileInputStream tagFileStream = new FileInputStream(tagFile);
+			byte[] data = new byte[(int) tagFile.length()];
+			tagFileStream.read(data);
+			tagFileStream.close();
+			InputStream is = new ByteArrayInputStream(data);
+			tagFile.delete();
+			AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(docName, is, "ccl");
 			Document doc = reader.nextDocument();
 			reader.close();
+			tager_input.delete();
 			return doc;
 			
 		} catch (Exception ex) {

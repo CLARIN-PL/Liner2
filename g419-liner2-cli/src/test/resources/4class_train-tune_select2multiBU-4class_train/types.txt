@@ -1,4 +1,0 @@
-t3_date
-t3_duration
-t3_set
-t3_time

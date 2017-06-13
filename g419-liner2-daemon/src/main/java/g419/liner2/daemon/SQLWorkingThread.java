@@ -123,7 +123,6 @@ public class SQLWorkingThread extends WorkingThread {
 		// save results
 		request.setStats(numTokens, numSentences, numParagraphs, numChunks);
 		request.setText(ous.toString());
-
 		ConsolePrinter.log("Request processing completed: " + request.getId(), false);
 	}
 }

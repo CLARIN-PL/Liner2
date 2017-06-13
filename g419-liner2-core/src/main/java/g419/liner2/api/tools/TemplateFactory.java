@@ -73,10 +73,16 @@ public class TemplateFactory {
 					while (featureIdFixed.length() < 2)
 						featureIdFixed = "0" + featureIdFixed;
 					String wFixed = windowDesc[i+1];
-					if (!wFixed.startsWith("-"))
+
+					if (wFixed.endsWith("B")){
+						unigramId = unigramId.replace("U","B");
+						wFixed = wFixed.replace("B","");
+						//windowDesc[i+1] = windowDesc[i+1].replace("B","");
+					}
+					if (!wFixed.startsWith("-") && !wFixed.equals("0"))
 						wFixed = "+" + wFixed;
 					unigramId += featureIdFixed + wFixed;
-					unigramContent += "%x[" + windowDesc[i+1] + "," + featureId + "]";
+					unigramContent += "%x[" + wFixed + "," + featureId + "]";
 				}
 				pw.write(unigramId + ":" + unigramContent + "\n");
 			}

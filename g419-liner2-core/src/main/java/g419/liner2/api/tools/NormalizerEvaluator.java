@@ -216,7 +216,7 @@ public class NormalizerEvaluator {
     }
 
     public void printResults(){
-        println(String.format(HEADER_TEMPLATE, HEADER));
+        println(String.format(HEADER_TEMPLATE, new Object[]{HEADER}));
         println("\\hline");
         Map<String, Integer> totals = new HashMap<>();
         totals.put("tp", 0);

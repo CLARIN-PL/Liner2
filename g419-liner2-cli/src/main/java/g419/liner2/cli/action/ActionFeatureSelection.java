@@ -46,6 +46,8 @@ public class ActionFeatureSelection extends Action {
 	private String chunker = "c1";
 	private TokenFeatureGenerator gen;
 	private String[] restoreFeatures = null;
+	private HashMap<String, Document> documents = null;
+	private ArrayList<List<String>>  folds = null;
 
 	public ActionFeatureSelection() {
 		super("selection");
@@ -106,7 +108,7 @@ public class ActionFeatureSelection extends Action {
 		ChunkerEvaluatorMuc globalEvalMuc = new ChunkerEvaluatorMuc(LinerOptions.getGlobal().types);
 		LinerOptions.getGlobal().setCVDataFormat("ccl");
 
-		ArrayList<List<String>> folds = loadFolds();
+		folds = loadFolds();
 		String crfppChunkerName = cit.toString();
 		ChunkerManager cm = null;
 		for(int i=0; i < folds.size(); i++){
@@ -335,7 +337,7 @@ public class ActionFeatureSelection extends Action {
 		ChunkerEvaluatorMuc globalEvalMuc = new ChunkerEvaluatorMuc(LinerOptions.getGlobal().types);
 
 		LinerOptions.getGlobal().setCVDataFormat("ccl");
-		ArrayList<List<String>> folds = loadFolds();
+		//ArrayList<List<String>> folds = loadFolds();
 		for(int i=0; i < folds.size(); i++){
 			timer.startTimer("fold "+ (i + 1));
 			System.out.println("***************************************** FOLD " + (i + 1) + " *****************************************");
