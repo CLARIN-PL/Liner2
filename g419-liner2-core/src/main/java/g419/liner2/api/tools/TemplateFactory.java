@@ -77,12 +77,11 @@ public class TemplateFactory {
 					if (wFixed.endsWith("B")){
 						unigramId = unigramId.replace("U","B");
 						wFixed = wFixed.replace("B","");
-						//windowDesc[i+1] = windowDesc[i+1].replace("B","");
 					}
 					if (!wFixed.startsWith("-") && !wFixed.equals("0"))
 						wFixed = "+" + wFixed;
 					unigramId += featureIdFixed + wFixed;
-					unigramContent += "%x[" + wFixed + "," + featureId + "]";
+					unigramContent += "%x[" + windowDesc[i+1].replace("B","") + "," + featureId + "]";
 				}
 				pw.write(unigramId + ":" + unigramContent + "\n");
 			}
