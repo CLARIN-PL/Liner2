@@ -39,7 +39,7 @@ public class TemplateFactory {
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		pw.write("# Unigram\n");
+		pw.write("# States (U) and transiation between states (B) with feature values\n");
 		Hashtable<String, String[]> features = template.getFeatures();
 		for (String featureName : template.getFeatureNames()) {
 			pw.write("# " + featureName + "\n");
@@ -56,9 +56,17 @@ public class TemplateFactory {
 					featureIdFixed = "0" + featureIdFixed;
 				for (int i = 1; i < windowDesc.length; i++) {
 					String wFixed = windowDesc[i];
-					if (!wFixed.startsWith("-"))
+					if (!wFixed.startsWith("-")){
 						wFixed = "+" + wFixed;
-					pw.write("U" + featureIdFixed + wFixed + ":%x[" + windowDesc[i] + "," + featureId + "]\n");
+					}
+					String offset = windowDesc[i];
+					String type = "U";
+					if ( offset.endsWith("B") ){
+						type = "B";
+						offset = offset.substring(0, offset.length()-1);
+					}
+					String templateFeature = type + featureIdFixed + wFixed + ":%x[" + offset + "," + featureId + "]";
+					pw.write(templateFeature + "\n");
 				}
 			}
 			// cecha złożona
@@ -70,16 +78,18 @@ public class TemplateFactory {
 					if (unigramContent.length() > 0) unigramContent += "/";
 					String featureId = Integer.toString(template.getUsedFeatures().indexOf(windowDesc[i]));
 					String featureIdFixed = featureId;
-					while (featureIdFixed.length() < 2)
+					while (featureIdFixed.length() < 2){
 						featureIdFixed = "0" + featureIdFixed;
+					}
 					String wFixed = windowDesc[i+1];
 
 					if (wFixed.endsWith("B")){
 						unigramId = unigramId.replace("U","B");
 						wFixed = wFixed.replace("B","");
 					}
-					if (!wFixed.startsWith("-") && !wFixed.equals("0"))
+					if (!wFixed.startsWith("-") && !wFixed.equals("0")){
 						wFixed = "+" + wFixed;
+					}
 					unigramId += featureIdFixed + wFixed;
 					unigramContent += "%x[" + windowDesc[i+1].replace("B","") + "," + featureId + "]";
 				}
@@ -87,7 +97,7 @@ public class TemplateFactory {
 			}
 			pw.write("\n");
 		}
-		pw.write("# Bigram\n");
+		pw.write("# Transitions between states\n");
 		pw.write("B\n");
 		pw.close();
 	}
