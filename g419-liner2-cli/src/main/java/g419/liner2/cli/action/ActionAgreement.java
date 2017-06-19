@@ -76,7 +76,6 @@ public class ActionAgreement extends Action {
 				AbstractDocumentReader originalDocument = new BatchReader(IOUtils.toInputStream(getBatch(pair.first), "UTF-8"), "", this.input_format);
 				AbstractDocumentReader referenceDocument = new BatchReader(IOUtils.toInputStream(getBatch(pair.second), "UTF-8"), "", this.input_format);
 				compare(originalDocument, referenceDocument, results);
-				System.out.println("aaa");
 			}
 		} else {
 
