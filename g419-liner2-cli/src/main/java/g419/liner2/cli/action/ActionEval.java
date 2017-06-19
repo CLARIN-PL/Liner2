@@ -121,9 +121,9 @@ public class ActionEval extends Action{
                 String trainSet = getTrainingSet(i, folds);
                 String testSet = getTestingSet(i, folds);
                 ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
-                cm.loadTrainData(new BatchReader(IOUtils.toInputStream(trainSet), "", this.inputFormat), gen);
-                cm.loadTestData(new BatchReader(IOUtils.toInputStream(testSet), "", this.inputFormat), gen);
-                AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet), "", this.inputFormat);
+                cm.loadTrainData(new BatchReader(IOUtils.toInputStream(trainSet, "UTF-8"), "", this.inputFormat), gen);
+                cm.loadTestData(new BatchReader(IOUtils.toInputStream(testSet, "UTF-8"), "", this.inputFormat), gen);
+                AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet, "UTF-8"), "", this.inputFormat);
                 evaluate(reader, gen, cm, globalEval, globalEvalMuc, errorsOnly);
                 timer.stopTimer();
             }

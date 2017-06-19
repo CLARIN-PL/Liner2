@@ -73,9 +73,10 @@ public class ActionAgreement extends Action {
 
 			InputIndexMixer numbers = new InputIndexMixer(input_files.length);
 			for (NumberPair pair : numbers) {
-				AbstractDocumentReader originalDocument = new BatchReader(IOUtils.toInputStream(getBatch(pair.first)), "", this.input_format);
-				AbstractDocumentReader referenceDocument = new BatchReader(IOUtils.toInputStream(getBatch(pair.second)), "", this.input_format);
+				AbstractDocumentReader originalDocument = new BatchReader(IOUtils.toInputStream(getBatch(pair.first), "UTF-8"), "", this.input_format);
+				AbstractDocumentReader referenceDocument = new BatchReader(IOUtils.toInputStream(getBatch(pair.second), "UTF-8"), "", this.input_format);
 				compare(originalDocument, referenceDocument, results);
+				System.out.println("aaa");
 			}
 		} else {
 

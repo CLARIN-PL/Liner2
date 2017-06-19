@@ -94,7 +94,7 @@ public class ActionLearningCurve extends Action {
 				LinerOptions.getGlobal().setCVTrainData(
 						trainSetB.toString().trim());
 				AbstractDocumentReader reader = new BatchReader(
-						IOUtils.toInputStream(testSetB.toString().trim()), "",
+						IOUtils.toInputStream(testSetB.toString().trim(), "UTF-8"), "",
 						this.input_format.substring(3));
 				evaluate(reader, gen, globalEval, globalEvalMuc);
 			}

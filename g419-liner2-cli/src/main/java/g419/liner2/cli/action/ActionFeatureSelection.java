@@ -117,9 +117,9 @@ public class ActionFeatureSelection extends Action {
 			String trainSet = getTrainingSet(i, folds);
 			String testSet = getTestingSet(i, folds);
 			cm = new ChunkerManager(LinerOptions.getGlobal());
-			cm.loadTrainData(new BatchReader(IOUtils.toInputStream(trainSet), "", "ccl"), gen);
-			cm.loadTestData(new BatchReader(IOUtils.toInputStream(testSet), "", "ccl"), gen);
-			AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet), "", "ccl");
+			cm.loadTrainData(new BatchReader(IOUtils.toInputStream(trainSet, "UTF-8"), "", "ccl"), gen);
+			cm.loadTestData(new BatchReader(IOUtils.toInputStream(testSet, "UTF-8"), "", "ccl"), gen);
+			AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet, "UTF-8"), "", "ccl");
 			evaluate(reader, gen, cm, globalEval, globalEvalMuc);
 			timer.stopTimer();
 			break;
@@ -343,9 +343,9 @@ public class ActionFeatureSelection extends Action {
 			System.out.println("***************************************** FOLD " + (i + 1) + " *****************************************");
 			String trainSet = getTrainingSet(i, folds);
 			String testSet = getTestingSet(i, folds);
-			cm.loadTrainData(new BatchReader(IOUtils.toInputStream(trainSet), "", "ccl"), this.gen);
-			cm.loadTestData(new BatchReader(IOUtils.toInputStream(testSet), "", "ccl"), this.gen);
-			AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet), "", "ccl");
+			cm.loadTrainData(new BatchReader(IOUtils.toInputStream(trainSet, "UTF-8"), "", "ccl"), this.gen);
+			cm.loadTestData(new BatchReader(IOUtils.toInputStream(testSet, "UTF-8"), "", "ccl"), this.gen);
+			AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet, "UTF-8"), "", "ccl");
 			evaluate(reader, gen, cm, globalEval, globalEvalMuc);
 			timer.stopTimer();
 

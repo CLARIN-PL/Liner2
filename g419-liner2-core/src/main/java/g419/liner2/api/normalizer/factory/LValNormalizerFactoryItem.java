@@ -5,7 +5,7 @@ import g419.liner2.api.chunker.factory.ChunkerManager;
 import g419.liner2.api.normalizer.LValNormalizingChunker;
 import g419.liner2.api.normalizer.lval.LValRuleContainer;
 import org.ini4j.Ini;
-
+//current LVAL normalizer
 public class LValNormalizerFactoryItem extends AbstractNormalizerFactoryItem {
     public LValNormalizerFactoryItem() {
         super("lval-norm");

@@ -1,7 +1,6 @@
 package g419.liner2.api.normalizer;
 
 import g419.corpus.structure.Annotation;
-import g419.liner2.api.normalizer.rbn.RuleSet;
 
 import java.util.List;
 import java.util.regex.Pattern;
