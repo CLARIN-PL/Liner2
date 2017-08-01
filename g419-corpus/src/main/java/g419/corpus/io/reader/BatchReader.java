@@ -52,18 +52,22 @@ public class BatchReader extends AbstractDocumentReader {
             } catch (IOException ex) {
                 throw new DataFormatException("I/O error.");
             }
-            if(line == null)
+            if(line == null){
                 break;
+            }
             String name = line.trim().split(";")[0];
             String cclFile = name;
-            if (cclFile.length() == 0)
+            if (cclFile.length() == 0){
                 break;
+            }
             
-            if (!cclFile.startsWith("/"))
+            if (!cclFile.startsWith("/")){
             	cclFile = new File(this.root, cclFile).getAbsolutePath();
+            }
 
-            if (!new File(cclFile).exists())
+            if (!new File(cclFile).exists()){
             	System.err.println("File not found while reading batch: " + cclFile);
+            }
             else{
             	this.files.add(name);
             }

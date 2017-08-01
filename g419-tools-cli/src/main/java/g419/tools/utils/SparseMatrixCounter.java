@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.TreeSet;
 
 /**
- * Klasa reprezentuje żadką macierz do zliczania częstości cech na przecięciu wieresza i kolumny.
+ * Klasa reprezentuje rzadką macierz do zliczania częstości cech na przecięciu wieresza i kolumny.
  * @author czuk
  *
  */
@@ -20,9 +20,7 @@ public class SparseMatrixCounter {
 	
 	// Wiersz => Kolumna => Counter
 	Map<String, Map<String, Counter>> counters = new HashMap<String, Map<String, Counter>>();
-	
-	
-	
+		
 	public Set<String> getRows(){
 		return this.rowValues;
 	}
@@ -70,7 +68,7 @@ public class SparseMatrixCounter {
 		}
 		return values;
 	}
-	
+
 	public void addItem(String row, String column){
 		this.rowValues.add(row);
 		this.columnValues.add(column);
