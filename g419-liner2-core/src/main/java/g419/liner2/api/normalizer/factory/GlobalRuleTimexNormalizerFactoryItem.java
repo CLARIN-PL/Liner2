@@ -2,10 +2,10 @@ package g419.liner2.api.normalizer.factory;
 
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.factory.ChunkerManager;
-import g419.liner2.api.normalizer.GlobalTimexNormalizer;
 import g419.liner2.api.normalizer.RuleGlobalTimexNormalizer;
 import org.ini4j.Ini;
 
+//current VAL normalizer
 public class GlobalRuleTimexNormalizerFactoryItem extends AbstractNormalizerFactoryItem {
     public GlobalRuleTimexNormalizerFactoryItem() {
         super("global-rule-timex");

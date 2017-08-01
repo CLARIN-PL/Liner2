@@ -136,7 +136,7 @@ public class ActionInteractive extends Action{
 				// morphological analysis, feature generation
 				AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(
 						"terminal input", 
-						IOUtils.toInputStream(cSeq), 
+						IOUtils.toInputStream(cSeq, "UTF-8"),
 						input_format);
 				Document ps = reader.nextDocument();
 				reader.close();

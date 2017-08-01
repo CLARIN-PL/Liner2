@@ -117,8 +117,8 @@ public abstract class AbstractRule implements Rule {
         return closestWeekday(original, toInt(weekDay));
     }
 
-    static public <T> T firstNotNull(T... objs){
-        for (T o: objs){
+    static public String firstNotNull(String... objs){
+        for (String o: objs){
             if (o!=null)
                 return o;
         }

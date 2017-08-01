@@ -1,3 +1,5 @@
+class:-1/class:0/class:1B
+/class:2B
 orth:-2:-1:0:1:2
 base:-2:-1:0:1:2
 ctag:-2:-1:0:1:2
