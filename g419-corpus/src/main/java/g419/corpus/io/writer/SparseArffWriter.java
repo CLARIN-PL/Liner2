@@ -5,7 +5,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -22,19 +22,23 @@ import java.util.Set;
 public class SparseArffWriter {
 
     private BufferedWriter ow = null;
+    private List<String> attributeNames = new ArrayList<String>();
+    private Map<String, ArffAttributeType> attributes = null;
 
-    public SparseArffWriter(OutputStream os, String name, List<String> features, Set<String> classes){
+    public SparseArffWriter(OutputStream os, String name, Map<String, ArffAttributeType> attributes, Set<String> classes){
         this.ow = new BufferedWriter(new OutputStreamWriter(os));
-        writeDocumentStart(name, features, classes);
+    	this.attributeNames.addAll(attributes.keySet());
+    	this.attributes = attributes;
+        writeDocumentStart(name, classes);
     }
 
-    private void writeDocumentStart(String name, List<String> features, Set<String> classes){
+    private void writeDocumentStart(String name, Set<String> classes){
         try {
         	ow.write(String.format("@relation %s", name));
         	ow.newLine();
         	ow.newLine();
-	        for (String feature: features) {
-	            String line = "@attribute " + feature.replace(" ", "_").replace("\"", "PARENTHESIS") + " Integer"; //" string";
+	        for ( String attribute : attributeNames ) {
+	            String line = "@attribute " + attribute.replace(" ", "_").replace("\"", "PARENTHESIS") + " " + attributes.get(attribute) ;
 	                ow.write(line, 0, line.length());
 	                ow.newLine();
             }
@@ -45,7 +49,6 @@ public class SparseArffWriter {
 	        	if ( it.hasNext() ){
 	        		lineClass +=",";
 	        	}
-	        	
 	        }
 	        ow.write(lineClass + "}");
             ow.newLine();
@@ -63,19 +66,23 @@ public class SparseArffWriter {
      * @param features
      * @throws IOException
      */
-    public void writeInstance(String label, List<? extends Object> features) throws IOException {
+    public void writeInstance(String label, Map<String, ? extends Object> instanceAttributes) throws IOException {
         StringBuilder line = new StringBuilder();
         int featureIndex = 0;
         line.append("{");
-        for(Object feature: features){
-            if (feature == null || feature.toString().equals("0") ){
-                feature = "?";
+        for( String attributeName : this.attributeNames ){
+        	ArffAttributeType attributeType = this.attributes.get(attributeName);
+        	Object value = instanceAttributes.get(attributeName);
+        	String valueStr = "";
+            if (value == null || value.equals("") || value.toString().equals("0") ){
+            	valueStr = "?";
+            } else {
+            	valueStr = value.toString();
+                if ( attributeType == ArffAttributeType.STRING ){
+                	valueStr = String.format("'%s'", valueStr.replaceAll("'", "\'"));
+                }
             }
-            else{
-                //feature = "\'" + feature.toString().replace("\'", "\\\'") + "\'";
-                feature = feature.toString();
-                line.append(String.format("%d %s, ", featureIndex, feature));
-            }
+            line.append(String.format("%d %s, ", featureIndex, valueStr));
             featureIndex++;
         }
         line.append(String.format("%d '%s'}, ", featureIndex, label));

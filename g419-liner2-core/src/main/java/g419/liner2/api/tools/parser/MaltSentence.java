@@ -13,7 +13,7 @@ public class MaltSentence {
     private HashMap<String, String> nkjpToCoNLLPos = getnkjpToCoNLLPos();
     private String[] maltData = null;
     private LinkedHashSet<Annotation> annotations = new LinkedHashSet<Annotation>();
-    Pattern allAnnotationsPattern = Pattern.compile("nam.*");
+    //Pattern allAnnotationsPattern = Pattern.compile("nam.*");
     List<MaltSentenceLink> links = new ArrayList<MaltSentenceLink>();
     private Sentence sentence = null;
 
@@ -30,8 +30,8 @@ public class MaltSentence {
 
     public MaltSentence(Sentence sent, Set<Annotation> sentenceAnnotations) {
 
-    	ArrayList<Pattern> patterns = new ArrayList<Pattern>();
-    	patterns.add(this.allAnnotationsPattern);
+    	List<Pattern> patterns = new ArrayList<Pattern>();
+    	//patterns.add(this.allAnnotationsPattern);
     	
         Sentence wrappedSent = TokenWrapper.wrapAnnotations(sent, patterns);        
         List<String[]> coNLLTokens = convertToCoNLL(wrappedSent);

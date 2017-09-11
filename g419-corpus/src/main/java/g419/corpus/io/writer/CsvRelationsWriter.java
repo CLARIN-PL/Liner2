@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.log4j.Logger;
 
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
@@ -31,27 +32,38 @@ public class CsvRelationsWriter extends AbstractDocumentWriter {
 		
 	@Override
 	public void writeDocument(Document document) {
-		for (Relation relation : document.getRelations().getRelations())
+		for (Relation relation : document.getRelations().getRelations()){
 			try {
-				Annotation af = relation.getAnnotationFrom();
-				Annotation at = relation.getAnnotationTo();
-				
 				List<String> record = new ArrayList<String>();
 				record.add(document.getName());
 				record.add(relation.getType());
-				record.add(af.getType());
-				record.add(af.getText());
-				record.add(at.getType());
-				record.add(at.getText());
-				record.add(af.getSentence().toString());
+				this.annotationAttributes(record, relation.getAnnotationFrom());
+				this.annotationAttributes(record, relation.getAnnotationTo());
+				record.add(relation.getAnnotationFrom().getSentence().toString());
 				
 				writer.printRecord(record);
 				
 			} catch (IOException e) {
 				e.printStackTrace();
+				Logger.getLogger(this.getClass()).error("Writing error", e);
 			}
+		}
 	}
 
+	/**
+	 * Put annotation attributes to the list.
+	 * @param record
+	 * @param an
+	 */
+	private void annotationAttributes(List<String> record, Annotation an){
+		record.add(an.getSentence().getId());
+		record.add("" + an.getBegin());
+		record.add("" + an.getBegin());
+		record.add(an.getType());
+		record.add(an.getText());
+		record.add(an.getBaseText(false));		
+	}
+	
 	@Override
 	public void flush() {
 		try {

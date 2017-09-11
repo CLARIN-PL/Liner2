@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
@@ -71,7 +73,12 @@ public class TokenWrapper {
                         newAnn.addToken(newIdx);
                     }
                 }
-                wrappedSent.addChunk(newAnn);
+                //System.out.println(newAnn);
+                if ( newAnn.getEnd() >= wrappedSent.getTokenNumber() ){
+                	Logger.getLogger(TokenWrapper.class).error("Annotation boundary exceeds sentence boundary");
+                } else {
+                	wrappedSent.addChunk(newAnn);
+                }
             }
         }
         
