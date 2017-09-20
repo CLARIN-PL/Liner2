@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import g419.corpus.structure.Annotation;
@@ -20,7 +21,7 @@ import g419.liner2.api.features.TokenFeatureGenerator;
 import g419.liner2.api.features.TokenToAnnotationFeatureGenerator;
 
 /**
-* Created by michal on 8/21/14.
+* @author Michał Krautforst
 */
 public class AnnotationCRFClassifierChunker extends Chunker {
 
@@ -29,7 +30,6 @@ public class AnnotationCRFClassifierChunker extends Chunker {
     private CrfppChunker baseChunker;
     private TokenToAnnotationFeatureGenerator tokenToAnnotationFeatureGenerator;
     private AnnotationFeatureGenerator annotationFeatureGenerator;
-    private int contextFeatureIndex;
 
     public AnnotationCRFClassifierChunker(List<Pattern> list, String base, CrfppChunker baseChunker, TokenFeatureGenerator gen, List<String> annotationFeatures, String featuresContext) throws Exception {
         this.list = list;
@@ -38,7 +38,7 @@ public class AnnotationCRFClassifierChunker extends Chunker {
         this.annotationFeatureGenerator = new AnnotationFeatureGenerator(annotationFeatures);
         this.tokenToAnnotationFeatureGenerator = new TokenToAnnotationFeatureGenerator(gen);
 
-        for(String featureName: this.annotationFeatureGenerator.fetureNames){
+        for(String featureName: this.annotationFeatureGenerator.getFeatureNames()){
             if(!baseChunker.getTemplate().getFeatures().containsKey(featureName)){
                 baseChunker.getTemplate().addFeature(featureName+ ":" + featuresContext);
 //                    ToDo: Zdecydować czy warto generować cechy złożone z context dla cech anotacji
@@ -106,8 +106,7 @@ public class AnnotationCRFClassifierChunker extends Chunker {
         Paragraph whole = new Paragraph("wholeDoc");
         TokenAttributeIndex index = doc.getAttributeIndex().clone();
         index.addAttribute("context");
-        this.contextFeatureIndex = index.getLength() - 1;
-        for(String featureName: this.annotationFeatureGenerator.fetureNames){
+        for(String featureName: this.annotationFeatureGenerator.getFeatureNames()){
             index.addAttribute(featureName);
         }
         for(Sentence sentence: doc.getSentences()){
@@ -175,10 +174,10 @@ public class AnnotationCRFClassifierChunker extends Chunker {
             }
 
         }
-        LinkedHashMap<String, HashMap<Annotation, String>> annotationFeatures = this.annotationFeatureGenerator.generate(sent, annotations);
+        Map<String, Map<Annotation, String>> annotationFeatures = this.annotationFeatureGenerator.generate(sent, annotations);
         List<Token> tokens = sent.getTokens();
         for(String featureName: annotationFeatures.keySet()){
-            HashMap<Annotation, String> feature = annotationFeatures.get(featureName);
+            Map<Annotation, String> feature = annotationFeatures.get(featureName);
             for(Annotation ann: feature.keySet()){
                 for(int tokenIdx: ann.getTokens()){
                     tokens.get(tokenIdx).setAttributeValue(index.getIndex(featureName), feature.get(ann));

@@ -2,7 +2,9 @@ package g419.liner2.cli.action;
 
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
-import g419.corpus.io.writer.AnnotationArffWriter;
+import g419.corpus.io.writer.AbstractMatrixWriter;
+import g419.corpus.io.writer.ArffGenericWriter;
+import g419.corpus.io.writer.CsvGenericWriter;
 import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationSet;
@@ -11,12 +13,16 @@ import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.features.AnnotationFeatureGenerator;
+import g419.liner2.api.features.TokenFeatureGenerator;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.commons.cli.*;
@@ -38,6 +44,7 @@ public class ActionAnnotations extends Action {
 	private String input_format = null;
 	private String features_file = null;
 	private List<Pattern> types = new ArrayList<Pattern>();
+    Map<String, String> features = new LinkedHashMap<String, String>();
 		
 	public ActionAnnotations() {
 		super("annotations");
@@ -59,6 +66,7 @@ public class ActionAnnotations extends Action {
         this.options.addOption(CommonOptions.getOutputFileNameOption());
         this.options.addOption(CommonOptions.getInputFileFormatOption());
         this.options.addOption(CommonOptions.getInputFileNameOption());
+        this.options.addOption(CommonOptions.getFeaturesOption());
 	}
 
 	@Override
@@ -73,43 +81,69 @@ public class ActionAnnotations extends Action {
         if(typesFile != null){
             this.types = LinerOptions.getGlobal().parseTypes(typesFile);
         }
+        /* Parse token features */
+        String featuresFile = line.getOptionValue(CommonOptions.OPTION_FEATURES);
+        if(featuresFile != null){
+        	
+            this.features = LinerOptions.getGlobal().parseFeatures(featuresFile);            
+        }
 	}
 	
 	@Override
     public void run() throws Exception {
-        List<String> annFeatures = parseAnnotationFeatures(this.features_file);
+        List<String> annFeatures = this.parseAnnotationFeatures(this.features_file);
         AnnotationFeatureGenerator annGen = new AnnotationFeatureGenerator(annFeatures);
 
         AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(
-    			this.input_file,
-    			this.input_format);
+    			this.input_file, this.input_format);
 
-        AnnotationArffWriter writer = WriterFactory.get().getArffAnnotationWriter(
-        		this.output_file ,annFeatures);
+        AbstractMatrixWriter writer1 = new ArffGenericWriter(new FileOutputStream(this.output_file + ".arff"));
+        AbstractMatrixWriter writer2 = new CsvGenericWriter(new FileOutputStream(this.output_file + ".csv"));
+        writer1.writeHeader("annotations", annFeatures);
+        writer2.writeHeader("annotations", annFeatures);
+        		
+        TokenFeatureGenerator gen = null;
+        if (!this.features.isEmpty()) {
+            gen = new TokenFeatureGenerator(this.features);
+        }
 
         Document ps = reader.nextDocument();
         while ( ps != null ){
+        	if ( gen != null ){
+        		gen.generateFeatures(ps);
+        	}
             for(AnnotationSet annotations: ps.getChunkings().values()){
                 for(Annotation ann: annotations.chunkSet()){
-                    if(!this.types.isEmpty()){
-                        for(Pattern patt: this.types){
-                            if(patt.matcher(ann.getType()).find()){
-                                writer.writeAnnotation(ann.getType(), annGen.generate(ann));
-                            }
-                        }
+                    if(this.types.isEmpty() || this.isTypeMatched(ann.getType(), this.types)){
+                    	List<String> values = annGen.generateAtomicFeatures(ann);
+                    	values.add(ann.getType());
+                        writer1.writeRow(values);
+                        writer2.writeRow(values);
                     }
-                    else{
-                        writer.writeAnnotation(ann.getType(), annGen.generate(ann));
-                    }
-
                 }
             }
 
             ps = reader.nextDocument();
         }
-        writer.close();
+        writer1.close();
+        writer2.close();
         reader.close();
     }
+
+	/**
+	 * 
+	 * @param type
+	 * @param patterns
+	 * @return
+	 */
+	private boolean isTypeMatched(String type, List<Pattern> patterns){
+        for(Pattern patt: this.types){
+            if(patt.matcher(type).find()){
+            	return true;
+            }
+        }
+        return false;
+	}
 
    	/**
    	 *
@@ -122,9 +156,13 @@ public class ActionAnnotations extends Action {
         BufferedReader br = new BufferedReader(new FileReader(path));
         String line = br.readLine();
         while(line != null) {
-            annotationFeatures.add(line);
+        	line = line.trim();
+        	if ( line.length() > 0 && !line.startsWith("#") ){
+        		annotationFeatures.add(line);
+        	}
             line = br.readLine();
         }
+        br.close();
         return annotationFeatures;
     }
 

@@ -1,5 +1,17 @@
 package g419.liner2.api.chunker;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+
 import g419.corpus.ConsolePrinter;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationSet;
@@ -9,16 +21,6 @@ import g419.liner2.api.chunker.interfaces.DeserializableChunkerInterface;
 import g419.liner2.api.chunker.interfaces.SerializableChunkerInterface;
 import g419.liner2.api.chunker.interfaces.TrainableChunkerInterface;
 import g419.liner2.api.features.AnnotationFeatureGenerator;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.*;
-import java.util.regex.Pattern;
-
 import weka.classifiers.Classifier;
 import weka.classifiers.meta.MultiClassClassifier;
 import weka.core.Attribute;
@@ -32,7 +34,7 @@ import weka.filters.unsupervised.attribute.StringToNominal;
  * @author czuk
  *
  */
-public class AnnotationClassifierChunker extends Chunker 
+public class AnnotationWekaClassifierChunker extends Chunker 
 	implements TrainableChunkerInterface, DeserializableChunkerInterface, SerializableChunkerInterface {
 	
 	private AnnotationFeatureGenerator featureGenerator = null;
@@ -44,7 +46,7 @@ public class AnnotationClassifierChunker extends Chunker
 	private Classifier classifier = null;
 	private FastVector classes = new FastVector();
 	private StringToNominal filter = null;
-    private List <String> features;
+    private List <String> features = null;
     List<Pattern> types;
     FastVector fva = null;
     Instances instances = null;
@@ -53,7 +55,7 @@ public class AnnotationClassifierChunker extends Chunker
 	 * 
 	 * @param inputChunker
 	 */
-    public AnnotationClassifierChunker(Chunker inputChunker, List <String> features) {
+    public AnnotationWekaClassifierChunker(Chunker inputChunker, List <String> features) {
         this.features = features;
         this.featureGenerator = new AnnotationFeatureGenerator(features);
         this.inputChunker = inputChunker;
@@ -191,8 +193,8 @@ public class AnnotationClassifierChunker extends Chunker
 
 
 	@Override
-	public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
-		HashMap<Sentence, AnnotationSet> inputChunks = this.inputChunker.chunk(ps);
+	public Map<Sentence, AnnotationSet> chunk(Document ps) {
+		Map<Sentence, AnnotationSet> inputChunks = this.inputChunker.chunk(ps);
 		try {
 			this.classify(inputChunks);
 		} catch (Exception e) {
@@ -209,7 +211,7 @@ public class AnnotationClassifierChunker extends Chunker
 	 * @param annotationsBySentence — collection of AnnotationSet's grouped by sentences
 	 * @throws Exception 
 	 */
-	public void classify(HashMap<Sentence, AnnotationSet> annotationsBySentence) throws Exception{
+	public void classify(Map<Sentence, AnnotationSet> annotationsBySentence) throws Exception{
         ConsolePrinter.log("AnnoatationClassifier: classifying data");
         if(fva == null){
             fva = this.getAttributesDefinition();
@@ -220,14 +222,14 @@ public class AnnotationClassifierChunker extends Chunker
         List<Annotation> allAnnotations = new ArrayList<Annotation>();
         for ( Sentence sentence : annotationsBySentence.keySet() ){
 
-            LinkedHashMap<String, HashMap<Annotation, String>> allFeatures = this.featureGenerator.generate(sentence, annotationsBySentence.get(sentence).chunkSet());
+            Map<String, Map<Annotation, String>> allFeatures = this.featureGenerator.generate(sentence, annotationsBySentence.get(sentence).chunkSet());
 
             instanceLoop:
             for (Annotation ann : annotationsBySentence.get(sentence).chunkSet()){
                 Instance instance = new Instance(this.featureGenerator.getFeaturesCount() + 1);
 
                 int featureIndex = 0;
-                for(HashMap<Annotation, String> featureValues: allFeatures.values()){
+                for(Map<Annotation, String> featureValues: allFeatures.values()){
                     if(!featureValues.containsKey(ann)){
                         continue instanceLoop;
                     }
@@ -261,7 +263,7 @@ public class AnnotationClassifierChunker extends Chunker
         ConsolePrinter.log("AnnoatationClassifier: Loading training data for from document:" + document.getName());
         updateClassDomain(document);
         for ( Sentence sentence : document.getSentences() ){
-            LinkedHashMap<String, HashMap<Annotation, String>> allFeatures = this.featureGenerator.generate(sentence, sentence.getChunks());
+            Map<String, Map<Annotation, String>> allFeatures = this.featureGenerator.generate(sentence, sentence.getChunks());
             instanceLoop:
             for (Annotation ann : sentence.getChunks()){
                 if(this.classes.contains(ann.getType())){
@@ -269,7 +271,7 @@ public class AnnotationClassifierChunker extends Chunker
                     instance.setDataset(instances);
 
                     int featureIndex = 0;
-                    for(HashMap<Annotation, String> featureValues: allFeatures.values()){
+                    for(Map<Annotation, String> featureValues: allFeatures.values()){
                         if(!featureValues.containsKey(ann)){
                             continue instanceLoop;
                         }

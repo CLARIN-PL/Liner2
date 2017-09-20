@@ -23,9 +23,9 @@ public class AnnotationRenameChunker extends Chunker {
      * 
      */
 	@Override
-	public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
+	public Map<Sentence, AnnotationSet> chunk(Document ps) {
 		/* Get base chunking for every sentence. */
-		HashMap<Sentence, AnnotationSet> chunkings = this.chunker.chunk(ps);
+		Map<Sentence, AnnotationSet> chunkings = this.chunker.chunk(ps);
 
 		for (Sentence sentence : chunkings.keySet()){
 			for (Annotation ann : chunkings.get(sentence).chunkSet()){

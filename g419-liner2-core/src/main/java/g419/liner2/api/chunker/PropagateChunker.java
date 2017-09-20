@@ -8,6 +8,8 @@ import g419.corpus.structure.Sentence;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,8 +22,8 @@ import java.util.regex.Pattern;
 public class PropagateChunker extends Chunker {
 	private Chunker baseChunker = null;
 	private boolean one = false;
-	private HashMap<String, String> dictionary = null;
-	private ArrayList<Pattern> patterns = new ArrayList<Pattern>();
+	private Map<String, String> dictionary = null;
+	private List<Pattern> patterns = new ArrayList<Pattern>();
 	
 
 	public PropagateChunker(Chunker baseChunker) {
@@ -50,8 +52,8 @@ public class PropagateChunker extends Chunker {
 	}
 	
 	@Override
-	public HashMap<Sentence, AnnotationSet> chunk(Document ps){
-		HashMap<Sentence, AnnotationSet> chunkings = this.baseChunker.chunk(ps);
+	public Map<Sentence, AnnotationSet> chunk(Document ps){
+		Map<Sentence, AnnotationSet> chunkings = this.baseChunker.chunk(ps);
 
 		DictionaryChunker dictionaryChunker = new DictionaryChunker(null);
         HashSet<String> ambigious = new HashSet<String>();

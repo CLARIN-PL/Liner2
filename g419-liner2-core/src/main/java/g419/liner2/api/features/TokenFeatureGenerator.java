@@ -14,6 +14,7 @@ import g419.corpus.ConsolePrinter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 
 public class TokenFeatureGenerator {
@@ -37,7 +38,7 @@ public class TokenFeatureGenerator {
 	 * 
 	 * @param features — array with feature definitions
 	 */
-	public TokenFeatureGenerator(LinkedHashMap<String, String> features){
+	public TokenFeatureGenerator(Map<String, String> features){
         ConsolePrinter.log("(TokenFeatureGenerator) Loading features...");
         this.featureNames = new ArrayList<String>(features.keySet());
 		for( String sf: sourceFeatures)

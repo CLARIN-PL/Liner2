@@ -28,8 +28,8 @@ public class AnnotationFeatureNeFirstBase extends AnnotationSentenceFeature {
     }
 
     @Override
-    public HashMap<Annotation, String> generate(Sentence sent, LinkedHashSet<Annotation> sentenceAnnotations) {
-        HashMap<Annotation, String> features = new HashMap<Annotation, String>();
+    public Map<Annotation, String> generate(Sentence sent, Set<Annotation> sentenceAnnotations) {
+        Map<Annotation, String> features = new HashMap<Annotation, String>();
         int posIndex = sent.getAttributeIndex().getIndex("ctag");
         for(Annotation ann: sentenceAnnotations){
             List<Token> candidateTokens;

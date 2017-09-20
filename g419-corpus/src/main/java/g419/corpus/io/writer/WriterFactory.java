@@ -104,7 +104,7 @@ public class WriterFactory {
 			case "tokens":
 				return new TokensStreamWriter(outWrapped);
 			case "arff":
-				return new ArffStreamWriter(outWrapped);
+				return new ArffTokenStreamWriter(outWrapped);
 			case "verb_eval":
 				return new MinosVerbEvalWriter(outWrapped);
 			case "simple_rel":
@@ -113,8 +113,6 @@ public class WriterFactory {
 				return new RelationTuplesWriter(outWrapped);
 			case "csv-relations":
 				return new CsvRelationsWriter(outWrapped);
-			case "annotations-tsv":
-				return new AnnotationTsvStreamWriter(outWrapped);
 			case "bsnlp":
 				return new BSNLPStreamWriter(outWrapped);
 			default:
@@ -122,16 +120,16 @@ public class WriterFactory {
 		}
 	}
 
-	/**
-	 * Zwraca piśnik do zapisu danych w formacie Arff.
-	 * @param outputFile
-	 * @param features
-	 * @return
-	 * @throws Exception
-	 */
-    public AnnotationArffWriter getArffAnnotationWriter(String outputFile, List<String> features) throws Exception {
-        return new AnnotationArffWriter(getOutputStreamGz(outputFile, false), features);
-    }
+//	/**
+//	 * Zwraca piśnik do zapisu danych w formacie Arff.
+//	 * @param outputFile
+//	 * @param features
+//	 * @return
+//	 * @throws Exception
+//	 */
+//    public ArffGenericWriter getArffAnnotationWriter(String outputFile, String relationName, List<String> features) throws Exception {
+//        return new ArffGenericWriter(getOutputStreamGz(outputFile, false), relationName, features);
+//    }
 	
     /**
      * Zwraca piśnik do formatu ccl. Dane zapisywane są do dwóch plików: .xml i .rel.xml.

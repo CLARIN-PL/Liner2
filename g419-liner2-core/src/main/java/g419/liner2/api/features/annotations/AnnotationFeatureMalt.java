@@ -1,13 +1,13 @@
 package g419.liner2.api.features.annotations;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import org.maltparser.core.exception.MaltChainedException;
+
 import g419.corpus.structure.Annotation;
 import g419.liner2.api.tools.parser.MaltParser;
-
-import java.util.HashMap;
-import java.util.HashSet;
-
-import org.maltparser.MaltParserService;
-import org.maltparser.core.exception.MaltChainedException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,9 +29,9 @@ public class AnnotationFeatureMalt extends AnnotationFeature{
         malt = new MaltParser(modelPath);
     }
 
-    public HashMap<Annotation, String> generate(String[] dataForMalt, HashSet<Annotation> annotations) {
+    public Map<Annotation, String> generate(String[] dataForMalt, Set<Annotation> annotations) {
 
-        HashMap<Annotation, String> features = new HashMap<Annotation, String>();
+        Map<Annotation, String> features = new HashMap<Annotation, String>();
         try {
             String [] parsedTokens =  malt.parseTokens(dataForMalt);
 

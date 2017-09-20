@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -90,7 +91,7 @@ public class ChunkerEvaluator {
 	/**
 	 * Ocenia nerowanie całego dokumentu.
 	 */
-	public void evaluate(Document document, HashMap<Sentence, AnnotationSet> chunkings, HashMap<Sentence, AnnotationSet> chunkigsRef){
+	public void evaluate(Document document, Map<Sentence, AnnotationSet> chunkings, Map<Sentence, AnnotationSet> chunkigsRef){
         currentDocId = document.getName();
 		for ( Sentence sentence : document.getSentences()){
 			this.evaluate(sentence, chunkings.get(sentence), chunkigsRef.get(sentence));
@@ -474,7 +475,7 @@ public class ChunkerEvaluator {
 		if (paragraphId != null){
 			sentenceHeader += " from " + paragraphId;
 		}
-		ConsolePrinter.println(sentenceHeader + "\n");
+		ConsolePrinter.log(sentenceHeader);
 		StringBuilder tokenOrths = new StringBuilder();
 		StringBuilder tokenNums = new StringBuilder();
 		int idx = 0;

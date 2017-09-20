@@ -1,25 +1,36 @@
 package g419.liner2.api.chunker;
 
+import java.util.Map;
+
+import org.ini4j.Ini;
+
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
-import org.ini4j.Ini;
-
-import java.util.HashMap;
 
 
 public abstract class Chunker {
 
     Ini.Section description;
-	abstract public HashMap<Sentence, AnnotationSet> chunk(Document ps);
+    
+    /**
+     * Recognize annotations in the document. 
+     * The recognized annotations should not be added to the sentences but returned in the map.
+     * @param ps
+     * @return
+     */
+	abstract public Map<Sentence, AnnotationSet> chunk(Document ps);
 
 	public void chunkInPlace(Document ps){
-		HashMap<Sentence, AnnotationSet> chunking = this.chunk(ps);
-		for ( Paragraph paragraph : ps.getParagraphs() )
-			for (Sentence sentence : paragraph.getSentences())
-				if ( chunking.containsKey(sentence) )
+		Map<Sentence, AnnotationSet> chunking = this.chunk(ps);
+		for ( Paragraph paragraph : ps.getParagraphs() ){
+			for (Sentence sentence : paragraph.getSentences()){
+				if ( chunking.containsKey(sentence) ){
 					sentence.addAnnotations(chunking.get(sentence));
+				}
+			}
+		}
 	}
 
 

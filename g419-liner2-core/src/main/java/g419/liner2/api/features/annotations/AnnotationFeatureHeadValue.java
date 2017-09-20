@@ -28,7 +28,11 @@ public class AnnotationFeatureHeadValue extends AnnotationAtomicFeature{
         List<Token> tokens = sentence.getTokens();
         TokenAttributeIndex index = sentence.getAttributeIndex();
         for(Token tok: tokens.subList(ann.getBegin(), ann.getEnd() + 1)){
-            String tokClass = tok.getAttributeValue(index.getIndex("class"));
+        	int classIndex = index.getIndex("class");
+        	if ( classIndex == -1 ){
+        		throw new Error("Class feature not found. Make sure it is included in the token feature list.");
+        	}
+            String tokClass = tok.getAttributeValue(classIndex);
             if(tokClass != null && tokClass.equals("subst")){
                 return tok;
             }

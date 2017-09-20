@@ -6,7 +6,7 @@ import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Document;
 import g419.lib.cli.ParameterException;
 import g419.liner2.api.LinerOptions;
-import g419.liner2.api.chunker.AnnotationClassifierChunker;
+import g419.liner2.api.chunker.AnnotationWekaClassifierChunker;
 import g419.liner2.api.chunker.Chunker;
 import g419.corpus.ConsolePrinter;
 
@@ -18,9 +18,9 @@ import java.util.regex.Pattern;
 import org.ini4j.Ini;
 import org.ini4j.Profile;
 
-public class ChunkerFactoryItemAnnotationClassifier extends ChunkerFactoryItem {
+public class ChunkerFactoryItemAnnotationWekaClassifier extends ChunkerFactoryItem {
 
-	public ChunkerFactoryItemAnnotationClassifier() {
+	public ChunkerFactoryItemAnnotationWekaClassifier() {
 		super("classifier");
 	}
 
@@ -55,7 +55,7 @@ public class ChunkerFactoryItemAnnotationClassifier extends ChunkerFactoryItem {
             feature = br.readLine();
         }
 
-		AnnotationClassifierChunker chunker = new AnnotationClassifierChunker(baseChunker, features);
+		AnnotationWekaClassifierChunker chunker = new AnnotationWekaClassifierChunker(baseChunker, features);
 
         String mode = description.get("mode");
         String modelPath = description.get("store");
@@ -74,7 +74,7 @@ public class ChunkerFactoryItemAnnotationClassifier extends ChunkerFactoryItem {
 		return chunker;
 	}
 
-    private void train(Profile.Section description, AnnotationClassifierChunker chunker, ChunkerManager cm) throws Exception {
+    private void train(Profile.Section description, AnnotationWekaClassifierChunker chunker, ChunkerManager cm) throws Exception {
         String[] parameters;
         if(description.containsKey("parameters")){
             parameters = description.get("parameters").split(",");

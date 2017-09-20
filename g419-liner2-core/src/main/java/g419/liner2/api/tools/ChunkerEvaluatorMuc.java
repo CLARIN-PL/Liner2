@@ -107,7 +107,7 @@ public class ChunkerEvaluatorMuc {
 	/**
 	 * Ocenia nerowanie całego dokumentu.
 	 */
-	public void evaluate(Document document, HashMap<Sentence, AnnotationSet> chunkings, HashMap<Sentence, AnnotationSet> chunkigsRef){
+	public void evaluate(Document document, Map<Sentence, AnnotationSet> chunkings, Map<Sentence, AnnotationSet> chunkigsRef){
         currentDocId = document.getName();
         for ( Sentence sentence : document.getSentences()){
             this.evaluate(sentence, chunkings.get(sentence), chunkigsRef.get(sentence));

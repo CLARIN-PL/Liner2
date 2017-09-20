@@ -10,6 +10,7 @@ import g419.liner2.api.chunker.Chunker;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 
 /**
@@ -60,23 +61,25 @@ public class MajorityVotingChunker extends Chunker {
 	}
 	
 	@Override
-	public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
+	public Map<Sentence, AnnotationSet> chunk(Document ps) {
 				
-		HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
-		HashMap<Sentence, ArrayList<AnnotationSet>> sentenceChunkings = new HashMap<Sentence, ArrayList<AnnotationSet>>();
+		Map<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
+		Map<Sentence, ArrayList<AnnotationSet>> sentenceChunkings = new HashMap<Sentence, ArrayList<AnnotationSet>>();
 
 		for ( Paragraph paragraph : ps.getParagraphs() )
 			for (Sentence sentence : paragraph.getSentences())
 				sentenceChunkings.put(sentence, new ArrayList<AnnotationSet>());
 		
 		for ( Chunker chunker : this.chunkers) {
-			HashMap<Sentence, AnnotationSet> chunkingsThis = chunker.chunk(ps);
-			for (Sentence sentence : chunkingsThis.keySet())
-				sentenceChunkings.get(sentence).add(chunkingsThis.get(sentence));				
+			Map<Sentence, AnnotationSet> chunkingsThis = chunker.chunk(ps);
+			for (Sentence sentence : chunkingsThis.keySet()){
+				sentenceChunkings.get(sentence).add(chunkingsThis.get(sentence));
+			}
 		}
 		
-		for ( Sentence sentence : sentenceChunkings.keySet() )
+		for ( Sentence sentence : sentenceChunkings.keySet() ){
 			chunkings.put(sentence, this.voting(sentence, sentenceChunkings.get(sentence)));
+		}
 		
 		return chunkings;
 	}

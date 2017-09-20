@@ -8,6 +8,7 @@ import g419.liner2.api.chunker.Chunker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -28,17 +29,20 @@ public class UnionChunker extends Chunker {
 		this.chunkers = chunkers;
 	}
 		
-	public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
-		HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
+	public Map<Sentence, AnnotationSet> chunk(Document ps) {
+		Map<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
 		
-		for (Paragraph p : ps.getParagraphs())
-			for (Sentence sentence : p.getSentences())
+		for (Paragraph p : ps.getParagraphs()){
+			for (Sentence sentence : p.getSentences()){
 				chunkings.put(sentence, new AnnotationSet(sentence));
+			}
+		}
 		
 		for ( Chunker chunker : this.chunkers){
-			HashMap<Sentence, AnnotationSet> chunkingThis = chunker.chunk(ps);
-			for (Sentence sentence : chunkingThis.keySet())
-				chunkings.get(sentence).union(chunkingThis.get(sentence));				
+			Map<Sentence, AnnotationSet> chunkingThis = chunker.chunk(ps);
+			for (Sentence sentence : chunkingThis.keySet()){
+				chunkings.get(sentence).union(chunkingThis.get(sentence));
+			}
 		}
 		
 		return chunkings;

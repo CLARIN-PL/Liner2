@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
@@ -379,11 +380,11 @@ public class ActionFeatureSelection extends Action {
         Document ps = dataReader.nextDocument();
         timer.stopTimer();
 
-        HashMap<Sentence, AnnotationSet> chunkings = null;
+        Map<Sentence, AnnotationSet> chunkings = null;
         while ( ps != null ){
 
     		/* Get reference set of annotations */
-            HashMap<Sentence, AnnotationSet> referenceChunks = ps.getChunkings();
+            Map<Sentence, AnnotationSet> referenceChunks = ps.getChunkings();
 
     		/* Remove annotations from data */
             ps.removeAnnotations();

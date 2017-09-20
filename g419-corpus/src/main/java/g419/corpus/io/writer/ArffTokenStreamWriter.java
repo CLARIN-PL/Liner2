@@ -1,25 +1,29 @@
 package g419.corpus.io.writer;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.util.List;
+
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.List;
 
-
-public class ArffStreamWriter extends AbstractDocumentWriter{
+/**
+ * TODO Wykorzystać klasę ArffGenericWriter do obsługi zapisu w formacie ARFF.
+ * @author czuk
+ *
+ */
+public class ArffTokenStreamWriter extends AbstractDocumentWriter{
 
 	private BufferedWriter ow;
 	private boolean init = false;
 
-	public ArffStreamWriter(OutputStream os) {
+	public ArffTokenStreamWriter(OutputStream os) {
 		this.ow = new BufferedWriter(new OutputStreamWriter(os));
 	}
 

@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -124,11 +125,11 @@ public class ActionLearningCurve extends Action {
 		Document ps = dataReader.nextDocument();
 		timer.stopTimer();
 
-		HashMap<Sentence, AnnotationSet> chunkings = null;
+		Map<Sentence, AnnotationSet> chunkings = null;
 		while (ps != null) {
 
 			/* Get reference set of annotations */
-			HashMap<Sentence, AnnotationSet> referenceChunks = ps
+			Map<Sentence, AnnotationSet> referenceChunks = ps
 					.getChunkings();
 
 			/* Remove annotations from data */
