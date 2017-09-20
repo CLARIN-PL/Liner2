@@ -121,7 +121,6 @@ public class ActionEvalUnique extends Action{
                 String testSet = getTestingSet(i, folds);
                 ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
                 cm.loadTrainData(new BatchReader(IOUtils.toInputStream(trainSet, "UTF-8"), "", this.inputFormat), gen);
-                cm.loadTestData(new BatchReader(IOUtils.toInputStream(testSet, "UTF-8"), "", this.inputFormat), gen);
                 AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet, "UTF-8"), "", this.inputFormat);
                 evaluate(reader, gen, cm, globalEval, globalEvalMuc, errorsOnly);
                 timer.stopTimer();
@@ -137,7 +136,6 @@ public class ActionEvalUnique extends Action{
         }
         else{
             ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
-            cm.loadTestData(ReaderFactory.get().getStreamReader(this.inputFile, this.inputFormat), gen);
             evaluate(ReaderFactory.get().getStreamReader(this.inputFile, this.inputFormat),
                     gen, cm, null, null, errorsOnly);
         }

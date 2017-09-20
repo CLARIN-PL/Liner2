@@ -119,7 +119,6 @@ public class ActionFeatureSelection extends Action {
 			String testSet = getTestingSet(i, folds);
 			cm = new ChunkerManager(LinerOptions.getGlobal());
 			cm.loadTrainData(new BatchReader(IOUtils.toInputStream(trainSet, "UTF-8"), "", "ccl"), gen);
-			cm.loadTestData(new BatchReader(IOUtils.toInputStream(testSet, "UTF-8"), "", "ccl"), gen);
 			AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet, "UTF-8"), "", "ccl");
 			evaluate(reader, gen, cm, globalEval, globalEvalMuc);
 			timer.stopTimer();
@@ -338,14 +337,12 @@ public class ActionFeatureSelection extends Action {
 		ChunkerEvaluatorMuc globalEvalMuc = new ChunkerEvaluatorMuc(LinerOptions.getGlobal().types);
 
 		LinerOptions.getGlobal().setCVDataFormat("ccl");
-		//ArrayList<List<String>> folds = loadFolds();
 		for(int i=0; i < folds.size(); i++){
 			timer.startTimer("fold "+ (i + 1));
 			System.out.println("***************************************** FOLD " + (i + 1) + " *****************************************");
 			String trainSet = getTrainingSet(i, folds);
 			String testSet = getTestingSet(i, folds);
 			cm.loadTrainData(new BatchReader(IOUtils.toInputStream(trainSet, "UTF-8"), "", "ccl"), this.gen);
-			cm.loadTestData(new BatchReader(IOUtils.toInputStream(testSet, "UTF-8"), "", "ccl"), this.gen);
 			AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet, "UTF-8"), "", "ccl");
 			evaluate(reader, gen, cm, globalEval, globalEvalMuc);
 			timer.stopTimer();

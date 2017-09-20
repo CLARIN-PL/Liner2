@@ -116,7 +116,7 @@ public class ActionEval extends Action{
 
             this.inputFormat = this.inputFormat.substring(3);
             LinerOptions.getGlobal().setCVDataFormat(this.inputFormat);
-            ArrayList<List<String>> folds = loadFolds();
+            List<List<String>> folds = loadFolds();
             for(int i=0; i < folds.size(); i++){
                 timer.startTimer("fold "+ (i + 1));
                 System.out.println("***************************************** FOLD " + (i + 1) + " *****************************************");
@@ -124,7 +124,6 @@ public class ActionEval extends Action{
                 String testSet = getTestingSet(i, folds);
                 ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
                 cm.loadTrainData(new BatchReader(IOUtils.toInputStream(trainSet, "UTF-8"), "", this.inputFormat), gen);
-                cm.loadTestData(new BatchReader(IOUtils.toInputStream(testSet, "UTF-8"), "", this.inputFormat), gen);
                 AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet, "UTF-8"), "", this.inputFormat);
                 evaluate(reader, gen, cm, globalEval, globalEvalMuc, errorsOnly);
                 timer.stopTimer();
@@ -137,14 +136,21 @@ public class ActionEval extends Action{
             timer.printStats();
         } else {
             ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
-            cm.loadTestData(ReaderFactory.get().getStreamReader(this.inputFile, this.inputFormat), gen);
             evaluate(ReaderFactory.get().getStreamReader(this.inputFile, this.inputFormat),
                     gen, cm, null, null, errorsOnly);
         }
-
-
 	}
 
+	/**
+	 * 
+	 * @param dataReader
+	 * @param gen
+	 * @param cm
+	 * @param globalEval
+	 * @param globalEvalMuc
+	 * @param errorsOnly
+	 * @throws Exception
+	 */
     private void evaluate(AbstractDocumentReader dataReader, TokenFeatureGenerator gen, ChunkerManager cm,
                           ChunkerEvaluator globalEval, ChunkerEvaluatorMuc globalEvalMuc, boolean errorsOnly) throws Exception {
         ProcessingTimer timer = new ProcessingTimer();
@@ -211,8 +217,14 @@ public class ActionEval extends Action{
         timer.printStats();
     }
 
-    private ArrayList<List<String>> loadFolds() throws IOException, DataFormatException {
-        ArrayList<List<String>> folds = new ArrayList<List<String>>();
+    /**
+     * 
+     * @return
+     * @throws IOException
+     * @throws DataFormatException
+     */
+    private List<List<String>> loadFolds() throws IOException, DataFormatException {
+        List<List<String>> folds = new ArrayList<List<String>>();
         /** Wczytaj listy plików */
         File sourceFile = new File(this.inputFile);
         String root = sourceFile.getParentFile().getAbsolutePath();
@@ -241,7 +253,7 @@ public class ActionEval extends Action{
 
     }
 
-    private String getTrainingSet(int fold, ArrayList<List<String>> folds){
+    private String getTrainingSet(int fold, List<List<String>> folds){
         StringBuilder sbtrain = new StringBuilder();
 
         for ( int i = 0; i< folds.size(); i++){
@@ -252,7 +264,7 @@ public class ActionEval extends Action{
         return sbtrain.toString().trim();
     }
 
-    private String getTestingSet(int fold, ArrayList<List<String>> folds){
+    private String getTestingSet(int fold, List<List<String>> folds){
         StringBuilder sbtrain = new StringBuilder();
         for ( String line : folds.get(fold))
             sbtrain.append(line + "\n");

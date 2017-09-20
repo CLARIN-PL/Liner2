@@ -99,7 +99,6 @@ public class ActionConstituentsEval extends Action {
     protected Normalizer getNormalizer() throws Exception {
         ChunkerManager manager = new ChunkerManager(LinerOptions.getGlobal());
         manager.loadChunkers();
-        manager.loadTestData(ReaderFactory.get().getStreamReader(this.input_file, this.input_format), gen);
         Chunker chunker = manager.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
         if (!(chunker instanceof Normalizer)) {
             ClassCastException up = new ClassCastException("Specified Chunker is not Normalizer, but "+chunker.getClass().getSimpleName());

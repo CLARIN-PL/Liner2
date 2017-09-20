@@ -16,6 +16,6 @@ public class ChunkerFactoryItemMapping extends ChunkerFactoryItem {
     }
     @Override
     public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
-        return new MappingChunker(description.get("mapping"), cm.testData);
+        return new MappingChunker(description.get("mapping"));
     }
 }

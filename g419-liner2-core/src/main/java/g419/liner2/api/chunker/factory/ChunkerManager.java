@@ -2,20 +2,18 @@ package g419.liner2.api.chunker.factory;
 
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.ini4j.Ini;
+
 import g419.corpus.io.reader.AbstractDocumentReader;
-import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.CrfTemplate;
 import g419.corpus.structure.Document;
 import g419.liner2.api.LinerOptions;
 import g419.liner2.api.chunker.Chunker;
 import g419.liner2.api.chunker.CrfppChunker;
 import g419.liner2.api.features.TokenFeatureGenerator;
-import org.ini4j.Ini;
-import org.ini4j.Profile;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,7 +27,6 @@ public class ChunkerManager {
     private HashMap<String, Chunker> chunkers = new HashMap<String, Chunker>();
     public LinerOptions opts;
     public ArrayList<Document> trainingData;
-    public ArrayList<Document> testData;
     private HashMap<String, CrfTemplate> chunkerTemplates = new HashMap<String, CrfTemplate>();
 
     public ChunkerManager(LinerOptions config){
@@ -84,17 +81,6 @@ public class ChunkerManager {
         return chunkers.get(name);
     }
 
-    public void loadTestData(AbstractDocumentReader reader, TokenFeatureGenerator gen) throws Exception {
-        testData = new ArrayList<Document>();
-        Document document = reader.nextDocument();
-        while ( document != null ){
-            if(gen != null){
-                gen.generateFeatures(document);
-            }
-            testData.add(document);
-            document = reader.nextDocument();
-        }
-    }
 
     public void loadTrainData(AbstractDocumentReader reader, TokenFeatureGenerator gen) throws Exception {
         trainingData = new ArrayList<Document>();
