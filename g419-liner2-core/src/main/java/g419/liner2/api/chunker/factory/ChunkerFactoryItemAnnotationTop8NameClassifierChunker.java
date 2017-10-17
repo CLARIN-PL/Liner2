@@ -4,12 +4,13 @@ package g419.liner2.api.chunker.factory;
 import org.ini4j.Ini;
 
 import g419.lib.cli.ParameterException;
-import g419.liner2.api.chunker.AnnotationTop8ClassifierChunker;
+import g419.liner2.api.chunker.AnnotationTop8NameClassifierChunker;
 import g419.liner2.api.chunker.Chunker;
+import g419.liner2.api.tools.TypedDictionary;
 
-public class ChunkerFactoryItemAnnotationTop8ClassifierChunker extends ChunkerFactoryItem {
+public class ChunkerFactoryItemAnnotationTop8NameClassifierChunker extends ChunkerFactoryItem {
 
-	public ChunkerFactoryItemAnnotationTop8ClassifierChunker() {
+	public ChunkerFactoryItemAnnotationTop8NameClassifierChunker() {
 		super("top8classifier");
 	}
 
@@ -24,8 +25,13 @@ public class ChunkerFactoryItemAnnotationTop8ClassifierChunker extends ChunkerFa
 				throw new ParameterException("Undefined base chunker: " + inputClassifier);
 			}
 		}
-
-		return new AnnotationTop8ClassifierChunker(baseChunker);
+		
+		TypedDictionary indicatorTypes = new TypedDictionary();
+		if ( description.containsKey("indicators") ){
+			indicatorTypes = TypedDictionary.loadFromFile(description.get("indicators"));
+		}
+				
+		return new AnnotationTop8NameClassifierChunker(baseChunker, indicatorTypes);
 	}
 
 }

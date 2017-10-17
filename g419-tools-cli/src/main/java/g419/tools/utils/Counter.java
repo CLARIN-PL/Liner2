@@ -1,7 +1,7 @@
 package g419.tools.utils;
 
 /**
- * Klasa reprezentuje licznik wartości. 
+ * A thread-safe counter. 
  * 
  * @author czuk
  *
@@ -10,7 +10,7 @@ public class Counter{
 	
 	private Integer counter = 0;
 	
-	public void increment(){
+	public synchronized void increment(){
 		this.counter++;
 	}
 	

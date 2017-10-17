@@ -1,16 +1,15 @@
 package g419.liner2.api.chunker.factory;
 
 
-import g419.liner2.api.chunker.Chunker;
 import org.ini4j.Ini;
 
-import java.util.regex.Matcher;
+import g419.liner2.api.chunker.Chunker;
 
 
-public class ChunkerFactoryItemEnsamble extends ChunkerFactoryItem {
+public class ChunkerFactoryItemEnsemble extends ChunkerFactoryItem {
 
-	public ChunkerFactoryItemEnsamble() {
-		super("ensamble");
+	public ChunkerFactoryItemEnsemble() {
+		super("ensemble");
 	}
 
 	@Override

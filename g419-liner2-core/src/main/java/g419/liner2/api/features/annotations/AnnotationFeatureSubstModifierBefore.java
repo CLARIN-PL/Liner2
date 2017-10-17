@@ -19,7 +19,7 @@ public class AnnotationFeatureSubstModifierBefore extends AnnotationAtomicFeatur
 
 	@Override
 	public String generate(Annotation an) {
-		String value = "NULL";
+		String value = null;
 		
 		List<Token> tokens = an.getSentence().getTokens();
 		

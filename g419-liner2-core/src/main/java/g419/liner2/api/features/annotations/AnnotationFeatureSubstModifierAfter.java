@@ -33,12 +33,12 @@ public class AnnotationFeatureSubstModifierAfter extends AnnotationAtomicFeature
 
 	@Override
 	public String generate(Annotation an) {
-		String value = "NULL";
+		String value = null;
 		
 		SentenceTraverse st = new SentenceTraverse(an.getSentence());
 		st.setPointer(an.getEnd()+1);
 		if ( st.consumeByBase(this.nameSubstJoiner) 
-				&& st.forwardUnitPosMatches("adj") > 0
+				&& st.forwardUnitPosMatches("adj") >= 0
 				&& st.matchesByPos("subst")
 				&& st.matchesByCase(this.caseNomInst)){
 			value = st.getCurrentToken().getDisambTag().getBase();

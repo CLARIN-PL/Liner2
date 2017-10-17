@@ -17,7 +17,7 @@ public class AnnotationFeatureSubstList extends AnnotationAtomicFeature {
 
 	@Override
 	public String generate(Annotation an) {
-		String value = "NULL";
+		String value = null;
 		SentenceTraverse st = new SentenceTraverse(an.getSentence());
 		st.setPointer(an.getBegin());
 		if ( st.backwardUnitFindBase(":") > 0 
