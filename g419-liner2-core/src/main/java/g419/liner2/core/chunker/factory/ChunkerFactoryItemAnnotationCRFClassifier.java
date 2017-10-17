@@ -9,6 +9,7 @@ import g419.liner2.core.chunker.Chunker;
 import g419.liner2.core.chunker.CrfppChunker;
 import g419.liner2.core.features.TokenFeatureGenerator;
 import g419.corpus.ConsolePrinter;
+import g419.liner2.core.tools.CrfppLoader;
 import g419.liner2.core.tools.TemplateFactory;
 import org.ini4j.Ini;
 
@@ -28,26 +29,18 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
     }
     @Override
     public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
-        if (!cm.opts.libCRFPPLoaded){
-            try {
-                //fixme: I replaced this with exploded JAR-contained library to allow CRFPP building automatization. See ShareLibUtils and g419-external-dependencies module ~Filip
-//                String linerJarPath = Liner2.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-//                System.load(linerJarPath.replace("g419-liner2-core.jar","") + "libCRFPP.so");
-                System.load(SharedLibUtils.getCrfppLibPath());
-            } catch (UnsatisfiedLinkError e) {
-                System.err.println("Cannot load the libCRFPP.so native code.\nIf you are using liner as an imported jar specify correct path as CRFlib parameter in config.\n" + e);
-                System.exit(1);
-            }
+        try {
+            CrfppLoader.load();
+        } catch (UnsatisfiedLinkError e) {
+            System.exit(1);
         }
         String mode = description.get("mode");
 
         if(mode.equals("train")){
             return train(description, cm);
-        }
-        else if(mode.equals("load")){
+        } else if(mode.equals("load")){
             return load(description, cm);
-        }
-        else{
+        } else{
             throw new Exception("Unrecognized mode for CRFPP annotation classifier: " + mode + "(Valid: train/load)");
         }
     }

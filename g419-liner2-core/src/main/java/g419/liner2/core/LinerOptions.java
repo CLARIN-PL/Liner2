@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import g419.liner2.core.tools.CrfppLoader;
 import org.ini4j.Ini;
 
 /**
@@ -57,8 +58,6 @@ public class LinerOptions {
 	public static final String OPTION_USED_CHUNKER = "chunker";
     public static final String OPTION_CRFLIB = "crflib";
 
-    public boolean libCRFPPLoaded = false;
-
     public LinkedHashMap<String, String> features = new LinkedHashMap<String, String>();
 	public LinkedHashSet<Ini.Section> chunkersDescriptions = new LinkedHashSet<Ini.Section>();
     public List<Pattern> types = new ArrayList<Pattern>();
@@ -101,8 +100,8 @@ public class LinerOptions {
             }
             if (main.containsKey(OPTION_CRFLIB)) {
                 try {
-                    System.load(main.get(OPTION_CRFLIB).replace("{INI_PATH}", iniPath));
-                    libCRFPPLoaded = true;
+                    String crfppPath = main.get(OPTION_CRFLIB).replace("{INI_PATH}", iniPath);
+                    CrfppLoader.load(crfppPath);
                 } catch (UnsatisfiedLinkError e) {
                     System.err.println("Cannot load the libCRFPP.so native code.\n" + e);
                     System.exit(1);

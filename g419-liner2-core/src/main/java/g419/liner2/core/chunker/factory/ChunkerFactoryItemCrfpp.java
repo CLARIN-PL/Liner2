@@ -1,5 +1,6 @@
 package g419.liner2.core.chunker.factory;
 
+import g419.corpus.ConsolePrinter;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.CrfTemplate;
@@ -10,20 +11,18 @@ import g419.liner2.core.chunker.CrfppChunker;
 import g419.liner2.core.converter.Converter;
 import g419.liner2.core.converter.factory.ConverterFactory;
 import g419.liner2.core.features.TokenFeatureGenerator;
-import g419.corpus.ConsolePrinter;
+import g419.liner2.core.tools.CrfppLoader;
 import g419.liner2.core.tools.TemplateFactory;
+import org.ini4j.Ini;
+import org.ini4j.Profile;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.ini4j.Ini;
-import org.ini4j.Profile;
 
 public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
 
@@ -35,26 +34,18 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
 
 	@Override
 	public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
-        if (!cm.opts.libCRFPPLoaded){
-            try {
-                //fixme: I replaced this with exploded JAR-contained library to allow CRFPP building automatization. See ShareLibUtils and g419-external-dependencies module ~Filip
-//                String linerJarPath = Liner2.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-//                System.load(linerJarPath.replace("g419-liner2-core.jar","") + "libCRFPP.so");
-                System.load(SharedLibUtils.getCrfppLibPath());
-            } catch (UnsatisfiedLinkError e) {
-                System.err.println("Cannot load the libCRFPP.so native code.\nIf you are using liner as an imported jar specify correct path as CRFlib parameter in config.\n" + e);
-                System.exit(1);
-            }
+        try {
+            CrfppLoader.load();
+        } catch (UnsatisfiedLinkError e) {
+            System.exit(1);
         }
         String mode = description.get("mode");
         TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
         if(mode.equals("train")){
             return train(description, cm, gen);
-        }
-        else if(mode.equals("load")){
+        } else if(mode.equals("load")){
             return load(description, cm, gen);
-        }
-        else{
+        } else{
             throw new Exception("Unrecognized mode for CRFPP chunker: " + mode + "(Valid: train/load)");
         }
 	}
@@ -63,7 +54,7 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
 	 * Load the model from a file.
 	 * @param description
 	 * @return
-	 * @throws IOException
+	 * @throws Exception
 	 */
     private Chunker load(Profile.Section description, ChunkerManager cm, TokenFeatureGenerator gen) throws Exception {
         String store = description.get("store");
@@ -159,7 +150,7 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
     }
 
     private List<String> loadUsedFeatures(String file) throws IOException {
-        ArrayList<String> usedFeatures = new ArrayList<>();
+        List<String> usedFeatures = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line = reader.readLine();
         while(line != null){
