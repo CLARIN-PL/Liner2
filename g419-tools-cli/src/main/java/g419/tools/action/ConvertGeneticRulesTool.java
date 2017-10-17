@@ -20,7 +20,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 
 import g419.lib.cli.Action;
-import g419.liner2.api.LinerOptions;
+import g419.liner2.core.LinerOptions;
 
 /**
  * Created by michal on 5/7/15.

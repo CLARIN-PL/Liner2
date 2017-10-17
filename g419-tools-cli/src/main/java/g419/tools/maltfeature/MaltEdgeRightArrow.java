@@ -3,8 +3,8 @@ package g419.tools.maltfeature;
 import java.util.HashSet;
 import java.util.Set;
 
-import g419.liner2.api.tools.parser.MaltSentence;
-import g419.liner2.api.tools.parser.MaltSentenceLink;
+import g419.liner2.core.tools.parser.MaltSentence;
+import g419.liner2.core.tools.parser.MaltSentenceLink;
 
 /**
  * 

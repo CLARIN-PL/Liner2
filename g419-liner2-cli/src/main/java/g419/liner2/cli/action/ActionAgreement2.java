@@ -21,8 +21,8 @@ import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.liner2.api.tools.ChunkerEvaluator;
-import g419.liner2.api.tools.ChunkerEvaluatorMuc;
+import g419.liner2.core.tools.ChunkerEvaluator;
+import g419.liner2.core.tools.ChunkerEvaluatorMuc;
 
 /**
  * Porównuje zbiory anotacji dla wskazanych korpusów. Korpusy porównywane są parami.

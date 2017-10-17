@@ -22,7 +22,7 @@ public class ActionWordnet extends Action {
 	
 	public ActionWordnet() {
 		super("wordnet");
-		this.setDescription("test wordnet api");
+		this.setDescription("test wordnet core");
 		
 		this.options.addOption(Option.builder("w").hasArg().argName("FILENAME").required()
 						.desc("ścieżka do katalogu z wordnetem w formacie Princeton").longOpt("wordnet").build());

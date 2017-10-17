@@ -4,12 +4,12 @@ import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.structure.Document;
 import g419.lib.cli.ParameterException;
-import g419.liner2.api.LinerOptions;
-import g419.liner2.api.chunker.Chunker;
-import g419.liner2.api.chunker.factory.ChunkerManager;
-import g419.liner2.api.features.TokenFeatureGenerator;
+import g419.liner2.core.LinerOptions;
+import g419.liner2.core.chunker.Chunker;
+import g419.liner2.core.chunker.factory.ChunkerManager;
+import g419.liner2.core.features.TokenFeatureGenerator;
 import g419.corpus.ConsolePrinter;
-import g419.liner2.api.tools.ProcessingTimer;
+import g419.liner2.core.tools.ProcessingTimer;
 
 /**
  * Measuring processing time.

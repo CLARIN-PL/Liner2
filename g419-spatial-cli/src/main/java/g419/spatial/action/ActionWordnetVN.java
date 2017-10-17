@@ -21,7 +21,7 @@ public class ActionWordnetVN extends Action {
 	
 	public ActionWordnetVN() {
 		super("wordnet-vn");
-		this.setDescription("test wordnet api");
+		this.setDescription("test wordnet core");
 		
 		this.options.addOption(Option.builder("w").hasArg().argName("FILENAME").required()
 						.desc("ścieżka do katalogu z wordnetem w formacie Princeton").longOpt("wordnet").build());

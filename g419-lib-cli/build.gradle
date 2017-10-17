@@ -11,5 +11,5 @@ dependencies {
     compile project(":g419-corpus")
 
     // for some reason this was in ant build, but it doesn't seem to be used, and it would introduce circular dependencies
-    //compile project(":g419-liner2-api")
+    //compile project(":g419-liner2-core")
 }

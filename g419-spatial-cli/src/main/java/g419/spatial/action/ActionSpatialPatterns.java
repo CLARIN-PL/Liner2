@@ -23,7 +23,7 @@ import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.liner2.api.chunker.IobberChunker;
+import g419.liner2.core.chunker.IobberChunker;
 
 public class ActionSpatialPatterns extends Action {
 	

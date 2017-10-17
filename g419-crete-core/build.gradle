@@ -1,4 +1,4 @@
-description = "g419-crete-api -- API dla modułu do rozpoznawania koreferencji o nazwie CRETE"
+description = "g419-crete-core -- API dla modułu do rozpoznawania koreferencji o nazwie CRETE"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8

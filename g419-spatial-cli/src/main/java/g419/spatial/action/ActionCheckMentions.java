@@ -19,7 +19,7 @@ import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.liner2.api.Liner2;
+import g419.liner2.core.Liner2;
 
 public class ActionCheckMentions extends Action {
 	

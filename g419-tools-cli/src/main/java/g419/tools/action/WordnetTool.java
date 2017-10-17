@@ -19,7 +19,7 @@ import g419.corpus.structure.Sentence;
 import g419.corpus.structure.TokenAttributeIndex;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.liner2.api.tools.Wordnet2;
+import g419.liner2.core.tools.Wordnet2;
 
 /**
  * Created by michal on 7/23/15.

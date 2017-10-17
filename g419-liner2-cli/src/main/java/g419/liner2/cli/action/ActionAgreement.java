@@ -28,9 +28,9 @@ import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.liner2.api.LinerOptions;
-import g419.liner2.api.tools.ChunkerEvaluator;
-import g419.liner2.api.tools.ProcessingTimer;
+import g419.liner2.core.LinerOptions;
+import g419.liner2.core.tools.ChunkerEvaluator;
+import g419.liner2.core.tools.ProcessingTimer;
 
 public class ActionAgreement extends Action {
 

@@ -1,12 +1,6 @@
 package g419.liner2.daemon;
 
-import g419.lib.cli.ParameterException;
-import g419.liner2.api.LinerOptions;
-import g419.corpus.ConsolePrinter;
-
-import org.apache.commons.cli.*;
-import org.ini4j.Ini;
-import org.ini4j.Profile;
+import g419.liner2.core.LinerOptions;
 
 import java.io.File;
 import java.util.HashMap;

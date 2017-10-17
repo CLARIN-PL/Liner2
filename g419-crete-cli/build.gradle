@@ -1,4 +1,4 @@
-description = "g419-crete-cli -- konsolowy interfejs dla g419-crete-api"
+description = "g419-crete-cli -- konsolowy interfejs dla g419-crete-core"
 
 apply plugin: 'application'
 apply plugin: 'idea'

@@ -1,4 +1,4 @@
-description = "g419-liner2-cli -- konsolowy interfejs dla g419-liner2-api"
+description = "g419-liner2-cli -- konsolowy interfejs dla g419-liner2-core"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8

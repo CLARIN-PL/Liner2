@@ -14,7 +14,7 @@ public class ActionSumo extends Action {
 	
 	public ActionSumo() {
 		super("sumo");
-		this.setDescription("test SUMO api");
+		this.setDescription("test SUMO core");
 	}
 	
 	/**

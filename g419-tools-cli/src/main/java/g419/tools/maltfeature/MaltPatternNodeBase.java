@@ -1,6 +1,6 @@
 package g419.tools.maltfeature;
 
-import g419.liner2.api.tools.parser.MaltSentence;
+import g419.liner2.core.tools.parser.MaltSentence;
 
 public class MaltPatternNodeBase extends MaltPatternNode{
 	

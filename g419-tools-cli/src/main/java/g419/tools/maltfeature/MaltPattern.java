@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
-import g419.liner2.api.tools.parser.MaltSentence;
+import g419.liner2.core.tools.parser.MaltSentence;
 
 public class MaltPattern {
 

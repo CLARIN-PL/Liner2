@@ -2,7 +2,7 @@ package g419.liner2.daemon.action;
 
 import g419.lib.cli.ParameterException;
 import g419.lib.cli.Action;
-import g419.liner2.api.LinerOptions;
+import g419.liner2.core.LinerOptions;
 import g419.liner2.daemon.DaemonOptions;
 import g419.liner2.daemon.DaemonThread;
 

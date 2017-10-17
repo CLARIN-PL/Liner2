@@ -3,7 +3,7 @@ package g419.spatial.tools;
 import java.util.HashMap;
 import java.util.Map;
 
-import g419.liner2.api.tools.FscoreEvaluator;
+import g419.liner2.core.tools.FscoreEvaluator;
 import g419.spatial.structure.SpatialExpression;
 
 public class FscoreEvaluator2 {

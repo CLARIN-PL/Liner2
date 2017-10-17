@@ -5,13 +5,13 @@ import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.Document;
-import g419.crete.api.CreteOptions;
-import g419.crete.api.annotation.AbstractAnnotationSelector;
-import g419.crete.api.annotation.AnnotationSelectorFactory;
-import g419.crete.api.refine.CoverAnnotationDocumentRefiner;
+import g419.crete.core.CreteOptions;
+import g419.crete.core.annotation.AbstractAnnotationSelector;
+import g419.crete.core.annotation.AnnotationSelectorFactory;
+import g419.crete.core.refine.CoverAnnotationDocumentRefiner;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.liner2.api.features.TokenFeatureGenerator;
+import g419.liner2.core.features.TokenFeatureGenerator;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 

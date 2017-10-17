@@ -1,8 +1,5 @@
 package g419.liner2.daemon;
 
-import g419.liner2.api.chunker.Chunker;
-import g419.liner2.api.features.TokenFeatureGenerator;
-
 import java.util.HashMap;
 
 /**

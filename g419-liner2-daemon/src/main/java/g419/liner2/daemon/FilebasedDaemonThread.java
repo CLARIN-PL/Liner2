@@ -1,16 +1,6 @@
 package g419.liner2.daemon;
 
-import g419.corpus.ConsolePrinter;
-import g419.corpus.io.reader.AbstractDocumentReader;
-import g419.corpus.io.reader.ReaderFactory;
-import g419.corpus.io.writer.AbstractDocumentWriter;
-import g419.corpus.io.writer.WriterFactory;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
 import g419.lib.cli.ParameterException;
-import g419.liner2.api.chunker.Chunker;
-import g419.liner2.api.features.TokenFeatureGenerator;
 import org.json.JSONException;
 import org.json.JSONObject;
 

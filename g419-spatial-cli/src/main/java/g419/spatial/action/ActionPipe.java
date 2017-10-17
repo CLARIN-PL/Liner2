@@ -10,7 +10,7 @@ import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.Document;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.liner2.api.tools.parser.MaltParser;
+import g419.liner2.core.tools.parser.MaltParser;
 import g419.spatial.tools.SpatialRelationRecognizer;
 import g419.toolbox.wordnet.Wordnet3;
 

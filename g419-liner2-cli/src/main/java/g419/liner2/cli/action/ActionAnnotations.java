@@ -5,15 +5,14 @@ import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractMatrixWriter;
 import g419.corpus.io.writer.ArffGenericWriter;
 import g419.corpus.io.writer.CsvGenericWriter;
-import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.liner2.api.LinerOptions;
-import g419.liner2.api.features.AnnotationFeatureGenerator;
-import g419.liner2.api.features.TokenFeatureGenerator;
+import g419.liner2.core.LinerOptions;
+import g419.liner2.core.features.AnnotationFeatureGenerator;
+import g419.liner2.core.features.TokenFeatureGenerator;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;

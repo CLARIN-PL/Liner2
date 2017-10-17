@@ -18,10 +18,10 @@ import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.liner2.api.features.tokens.ClassFeature;
-import g419.liner2.api.tools.parser.MaltParser;
-import g419.liner2.api.tools.parser.MaltSentence;
-import g419.liner2.api.tools.parser.MaltSentenceLink;
+import g419.liner2.core.features.tokens.ClassFeature;
+import g419.liner2.core.tools.parser.MaltParser;
+import g419.liner2.core.tools.parser.MaltSentence;
+import g419.liner2.core.tools.parser.MaltSentenceLink;
 import g419.spatial.structure.SpatialExpression;
 
 public class ActionTestMalt extends Action {
