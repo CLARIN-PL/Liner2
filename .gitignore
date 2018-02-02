@@ -114,4 +114,8 @@ modules/**/*.jar
 
 g419-liner2-cli/src/test/resources/data/plwordnet_2_0_2_pwn_format
 g419-liner2-cli/src/test/resources/2015-03-11-kpwr-timex-norm-global
-g419-external-dependencies/CRF++-0.57
+g419-external-dependencies/crfppWorkspace
+g419-external-dependencies/src
+
+.classpath
+.project
