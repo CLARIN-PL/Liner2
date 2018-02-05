@@ -3,7 +3,7 @@ description = "g419-crete-cli -- konsolowy interfejs dla g419-crete-core"
 apply plugin: 'application'
 apply plugin: 'idea'
 
-main = "g419.crete.cli.Main"
+def main = "g419.crete.cli.Main"
 
 mainClassName = main
 
