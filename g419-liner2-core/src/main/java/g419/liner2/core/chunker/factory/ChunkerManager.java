@@ -34,11 +34,23 @@ public class ChunkerManager {
     }
 
     /**
-     * Creates a hash of chunkers according to the description
+     * Creates a map of chunkers according to their descriptions.
      * @throws Exception
      */
     public void loadChunkers() throws Exception {
-        for (Ini.Section chunkerDesc : opts.chunkersDescriptions) {
+        for (Ini.Section chunkerDesc : opts.getChunkerDescriptions()) {
+            Chunker chunker = ChunkerFactory.createChunker(chunkerDesc, this);
+            addChunker(chunkerDesc.getName().substring(8), chunker);
+        }
+    }
+
+    /**
+     * Creates a map of chunkers according to their parametrized ({NAME} holders) descriptions.
+     * @param foldNumber Number of the fold.
+     * @throws Exception
+     */
+    public void loadChunkers(Integer foldNumber) throws Exception {
+        for (Ini.Section chunkerDesc : opts.getParametrizedChunkerDescriptions(foldNumber)) {
             Chunker chunker = ChunkerFactory.createChunker(chunkerDesc, this);
             addChunker(chunkerDesc.getName().substring(8), chunker);
         }

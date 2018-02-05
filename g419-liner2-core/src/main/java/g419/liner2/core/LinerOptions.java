@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import g419.liner2.core.tools.CrfppLoader;
@@ -59,7 +58,7 @@ public class LinerOptions {
     public static final String OPTION_CRFLIB = "crflib";
 
     public LinkedHashMap<String, String> features = new LinkedHashMap<String, String>();
-	public LinkedHashSet<Ini.Section> chunkersDescriptions = new LinkedHashSet<Ini.Section>();
+	private Set<Ini.Section> chunkersDescriptions = new LinkedHashSet<Ini.Section>();
     public List<Pattern> types = new ArrayList<Pattern>();
 	 
 	/**
@@ -76,6 +75,38 @@ public class LinerOptions {
 	public boolean isOption(String name){
 		return LinerOptions.getGlobal().getProperties().containsKey(name);		
 	}
+
+    /**
+     * Returns a list of Ini.Section objects containing chunkers descriptions.
+     * @param folderNumber
+     * @return
+     */
+    public List<Ini.Section> getChunkerDescriptions() {
+        List<Ini.Section> sections = new ArrayList<>();
+        sections.addAll(this.chunkersDescriptions);
+        return sections;
+    }
+
+    /**
+     * Returns a list of Ini.Section objects containing chunkers descriptions.
+     * The parameter holders ({NAME} are replaced with specified values.
+     * @param folderNumber — fold number replaces the {FOLD_NO} holder.
+     * @return
+     */
+	public List<Ini.Section> getParametrizedChunkerDescriptions(Integer folderNumber){
+        List<Ini.Section> sections = new ArrayList<Ini.Section>();
+        for ( Ini.Section osec : this.chunkersDescriptions ){
+            Ini ini = new Ini();
+            ini.add(osec.getName());
+            for ( String name : osec.keySet() ){
+                String value = osec.get(name);
+                value = value.replace("{FOLD_NO}", "" + folderNumber);
+                ini.put(osec.getName(), name, value);
+            }
+            sections.add(ini.get(osec.getName()));
+        }
+        return sections;
+    }
 
 	public Properties getProperties() {
 		return this.properties;

@@ -88,7 +88,7 @@ public class ActionFeatureSelection extends Action {
 		}
 		Iterator<Entry<String, CrfTemplate>> it = templates.entrySet()
 				.iterator();
-		Iterator<Section> cit = LinerOptions.getGlobal().chunkersDescriptions.iterator();
+		Iterator<Section> cit = LinerOptions.getGlobal().getChunkerDescriptions().iterator();
 		List<Pattern> ll = l.getTypes();
 		Section c = null;
 		while (cit.hasNext()){

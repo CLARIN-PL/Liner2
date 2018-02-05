@@ -125,7 +125,7 @@ public class ActionEval extends Action{
                 ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
                 cm.loadTrainData(new BatchReader(IOUtils.toInputStream(trainSet, "UTF-8"), "", this.inputFormat), gen);
                 AbstractDocumentReader reader = new BatchReader(IOUtils.toInputStream(testSet, "UTF-8"), "", this.inputFormat);
-                evaluate(reader, gen, cm, globalEval, globalEvalMuc, errorsOnly);
+                evaluate(reader, gen, cm, globalEval, globalEvalMuc, i, errorsOnly);
                 timer.stopTimer();
             }
 
@@ -137,7 +137,7 @@ public class ActionEval extends Action{
         } else {
             ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
             evaluate(ReaderFactory.get().getStreamReader(this.inputFile, this.inputFormat),
-                    gen, cm, null, null, errorsOnly);
+                    gen, cm, null, null, null, errorsOnly);
         }
 	}
 
@@ -152,10 +152,14 @@ public class ActionEval extends Action{
 	 * @throws Exception
 	 */
     private void evaluate(AbstractDocumentReader dataReader, TokenFeatureGenerator gen, ChunkerManager cm,
-                          ChunkerEvaluator globalEval, ChunkerEvaluatorMuc globalEvalMuc, boolean errorsOnly) throws Exception {
+                          ChunkerEvaluator globalEval, ChunkerEvaluatorMuc globalEvalMuc, Integer foldNumber, boolean errorsOnly) throws Exception {
         ProcessingTimer timer = new ProcessingTimer();
         timer.startTimer("Model loading");
-        cm.loadChunkers();
+        if ( foldNumber != null ) {
+            cm.loadChunkers(foldNumber);
+        } else {
+            cm.loadChunkers();
+        }
         Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
         timer.stopTimer();
 
@@ -189,8 +193,7 @@ public class ActionEval extends Action{
             chunker.prepare(ps);
             try{
                 chunkings = chunker.chunk(ps);
-            }
-            catch(Exception ex){
+            } catch(Exception ex){
                 System.err.println("Failed to chunk a sentence in document " + ps.getName());
                 ex.printStackTrace(System.err);
                 chunkings = new HashMap<Sentence, AnnotationSet>();
@@ -257,17 +260,20 @@ public class ActionEval extends Action{
         StringBuilder sbtrain = new StringBuilder();
 
         for ( int i = 0; i< folds.size(); i++){
-            if ( i != fold )
-                for ( String line : folds.get(i))
+            if ( i != fold ) {
+                for (String line : folds.get(i)) {
                     sbtrain.append(line + "\n");
+                }
+            }
         }
         return sbtrain.toString().trim();
     }
 
     private String getTestingSet(int fold, List<List<String>> folds){
         StringBuilder sbtrain = new StringBuilder();
-        for ( String line : folds.get(fold))
+        for ( String line : folds.get(fold)) {
             sbtrain.append(line + "\n");
+        }
         return sbtrain.toString().trim();
     }
 }
