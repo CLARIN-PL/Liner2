@@ -35,7 +35,7 @@ public class ActionRegions extends Action {
 	public ActionRegions() throws IOException {
 		super("regions");
 		this.setDescription("Finds and prints patterns PREP REGION OBJECT, where REGION is a word from a dictionary of regions and OBJECT is a word which is linked with OBJECT concept from SUMO.");
-		this.setExample(IOUtils.toString(this.getClass().getResource("action-regions-example.txt"), Charsets.UTF_8));
+		this.setExample(IOUtils.toString(this.getClass().getResource("ActionRegions.example.txt"), Charsets.UTF_8));
 		this.options.addOption(this.getOptionInputFilename());		
 		this.options.addOption(CommonOptions.getInputFileFormatOption());
 	}
