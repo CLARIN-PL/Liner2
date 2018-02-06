@@ -54,7 +54,7 @@ public class ActionEval extends Action {
 	 */
 	public ActionEval() {
 		super("eval");
-		this.setDescription("recognize spatial relations");
+		this.setDescription("evaluate recognition of spatial expressions");
 		this.options.addOption(this.getOptionInputFilename());		
 		this.options.addOption(CommonOptions.getInputFileFormatOption());
 		this.options.addOption(CommonOptions.getMaltparserModelFileOption());
@@ -79,7 +79,7 @@ public class ActionEval extends Action {
 
 	/**
 	 * Parse action options
-	 * @param arg0 The array with command line parameters
+	 * @param args The array with command line parameters
 	 */
 	@Override
 	public void parseOptions(String[] args) throws Exception {

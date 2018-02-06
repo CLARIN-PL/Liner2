@@ -1,9 +1,12 @@
 package g419.spatial.action;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
@@ -19,6 +22,7 @@ import g419.lib.cli.CommonOptions;
 import g419.spatial.tools.SpatialResources;
 import g419.toolbox.sumo.Sumo;
 import g419.toolbox.sumo.WordnetToSumo;
+import org.apache.commons.io.IOUtils;
 
 public class ActionRegions extends Action {
 	
@@ -27,16 +31,13 @@ public class ActionRegions extends Action {
 	
 	private String filename = null;
 	private String inputFormat = null;
-	
-	
-	/* Parametry, które będzie trzeba wyciągnąć do pliku ini. */
-	private String wordnet = "/nlp/resources/plwordnet/plwordnet_2_3_mod/plwordnet_2_3_pwn_format/";
 
-	public ActionRegions() {
+	public ActionRegions() throws IOException {
 		super("regions");
-		this.setDescription("recognize spatial relations");
+		this.setDescription("Finds and prints patterns PREP REGION OBJECT, where REGION is a word from a dictionary of regions and OBJECT is a word which is linked with OBJECT concept from SUMO.");
+		this.setExample(IOUtils.toString(this.getClass().getResource("action-regions-example.txt"), Charsets.UTF_8));
 		this.options.addOption(this.getOptionInputFilename());		
-		this.options.addOption(CommonOptions.getInputFileFormatOption());		
+		this.options.addOption(CommonOptions.getInputFileFormatOption());
 	}
 	
 	/**
@@ -50,7 +51,7 @@ public class ActionRegions extends Action {
 
 	/**
 	 * Parse action options
-	 * @param arg0 The array with command line parameters
+	 * @param args The array with command line parameters
 	 */
 	@Override
 	public void parseOptions(String[] args) throws Exception {
@@ -84,6 +85,7 @@ public class ActionRegions extends Action {
 								}
 							}
 							if ( superConcepts.contains("object") ){
+								System.out.println();
 								System.out.println(String.format("BASE: %s %s %s", 
 										tokens.get(i).getDisambTag().getBase(),
 										tokens.get(i+1).getDisambTag().getBase(),
@@ -92,8 +94,9 @@ public class ActionRegions extends Action {
 										tokens.get(i).getOrth(),
 										tokens.get(i+1).getOrth(),
 										tokens.get(i+2).getOrth()));
+								System.out.println(String.format("SUMO:"));
 								for ( String concept : concepts ){
-									System.out.println(String.format("SUMO: %s %s %s", 
+									System.out.println(String.format("  * %s %s %s",
 											tokens.get(i).getDisambTag().getBase(),
 											tokens.get(i+1).getDisambTag().getBase(),
 											concept));
