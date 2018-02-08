@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Klasa pomocniczna do reprezentacji relacji przestrzennegj i jej składowych.
+ * Represents spatial expression, which consists of: trajector, landmark, spatial indicator, motion indicator, path
  * @author czuk
  *
  */
@@ -61,6 +61,7 @@ public class SpatialExpression{
 	public Annotation getLandmark() {
 		return landmark;
 	}
+
 	public Set<SpatialRelationSchema> getSchemas(){
 		return this.filtres;
 	}
