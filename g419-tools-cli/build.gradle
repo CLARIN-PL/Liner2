@@ -5,7 +5,7 @@ targetCompatibility = 1.8
 
 apply plugin: 'application'
 
-main = "g419.Main"
+def main = "g419.Main"
 
 mainClassName = main
 

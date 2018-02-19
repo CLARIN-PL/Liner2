@@ -2,7 +2,7 @@ description = "g419-spatial-cli"
 
 apply plugin: 'application'
 
-main = "g419.spatial.Main"
+def main = "g419.spatial.Main"
 
 mainClassName = main
 

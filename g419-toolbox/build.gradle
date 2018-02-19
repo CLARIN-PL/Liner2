@@ -2,7 +2,7 @@ description = "g419-toolbox -- narzędzia"
 
 apply plugin: "application"
 
-main = "g419.toolbox.Main"
+def main = "g419.toolbox.Main"
 
 mainClassName = main
 

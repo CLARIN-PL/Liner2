@@ -2,7 +2,7 @@ description = "g419-liner2-daemon -- obsługa Liner2 w trybie demona"
 
 apply plugin: "application"
 
-main = "g419.liner2.daemon.Main"
+def main = "g419.liner2.daemon.Main"
 
 mainClassName = main
 
