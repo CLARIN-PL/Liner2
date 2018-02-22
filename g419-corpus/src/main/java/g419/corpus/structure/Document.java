@@ -63,13 +63,17 @@ public class Document{
 	public void setUri(String uri){
 		this.uri = uri;
 	}
-	
+
+	public Set<Relation> getRelationsSet(){
+		return relations.getRelations();
+	}
+
 	public RelationSet getRelations(){
-		return this.relations;
+		return relations;
 	}
 	
 	public RelationSet getRelations(String set){
-		return this.relations.filterBySet(set);
+		return relations.filterBySet(set);
 	}
 	
 	public void setRelations(RelationSet relations){

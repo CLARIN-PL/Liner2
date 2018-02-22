@@ -17,8 +17,7 @@ public class Main {
 		File log4jFile = new File("log4j.properties");
 		if ( log4jFile.exists() ){		
 			PropertyConfigurator.configure(log4jFile.getAbsolutePath());
-		}
-		else{
+		} else {
 			System.err.println("log4j.properties not found in the current location");
 			System.err.println("Expected location: " + log4jFile.getAbsoluteFile());
 		}

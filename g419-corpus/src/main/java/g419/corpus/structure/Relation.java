@@ -49,13 +49,6 @@ public class Relation {
 		this.setType(type);
 	}
 	
-//	public Relation(Annotation from, Annotation to, String type, String set){
-//		this.setAnnotationFrom(from);
-//		this.setAnnotationTo(to);
-//		this.setSet(set);
-//		this.setType(type);
-//	}
-
 	public Relation(Annotation from, Annotation to, String type, String set, Document document){
 		this.document = document;
 		this.setAnnotationFrom(from);
@@ -104,7 +97,7 @@ public class Relation {
 	
 	@Override
 	public String toString(){
-		return annotationFrom.toString() + " >-- " + type + " --> " + annotationTo.toString();
+		return annotationFrom.toString() + " ->- " + type + " ->- " + annotationTo.toString();
 	}
 	
 	@Override

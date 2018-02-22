@@ -132,7 +132,7 @@ public class ActionEval extends Action {
 						System.out.println();
 						
 						for ( SpatialExpression relation : gold ){
-							if ( relation.getLandmark().getSentence() == sentence) {
+							if ( relation.getLandmark().getSpatialObject().getSentence() == sentence) {
 								System.out.println(relation.toString() + " " + relation.getKey());
 							}
 						}
@@ -210,7 +210,7 @@ public class ActionEval extends Action {
 							}
 							
 							String info = String.format("  - %s\t %-80s\t%s %s; id=%s; schema=%s",status, rel.toString(), filterName, eval, rel.getKey(), sb.toString());
-							if ( regions.contains(rel.getLandmark().getHeadToken().getDisambTag().getBase()) ){
+							if ( regions.contains(rel.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase()) ){
 								info += " REGION_AS_LANDMARK";
 							}
 							System.out.println(info);
