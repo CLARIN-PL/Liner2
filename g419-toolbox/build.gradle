@@ -18,11 +18,23 @@ jar {
     }
 }
 
+configurations {
+    dependencyFix
+    dependencyFix.extendsFrom(compile)
+}
+
 dependencies {
     compile 'commons-cli:commons-cli:1.2'
     compile 'org.maltparser:maltparser:1.8.1' // should be compatible with 1.7.1
     compile 'org.seleniumhq.selenium:selenium-java:3.0.1'
     compile project(":g419-corpus")
     compile project(":g419-external-dependencies")
+
+    dependencyFix fileTree(new File(project(":g419-external-dependencies").buildDir, "libs"))
 }
 
+idea {
+    module {
+        scopes.COMPILE.plus += [ configurations.dependencyFix ]
+    }
+}

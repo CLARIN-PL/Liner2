@@ -54,7 +54,7 @@ public class ActionEval extends Action {
 	 */
 	public ActionEval() {
 		super("eval");
-		this.setDescription("evaluate recognition of spatial expressions");
+		this.setDescription("evaluate recognition of spatial expressions (only for static)");
 		this.options.addOption(this.getOptionInputFilename());		
 		this.options.addOption(CommonOptions.getInputFileFormatOption());
 		this.options.addOption(CommonOptions.getMaltparserModelFileOption());

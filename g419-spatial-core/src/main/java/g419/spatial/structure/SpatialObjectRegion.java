@@ -10,11 +10,7 @@ public class SpatialObjectRegion {
 
     private Annotation region;
 
-    public SpatialObjectRegion(){
-
-    }
-
-    public void setRegion(Annotation region){
+    public void setRegion(final Annotation region){
         this.region = region;
     }
 
@@ -22,7 +18,7 @@ public class SpatialObjectRegion {
         return region;
     }
 
-    public void setSpatialObject(Annotation spatialObject){
+    public void setSpatialObject(final Annotation spatialObject){
         this.spatialObject = spatialObject;
     }
 
@@ -33,8 +29,8 @@ public class SpatialObjectRegion {
     @Override
     public String toString(){
         StringJoiner joiner = new StringJoiner("; ", "[", "]");
-        joiner.add("" + region);
-        joiner.add("" + spatialObject);
+        joiner.add("RE=" + (region == null ? "" : region.getText()));
+        joiner.add("SO=" + (spatialObject == null ? "" : spatialObject.getText()));
         return joiner.toString();
     }
 }

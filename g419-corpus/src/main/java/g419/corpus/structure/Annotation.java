@@ -184,7 +184,7 @@ public class Annotation {
 		}
 	}
 
-	public int getHead(){
+	public Integer getHead(){
 		return this.head;
 	}
 	

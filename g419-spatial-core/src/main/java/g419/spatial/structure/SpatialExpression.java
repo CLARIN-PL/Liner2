@@ -4,9 +4,11 @@ import com.google.common.collect.Sets;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Token;
 import g419.spatial.filter.IRelationFilter;
+import g419.spatial.tools.Nuller;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -103,16 +105,18 @@ public class SpatialExpression{
     }
 
 	public String getKey(){
-		return String.format("%s:%s_%d_%d_%d",
-				spatialIndicator.getSentence().getDocument().getName(),
-				spatialIndicator.getSentence().getId(),
-				trajector.getSpatialObject().getHead(), spatialIndicator.getHead(), landmark.getSpatialObject().getHead());
+		return String.format("doc:%s_sent:%s_tr-so:%s_si:%s_lm-so:%s",
+				Nuller.resolve(() -> spatialIndicator.getSentence().getDocument().getName()).orElse("x"),
+				Nuller.resolve(() -> spatialIndicator.getSentence().getId()).orElse(""),
+				Nuller.resolve(() -> trajector.getSpatialObject().getHead().toString()).orElse(""),
+				Nuller.resolve(() -> spatialIndicator.getHead().toString()).orElse(""),
+				Nuller.resolve(() -> landmark.getSpatialObject().getHead().toString()).orElse(""));
 	}
 
 	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
-		Annotation lastAn = null;
+		Annotation lastAn;
 		sb.append(String.format("%s:", type));
 		sb.append(String.format(" TR:[%s]%s", trajector.getSpatialObject().getText(true), trajector.getSpatialObject().getType()));
 		lastAn = trajector.getSpatialObject();

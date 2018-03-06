@@ -19,7 +19,7 @@ allprojects {
     apply plugin: 'maven'
     apply plugin: 'idea'
     apply plugin: 'eclipse'
-    //apply plugin: 'netbeans' // if needed (?)
+    apply plugin: 'groovy'
 
     compileJava {
         options.compilerArgs << "-Xlint:all"
@@ -43,10 +43,14 @@ allprojects {
         // I took the liberty of providing dependencies that I find most useful
         compile 'org.slf4j:slf4j-api:1.7.2'
         runtime 'org.slf4j:slf4j-log4j12:1.7.2'
-        testCompile 'junit:junit:4.11'
         runtime 'com.google.code.gson:gson:2.7'
         runtime 'commons-lang:commons-lang:2.6'
         runtime 'org.apache.commons:commons-csv:1.4'
+        testCompile(
+                'junit:junit:4.12',
+                'org.codehaus.groovy:groovy-all:2.4.4',
+                'org.spockframework:spock-core:1.0-groovy-2.4'
+        )
     }
 
     test {

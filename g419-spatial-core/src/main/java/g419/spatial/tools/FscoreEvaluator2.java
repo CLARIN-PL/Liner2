@@ -1,5 +1,6 @@
 package g419.spatial.tools;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +14,10 @@ public class FscoreEvaluator2 {
 	
 	public void addGold(SpatialExpression relation){
 		this.gold.put(relation.getKey(), relation);
+	}
+
+	public void addAllGold(Collection<SpatialExpression> relations){
+		relations.stream().forEach(r -> gold.put(r.getKey(), r));
 	}
 
 	public void addDecision(SpatialExpression relation){

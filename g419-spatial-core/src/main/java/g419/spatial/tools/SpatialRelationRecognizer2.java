@@ -1,83 +1,58 @@
 package g419.spatial.tools;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import org.apache.log4j.Logger;
-import org.maltparser.core.exception.MaltChainedException;
-
 import g419.corpus.schema.kpwr.KpwrSpatial;
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Frame;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
+import g419.corpus.structure.*;
 import g419.liner2.core.features.tokens.ClassFeature;
 import g419.liner2.core.tools.parser.MaltParser;
 import g419.liner2.core.tools.parser.MaltSentence;
 import g419.liner2.core.tools.parser.MaltSentenceLink;
-import g419.spatial.filter.IRelationFilter;
-import g419.spatial.filter.RelationFilterDifferentObjects;
-import g419.spatial.filter.RelationFilterHolonyms;
-import g419.spatial.filter.RelationFilterLandmarkTrajectorException;
-import g419.spatial.filter.RelationFilterPrepositionBeforeLandmark;
-import g419.spatial.filter.RelationFilterPronoun;
-import g419.spatial.filter.RelationFilterSemanticPattern;
+import g419.spatial.filter.*;
 import g419.spatial.structure.SpatialExpression;
 import g419.spatial.structure.SpatialRelationSchema;
 import g419.toolbox.wordnet.NamToWordnet;
 import g419.toolbox.wordnet.Wordnet3;
+import org.apache.log4j.Logger;
+import org.maltparser.core.exception.MaltChainedException;
 
-public class SpatialRelationRecognizer {
+import java.io.IOException;
+import java.util.*;
+import java.util.regex.Pattern;
 
-	private MaltParser malt = null;
-	List<IRelationFilter> filters = null;
-	RelationFilterSemanticPattern semanticFilter = null;
-	
-	private Pattern annotationsPrep = Pattern.compile("^PrepNG.*$");	
-	private Pattern annotationsNg = Pattern.compile("^NG.*$");	
-	private Pattern patternAnnotationNam = Pattern.compile("^nam(_(fac|liv|loc|pro|oth).*|$)");
-	
-	private Set<String> objectPos = Sets.newHashSet();
-	private Set<String> regions = SpatialResources.getRegions();
-	
-	private Logger logger = Logger.getLogger(this.getClass());
-	
-	
+public class SpatialRelationRecognizer2 {
+
+	final private MaltParser malt;
+	final List<IRelationFilter> filters;
+	final RelationFilterSemanticPattern semanticFilter;
+
+	final private Pattern annotationsPrep = Pattern.compile("^PrepNG.*$");
+	final private Pattern annotationsNg = Pattern.compile("^NG.*$");
+	final private Pattern patternAnnotationNam = Pattern.compile("^nam(_(fac|liv|loc|pro|oth).*|$)");
+
+	final private Set<String> objectPos;
+	final private Set<String> regions = SpatialResources.getRegions();
+
+	final private Logger logger = Logger.getLogger(this.getClass());
+
+
 	/**
-	 * @throws IOException 
+	 * @throws IOException
 	 * @param malt Ścieżka do modelu Maltparsera
 	 * @param wordnet Ścieżka do wordnetu w formacie PWN
 	 */
-	public SpatialRelationRecognizer(MaltParser malt, Wordnet3 wordnet) throws IOException{		
+	public SpatialRelationRecognizer2(MaltParser malt, Wordnet3 wordnet) throws IOException{
 		this.malt = malt;
-		
-		this.objectPos.add("subst");
-		this.objectPos.add("ign");
-		this.objectPos.add("brev");
-		
+		this.objectPos = Sets.newHashSet("subst", "ign", "brev");
 		this.semanticFilter = new RelationFilterSemanticPattern();
 
-		NamToWordnet nam2wordnet = new NamToWordnet(wordnet);
-		
 		this.filters = Lists.newLinkedList();
 		this.filters.add(new RelationFilterPronoun());
 		this.filters.add(new RelationFilterDifferentObjects());
 		this.filters.add(this.semanticFilter);
 		this.filters.add(new RelationFilterPrepositionBeforeLandmark());
 		this.filters.add(new RelationFilterLandmarkTrajectorException());
-		this.filters.add(new RelationFilterHolonyms(wordnet, nam2wordnet));		
+		this.filters.add(new RelationFilterHolonyms(wordnet, new NamToWordnet(wordnet)));
 	}
 	
 	/**
@@ -95,75 +70,45 @@ public class SpatialRelationRecognizer {
 	public RelationFilterSemanticPattern getSemanticFilter(){
 		return this.semanticFilter;
 	}
-	
-	/**
-	 * Rozpoznaje wyrażenia przestrzenne i dodaje je do dokumentu jako obiekty Frame o type "spatial"
-	 * @param document
-	 * @throws MaltChainedException 
-	 */
-	public void recognizeInPlace(Document document) throws MaltChainedException{
-		for (Paragraph paragraph : document.getParagraphs()){
-			for (Sentence sentence : paragraph.getSentences()){
-				for ( SpatialExpression rel : this.recognize(sentence) ){
-					Frame f = SpatialRelationRecognizer.convertSpatialToFrame(rel);
-					document.getFrames().add(f);
-				}		
-			}
-		}		
+
+	public List<SpatialExpression> recognize(Document document) throws MaltChainedException {
+		List<SpatialExpression> expressions = Lists.newArrayList();
+		document.getSentences().stream().forEach((Sentence s) -> expressions.addAll(this.recognize(s)));
+		return expressions;
 	}
-	
+
 	/**
 	 * Rozpoznaje wyrażenia przestrzenne i zwraca je jako listę obiektów SpatialExpression
 	 * @param sentence
 	 * @return
 	 * @throws MaltChainedException 
 	 */
-	public List<SpatialExpression> recognize(Sentence sentence) throws MaltChainedException{
-		List<SpatialExpression> candidateRelations = this.findCandidates(sentence);
-		List<SpatialExpression> finalRelations = new ArrayList<SpatialExpression>();
-		if ( candidateRelations.size() > 0 ){
-			for ( SpatialExpression rel : candidateRelations ){
-				
-				boolean pass = true;
-				
-				for ( IRelationFilter filter : filters ){
-					if ( !filter.pass(rel) ){
-						pass = false;
-						break;
-					}								
-				}
-				
-				if ( pass ){
-					finalRelations.add(rel);
-				}
-			}				
+	public List<SpatialExpression> recognize(Sentence sentence) {
+		List<SpatialExpression> finalRelations = Lists.newArrayList();
+		try {
+			findCandidates(sentence).stream()
+					.filter(se->!getFilterDiscardingRelation(se).isPresent()).forEach(finalRelations::add);
+		} catch (MaltChainedException ex){
+			logger.error("Failed to recognize spatial expressions due to an exception", ex);
 		}
 		return finalRelations;
 	}
-	
+
 	/**
-	 * Konwertuje strukturę SpatialRelation do uniwersalnego formatu Frame.
-	 * @param relation
+	 * Passes the spatial expression through the list of filters and return the first filter, for which
+	 * the expressions was discarded.
+	 * @param se Spatial expression to test
 	 * @return
 	 */
-	public static Frame convertSpatialToFrame(SpatialExpression relation){
-		Frame f = new Frame(KpwrSpatial.SPATIAL_FRAME_TYPE);
-		f.setSlot(KpwrSpatial.SPATIAL_INDICATOR, relation.getSpatialIndicator());
-		f.setSlot(KpwrSpatial.SPATIAL_LANDMARK, relation.getLandmark().getSpatialObject());
-		f.setSlot(KpwrSpatial.SPATIAL_TRAJECTOR, relation.getTrajector().getSpatialObject());
-		f.setSlot(KpwrSpatial.SPATIAL_REGION, relation.getLandmark().getRegion());
-		
-		f.setSlotAttribute(KpwrSpatial.SPATIAL_TRAJECTOR, "sumo", String.join(", ",relation.getTrajectorConcepts()));
-		f.setSlotAttribute(KpwrSpatial.SPATIAL_LANDMARK, "sumo", String.join(", ",relation.getLandmarkConcepts()));
-		f.setSlotAttribute("debug", "pattern", relation.getType());
-		
-		Set<String> schemas = new HashSet<String>();
-		for ( SpatialRelationSchema schema : relation.getSchemas() ){
-			schemas.add(schema.getName());
+	public Optional<String> getFilterDiscardingRelation(SpatialExpression se){
+		Iterator<IRelationFilter> filters = this.getFilters().iterator();
+		while (filters.hasNext()) {
+			IRelationFilter filter = filters.next();
+			if (!filter.pass(se)) {
+				return Optional.ofNullable(filter.getClass().getSimpleName());
+			}
 		}
-		f.setSlotAttribute("debug", "schema", String.join("; ", schemas));
-		
-		return f;
+		return Optional.ofNullable(null);
 	}
 
 	/**
@@ -174,7 +119,9 @@ public class SpatialRelationRecognizer {
 	 */
 	public List<SpatialExpression> findCandidates(Sentence sentence) throws MaltChainedException{
 		this.splitPrepNg(sentence);
-		
+
+		SentenceAnnotationIndexTypePos anIndex = new SentenceAnnotationIndexTypePos(sentence);
+
 		MaltSentence maltSentence = new MaltSentence(sentence);
 		this.malt.parse(maltSentence);
 
@@ -237,15 +184,8 @@ public class SpatialRelationRecognizer {
 		// Second Iteration only		
 		relations.addAll( this.findCandidatesFirstNgAnyPrepNg(sentence, chunkNgTokens, chunkNpTokens, chunkPrepTokens) );
 		relations.addAll( this.findCandidatesByMalt(sentence, maltSentence, chunkPrepTokens, chunkNamesTokens, chunkNgTokens));
-		
-		relations.addAll( this.findCandidatesNgPpasPrepNg(
-				sentence, chunkNgTokens, chunkNpTokens, chunkPpasTokens, chunkPrepTokens));
-		relations.addAll( this.findCandidatesNgPactPrepNg(
-				sentence, chunkNgTokens, chunkNpTokens, chunkPactTokens, chunkPrepTokens));
-
-		// Eksperymentalnie
-		//relations.addAll( this.findCandidatesAllCombinations());
-
+		relations.addAll( this.findCandidatesNgPpasPrepNg(sentence, chunkNgTokens, chunkNpTokens, chunkPpasTokens, chunkPrepTokens));
+		relations.addAll( this.findCandidatesNgPactPrepNg(sentence, chunkNgTokens, chunkNpTokens, chunkPactTokens, chunkPrepTokens));
 
 		// Sprawdź, czy landmarkiem jest region. Jeżeli tak, to przesuń landmark na najbliższych ign lub subst
 		for ( SpatialExpression rel : relations ){

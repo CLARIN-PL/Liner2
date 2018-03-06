@@ -140,7 +140,7 @@ public class TEIStreamWriter extends AbstractDocumentWriter{
         this.mentionPatterns.add(Pattern.compile(".*nam"));
         this.mentionPatterns.add(Pattern.compile("anafora_wyznacznik"));
         // TODO: tymczasowo dodane elementy wyrażeń przestrzennych
-        this.mentionPatterns.add(Pattern.compile("^(landmark|spatial_indicator|trajector|spatial_object|region|path)", Pattern.CASE_INSENSITIVE));
+        this.mentionPatterns.add(Pattern.compile("^(landmark|spatial_indicator|trajector|spatial_object|region|path).", Pattern.CASE_INSENSITIVE));
         
         this.chunksPatterns = new ArrayList<Pattern>();
         this.chunksPatterns.add(Pattern.compile("^chunk_.*"));

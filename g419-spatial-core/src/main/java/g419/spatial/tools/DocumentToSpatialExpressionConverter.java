@@ -274,7 +274,6 @@ public class DocumentToSpatialExpressionConverter {
         }
 
 
-
         /**
          *
          */
@@ -326,7 +325,7 @@ public class DocumentToSpatialExpressionConverter {
             }
         }
 
-        return Lists.newArrayList(annotationToExpression.values());
+        return Lists.newArrayList(Sets.newHashSet(annotationToExpression.values()));
     }
 
 }

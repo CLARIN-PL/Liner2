@@ -7,6 +7,10 @@ import g419.corpus.structure.TokenAttributeIndex;
 
 /**
  * Abstrakcyjna klasa do strumieniowego wczytywania danych.
+ *
+ * ToDo: Add hasNext method
+ * ToDo: AbstractDocumentReader as an inherited class from Iterator
+ *
  * @author czuk
  *
  */
