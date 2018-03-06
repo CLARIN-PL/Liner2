@@ -3,11 +3,6 @@ description = "g419-liner2-core"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-configurations {
-    dependencyFix
-    dependencyFix.extendsFrom(compile)
-}
-
 dependencies {
     compile project(":g419-external-dependencies")
     compile 'commons-io:commons-io:2.4'
@@ -20,13 +15,4 @@ dependencies {
     compile "joda-time:joda-time:2.8.1"
     compile 'com.googlecode.json-simple:json-simple:1.1.1'
     runtime 'org.slf4j:slf4j-log4j12:1.7.2'
-
-    dependencyFix fileTree(new File(project(":g419-external-dependencies").buildDir, "libs"))
-}
-
-
-idea {
-    module {
-        scopes.COMPILE.plus += [ configurations.dependencyFix ]
-    }
 }

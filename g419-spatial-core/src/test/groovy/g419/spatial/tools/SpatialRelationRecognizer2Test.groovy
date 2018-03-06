@@ -5,7 +5,7 @@ import spock.lang.Specification
 class SpatialRelationRecognizer2Test extends Specification {
 
     def "simple"(){
-        when:
+        given:
             String x = "aaa"
 
         expect:

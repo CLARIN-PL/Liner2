@@ -140,11 +140,11 @@ task cleanCRFPP << {
 compileJava.dependsOn compileCRFPP
 clean.dependsOn cleanCRFPP
 
-jar {
-    from(
-        zipTree(new File(project.projectDir, "princetonAdapter.jar"))
-    )
-    from(
-        zipTree(new File(project.projectDir, "jlibsvm-0.92-SNAPSHOT.jar"))
-    )
-}
+//jar {
+//    from(
+//        zipTree(new File(project.projectDir, "princetonAdapter.jar"))
+//    )
+//    from(
+//        zipTree(new File(project.projectDir, "jlibsvm-0.92-SNAPSHOT.jar"))
+//    )
+//}

@@ -17,5 +17,4 @@ dependencies {
     compile project(":g419-toolbox")
     compile project(":g419-liner2-core")
     compile project(":g419-external-dependencies")
-    testCompile project(":g419-external-dependencies")
 }
