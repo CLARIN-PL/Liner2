@@ -1,9 +1,15 @@
 import org.gradle.plugins.ide.eclipse.model.ProjectDependency
 
 buildscript {
-    repositories { jcenter() }
+    repositories {
+        jcenter()
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+    }
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
     }
 }
 
@@ -19,7 +25,8 @@ allprojects {
     apply plugin: 'idea'
     apply plugin: 'eclipse'
     apply plugin: 'groovy'
-    apply plugin: "jacoco"
+    apply plugin: 'jacoco'
+    apply plugin: 'com.github.kt3k.coveralls' //version '2.6.3'
 
     compileJava {
         options.compilerArgs << "-Xlint:all"
@@ -96,11 +103,11 @@ allprojects {
     }
 
     jacocoTestReport {
-        group = "Reporting"
         reports {
             xml.enabled true
-            csv.enabled false
-            html.destination "${buildDir}/reports/coverage"
+            html.enabled true
+            //csv.enabled false
+            //html.destination "${buildDir}/reports/coverage"
         }
     }
 }
