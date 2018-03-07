@@ -1,11 +1,10 @@
-import org.gradle.plugins.ide.eclipse.model.ProjectDependency
+apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls' //version '2.6.3'
 
 buildscript {
     repositories {
         jcenter()
-        maven {
-            url 'https://plugins.gradle.org/m2/'
-        }
+        maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
@@ -17,6 +16,7 @@ description = "g419 - Top-level project"
 version = "2.5-SNAPSHOT"
 
 apply plugin: 'wrapper'
+
 group = "pl.pwr.nlp"
 
 allprojects {
@@ -25,8 +25,6 @@ allprojects {
     apply plugin: 'idea'
     apply plugin: 'eclipse'
     apply plugin: 'groovy'
-    apply plugin: 'jacoco'
-    apply plugin: 'com.github.kt3k.coveralls' //version '2.6.3'
 
     compileJava {
         options.compilerArgs << "-Xlint:all"
@@ -43,11 +41,6 @@ allprojects {
     }
 
     dependencies {
-        // some ant build included nlog4j in JARs, but it doesn't seem to be used anywhere, or at least
-        // recursively grepping repo root for "nlog4j" and "log4j" returned only build files
-        // building the whole project doesn't yield any compilation errors without it, so I assume everything's fine
-
-        // I took the liberty of providing dependencies that I find most useful
         compile (
             'org.slf4j:slf4j-api:1.7.2'
         )
@@ -110,13 +103,6 @@ allprojects {
             //html.destination "${buildDir}/reports/coverage"
         }
     }
-}
-
-eclipse {
-   classpath {
-      // Tworzy główny .classpath z wszystkimi zależnościami podprojektów
-      plusConfigurations += subprojects.collect { it.configurations.compile }
-   }
 }
 
 task libZip(type: Zip, dependsOn: build){
