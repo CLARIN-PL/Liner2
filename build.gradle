@@ -8,7 +8,6 @@ buildscript {
 }
 
 description = "g419 - Top-level project"
-
 version = "2.5-SNAPSHOT"
 
 apply plugin: 'wrapper'
@@ -20,6 +19,7 @@ allprojects {
     apply plugin: 'idea'
     apply plugin: 'eclipse'
     apply plugin: 'groovy'
+    apply plugin: "jacoco"
 
     compileJava {
         options.compilerArgs << "-Xlint:all"
@@ -41,15 +41,19 @@ allprojects {
         // building the whole project doesn't yield any compilation errors without it, so I assume everything's fine
 
         // I took the liberty of providing dependencies that I find most useful
-        compile 'org.slf4j:slf4j-api:1.7.2'
-        runtime 'org.slf4j:slf4j-log4j12:1.7.2'
-        runtime 'com.google.code.gson:gson:2.7'
-        runtime 'commons-lang:commons-lang:2.6'
-        runtime 'org.apache.commons:commons-csv:1.4'
+        compile (
+            'org.slf4j:slf4j-api:1.7.2'
+        )
+        runtime (
+            'org.slf4j:slf4j-log4j12:1.7.2',
+            'com.google.code.gson:gson:2.7',
+            'commons-lang:commons-lang:2.6',
+            'org.apache.commons:commons-csv:1.4'
+        )
         testCompile(
-                'junit:junit:4.12',
-                'org.codehaus.groovy:groovy-all:2.4.4',
-                'org.spockframework:spock-core:1.0-groovy-2.4'
+            'junit:junit:4.12',
+            'org.codehaus.groovy:groovy-all:2.4.4',
+            'org.spockframework:spock-core:1.0-groovy-2.4'
         )
     }
 
@@ -88,6 +92,15 @@ allprojects {
     artifacts {
         artifactsTasks.each {
             archives it
+        }
+    }
+
+    jacocoTestReport {
+        group = "Reporting"
+        reports {
+            xml.enabled true
+            csv.enabled false
+            html.destination "${buildDir}/reports/coverage"
         }
     }
 }

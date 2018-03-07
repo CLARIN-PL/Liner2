@@ -90,7 +90,7 @@ public class AnnotationTest {
 		String type = "";
 		Annotation annotation = new Annotation(begin, type, sentence);
 
-		Assert.assertFalse(annotation.hasHead());
+		Assert.assertTrue(annotation.hasHead());
 		annotation.setHead(begin);
 		Assert.assertTrue(annotation.hasHead());
 	}
