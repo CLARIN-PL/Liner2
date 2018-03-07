@@ -21,18 +21,16 @@ public class SpatialExpression{
 	private String type;
 	final private SpatialObjectRegion trajector = new SpatialObjectRegion();
 	final private SpatialObjectRegion landmark = new SpatialObjectRegion();
+	final private Set<Annotation> directions = Sets.newHashSet();
+	final private Set<Annotation> distances = Sets.newHashSet();
+	final private Set<SpatialObjectPath> pathsIndicators = Sets.newHashSet();
+
+	final private Set<SpatialRelationSchema> filtres = Sets.newHashSet();
+	final private Set<String> trajectorConcepts = Sets.newHashSet();
+	final private Set<String> landmarkConcepts = Sets.newHashSet();
 
 	private Annotation spatialIndicator = null;
 	private Annotation motionIndicator = null;
-
-    final private Set<Annotation> directions = Sets.newHashSet();
-    final private Set<Annotation> distances = Sets.newHashSet();
-    private Set<SpatialObjectPath> pathsIndicators = Sets.newHashSet();
-
-	private Set<SpatialRelationSchema> filtres = Sets.newHashSet();
-
-	private Set<String> trajectorConcepts = Sets.newHashSet();
-	private Set<String> landmarkConcepts = Sets.newHashSet();
 
 	public SpatialExpression(){}
 
@@ -104,6 +102,29 @@ public class SpatialExpression{
         return this.filtres;
     }
 
+	/**
+	 * Returns a set of all annotations which are part of the expression.
+	 * @return
+	 */
+	public Set<Annotation> getAnnotations(){
+		Set<Annotation> ans = Sets.newHashSet();
+		ans.add(getLandmark().getSpatialObject());
+		ans.add(getLandmark().getRegion());
+		ans.add(getTrajector().getSpatialObject());
+		ans.add(getTrajector().getRegion());
+		ans.add(getSpatialIndicator());
+		ans.add(getMotionIndicator());
+		for (SpatialObjectPath sop : pathsIndicators){
+			ans.add(sop.getSpatialObject().getRegion());
+			ans.add(sop.getSpatialObject().getSpatialObject());
+			ans.add(sop.getPathIndicator());
+		}
+		ans.addAll(directions);
+		ans.addAll(distances);
+		ans.remove(null);
+		return ans;
+	}
+
 	public String getKey(){
 		return String.format("doc:%s_sent:%s_tr-so:%s_si:%s_lm-so:%s",
 				Nuller.resolve(() -> spatialIndicator.getSentence().getDocument().getName()).orElse("x"),
@@ -132,10 +153,14 @@ public class SpatialExpression{
 			lastAn = landmark.getRegion();
 			sb.append(String.format(" RE:[%s]%s", landmark.getRegion().getText(true), landmark.getRegion().getType()));
 		}
-		if ( lastAn != null && lastAn.getEnd()+1 < landmark.getSpatialObject().getBegin() ){
-			sb.append(" ...");
+		if ( landmark.getSpatialObject() != null ) {
+			if (lastAn != null && lastAn.getEnd() + 1 < landmark.getSpatialObject().getBegin()) {
+				sb.append(" ...");
+			}
+			sb.append(String.format(" LM:[%s]%s", landmark.getSpatialObject().getText(true), landmark.getSpatialObject().getType()));
+		} else {
+			sb.append(" NO_LANDMARK ");
 		}
-		sb.append(String.format(" LM:[%s]%s", landmark.getSpatialObject().getText(true), landmark.getSpatialObject().getType()));
 		return sb.toString();
 	}
 }

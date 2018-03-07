@@ -1,45 +1,37 @@
 package g419.spatial.action;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import g419.corpus.io.reader.AbstractDocumentReader;
+import g419.corpus.io.reader.ReaderFactory;
+import g419.corpus.structure.*;
+import g419.lib.cli.Action;
+import g419.lib.cli.CommonOptions;
+import g419.liner2.core.chunker.IobberChunker;
+import g419.spatial.structure.SpatialExpression;
+import g419.spatial.tools.DocumentToSpatialExpressionConverter;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.log4j.Logger;
 
-import g419.corpus.io.reader.AbstractDocumentReader;
-import g419.corpus.io.reader.ReaderFactory;
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Relation;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-import g419.lib.cli.Action;
-import g419.lib.cli.CommonOptions;
-import g419.liner2.core.chunker.IobberChunker;
+import java.util.*;
+import java.util.regex.Pattern;
 
-public class ActionSpatialPatterns extends Action {
-	
+public class ActionSpatialPatterns2 extends Action {
+
 	private final static String OPTION_FILENAME_LONG = "filename";
 	private final static String OPTION_FILENAME = "f";
-	
+
 	private List<Pattern> annotationsPrep = Lists.newLinkedList();
 	private List<Pattern> annotationsNg = Lists.newLinkedList();
 	private List<Pattern> annotationsNp = Lists.newLinkedList();
-	
+
 	private String filename = null;
 	private String inputFormat = null;
-	
+
 	private Logger logger = Logger.getLogger("ActionSpatial");
-	
+
 	private final String ngs = "(AdjG|NumG[rzbde]?|NGdata|NGadres|Ngg|Ngs|NG[agspbcnxk])";
 	private final Pattern generaliseToPrepNG = Pattern.compile("Prep" + this.ngs);
 	private final Pattern generaliseToNG = Pattern.compile(this.ngs);
@@ -53,15 +45,12 @@ public class ActionSpatialPatterns extends Action {
 	private final Pattern generaliseVerbfinVerbfin = Pattern.compile("\\[Verbfin\\] \\[Verbfin\\]");
 	private final Pattern generalisePrepXLandmark = Pattern.compile("\\[pos=prep\\] \\[pos=(num|adj|burk)\\] \\[NG#landmark\\]");
 	private final Pattern generaliseIgnoreBrackets = Pattern.compile(" \\[orth=\\(\\]( \\[[^]]+\\])+ \\[orth=\\)\\]");
-	
-	/* Parametry, które będzie trzeba wyciągnąć do pliku ini. */
-	private String config_liner2_model = "/home/czuk/nlp/eclipse/workspace_liner2/models-released/liner2.5/liner25-model-pack-ibl/config-n82.ini";
-	private String config_iobber_model = "model-kpwr11-H";
-	private String config_iobber_config = "kpwr.ini";
 
-	public ActionSpatialPatterns() {
-		super("spatial-patterns");
-		this.setDescription("old implementation of pattern generator for spatial expressions (static expressions)");
+	private final DocumentToSpatialExpressionConverter converter = new DocumentToSpatialExpressionConverter();
+
+	public ActionSpatialPatterns2() {
+		super("spatial-patterns2");
+		this.setDescription("new implementation of pattern generator for spatial expressions (includes static and dynamic expressions)");
 		this.options.addOption(this.getOptionInputFilename());		
 		this.options.addOption(CommonOptions.getInputFileFormatOption());
 		
@@ -75,72 +64,44 @@ public class ActionSpatialPatterns extends Action {
 	 * @return Object for input file name parameter.
 	 */
 	private Option getOptionInputFilename(){
-		return Option.builder(ActionSpatialPatterns.OPTION_FILENAME).hasArg().argName("FILENAME").required()
+		return Option.builder(ActionSpatialPatterns2.OPTION_FILENAME).hasArg().argName("FILENAME").required()
 				.desc("path to the input file").longOpt(OPTION_FILENAME_LONG).build();			
 	}
 
 	/**
 	 * Parse action options
-	 * @param arg0 The array with command line parameters
+	 * @param args The array with command line parameters
 	 */
 	@Override
 	public void parseOptions(String[] args) throws Exception {
         CommandLine line = new DefaultParser().parse(this.options, args);
         parseDefault(line);
-        this.filename = line.getOptionValue(ActionSpatialPatterns.OPTION_FILENAME);
+        this.filename = line.getOptionValue(ActionSpatialPatterns2.OPTION_FILENAME);
         this.inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
     }
 
 	@Override
 	public void run() throws Exception {
-		AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(this.filename, this.inputFormat);				
-		IobberChunker iobber = new IobberChunker("", this.config_iobber_model, this.config_iobber_config);		
-		//Liner2 liner2 = new Liner2(this.config_liner2_model);
-		
-		// Jakie kategorie relacji mają być brane do konstrukcji wyrażeń przestrzennych
-		Set<String> relationTypes = new HashSet<String>();
-		relationTypes.add("trajector");
-		relationTypes.add("landmark");
-		relationTypes.add("other");
-		
-		List<Pattern> annotationNG = new ArrayList<Pattern>();
-		annotationNG.add(Pattern.compile(".*NG"));
-		annotationNG.add(Pattern.compile("Verbfin"));
-		annotationNG.add(Pattern.compile("Ppas"));
-		annotationNG.add(Pattern.compile("Pact"));
-		annotationNG.add(Pattern.compile("Inf"));
-		annotationNG.add(Pattern.compile("Imps"));
-		
-		Document document = null;
-		while ( (document = reader.nextDocument()) != null ){					
-			Logger.getLogger(this.getClass()).info("\nDocument: " + document.getName());
-			//liner2.chunkInPlace(document);
-			//iobber.chunkInPlace(document);
-			
-			Map<String, Annotation> tokenToNg = this.makeAnnotationIndex(document.getAnnotations(annotationNG));
-			Map<String, Annotation> tokenToNp = this.makeAnnotationIndex(document.getAnnotations(this.annotationsNp));
-			
-			Map<Annotation, List<Annotation>> tuples = new HashMap<Annotation, List<Annotation>>();
-						
-			for ( Relation r : document.getRelations().getRelations() ){
-				if ( relationTypes.contains(r.getType()) ){
-					List<Annotation> anns = tuples.get(r.getAnnotationFrom());
-					if ( anns == null ){
-						anns = new LinkedList<Annotation>();
-						tuples.put(r.getAnnotationFrom(), anns);
-					}
-					anns.add(r.getAnnotationTo());
-				}
-			}
-			
-			for ( Annotation si : tuples.keySet() ){
-				String pattern = this.generatePattern(si.getSentence(), tuples.get(si), tokenToNg, tokenToNp);
-				pattern = this.generalisePattern(pattern);
-				System.out.println(pattern);
-			}
+//		List<Pattern> annotationNG = new ArrayList<Pattern>();
+//		annotationNG.add(Pattern.compile(".*NG"));
+//		annotationNG.add(Pattern.compile("Verbfin"));
+//		annotationNG.add(Pattern.compile("Ppas"));
+//		annotationNG.add(Pattern.compile("Pact"));
+//		annotationNG.add(Pattern.compile("Inf"));
+//		annotationNG.add(Pattern.compile("Imps"));
+
+		AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(filename, inputFormat);
+		Document document;
+		while ( (document = reader.nextDocument()) != null ){
+			List<SpatialExpression> ses = converter.convert(document);
+			ses.stream().map(r -> generatePattern(r)).forEach(System.out::println);
 		}
-			
 		reader.close();
+	}
+
+	private String generatePattern(SpatialExpression se){
+        generatePattern(se, null, null);
+		return se.toString();
 	}
 	
 	/**
@@ -150,48 +111,28 @@ public class ActionSpatialPatterns extends Action {
 	 * @param tokenToNg
 	 * @return
 	 */
-	public String generatePattern(Sentence sentence, List<Annotation> anns, 
-			Map<String, Annotation> tokenToNg, Map<String, Annotation> tokenToNp){
+	public String generatePattern(SpatialExpression se, Map<String, Annotation> tokenToNg, Map<String, Annotation> tokenToNp){
 		
-		List<Token> tokens = sentence.getTokens();
-		StringBuilder sb = new StringBuilder();		
-		sb.append("PATTERN: ");
-		
-		if ( anns.size() < 2 ){
-			for ( Annotation an : anns ) {
-				Logger.getLogger(this.getClass()).warn(an.toString());				
-			}
-			return "Mniej niż 2 elementy";
+		StringBuilder sb = new StringBuilder("PATTERN: ");
+		List<Annotation> ans = Lists.newArrayList(se.getAnnotations());
+
+		if ( ans.size() < 2 ){
+			ans.stream().forEach(logger::warn);
+			return null;
 		}
+
+        Sentence sentence = ans.get(0).getSentence();
+        List<Token> tokens = sentence.getTokens();
+
+        Integer firstToken = ans.stream().map(a -> a.getBegin()).min(Integer::compare).get();
+		Integer lastToken = ans.stream().map(a -> a.getEnd()).max(Integer::compare).get();
 		
-		Integer begin = null;
-		Integer end = null;
-		
-		// Ustal indeks pierwszej i ostatniej anotacji
-		for ( Annotation an : anns ){
-			if (begin == null){
-				begin = an.getBegin();
-			}
-			else{
-				begin = Math.min(begin, an.getBegin());
-			}
-			if (end == null){
-				end = an.getEnd();
-			}
-			else{
-				end = Math.max(end, an.getEnd());
-			}
-			if ( sentence != an.getSentence() ){
-				return "Różne zdania";
-			}
-		}
-		
-		Map<String, Annotation> mentionIndex = this.makeAnnotationIndex(anns);		
+		Map<String, Annotation> mentionIndex = this.makeAnnotationIndex(ans);
 		
 		Annotation lastNP = null;
 		
-		int i=begin;
-		while ( i<=end){
+		int i=firstToken;
+		while ( i<=lastToken){
 			String tokenHashI = "" + sentence.hashCode() + "#" + i;
 			
 			Annotation currentNP = tokenToNp.get(tokenHashI);
@@ -211,7 +152,7 @@ public class ActionSpatialPatterns extends Action {
 			
 			if ( group != null ){
 				// Jeżeli grupa rozpoczyna się przed begin, to ustaw begin na początek anotacji group
-				begin = Math.min(begin, group.getBegin());
+				firstToken = Math.min(firstToken, group.getBegin());
 				
 				tokenStr += group.getType();
 				int j = i;
@@ -226,8 +167,7 @@ public class ActionSpatialPatterns extends Action {
 						mentionStr += "{" + mention.getType() + "}";
 						j = mention.getEnd();
 						mentionCount++;
-					}
-					else{
+					}else{
 						mentionStr += tokens.get(j).getDisambTag().getBase();
 					}					
 					j++;					
@@ -237,12 +177,10 @@ public class ActionSpatialPatterns extends Action {
 					mentionStr = "";
 				}
 				i = Integer.max(i, group.getEnd());
-			}
-			else{
+			}else{
 				if ( tokens.get(i).getDisambTag().getPos().equals("interp") ){
 					tokenStr += "orth=" + tokens.get(i).getOrth();
-				}
-				else{
+				}else{
 					tokenStr += "pos=" + tokens.get(i).getDisambTag().getPos();
 				}
 				Annotation mention = mentionIndex.get(tokenHashI);
@@ -264,7 +202,7 @@ public class ActionSpatialPatterns extends Action {
 
 		sb.append("\t	*** ");
 
-		for ( int t=begin; t<=end; t++ ){
+		for ( int t=firstToken; t<=lastToken; t++ ){
 			Token tok = tokens.get(t);
 			sb.append(tok.getOrth());
 			if ( !tok.getNoSpaceAfter() ){
@@ -274,7 +212,7 @@ public class ActionSpatialPatterns extends Action {
 
 		sb.append("\t *** ");
 
-		for ( int t=begin; t<=end; t++ ){
+		for ( int t=firstToken; t<=lastToken; t++ ){
 			Token tok = tokens.get(t);
 			sb.append(String.format("%s:%s", tok.getOrth(), tok.getDisambTag().getPos()));
 			sb.append(" ");
@@ -319,8 +257,7 @@ public class ActionSpatialPatterns extends Action {
 					if ( annotationIndex.get(hash).getTokens().size() < an.getTokens().size() ){
 						annotationIndex.remove(hash);
 					}
-				}
-				else{
+				} else{
 					annotationIndex.put(hash, an);
 				}
 			}

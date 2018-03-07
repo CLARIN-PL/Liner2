@@ -19,6 +19,7 @@ import org.maltparser.core.exception.MaltChainedException;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class SpatialRelationRecognizer2 {
 
@@ -182,10 +183,10 @@ public class SpatialRelationRecognizer2 {
 		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
 
 		// Second Iteration only		
-		relations.addAll( this.findCandidatesFirstNgAnyPrepNg(sentence, chunkNgTokens, chunkNpTokens, chunkPrepTokens) );
+		//relations.addAll( this.findCandidatesFirstNgAnyPrepNg(sentence, chunkNgTokens, chunkNpTokens, chunkPrepTokens) );
 		relations.addAll( this.findCandidatesByMalt(sentence, maltSentence, chunkPrepTokens, chunkNamesTokens, chunkNgTokens));
-		relations.addAll( this.findCandidatesNgPpasPrepNg(sentence, chunkNgTokens, chunkNpTokens, chunkPpasTokens, chunkPrepTokens));
-		relations.addAll( this.findCandidatesNgPactPrepNg(sentence, chunkNgTokens, chunkNpTokens, chunkPactTokens, chunkPrepTokens));
+		//relations.addAll( this.findCandidatesNgPpasPrepNg(sentence, chunkNgTokens, chunkNpTokens, chunkPpasTokens, chunkPrepTokens));
+		//relations.addAll( this.findCandidatesNgPactPrepNg(sentence, chunkNgTokens, chunkNpTokens, chunkPactTokens, chunkPrepTokens));
 
 		// Sprawdź, czy landmarkiem jest region. Jeżeli tak, to przesuń landmark na najbliższych ign lub subst
 		for ( SpatialExpression rel : relations ){
@@ -257,13 +258,8 @@ public class SpatialRelationRecognizer2 {
 		}
 		
 		// Usuń kandydatów, dla których spatial indicator jest częścią nazwy
-		List<SpatialExpression> toRemove = new ArrayList<SpatialExpression>();
-		for ( SpatialExpression spatial : relations ){
-			if ( chunkNamesTokens.get(spatial.getSpatialIndicator().getHead()) != null ){
-				toRemove.add(spatial);
-			}
-		}
-		relations.removeAll(toRemove);
+		relations.removeAll(relations.stream()
+				.filter(r->chunkNamesTokens.get(r.getSpatialIndicator().getHead()) != null).collect(Collectors.toList()));
 		
 		// Jeżeli frazy NG pokrywają się z nam_, to podmień anotacje
 		this.replaceNgWithNames(sentence, relations, chunkNamesTokens);
@@ -323,7 +319,7 @@ public class SpatialRelationRecognizer2 {
 				mapTokenIdToAnnotations.get(i).add(an);
 			}
 		}
-		
+
 		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){
 			if ( !mapTokenIdToAnnotations.containsKey(an.getBegin()+1) ){
 				Annotation ani = new Annotation(an.getBegin()+1, an.getEnd(), an.getType().substring(4), an.getSentence());
@@ -351,7 +347,7 @@ public class SpatialRelationRecognizer2 {
 					Annotation newNg = new Annotation(newNgStart, an.getEnd(), "NG", sentence);
 					this.logger.info("NEW NG: " + newNg.toString());
 					sentence.addChunk(newNg);
-					newNgStart = null;				
+					newNgStart = null;
 				}
 			}
 		}
@@ -361,624 +357,624 @@ public class SpatialRelationRecognizer2 {
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialExpression> findCandidatesNgAnyPrepNg(Sentence sentence, 
-			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
-			Map<Integer, Annotation> chunkNpTokens, 
-			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
-		/* Szukaj wzorców NG* prep NG* */
-		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
-			Annotation preposition = chunkPrepTokens.get(an.getBegin());
-			if ( preposition == null ){
-				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
-				continue;
-			}
-						
-			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
-			Integer trajectorPrevId = an.getBegin()-1;
-			
-			boolean breakSearchPrev = false;
-			while ( !breakSearchPrev && trajectorPrevId >=0 && mapTokenIdToAnnotations.get(trajectorPrevId) == null ){
-				/* Przecinek i nawias zamykający przerywają poszykiwanie */
-				String orth = sentence.getTokens().get(trajectorPrevId).getOrth(); 
-				if ( orth.equals(",") || orth.equals(")") ){
-					breakSearchPrev = true;
-				}
-				trajectorPrevId--;
-			}
-			Integer trajectorId = trajectorPrevId;
-						
-			if ( chunkNpTokens.get(landmarkId) != null && !breakSearchPrev && chunkNpTokens.get(trajectorPrevId) == chunkNpTokens.get(landmarkId) ){
-				String type = "";
-				if ( trajectorPrevId+1 == preposition.getBegin() ){
-					type = "<NG|PrepNG>";
-				}
-				else{
-					type = "<NG|...|PrepNG>";						
-				}
-				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
-				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-				relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
-			}
-		}
-		return relations;
-	}
+//	public List<SpatialExpression> findCandidatesNgAnyPrepNg(Sentence sentence,
+//			Map<Integer, List<Annotation>> mapTokenIdToAnnotations,
+//			Map<Integer, Annotation> chunkNpTokens,
+//			Map<Integer, Annotation> chunkPrepTokens){
+//		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
+//		/* Szukaj wzorców NG* prep NG* */
+//		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){
+//			Annotation preposition = chunkPrepTokens.get(an.getBegin());
+//			if ( preposition == null ){
+//				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+//				continue;
+//			}
+//
+//			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
+//			Integer trajectorPrevId = an.getBegin()-1;
+//
+//			boolean breakSearchPrev = false;
+//			while ( !breakSearchPrev && trajectorPrevId >=0 && mapTokenIdToAnnotations.get(trajectorPrevId) == null ){
+//				/* Przecinek i nawias zamykający przerywają poszykiwanie */
+//				String orth = sentence.getTokens().get(trajectorPrevId).getOrth();
+//				if ( orth.equals(",") || orth.equals(")") ){
+//					breakSearchPrev = true;
+//				}
+//				trajectorPrevId--;
+//			}
+//			Integer trajectorId = trajectorPrevId;
+//
+//			if ( chunkNpTokens.get(landmarkId) != null && !breakSearchPrev && chunkNpTokens.get(trajectorPrevId) == chunkNpTokens.get(landmarkId) ){
+//				String type = "";
+//				if ( trajectorPrevId+1 == preposition.getBegin() ){
+//					type = "<NG|PrepNG>";
+//				}
+//				else{
+//					type = "<NG|...|PrepNG>";
+//				}
+//				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
+//				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
+//				relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+//			}
+//		}
+//		return relations;
+//	}
 	
 	/**
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialExpression> findCandidatesNgPrepNgNoNp(Sentence sentence, 
-			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
-			Map<Integer, Annotation> chunkNpTokens, 
-			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
-		/* Szukaj wzorców NG* prep NG* */
-		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
-			Annotation preposition = chunkPrepTokens.get(an.getBegin());
-			if ( preposition == null ){
-				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
-				continue;
-			}
-						
-			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
-			Integer trajectorId = an.getBegin()-1;
-						
-			if ( chunkNpTokens.get(landmarkId) == null
-					&& chunkNpTokens.get(trajectorId) == null ){
-				String type = "NG|PrepNG";
-				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
-				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-				if ( trajectors != null ){
-					relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
-				}
-			}
-		}
-		return relations;
-	}	
+//	public List<SpatialExpression> findCandidatesNgPrepNgNoNp(Sentence sentence,
+//			Map<Integer, List<Annotation>> mapTokenIdToAnnotations,
+//			Map<Integer, Annotation> chunkNpTokens,
+//			Map<Integer, Annotation> chunkPrepTokens){
+//		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
+//		/* Szukaj wzorców NG* prep NG* */
+//		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){
+//			Annotation preposition = chunkPrepTokens.get(an.getBegin());
+//			if ( preposition == null ){
+//				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+//				continue;
+//			}
+//
+//			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
+//			Integer trajectorId = an.getBegin()-1;
+//
+//			if ( chunkNpTokens.get(landmarkId) == null
+//					&& chunkNpTokens.get(trajectorId) == null ){
+//				String type = "NG|PrepNG";
+//				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
+//				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
+//				if ( trajectors != null ){
+//					relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+//				}
+//			}
+//		}
+//		return relations;
+//	}
 
 	/**
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialExpression> findCandidatesNgPrepNgDiffNp(Sentence sentence, 
-			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
-			Map<Integer, Annotation> chunkNpTokens, 
-			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
-		/* Szukaj wzorców NG* prep NG* */
-		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
-			Annotation preposition = chunkPrepTokens.get(an.getBegin());
-			if ( preposition == null ){
-				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
-				continue;
-			}
-						
-			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
-			Integer trajectorId = an.getBegin()-1;
-						
-			if ( chunkNpTokens.get(landmarkId) != null
-					&& chunkNpTokens.get(trajectorId) != null
-					&& chunkNpTokens.get(trajectorId) != chunkNpTokens.get(landmarkId) ){
-				String type = "<NG><PrepNG>";
-				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
-				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-				if ( trajectors != null ){
-					relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
-				}
-			}
-		}
-		return relations;
-	}
+//	public List<SpatialExpression> findCandidatesNgPrepNgDiffNp(Sentence sentence,
+//			Map<Integer, List<Annotation>> mapTokenIdToAnnotations,
+//			Map<Integer, Annotation> chunkNpTokens,
+//			Map<Integer, Annotation> chunkPrepTokens){
+//		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
+//		/* Szukaj wzorców NG* prep NG* */
+//		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){
+//			Annotation preposition = chunkPrepTokens.get(an.getBegin());
+//			if ( preposition == null ){
+//				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+//				continue;
+//			}
+//
+//			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
+//			Integer trajectorId = an.getBegin()-1;
+//
+//			if ( chunkNpTokens.get(landmarkId) != null
+//					&& chunkNpTokens.get(trajectorId) != null
+//					&& chunkNpTokens.get(trajectorId) != chunkNpTokens.get(landmarkId) ){
+//				String type = "<NG><PrepNG>";
+//				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
+//				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
+//				if ( trajectors != null ){
+//					relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+//				}
+//			}
+//		}
+//		return relations;
+//	}
 
 	/**
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialExpression> findCandidatesPrepNgNgDiffNp(Sentence sentence, 
-			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
-			Map<Integer, Annotation> chunkNpTokens, 
-			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
-		/* Szukaj wzorców NG* prep NG* */
-		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
-			Annotation preposition = chunkPrepTokens.get(an.getBegin());
-			if ( preposition == null ){
-				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
-				continue;
-			}
-						
-			Integer landmarkId = an.getBegin() + preposition.getTokens().size();
-			Integer trajectorId = an.getEnd() + 1;
-						
-			if ( chunkNpTokens.get(landmarkId) != null
-					&& chunkNpTokens.get(trajectorId) != null
-					&& chunkNpTokens.get(trajectorId) != chunkNpTokens.get(landmarkId) ){
-				String type = "<PrepNG><NG>";
-				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
-				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-				relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
-			}
-		}
-		return relations;
-	}
+//	public List<SpatialExpression> findCandidatesPrepNgNgDiffNp(Sentence sentence,
+//			Map<Integer, List<Annotation>> mapTokenIdToAnnotations,
+//			Map<Integer, Annotation> chunkNpTokens,
+//			Map<Integer, Annotation> chunkPrepTokens){
+//		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
+//		/* Szukaj wzorców NG* prep NG* */
+//		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){
+//			Annotation preposition = chunkPrepTokens.get(an.getBegin());
+//			if ( preposition == null ){
+//				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+//				continue;
+//			}
+//
+//			Integer landmarkId = an.getBegin() + preposition.getTokens().size();
+//			Integer trajectorId = an.getEnd() + 1;
+//
+//			if ( chunkNpTokens.get(landmarkId) != null
+//					&& chunkNpTokens.get(trajectorId) != null
+//					&& chunkNpTokens.get(trajectorId) != chunkNpTokens.get(landmarkId) ){
+//				String type = "<PrepNG><NG>";
+//				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
+//				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
+//				relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+//			}
+//		}
+//		return relations;
+//	}
 
 	/**
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialExpression> findCandidatesNgPrepNgPpasPrepNg(Sentence sentence, 
-			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
-			Map<Integer, Annotation> chunkNpTokens, 
-			Map<Integer, Annotation> chunkPrepTokens,
-			Map<Integer, Annotation> chunkPpasTokens){				
-		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
-		/* Szukaj wzorców NG* prep NG* */
-		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
-			Annotation preposition = chunkPrepTokens.get(an.getBegin());
-			if ( preposition == null ){
-				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
-				continue;
-			}
-						
-			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
-			if ( an.getBegin()-1 <= 0 || !sentence.getTokens().get(an.getBegin()-1).getOrth().equals(",") ){
-				continue;
-			}
-			
-			Annotation ppas = chunkPpasTokens.get(an.getBegin()-1);
-			
-			if ( ppas == null ){
-				continue;
-			}
-			
-			List<Annotation> ngs = mapTokenIdToAnnotations.get(ppas.getBegin()-1);
-			if ( ngs == null ){
-				continue;
-			}
-			
-			Annotation prep = chunkPrepTokens.get(ngs.get(0).getBegin()-1);
-			if ( prep == null ){
-				continue;
-			}
-			
-			Integer trajectorId = prep.getBegin()-1;
-						
-			if ( chunkNpTokens.get(landmarkId) != null && chunkNpTokens.get(trajectorId) == chunkNpTokens.get(landmarkId) ){
-				String type = "<NG|PrepNG|Ppas|PrepNG>";
-				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
-				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-				if ( trajectors != null ){
-					relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
-				}
-			}
-		}
-		return relations;
-	}	
+//	public List<SpatialExpression> findCandidatesNgPrepNgPpasPrepNg(Sentence sentence,
+//			Map<Integer, List<Annotation>> mapTokenIdToAnnotations,
+//			Map<Integer, Annotation> chunkNpTokens,
+//			Map<Integer, Annotation> chunkPrepTokens,
+//			Map<Integer, Annotation> chunkPpasTokens){
+//		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
+//		/* Szukaj wzorców NG* prep NG* */
+//		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){
+//			Annotation preposition = chunkPrepTokens.get(an.getBegin());
+//			if ( preposition == null ){
+//				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+//				continue;
+//			}
+//
+//			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
+//			if ( an.getBegin()-1 <= 0 || !sentence.getTokens().get(an.getBegin()-1).getOrth().equals(",") ){
+//				continue;
+//			}
+//
+//			Annotation ppas = chunkPpasTokens.get(an.getBegin()-1);
+//
+//			if ( ppas == null ){
+//				continue;
+//			}
+//
+//			List<Annotation> ngs = mapTokenIdToAnnotations.get(ppas.getBegin()-1);
+//			if ( ngs == null ){
+//				continue;
+//			}
+//
+//			Annotation prep = chunkPrepTokens.get(ngs.get(0).getBegin()-1);
+//			if ( prep == null ){
+//				continue;
+//			}
+//
+//			Integer trajectorId = prep.getBegin()-1;
+//
+//			if ( chunkNpTokens.get(landmarkId) != null && chunkNpTokens.get(trajectorId) == chunkNpTokens.get(landmarkId) ){
+//				String type = "<NG|PrepNG|Ppas|PrepNG>";
+//				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
+//				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
+//				if ( trajectors != null ){
+//					relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+//				}
+//			}
+//		}
+//		return relations;
+//	}
 
 	/**
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialExpression> findCandidatesNgPrepNgCommaPrepNg(Sentence sentence, 
-			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
-			Map<Integer, Annotation> chunkNpTokens, 
-			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
-		/* Szukaj wzorców NG* prep NG* */
-		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
-			Annotation preposition = chunkPrepTokens.get(an.getBegin());
-			if ( preposition == null ){
-				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
-				continue;
-			}
-						
-			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
-			Integer commaId = preposition.getBegin()-1;
-			
-			if ( commaId <= 0 || !sentence.getTokens().get(commaId).getOrth().equals(",") ){
-				continue;
-			}			
-						
-			Integer prepId = null;
-			List<Annotation> ngs = mapTokenIdToAnnotations.get(commaId-1);
-			if ( ngs == null ){
-				continue;
-			}
-			else{
-				for ( Annotation a : ngs ){
-					if ( prepId == null ){
-						prepId = a.getBegin()-1;
-					}
-					else{
-						prepId = Math.min(prepId, a.getBegin()-1);
-					}
-				}
-			}
-			
-			Annotation prep = chunkPrepTokens.get(prepId);
-			if ( prep == null ){
-				continue;
-			}
-			
-			Integer trajectorId = prep.getBegin()-1;
-						
-			if ( chunkNpTokens.get(landmarkId) != null 
-					&& chunkNpTokens.get(trajectorId) == chunkNpTokens.get(landmarkId) ){
-				String type = "<NG|PrepNG|Comma|PrepNG>";
-				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
-				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-				if ( trajectors != null ){
-					relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
-				}
-			}
-		}
-		return relations;
-	}	
+//	public List<SpatialExpression> findCandidatesNgPrepNgCommaPrepNg(Sentence sentence,
+//			Map<Integer, List<Annotation>> mapTokenIdToAnnotations,
+//			Map<Integer, Annotation> chunkNpTokens,
+//			Map<Integer, Annotation> chunkPrepTokens){
+//		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
+//		/* Szukaj wzorców NG* prep NG* */
+//		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){
+//			Annotation preposition = chunkPrepTokens.get(an.getBegin());
+//			if ( preposition == null ){
+//				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+//				continue;
+//			}
+//
+//			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
+//			Integer commaId = preposition.getBegin()-1;
+//
+//			if ( commaId <= 0 || !sentence.getTokens().get(commaId).getOrth().equals(",") ){
+//				continue;
+//			}
+//
+//			Integer prepId = null;
+//			List<Annotation> ngs = mapTokenIdToAnnotations.get(commaId-1);
+//			if ( ngs == null ){
+//				continue;
+//			}
+//			else{
+//				for ( Annotation a : ngs ){
+//					if ( prepId == null ){
+//						prepId = a.getBegin()-1;
+//					}
+//					else{
+//						prepId = Math.min(prepId, a.getBegin()-1);
+//					}
+//				}
+//			}
+//
+//			Annotation prep = chunkPrepTokens.get(prepId);
+//			if ( prep == null ){
+//				continue;
+//			}
+//
+//			Integer trajectorId = prep.getBegin()-1;
+//
+//			if ( chunkNpTokens.get(landmarkId) != null
+//					&& chunkNpTokens.get(trajectorId) == chunkNpTokens.get(landmarkId) ){
+//				String type = "<NG|PrepNG|Comma|PrepNG>";
+//				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
+//				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
+//				if ( trajectors != null ){
+//					relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+//				}
+//			}
+//		}
+//		return relations;
+//	}
 	
 	/**
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialExpression> findCandidatesNgPrepNgPrepNg(Sentence sentence, 
-			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
-			Map<Integer, Annotation> chunkNpTokens, 
-			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
-		/* Szukaj wzorców NG* prep NG* */
-		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
-			Annotation preposition = chunkPrepTokens.get(an.getBegin());
-			if ( preposition == null ){
-				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
-				continue;
-			}
-						
-			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
-
-			List<Annotation> ngs = mapTokenIdToAnnotations.get(an.getBegin()-1);
-			Integer prepId = null;
-			if ( ngs == null ){
-				continue;
-			}
-			else{
-				for ( Annotation a : ngs ){
-					if ( prepId == null ){
-						prepId = a.getBegin()-1;
-					}
-					else{
-						prepId = Math.min(prepId, a.getBegin()-1);
-					}
-				}
-			}
-			
-			Annotation prep = chunkPrepTokens.get(prepId);
-			if ( prep == null ){
-				continue;
-			}
-			
-			Integer trajectorId = prep.getBegin()-1;
-						
-			if ( chunkNpTokens.get(landmarkId) != null 
-					&& chunkNpTokens.get(trajectorId) == chunkNpTokens.get(landmarkId) ){
-				String type = "<NG|PrepNG|PrepNG>";
-				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
-				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-				relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
-			}
-		}
-		return relations;
-	}			
+//	public List<SpatialExpression> findCandidatesNgPrepNgPrepNg(Sentence sentence,
+//			Map<Integer, List<Annotation>> mapTokenIdToAnnotations,
+//			Map<Integer, Annotation> chunkNpTokens,
+//			Map<Integer, Annotation> chunkPrepTokens){
+//		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
+//		/* Szukaj wzorców NG* prep NG* */
+//		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){
+//			Annotation preposition = chunkPrepTokens.get(an.getBegin());
+//			if ( preposition == null ){
+//				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+//				continue;
+//			}
+//
+//			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
+//
+//			List<Annotation> ngs = mapTokenIdToAnnotations.get(an.getBegin()-1);
+//			Integer prepId = null;
+//			if ( ngs == null ){
+//				continue;
+//			}
+//			else{
+//				for ( Annotation a : ngs ){
+//					if ( prepId == null ){
+//						prepId = a.getBegin()-1;
+//					}
+//					else{
+//						prepId = Math.min(prepId, a.getBegin()-1);
+//					}
+//				}
+//			}
+//
+//			Annotation prep = chunkPrepTokens.get(prepId);
+//			if ( prep == null ){
+//				continue;
+//			}
+//
+//			Integer trajectorId = prep.getBegin()-1;
+//
+//			if ( chunkNpTokens.get(landmarkId) != null
+//					&& chunkNpTokens.get(trajectorId) == chunkNpTokens.get(landmarkId) ){
+//				String type = "<NG|PrepNG|PrepNG>";
+//				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
+//				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
+//				relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+//			}
+//		}
+//		return relations;
+//	}
 	
 	/**
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialExpression> findCandidatesNgNgPrepNg(Sentence sentence, 
-			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
-			Map<Integer, Annotation> chunkNpTokens, 
-			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
-		/* Szukaj wzorców NG* prep NG* */
-		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
-			Annotation preposition = chunkPrepTokens.get(an.getBegin());
-			if ( preposition == null ){
-				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
-				continue;
-			}
-						
-			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
-						
-			List<Annotation> ngs = mapTokenIdToAnnotations.get(preposition.getBegin()-1);
-			Integer trajectorId = null;
-			if ( ngs == null ){
-				continue;
-			}
-			else{
-				for ( Annotation a : ngs ){
-					if ( trajectorId == null ){
-						trajectorId = a.getBegin()-1;
-					}
-					else{
-						trajectorId = Math.min(trajectorId, a.getBegin()-1);
-					}
-				}
-			}
-			
-			if ( chunkNpTokens.get(landmarkId) != null && chunkNpTokens.get(trajectorId) == chunkNpTokens.get(landmarkId) ){
-				String type = "<NG|NG|PrepNG>";
-				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
-				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-				if ( trajectors != null ){
-					relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
-				}
-			}
-		}
-		return relations;
-	}			
+//	public List<SpatialExpression> findCandidatesNgNgPrepNg(Sentence sentence,
+//			Map<Integer, List<Annotation>> mapTokenIdToAnnotations,
+//			Map<Integer, Annotation> chunkNpTokens,
+//			Map<Integer, Annotation> chunkPrepTokens){
+//		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
+//		/* Szukaj wzorców NG* prep NG* */
+//		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){
+//			Annotation preposition = chunkPrepTokens.get(an.getBegin());
+//			if ( preposition == null ){
+//				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+//				continue;
+//			}
+//
+//			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
+//
+//			List<Annotation> ngs = mapTokenIdToAnnotations.get(preposition.getBegin()-1);
+//			Integer trajectorId = null;
+//			if ( ngs == null ){
+//				continue;
+//			}
+//			else{
+//				for ( Annotation a : ngs ){
+//					if ( trajectorId == null ){
+//						trajectorId = a.getBegin()-1;
+//					}
+//					else{
+//						trajectorId = Math.min(trajectorId, a.getBegin()-1);
+//					}
+//				}
+//			}
+//
+//			if ( chunkNpTokens.get(landmarkId) != null && chunkNpTokens.get(trajectorId) == chunkNpTokens.get(landmarkId) ){
+//				String type = "<NG|NG|PrepNG>";
+//				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
+//				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
+//				if ( trajectors != null ){
+//					relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+//				}
+//			}
+//		}
+//		return relations;
+//	}
 
 	/**
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialExpression> findCandidatesFirstNgAnyPrepNg(Sentence sentence, 
-			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
-			Map<Integer, Annotation> chunkNpTokens, 
-			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
-		/* Szukaj wzorców NG* prep NG* */
-		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
-			Annotation preposition = chunkPrepTokens.get(an.getBegin());
-			if ( preposition == null ){
-				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
-				continue;
-			}
-						
-			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
-			Integer trajectorId = an.getBegin()-1;
-			
-			boolean breakSearchPrev = false;
-			while ( !breakSearchPrev && trajectorId >=0 && mapTokenIdToAnnotations.get(trajectorId) == null ){
-				/* Przecinek i nawias zamykający przerywają poszykiwanie */
-				String orth = sentence.getTokens().get(trajectorId).getOrth(); 
-				if ( orth.equals(",") || orth.equals(")") ){
-					breakSearchPrev = true;
-				}
-				trajectorId--;
-			}			
-						
-			if ( chunkNpTokens.get(landmarkId) != null && !breakSearchPrev && chunkNpTokens.get(trajectorId) == chunkNpTokens.get(landmarkId) ){
-				
-				while ( trajectorId > 0
-						&& mapTokenIdToAnnotations.get(trajectorId-1) != null
-						&& chunkNpTokens.get(trajectorId-1) == chunkNpTokens.get(landmarkId)
-						){
-					trajectorId = mapTokenIdToAnnotations.get(trajectorId-1).get(0).getBegin();
-				}
-				
-				String type = "";
-				if ( trajectorId+1 == preposition.getBegin() ){
-					type = "<FirstNG|PrepNG>";
-				}
-				else{
-					type = "<FirstNG|...|PrepNG>";						
-				}
-									
-				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
-				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-				relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
-			}
-		}
-		return relations;
-	}		
+//	public List<SpatialExpression> findCandidatesFirstNgAnyPrepNg(Sentence sentence,
+//			Map<Integer, List<Annotation>> mapTokenIdToAnnotations,
+//			Map<Integer, Annotation> chunkNpTokens,
+//			Map<Integer, Annotation> chunkPrepTokens){
+//		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
+//		/* Szukaj wzorców NG* prep NG* */
+//		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){
+//			Annotation preposition = chunkPrepTokens.get(an.getBegin());
+//			if ( preposition == null ){
+//				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+//				continue;
+//			}
+//
+//			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
+//			Integer trajectorId = an.getBegin()-1;
+//
+//			boolean breakSearchPrev = false;
+//			while ( !breakSearchPrev && trajectorId >=0 && mapTokenIdToAnnotations.get(trajectorId) == null ){
+//				/* Przecinek i nawias zamykający przerywają poszykiwanie */
+//				String orth = sentence.getTokens().get(trajectorId).getOrth();
+//				if ( orth.equals(",") || orth.equals(")") ){
+//					breakSearchPrev = true;
+//				}
+//				trajectorId--;
+//			}
+//
+//			if ( chunkNpTokens.get(landmarkId) != null && !breakSearchPrev && chunkNpTokens.get(trajectorId) == chunkNpTokens.get(landmarkId) ){
+//
+//				while ( trajectorId > 0
+//						&& mapTokenIdToAnnotations.get(trajectorId-1) != null
+//						&& chunkNpTokens.get(trajectorId-1) == chunkNpTokens.get(landmarkId)
+//						){
+//					trajectorId = mapTokenIdToAnnotations.get(trajectorId-1).get(0).getBegin();
+//				}
+//
+//				String type = "";
+//				if ( trajectorId+1 == preposition.getBegin() ){
+//					type = "<FirstNG|PrepNG>";
+//				}
+//				else{
+//					type = "<FirstNG|...|PrepNG>";
+//				}
+//
+//				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
+//				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
+//				relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+//			}
+//		}
+//		return relations;
+//	}
 	
 	/**
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialExpression> findCandidatesPrepNgNg(Sentence sentence, 
-			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
-			Map<Integer, Annotation> chunkNpTokens, 
-			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
-		/* Szukaj wzorców prep NG* NG* */
-		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
-			Annotation preposition = chunkPrepTokens.get(an.getBegin());
-			if ( preposition == null ){
-				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
-				continue;
-			}
-						
-			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
-			Integer trajectorId = an.getEnd()+1;
-			
-			if ( chunkNpTokens.get(landmarkId) != null
-					&& chunkNpTokens.get(landmarkId) == chunkNpTokens.get(trajectorId) ){
-				String type = "<PrepNG|NG>";
-				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
-				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-				relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
-			}
-		}
-		return relations;
-	}	
+//	public List<SpatialExpression> findCandidatesPrepNgNg(Sentence sentence,
+//			Map<Integer, List<Annotation>> mapTokenIdToAnnotations,
+//			Map<Integer, Annotation> chunkNpTokens,
+//			Map<Integer, Annotation> chunkPrepTokens){
+//		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
+//		/* Szukaj wzorców prep NG* NG* */
+//		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){
+//			Annotation preposition = chunkPrepTokens.get(an.getBegin());
+//			if ( preposition == null ){
+//				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+//				continue;
+//			}
+//
+//			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
+//			Integer trajectorId = an.getEnd()+1;
+//
+//			if ( chunkNpTokens.get(landmarkId) != null
+//					&& chunkNpTokens.get(landmarkId) == chunkNpTokens.get(trajectorId) ){
+//				String type = "<PrepNG|NG>";
+//				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
+//				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
+//				relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+//			}
+//		}
+//		return relations;
+//	}
 
 	/**
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialExpression> findCandidatesNgPrepNg(Sentence sentence, 
-			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
-			Map<Integer, Annotation> chunkNpTokens, 
-			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
-		/* Szukaj wzorców prep NG* NG* */
-		for ( Annotation landmark : sentence.getAnnotations(this.annotationsNg) ){
-			
-			Integer prepId = landmark.getBegin()-1;
-			if ( prepId <= 0 
-					|| !sentence.getTokens().get(prepId).getDisambTag().equals("prep")
-					|| chunkPrepTokens.get(prepId) != null ){
-				continue;
-			}
-			
-			Integer landmarkId = landmark.getBegin();
-			Integer trajectorId = prepId-1;
-			
-			if ( chunkNpTokens.get(landmarkId) != null
-					&& chunkNpTokens.get(landmarkId) == chunkNpTokens.get(trajectorId) ){
-				String type = "<NG|prep|NG>";
-				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
-				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-				relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, 
-						new Annotation(prepId, "Prep", sentence)));
-			}
-		}
-		return relations;
-	}	
+//	public List<SpatialExpression> findCandidatesNgPrepNg(Sentence sentence,
+//			Map<Integer, List<Annotation>> mapTokenIdToAnnotations,
+//			Map<Integer, Annotation> chunkNpTokens,
+//			Map<Integer, Annotation> chunkPrepTokens){
+//		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
+//		/* Szukaj wzorców prep NG* NG* */
+//		for ( Annotation landmark : sentence.getAnnotations(this.annotationsNg) ){
+//
+//			Integer prepId = landmark.getBegin()-1;
+//			if ( prepId <= 0
+//					|| !sentence.getTokens().get(prepId).getDisambTag().equals("prep")
+//					|| chunkPrepTokens.get(prepId) != null ){
+//				continue;
+//			}
+//
+//			Integer landmarkId = landmark.getBegin();
+//			Integer trajectorId = prepId-1;
+//
+//			if ( chunkNpTokens.get(landmarkId) != null
+//					&& chunkNpTokens.get(landmarkId) == chunkNpTokens.get(trajectorId) ){
+//				String type = "<NG|prep|NG>";
+//				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
+//				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
+//				relations.addAll(this.generateAllCombinations(type, trajectors, landmarks,
+//						new Annotation(prepId, "Prep", sentence)));
+//			}
+//		}
+//		return relations;
+//	}
 
 	/**
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialExpression> findCandidatesPrepNgVerbfinNg(Sentence sentence, 
-			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
-			Map<Integer, Annotation> chunkVerbfinTokens, 
-			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
-		/* Szukaj wzorców prep NG* NG* */
-		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
-			Annotation preposition = chunkPrepTokens.get(an.getBegin());
-			if ( preposition == null ){
-				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
-				continue;
-			}
-						
-			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
-			Integer verbfinId = an.getEnd()+1;
-			Annotation verbfin = chunkVerbfinTokens.get(verbfinId);
-			
-			if ( verbfin != null ){
-				Integer trajectorId = verbfin.getEnd()+1;			
-				String type = "PrepNG|Verbfin|NG";
-				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
-				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-				relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
-			}
-		}
-		return relations;
-	}		
+//	public List<SpatialExpression> findCandidatesPrepNgVerbfinNg(Sentence sentence,
+//			Map<Integer, List<Annotation>> mapTokenIdToAnnotations,
+//			Map<Integer, Annotation> chunkVerbfinTokens,
+//			Map<Integer, Annotation> chunkPrepTokens){
+//		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
+//		/* Szukaj wzorców prep NG* NG* */
+//		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){
+//			Annotation preposition = chunkPrepTokens.get(an.getBegin());
+//			if ( preposition == null ){
+//				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+//				continue;
+//			}
+//
+//			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
+//			Integer verbfinId = an.getEnd()+1;
+//			Annotation verbfin = chunkVerbfinTokens.get(verbfinId);
+//
+//			if ( verbfin != null ){
+//				Integer trajectorId = verbfin.getEnd()+1;
+//				String type = "PrepNG|Verbfin|NG";
+//				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
+//				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
+//				relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+//			}
+//		}
+//		return relations;
+//	}
 	
 	/**
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialExpression> findCandidatesNgVerbfinPrepNg(Sentence sentence, 
-			Map<Integer, List<Annotation>> mapTokenIdToAnnotations, 
-			Map<Integer, Annotation> chunkVerbfinTokens, 
-			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
-		/* Szukaj wzorców prep NG* NG* */
-		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
-			Annotation preposition = chunkPrepTokens.get(an.getBegin());
-			if ( preposition == null ){
-				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
-				continue;
-			}
-						
-			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
-			Integer verbfinId = preposition.getBegin()-1;
-			Annotation verbfin = chunkVerbfinTokens.get(verbfinId);
-			
-			if ( verbfin != null ){
-				Integer trajectorId = verbfin.getBegin()-1;			
-				String type = "NG|Verbfin|PrepNG";
-				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
-				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-				if ( trajectors != null ){
-					relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
-				}
-			}
-		}
-		return relations;
-	}		
+//	public List<SpatialExpression> findCandidatesNgVerbfinPrepNg(Sentence sentence,
+//			Map<Integer, List<Annotation>> mapTokenIdToAnnotations,
+//			Map<Integer, Annotation> chunkVerbfinTokens,
+//			Map<Integer, Annotation> chunkPrepTokens){
+//		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
+//		/* Szukaj wzorców prep NG* NG* */
+//		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){
+//			Annotation preposition = chunkPrepTokens.get(an.getBegin());
+//			if ( preposition == null ){
+//				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+//				continue;
+//			}
+//
+//			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
+//			Integer verbfinId = preposition.getBegin()-1;
+//			Annotation verbfin = chunkVerbfinTokens.get(verbfinId);
+//
+//			if ( verbfin != null ){
+//				Integer trajectorId = verbfin.getBegin()-1;
+//				String type = "NG|Verbfin|PrepNG";
+//				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
+//				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
+//				if ( trajectors != null ){
+//					relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+//				}
+//			}
+//		}
+//		return relations;
+//	}
 
 	/**
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialExpression> findCandidatesNgPpasPrepNg(Sentence sentence, 
-			Map<Integer, List<Annotation>> mapTokenIdToAnnotations,
-			Map<Integer, Annotation> chunkNpTokens,
-			Map<Integer, Annotation> chunkPpasTokens, 
-			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
-		/* Szukaj wzorców prep NG* NG* */
-		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
-			Annotation preposition = chunkPrepTokens.get(an.getBegin());
-			if ( preposition == null ){
-				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
-				continue;
-			}
-						
-			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
-			Integer verbfinId = preposition.getBegin()-1;
-			Annotation ppas = chunkPpasTokens.get(verbfinId);
-			if ( ppas == null ){
-				continue;
-			}
-			Integer trajectorId = ppas.getBegin()-1;			
-			
-			if ( ppas != null && chunkNpTokens.get(landmarkId) != null 
-					&& chunkNpTokens.get(landmarkId) == chunkNpTokens.get(trajectorId) ){
-				String type = "<NG|Ppas|PrepNG>";
-				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
-				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-				if ( trajectors != null ){
-					relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
-				}
-			}
-		}
-		return relations;
-	}		
+//	public List<SpatialExpression> findCandidatesNgPpasPrepNg(Sentence sentence,
+//			Map<Integer, List<Annotation>> mapTokenIdToAnnotations,
+//			Map<Integer, Annotation> chunkNpTokens,
+//			Map<Integer, Annotation> chunkPpasTokens,
+//			Map<Integer, Annotation> chunkPrepTokens){
+//		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
+//		/* Szukaj wzorców prep NG* NG* */
+//		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){
+//			Annotation preposition = chunkPrepTokens.get(an.getBegin());
+//			if ( preposition == null ){
+//				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+//				continue;
+//			}
+//
+//			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
+//			Integer verbfinId = preposition.getBegin()-1;
+//			Annotation ppas = chunkPpasTokens.get(verbfinId);
+//			if ( ppas == null ){
+//				continue;
+//			}
+//			Integer trajectorId = ppas.getBegin()-1;
+//
+//			if ( ppas != null && chunkNpTokens.get(landmarkId) != null
+//					&& chunkNpTokens.get(landmarkId) == chunkNpTokens.get(trajectorId) ){
+//				String type = "<NG|Ppas|PrepNG>";
+//				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
+//				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
+//				if ( trajectors != null ){
+//					relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+//				}
+//			}
+//		}
+//		return relations;
+//	}
 	
 	/**
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence
 	 */
-	public List<SpatialExpression> findCandidatesNgPactPrepNg(Sentence sentence, 
-			Map<Integer, List<Annotation>> mapTokenIdToAnnotations,
-			Map<Integer, Annotation> chunkNpTokens,
-			Map<Integer, Annotation> chunkPactTokens, 
-			Map<Integer, Annotation> chunkPrepTokens){				
-		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
-		/* Szukaj wzorców prep NG* NG* */
-		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){						
-			Annotation preposition = chunkPrepTokens.get(an.getBegin());
-			if ( preposition == null ){
-				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
-				continue;
-			}
-						
-			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
-			Integer verbfinId = preposition.getBegin()-1;
-			Annotation pact = chunkPactTokens.get(verbfinId);
-			if ( pact == null ){
-				continue;
-			}
-			Integer trajectorId = pact.getBegin()-1;			
-			
-			if ( pact != null && chunkNpTokens.get(landmarkId) != null 
-					&& chunkNpTokens.get(landmarkId) == chunkNpTokens.get(trajectorId) ){
-				String type = "<NG|Pact|PrepNG>";
-				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
-				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-				if ( trajectors != null ){
-					relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
-				}
-			}
-		}
-		return relations;
-	}		
+//	public List<SpatialExpression> findCandidatesNgPactPrepNg(Sentence sentence,
+//			Map<Integer, List<Annotation>> mapTokenIdToAnnotations,
+//			Map<Integer, Annotation> chunkNpTokens,
+//			Map<Integer, Annotation> chunkPactTokens,
+//			Map<Integer, Annotation> chunkPrepTokens){
+//		List<SpatialExpression> relations = new LinkedList<SpatialExpression>();
+//		/* Szukaj wzorców prep NG* NG* */
+//		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){
+//			Annotation preposition = chunkPrepTokens.get(an.getBegin());
+//			if ( preposition == null ){
+//				this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+//				continue;
+//			}
+//
+//			Integer landmarkId = an.getBegin()+preposition.getTokens().size();
+//			Integer verbfinId = preposition.getBegin()-1;
+//			Annotation pact = chunkPactTokens.get(verbfinId);
+//			if ( pact == null ){
+//				continue;
+//			}
+//			Integer trajectorId = pact.getBegin()-1;
+//
+//			if ( pact != null && chunkNpTokens.get(landmarkId) != null
+//					&& chunkNpTokens.get(landmarkId) == chunkNpTokens.get(trajectorId) ){
+//				String type = "<NG|Pact|PrepNG>";
+//				List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
+//				List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
+//				if ( trajectors != null ){
+//					relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+//				}
+//			}
+//		}
+//		return relations;
+//	}
 
 	/**
 	 * 

@@ -1,5 +1,6 @@
 package g419.corpus.structure;
 
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -50,7 +51,12 @@ public class Annotation {
 	private double confidence = 1.0;
 	
 
-	private Map<String, String> metadata = new HashMap<String, String>();
+	private Map<String, String> metadata = Maps.newHashMap();
+
+	public Annotation(String id, int begin, int end, String type, Sentence sentence){
+		this(begin,end,type,sentence);
+		this.id=id;
+	}
 
 	public Annotation(int begin, int end, String type, Sentence sentence){
 		for(int i = begin; i <= end; i++){
@@ -62,16 +68,11 @@ public class Annotation {
 	}
 
 	public Annotation(int tokenIndex, String type, Sentence sentence){
-		this.tokens.add(tokenIndex);
-		this.type = type;
-		this.sentence = sentence;
-		this.head = tokenIndex;
+		this(tokenIndex,tokenIndex,type,sentence);
 	}
 
 	public Annotation(int begin, String type, int channelIdx, Sentence sentence){
-		this.tokens.add(begin);
-		this.type = type;
-		this.sentence = sentence;
+		this(begin,begin,type,sentence);
 		this.channelIdx = channelIdx;
 	}
 
@@ -112,12 +113,12 @@ public class Annotation {
 	 */
 	public String getLemma(){
 		if ( this.lemma == null ){
-			if (this.metadata.containsKey("lemma"))
+			if (this.metadata.containsKey("lemma")) {
 				return this.metadata.get("lemma");
-			else
+			} else {
 				return this.getText();
-		}
-		else{
+			}
+		} else {
 			return this.lemma;
 		}
 	}
@@ -450,5 +451,9 @@ public class Annotation {
     			return false;
     	return true;
     }
+
+    public int length(){
+		return tokens.size();
+	}
 
 }

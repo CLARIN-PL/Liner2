@@ -8,8 +8,8 @@ import g419.corpus.structure.Document;
 import g419.corpus.structure.Relation;
 import g419.spatial.structure.SpatialExpression;
 import g419.spatial.structure.SpatialObjectPath;
-import g419.spatial.structure.SpatialObjectRegion;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -46,7 +46,7 @@ public class DocumentToSpatialExpressionConverter {
 
     private Set<String> relationTypes = Sets.newHashSet();
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      *
@@ -72,7 +72,6 @@ public class DocumentToSpatialExpressionConverter {
      */
     public List<SpatialExpression> convert(final Document document){
         if (document.getAnnotations().size() > 0 && document.getRelationsSet().size() == 0){
-            logger.error("No relations in the document");
             return Lists.newArrayList();
         }
 
@@ -153,7 +152,7 @@ public class DocumentToSpatialExpressionConverter {
             for (Relation rel : fRelations) {
                 SpatialExpression se = annotationToExpression.get(rel.getAnnotationFrom());
                 if (se==null){
-                    logger.warn("Spatial expressions expected to exists but not found for: " + rel);
+                    logger.warn("Spatial expressions expected to exists but not found for: {}", rel);
                 } else {
                     se.getTrajector().setSpatialObject(rel.getAnnotationTo());
                 }
@@ -188,7 +187,7 @@ public class DocumentToSpatialExpressionConverter {
             for (Relation rel : fRelations) {
                 SpatialExpression se = annotationToExpression.get(rel.getAnnotationFrom());
                 if (se == null) {
-                    logger.warn("Spatial expression with a region but without trajector: " + rel);
+                    logger.warn("Spatial expression with a region but without trajector: {}", rel);
                 } else {
                     se.getLandmark().setRegion(rel.getAnnotationTo());
                     annotationToExpression.put(rel.getAnnotationTo(), se);
@@ -207,7 +206,7 @@ public class DocumentToSpatialExpressionConverter {
             for (Relation rel : fRelations) {
                 SpatialExpression se = annotationToExpression.get(rel.getAnnotationFrom());
                 if (se == null) {
-                    logger.warn("Spatial expression with a landmark but without trajector: " + rel);
+                    logger.warn("Spatial expression with a landmark but without trajector: {}", rel);
                 } else {
                     se.getLandmark().setSpatialObject(rel.getAnnotationTo());
                     annotationToExpression.put(rel.getAnnotationTo(), se);
@@ -264,7 +263,7 @@ public class DocumentToSpatialExpressionConverter {
             for (Relation rel : fRelations){
                 SpatialObjectPath sor = objectPathMap.get(rel.getAnnotationFrom());
                 if (sor==null){
-                    logger.warn("Path expression not found for: " + rel);
+                    logger.warn("Path expression not found for: {}", rel);
                 } else {
                     sor.getSpatialObject().setSpatialObject(rel.getAnnotationTo());
                 }
@@ -280,7 +279,7 @@ public class DocumentToSpatialExpressionConverter {
         for ( Relation rel : relationsToProcess) {
             SpatialExpression se = annotationToExpression.get(rel.getAnnotationFrom());
             if (se==null){
-                logger.warn("Spatial expression not found for argument: " + rel);
+                logger.warn("Spatial expression not found for argument: {}", rel);
             } else if (annotationMotionIndicator.equals(rel.getAnnotationFrom().getType())) {
                 if ( annotationDirection.equals(rel.getAnnotationTo().getType())){
                     se.getDirections().add(rel.getAnnotationTo());
@@ -294,7 +293,7 @@ public class DocumentToSpatialExpressionConverter {
                         se.getPathsIndicators().add(path);
                     }
                 } else {
-                    logger.warn(String.format("Handle relation between %s and %s", rel.getAnnotationFrom().getType(), rel.getAnnotationTo().getType()));
+                    logger.warn("Handle relation between {} and {}", rel.getAnnotationFrom().getType(), rel.getAnnotationTo().getType());
                     se = null;
                 }
             }
@@ -314,14 +313,14 @@ public class DocumentToSpatialExpressionConverter {
         if (annotationsToProcess.size()>0){
             logger.warn("There are annotations which were not processed:");
             for (Annotation an : annotationsToProcess){
-                logger.warn("  => " + an);
+                logger.warn("  => {}", an);
             }
         }
 
         if (relationsToProcess.size()>0){
             logger.warn("There are relations which were not processed:");
             for (Relation rel : relationsToProcess){
-                logger.warn("  => " + rel);
+                logger.warn("  => {}", rel);
             }
         }
 
