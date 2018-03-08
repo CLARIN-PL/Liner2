@@ -48,9 +48,7 @@ public class Sentence {
         }
     };
 
-    public Sentence()	{
-    	
-    }
+    public Sentence() {}
 
     public Sentence(TokenAttributeIndex attrIndex)	{
     	this.attributeIndex = attrIndex;

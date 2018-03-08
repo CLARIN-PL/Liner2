@@ -82,8 +82,10 @@ public class ActionEval2 extends Action {
 
         Set<String> regions = SpatialResources.getRegions();
 
-        FscoreEvaluator2 evalTotal = new FscoreEvaluator2();
-        FscoreEvaluator2 evalNoSeedTotal = new FscoreEvaluator2();
+        KeyGenerator<SpatialExpression> keyGenerator = new SpatialExpressionKeyGeneratorSimple();
+        DecisionCollector<SpatialExpression> evalTotal = new DecisionCollector<>(keyGenerator);
+        DecisionCollector<SpatialExpression> evalNoSeedTotal = new DecisionCollector<>(keyGenerator);
+
         Map<String, FscoreEvaluator> evalByTypeTotal = Maps.newHashMap();
         Sumo sumo = recognizer.getSemanticFilter().getSumo();
         DocumentToSpatialExpressionConverter converter = new DocumentToSpatialExpressionConverter();
@@ -152,11 +154,11 @@ public class ActionEval2 extends Action {
 
         reader.close();
         printHeader1("Z sitem semantycznym");
-        evalTotal.evaluate();
+        evalTotal.getConfusionMatrix().printTotal();
         System.out.println("-----------------------------");
         evalByTypeTotal.entrySet().stream().map(p -> formatEvalLine(p.getKey(), p.getValue())).forEach(System.out::println);
         printHeader1("Bez sita semantycznego");
-        evalNoSeedTotal.evaluate();
+        evalNoSeedTotal.getConfusionMatrix().printTotal();
     }
 
     private String formatEvalLine(String type, FscoreEvaluator eval) {

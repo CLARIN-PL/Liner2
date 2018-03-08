@@ -237,7 +237,7 @@ public class Annotation {
 
     @Override
     public int hashCode() {
-        return (this.getText() + this.tokens.toString() + this.getType() + this.getSentence().getId()).hashCode();
+        return (this.getText() + this.tokens.toString() + this.getType() + this.getSentence()).hashCode();
     }
 
 	public Map<String, String> getMetadata() {

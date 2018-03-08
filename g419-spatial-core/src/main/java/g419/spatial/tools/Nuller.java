@@ -3,7 +3,7 @@ package g419.spatial.tools;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class Nuller {
+public final class Nuller {
 
     public static <T> Optional<T> resolve(Supplier<T> resolver) {
         try {

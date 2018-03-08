@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.google.common.collect.Maps;
+import g419.spatial.tools.*;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
@@ -28,9 +30,6 @@ import g419.liner2.core.tools.parser.MaltParser;
 import g419.spatial.filter.IRelationFilter;
 import g419.spatial.structure.SpatialExpression;
 import g419.spatial.structure.SpatialRelationSchema;
-import g419.spatial.tools.FscoreEvaluator2;
-import g419.spatial.tools.SpatialRelationRecognizer;
-import g419.spatial.tools.SpatialResources;
 import g419.toolbox.wordnet.Wordnet3;
 
 public class ActionEval extends Action {
@@ -98,10 +97,12 @@ public class ActionEval extends Action {
 		MaltParser malt = new MaltParser(this.maltparserModel);		
 		SpatialRelationRecognizer recognizer = new SpatialRelationRecognizer(malt, wordnet);
 		Set<String> regions = SpatialResources.getRegions();
-		
-		FscoreEvaluator2 evalTotal = new FscoreEvaluator2();
-		FscoreEvaluator2 evalNoSeedTotal = new FscoreEvaluator2();
-		Map<String, FscoreEvaluator> evalByTypeTotal = new HashMap<String, FscoreEvaluator>();
+
+		KeyGenerator<SpatialExpression> keyGenerator = new SpatialExpressionKeyGeneratorSimple();
+		DecisionCollector<SpatialExpression> evalTotal = new DecisionCollector<>(keyGenerator);
+		DecisionCollector<SpatialExpression> evalNoSeedTotal = new DecisionCollector<>(keyGenerator);
+
+		Map<String, FscoreEvaluator> evalByTypeTotal = Maps.newHashMap();
 				
 		Document document = null;
 		while ( ( document = reader.nextDocument() ) != null ){					
@@ -230,7 +231,7 @@ public class ActionEval extends Action {
 		System.out.println("=============================");
 		System.out.println("Z sitem semantycznym");
 		System.out.println("=============================");
-		evalTotal.evaluate();
+		evalTotal.getConfusionMatrix().printTotal();
 		System.out.println("-----------------------------");
 		
 		for ( String type : evalByTypeTotal.keySet() ){
@@ -242,7 +243,7 @@ public class ActionEval extends Action {
 		System.out.println("=============================");
 		System.out.println("Bez sita semantycznego");
 		System.out.println("=============================");
-		evalNoSeedTotal.evaluate();
+		evalNoSeedTotal.getConfusionMatrix().printTotal();
 	}
 	
 		
