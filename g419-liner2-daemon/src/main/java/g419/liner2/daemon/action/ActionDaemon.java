@@ -43,26 +43,12 @@ public abstract class ActionDaemon extends Action{
     }
     
     @Override
-    public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new GnuParser().parse(this.options, args);
-        HashSet<String> argNames = new HashSet<String>();
-        for(Option opt: line.getOptions()){
-            String argName = opt.getOpt();
-            if(argNames.contains(argName)){
-                throw new ParameterException("Repeated argument:" + argName);
-            }
-            else{
-                argNames.add(argName);
-            }
-        }
-        parseDefault(line);
+    public void parseOptions(final CommandLine line) throws Exception {
         parseModelsIni(line.getOptionValue(OPTION_MODELS));
         String threads = line.getOptionValue(OPTION_MAX_THREADS);
         max_threads = threads != null ? Integer.parseInt(threads) : DaemonThread.DEFAULT_MAX_THREADS;
         parseOptions(line);
     }
-
-    public abstract void parseOptions(CommandLine line) throws Exception;
 
     @Override
     public void run() throws Exception {

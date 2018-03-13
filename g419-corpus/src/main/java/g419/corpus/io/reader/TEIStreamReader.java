@@ -27,6 +27,7 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 
@@ -171,7 +172,7 @@ public class TEIStreamReader extends  AbstractDocumentReader{
         		}
         	}
         	catch(Exception ex){
-        		// TODO
+        		// ToDo: Log the exception
         		ex.printStackTrace();
         	}
         }
@@ -184,13 +185,13 @@ public class TEIStreamReader extends  AbstractDocumentReader{
     }
 
     @Override
-    public void close() throws DataFormatException {
+    public void close() {
     	for ( InputStream stream : this.streams ){
     		if ( stream != null ){
     			try {
 					stream.close();
 				} catch (IOException e) {
-					Logger.getLogger(this.getClass()).error("Unable to close stream");
+					LoggerFactory.getLogger(this.getClass()).error("Unable to close stream");
 				}
     		}
     	}
@@ -201,6 +202,11 @@ public class TEIStreamReader extends  AbstractDocumentReader{
 		Document doc = this.document;
 		this.document = null;
 		return doc;
+	}
+
+	@Override
+	public boolean hasNext(){
+    	return document!=null;
 	}
 
 }

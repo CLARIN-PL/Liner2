@@ -41,19 +41,20 @@ allprojects {
     }
 
     dependencies {
-        compile (
-            'org.slf4j:slf4j-api:1.7.2'
+        compile(
+                'org.slf4j:slf4j-api:1.7.2',
+                'io.vavr:vavr:0.9.0'
         )
-        runtime (
-            'org.slf4j:slf4j-log4j12:1.7.2',
-            'com.google.code.gson:gson:2.7',
-            'commons-lang:commons-lang:2.6',
-            'org.apache.commons:commons-csv:1.4'
+        runtime(
+                'org.slf4j:slf4j-log4j12:1.7.2',
+                'com.google.code.gson:gson:2.7',
+                'commons-lang:commons-lang:2.6',
+                'org.apache.commons:commons-csv:1.4'
         )
         testCompile(
-            'junit:junit:4.12',
-            'org.codehaus.groovy:groovy-all:2.4.4',
-            'org.spockframework:spock-core:1.0-groovy-2.4'
+                'junit:junit:4.12',
+                'org.codehaus.groovy:groovy-all:2.4.4',
+                'org.spockframework:spock-core:1.0-groovy-2.4'
         )
     }
 
@@ -74,16 +75,16 @@ allprojects {
     }
 
     def artifactsTasks = [
-        jar,
-        sourcesJar,
+            jar,
+            sourcesJar,
 //        javadocJar //uncomment this when javadoc will work
     ]
 
-    plugins.withType(ApplicationPlugin){
+    plugins.withType(ApplicationPlugin) {
         it.project.apply plugin: 'com.github.johnrengelman.shadow'
 
         shadowJar {
-            classifier='all'
+            classifier = 'all'
         }
 
         it.project.tasks.find { it.name == "jar" }.dependsOn it.project.tasks.find { it.name == "shadowJar" }
@@ -116,7 +117,7 @@ subprojects {
     jacocoTestReport {
         additionalSourceDirs = files(sourceSets.main.allSource.srcDirs)
         sourceDirectories = files(sourceSets.main.allSource.srcDirs)
-        classDirectories =  files(sourceSets.main.output)
+        classDirectories = files(sourceSets.main.output)
         reports {
             html.enabled = true
             xml.enabled = true
@@ -125,24 +126,24 @@ subprojects {
     }
 }
 
-task libZip(type: Zip, dependsOn: build){
+task libZip(type: Zip, dependsOn: build) {
     description "Makes ZIP with all JARs and some additional stuff, like README and samples."
     classifier = "libs"
     into("liner2-pack") {
         from new File(project.rootDir, "stuff/README")
-        from new File(project.rootDir, "stuff/log4j.properties")    
+        from new File(project.rootDir, "stuff/log4j.properties")
         into("libs") {
             from subprojects.collect {
                 it.jar.archivePath
             }
         }
-        into("wrapper"){
+        into("wrapper") {
             from new File(project.rootDir, "stuff/wrapper")
         }
     }
 }
 
-task appZip(type: Zip, dependsOn: build){
+task appZip(type: Zip, dependsOn: build) {
     description "Makes ZIP with all FAT-JARs."
     classifier = "apps"
     def files = subprojects.collect {
@@ -151,7 +152,7 @@ task appZip(type: Zip, dependsOn: build){
         def parts = p.split("[.]") as List
         def last = parts.pop()
         def archiveName = parts.pop() + "-all"
-        def appPath = (parts+[archiveName, last]).join(".")
+        def appPath = (parts + [archiveName, last]).join(".")
         File appFile = new File(appPath)
         if (appFile.exists())
             return appFile

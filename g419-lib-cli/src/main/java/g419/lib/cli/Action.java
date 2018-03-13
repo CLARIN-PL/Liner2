@@ -1,21 +1,19 @@
 package g419.lib.cli;
 
+import com.google.common.collect.Sets;
 import g419.corpus.ConsolePrinter;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
+import org.apache.commons.cli.*;
 
 import java.util.HashSet;
 
 public abstract class Action {
 
-	protected String name = null;
+	final protected String name;
 	protected String description = "";
 	protected String example = "";
 	protected Options options = new Options();
-	protected HashSet<String> multipleValueOptions = new HashSet<String>();
+	protected HashSet<String> multipleValueOptions = Sets.newHashSet();
 	
 	/**
 	 * @param name -- nazwa trybu pracy.
@@ -47,19 +45,21 @@ public abstract class Action {
 	 * error message;
 	 * @param args
 	 */
-	public abstract void parseOptions(String[] args) throws Exception;
-	
+	public void parseOptions(final String[] args) throws Exception{
+		final CommandLine line = new DefaultParser().parse(options, args);
+		checkOptionRepetition(line);
+		if(line.hasOption(CommonOptions.OPTION_VERBOSE)){
+			ConsolePrinter.verbose = true;
+		}
+		parseOptions(line);
+	}
+
+	public abstract void parseOptions(final CommandLine line) throws Exception;
+
 	public Options getOptions(){
 		return this.options;
 	}
 
-    protected void parseDefault(CommandLine line){
-		checkOptionRepetition(line);
-        if(line.hasOption(CommonOptions.OPTION_VERBOSE)){
-            ConsolePrinter.verbose = true;
-        }
-    }
-	
 	/**
 	 * Returns name of the mode.
 	 * @return

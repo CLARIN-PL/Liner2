@@ -7,9 +7,11 @@ import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.*;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
+import g419.spatial.pattern.AnnotationPatternGenerator;
 import g419.spatial.structure.SpatialExpression;
 import g419.spatial.tools.DocumentToSpatialExpressionConverter;
 import g419.spatial.tools.SentenceAnnotationIndexTypePos;
+import io.vavr.control.Try;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
@@ -22,30 +24,18 @@ import java.util.stream.Collectors;
 
 public class ActionSpatialPatterns2 extends Action {
 
-	private List<Pattern> annotationsPrep = Lists.newLinkedList();
-	private List<Pattern> annotationsNg = Lists.newLinkedList();
-	private List<Pattern> annotationsNp = Lists.newLinkedList();
-
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	final private AnnotationPatternGenerator generator = new AnnotationPatternGenerator();
 	private String filename = null;
 	private String inputFormat = null;
-
-	private Logger logger = LoggerFactory.getLogger(getClass());
-
-	private final String ngs = "(AdjG|NumG[rzbde]?|NGdata|NGadres|Ngg|Ngs|NG[agspbcnxk])";
-
-	private final Set<String> spejdTypesToReplace = Sets.newHashSet("PrepNG", "NG", "Verbfin", "Ppas", "Pact", "Inf", "Imps");
 
 	private final DocumentToSpatialExpressionConverter converter = new DocumentToSpatialExpressionConverter();
 
 	public ActionSpatialPatterns2() {
 		super("spatial-patterns2");
-		this.setDescription("new implementation of pattern generator for spatial expressions (includes static and dynamic expressions)");
-		this.options.addOption(this.getOptionInputFilename());		
-		this.options.addOption(CommonOptions.getInputFileFormatOption());
-		
-		this.annotationsPrep.add(Pattern.compile("^PrepNG.*"));
-		this.annotationsNg.add(Pattern.compile("^NG.*"));		
-		this.annotationsNp.add(Pattern.compile("chunk_np"));
+		setDescription("new implementation of pattern generator for spatial expressions (includes static and dynamic expressions)");
+		options.addOption(this.getOptionInputFilename());
+		options.addOption(CommonOptions.getInputFileFormatOption());
 	}
 	
 	/**
@@ -62,22 +52,22 @@ public class ActionSpatialPatterns2 extends Action {
 	 * @param args The array with command line parameters
 	 */
 	@Override
-	public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);
+	public void parseOptions(final CommandLine line) throws Exception {
         filename = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
     }
 
 	@Override
 	public void run() throws Exception {
-		AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(filename, inputFormat);
-		Document document;
-		while ( (document = reader.nextDocument()) != null ){
-			List<SpatialExpression> ses = converter.convert(document);
-			ses.stream().map(r -> generatePattern(r)).forEach(System.out::println);
-		}
-		reader.close();
+	    List<String> patterns = Lists.newArrayList();
+	    try (AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(filename, inputFormat)) {
+            while (reader.hasNext()) {
+                Document document = reader.nextDocument();
+                List<SpatialExpression> ses = converter.convert(document);
+                ses.stream().map(r -> generatePattern(r)).forEach(patterns::add);
+            }
+        }
+        patterns.stream().forEach(System.out::println);
 	}
 
 	/**
@@ -85,34 +75,17 @@ public class ActionSpatialPatterns2 extends Action {
      * @param se
 	 * @return
 	 */
-	public String generatePattern(SpatialExpression se){
-		StringBuilder sb = new StringBuilder("PATTERN: ");
-		List<Annotation> ans = Lists.newArrayList(se.getAnnotations());
-
-		if ( ans.size() < 2 ){
-			ans.stream().map(an->an.toString()).forEach(logger::warn);
-			return null;
-		}
-
-        Sentence sentence = ans.get(0).getSentence();
-        List<Token> tokens = sentence.getTokens();
-        SentenceAnnotationIndexTypePos spejdChunks = new SentenceAnnotationIndexTypePos(sentence);
-
-        if (!ans.stream().filter(an->an.getSentence()!=sentence).collect(Collectors.toList()).isEmpty()){
-            logger.warn("Expressions has annotations assigned to different sentences: {}", se);
-            return null;
+	private String generatePattern(SpatialExpression se){
+		List<Annotation> annotations = Lists.newArrayList(se.getAnnotations());
+		String str = "";
+		if ( annotations.size() > 0 ){
+		    try {
+                str = generator.generate(annotations.get(0).getSentence(), annotations);
+            } catch (Exception ex){
+		        logger.warn("Failed to generate pattern for spatial expression: {}", se, ex);
+            }
         }
-
-        Integer firstToken = ans.stream().map(a -> a.getBegin()).min(Integer::compare).get();
-		Integer lastToken = ans.stream().map(a -> a.getEnd()).max(Integer::compare).get();
-		
-        int i=firstToken;
-        while (i<=lastToken){
-            sb.append(String.format("[pos=%s]", tokens.get(i).getDisambTag().getPos()));
-            i++;
-        }
-
-		return sb.toString().trim();
+		return str;
 	}
 
 }

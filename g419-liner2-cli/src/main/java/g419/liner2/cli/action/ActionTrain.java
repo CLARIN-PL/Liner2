@@ -23,9 +23,7 @@ public class ActionTrain extends Action{
 	}
 
 	@Override
-	public void parseOptions(String[] args) throws ParseException {
-		CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);
+	public void parseOptions(final CommandLine line) throws Exception {
         LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
 	}
 	

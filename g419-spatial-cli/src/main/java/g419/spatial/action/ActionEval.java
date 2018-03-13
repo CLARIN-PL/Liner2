@@ -81,9 +81,7 @@ public class ActionEval extends Action {
 	 * @param args The array with command line parameters
 	 */
 	@Override
-	public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);
+	public void parseOptions(final CommandLine line) throws Exception {
         this.filename = line.getOptionValue(ActionEval.OPTION_FILENAME);
         this.inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
         this.maltparserModel = line.getOptionValue(CommonOptions.OPTION_MALT);
@@ -103,7 +101,7 @@ public class ActionEval extends Action {
 		DecisionCollector<SpatialExpression> evalNoSeedTotal = new DecisionCollector<>(keyGenerator);
 
 		Map<String, FscoreEvaluator> evalByTypeTotal = Maps.newHashMap();
-				
+
 		Document document = null;
 		while ( ( document = reader.nextDocument() ) != null ){					
 			System.out.println("=======================================");
@@ -134,7 +132,7 @@ public class ActionEval extends Action {
 						
 						for ( SpatialExpression relation : gold ){
 							if ( relation.getLandmark().getSpatialObject().getSentence() == sentence) {
-								System.out.println(relation.toString() + " " + relation.getKey());
+								System.out.println(relation.toString() + " " + keyGenerator.generateKey(relation));
 							}
 						}
 						System.out.println();
@@ -210,7 +208,7 @@ public class ActionEval extends Action {
 								
 							}
 							
-							String info = String.format("  - %s\t %-80s\t%s %s; id=%s; schema=%s",status, rel.toString(), filterName, eval, rel.getKey(), sb.toString());
+							String info = String.format("  - %s\t %-80s\t%s %s; id=%s; schema=%s",status, rel.toString(), filterName, eval, keyGenerator.generateKey(rel), sb.toString());
 							if ( regions.contains(rel.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase()) ){
 								info += " REGION_AS_LANDMARK";
 							}

@@ -125,15 +125,6 @@ public class SpatialExpression{
 		return ans;
 	}
 
-	public String getKey(){
-		return String.format("doc:%s_sent:%s_tr-so:%s_si:%s_lm-so:%s",
-				Nuller.resolve(() -> spatialIndicator.getSentence().getDocument().getName()).orElse("x"),
-				Nuller.resolve(() -> spatialIndicator.getSentence().getId()).orElse(""),
-				Nuller.resolve(() -> trajector.getSpatialObject().getHead().toString()).orElse(""),
-				Nuller.resolve(() -> spatialIndicator.getHead().toString()).orElse(""),
-				Nuller.resolve(() -> landmark.getSpatialObject().getHead().toString()).orElse(""));
-	}
-
 	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder();

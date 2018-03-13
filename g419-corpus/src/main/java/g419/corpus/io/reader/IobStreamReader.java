@@ -18,6 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
 
 
 public class IobStreamReader extends AbstractDocumentReader {
@@ -28,9 +29,10 @@ public class IobStreamReader extends AbstractDocumentReader {
 	private String nextParagraphId = null;
 	private boolean nextParagraph = false;
 	private boolean init = false;
+	private Document documentBuffor=null;
 	
 	public IobStreamReader(InputStream is) {
-		this.ir = new BufferedReader(new InputStreamReader(is));
+		ir = new BufferedReader(new InputStreamReader(is));
 	}
 
 	/**
@@ -61,16 +63,17 @@ public class IobStreamReader extends AbstractDocumentReader {
 				this.attributeIndex.addAttribute(content[i]);
 			}
 			this.init = true;
+			documentBuffor=readNextDocument();
 			return;
 		}
 	}
 	
 	@Override
-	public void close() throws DataFormatException {
+	public void close() {
 		try {
 			ir.close();
 		} catch (IOException ex) {
-			throw new DataFormatException("Failed to close input stream.");
+			LoggerFactory.getLogger(getClass()).error("Failed to close the input stream", ex);
 		}
 	}
 
@@ -112,8 +115,15 @@ public class IobStreamReader extends AbstractDocumentReader {
 
 	@Override
 	public Document nextDocument() throws DataFormatException {
-		if (!paragraphReady())
+		Document document = documentBuffor;
+		documentBuffor = readNextDocument();
+		return document;
+	}
+
+	private Document readNextDocument() throws DataFormatException {
+		if (!paragraphReady()) {
 			return null;
+		}
 			
 		TokenAttributeIndex index = this.attributeIndex.clone();
 		
@@ -209,5 +219,10 @@ public class IobStreamReader extends AbstractDocumentReader {
 			token.addTag(new Tag(base, ctag, false));
 		}
 		return token;
+	}
+
+	@Override
+	public boolean hasNext(){
+		return documentBuffor!=null;
 	}
 }

@@ -84,9 +84,7 @@ public class ActionSpatialPatterns extends Action {
 	 * @param arg0 The array with command line parameters
 	 */
 	@Override
-	public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);
+	public void parseOptions(final CommandLine line) throws Exception {
         this.filename = line.getOptionValue(ActionSpatialPatterns.OPTION_FILENAME);
         this.inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
     }

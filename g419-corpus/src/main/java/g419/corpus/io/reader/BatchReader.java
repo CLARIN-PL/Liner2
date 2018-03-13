@@ -113,7 +113,12 @@ public class BatchReader extends AbstractDocumentReader {
     }
 
     @Override
-    public void close() throws DataFormatException {
+    public void close() {
+    }
+
+    @Override
+    public boolean hasNext(){
+        return this.fileIndex < this.files.size();
     }
 
 }

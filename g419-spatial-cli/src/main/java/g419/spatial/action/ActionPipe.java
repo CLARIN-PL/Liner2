@@ -43,9 +43,7 @@ public class ActionPipe extends Action {
 	 * @param args The array with command line parameters
 	 */
 	@Override
-	public void parseOptions(String[] args) throws Exception {
-        final CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);
+	public void parseOptions(final CommandLine line) throws Exception {
         this.inputFilename = Optional.fromNullable(line.getOptionValue(CommonOptions.OPTION_INPUT_FILE));
         this.inputFormat = Optional.fromNullable(line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT));
         this.outputFilename = Optional.fromNullable(line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE));

@@ -43,16 +43,19 @@ public class CclSAXStreamReader extends AbstractDocumentReader {
 	}
 	
 	@Override
-	public void close() throws DataFormatException {
-		
-	}
+	public void close() {}
 
 	@Override
 	public Document nextDocument() throws DataFormatException, IOException {
-		Document doc = this.document;
+		Document document = this.document;
 		this.document = null;
-		return doc;
-	}	
+		return document;
+	}
+
+	@Override
+	public boolean hasNext(){
+		return document!=null;
+	}
 			
 }
 
