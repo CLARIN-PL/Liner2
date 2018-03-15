@@ -100,25 +100,13 @@ class SentenceAnnotationIndexTypePosTest extends Specification {
 
     def "getLongestAtPosFromSet should return valid annotation"(){
         given:
-            Sentence sentence = getSampleSentence()
+            Sentence sentence = getSampleSentenceWithAnnotations()
             Annotation an0 = new Annotation("an0", 0, 0, "null", sentence)
-            Annotation an1 = new Annotation("an1", 1, 2, "artifact", sentence)
-            Annotation an2 = new Annotation("an2", 2, 2, "artifact", sentence)
-            Annotation an3 = new Annotation("an3", 4, 6, "person", sentence)
-            Annotation an4 = new Annotation("an4", 4, 4, "person", sentence)
-            Annotation an5 = new Annotation("an5", 3, 4, "action", sentence)
-            sentence.addChunk(an1)
-            sentence.addChunk(an2)
-            sentence.addChunk(an3)
-            sentence.addChunk(an4)
-            sentence.addChunk(an5)
+            Map<String,Annotation> map = getAnnotationMap(sentence)
             SentenceAnnotationIndexTypePos index = new SentenceAnnotationIndexTypePos(sentence)
-            Map<String,Annotation> idToAnnotation = Maps.newHashMap()
-            sentence.getChunks().stream().forEach{a->idToAnnotation.put(a.getId(),a)}
 
         expect:
-            Optional.ofNullable(index.getLongestAtPosFromSet(
-                    pos, ans.stream().map{id->idToAnnotation.get(id)}.collect(Collectors.toList()))).orElse(an0).getId() == an
+            Optional.ofNullable(index.getLongestAtPosFromSet(pos, getAnnotationListFromIds(map, ans))).orElse(an0).getId() == an
 
         where:
             pos | ans           || an
@@ -162,8 +150,37 @@ class SentenceAnnotationIndexTypePosTest extends Specification {
             SentenceAnnotationIndexTypePos.sortAnnotationsLengthDescBeginAsc(list3)
         then:
             list3 == [an1, an5, an2, an4]
+    }
 
+    def "getFirstInRangeFromSet should return valid annotation"(){
+        given:
+            Sentence sentence = getSampleSentenceWithAnnotations()
+            Annotation an0 = new Annotation("an0", 0, 0, "null", sentence)
+            Map<String,Annotation> map = getAnnotationMap(sentence)
+            SentenceAnnotationIndexTypePos index = new SentenceAnnotationIndexTypePos(sentence)
 
+        expect:
+            Optional.ofNullable(index.getFirstInRangeFromSet(start, end, getAnnotationListFromIds(map,anns)))
+                    .orElse(an0).getId() == id
+
+        where:
+            start | end | anns          || id
+                0 |   0 | []            || "an0"
+                0 |   1 | []            || "an0"
+                0 |   6 | ["an1"]       || "an1"
+                0 |   6 | ["an3","an5"] || "an5"
+                4 |   6 | ["an1","an5"] || "an5"
+
+    }
+
+    def getAnnotationListFromIds(Map<String,Annotation> map, List<String> ids){
+        return ids.stream().map{id->map.get(id)}.collect(Collectors.toList())
+    }
+
+    def getAnnotationMap(Sentence sentence){
+        Map<String, Annotation> map = Maps.newHashMap()
+        sentence.getChunks().stream().forEach{a -> map.put(a.getId(), a)}
+        return map;
     }
 
     /**

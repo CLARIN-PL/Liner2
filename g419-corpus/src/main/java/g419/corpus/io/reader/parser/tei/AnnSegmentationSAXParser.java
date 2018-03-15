@@ -20,11 +20,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * Created with IntelliJ IDEA.
- * User: michal
- * Date: 9/2/13
- * Time: 3:19 PM
- * To change this template use File | Settings | File Templates.
  */
 public class AnnSegmentationSAXParser extends DefaultHandler {
 
@@ -73,12 +68,10 @@ public class AnnSegmentationSAXParser extends DefaultHandler {
         if (elementName.equalsIgnoreCase(TAG_PARAGRAPH)) {
             currentParagraph = paragraphs.get(currentParagraphIdx++);
             currentSentenceIdx = 0;
-        }
-        else if (elementName.equalsIgnoreCase(TAG_SENTENCE)) {
+        } else if (elementName.equalsIgnoreCase(TAG_SENTENCE)) {
             currentSentence = currentParagraph.getSentences().get(currentSentenceIdx++);
             currentTokenIdx = 0;
-        }
-        else if (elementName.equalsIgnoreCase(TAG_SEGMENT)) {
+        } else if (elementName.equalsIgnoreCase(TAG_SEGMENT)) {
             if (attributes.getValue("nkjp:nps") != null) {
                 currentToken.setNoSpaceAfter(true);
             }

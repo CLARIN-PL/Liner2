@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.io.FilenameUtils;
@@ -114,7 +113,7 @@ public class WriterFactory {
 			case "csv-relations":
 				return new CsvRelationsWriter(outWrapped);
 			case "bsnlp":
-				return new BSNLPStreamWriter(outWrapped);
+				return new BsnlpStreamWriter(outWrapped);
 			default:
 				throw new UnknownFormatException("Output format " + outputFormat + " not recognized.");
 		}
@@ -174,7 +173,7 @@ public class WriterFactory {
         		new File(outputFolder,"ann_coreference.xml").getPath(), gz);
         OutputStream annRelations = getOutputStreamGz(
         		new File(outputFolder,"ann_relations.xml").getPath(), gz);
-        return new TEIStreamWriter(text, metadata, annSegmentation, annMorphosyntax, annProps, annNamed, 
+        return new TeiStreamWriter(text, metadata, annSegmentation, annMorphosyntax, annProps, annNamed,
         		annMentions, annChunks, annCoreference, annRelations, new File(outputFolder).getName());
     }
 

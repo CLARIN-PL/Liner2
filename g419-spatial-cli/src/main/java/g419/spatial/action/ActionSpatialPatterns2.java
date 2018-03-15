@@ -1,7 +1,7 @@
 package g419.spatial.action;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import com.google.common.collect.Maps;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.*;
@@ -10,17 +10,12 @@ import g419.lib.cli.CommonOptions;
 import g419.spatial.pattern.AnnotationPatternGenerator;
 import g419.spatial.structure.SpatialExpression;
 import g419.spatial.tools.DocumentToSpatialExpressionConverter;
-import g419.spatial.tools.SentenceAnnotationIndexTypePos;
-import io.vavr.control.Try;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class ActionSpatialPatterns2 extends Action {
 
@@ -67,7 +62,11 @@ public class ActionSpatialPatterns2 extends Action {
                 ses.stream().map(r -> generatePattern(r)).forEach(patterns::add);
             }
         }
-        patterns.stream().forEach(System.out::println);
+        Map<String, Integer> count = Maps.newHashMap();
+        patterns.stream().forEach(p->count.put(p, count.getOrDefault(p, 0)+1));
+        List<Map.Entry<String,Integer>> items = Lists.newArrayList(count.entrySet());
+        items.sort( Comparator.comparing(Map.Entry<String,Integer>::getValue).thenComparing(Map.Entry::getKey));
+        items.stream().map(p->String.format("[%3d] %s", p.getValue(), p.getKey())).forEach(System.out::println);
 	}
 
 	/**
