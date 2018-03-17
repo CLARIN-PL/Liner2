@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class TEIStreamReaderTest {
+public class TeiStreamReaderTest {
 
 	@Test
 	public void testGetAttributeIndex() {

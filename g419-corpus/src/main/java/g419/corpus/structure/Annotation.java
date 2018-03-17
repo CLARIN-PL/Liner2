@@ -1,7 +1,6 @@
 package g419.corpus.structure;
 
 import com.google.common.collect.Maps;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,7 +11,7 @@ import java.util.stream.Collectors;
  * @author Michał Marcińczuk
  *
  */
-public class Annotation {
+public class Annotation extends IdentifiableElement {
 	/** Annotation type, i.e. name of category.  */
 	private String type = null;
 	
@@ -22,9 +21,6 @@ public class Annotation {
 	/** Sentence to which the annotation belongs. */
 	private Sentence sentence = null;
 
-	/** Unique identifier of the annotation */
-	private String id = null;
-	
 	/** Indices of tokens which form the annotation. */
 	private TreeSet<Integer> tokens = new TreeSet<Integer>();
 
@@ -264,10 +260,6 @@ public class Annotation {
 		return this.metadata.getOrDefault(key, "none1").equals(other.metadata.getOrDefault(key, "none2"));
 	}
 
-	public String getId(){
-		return this.id;
-	}
-
 	public int getBegin() {
 		return this.tokens.first();
 	}
@@ -392,16 +384,6 @@ public class Annotation {
         }
         return text.toString().trim();
     }    
-    
-    
-    /**
-     * 
-     * @param id
-     */
-	public void setId(String id){
-		this.id = id;
-	}
-
 
 	public void setType(String type){
 		this.type = type.toLowerCase();

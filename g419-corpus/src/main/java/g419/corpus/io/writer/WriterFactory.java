@@ -153,28 +153,19 @@ public class WriterFactory {
         if ( !folder.exists() ){
         	folder.mkdirs();
         }
-        OutputStream text = getOutputStreamGz(
-        		new File(outputFolder,"text.xml").getPath(), gz);
-        OutputStream metadata = getOutputStreamGz(
-        		new File(outputFolder,"metadata.xml").getPath(), gz);
-        OutputStream annSegmentation = getOutputStreamGz(
-        		new File(outputFolder,"ann_segmentation.xml").getPath(), gz);
-        OutputStream annMorphosyntax = getOutputStreamGz(
-        		new File(outputFolder,"ann_morphosyntax.xml").getPath(), gz);
-        OutputStream annProps = getOutputStreamGz(
-        		new File(outputFolder,"ann_props.xml").getPath(), gz);
-        OutputStream annNamed = getOutputStreamGz(
-        		new File(outputFolder,"ann_named.xml").getPath(), gz);
-        OutputStream annMentions = getOutputStreamGz(
-        		new File(outputFolder,"ann_mentions.xml").getPath(), gz);
-        OutputStream annChunks = getOutputStreamGz(
-        		new File(outputFolder,"ann_chunks.xml").getPath(), gz);
-        OutputStream annCoreference = getOutputStreamGz(
-        		new File(outputFolder,"ann_coreference.xml").getPath(), gz);
-        OutputStream annRelations = getOutputStreamGz(
-        		new File(outputFolder,"ann_relations.xml").getPath(), gz);
-        return new TeiStreamWriter(text, metadata, annSegmentation, annMorphosyntax, annProps, annNamed,
-        		annMentions, annChunks, annCoreference, annRelations, new File(outputFolder).getName());
+		return new TeiWriter(
+				getOutputStreamGz(new File(folder,"text.xml").getPath(), gz),
+				getOutputStreamGz(new File(folder,"metadata.xml").getPath(), gz),
+				getOutputStreamGz(new File(folder,"ann_segmentation.xml").getPath(), gz),
+				getOutputStreamGz(new File(folder,"ann_morphosyntax.xml").getPath(), gz),
+				getOutputStreamGz(new File(folder,"ann_props.xml").getPath(), gz),
+				getOutputStreamGz(new File(folder,"ann_named.xml").getPath(), gz),
+				getOutputStreamGz(new File(folder,"ann_mentions.xml").getPath(), gz),
+				getOutputStreamGz(new File(folder,"ann_chunks.xml").getPath(), gz),
+				getOutputStreamGz(new File(folder,"ann_annotations.xml").getPath(), gz),
+				getOutputStreamGz(new File(folder,"ann_coreference.xml").getPath(), gz),
+				getOutputStreamGz(new File(folder,"ann_relations.xml").getPath(), gz),
+				new File(outputFolder).getName());
     }
 
     /**

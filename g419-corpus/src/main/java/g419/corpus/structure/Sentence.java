@@ -18,7 +18,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author czuk
  *
  */
-public class Sentence {
+public class Sentence extends IdentifiableElement {
 	
 	/* Indeks nazw atrybutów */
 	TokenAttributeIndex attributeIndex = null;
@@ -28,10 +28,7 @@ public class Sentence {
 	
 	/* Zbiór anotacji */
 	LinkedHashSet<Annotation> chunks = new LinkedHashSet<Annotation>();
-	
-	/* Identyfikator zdania (unikalny w obrębie paragrafu) */
-	String id = null;
-	
+
 	/* Tymczasowe obejście braku odniesienia do dokumentu z poziomu klasy Annotation */
 	Document document;
 
@@ -68,10 +65,6 @@ public class Sentence {
 		tokens.add(token);
 	}
 	
-	public String getId(){
-		return this.id;
-	}
-
 	/**
 	 * Zwraca pozycję zdania w dokumencie.
 	 * @return
@@ -297,10 +290,6 @@ public class Sentence {
 		this.chunks = chunking.chunkSet();
 	}
 	
-	public void setId(String id){
-		this.id = id;
-	}
-
     public String annotationsToString(){
         StringBuilder output = new StringBuilder();
         for(Annotation chunk: chunks)
