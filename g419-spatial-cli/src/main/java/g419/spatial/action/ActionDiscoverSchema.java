@@ -89,12 +89,10 @@ public class ActionDiscoverSchema extends Action {
 
 	/**
 	 * Parse action options
-	 * @param arg0 The array with command line parameters
+	 * @param args The array with command line parameters
 	 */
 	@Override
-	public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);
+	public void parseOptions(final CommandLine line) throws Exception {
         this.filename = line.getOptionValue(ActionDiscoverSchema.OPTION_FILENAME);
         this.inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
     }
@@ -275,18 +273,18 @@ public class ActionDiscoverSchema extends Action {
 		}
 		for ( SpatialExpression relation : relations ){
 			// Sprawdź landmark
-			String landmarkKey = String.format("%d:%d",relation.getLandmark().getBegin(), relation.getLandmark().getEnd());
+			String landmarkKey = String.format("%d:%d",relation.getLandmark().getSpatialObject().getBegin(), relation.getLandmark().getSpatialObject().getEnd());
 			Annotation landmarkName = names.get(landmarkKey);
 			if ( landmarkName != null ){
-				Logger.getLogger(this.getClass()).info(String.format("Replace %s (%s) with nam (%s)", relation.getLandmark().getType(), relation.getLandmark(), landmarkName));
-				landmarkName.setHead(relation.getLandmark().getHead());
+				Logger.getLogger(this.getClass()).info(String.format("Replace %s (%s) with nam (%s)", relation.getLandmark().getSpatialObject().getType(), relation.getLandmark(), landmarkName));
+				landmarkName.setHead(relation.getLandmark().getSpatialObject().getHead());
 				relation.setLandmark(landmarkName);
 			}
 			// Sprawdź trajector
-			String trajectorKey = String.format("%d:%d",relation.getTrajector().getBegin(), relation.getTrajector().getEnd());
+			String trajectorKey = String.format("%d:%d",relation.getTrajector().getSpatialObject().getBegin(), relation.getTrajector().getSpatialObject().getEnd());
 			Annotation trajectorName = names.get(trajectorKey);
 			if ( trajectorName != null ){
-				Logger.getLogger(this.getClass()).info(String.format("Replace %s (%s) with nam (%s)", relation.getTrajector().getType(), relation.getTrajector(), trajectorName));
+				Logger.getLogger(this.getClass()).info(String.format("Replace %s (%s) with nam (%s)", relation.getTrajector().getSpatialObject().getType(), relation.getTrajector(), trajectorName));
 				relation.setTrajector(trajectorName);
 			}
 		}

@@ -16,7 +16,7 @@ public class RelationFilterPrepositionBeforeLandmark implements IRelationFilter 
 		
 	@Override
 	public boolean pass(SpatialExpression relation) {
-		return relation.getSpatialIndicator().getHead() < relation.getLandmark().getHead();
+		return relation.getSpatialIndicator().getHead() < relation.getLandmark().getSpatialObject().getHead();
 	}
 	
 }

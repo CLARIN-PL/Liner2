@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.google.common.collect.Maps;
 import org.apache.log4j.Logger;
 
 import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataLemmaRaw;
@@ -28,8 +29,8 @@ import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonParser;
  *
  */
 public class Wordnet3 {
-	HashMap<String, HashMap<String, PrincetonDataRaw>> data = new HashMap<String, HashMap<String, PrincetonDataRaw>>();
-	HashMap<String, HashMap<String, PrincetonIndexRaw>> index = new HashMap<String, HashMap<String, PrincetonIndexRaw>>();
+	HashMap<String, HashMap<String, PrincetonDataRaw>> data = Maps.newHashMap();
+	HashMap<String, HashMap<String, PrincetonIndexRaw>> index = Maps.newHashMap();
 	
 	public final static String REL_HYPERNYM = "@";
 	public final static String REL_HYPONYM = "~";

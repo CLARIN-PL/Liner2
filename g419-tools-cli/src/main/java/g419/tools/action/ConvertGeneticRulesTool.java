@@ -56,9 +56,7 @@ public class ConvertGeneticRulesTool extends Action{
     }
 
     @Override
-    public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);
+    public void parseOptions(final CommandLine line) throws Exception {
         rules_file = new File(line.getOptionValue(OPTION_RULES));
         if(!rules_file.exists()){
             throw new DataFormatException("Rules file does not exist: " + rules_file.getAbsolutePath());

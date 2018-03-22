@@ -69,8 +69,8 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
 	 * @return
 	 */
 	public List<SpatialRelationSchema> match(SpatialExpression relation){	
-		relation.getLandmarkConcepts().addAll(this.getAnnotationConcepts(relation.getLandmark()));
-		relation.getTrajectorConcepts().addAll(this.getAnnotationConcepts(relation.getTrajector()));
+		relation.getLandmarkConcepts().addAll(this.getAnnotationConcepts(relation.getLandmark().getSpatialObject()));
+		relation.getTrajectorConcepts().addAll(this.getAnnotationConcepts(relation.getTrajector().getSpatialObject()));
 		
 		List<SpatialRelationSchema> matching = this.patternMatcher.matchAll(relation);
 		relation.getSchemas().addAll(matching);

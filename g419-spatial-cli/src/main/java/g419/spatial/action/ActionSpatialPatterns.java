@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
@@ -30,9 +31,9 @@ public class ActionSpatialPatterns extends Action {
 	private final static String OPTION_FILENAME_LONG = "filename";
 	private final static String OPTION_FILENAME = "f";
 	
-	private List<Pattern> annotationsPrep = new LinkedList<Pattern>();
-	private List<Pattern> annotationsNg = new LinkedList<Pattern>();
-	private List<Pattern> annotationsNp = new LinkedList<Pattern>();
+	private List<Pattern> annotationsPrep = Lists.newLinkedList();
+	private List<Pattern> annotationsNg = Lists.newLinkedList();
+	private List<Pattern> annotationsNp = Lists.newLinkedList();
 	
 	private String filename = null;
 	private String inputFormat = null;
@@ -60,7 +61,7 @@ public class ActionSpatialPatterns extends Action {
 
 	public ActionSpatialPatterns() {
 		super("spatial-patterns");
-		this.setDescription("generuje listę wzorców dla relacji przestrzennych");
+		this.setDescription("old implementation of pattern generator for spatial expressions (static expressions)");
 		this.options.addOption(this.getOptionInputFilename());		
 		this.options.addOption(CommonOptions.getInputFileFormatOption());
 		
@@ -83,9 +84,7 @@ public class ActionSpatialPatterns extends Action {
 	 * @param arg0 The array with command line parameters
 	 */
 	@Override
-	public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);
+	public void parseOptions(final CommandLine line) throws Exception {
         this.filename = line.getOptionValue(ActionSpatialPatterns.OPTION_FILENAME);
         this.inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
     }

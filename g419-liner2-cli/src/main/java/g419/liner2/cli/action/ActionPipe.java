@@ -41,10 +41,12 @@ public class ActionPipe extends Action{
         this.options.addOption(CommonOptions.getModelFileOption());
 	}
 
-	@Override
-	public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);
+    protected ActionPipe(final String name){
+	    super(name);
+    }
+
+        @Override
+    public void parseOptions(final CommandLine line) throws Exception {
         this.output_file = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
         this.output_format = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT, "ccl");
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);

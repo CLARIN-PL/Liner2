@@ -28,12 +28,12 @@ import java.util.regex.Pattern;
  * 
  * @author Jan Kocoń
  */
-public class BSNLPStreamWriter extends AbstractDocumentWriter {
+public class BsnlpStreamWriter extends AbstractDocumentWriter {
 	private BufferedWriter ow = null;
 	/** Current token index inside document */
 	private Set<String> linesWritten = null;
 
-	public BSNLPStreamWriter(OutputStream os) {
+	public BsnlpStreamWriter(OutputStream os) {
 		this.ow = new BufferedWriter(new OutputStreamWriter(os));
 	}
 

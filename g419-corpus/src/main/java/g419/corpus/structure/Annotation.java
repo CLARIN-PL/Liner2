@@ -1,6 +1,6 @@
 package g419.corpus.structure;
 
-import org.apache.commons.lang3.StringUtils;
+import com.google.common.collect.Maps;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  * @author Michał Marcińczuk
  *
  */
-public class Annotation {
+public class Annotation extends IdentifiableElement {
 	/** Annotation type, i.e. name of category.  */
 	private String type = null;
 	
@@ -21,9 +21,6 @@ public class Annotation {
 	/** Sentence to which the annotation belongs. */
 	private Sentence sentence = null;
 
-	/** Unique identifier of the annotation */
-	private String id = null;
-	
 	/** Indices of tokens which form the annotation. */
 	private TreeSet<Integer> tokens = new TreeSet<Integer>();
 
@@ -50,7 +47,12 @@ public class Annotation {
 	private double confidence = 1.0;
 	
 
-	private Map<String, String> metadata = new HashMap<String, String>();
+	private Map<String, String> metadata = Maps.newHashMap();
+
+	public Annotation(String id, int begin, int end, String type, Sentence sentence){
+		this(begin,end,type,sentence);
+		this.id=id;
+	}
 
 	public Annotation(int begin, int end, String type, Sentence sentence){
 		for(int i = begin; i <= end; i++){
@@ -62,16 +64,11 @@ public class Annotation {
 	}
 
 	public Annotation(int tokenIndex, String type, Sentence sentence){
-		this.tokens.add(tokenIndex);
-		this.type = type;
-		this.sentence = sentence;
-		this.head = tokenIndex;
+		this(tokenIndex,tokenIndex,type,sentence);
 	}
 
 	public Annotation(int begin, String type, int channelIdx, Sentence sentence){
-		this.tokens.add(begin);
-		this.type = type;
-		this.sentence = sentence;
+		this(begin,begin,type,sentence);
 		this.channelIdx = channelIdx;
 	}
 
@@ -112,12 +109,12 @@ public class Annotation {
 	 */
 	public String getLemma(){
 		if ( this.lemma == null ){
-			if (this.metadata.containsKey("lemma"))
+			if (this.metadata.containsKey("lemma")) {
 				return this.metadata.get("lemma");
-			else
+			} else {
 				return this.getText();
-		}
-		else{
+			}
+		} else {
 			return this.lemma;
 		}
 	}
@@ -184,7 +181,7 @@ public class Annotation {
 		}
 	}
 
-	public int getHead(){
+	public Integer getHead(){
 		return this.head;
 	}
 	
@@ -236,7 +233,7 @@ public class Annotation {
 
     @Override
     public int hashCode() {
-        return (this.getText() + this.tokens.toString() + this.getType() + this.getSentence().getId()).hashCode();
+        return (this.getText() + this.tokens.toString() + this.getType() + this.getSentence()).hashCode();
     }
 
 	public Map<String, String> getMetadata() {
@@ -261,10 +258,6 @@ public class Annotation {
 
 	public boolean metaDataMatchesKey(String key, Annotation other){
 		return this.metadata.getOrDefault(key, "none1").equals(other.metadata.getOrDefault(key, "none2"));
-	}
-
-	public String getId(){
-		return this.id;
 	}
 
 	public int getBegin() {
@@ -391,16 +384,6 @@ public class Annotation {
         }
         return text.toString().trim();
     }    
-    
-    
-    /**
-     * 
-     * @param id
-     */
-	public void setId(String id){
-		this.id = id;
-	}
-
 
 	public void setType(String type){
 		this.type = type.toLowerCase();
@@ -450,5 +433,9 @@ public class Annotation {
     			return false;
     	return true;
     }
+
+    public int length(){
+		return tokens.size();
+	}
 
 }

@@ -2,7 +2,7 @@ description = "g419-liner2-daemon -- obsługa Liner2 w trybie demona"
 
 apply plugin: "application"
 
-main = "g419.liner2.daemon.Main"
+def main = "g419.liner2.daemon.Main"
 
 mainClassName = main
 
@@ -21,7 +21,7 @@ jar {
 dependencies {
     compile 'commons-cli:commons-cli:1.2'
     compile 'commons-io:commons-io:2.4'
-    compile 'org.ini4j:ini4j:0.5.2' // change to 0.5.0 if needed, but I doubt it (semver states that there were only bug fixes, not API change)
+    compile 'org.ini4j:ini4j:0.5.2'
     compile 'org.json:json:20141113'
     compile 'mysql:mysql-connector-java:5.1.10'
     compile project(":g419-corpus")

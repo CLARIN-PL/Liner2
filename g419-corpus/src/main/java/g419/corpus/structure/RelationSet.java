@@ -1,8 +1,9 @@
 package g419.corpus.structure;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.TreeSet;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+
+import java.util.*;
 
 
 /**
@@ -15,11 +16,11 @@ import java.util.TreeSet;
  */
 public class RelationSet {
 
-	LinkedHashSet<Relation> relations = new LinkedHashSet<Relation>();
+	Set<Relation> relations = Sets.newHashSet();
 	// Zbiór relacji indeksowany anotacjami docelowymi
-	HashMap<Annotation, TreeSet<Relation>> incomingRelations = new HashMap<Annotation, TreeSet<Relation>>();
+	Map<Annotation, Set<Relation>> incomingRelations = Maps.newHashMap();
 	// Zbiór relacji indeksowany anotacjami źródłowymi
-	HashMap<Annotation, TreeSet<Relation>> outgoingRelations = new HashMap<Annotation, TreeSet<Relation>>();
+	Map<Annotation, Set<Relation>> outgoingRelations = Maps.newHashMap();
 	
 	public RelationSet(){
 		
@@ -41,8 +42,8 @@ public class RelationSet {
 	}
 
 	public void refresh(){
-		incomingRelations = new HashMap<Annotation, TreeSet<Relation>>();
-		outgoingRelations = new HashMap<Annotation, TreeSet<Relation>>();
+		incomingRelations = Maps.newHashMap();
+		outgoingRelations = Maps.newHashMap();
 		
 		for(Relation relation : this.relations){
 			addAnnotationRelation(this.outgoingRelations, relation.getAnnotationFrom(), relation);
@@ -50,38 +51,37 @@ public class RelationSet {
 		}
 	}
 	
-	private void addAnnotationRelation(HashMap<Annotation, TreeSet<Relation>> relationMap, Annotation indexAnnotation, Relation relation){
-		if(relationMap.containsKey(indexAnnotation))
+	private void addAnnotationRelation(Map<Annotation, Set<Relation>> relationMap, Annotation indexAnnotation, Relation relation){
+		if(relationMap.containsKey(indexAnnotation)) {
 			relationMap.get(indexAnnotation).add(relation);
-		else
+		} else {
 			relationMap.put(indexAnnotation, newRelationSet(relation));
+		}
 	}
 	
-	private TreeSet<Relation> newRelationSet(Relation firstRelation){
-		TreeSet<Relation> set = new TreeSet<Relation>(new RelationAtSameAnnotationComparator());
+	private Set<Relation> newRelationSet(Relation firstRelation){
+		Set<Relation> set = new TreeSet<Relation>(new RelationAtSameAnnotationComparator());
 		set.add(firstRelation);
 		return set;
 	}
 	
-	public LinkedHashSet<Relation> getRelations(){
+	public Set<Relation> getRelations(){
 		return relations;
 	}
 	
-	public HashMap<Annotation, TreeSet<Relation>> getIncomingRelations(){
+	public Map<Annotation, Set<Relation>> getIncomingRelations(){
 		return incomingRelations;
 	}
 	
-	public TreeSet<Relation> getIncomingRelations(Annotation annotation){
-		//return incomingRelations.getOrDefault(annotation, new TreeSet<Relation>());
+	public Set<Relation> getIncomingRelations(Annotation annotation){
 		return incomingRelations.get(annotation) != null ? incomingRelations.get(annotation) : new TreeSet<Relation>();
 	}
 	
-	public HashMap<Annotation, TreeSet<Relation>> getOutgoingRelations(){
+	public Map<Annotation, Set<Relation>> getOutgoingRelations(){
 		return outgoingRelations;
 	}
 	
-	public TreeSet<Relation> getOutgoingRelations(Annotation annotation){
-		// return outgoingRelations.getOrDefault(annotation, new TreeSet<Relation>());
-		return outgoingRelations.get(annotation) != null ? outgoingRelations.get(annotation) : new TreeSet<Relation>();		
+	public Set<Relation> getOutgoingRelations(Annotation annotation){
+		return outgoingRelations.get(annotation) != null ? outgoingRelations.get(annotation) : new TreeSet<Relation>();
 	}
 }

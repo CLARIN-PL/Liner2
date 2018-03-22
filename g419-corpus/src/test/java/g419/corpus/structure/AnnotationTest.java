@@ -90,7 +90,7 @@ public class AnnotationTest {
 		String type = "";
 		Annotation annotation = new Annotation(begin, type, sentence);
 
-		Assert.assertFalse(annotation.hasHead());
+		Assert.assertTrue(annotation.hasHead());
 		annotation.setHead(begin);
 		Assert.assertTrue(annotation.hasHead());
 	}
@@ -102,7 +102,7 @@ public class AnnotationTest {
 		String type = "";
 		Annotation annotation = new Annotation(begin, type, sentence);
 
-		int head = 10;
+		Integer head = 10;
 		annotation.setHead(head);
 		Assert.assertEquals("annotation.setHead did not caused annotation.getHead to return proper value", head, annotation.getHead());
 	}

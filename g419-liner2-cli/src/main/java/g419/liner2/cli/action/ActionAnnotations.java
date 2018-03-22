@@ -69,9 +69,7 @@ public class ActionAnnotations extends Action {
 	}
 
 	@Override
-	public void parseOptions(String[] args) throws ParseException, IOException {
-        CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);
+    public void parseOptions(final CommandLine line) throws Exception {
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
         this.output_file = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);

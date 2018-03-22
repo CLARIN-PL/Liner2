@@ -28,11 +28,7 @@ public class ActionWordnetVN extends Action {
     }
 
     @Override
-    public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);
-        //this.output_file = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
-        //System.out.println(line.getOptionValue(OPTION_WORDNET));
+    public void parseOptions(final CommandLine line) throws Exception {
         this.wordnet = line.getOptionValue(OPTION_WORDNET);
 
     }

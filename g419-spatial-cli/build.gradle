@@ -2,7 +2,7 @@ description = "g419-spatial-cli"
 
 apply plugin: 'application'
 
-main = "g419.spatial.Main"
+def main = "g419.spatial.Main"
 
 mainClassName = main
 
@@ -19,6 +19,7 @@ jar {
 }
 
 dependencies {
+    compile 'com.google.guava:guava:24.0-jre'
     compile 'commons-cli:commons-cli:1.2'
     compile 'commons-io:commons-io:2.4'
     compile project(":g419-corpus")

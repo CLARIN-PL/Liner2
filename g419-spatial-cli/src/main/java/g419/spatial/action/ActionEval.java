@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.google.common.collect.Maps;
+import g419.spatial.tools.*;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
@@ -28,9 +30,6 @@ import g419.liner2.core.tools.parser.MaltParser;
 import g419.spatial.filter.IRelationFilter;
 import g419.spatial.structure.SpatialExpression;
 import g419.spatial.structure.SpatialRelationSchema;
-import g419.spatial.tools.FscoreEvaluator2;
-import g419.spatial.tools.SpatialRelationRecognizer;
-import g419.spatial.tools.SpatialResources;
 import g419.toolbox.wordnet.Wordnet3;
 
 public class ActionEval extends Action {
@@ -54,7 +53,7 @@ public class ActionEval extends Action {
 	 */
 	public ActionEval() {
 		super("eval");
-		this.setDescription("recognize spatial relations");
+		this.setDescription("evaluate recognition of spatial expressions (only for static)");
 		this.options.addOption(this.getOptionInputFilename());		
 		this.options.addOption(CommonOptions.getInputFileFormatOption());
 		this.options.addOption(CommonOptions.getMaltparserModelFileOption());
@@ -79,12 +78,10 @@ public class ActionEval extends Action {
 
 	/**
 	 * Parse action options
-	 * @param arg0 The array with command line parameters
+	 * @param args The array with command line parameters
 	 */
 	@Override
-	public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);
+	public void parseOptions(final CommandLine line) throws Exception {
         this.filename = line.getOptionValue(ActionEval.OPTION_FILENAME);
         this.inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
         this.maltparserModel = line.getOptionValue(CommonOptions.OPTION_MALT);
@@ -98,11 +95,13 @@ public class ActionEval extends Action {
 		MaltParser malt = new MaltParser(this.maltparserModel);		
 		SpatialRelationRecognizer recognizer = new SpatialRelationRecognizer(malt, wordnet);
 		Set<String> regions = SpatialResources.getRegions();
-		
-		FscoreEvaluator2 evalTotal = new FscoreEvaluator2();
-		FscoreEvaluator2 evalNoSeedTotal = new FscoreEvaluator2();
-		Map<String, FscoreEvaluator> evalByTypeTotal = new HashMap<String, FscoreEvaluator>();
-				
+
+		KeyGenerator<SpatialExpression> keyGenerator = new SpatialExpressionKeyGeneratorSimple();
+		DecisionCollector<SpatialExpression> evalTotal = new DecisionCollector<>(keyGenerator);
+		DecisionCollector<SpatialExpression> evalNoSeedTotal = new DecisionCollector<>(keyGenerator);
+
+		Map<String, FscoreEvaluator> evalByTypeTotal = Maps.newHashMap();
+
 		Document document = null;
 		while ( ( document = reader.nextDocument() ) != null ){					
 			System.out.println("=======================================");
@@ -132,8 +131,8 @@ public class ActionEval extends Action {
 						System.out.println();
 						
 						for ( SpatialExpression relation : gold ){
-							if ( relation.getLandmark().getSentence() == sentence) {
-								System.out.println(relation.toString() + " " + relation.getKey());
+							if ( relation.getLandmark().getSpatialObject().getSentence() == sentence) {
+								System.out.println(relation.toString() + " " + keyGenerator.generateKey(relation));
 							}
 						}
 						System.out.println();
@@ -209,8 +208,8 @@ public class ActionEval extends Action {
 								
 							}
 							
-							String info = String.format("  - %s\t %-80s\t%s %s; id=%s; schema=%s",status, rel.toString(), filterName, eval, rel.getKey(), sb.toString());
-							if ( regions.contains(rel.getLandmark().getHeadToken().getDisambTag().getBase()) ){
+							String info = String.format("  - %s\t %-80s\t%s %s; id=%s; schema=%s",status, rel.toString(), filterName, eval, keyGenerator.generateKey(rel), sb.toString());
+							if ( regions.contains(rel.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase()) ){
 								info += " REGION_AS_LANDMARK";
 							}
 							System.out.println(info);
@@ -230,7 +229,7 @@ public class ActionEval extends Action {
 		System.out.println("=============================");
 		System.out.println("Z sitem semantycznym");
 		System.out.println("=============================");
-		evalTotal.evaluate();
+		evalTotal.getConfusionMatrix().printTotal();
 		System.out.println("-----------------------------");
 		
 		for ( String type : evalByTypeTotal.keySet() ){
@@ -242,7 +241,7 @@ public class ActionEval extends Action {
 		System.out.println("=============================");
 		System.out.println("Bez sita semantycznego");
 		System.out.println("=============================");
-		evalNoSeedTotal.evaluate();
+		evalNoSeedTotal.getConfusionMatrix().printTotal();
 	}
 	
 		

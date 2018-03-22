@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
-public class Paragraph {
+public class Paragraph extends IdentifiableElement {
 
-	private String id = null;
 	private TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
 	private HashMap<String,String> chunkMetaData = new HashMap<String, String>();
 	
@@ -25,11 +24,7 @@ public class Paragraph {
 	public TokenAttributeIndex getAttributeIndex() {
 		return this.attributeIndex;
 	}
-	
-	public String getId() {
-		return this.id;
-	}
-	
+
 	public ArrayList<Sentence> getSentences() {
 		return this.sentences;
 	}

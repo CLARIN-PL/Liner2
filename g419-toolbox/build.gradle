@@ -2,7 +2,7 @@ description = "g419-toolbox -- narzędzia"
 
 apply plugin: "application"
 
-main = "g419.toolbox.Main"
+def main = "g419.toolbox.Main"
 
 mainClassName = main
 
@@ -24,5 +24,5 @@ dependencies {
     compile 'org.seleniumhq.selenium:selenium-java:3.0.1'
     compile project(":g419-corpus")
     compile project(":g419-external-dependencies")
+    compile files("../lib/princetonAdapter.jar")
 }
-

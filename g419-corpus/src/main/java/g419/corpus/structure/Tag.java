@@ -8,7 +8,7 @@ public class Tag {
 	String pos = "";
 	String cas = "";
 	
-	public Tag()	{}
+	public Tag(){}
 	
 	public Tag(String base, String ctag, boolean disamb) {
 		this.base = base;

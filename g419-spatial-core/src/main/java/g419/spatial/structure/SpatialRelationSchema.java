@@ -11,11 +11,11 @@ import java.util.Set;
  */
 public class SpatialRelationSchema {
 
-	String name = null;
-	String cas = null;
-	Set<String> indicators = null;
-	Set<String> landmarkConcepts = null;
-	Set<String> trajectorConcepts = null;
+	String name;
+	String cas;
+	Set<String> indicators;
+	Set<String> landmarkConcepts;
+	Set<String> trajectorConcepts;
 	
 	public SpatialRelationSchema(String name, String cas, Set<String> indicators, Set<String> trajectorConcepts, Set<String> landmarkConcepts){
 		this.name = name;

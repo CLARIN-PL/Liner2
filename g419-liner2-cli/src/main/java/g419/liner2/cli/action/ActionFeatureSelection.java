@@ -64,9 +64,7 @@ public class ActionFeatureSelection extends Action {
 	}
 
 	@Override
-	public void parseOptions(String[] args) throws ParseException {
-		CommandLine line = new DefaultParser().parse(this.options, args);
-		parseDefault(line);
+	public void parseOptions(final CommandLine line) throws Exception {
 		this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
 		LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
 		if(line.hasOption(CommonOptions.OPTION_VERBOSE_DETAILS)){
