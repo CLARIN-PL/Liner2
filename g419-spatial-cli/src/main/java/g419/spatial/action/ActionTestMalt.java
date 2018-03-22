@@ -70,7 +70,7 @@ public class ActionTestMalt extends Action {
 			
 			for (Paragraph paragraph : document.getParagraphs()){
 				for (Sentence sentence : paragraph.getSentences()){
-					MaltSentence maltSentence = new MaltSentence(sentence, new HashSet<Annotation>());
+					MaltSentence maltSentence = new MaltSentence(sentence);
 					malt.parse(maltSentence);
 					
 					List<SpatialExpression> srs = this.findByMalt(sentence, maltSentence);

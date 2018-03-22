@@ -187,9 +187,8 @@ public class CategorizeTool extends Action {
         
         while ( (ps = reader.nextDocument()) != null ){
             for(Sentence sent: ps.getSentences()){
-                MaltSentence maltSent = new MaltSentence(sent, sent.getChunks());
-                maltSent.wrapConjunctions();
-                
+                MaltSentence maltSent = new MaltSentence(sent);
+
                 for (Annotation ann : maltSent.getAnnotations()) {
                     String name = ann.getText();
                     if(categorize_output != null){

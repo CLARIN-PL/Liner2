@@ -1,54 +1,40 @@
 package g419.liner2.core.tools.parser;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import g419.corpus.structure.*;
 
 import java.util.*;
 import java.util.regex.Pattern;
-
-/**
- * Created by michal on 2/12/15.
- */
+import java.util.stream.Collectors;
 
 public class MaltSentence {
     private HashMap<String, String> nkjpToCoNLLPos = getnkjpToCoNLLPos();
     private String[] maltData = null;
-    private LinkedHashSet<Annotation> annotations = new LinkedHashSet<Annotation>();
-    //Pattern allAnnotationsPattern = Pattern.compile("nam.*");
-    List<MaltSentenceLink> links = new ArrayList<MaltSentenceLink>();
+    private Set<Annotation> annotations = Sets.newHashSet();
+    List<MaltSentenceLink> links = Lists.newArrayList();
     private Sentence sentence = null;
 
-    public MaltSentence(Sentence sent) {
-        List<String[]> coNLLTokens = convertToCoNLL(sent);
-
-        String[] dataForMalt = new String[coNLLTokens.size()];
-        for(int i=0; i<coNLLTokens.size(); i++)
-            dataForMalt[i] = String.join("\t", Arrays.asList(coNLLTokens.get(i)));
-
-        this.maltData = dataForMalt;
-        this.sentence = sent;
+    public MaltSentence(final Sentence sent) {
+        maltData = convertToCoNLL(sent).stream()
+                .map(r->String.join("\t", Arrays.asList(r)))
+                .toArray(String[]::new);
+        annotations = sent.getChunks();
+        sentence = sent;
     }
 
-    public MaltSentence(Sentence sent, Set<Annotation> sentenceAnnotations) {
-
-    	List<Pattern> patterns = new ArrayList<Pattern>();
-    	//patterns.add(this.allAnnotationsPattern);
-    	
-        Sentence wrappedSent = TokenWrapper.wrapAnnotations(sent, patterns);        
-        List<String[]> coNLLTokens = convertToCoNLL(wrappedSent);
-
-        String[] dataForMalt = new String[coNLLTokens.size()];
-        for(int i=0; i<coNLLTokens.size(); i++)
-            dataForMalt[i] = String.join("\t", Arrays.asList(coNLLTokens.get(i)));
-
-        this.maltData = dataForMalt;
-        this.annotations = wrappedSent.getChunks();
-        this.sentence = wrappedSent;
+    public MaltSentence(final Sentence sent, final List<Pattern> patterns) {
+        this(TokenWrapper.wrapAnnotations(sent, patterns));
     }
 
-
-	public void setMaltData(String[] output) {
-		this.maltData = output;
-	}
+    public void setMaltDataAndLinks(final String[] output) {
+        maltData = output;
+        setLinks(Arrays.stream(output)
+                .map(line->line.split("\t"))
+                .map(parts->new MaltSentenceLink(links.size(), Integer.parseInt(parts[8]) - 1, parts[9]))
+                .collect(Collectors.toList()));
+    }
 
     public String[] getMaltData() {
         return maltData;
@@ -63,28 +49,8 @@ public class MaltSentence {
     }
     
     public MaltSentenceLink getLink(int index){
-    	if ( index >= this.links.size() ){
-    		return null;
-    	}
-    	else{
-    		return this.links.get(index);
-    	}
+    	return index >= this.links.size() ? null : this.links.get(index);
     }
-
-    public void wrapConjunctions(){
-//        for(int i=0; i<sentenceData.length; i++){
-//            if(sentenceData[i][3].equals("conj") && Integer.parseInt(sentenceData[i][8]) != 0){
-//                for(int j=0; j<sentenceData.length; j++){
-//                    if(sentenceData[j][9].equals("conjunct") && (Integer.parseInt(sentenceData[j][8]) - 1) == i){
-//                        sentenceData[j][9] = sentenceData[i][9];
-//                        sentenceData[j][8] = sentenceData[i][8];
-//                    }
-//                }
-//                sentenceData[i][9] = "deleted_rel";
-//            }
-//        }
-    }
-    
 
     /**
      * Zwraca listę linków wskazujących na token o wskazanym indeksie.
@@ -92,21 +58,15 @@ public class MaltSentence {
      * @return
      */
     public List<MaltSentenceLink> getLinksByTargetIndex(int index){
-    	List<MaltSentenceLink> links = new ArrayList<MaltSentenceLink>();
-    	for ( MaltSentenceLink link : this.links){
-    		if ( link.getTargetIndex() == index ){
-    			links.add(link);
-    		}
-    	}
-    	return links;
+        return links.stream().filter(link->link.getTargetIndex()==index).collect(Collectors.toList());
     }
 
-    public HashSet<Annotation> getAnnotations() {
+    public Set<Annotation> getAnnotations() {
         return annotations;
     }
 
     private List<String[]> convertToCoNLL(Sentence sent){
-        List<String[]> tokens = new ArrayList<String[]>();
+        List<String[]> tokens = Lists.newArrayList();
         ListIterator<Token> it = sent.getTokens().listIterator();
         TokenAttributeIndex attributes = sent.getAttributeIndex();
         while (it.hasNext()) {
@@ -134,7 +94,7 @@ public class MaltSentence {
 
 
     private static HashMap<String, String> getnkjpToCoNLLPos(){
-        HashMap<String, String> nkjpToCoNLLPos = new HashMap<String, String>();
+        HashMap<String, String> nkjpToCoNLLPos = Maps.newHashMap();
         nkjpToCoNLLPos.put("bedzie", "verb");
         nkjpToCoNLLPos.put("fin", "verb");
         nkjpToCoNLLPos.put("imps", "verb");

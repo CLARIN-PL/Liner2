@@ -56,10 +56,9 @@ public class MaltFeatureGenerator {
 	
 	public void process(Document document) throws MaltChainedException{
         for(Sentence sent: document.getSentences()){
-            MaltSentence maltSent = new MaltSentence(sent, sent.getChunks());
+            MaltSentence maltSent = new MaltSentence(sent);
             this.malt.parse(maltSent);
-            //maltSent.wrapConjunctions();
-            
+
             if ( maltSent.getAnnotations().size() > 0 && verbose ){
                 for (String str : maltSent.getMaltData()){
                 	System.out.println(str);

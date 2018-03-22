@@ -110,7 +110,7 @@ public class FeatureExtractor extends Action{
     	int i = 1;    	
         while ( (ps = reader.nextDocument()) != null ){
         	for ( Sentence sentence : ps.getSentences() ){
-        		MaltSentence maltSent = new MaltSentence(sentence, sentence.getChunks());
+        		MaltSentence maltSent = new MaltSentence(sentence);
         		malt.parse(maltSent);
         		
                 for ( Annotation ann : sentence.getChunks() ) {
