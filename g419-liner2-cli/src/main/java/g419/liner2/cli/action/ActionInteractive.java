@@ -68,9 +68,7 @@ public class ActionInteractive extends Action{
 	}
 
 	@Override
-	public void parseOptions(String[] args) throws ParseException {
-		CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);
+	public void parseOptions(final CommandLine line) throws Exception {
         this.output_format = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT, "ccl");
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "plain:wcrft");
         LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));

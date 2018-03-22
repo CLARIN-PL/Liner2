@@ -43,6 +43,7 @@ public class CommonOptions {
     public static final String OPTION_MALT = "M";
     public static final String OPTION_MALT_LONG = "malt";
 
+
 	public static Option getOutputFileNameOption(){
 		return Option.builder(CommonOptions.OPTION_OUTPUT_FILE)
 				.longOpt(CommonOptions.OPTION_OUTPUT_FILE_LONG)

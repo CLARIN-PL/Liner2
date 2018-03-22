@@ -33,25 +33,25 @@ public class RelationFilterHolonyms implements IRelationFilter {
 		/* Utwórz listę holonimów landmarka */		
 		Set<String> holonyms = new HashSet<String>();
 		// Holonimy z dla kategorii jednostki
-		for ( PrincetonDataRaw synset : this.nam2wordnet.getSynsets(relation.getLandmark().getType()) ){
+		for ( PrincetonDataRaw synset : this.nam2wordnet.getSynsets(relation.getLandmark().getSpatialObject().getType()) ){
 			for ( PrincetonDataRaw holonym : this.wordnet.getHolonyms(synset) ){
 				holonyms.addAll(this.wordnet.getLexicalUnits(holonym));
 			}			
 		}
 		// Holonimy dla głowy, jeżeli nie ma kategorii jednostki
 		if ( holonyms.size() == 0 ){
-			for ( PrincetonDataRaw synset : this.wordnet.getSynsets(relation.getLandmark().getHeadToken().getDisambTag().getBase()) ){
+			for ( PrincetonDataRaw synset : this.wordnet.getSynsets(relation.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase()) ){
 				for ( PrincetonDataRaw holonym : this.wordnet.getHolonyms(synset) ){
 					holonyms.addAll(this.wordnet.getLexicalUnits(holonym));
 				}
 			}		
 		}
-		holonyms.removeAll(this.nam2wordnet.getSynsets(relation.getLandmark().getType()));
-		holonyms.removeAll(this.wordnet.getSynsets(relation.getLandmark().getHeadToken().getDisambTag().getBase()));
+		holonyms.removeAll(this.nam2wordnet.getSynsets(relation.getLandmark().getSpatialObject().getType()));
+		holonyms.removeAll(this.wordnet.getSynsets(relation.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase()));
 		
 		// Jednostki trajectora
 		Set<PrincetonDataRaw> synsets = this.nam2wordnet.getSynsets(
-				relation.getTrajector().getType());
+				relation.getTrajector().getSpatialObject().getType());
 		
 		//System.out.println(synsets);
 		//System.out.println(holonyms);
@@ -73,7 +73,7 @@ public class RelationFilterHolonyms implements IRelationFilter {
 		}
 		else{
 			return !holonyms.contains(
-					relation.getTrajector().getHeadToken().getDisambTag().getBase());
+					relation.getTrajector().getSpatialObject().getHeadToken().getDisambTag().getBase());
 		}
 	}
 	

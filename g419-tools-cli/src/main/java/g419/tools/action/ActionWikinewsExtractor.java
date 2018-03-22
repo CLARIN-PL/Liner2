@@ -32,12 +32,10 @@ public class ActionWikinewsExtractor extends Action {
 	
 	/**
 	 * Parse action options
-	 * @param args The array with command line parameters
+	 * @param line The array with command line parameters
 	 */
 	@Override
-	public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);        
+	public void parseOptions(final CommandLine line) throws Exception {
         this.wikinewsFilename = line.getOptionValue(OPTION_WIKINEWS_DUMP_LONG);
         this.outputFolder = line.getOptionValue(OPTION_OUTPUT);
     }

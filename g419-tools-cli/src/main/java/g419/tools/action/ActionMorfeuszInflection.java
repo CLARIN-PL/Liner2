@@ -38,13 +38,10 @@ public class ActionMorfeuszInflection extends Action {
 	
 	/**
 	 * Parse action options
-	 * @param args The array with command line parameters
+	 * @param line The array with command line parameters
 	 */
 	@Override
-	public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);
-        
+	public void parseOptions(final CommandLine line) throws Exception {
         this.morfeusz = line.getOptionValue(OPTION_MORFEUSZ_LONG);
     }
 

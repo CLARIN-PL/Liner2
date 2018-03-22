@@ -1,5 +1,6 @@
 package g419.corpus.io.reader.parser.tei;
 
+import com.google.common.collect.Maps;
 import g419.corpus.io.DataFormatException;
 import g419.corpus.io.reader.parser.tei.AnnGroupsSAXParser.SentenceGroup;
 import g419.corpus.structure.Annotation;
@@ -37,10 +38,10 @@ public class AnnWordsSAXParser extends DefaultHandler{
     private final String TAG_FEATURE		= "f";
     private final String TAG_SYMBOL	    = "symbol";
 
-    HashMap<String,List<String>> wordsIdsMap = new HashMap<String, List<String>>();
+    Map<String,List<String>> wordsIdsMap = Maps.newHashMap();
     InputStream is = null;
     String docName = null;
-    ArrayList<Paragraph> paragraphs = null;
+    List<Paragraph> paragraphs = null;
     Map<String, Integer> tokenIdsMap = null;
     
     /** A list of tokens for the current word */
@@ -66,7 +67,7 @@ public class AnnWordsSAXParser extends DefaultHandler{
      * @param is
      * @throws DataFormatException
      */
-    public AnnWordsSAXParser(String docName, InputStream is, ArrayList<Paragraph> paragraphs, Map<String,Integer> tokenIdsMap) throws DataFormatException {
+    public AnnWordsSAXParser(String docName, InputStream is, List<Paragraph> paragraphs, Map<String,Integer> tokenIdsMap) throws DataFormatException {
         this.docName = docName;
         this.is = is;
         this.paragraphs = paragraphs;
@@ -75,7 +76,7 @@ public class AnnWordsSAXParser extends DefaultHandler{
         this.parseDocument();
     }
 
-    public HashMap<String,List<String>> getWordsIdsMap(){
+    public Map<String,List<String>> getWordsIdsMap(){
         return wordsIdsMap;
     }
 

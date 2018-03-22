@@ -32,12 +32,10 @@ public class FeatureFilter extends Action {
 	
 	/**
 	 * Parse action options
-	 * @param args The array with command line parameters
+	 * @param line The array with command line parameters
 	 */
 	@Override
-	public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);        
+	public void parseOptions(final CommandLine line) throws Exception {
         this.inputFilename = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE_LONG);
         this.outputFilename = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE_LONG);
     }

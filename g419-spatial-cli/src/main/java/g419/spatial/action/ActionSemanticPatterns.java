@@ -7,6 +7,7 @@ import java.util.MissingResourceException;
 import g419.lib.cli.Action;
 import g419.spatial.io.CsvSpatialSchemeParser;
 import g419.toolbox.sumo.Sumo;
+import org.apache.commons.cli.CommandLine;
 
 public class ActionSemanticPatterns extends Action {
 	
@@ -21,7 +22,7 @@ public class ActionSemanticPatterns extends Action {
 	 * @param arg0 The array with command line parameters
 	 */
 	@Override
-	public void parseOptions(String[] args) throws Exception {
+	public void parseOptions(final CommandLine line) throws Exception {
     }
 
 	@Override

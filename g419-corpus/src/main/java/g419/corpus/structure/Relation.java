@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * @author Adam Kaczmarek
  *
  */
-public class Relation {
+public class Relation extends IdentifiableElement{
 	public static final String COREFERENCE = "Coreference";
 	public static final String SUBJECT = "subj";
 	public static final String OBJECT="obj";
@@ -16,6 +16,7 @@ public class Relation {
 	public static final String EMPTY = "";
 	
 	public static final AnnotationPositionComparator annPosComparator = new AnnotationPositionComparator();
+
 	/**
 	 * Typ relacji
 	 */
@@ -41,22 +42,28 @@ public class Relation {
 	 */
 	private Document document;
 	public Document getDocument(){return document;}
-	
-	public Relation(Annotation from, Annotation to, String type){
+
+	public Relation(final String id, final Annotation from, final Annotation to, final String type){
+		this(from,to,type);
+		this.id = id;
+	}
+
+	public Relation(final Annotation from, final Annotation to, final String type){
 		this.setAnnotationFrom(from);
 		this.setAnnotationTo(to);
 		this.setSet(type);
 		this.setType(type);
 	}
-	
-//	public Relation(Annotation from, Annotation to, String type, String set){
-//		this.setAnnotationFrom(from);
-//		this.setAnnotationTo(to);
-//		this.setSet(set);
-//		this.setType(type);
-//	}
 
-	public Relation(Annotation from, Annotation to, String type, String set, Document document){
+	public Relation(final String id, final Annotation from, final Annotation to, final String type, final String set){
+		this.id = id;
+		this.setAnnotationFrom(from);
+		this.setAnnotationTo(to);
+		this.setSet(set);
+		this.setType(type);
+	}
+
+	public Relation(final Annotation from, final Annotation to, final String type, final String set, final Document document){
 		this.document = document;
 		this.setAnnotationFrom(from);
 		this.setAnnotationTo(to);
@@ -98,13 +105,12 @@ public class Relation {
 	}
 
 	public String getSet() {
-		if(this.set == null) return Relation.EMPTY;
-		return this.set;
+		return this.set == null ? Relation.EMPTY : this.set;
 	}
-	
+
 	@Override
 	public String toString(){
-		return annotationFrom.toString() + " >-- " + type + " --> " + annotationTo.toString();
+		return annotationFrom.toString() + " ->- " + type + " ->- " + annotationTo.toString();
 	}
 	
 	@Override

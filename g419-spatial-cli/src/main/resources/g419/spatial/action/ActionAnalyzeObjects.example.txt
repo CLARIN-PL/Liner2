@@ -1,0 +1,36 @@
+       Uniwersytecie      subst  nam_org IS_HEAD # [Uniwersytecie w Klagenfurcie]_sent5|nam_org
+        Klagenfurcie      subst  nam_org NO_HEAD # [Uniwersytecie w Klagenfurcie]_sent5|nam_org
+                 dom      subst  NOT_FOUND
+             Zalesiu      subst  nam_loc IS_HEAD # [Zalesiu Górnym]_sent5|nam_loc
+              Pomnik      subst  NOT_FOUND
+           Wrocławiu      subst  nam_loc IS_HEAD # [Wrocławiu]_sent2|nam_loc
+           popiersia      subst  NOT_FOUND
+         postumencie      subst  NOT_FOUND
+              Pomnik      subst  NOT_FOUND
+            Ogrodzie      subst  nam_fac IS_HEAD # [Ogrodzie Botanicznym]_sent9|nam_fac
+              dziale      subst  NOT_FOUND
+      Nowo-Jazykowie        adv  nam_loc IS_HEAD # [Nowo-Jazykowie]_sent2|nam_loc
+        uniwersytetu      subst  NOT_FOUND
+              Gorkim      subst  nam_loc IS_HEAD # [Gorkim]_sent3|nam_loc
+              Został      praet  NOT_FOUND
+             parafii      subst  nam_oth IS_HEAD # [parafii Narodzenia Matki Bożej]_sent6|nam_oth
+                 wsi      subst  NOT_FOUND
+            eparchii      subst  nam_oth IS_HEAD # [eparchii włodzimierskiej]_sent6|nam_oth
+          seminarium      subst  NOT_FOUND
+             Moskwie      subst  nam_loc IS_HEAD # [Moskwie]_sent7|nam_loc
+             parafii      subst  NOT_FOUND
+            Juriewie      subst  nam_loc IS_HEAD # [Juriewie Polskim]_sent9|nam_loc
+                  ur       brev  NOT_FOUND
+            Acireale      subst  nam_loc IS_HEAD # [Acireale]_sent2|nam_loc
+          seminarium      subst  NOT_FOUND
+            Acireale      subst  nam_loc IS_HEAD # [Acireale]_sent5|nam_loc
+              Rzymie      subst  nam_loc IS_HEAD # [Rzymie]_sent5|nam_loc
+            Pracował      praet  NOT_FOUND
+          placówkach      subst  NOT_FOUND
+             krajach      subst  NOT_FOUND
+         Filipinach,      subst  nam_loc IS_HEAD # [Filipinach]_sent8|nam_loc
+              Belgii      subst  nam_loc IS_HEAD # [Belgii]_sent8|nam_loc
+         Luksemburgu      subst  nam_loc IS_HEAD # [Luksemburgu]_sent8|nam_loc
+           Wenezueli      subst  nam_loc IS_HEAD # [Wenezueli]_sent8|nam_loc
+            Ruandzie      subst  nam_loc IS_HEAD # [Ruandzie]_sent8|nam_loc
+             Burundi      subst  nam_loc IS_HEAD # [Burundi]_sent8|nam_loc

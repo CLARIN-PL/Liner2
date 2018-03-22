@@ -49,9 +49,7 @@ public class ActionConvert extends Action {
 	}
 
 	@Override
-	public void parseOptions(String[] args) throws ParseException, IOException {
-        CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);
+    public void parseOptions(final CommandLine line) throws Exception {
         this.output_file = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
         this.output_format = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT, "ccl");
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);

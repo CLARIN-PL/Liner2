@@ -72,9 +72,7 @@ public class FeatureExtractor extends Action{
     }
 
     @Override
-    public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);
+    public void parseOptions(final CommandLine line) throws Exception {
         this.inputFile = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
         this.modelPath = line.getOptionValue(OPTION_MALT);

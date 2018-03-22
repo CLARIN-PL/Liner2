@@ -17,8 +17,7 @@ public class Main {
 		File log4jFile = new File("log4j.properties");
 		if ( log4jFile.exists() ){		
 			PropertyConfigurator.configure(log4jFile.getAbsolutePath());
-		}
-		else{
+		} else {
 			System.err.println("log4j.properties not found in the current location");
 			System.err.println("Expected location: " + log4jFile.getAbsoluteFile());
 		}
@@ -26,10 +25,10 @@ public class Main {
         StringBuilder info = new StringBuilder();        
         
         info.append("*-----------------------------------------------------------------------------------------------*\n");
-        info.append("* Tools for spatial expression recognition and related                                          *\n");
+        info.append("* Tools for spatial expression processing and automatic recognition                             *\n");
         info.append("*                                                                                               *\n");
-        info.append("* Authors: Michał Marcińczuk (2015–2016)                                                        *\n");
-        info.append("* Contact: michal.marcinczuk@pwr.edu.pl                                                        *\n");
+        info.append("* Authors: Michał Marcińczuk (2015–2018)                                                        *\n");
+        info.append("* Contact: michal.marcinczuk@pwr.edu.pl                                                         *\n");
         info.append("*                                                                                               *\n");
         info.append("*          G4.19 Research Group, Wrocław University of Technology                               *\n");
         info.append("*-----------------------------------------------------------------------------------------------*\n");

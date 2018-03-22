@@ -18,8 +18,8 @@ public class RelationFilterPronoun implements IRelationFilter {
 		
 	@Override
 	public boolean pass(SpatialExpression relation) {
-		return !this.pronouns.contains(relation.getLandmark().getHeadToken().getDisambTag().getPos())
-				&& !this.pronouns.contains(relation.getTrajector().getHeadToken().getDisambTag().getPos());
+		return !this.pronouns.contains(relation.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getPos())
+				&& !this.pronouns.contains(relation.getTrajector().getSpatialObject().getHeadToken().getDisambTag().getPos());
 	}
 	
 }

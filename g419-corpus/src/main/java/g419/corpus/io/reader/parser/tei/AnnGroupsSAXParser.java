@@ -44,8 +44,8 @@ public class AnnGroupsSAXParser extends DefaultHandler {
     private final String TAG_ID 			= "xml:id";
 
     InputStream is = null;
-    ArrayList<Paragraph> paragraphs = null;
-    ArrayList<Integer> annotatedTokens = null;
+    List<Paragraph> paragraphs = null;
+    List<Integer> annotatedTokens = null;
     
     int currentParagraphIdx = 0;
     int currentSentenceIdx = 0;
@@ -72,7 +72,7 @@ public class AnnGroupsSAXParser extends DefaultHandler {
      */    
     List<SentenceGroup> groups = new LinkedList<SentenceGroup>();
 
-    public AnnGroupsSAXParser(InputStream is, ArrayList<Paragraph> paragraphs, Map<String,Integer> tokenIdsMap, Map<String, List<String>> wordsIdsMap) throws DataFormatException {
+    public AnnGroupsSAXParser(InputStream is, List<Paragraph> paragraphs, Map<String,Integer> tokenIdsMap, Map<String, List<String>> wordsIdsMap) throws DataFormatException {
         this.is = is;
         this.paragraphs = paragraphs;
         this.tokenIdsMap = tokenIdsMap;
@@ -157,7 +157,7 @@ public class AnnGroupsSAXParser extends DefaultHandler {
         }        
     }
 
-    public ArrayList<Paragraph> getParagraphs(){
+    public List<Paragraph> getParagraphs(){
         return paragraphs;
     }
 

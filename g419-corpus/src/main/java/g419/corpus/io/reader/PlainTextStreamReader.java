@@ -33,36 +33,23 @@ public class PlainTextStreamReader extends AbstractDocumentReader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-					
-		if (analyzer.equals("none"))
-			this.document = analyzePlain(sb.toString().trim());
-		else
-			this.document = analyze(sb.toString().trim(), analyzer);
-		
+		document = analyzer.equals("none") ? analyzePlain(sb.toString().trim()) :  analyze(sb.toString().trim(), analyzer);
 	}
 	
 	@Override
-	public void close() throws DataFormatException {
+	public void close() {
 	}
 
 	@Override
 	protected TokenAttributeIndex getAttributeIndex() {
-		if ( this.document != null )
-			return this.document.getAttributeIndex();
-		else
-			return null;
+		return this.document != null ? this.document.getAttributeIndex() : null;
 	}
 
 	@Override
 	public Document nextDocument() {
-		if ( this.document != null ){
-			Document document = this.document;
-			this.document = null;
-			return document;
-		}
-		else{			
-			return null;
-		}
+		Document document = this.document;
+		this.document = null;
+		return document;
 	}
 	
 	/**
@@ -82,8 +69,9 @@ public class PlainTextStreamReader extends AbstractDocumentReader {
 		for (String tokenStr : tokens) {
 			Token token = new Token(ai);
 			String[] tokenAttrs = tokenStr.split(" ");
-			for (int i = 0; i < tokenAttrs.length; i++)   {
-				token.setAttributeValue(i, tokenAttrs[i]); }
+			for (int i = 0; i < tokenAttrs.length; i++) {
+				token.setAttributeValue(i, tokenAttrs[i]);
+			}
             Tag tag = new Tag(ai.getAttributeValue(token, "base"), ai.getAttributeValue(token, "ctag"), false);
             token.addTag(tag);
 			sentence.addToken(token);
@@ -142,6 +130,11 @@ public class PlainTextStreamReader extends AbstractDocumentReader {
 			ex.printStackTrace();
 			return null;
 		}				
+	}
+
+	@Override
+	public boolean hasNext(){
+		return document!=null;
 	}
 	
 }

@@ -33,14 +33,10 @@ public class ActionWordnet extends Action {
 	 * @param arg0 The array with command line parameters
 	 */
 	@Override
-	public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new DefaultParser().parse(this.options, args);
-        
+	public void parseOptions(final CommandLine line) throws Exception {
         if ( line.hasOption("w") ){
         	this.wordnet = line.getOptionValue("w");
         }
-        
-        parseDefault(line);
     }
 
 	@Override

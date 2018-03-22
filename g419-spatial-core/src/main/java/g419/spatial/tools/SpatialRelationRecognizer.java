@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.apache.log4j.Logger;
 import org.maltparser.core.exception.MaltChainedException;
 
@@ -47,7 +49,7 @@ public class SpatialRelationRecognizer {
 	private Pattern annotationsNg = Pattern.compile("^NG.*$");	
 	private Pattern patternAnnotationNam = Pattern.compile("^nam(_(fac|liv|loc|pro|oth).*|$)");
 	
-	private Set<String> objectPos = new HashSet<String>();
+	private Set<String> objectPos = Sets.newHashSet();
 	private Set<String> regions = SpatialResources.getRegions();
 	
 	private Logger logger = Logger.getLogger(this.getClass());
@@ -55,7 +57,7 @@ public class SpatialRelationRecognizer {
 	
 	/**
 	 * @throws IOException 
-	 * @param maltparser Ścieżka do modelu Maltparsera
+	 * @param malt Ścieżka do modelu Maltparsera
 	 * @param wordnet Ścieżka do wordnetu w formacie PWN
 	 */
 	public SpatialRelationRecognizer(MaltParser malt, Wordnet3 wordnet) throws IOException{		
@@ -69,7 +71,7 @@ public class SpatialRelationRecognizer {
 
 		NamToWordnet nam2wordnet = new NamToWordnet(wordnet);
 		
-		this.filters = new LinkedList<IRelationFilter>();
+		this.filters = Lists.newLinkedList();
 		this.filters.add(new RelationFilterPronoun());
 		this.filters.add(new RelationFilterDifferentObjects());
 		this.filters.add(this.semanticFilter);
@@ -147,9 +149,9 @@ public class SpatialRelationRecognizer {
 	public static Frame convertSpatialToFrame(SpatialExpression relation){
 		Frame f = new Frame(KpwrSpatial.SPATIAL_FRAME_TYPE);
 		f.setSlot(KpwrSpatial.SPATIAL_INDICATOR, relation.getSpatialIndicator());
-		f.setSlot(KpwrSpatial.SPATIAL_LANDMARK, relation.getLandmark());
-		f.setSlot(KpwrSpatial.SPATIAL_TRAJECTOR, relation.getTrajector());
-		f.setSlot(KpwrSpatial.SPATIAL_REGION, relation.getRegion());
+		f.setSlot(KpwrSpatial.SPATIAL_LANDMARK, relation.getLandmark().getSpatialObject());
+		f.setSlot(KpwrSpatial.SPATIAL_TRAJECTOR, relation.getTrajector().getSpatialObject());
+		f.setSlot(KpwrSpatial.SPATIAL_REGION, relation.getLandmark().getRegion());
 		
 		f.setSlotAttribute(KpwrSpatial.SPATIAL_TRAJECTOR, "sumo", String.join(", ",relation.getTrajectorConcepts()));
 		f.setSlotAttribute(KpwrSpatial.SPATIAL_LANDMARK, "sumo", String.join(", ",relation.getLandmarkConcepts()));
@@ -247,25 +249,25 @@ public class SpatialRelationRecognizer {
 
 		// Sprawdź, czy landmarkiem jest region. Jeżeli tak, to przesuń landmark na najbliższych ign lub subst
 		for ( SpatialExpression rel : relations ){
-			if ( this.regions.contains(rel.getLandmark().getHeadToken().getDisambTag().getBase()) ){
-				int i = rel.getLandmark().getEnd() + 1;
-				List<Token> tokens = rel.getLandmark().getSentence().getTokens();
+			if ( this.regions.contains(rel.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase()) ){
+				int i = rel.getLandmark().getSpatialObject().getEnd() + 1;
+				List<Token> tokens = rel.getLandmark().getSpatialObject().getSentence().getTokens();
 				
 				if ( i < tokens.size() && chunkNamesTokens.get(i) != null ){
 					Annotation an = chunkNamesTokens.get(i);
 					this.logger.info("REPLACE_REGION_NEXT_NAME " + rel.getLandmark().toString() + " => " + an.toString());
-					rel.setRegion(rel.getLandmark());
-					rel.setLandmark(an);
+					rel.getLandmark().setRegion(rel.getLandmark().getSpatialObject());
+					rel.getLandmark().setSpatialObject(an);
 				}
 				else{
 					// Znajdż zagnieżdżone NG występujące po regionie
 					Annotation ng = null;
-					int j = rel.getLandmark().getHead() + 1;
-					while ( j <= rel.getLandmark().getEnd() && ng == null ){
+					int j = rel.getLandmark().getSpatialObject().getHead() + 1;
+					while ( j <= rel.getLandmark().getSpatialObject().getEnd() && ng == null ){
 						List<Annotation> innerNgs = chunkNgTokens.get(j);
 						if ( innerNgs != null ){
 							for (Annotation an : innerNgs ){
-								if ( an.getBegin() > rel.getLandmark().getHead() ){
+								if ( an.getBegin() > rel.getLandmark().getSpatialObject().getHead() ){
 									ng = an;
 								}
 							}							
@@ -275,25 +277,25 @@ public class SpatialRelationRecognizer {
 					if ( ng != null ){
 						this.logger.info("REPLACE_REGION_INNER_NG" + rel.getLandmark().toString() + " => " + ng.toString());
 						Annotation newLandmark = null;
-						List<Annotation> newLandmakrs = chunkNgTokens.get(rel.getLandmark().getHead());
+						List<Annotation> newLandmakrs = chunkNgTokens.get(rel.getLandmark().getSpatialObject().getHead());
 						if ( newLandmakrs != null ){
 							for (Annotation an : newLandmakrs ){
-								if ( an != rel.getLandmark() && (newLandmark == null || newLandmark.getTokens().size() < an.getTokens().size() ) ){
+								if ( an != rel.getLandmark().getSpatialObject() && (newLandmark == null || newLandmark.getTokens().size() < an.getTokens().size() ) ){
 									newLandmark = an;
 								}
 							}
 						}
 						if ( newLandmark == null ){
-							newLandmark = new Annotation(rel.getLandmark().getBegin(), ng.getBegin()-1, "NG", sentence);
+							newLandmark = new Annotation(rel.getLandmark().getSpatialObject().getBegin(), ng.getBegin()-1, "NG", sentence);
 						}
-						rel.setRegion(newLandmark);
-						rel.setLandmark(ng);						
+						rel.getLandmark().setRegion(newLandmark);
+						rel.getLandmark().setSpatialObject(ng);
 					}
 					else{
 						// Znajdź pierwszy subst lub ign po prawej stronie
 						Integer subst_or_ign = null;
-						int k = rel.getLandmark().getHead() + 1;
-						while ( k <= rel.getLandmark().getEnd() && subst_or_ign == null ){
+						int k = rel.getLandmark().getSpatialObject().getHead() + 1;
+						while ( k <= rel.getLandmark().getSpatialObject().getEnd() && subst_or_ign == null ){
 							if ( this.objectPos.contains(tokens.get(k).getDisambTag().getPos()) ){
 								subst_or_ign = k;
 							}
@@ -301,13 +303,13 @@ public class SpatialRelationRecognizer {
 						}
 						if ( subst_or_ign != null ){
 							// Wszystko po prawje staje się nową anotacją NG
-							Annotation newRegion = new Annotation(rel.getLandmark().getHead(), "NG", sentence);
-							Annotation newLandmark = new Annotation(rel.getLandmark().getHead()+1, rel.getLandmark().getEnd(), "NG", sentence);
+							Annotation newRegion = new Annotation(rel.getLandmark().getSpatialObject().getHead(), "NG", sentence);
+							Annotation newLandmark = new Annotation(rel.getLandmark().getSpatialObject().getHead()+1, rel.getLandmark().getSpatialObject().getEnd(), "NG", sentence);
 							sentence.addChunk(newRegion);
 							sentence.addChunk(newLandmark);
 							this.logger.info("REPLACE_REGION_INNER_SUBST_IGN" + rel.getLandmark().toString() + " => " + newLandmark);
-							rel.setLandmark(newLandmark);
-							rel.setRegion(newRegion);
+							rel.getLandmark().setSpatialObject(newLandmark);
+							rel.getLandmark().setRegion(newRegion);
 						}
 					}
 				}
@@ -347,21 +349,21 @@ public class SpatialRelationRecognizer {
 		for ( SpatialExpression relation : relations ){
 			// Sprawdź landmark
 			//String landmarkKey = String.format("%d:%d",relation.getLandmark().getBegin(), relation.getLandmark().getEnd());
-			Integer landmarkKey = relation.getLandmark().getBegin();
+			Integer landmarkKey = relation.getLandmark().getSpatialObject().getBegin();
 			Annotation landmarkName = names.get(landmarkKey);
-			if ( landmarkName != null && landmarkName != relation.getLandmark() ){
-				Logger.getLogger(this.getClass()).info(String.format("Replace %s (%s) with nam (%s)", relation.getLandmark().getType(), relation.getLandmark(), landmarkName));
-				landmarkName.setHead(relation.getLandmark().getHead());
-				relation.setLandmark(landmarkName);
+			if ( landmarkName != null && landmarkName != relation.getLandmark().getSpatialObject() ){
+				Logger.getLogger(this.getClass()).info(String.format("Replace %s (%s) with nam (%s)", relation.getLandmark().getSpatialObject().getType(), relation.getLandmark(), landmarkName));
+				landmarkName.setHead(relation.getLandmark().getSpatialObject().getHead());
+				relation.getLandmark().setSpatialObject(landmarkName);
 			}
 			// Sprawdź trajector
 			//String trajectorKey = String.format("%d:%d",relation.getTrajector().getBegin(), relation.getTrajector().getEnd());
-			Integer trajectorKey = relation.getTrajector().getBegin();
+			Integer trajectorKey = relation.getTrajector().getSpatialObject().getBegin();
 			Annotation trajectorName = names.get(trajectorKey);
-			if ( trajectorName != null && trajectorName != relation.getTrajector() ){
-				Logger.getLogger(this.getClass()).info(String.format("Replace %s (%s) with nam (%s)", relation.getTrajector().getType(), relation.getTrajector(), trajectorName));
-				trajectorName.setHead(relation.getTrajector().getHead());
-				relation.setTrajector(trajectorName);
+			if ( trajectorName != null && trajectorName != relation.getTrajector().getSpatialObject() ){
+				Logger.getLogger(this.getClass()).info(String.format("Replace %s (%s) with nam (%s)", relation.getTrajector().getSpatialObject().getType(), relation.getTrajector(), trajectorName));
+				trajectorName.setHead(relation.getTrajector().getSpatialObject().getHead());
+				relation.getTrajector().setSpatialObject(trajectorName);
 			}
 		}
 	}

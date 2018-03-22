@@ -1,5 +1,6 @@
 package g419.liner2.core.tools;
 
+// ToDo: Rename to ConfusionMatrix
 public class FscoreEvaluator {
 
 	protected int truePositives;
@@ -17,30 +18,49 @@ public class FscoreEvaluator {
 		falsePositives = 0;
 		falseNegatives = 0;
 	}
-	
-	
+
 	public void addTruePositive(){
 		truePositives++;
 	}
-	
+
+	public void addTruePositive(int n){
+		truePositives+=n;
+	}
+
 	public void addTrueNegative(){
 		trueNegatives++;
 	}
-	
+
+	public void addTrueNegative(int n){
+		trueNegatives+=n;
+	}
+
 	public void addFalsePositive(){
 		falsePositives++;
 	}
-	
+
+	public void addFalsePositive(int n){
+		falsePositives+=n;
+	}
+
 	public void addFalseNegative(){
 		falseNegatives++;
 	}
-	
+
+	public void addFalseNegative(int n){
+		falseNegatives+=n;
+	}
+
 	public int getTruePositiveCount(){
 		return this.truePositives;
 	}
 	
 	public int getFalsePositiveCount(){
 		return this.falsePositives;
+	}
+
+	public int getFalseNegativesCount(){
+		return falseNegatives;
 	}
 	
 	protected float safeDiv(float numerator, float denominator, float defaultValue){
