@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
@@ -110,7 +111,7 @@ public class FeatureExtractor extends Action{
     	int i = 1;    	
         while ( (ps = reader.nextDocument()) != null ){
         	for ( Sentence sentence : ps.getSentences() ){
-        		MaltSentence maltSent = new MaltSentence(sentence);
+        		MaltSentence maltSent = new MaltSentence(sentence, MappingNkjpToConllPos.get());
         		malt.parse(maltSent);
         		
                 for ( Annotation ann : sentence.getChunks() ) {

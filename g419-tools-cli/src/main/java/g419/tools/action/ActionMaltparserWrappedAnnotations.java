@@ -2,10 +2,12 @@ package g419.tools.action;
 
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
+import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.core.tools.parser.MaltParser;
 import g419.liner2.core.tools.parser.MaltSentence;
+import g419.liner2.core.tools.parser.TokenWrapper;
 import org.apache.commons.cli.CommandLine;
 import org.maltparser.core.exception.MaltChainedException;
 import org.slf4j.Logger;
@@ -52,11 +54,12 @@ public class ActionMaltparserWrappedAnnotations extends Action {
         try (AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputName, inputFormat)) {
             while (reader.hasNext()) {
                 reader.nextDocument().getSentences().stream()
-                        .map(s -> new MaltSentence(s, annotationTypePatterns))
-                        .forEach(s -> {
+                        .map(sentence -> TokenWrapper.wrapAnnotations(sentence, annotationTypePatterns))
+                        .map(sentence -> new MaltSentence(sentence, MappingNkjpToConllPos.get()))
+                        .forEach(sentence -> {
                             try {
-                                malt.parse(s);
-                                Arrays.stream(s.getMaltData()).forEach(System.out::println);
+                                malt.parse(sentence);
+                                Arrays.stream(sentence.getMaltData()).forEach(System.out::println);
                                 System.out.println();
                             } catch (MaltChainedException e) {
                                 logger.warn("Failed to parse sentence with MaltParser", e);

@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.zip.DataFormatException;
 
+import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
@@ -187,7 +188,7 @@ public class CategorizeTool extends Action {
         
         while ( (ps = reader.nextDocument()) != null ){
             for(Sentence sent: ps.getSentences()){
-                MaltSentence maltSent = new MaltSentence(sent);
+                MaltSentence maltSent = new MaltSentence(sent, MappingNkjpToConllPos.get());
 
                 for (Annotation ann : maltSent.getAnnotations()) {
                     String name = ann.getText();

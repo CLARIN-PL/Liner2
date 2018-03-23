@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
@@ -70,7 +71,7 @@ public class ActionTestMalt extends Action {
 			
 			for (Paragraph paragraph : document.getParagraphs()){
 				for (Sentence sentence : paragraph.getSentences()){
-					MaltSentence maltSentence = new MaltSentence(sentence);
+					MaltSentence maltSentence = new MaltSentence(sentence, MappingNkjpToConllPos.get());
 					malt.parse(maltSentence);
 					
 					List<SpatialExpression> srs = this.findByMalt(sentence, maltSentence);

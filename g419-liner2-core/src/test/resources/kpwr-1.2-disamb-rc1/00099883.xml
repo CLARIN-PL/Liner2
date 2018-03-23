@@ -1,0 +1,1559 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chunkList SYSTEM "ccl.dtd">
+<chunkList>
+ <chunk id="ch1">
+  <sentence id="sent1">
+   <tok>
+    <orth>Toronto</orth>
+    <lex disamb="1"><base>Toronto</base><ctag>subst:sg:nom:n</ctag></lex>
+    <ann chan="nam_fac_goe">1</ann>
+    <ann chan="nam_loc_gpe_city">1</ann>
+    <ann chan="chunk_app">1</ann>
+    <ann chan="chunk_agp">1</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_head_agp">1</ann>
+    <ann chan="chunk_head_np">1</ann>
+    <prop key="nam_fac_goe:lemma">Toronto Dominion Centre</prop>
+    <prop key="nam_loc_gpe_city:lemma">Toronto</prop>
+   </tok>
+   <tok>
+    <orth>Dominion</orth>
+    <lex disamb="1"><base>dominion</base><ctag>subst:sg:nom:n</ctag></lex>
+    <ann chan="nam_fac_goe">1</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="chunk_app">1</ann>
+    <ann chan="chunk_agp">1</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+   </tok>
+   <tok>
+    <orth>Centre</orth>
+    <lex disamb="1"><base>centre</base><ctag>subst:sg:nom:n</ctag></lex>
+    <ann chan="nam_fac_goe">1</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="chunk_app">1</ann>
+    <ann chan="chunk_agp">1</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+   </tok>
+  </sentence>
+ </chunk>
+ <chunk id="ch2">
+  <sentence id="sent2">
+   <tok>
+    <orth>Toronto</orth>
+    <lex disamb="1"><base>Toronto</base><ctag>subst:sg:nom:n</ctag></lex>
+    <ann chan="nam_fac_goe">1</ann>
+    <ann chan="nam_loc_gpe_city">1</ann>
+    <ann chan="nam_adj_country">0</ann>
+    <ann chan="nam_loc_gpe_district">0</ann>
+    <ann chan="chunk_app">1</ann>
+    <ann chan="chunk_agp">1</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_head_agp">1</ann>
+    <ann chan="chunk_head_np">1</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="keyword">1</ann>
+    <prop key="nam_fac_goe:lemma">Toronto Dominion Centre</prop>
+    <prop key="nam_loc_gpe_city:lemma">Toronto</prop>
+   </tok>
+   <tok>
+    <orth>Dominion</orth>
+    <lex disamb="1"><base>dominion</base><ctag>subst:sg:nom:n</ctag></lex>
+    <ann chan="nam_fac_goe">1</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="nam_adj_country">0</ann>
+    <ann chan="nam_loc_gpe_district">0</ann>
+    <ann chan="chunk_app">1</ann>
+    <ann chan="chunk_agp">1</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="keyword">1</ann>
+   </tok>
+   <tok>
+    <orth>Centre</orth>
+    <lex disamb="1"><base>centre</base><ctag>subst:sg:nom:n</ctag></lex>
+    <ann chan="nam_fac_goe">1</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="nam_adj_country">0</ann>
+    <ann chan="nam_loc_gpe_district">0</ann>
+    <ann chan="chunk_app">1</ann>
+    <ann chan="chunk_agp">1</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="keyword">1</ann>
+   </tok>
+   <tok>
+    <orth>-</orth>
+    <lex disamb="1"><base>-</base><ctag>interp</ctag></lex>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="nam_adj_country">0</ann>
+    <ann chan="nam_loc_gpe_district">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="chunk_agp">0</ann>
+    <ann chan="chunk_np">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>kompleks</orth>
+    <lex disamb="1"><base>kompleks</base><ctag>subst:sg:nom:m3</ctag></lex>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="nam_adj_country">0</ann>
+    <ann chan="nam_loc_gpe_district">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="chunk_agp">2</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">2</ann>
+    <ann chan="chunk_head_np">2</ann>
+    <ann chan="spatial_object">1</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="keyword">2</ann>
+   </tok>
+   <tok>
+    <orth>handlowo</orth>
+    <lex disamb="1"><base>handlowo</base><ctag>adv:pos</ctag></lex>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="nam_adj_country">0</ann>
+    <ann chan="nam_loc_gpe_district">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="chunk_agp">2</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="keyword">2</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>-</orth>
+    <lex disamb="1"><base>-</base><ctag>interp</ctag></lex>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="nam_adj_country">0</ann>
+    <ann chan="nam_loc_gpe_district">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="chunk_agp">2</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="keyword">2</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>kulturalny</orth>
+    <lex disamb="1"><base>kulturalny</base><ctag>adj:sg:nom:m1:pos</ctag></lex>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="nam_adj_country">0</ann>
+    <ann chan="nam_loc_gpe_district">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="chunk_agp">2</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="keyword">2</ann>
+   </tok>
+   <tok>
+    <orth>w</orth>
+    <lex disamb="1"><base>w</base><ctag>prep:loc:nwok</ctag></lex>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="nam_adj_country">0</ann>
+    <ann chan="nam_loc_gpe_district">0</ann>
+    <ann chan="chunk_app">2</ann>
+    <ann chan="chunk_agp">3</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="spatial_indicator_3">1</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>kanadyjskim</orth>
+    <lex disamb="1"><base>kanadyjski</base><ctag>adj:sg:loc:n:pos</ctag></lex>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="nam_adj_country">1</ann>
+    <ann chan="nam_loc_gpe_district">0</ann>
+    <ann chan="chunk_app">2</ann>
+    <ann chan="chunk_agp">3</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="keyword">0</ann>
+    <prop key="nam_adj_country:lemma">kanadyjski</prop>
+   </tok>
+   <tok>
+    <orth>mieście</orth>
+    <lex disamb="1"><base>miasto</base><ctag>subst:sg:loc:n</ctag></lex>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="nam_adj_country">0</ann>
+    <ann chan="nam_loc_gpe_district">0</ann>
+    <ann chan="chunk_app">2</ann>
+    <ann chan="chunk_agp">3</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">3</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="spatial_object">2</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>Toronto</orth>
+    <lex disamb="1"><base>Toronto</base><ctag>subst:sg:nom:n</ctag></lex>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">2</ann>
+    <ann chan="nam_adj_country">0</ann>
+    <ann chan="nam_loc_gpe_district">0</ann>
+    <ann chan="chunk_app">2</ann>
+    <ann chan="chunk_agp">3</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="keyword">0</ann>
+    <prop key="nam_loc_gpe_city:lemma">Toronto</prop>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>,</orth>
+    <lex disamb="1"><base>,</base><ctag>interp</ctag></lex>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="nam_adj_country">0</ann>
+    <ann chan="nam_loc_gpe_district">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="chunk_agp">0</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>w</orth>
+    <lex disamb="1"><base>w</base><ctag>prep:loc:nwok</ctag></lex>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="nam_adj_country">0</ann>
+    <ann chan="nam_loc_gpe_district">0</ann>
+    <ann chan="chunk_app">3</ann>
+    <ann chan="chunk_agp">4</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="spatial_indicator_3">2</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>Financial</orth>
+    <lex disamb="1"><base>financial</base><ctag>subst:sg:loc:n</ctag></lex>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="nam_adj_country">0</ann>
+    <ann chan="nam_loc_gpe_district">1</ann>
+    <ann chan="chunk_app">3</ann>
+    <ann chan="chunk_agp">4</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">4</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="spatial_object">3</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="keyword">0</ann>
+    <prop key="nam_loc_gpe_district:lemma">Financial District</prop>
+   </tok>
+   <tok>
+    <orth>District</orth>
+    <lex disamb="1"><base>district</base><ctag>subst:sg:loc:n</ctag></lex>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="nam_adj_country">0</ann>
+    <ann chan="nam_loc_gpe_district">1</ann>
+    <ann chan="chunk_app">3</ann>
+    <ann chan="chunk_agp">4</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>.</orth>
+    <lex disamb="1"><base>.</base><ctag>interp</ctag></lex>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="nam_adj_country">0</ann>
+    <ann chan="nam_loc_gpe_district">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="chunk_agp">0</ann>
+    <ann chan="chunk_np">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+  </sentence>
+  <sentence id="sent3">
+   <tok>
+    <orth>Składa</orth>
+    <lex disamb="1"><base>składać</base><ctag>fin:sg:ter:imperf</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_czarny">0</ann>
+    <ann chan="chunk_vp">1</ann>
+    <ann chan="chunk_head_vp">1</ann>
+    <ann chan="chunk_agp">0</ann>
+    <ann chan="chunk_np">0</ann>
+    <ann chan="chunk_numord">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="anafora_wyznacznik">1</ann>
+    <ann chan="anafora_verb_null">1</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>się</orth>
+    <lex disamb="1"><base>się</base><ctag>qub</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_czarny">0</ann>
+    <ann chan="chunk_vp">1</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_agp">0</ann>
+    <ann chan="chunk_np">0</ann>
+    <ann chan="chunk_numord">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="anafora_verb_null">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>z</orth>
+    <lex disamb="1"><base>z</base><ctag>prep:gen:nwok</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_czarny">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_agp">1</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_numord">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="anafora_verb_null">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>3</orth>
+    <lex disamb="1"><base>3</base><ctag>num:pl:gen:m3:congr</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_czarny">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_agp">1</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_numord">1</ann>
+    <ann chan="chunk_head_agp">1</ann>
+    <ann chan="chunk_head_np">1</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="anafora_verb_null">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>czarnych</orth>
+    <lex disamb="1"><base>czarny</base><ctag>adj:pl:gen:m3:pos</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_czarny">1</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_agp">1</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_numord">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="anafora_verb_null">0</ann>
+    <ann chan="keyword">0</ann>
+    <prop key="sense:wsd_czarny">czarny-1</prop>
+   </tok>
+   <tok>
+    <orth>budynków</orth>
+    <lex disamb="1"><base>budynek</base><ctag>subst:pl:gen:m3</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_czarny">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_agp">1</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_numord">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="anafora_verb_null">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>,</orth>
+    <lex disamb="1"><base>,</base><ctag>interp</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_czarny">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_agp">1</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_numord">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="anafora_verb_null">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>zaprojektowanych</orth>
+    <lex disamb="1"><base>zaprojektować</base><ctag>ppas:pl:gen:m3:perf:aff</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_czarny">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_agp">1</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_numord">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="anafora_verb_null">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>przez</orth>
+    <lex disamb="1"><base>przez</base><ctag>prep:acc:nwok</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_czarny">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_agp">2</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_numord">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="anafora_verb_null">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>architekta</orth>
+    <lex disamb="1"><base>architekt</base><ctag>subst:sg:acc:m1</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_czarny">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_agp">2</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_numord">0</ann>
+    <ann chan="chunk_head_agp">2</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="anafora_verb_null">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>Ludwiga</orth>
+    <lex disamb="1"><base>Ludwig</base><ctag>subst:sg:acc:m1</ctag></lex>
+    <ann chan="nam_liv_person_first">1</ann>
+    <ann chan="nam_liv_person">1</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_czarny">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_agp">2</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_numord">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="anafora_verb_null">0</ann>
+    <ann chan="keyword">1</ann>
+    <prop key="nam_liv_person_first:lemma">Ludwig</prop>
+    <prop key="nam_liv_person:lemma">Ludwig Mies van der Rohe</prop>
+   </tok>
+   <tok>
+    <orth>Mies</orth>
+    <lex disamb="1"><base>mies</base><ctag>subst:sg:acc:m1</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">1</ann>
+    <ann chan="nam_liv_person_last">1</ann>
+    <ann chan="wsd_czarny">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_agp">2</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_numord">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="anafora_verb_null">0</ann>
+    <ann chan="keyword">1</ann>
+    <prop key="nam_liv_person_last:lemma">Mies</prop>
+   </tok>
+   <tok>
+    <orth>van</orth>
+    <lex disamb="1"><base>van</base><ctag>subst:sg:nom:m2</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">1</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_czarny">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_agp">2</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_numord">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="anafora_verb_null">0</ann>
+    <ann chan="keyword">1</ann>
+   </tok>
+   <tok>
+    <orth>der</orth>
+    <lex disamb="1"><base>dera</base><ctag>subst:pl:gen:f</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">1</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_czarny">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_agp">2</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_numord">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="anafora_verb_null">0</ann>
+    <ann chan="keyword">1</ann>
+   </tok>
+   <tok>
+    <orth>Rohe</orth>
+    <lex disamb="1"><base>rohe</base><ctag>subst:sg:gen:m2</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">1</ann>
+    <ann chan="nam_liv_person_last">2</ann>
+    <ann chan="wsd_czarny">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_agp">2</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_numord">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="anafora_verb_null">0</ann>
+    <ann chan="keyword">1</ann>
+    <prop key="nam_liv_person_last:lemma">Rohe</prop>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>.</orth>
+    <lex disamb="1"><base>.</base><ctag>interp</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_czarny">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_agp">0</ann>
+    <ann chan="chunk_np">0</ann>
+    <ann chan="chunk_numord">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="anafora_verb_null">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+  </sentence>
+ </chunk>
+ <chunk id="ch3">
+  <sentence id="sent4">
+   <tok>
+    <orth>Budynki</orth>
+    <lex disamb="1"><base>budynek</base><ctag>subst:pl:nom:m3</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_tworzyć">0</ann>
+    <ann chan="chunk_agp">1</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_head_agp">1</ann>
+    <ann chan="chunk_head_np">1</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">1</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>tworzą</orth>
+    <lex disamb="1"><base>tworzyć</base><ctag>fin:pl:ter:imperf</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_tworzyć">1</ann>
+    <ann chan="chunk_agp">0</ann>
+    <ann chan="chunk_np">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">1</ann>
+    <ann chan="chunk_head_vp">1</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+    <prop key="sense:wsd_tworzyć">tworzyć-3</prop>
+   </tok>
+   <tok>
+    <orth>odgrodzony</orth>
+    <lex disamb="1"><base>odgrodzić</base><ctag>ppas:sg:nom:m3:perf:aff</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_tworzyć">0</ann>
+    <ann chan="chunk_agp">2</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>od</orth>
+    <lex disamb="1"><base>od</base><ctag>prep:gen:nwok</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_tworzyć">0</ann>
+    <ann chan="chunk_agp">3</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>ulic</orth>
+    <lex disamb="1"><base>ulica</base><ctag>subst:pl:gen:f</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_tworzyć">0</ann>
+    <ann chan="chunk_agp">3</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">2</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>dziedziniec</orth>
+    <lex disamb="1"><base>dziedziniec</base><ctag>subst:sg:nom:m3</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_tworzyć">0</ann>
+    <ann chan="chunk_agp">4</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">3</ann>
+    <ann chan="chunk_head_np">2</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>,</orth>
+    <lex disamb="1"><base>,</base><ctag>interp</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_tworzyć">0</ann>
+    <ann chan="chunk_agp">0</ann>
+    <ann chan="chunk_np">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>na</orth>
+    <lex disamb="1"><base>na</base><ctag>prep:loc</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_tworzyć">0</ann>
+    <ann chan="chunk_agp">5</ann>
+    <ann chan="chunk_np">3</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">1</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>którym</orth>
+    <lex disamb="1"><base>który</base><ctag>adj:sg:loc:m3:pos</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_tworzyć">0</ann>
+    <ann chan="chunk_agp">5</ann>
+    <ann chan="chunk_np">3</ann>
+    <ann chan="chunk_head_agp">4</ann>
+    <ann chan="chunk_head_np">3</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">1</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>Joe</orth>
+    <lex disamb="1"><base>Joe</base><ctag>subst:sg:nom:m1</ctag></lex>
+    <ann chan="nam_liv_person_first">1</ann>
+    <ann chan="nam_liv_person">1</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_tworzyć">0</ann>
+    <ann chan="chunk_agp">6</ann>
+    <ann chan="chunk_np">4</ann>
+    <ann chan="chunk_head_agp">5</ann>
+    <ann chan="chunk_head_np">4</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">1</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">1</ann>
+    <prop key="nam_liv_person_first:lemma">Joe</prop>
+    <prop key="nam_liv_person:lemma">Joe Fafard</prop>
+   </tok>
+   <tok>
+    <orth>Fafard</orth>
+    <lex disamb="1"><base>fafard</base><ctag>subst:sg:nom:m1</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">1</ann>
+    <ann chan="nam_liv_person_last">1</ann>
+    <ann chan="wsd_tworzyć">0</ann>
+    <ann chan="chunk_agp">6</ann>
+    <ann chan="chunk_np">4</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">1</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">1</ann>
+    <prop key="nam_liv_person_last:lemma">Fafard</prop>
+   </tok>
+   <tok>
+    <orth>ustawił</orth>
+    <lex disamb="1"><base>ustawić</base><ctag>praet:sg:m1:perf</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_tworzyć">0</ann>
+    <ann chan="chunk_agp">0</ann>
+    <ann chan="chunk_np">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">2</ann>
+    <ann chan="chunk_head_vp">2</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>6</orth>
+    <lex disamb="1"><base>6</base><ctag>num:pl:nom:f:rec</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_tworzyć">0</ann>
+    <ann chan="chunk_agp">7</ann>
+    <ann chan="chunk_np">5</ann>
+    <ann chan="chunk_head_agp">6</ann>
+    <ann chan="chunk_head_np">5</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>odpoczywających</orth>
+    <lex disamb="1"><base>odpoczywać</base><ctag>pact:pl:gen:f:imperf:aff</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_tworzyć">0</ann>
+    <ann chan="chunk_agp">8</ann>
+    <ann chan="chunk_np">5</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>krów</orth>
+    <lex disamb="1"><base>krowa</base><ctag>subst:pl:gen:f</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_tworzyć">0</ann>
+    <ann chan="chunk_agp">8</ann>
+    <ann chan="chunk_np">5</ann>
+    <ann chan="chunk_head_agp">7</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">2</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>z</orth>
+    <lex disamb="1"><base>z</base><ctag>prep:gen:nwok</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_tworzyć">0</ann>
+    <ann chan="chunk_agp">9</ann>
+    <ann chan="chunk_np">5</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>brązu</orth>
+    <lex disamb="1"><base>brąz</base><ctag>subst:sg:gen:m3</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_tworzyć">0</ann>
+    <ann chan="chunk_agp">9</ann>
+    <ann chan="chunk_np">5</ann>
+    <ann chan="chunk_head_agp">8</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>.</orth>
+    <lex disamb="1"><base>.</base><ctag>interp</ctag></lex>
+    <ann chan="nam_liv_person_first">0</ann>
+    <ann chan="nam_liv_person">0</ann>
+    <ann chan="nam_liv_person_last">0</ann>
+    <ann chan="wsd_tworzyć">0</ann>
+    <ann chan="chunk_agp">0</ann>
+    <ann chan="chunk_np">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+  </sentence>
+  <sentence id="sent5">
+   <tok>
+    <orth>Pomiędzy</orth>
+    <lex disamb="1"><base>pomiędzy</base><ctag>prep:inst</ctag></lex>
+    <ann chan="wsd_wielki">0</ann>
+    <ann chan="chunk_agp">1</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">1</ann>
+    <ann chan="spatial_object">0</ann>
+   </tok>
+   <tok>
+    <orth>budynkami</orth>
+    <lex disamb="1"><base>budynek</base><ctag>subst:pl:inst:m3</ctag></lex>
+    <ann chan="wsd_wielki">0</ann>
+    <ann chan="chunk_agp">1</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_head_agp">1</ann>
+    <ann chan="chunk_head_np">1</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="anafora_wyznacznik">1</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">1</ann>
+   </tok>
+   <tok>
+    <orth>stoi</orth>
+    <lex disamb="1"><base>stać</base><ctag>fin:sg:ter:imperf</ctag></lex>
+    <ann chan="wsd_wielki">0</ann>
+    <ann chan="chunk_agp">0</ann>
+    <ann chan="chunk_np">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">1</ann>
+    <ann chan="chunk_head_vp">1</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+   </tok>
+   <tok>
+    <orth>także</orth>
+    <lex disamb="1"><base>także</base><ctag>qub</ctag></lex>
+    <ann chan="wsd_wielki">0</ann>
+    <ann chan="chunk_agp">0</ann>
+    <ann chan="chunk_np">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+   </tok>
+   <tok>
+    <orth>wielkie</orth>
+    <lex disamb="1"><base>wielki</base><ctag>adj:sg:acc:n:pos</ctag></lex>
+    <ann chan="wsd_wielki">1</ann>
+    <ann chan="chunk_agp">2</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+   </tok>
+   <tok>
+    <orth>krzesło</orth>
+    <lex disamb="1"><base>krzesło</base><ctag>subst:sg:acc:n</ctag></lex>
+    <ann chan="wsd_wielki">0</ann>
+    <ann chan="chunk_agp">2</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">2</ann>
+    <ann chan="chunk_head_np">2</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">2</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>.</orth>
+    <lex disamb="1"><base>.</base><ctag>interp</ctag></lex>
+    <ann chan="wsd_wielki">0</ann>
+    <ann chan="chunk_agp">0</ann>
+    <ann chan="chunk_np">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+   </tok>
+  </sentence>
+  <sentence id="sent6">
+   <tok>
+    <orth>W</orth>
+    <lex disamb="1"><base>w</base><ctag>prep:acc:nwok</ctag></lex>
+    <ann chan="chunk_agp">1</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+   </tok>
+   <tok>
+    <orth>południe</orth>
+    <lex disamb="1"><base>południe</base><ctag>subst:sg:acc:n</ctag></lex>
+    <ann chan="chunk_agp">1</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_head_agp">1</ann>
+    <ann chan="chunk_head_np">1</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="t3_time">1</ann>
+    <ann chan="plimex_time">1</ann>
+    <prop key="t3_time:lemma">xxxx-xx-xxTMI</prop>
+    <prop key="t3_time:lemma2">xxxx-xx-xxTMI</prop>
+    <prop key="plimex_time:lemma">xxxx-xx-xxTMI</prop>
+    <prop key="plimex_time:lemma2">xxxx-xx-xxTMI</prop>
+   </tok>
+   <tok>
+    <orth>odbywają</orth>
+    <lex disamb="1"><base>odbywać</base><ctag>fin:pl:ter:imperf</ctag></lex>
+    <ann chan="chunk_agp">0</ann>
+    <ann chan="chunk_np">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">1</ann>
+    <ann chan="chunk_head_vp">1</ann>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+   </tok>
+   <tok>
+    <orth>się</orth>
+    <lex disamb="1"><base>się</base><ctag>qub</ctag></lex>
+    <ann chan="chunk_agp">0</ann>
+    <ann chan="chunk_np">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">1</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+   </tok>
+   <tok>
+    <orth>koncerty</orth>
+    <lex disamb="1"><base>koncert</base><ctag>subst:pl:nom:m3</ctag></lex>
+    <ann chan="chunk_agp">2</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">2</ann>
+    <ann chan="chunk_head_np">2</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+   </tok>
+   <tok>
+    <orth>jazzowe</orth>
+    <lex disamb="1"><base>jazzowy</base><ctag>adj:pl:nom:m3:pos</ctag></lex>
+    <ann chan="chunk_agp">2</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>.</orth>
+    <lex disamb="1"><base>.</base><ctag>interp</ctag></lex>
+    <ann chan="chunk_agp">0</ann>
+    <ann chan="chunk_np">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="t3_time">0</ann>
+    <ann chan="plimex_time">0</ann>
+   </tok>
+  </sentence>
+ </chunk>
+ <chunk id="ch4">
+  <sentence id="sent7">
+   <tok>
+    <orth>W</orth>
+    <lex disamb="1"><base>w</base><ctag>prep:loc:nwok</ctag></lex>
+    <ann chan="nam_org_nation">0</ann>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="wsd_znajdować">0</ann>
+    <ann chan="wsd_ważny">0</ann>
+    <ann chan="wsd_sztuka">0</ann>
+    <ann chan="chunk_agp">1</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">1</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>kompleksie</orth>
+    <lex disamb="1"><base>kompleks</base><ctag>subst:sg:loc:m3</ctag></lex>
+    <ann chan="nam_org_nation">0</ann>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="wsd_znajdować">0</ann>
+    <ann chan="wsd_ważny">0</ann>
+    <ann chan="wsd_sztuka">0</ann>
+    <ann chan="chunk_agp">1</ann>
+    <ann chan="chunk_np">1</ann>
+    <ann chan="chunk_head_agp">1</ann>
+    <ann chan="chunk_head_np">1</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">1</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">1</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>znajduje</orth>
+    <lex disamb="1"><base>znajdować</base><ctag>fin:sg:ter:imperf</ctag></lex>
+    <lex disamb="1"><base>znajdywać</base><ctag>fin:sg:ter:imperf</ctag></lex>
+    <ann chan="nam_org_nation">0</ann>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="wsd_znajdować">1</ann>
+    <ann chan="wsd_ważny">0</ann>
+    <ann chan="wsd_sztuka">0</ann>
+    <ann chan="chunk_agp">0</ann>
+    <ann chan="chunk_np">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">1</ann>
+    <ann chan="chunk_head_vp">1</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+    <prop key="sense:wsd_znajdować">znajdować-32</prop>
+   </tok>
+   <tok>
+    <orth>się</orth>
+    <lex disamb="1"><base>się</base><ctag>qub</ctag></lex>
+    <ann chan="nam_org_nation">0</ann>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="wsd_znajdować">0</ann>
+    <ann chan="wsd_ważny">0</ann>
+    <ann chan="wsd_sztuka">0</ann>
+    <ann chan="chunk_agp">0</ann>
+    <ann chan="chunk_np">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">1</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>jedna</orth>
+    <lex disamb="1"><base>jeden</base><ctag>adj:sg:nom:f:pos</ctag></lex>
+    <ann chan="nam_org_nation">0</ann>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="wsd_znajdować">0</ann>
+    <ann chan="wsd_ważny">0</ann>
+    <ann chan="wsd_sztuka">0</ann>
+    <ann chan="chunk_agp">2</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">2</ann>
+    <ann chan="chunk_head_np">2</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">2</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>z</orth>
+    <lex disamb="1"><base>z</base><ctag>prep:gen:nwok</ctag></lex>
+    <ann chan="nam_org_nation">0</ann>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="wsd_znajdować">0</ann>
+    <ann chan="wsd_ważny">0</ann>
+    <ann chan="wsd_sztuka">0</ann>
+    <ann chan="chunk_agp">3</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>najważniejszych</orth>
+    <lex disamb="1"><base>ważny</base><ctag>adj:pl:gen:f:sup</ctag></lex>
+    <ann chan="nam_org_nation">0</ann>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="wsd_znajdować">0</ann>
+    <ann chan="wsd_ważny">1</ann>
+    <ann chan="wsd_sztuka">0</ann>
+    <ann chan="chunk_agp">3</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>galerii</orth>
+    <lex disamb="1"><base>galeria</base><ctag>subst:pl:gen:f</ctag></lex>
+    <ann chan="nam_org_nation">0</ann>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="wsd_znajdować">0</ann>
+    <ann chan="wsd_ważny">0</ann>
+    <ann chan="wsd_sztuka">0</ann>
+    <ann chan="chunk_agp">3</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">3</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>sztuki</orth>
+    <lex disamb="1"><base>sztuka</base><ctag>subst:sg:gen:f</ctag></lex>
+    <ann chan="nam_org_nation">0</ann>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="wsd_znajdować">0</ann>
+    <ann chan="wsd_ważny">0</ann>
+    <ann chan="wsd_sztuka">1</ann>
+    <ann chan="chunk_agp">4</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">4</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+    <prop key="sense:wsd_sztuka">sztuka-1</prop>
+   </tok>
+   <tok>
+    <orth>Inuitów</orth>
+    <lex disamb="1"><base>inuitów</base><ctag>subst:sg:gen:f</ctag></lex>
+    <ann chan="nam_org_nation">1</ann>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="wsd_znajdować">0</ann>
+    <ann chan="wsd_ważny">0</ann>
+    <ann chan="wsd_sztuka">0</ann>
+    <ann chan="chunk_agp">5</ann>
+    <ann chan="chunk_np">2</ann>
+    <ann chan="chunk_head_agp">5</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+    <prop key="nam_org_nation:lemma">Inuita</prop>
+   </tok>
+   <tok>
+    <orth>–</orth>
+    <lex disamb="1"><base>–</base><ctag>interp</ctag></lex>
+    <ann chan="nam_org_nation">0</ann>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="wsd_znajdować">0</ann>
+    <ann chan="wsd_ważny">0</ann>
+    <ann chan="wsd_sztuka">0</ann>
+    <ann chan="chunk_agp">0</ann>
+    <ann chan="chunk_np">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+   <tok>
+    <orth>Toronto</orth>
+    <lex disamb="1"><base>Toronto</base><ctag>subst:sg:nom:n</ctag></lex>
+    <ann chan="nam_org_nation">0</ann>
+    <ann chan="nam_fac_goe">1</ann>
+    <ann chan="nam_loc_gpe_city">1</ann>
+    <ann chan="wsd_znajdować">0</ann>
+    <ann chan="wsd_ważny">0</ann>
+    <ann chan="wsd_sztuka">0</ann>
+    <ann chan="chunk_agp">6</ann>
+    <ann chan="chunk_np">3</ann>
+    <ann chan="chunk_head_agp">6</ann>
+    <ann chan="chunk_head_np">3</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">1</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">1</ann>
+    <prop key="nam_fac_goe:lemma">Toronto Dominion Gallery of Inuit Art</prop>
+    <prop key="nam_loc_gpe_city:lemma">Toronto</prop>
+   </tok>
+   <tok>
+    <orth>Dominion</orth>
+    <lex disamb="1"><base>dominion</base><ctag>subst:sg:nom:n</ctag></lex>
+    <ann chan="nam_org_nation">0</ann>
+    <ann chan="nam_fac_goe">1</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="wsd_znajdować">0</ann>
+    <ann chan="wsd_ważny">0</ann>
+    <ann chan="wsd_sztuka">0</ann>
+    <ann chan="chunk_agp">6</ann>
+    <ann chan="chunk_np">3</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">1</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">1</ann>
+   </tok>
+   <tok>
+    <orth>Gallery</orth>
+    <lex disamb="1"><base>gallery</base><ctag>xxx</ctag></lex>
+    <ann chan="nam_org_nation">0</ann>
+    <ann chan="nam_fac_goe">1</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="wsd_znajdować">0</ann>
+    <ann chan="wsd_ważny">0</ann>
+    <ann chan="wsd_sztuka">0</ann>
+    <ann chan="chunk_agp">6</ann>
+    <ann chan="chunk_np">3</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">1</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">1</ann>
+   </tok>
+   <tok>
+    <orth>of</orth>
+    <lex disamb="1"><base>of</base><ctag>subst:sg:nom:m3</ctag></lex>
+    <ann chan="nam_org_nation">0</ann>
+    <ann chan="nam_fac_goe">1</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="wsd_znajdować">0</ann>
+    <ann chan="wsd_ważny">0</ann>
+    <ann chan="wsd_sztuka">0</ann>
+    <ann chan="chunk_agp">6</ann>
+    <ann chan="chunk_np">3</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">1</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">1</ann>
+   </tok>
+   <tok>
+    <orth>Inuit</orth>
+    <lex disamb="1"><base>inuit</base><ctag>subst:sg:nom:m3</ctag></lex>
+    <ann chan="nam_org_nation">2</ann>
+    <ann chan="nam_fac_goe">1</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="wsd_znajdować">0</ann>
+    <ann chan="wsd_ważny">0</ann>
+    <ann chan="wsd_sztuka">0</ann>
+    <ann chan="chunk_agp">6</ann>
+    <ann chan="chunk_np">3</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">1</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">1</ann>
+    <prop key="nam_org_nation:lemma">Inuit</prop>
+   </tok>
+   <tok>
+    <orth>Art</orth>
+    <lex disamb="1"><base>art</base><ctag>subst:sg:nom:m3</ctag></lex>
+    <ann chan="nam_org_nation">0</ann>
+    <ann chan="nam_fac_goe">1</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="wsd_znajdować">0</ann>
+    <ann chan="wsd_ważny">0</ann>
+    <ann chan="wsd_sztuka">0</ann>
+    <ann chan="chunk_agp">6</ann>
+    <ann chan="chunk_np">3</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">1</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">1</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>.</orth>
+    <lex disamb="1"><base>.</base><ctag>interp</ctag></lex>
+    <ann chan="nam_org_nation">0</ann>
+    <ann chan="nam_fac_goe">0</ann>
+    <ann chan="nam_loc_gpe_city">0</ann>
+    <ann chan="wsd_znajdować">0</ann>
+    <ann chan="wsd_ważny">0</ann>
+    <ann chan="wsd_sztuka">0</ann>
+    <ann chan="chunk_agp">0</ann>
+    <ann chan="chunk_np">0</ann>
+    <ann chan="chunk_head_agp">0</ann>
+    <ann chan="chunk_head_np">0</ann>
+    <ann chan="chunk_vp">0</ann>
+    <ann chan="chunk_head_vp">0</ann>
+    <ann chan="chunk_app">0</ann>
+    <ann chan="anafora_wyznacznik">0</ann>
+    <ann chan="spatial_indicator_3">0</ann>
+    <ann chan="spatial_object">0</ann>
+    <ann chan="keyword">0</ann>
+   </tok>
+  </sentence>
+ </chunk>
+</chunkList>

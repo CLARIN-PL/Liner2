@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import org.apache.log4j.Logger;
 import org.maltparser.core.exception.MaltChainedException;
 
@@ -175,7 +176,7 @@ public class SpatialRelationRecognizer {
 	public List<SpatialExpression> findCandidates(Sentence sentence) throws MaltChainedException{
 		this.splitPrepNg(sentence);
 		
-		MaltSentence maltSentence = new MaltSentence(sentence);
+		MaltSentence maltSentence = new MaltSentence(sentence, MappingNkjpToConllPos.get());
 		this.malt.parse(maltSentence);
 
 		/* Zaindeksuj różne typy fraz */
