@@ -110,9 +110,9 @@ public class Sentence extends IdentifiableElement {
         while (i_chunk.hasNext()) {
             Annotation currentChunk = i_chunk.next();
             if (currentChunk.getTokens().contains(idx)) {
-                if(types != null && !types.isEmpty()) {
+                if(types != null) {
                     for (Pattern patt : types) {
-                        if (patt.matcher(currentChunk.getType()).find()) {
+                        if (patt.matcher(currentChunk.getType()).matches()) {
                             returning.add(currentChunk);
                             break;
                         }
