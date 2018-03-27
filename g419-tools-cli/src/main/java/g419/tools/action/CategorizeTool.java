@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.zip.DataFormatException;
 
+import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
@@ -117,9 +118,7 @@ public class CategorizeTool extends Action {
     }
 
     @Override
-    public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);
+    public void parseOptions(final CommandLine line) throws Exception {
         this.patterns_output = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
@@ -189,9 +188,8 @@ public class CategorizeTool extends Action {
         
         while ( (ps = reader.nextDocument()) != null ){
             for(Sentence sent: ps.getSentences()){
-                MaltSentence maltSent = new MaltSentence(sent, sent.getChunks());
-                maltSent.wrapConjunctions();
-                
+                MaltSentence maltSent = new MaltSentence(sent, MappingNkjpToConllPos.get());
+
                 for (Annotation ann : maltSent.getAnnotations()) {
                     String name = ann.getText();
                     if(categorize_output != null){

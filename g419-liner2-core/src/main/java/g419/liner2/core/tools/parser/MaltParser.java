@@ -1,84 +1,53 @@
 package g419.liner2.core.tools.parser;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
 import org.maltparser.core.syntaxgraph.DependencyStructure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- * Created with IntelliJ IDEA.
- * User: michal
- * Date: 8/5/13
- * Time: 10:28 AM
- * To change this template use File | Settings | File Templates.
- */
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class MaltParser {
 
-    private static HashMap<String, MaltParserService> parsers = new HashMap<String, MaltParserService>();
+    final static Logger logger = LoggerFactory.getLogger(MaltParser.class);
+    private static HashMap<String, MaltParserService> parsers = Maps.newHashMap();
 
-    MaltParserService parser;
+    final MaltParserService parser;
 
-    public MaltParser(String modelPath){
-        if(isInitialized(modelPath)){
-            parser = getParser(modelPath);
-        }
-        else{
-            parser = addParser(modelPath);
-        }
-
+    public MaltParser(String modelPath) {
+        parser = parsers.computeIfAbsent(modelPath, r -> MaltParser.loadParser(Paths.get(modelPath)));
     }
 
-    public DependencyStructure parseTokensToDependencyStructure(String [] dataForMalt) throws MaltChainedException {
-        return parser.parse(dataForMalt);
-    }
-
-    public String [] parseTokens(String [] dataForMalt) throws MaltChainedException {
-        if ( dataForMalt.length == 0 ){
-           return new String[0];
-        }
-        else{
-           return parser.parseTokens(dataForMalt);
-        }
-    }
-    
-    public void parse(MaltSentence sentence) throws MaltChainedException {
-    	List<MaltSentenceLink> links = new ArrayList<MaltSentenceLink>();
-    	String[] output = this.parseTokens(sentence.getMaltData());
-    	sentence.setMaltData(output);
-    	int i = 0;
-    	for ( String line : output ){
-    		String[] parts = line.split("\t");
-    		int targetIndex = Integer.parseInt(parts[8]) - 1;
-    		String relationType = parts[9];
-    		links.add(new MaltSentenceLink(i++, targetIndex, relationType));
-    	}
-    	sentence.setLinks(links);
-    }
-
-    private static MaltParserService addParser(String modelPath){
+    public static MaltParserService loadParser(final Path modelPath) {
         try {
-            MaltParserService parser =  new MaltParserService();
-            File modelFile = new File(modelPath);
-            parser.initializeParserModel(String.format("-c %s -m parse -w %s", modelFile.getName(), modelFile.getParent()));
-            parsers.put(modelPath, parser);
+            final MaltParserService parser = new MaltParserService();
+            parser.initializeParserModel(String.format("-c %s -m parse -w %s", modelPath.toFile().getName(), modelPath.toFile().getParent()));
             return parser;
         } catch (MaltChainedException e) {
-            e.printStackTrace();
+            logger.error("Failed to load MaltParser model {}", modelPath, e);
         }
         return null;
     }
 
-    private static MaltParserService getParser(String modelPath){
-        return parsers.get(modelPath);
+    public DependencyStructure parseTokensToDependencyStructure(final String[] dataForMalt) throws MaltChainedException {
+        return parser.parse(dataForMalt);
     }
 
-    private static boolean isInitialized(String modelPath){
-        return parsers.containsKey(modelPath);
+    public String[] parseTokens(final String[] dataForMalt) throws MaltChainedException {
+        return dataForMalt.length == 0 ? new String[0] : parser.parseTokens(dataForMalt);
     }
-    
+
+    public void parse(final MaltSentence sentence) throws MaltChainedException {
+        sentence.setMaltDataAndLinks(parseTokens(sentence.getMaltData()));
+    }
+
 }
 

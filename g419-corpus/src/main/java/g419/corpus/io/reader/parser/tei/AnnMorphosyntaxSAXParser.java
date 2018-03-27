@@ -1,78 +1,55 @@
 package g419.corpus.io.reader.parser.tei;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import g419.corpus.ConsolePrinter;
 import g419.corpus.io.DataFormatException;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Tag;
-import g419.corpus.structure.Token;
-import g419.corpus.structure.TokenAttributeIndex;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
+import g419.corpus.io.Tei;
+import g419.corpus.structure.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-/**
- * Created with IntelliJ IDEA.
- * User: michal
- * Date: 8/26/13
- * Time: 1:58 PM
- * To change this template use File | Settings | File Templates.
- */
-public class AnnMorphosyntaxSAXParser extends DefaultHandler{
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.util.List;
+import java.util.Map;
 
-    private final String TAG_PARAGRAPH		= "p";
-    private final String TAG_SENTENCE		= "s";
-    private final String TAG_SEGMENT		= "seg";
-    private final String TAG_FEATURESET		= "fs";
-    private final String TAG_FEATURE		= "f";
-    private final String TAG_STRING	    	= "string";
-    private final String TAG_SYMBOL	    	= "symbol";
-    private final String TAG_VALT	    	= "ptr";
-    private final String TAG_ID 			= "xml:id";
+public class AnnMorphosyntaxSAXParser extends DefaultHandler {
 
-    ArrayList<Paragraph> paragraphs;
+    List<Paragraph> paragraphs;
     Paragraph currentParagraph = null;
     Sentence currentSentence = null;
-    HashMap<String,Integer> tokenIdsMap;
-    HashMap<String,Tag> currentTokenTags;
+    Map<String, Integer> tokenIdsMap;
+    Map<String, Tag> currentTokenTags;
     Token currentToken = null;
     String currentFeatureName = "";
     String tmpBase = null;
     String tmpCtag = null;
-    String tmpMsd = null;
     InputStream is;
     String tmpValue;
     String disambTagId;
-    int idx =0;
+    int idx = 0;
     boolean foundSentenceId = false;
     TokenAttributeIndex attributeIndex;
     String docName;
+
+    final Logger logger = LoggerFactory.getLogger(getClass());
 
     public AnnMorphosyntaxSAXParser(String docName, InputStream is, TokenAttributeIndex attributeIndex) throws DataFormatException {
         this.docName = docName;
         this.is = is;
         this.attributeIndex = attributeIndex;
-        paragraphs = new ArrayList<Paragraph>();
-        tokenIdsMap = new HashMap<String, Integer>();
-        parseDocument();
-    }
-    private void parseDocument() throws DataFormatException {
-        SAXParserFactory factory = SAXParserFactory.newInstance();
+        paragraphs = Lists.newArrayList();
+        tokenIdsMap = Maps.newHashMap();
         try {
-            SAXParser parser = factory.newSAXParser();
-            parser.parse(is,this);
+            SAXParserFactory.newInstance().newSAXParser().parse(is, this);
             if (!foundSentenceId) ConsolePrinter.log("Generated sentence ids for document:" + docName);
         } catch (ParserConfigurationException e) {
             throw new DataFormatException("Parse error (ParserConfigurationException)");
@@ -84,85 +61,70 @@ public class AnnMorphosyntaxSAXParser extends DefaultHandler{
     }
 
     @Override
-    public InputSource resolveEntity (String publicId, String systemId){
+    public InputSource resolveEntity(String publicId, String systemId) {
         return new InputSource(new StringReader(""));
     }
 
     @Override
     public void startElement(String s, String s1, String elementName, Attributes attributes) throws SAXException {
         tmpValue = "";
-        if (elementName.equalsIgnoreCase(TAG_PARAGRAPH)) {
-            currentParagraph = new Paragraph(attributes.getValue(TAG_ID));
+        if (elementName.equalsIgnoreCase(Tei.TAG_PARAGRAPH)) {
+            currentParagraph = new Paragraph(attributes.getValue(Tei.TAG_ID));
             currentParagraph.setAttributeIndex(attributeIndex);
-        }
-        else if (elementName.equalsIgnoreCase(TAG_SENTENCE)) {
+        } else if (elementName.equalsIgnoreCase(Tei.TAG_SENTENCE)) {
             currentSentence = new Sentence();
-            idx =0;
-            currentSentence.setId(attributes.getValue(TAG_ID));
-        }
-        else if (elementName.equalsIgnoreCase(TAG_SEGMENT)) {
+            idx = 0;
+            currentSentence.setId(attributes.getValue(Tei.TAG_ID));
+        } else if (elementName.equalsIgnoreCase(Tei.TAG_SEGMENT)) {
             currentToken = new Token(attributeIndex);
-            currentTokenTags = new HashMap<String, Tag>();
-            tokenIdsMap.put(attributes.getValue(TAG_ID),idx++);
-            currentToken.setId(attributes.getValue(TAG_ID));
+            currentTokenTags = Maps.newHashMap();
+            tokenIdsMap.put(attributes.getValue(Tei.TAG_ID), idx++);
+            currentToken.setId(attributes.getValue(Tei.TAG_ID));
             foundSentenceId = true;
 
-        }
-        else if (elementName.equalsIgnoreCase(TAG_FEATURE)) {
-            if(currentFeatureName.equals("disamb") && attributes.getValue("name").equals("choice")){
-                disambTagId =  attributes.getValue("fVal").replace("#","");
-            }
-            else {
+        } else if (elementName.equalsIgnoreCase(Tei.TAG_FEATURE)) {
+            if (currentFeatureName.equals("disamb") && attributes.getValue("name").equals("choice")) {
+                disambTagId = attributes.getValue("fVal").replace("#", "");
+            } else {
                 currentFeatureName = attributes.getValue("name");
             }
-        }
-        else if (elementName.equalsIgnoreCase(TAG_FEATURESET)) {
-            if(currentFeatureName.equals("disamb")){
+        } else if (elementName.equalsIgnoreCase(Tei.TAG_FEATURESET)) {
+            if (currentFeatureName.equals("disamb")) {
                 //currentToken.setAttributeValue(attributeIndex.getIndex("tagTool"), attributes.getValue("feats"));
             }
-        }
-        else if (elementName.equalsIgnoreCase(TAG_SYMBOL)) {
+        } else if (elementName.equalsIgnoreCase(Tei.TAG_SYMBOL)) {
             if (currentFeatureName.equals("ctag")) {
-                tmpCtag =  attributes.getValue("value");
-            }
-            else if (currentFeatureName.equals("msd")) {
-                String ctag = tmpCtag+":"+attributes.getValue("value");
-                currentTokenTags.put(attributes.getValue(TAG_ID), new Tag(tmpBase, ctag, false));
+                tmpCtag = attributes.getValue("value");
+            } else if (currentFeatureName.equals("msd")) {
+                String ctag = tmpCtag + ":" + attributes.getValue("value");
+                currentTokenTags.put(attributes.getValue(Tei.TAG_ID), new Tag(tmpBase, ctag, false));
             }
         }
     }
 
     @Override
     public void endElement(String s, String s1, String element) throws SAXException {
-        if (element.equalsIgnoreCase(TAG_PARAGRAPH)) {
+        if (element.equalsIgnoreCase(Tei.TAG_PARAGRAPH)) {
             paragraphs.add(currentParagraph);
-        }
-        else if (element.equalsIgnoreCase(TAG_SENTENCE)) {
-            if(!currentSentence.hasId()){
+        } else if (element.equalsIgnoreCase(Tei.TAG_SENTENCE)) {
+            if (!currentSentence.hasId()) {
                 currentSentence.setId("sent" + currentParagraph.numSentences() + 1);
-                if(foundSentenceId){
-                    System.out.println("Warning: missing sentence id in " + docName + ":" + currentParagraph.getId() + ":" + currentSentence.getId());
+                if (foundSentenceId) {
+                    logger.warn("Warning: missing sentence id in " + docName + ":" + currentParagraph.getId() + ":" + currentSentence.getId());
                 }
             }
             currentParagraph.addSentence(currentSentence);
-        }
-        else if (element.equals(TAG_SEGMENT)) {
+        } else if (element.equals(Tei.TAG_SEGMENT)) {
             Tag disambTag = currentTokenTags.get(disambTagId);
             disambTag.setDisamb(true);
-            currentToken.addTag(disambTag);
-            for(Tag tag: currentTokenTags.values()){
-                currentToken.addTag(tag);
-            }
+            currentTokenTags.values().stream().forEach(currentToken::addTag);
             currentSentence.addToken(currentToken);
-        }
-        else if (element.equalsIgnoreCase(TAG_FEATURE)) {
+        } else if (element.equalsIgnoreCase(Tei.TAG_FEATURE)) {
             currentFeatureName = "";
-        }
-        else if (element.equalsIgnoreCase(TAG_STRING)) {
-            if(currentFeatureName.equals("orth")){
+        } else if (element.equalsIgnoreCase(Tei.TAG_STRING)) {
+            if (currentFeatureName.equals("orth")) {
                 currentToken.setAttributeValue(attributeIndex.getIndex("orth"), tmpValue);
-            }
-            else if (currentFeatureName.equals("base")) {
+            } else if (currentFeatureName.equals("base")) {
                 tmpBase = tmpValue;
             }
         }
@@ -172,15 +134,16 @@ public class AnnMorphosyntaxSAXParser extends DefaultHandler{
 
     @Override
     public void characters(char[] ac, int start, int length) throws SAXException {
-        for(int i=start;i<start+length;i++)
+        for (int i = start; i < start + length; i++) {
             tmpValue += ac[i];
+        }
     }
 
-    public ArrayList<Paragraph> getParagraphs(){
+    public List<Paragraph> getParagraphs() {
         return paragraphs;
     }
 
-    public HashMap<String,Integer> getTokenIdsMap(){
+    public Map<String, Integer> getTokenIdsMap() {
         return tokenIdsMap;
     }
 

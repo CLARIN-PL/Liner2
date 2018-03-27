@@ -24,8 +24,8 @@ public class RelationFilterLandmarkTrajectorException implements IRelationFilter
 		
 	@Override
 	public boolean pass(SpatialExpression relation) {
-		return !this.exceptions.contains(relation.getTrajector().getHeadToken().getDisambTag().getBase())
-				&& !this.exceptions.contains(relation.getLandmark().getHeadToken().getDisambTag().getBase());
+		return !this.exceptions.contains(relation.getTrajector().getSpatialObject().getHeadToken().getDisambTag().getBase())
+				&& !this.exceptions.contains(relation.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase());
 	}
 	
 }

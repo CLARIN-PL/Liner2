@@ -11,23 +11,7 @@ import java.util.HashMap;
  * @author czuk
  *
  */
-public class Token {
-
-    public Token(TokenAttributeIndex attrIdx){
-        this.attrIdx = attrIdx;
-        packAtributes(attrIdx.getLength());
-    }
-
-    public Token(String orth, Tag firstTag, TokenAttributeIndex attrIdx){
-        this.attrIdx = attrIdx;
-        packAtributes(attrIdx.getLength());
-        int index = attrIdx.getIndex("orth");
-        if ( index == -1 ){
-        	throw new Error("TokenAttribute Index does not contain the 'orth' attribute");
-        }
-        this.setAttributeValue(index, orth);
-        this.addTag(firstTag);
-    }
+public class Token extends IdentifiableElement{
 
     /* Indeks atrybutów */
     public TokenAttributeIndex attrIdx;
@@ -42,10 +26,24 @@ public class Token {
 	Map<String, String> props = new HashMap<String, String>();
 	
 	/* Oznaczenie, czy między bieżącym a następnym tokenem był biały znak. */
-	boolean noSpaceAfter = false; 
+	boolean noSpaceAfter = false;
 
-	private String id = null;
-	
+	public Token(TokenAttributeIndex attrIdx){
+		this.attrIdx = attrIdx;
+		packAtributes(attrIdx.getLength());
+	}
+
+	public Token(String orth, Tag firstTag, TokenAttributeIndex attrIdx){
+		this.attrIdx = attrIdx;
+		packAtributes(attrIdx.getLength());
+		int index = attrIdx.getIndex("orth");
+		if ( index == -1 ){
+			throw new Error("TokenAttribute Index does not contain the 'orth' attribute");
+		}
+		this.setAttributeValue(index, orth);
+		this.addTag(firstTag);
+	}
+
 	public void clearAttributes() {
 		this.attributes = new ArrayList<String>();
 	}
@@ -73,10 +71,6 @@ public class Token {
 		return attributes.size();
 	}
 
-	public String getId(){
-		return this.id;
-	}
-	
 	public Map<String, String> getProps(){
 		return this.props;
 	}
@@ -176,10 +170,6 @@ public class Token {
 		this.noSpaceAfter = noSpaceAfter;
 	}
 	
-	public void setId(String id){
-		this.id = id;
-	}
-    
     public String getAttributesAsString(){
     	StringBuilder sb = new StringBuilder();
     	for ( String attr : this.attributes )

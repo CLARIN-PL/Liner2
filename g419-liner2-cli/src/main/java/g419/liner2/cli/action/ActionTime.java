@@ -17,9 +17,7 @@ import g419.liner2.core.tools.ProcessingTimer;
 public class ActionTime extends ActionPipe{
 
 	public ActionTime(){
-
-		super();
-        name = "time";
+		super("time");
         this.setDescription("eval mode with processing time logs");
 	}
 	

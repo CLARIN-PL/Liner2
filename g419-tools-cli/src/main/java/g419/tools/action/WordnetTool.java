@@ -41,9 +41,7 @@ public class WordnetTool extends Action {
     }
 
     @Override
-    public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);
+    public void parseOptions(final CommandLine line) throws Exception {
         this.output_file = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
         System.out.println(line.getOptionValue(OPTION_WORDNET));
         this.wordnet_loader = new Wordnet2(line.getOptionValue(OPTION_WORDNET));

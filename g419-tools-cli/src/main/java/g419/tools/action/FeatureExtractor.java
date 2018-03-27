@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
@@ -72,9 +73,7 @@ public class FeatureExtractor extends Action{
     }
 
     @Override
-    public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);
+    public void parseOptions(final CommandLine line) throws Exception {
         this.inputFile = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
         this.modelPath = line.getOptionValue(OPTION_MALT);
@@ -112,7 +111,7 @@ public class FeatureExtractor extends Action{
     	int i = 1;    	
         while ( (ps = reader.nextDocument()) != null ){
         	for ( Sentence sentence : ps.getSentences() ){
-        		MaltSentence maltSent = new MaltSentence(sentence, sentence.getChunks());
+        		MaltSentence maltSent = new MaltSentence(sentence, MappingNkjpToConllPos.get());
         		malt.parse(maltSent);
         		
                 for ( Annotation ann : sentence.getChunks() ) {

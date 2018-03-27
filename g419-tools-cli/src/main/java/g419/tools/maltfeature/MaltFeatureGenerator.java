@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.zip.DataFormatException;
 
+import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import org.maltparser.core.exception.MaltChainedException;
 
 import g419.corpus.structure.Annotation;
@@ -56,10 +57,9 @@ public class MaltFeatureGenerator {
 	
 	public void process(Document document) throws MaltChainedException{
         for(Sentence sent: document.getSentences()){
-            MaltSentence maltSent = new MaltSentence(sent, sent.getChunks());
+            MaltSentence maltSent = new MaltSentence(sent, MappingNkjpToConllPos.get());
             this.malt.parse(maltSent);
-            //maltSent.wrapConjunctions();
-            
+
             if ( maltSent.getAnnotations().size() > 0 && verbose ){
                 for (String str : maltSent.getMaltData()){
                 	System.out.println(str);

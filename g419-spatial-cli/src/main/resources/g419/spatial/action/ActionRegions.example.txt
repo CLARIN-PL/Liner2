@@ -1,0 +1,19 @@
+BASE: przez teren Niemiec
+ORTH: przez teren Niemiec
+SUMO:
+  * przez teren Human
+
+BASE: od krawędź wieża
+ORTH: od krawędzi wieży
+SUMO:
+  * od krawędź Building
+  * od krawędź PhysicalSystem
+  * od krawędź GamePiece
+  * od krawędź Artifact
+
+BASE: od krawędź wieża
+ORTH: od krawędzi wieży
+  * od krawędź Building
+  * od krawędź PhysicalSystem
+  * od krawędź GamePiece
+  * od krawędź Artifact

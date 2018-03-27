@@ -1,6 +1,9 @@
 package g419.liner2.cli;
 
 import g419.lib.cli.ActionSelector;
+import org.apache.log4j.PropertyConfigurator;
+
+import java.io.File;
 
 
 /**
@@ -13,7 +16,16 @@ public class Main {
     /**
      * Here the story begins.
      */
-    public static void main(String[] args) throws Exception {    			
+    public static void main(String[] args) throws Exception {
+
+        File log4jFile = new File("log4j.properties");
+        if ( log4jFile.exists() ){
+            PropertyConfigurator.configure(log4jFile.getAbsolutePath());
+        } else {
+            System.err.println("log4j.properties not found in the current location");
+            System.err.println("Expected location: " + log4jFile.getAbsoluteFile());
+        }
+
         StringBuilder info = new StringBuilder();                
         info.append("*-----------------------------------------------------------------------------------------------*\n");
         info.append("* A framework for multitask sequence labeling, including: named entities, temporal expressions. *\n");

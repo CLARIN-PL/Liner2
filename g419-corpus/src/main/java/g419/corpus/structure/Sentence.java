@@ -18,7 +18,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author czuk
  *
  */
-public class Sentence {
+public class Sentence extends IdentifiableElement {
 	
 	/* Indeks nazw atrybutów */
 	TokenAttributeIndex attributeIndex = null;
@@ -28,10 +28,7 @@ public class Sentence {
 	
 	/* Zbiór anotacji */
 	LinkedHashSet<Annotation> chunks = new LinkedHashSet<Annotation>();
-	
-	/* Identyfikator zdania (unikalny w obrębie paragrafu) */
-	String id = null;
-	
+
 	/* Tymczasowe obejście braku odniesienia do dokumentu z poziomu klasy Annotation */
 	Document document;
 
@@ -48,9 +45,7 @@ public class Sentence {
         }
     };
 
-    public Sentence()	{
-    	
-    }
+    public Sentence() {}
 
     public Sentence(TokenAttributeIndex attrIndex)	{
     	this.attributeIndex = attrIndex;
@@ -70,10 +65,6 @@ public class Sentence {
 		tokens.add(token);
 	}
 	
-	public String getId(){
-		return this.id;
-	}
-
 	/**
 	 * Zwraca pozycję zdania w dokumencie.
 	 * @return
@@ -119,9 +110,9 @@ public class Sentence {
         while (i_chunk.hasNext()) {
             Annotation currentChunk = i_chunk.next();
             if (currentChunk.getTokens().contains(idx)) {
-                if(types != null && !types.isEmpty()) {
+                if(types != null) {
                     for (Pattern patt : types) {
-                        if (patt.matcher(currentChunk.getType()).find()) {
+                        if (patt.matcher(currentChunk.getType()).matches()) {
                             returning.add(currentChunk);
                             break;
                         }
@@ -299,10 +290,6 @@ public class Sentence {
 		this.chunks = chunking.chunkSet();
 	}
 	
-	public void setId(String id){
-		this.id = id;
-	}
-
     public String annotationsToString(){
         StringBuilder output = new StringBuilder();
         for(Annotation chunk: chunks)

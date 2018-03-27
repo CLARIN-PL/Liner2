@@ -47,7 +47,7 @@ public class SpatialRelationSchemaMatcher {
 	public static boolean matches(SpatialExpression relation, SpatialRelationSchema pattern, Sumo sumo){
 
 		String preposition = relation.getSpatialIndicator().getText().toLowerCase();
-		if ( relation.getRegion() != null && relation.getRegion().getHeadToken().getDisambTag().getBase().equals("teren") ){
+		if ( relation.getLandmark().getRegion() != null && relation.getLandmark().getRegion().getHeadToken().getDisambTag().getBase().equals("teren") ){
 			// Zamiana przyimka z "na" na "w" dla region=teren
 			preposition = "w";
 		}
@@ -58,7 +58,7 @@ public class SpatialRelationSchemaMatcher {
 
 		boolean trajector = false;
 		boolean landmark = false;
-		Token checkTokenPos = relation.getRegion() != null ? relation.getRegion().getHeadToken() : relation.getLandmark().getHeadToken(); 
+		Token checkTokenPos = relation.getLandmark().getRegion() != null ? relation.getLandmark().getRegion().getHeadToken() : relation.getLandmark().getSpatialObject().getHeadToken();
 		
 		String[] parts = checkTokenPos.getDisambTag().getCtag().split(":"); 
 		if ( parts.length > 2 && !parts[2].equals(pattern.getCase()) ){

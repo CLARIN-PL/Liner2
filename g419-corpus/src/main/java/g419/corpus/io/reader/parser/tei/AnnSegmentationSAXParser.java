@@ -1,6 +1,7 @@
 package g419.corpus.io.reader.parser.tei;
 
 import g419.corpus.io.DataFormatException;
+import g419.corpus.io.Tei;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -19,21 +21,10 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-/**
- * Created with IntelliJ IDEA.
- * User: michal
- * Date: 9/2/13
- * Time: 3:19 PM
- * To change this template use File | Settings | File Templates.
- */
 public class AnnSegmentationSAXParser extends DefaultHandler {
 
-    private final String TAG_PARAGRAPH		= "p";
-    private final String TAG_SENTENCE		= "s";
-    private final String TAG_SEGMENT        = "seg";
-
     InputStream is;
-    ArrayList<Paragraph> paragraphs;
+    List<Paragraph> paragraphs;
     Token currentToken;
     Sentence currentSentence;
     Paragraph currentParagraph;
@@ -41,7 +32,7 @@ public class AnnSegmentationSAXParser extends DefaultHandler {
     int currentParagraphIdx;
     int currentSentenceIdx;
 
-    public AnnSegmentationSAXParser(InputStream is, ArrayList<Paragraph> paragraphs) throws DataFormatException {
+    public AnnSegmentationSAXParser(InputStream is, List<Paragraph> paragraphs) throws DataFormatException {
         this.is = is;
         this.paragraphs = paragraphs;
         parseDocument();
@@ -70,15 +61,13 @@ public class AnnSegmentationSAXParser extends DefaultHandler {
 
     @Override
     public void startElement(String s, String s1, String elementName, Attributes attributes) throws SAXException {
-        if (elementName.equalsIgnoreCase(TAG_PARAGRAPH)) {
+        if (elementName.equalsIgnoreCase(Tei.TAG_PARAGRAPH)) {
             currentParagraph = paragraphs.get(currentParagraphIdx++);
             currentSentenceIdx = 0;
-        }
-        else if (elementName.equalsIgnoreCase(TAG_SENTENCE)) {
+        } else if (elementName.equalsIgnoreCase(Tei.TAG_SENTENCE)) {
             currentSentence = currentParagraph.getSentences().get(currentSentenceIdx++);
             currentTokenIdx = 0;
-        }
-        else if (elementName.equalsIgnoreCase(TAG_SEGMENT)) {
+        } else if (elementName.equalsIgnoreCase(Tei.TAG_SEGMENT)) {
             if (attributes.getValue("nkjp:nps") != null) {
                 currentToken.setNoSpaceAfter(true);
             }
@@ -91,7 +80,7 @@ public class AnnSegmentationSAXParser extends DefaultHandler {
     public void endElement(String s, String s1, String element) throws SAXException {
     }
 
-    public ArrayList<Paragraph> getParagraphs(){
+    public List<Paragraph> getParagraphs(){
         return paragraphs;
     }
 }

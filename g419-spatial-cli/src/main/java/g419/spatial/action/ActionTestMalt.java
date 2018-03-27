@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
@@ -53,9 +54,7 @@ public class ActionTestMalt extends Action {
 	 * @param arg0 The array with command line parameters
 	 */
 	@Override
-	public void parseOptions(String[] args) throws Exception {
-        CommandLine line = new DefaultParser().parse(this.options, args);
-        parseDefault(line);
+	public void parseOptions(final CommandLine line) throws Exception {
         this.filename = line.getOptionValue(ActionTestMalt.OPTION_FILENAME);
         this.inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
     }
@@ -72,7 +71,7 @@ public class ActionTestMalt extends Action {
 			
 			for (Paragraph paragraph : document.getParagraphs()){
 				for (Sentence sentence : paragraph.getSentences()){
-					MaltSentence maltSentence = new MaltSentence(sentence, new HashSet<Annotation>());
+					MaltSentence maltSentence = new MaltSentence(sentence, MappingNkjpToConllPos.get());
 					malt.parse(maltSentence);
 					
 					List<SpatialExpression> srs = this.findByMalt(sentence, maltSentence);

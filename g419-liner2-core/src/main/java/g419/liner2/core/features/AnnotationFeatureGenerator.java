@@ -1,5 +1,6 @@
 package g419.liner2.core.features;
 
+import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import g419.corpus.structure.*;
 import g419.liner2.core.features.annotations.*;
 import g419.liner2.core.tools.parser.MaltSentence;
@@ -147,7 +148,7 @@ public class AnnotationFeatureGenerator {
 
         MaltSentence maltSent;
         if(!this.maltFeatures.isEmpty()){
-            maltSent = new MaltSentence(sent, sentenceAnnotations);
+            maltSent = new MaltSentence(sent, MappingNkjpToConllPos.get());
             for (AnnotationFeatureMalt afg : this.maltFeatures)
             features.put(afg.name, afg.generate(maltSent.getMaltData(), sentenceAnnotations));
         }

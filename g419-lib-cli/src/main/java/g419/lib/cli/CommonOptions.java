@@ -42,6 +42,12 @@ public class CommonOptions {
 
     public static final String OPTION_MALT = "M";
     public static final String OPTION_MALT_LONG = "malt";
+    public static final String OPTION_MALT_DESC = "path to maltparser model";
+    public static final String OPTION_MALT_ARG = "path";
+
+    public static final String OPTION_ANNOTATION_PATTERN = "A";
+	public static final String OPTION_ANNOTATION_PATTERN_LONG = "annotation-type-pattern";
+	public static final String OPTION_ANNOTATION_PATTERN_DESC = "pattern of annotation type";
 
 	public static Option getOutputFileNameOption(){
 		return Option.builder(CommonOptions.OPTION_OUTPUT_FILE)
@@ -128,8 +134,12 @@ public class CommonOptions {
 	}
 
 	public static Option getMaltparserModelFileOption(){
-        return Option.builder(OPTION_MALT).longOpt(OPTION_MALT_LONG).hasArg().argName("filename")
-        		.desc("path to maltparser model").required().build();
+        return Option.builder(OPTION_MALT).longOpt(OPTION_MALT_LONG).hasArg().argName(OPTION_MALT_ARG)
+        		.desc(OPTION_MALT_DESC).required().build();
+	}
+
+	public static Option getAnnotationTypePatterns(){
+		return Option.builder(OPTION_ANNOTATION_PATTERN).longOpt(OPTION_ANNOTATION_PATTERN_LONG).desc(OPTION_ANNOTATION_PATTERN_DESC).hasArgs().build();
 	}
 
 }
