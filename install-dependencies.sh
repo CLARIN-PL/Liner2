@@ -7,6 +7,9 @@ sudo apt-get update
 sudo apt-get install gcc-5 g++-5
 sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 1
 
+gcc --version
+g++ --version
+
 mkdir install
 cd install
 
