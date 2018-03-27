@@ -17,6 +17,19 @@ sudo make install
 sudo ldconfig
 cd ..
 
+# Install wccl
+sudo apt-get install -y libantlr-dev
+git clone http://nlp.pwr.edu.pl/wccl.git
+cd wccl
+mkdir bin
+cd bin
+cmake ..
+make -j
+make -j
+sudo make install
+sudo ldconfig
+cd ..
+
 # Install Morfeusz2 form generator
 wget -O morfeusz2-2.0.0-Linux-amd64.deb https://nextcloud.clarin-pl.eu/index.php/s/VVIvx4w20azcWbp/download
 sudo dpkg -i morfeusz2-2.0.0-Linux-amd64.deb
