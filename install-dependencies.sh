@@ -2,6 +2,11 @@
 echo "Install dependencies"
 sudo apt-get install -y libboost-all-dev libicu-dev libxml++2.6-dev bison flex libloki-dev cmake g++ swig python-dev
 
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+sudo apt-get update
+sudo apt-get install gcc-5 g++-5
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 1
+
 mkdir install
 cd install
 
