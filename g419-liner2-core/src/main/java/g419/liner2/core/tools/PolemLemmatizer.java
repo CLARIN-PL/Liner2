@@ -17,7 +17,7 @@ public class PolemLemmatizer {
 
 
     public String lemmatize(final String orths, final String bases, final String ctags){
-        return lemmatize(orths, bases, ctags);
+        return lemmatize(orths, bases, ctags, false);
     }
 
     public String lemmatize(final String orths, final String bases, final String ctags, final boolean debug){

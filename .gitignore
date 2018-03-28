@@ -10,7 +10,6 @@ gradle-app.setting
 
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
-
 *.iml
 
 ## Directory-based project format:
@@ -120,3 +119,5 @@ g419-external-dependencies/CRF++-0.57
 
 .classpath
 .project
+
+install
