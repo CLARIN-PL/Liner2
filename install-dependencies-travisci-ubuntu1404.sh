@@ -66,16 +66,16 @@ cd ../..
 #==== END =======================================
 
 #################################################
+# Copy resources to Liner2 folder
+#################################################
+cp Polem/build/PolemJava.jar ../lib
+cp Polem/build/libPolemJava.so ../g419-liner2-core/src/main/resources/
+#==== END =======================================
+
+#################################################
 # Exit working folder
 #################################################
 cd ..
 #==== END =======================================
 
 polem -h
-
-#################################################
-# Copy resources to Liner2 folder
-#################################################
-cp Polem/build/PolemJava.jar ../lib
-cp Polem/build/libPolemJava.so ../g419-liner2-core/src/main/resources/
-#==== END =======================================
