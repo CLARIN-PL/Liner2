@@ -23,7 +23,8 @@ sudo apt-get install -y libboost-all-dev libicu-dev libxml++2.6-dev bison flex l
 mkdir install
 cd install
 
-# Install Morfeusz2 form generator
+#---- Install Morfeusz2 form generator ---------------------------------------------------------------------------------
+sudo apt-get install -y libcppunit-dev python-pyparsing
 wget http://sgjp.pl/morfeusz/download/20141120/morfeusz-src-20141120.tar.gz
 tar -xvf morfeusz-src-20141120.tar.gz
 wget http://sgjp.pl/morfeusz/download/20141120/sgjp-20141120.tab.gz
@@ -68,8 +69,6 @@ cd ../..
 # Install Morfeusz2 form generator
 # wget -O morfeusz2-2.0.0-Linux-amd64.deb https://nextcloud.clarin-pl.eu/index.php/s/VVIvx4w20azcWbp/download
 # sudo dpkg -i morfeusz2-2.0.0-Linux-amd64.deb
-
-sudo apt-get install -y libcppunit-dev python-pyparsing
 
 # Install Polem
 git clone https://github.com/CLARIN-PL/Polem.git
