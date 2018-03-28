@@ -41,8 +41,13 @@ cd ../..
 #################################################
 # Install Morfeusz2 form generator
 #################################################
-wget -O morfeusz2-2.0.0-Linux-amd64.deb https://nextcloud.clarin-pl.eu/index.php/s/VVIvx4w20azcWbp/download
-sudo dpkg -i morfeusz2-2.0.0-Linux-amd64.deb
+# wget -O morfeusz2-2.0.0-Linux-amd64.deb https://nextcloud.clarin-pl.eu/index.php/s/VVIvx4w20azcWbp/download
+# sudo dpkg -i morfeusz2-2.0.0-Linux-amd64.deb
+wget -O morfeusz2-unfolded-pack.7z https://nextcloud.clarin-pl.eu/index.php/s/AENL5gAYuuJTx4h/download
+7z x morfeusz2-unfolded-pack.7z
+cd morfeusz2-unfolded-pack
+bash install.sh
+cd ..
 #==== END =======================================
 
 #################################################
