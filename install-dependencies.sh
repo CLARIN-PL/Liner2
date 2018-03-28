@@ -24,7 +24,7 @@ mkdir install
 cd install
 
 #---- Install Morfeusz2 form generator ---------------------------------------------------------------------------------
-sudo apt-get install -y libcppunit-dev python-pyparsing
+sudo apt-get install -y libcppunit-dev python-pyparsing p7zip-full
 wget http://sgjp.pl/morfeusz/download/20141120/morfeusz-src-20141120.tar.gz
 tar -xvf morfeusz-src-20141120.tar.gz
 wget http://sgjp.pl/morfeusz/download/20141120/sgjp-20141120.tab.gz
