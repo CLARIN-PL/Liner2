@@ -111,10 +111,11 @@ public class TeiStreamReader extends AbstractDocumentReader {
         }
 
         Map<String, Annotation> idToAnnotation = Maps.newHashMap();
-        idToAnnotation.putAll(namedParser.getAnnotaitonMap());
-        idToAnnotation.putAll(mentionParser.getAnnotaitonMap());
-        idToAnnotation.putAll(annotationsParser.getAnnotaitonMap());
-        idToAnnotation.putAll(chunksParser.getAnnotaitonMap());
+        Optional.ofNullable(namedParser).ifPresent(p->idToAnnotation.putAll(p.getAnnotaitonMap()));
+        Optional.ofNullable(mentionParser).ifPresent(p->idToAnnotation.putAll(p.getAnnotaitonMap()));
+        Optional.ofNullable(annotationsParser).ifPresent(p->idToAnnotation.putAll(p.getAnnotaitonMap()));
+        Optional.ofNullable(chunksParser).ifPresent(p->idToAnnotation.putAll(p.getAnnotaitonMap()));
+
 
         if (annRelations != null) {
             AnnRelationsSAXParser relationParser = new AnnRelationsSAXParser(annRelations, idToAnnotation);

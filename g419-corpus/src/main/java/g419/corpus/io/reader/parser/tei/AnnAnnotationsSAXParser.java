@@ -8,6 +8,8 @@ import g419.corpus.io.Tei;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -36,6 +38,7 @@ public class AnnAnnotationsSAXParser extends DefaultHandler {
     String currentFeatureName;
     String tagId;
     final String annotationGroup;
+    final Logger logger = LoggerFactory.getLogger(getClass());
 
     public AnnAnnotationsSAXParser(final InputStream is, final List<Paragraph> paragraphs, final Map<String, Integer> tokenIdsMap,
                                    final String filename, final String annotationGroup) throws DataFormatException {
@@ -80,24 +83,28 @@ public class AnnAnnotationsSAXParser extends DefaultHandler {
             }
         } else if (elementName.equalsIgnoreCase(Tei.TAG_POINTER)) {
             String target = attributes.getValue("target");
-            Integer tokenIndex = tokenIdsMap.get(target.split("#")[1]);
-            if (tokenIndex == null) {
-                throw new SAXException("Token with id '" + target + "' not found");
+            String[] parts = target.split("#");
+            if ( parts.length != 2 ){
+                logger.warn("Invalid target value: {}", target);
+            } else {
+                Integer tokenIndex = tokenIdsMap.get(parts[1]);
+                if (tokenIndex == null) {
+                    throw new SAXException("Token with id '" + target + "' not found");
+                }
+                annotatedTokens.add(tokenIndex);
             }
-            annotatedTokens.add(tokenIndex);
         }
     }
 
     @Override
     public void endElement(String s, String s1, String element) throws SAXException {
 
-        if (element.equals(Tei.TAG_SEGMENT)) {
+        if (element.equals(Tei.TAG_SEGMENT) && annotatedTokens.size() > 0) {
             Annotation an = new Annotation(Sets.newTreeSet(annotatedTokens), annotationType, currentSentence);
             an.setGroup(annotationGroup);
             an.setId(tagId);
             currentSentence.addChunk(an);
             annotationsMap.put(String.format("%s#%s", filename, tagId), an);
-
         } else if (element.equalsIgnoreCase(Tei.TAG_FEATURE)) {
             currentFeatureName = null;
         }
