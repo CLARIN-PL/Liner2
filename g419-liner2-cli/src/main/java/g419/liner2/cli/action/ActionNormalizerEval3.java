@@ -24,9 +24,9 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.varia.NullAppender;
 
 /**
- * Chunking in pipe mode.
+ * Evaluation of the normalisation of temporal expressions.
  *
- * @author Maciej Janicki, Michał Marcińczuk
+ * @author Jan Kocoń
  */
 public class ActionNormalizerEval3 extends Action {
 
@@ -42,7 +42,7 @@ public class ActionNormalizerEval3 extends Action {
 
     public ActionNormalizerEval3() {
         super("normalizer-eval3");
-        this.setDescription("processes data with given model");
+        this.setDescription("evaluates normalisation of temporal expressions");
 
         this.options.addOption(CommonOptions.getInputFileFormatOption());
         this.options.addOption(CommonOptions.getInputFileNameOption());
