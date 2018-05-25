@@ -9,7 +9,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import g419.liner2.core.tools.CrfppLoader;
+import g419.liner2.core.lib.LibLoader;
+import g419.liner2.core.lib.LibLoaderCrfpp;
 import org.ini4j.Ini;
 
 /**
@@ -132,7 +133,7 @@ public class LinerOptions {
             if (main.containsKey(OPTION_CRFLIB)) {
                 try {
                     String crfppPath = main.get(OPTION_CRFLIB).replace("{INI_PATH}", iniPath);
-                    CrfppLoader.load(crfppPath);
+                    LibLoader.load(crfppPath);
                 } catch (UnsatisfiedLinkError e) {
                     System.err.println("Cannot load the libCRFPP.so native code.\n" + e);
                     System.exit(1);

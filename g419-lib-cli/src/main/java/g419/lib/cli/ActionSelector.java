@@ -119,8 +119,6 @@ public class ActionSelector {
 
         String lineFormat = " - %-" + maxLength + "s -- %s";
 
-        String newLine = String.format("   %"+maxLength+"s    ", " ");
-
         Set<String> actionNames = new TreeSet<String>();
         for (Action tool : this.actions.values()){
         	actionNames.add(tool.getName());

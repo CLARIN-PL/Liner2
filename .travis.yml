@@ -1,7 +1,10 @@
 language: java
+sudo: required
 
 jdk:
 - oraclejdk8
+
+install: ./install-dependencies-travisci-ubuntu1404.sh
 
 after_success:
 - ./gradlew jacocoRootReport coveralls

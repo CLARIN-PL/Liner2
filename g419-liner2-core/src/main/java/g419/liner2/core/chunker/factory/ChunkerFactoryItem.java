@@ -7,9 +7,9 @@ import org.ini4j.Ini;
 
 public abstract class ChunkerFactoryItem {
 
-	protected String type = null;
+	final protected String type;
 	
-	public ChunkerFactoryItem(String chunkerType){
+	public ChunkerFactoryItem(final String chunkerType){
 		type = chunkerType;
 	}
 	
@@ -17,6 +17,14 @@ public abstract class ChunkerFactoryItem {
 		return this.type;
 	}
 	
-	abstract public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception ;
+	abstract public Chunker getChunker(final Ini.Section description, final ChunkerManager cm) throws Exception ;
+
+	protected String getParameterString(final Ini.Section description, final String name) throws ChunkerFactoryItemParameterNotFoundException{
+		if (description.containsKey(name)){
+			return description.get(name);
+		} else {
+			throw new ChunkerFactoryItemParameterNotFoundException(description, name);
+		}
+	}
 
 }

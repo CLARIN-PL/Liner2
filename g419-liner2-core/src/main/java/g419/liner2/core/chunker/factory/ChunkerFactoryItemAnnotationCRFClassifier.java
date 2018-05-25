@@ -9,13 +9,12 @@ import g419.liner2.core.chunker.Chunker;
 import g419.liner2.core.chunker.CrfppChunker;
 import g419.liner2.core.features.TokenFeatureGenerator;
 import g419.corpus.ConsolePrinter;
-import g419.liner2.core.tools.CrfppLoader;
+import g419.liner2.core.lib.LibLoaderCrfpp;
 import g419.liner2.core.tools.TemplateFactory;
 import org.ini4j.Ini;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -30,7 +29,7 @@ public class ChunkerFactoryItemAnnotationCRFClassifier extends ChunkerFactoryIte
     @Override
     public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
         try {
-            CrfppLoader.load();
+            LibLoaderCrfpp.load();
         } catch (UnsatisfiedLinkError e) {
             System.exit(1);
         }
