@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 echo "Install dependencies"
+sudo apt-get update
 
 #################################################
 # Create working folder
