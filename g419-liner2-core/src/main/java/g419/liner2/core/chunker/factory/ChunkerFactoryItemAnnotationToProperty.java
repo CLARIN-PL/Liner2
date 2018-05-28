@@ -11,11 +11,13 @@ import org.ini4j.Ini;
 public class ChunkerFactoryItemAnnotationToProperty extends ChunkerFactoryItem {
 
 	public ChunkerFactoryItemAnnotationToProperty() {
-		super("annotation_to_property");
+		super("ann-to-prop");
 	}
 
     @Override
     public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
-        return new AnnotationToPropertyChunker();
+	    String propertyPattern = description.get("property_pattern");
+        String annotationPattern = description.get("annotation_pattern");
+        return new AnnotationToPropertyChunker(propertyPattern, annotationPattern);
     }
 }
