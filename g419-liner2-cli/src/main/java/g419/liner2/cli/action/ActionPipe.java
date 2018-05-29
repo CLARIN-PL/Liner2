@@ -5,6 +5,7 @@ import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.Document;
+import g419.corpus.structure.Relation;
 import g419.corpus.structure.RelationSet;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
@@ -76,6 +77,7 @@ public class ActionPipe extends Action{
         cm.loadChunkers();
 
         Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
+        chunker.setFeatureGenerator(gen);
 
 		Document ps = reader.nextDocument();
 		while ( ps != null ){
@@ -83,7 +85,10 @@ public class ActionPipe extends Action{
 			if ( gen != null )
 				gen.generateFeatures(ps);
 			chunker.chunkInPlace(ps);
-			ps.setRelations(relations);
+			// I think this is better
+			for (Relation r : relations.getRelations())
+			    ps.addRelation(r);
+			//ps.setRelations(relations);
 			writer.writeDocument(ps);
 			ps = reader.nextDocument();
 		}

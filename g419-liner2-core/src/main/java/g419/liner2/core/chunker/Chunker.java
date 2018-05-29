@@ -2,17 +2,16 @@ package g419.liner2.core.chunker;
 
 import java.util.Map;
 
+import g419.corpus.structure.*;
+import g419.liner2.core.features.TokenFeatureGenerator;
 import org.ini4j.Ini;
-
-import g419.corpus.structure.AnnotationSet;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
 
 
 public abstract class Chunker {
 
     Ini.Section description;
+
+    TokenFeatureGenerator generator = null;
     
     /**
      * Recognize annotations in the document. 
@@ -41,6 +40,14 @@ public abstract class Chunker {
     public org.ini4j.Profile.Section getDescription(){
         return description;
     }
+
+    public void setFeatureGenerator(TokenFeatureGenerator generator){
+		this.generator = generator;
+	}
+
+	public TokenFeatureGenerator getFeatureGenerator(){
+		return this.generator;
+	}
 
 	
 	/**

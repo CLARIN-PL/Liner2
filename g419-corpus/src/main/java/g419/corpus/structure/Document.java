@@ -23,7 +23,7 @@ public class Document{
 
 	/* Zbiór relacji */
 	RelationSet relations = new RelationSet();
-	
+
 	public Document(String name, TokenAttributeIndex attributeIndex){
 		this.name = name;
 		this.attributeIndex = attributeIndex;
@@ -340,4 +340,8 @@ public class Document{
 			return this.titleBases.get(base);
 		return 0;
 	}
+
+
+
+
 }

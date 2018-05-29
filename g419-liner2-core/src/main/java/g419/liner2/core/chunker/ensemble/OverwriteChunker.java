@@ -1,10 +1,8 @@
 package g419.liner2.core.chunker.ensemble;
 
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.AnnotationSet;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Sentence;
+import g419.corpus.structure.*;
 import g419.liner2.core.chunker.Chunker;
+import g419.liner2.core.features.TokenFeatureGenerator;
 import g419.liner2.core.normalizer.Normalizer;
 import g419.liner2.core.normalizer.NormalizingChunker;
 
@@ -65,13 +63,18 @@ public class OverwriteChunker extends Chunker implements Normalizer {
 
     public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
         HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
-
         Document document = ps.clone();
 
         for (Chunker chunker : this.chunkers) {
+            try {
+                this.getFeatureGenerator().generateFeatures(document);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             chunker.chunkInPlace(document);
-        }
 
+
+        }
         for (int i = 0; i < document.getSentences().size(); i++) {
             Sentence sentence = ps.getSentences().get(i);
             AnnotationSet set = new AnnotationSet(sentence);
@@ -80,12 +83,16 @@ public class OverwriteChunker extends Chunker implements Normalizer {
                     an.setSentence(sentence);
                     set.addChunk(an);
                 } else {
+                    //replace old annotations with new - may change in metadata
                     sentence.getChunks().remove(an);
                     an.setSentence(sentence);
                     set.addChunk(an);
                 }
             }
-            chunkings.put(sentence, set);
+            if (chunkings.containsKey(sentence))
+                chunkings.get(sentence).union(set);
+            else
+                chunkings.put(sentence, set);
         }
 
         // Dodaj relacje - dla np. ChunkRel'a
