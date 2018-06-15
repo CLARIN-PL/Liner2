@@ -3,11 +3,13 @@ package g419.corpus.io.reader.parser.tei;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import g419.corpus.HasLogger;
 import g419.corpus.io.DataFormatException;
 import g419.corpus.io.Tei;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
+import io.vavr.control.Option;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -21,12 +23,14 @@ import java.io.StringReader;
 import java.util.List;
 import java.util.Map;
 
-public class AnnAnnotationsSAXParser extends DefaultHandler {
+public class AnnAnnotationsSAXParser extends DefaultHandler implements HasLogger {
 
     final List<Paragraph> paragraphs;
     final Map<String, Integer> tokenIdsMap;
     final Map<String, Annotation> annotationsMap = Maps.newHashMap();
     final String filename;
+    final String annotationGroup;
+
     Paragraph currentParagraph;
     int currentParagraphIdx;
     Sentence currentSentence;
@@ -35,7 +39,6 @@ public class AnnAnnotationsSAXParser extends DefaultHandler {
     String annotationType;
     String currentFeatureName;
     String tagId;
-    final String annotationGroup;
 
     public AnnAnnotationsSAXParser(final InputStream is, final List<Paragraph> paragraphs, final Map<String, Integer> tokenIdsMap,
                                    final String filename, final String annotationGroup) throws DataFormatException {
@@ -79,29 +82,26 @@ public class AnnAnnotationsSAXParser extends DefaultHandler {
                 annotationType += "-" + attributes.getValue("value");
             }
         } else if (elementName.equalsIgnoreCase(Tei.TAG_POINTER)) {
-            String target = attributes.getValue("target");
-            Integer tokenIndex = tokenIdsMap.get(target.split("#")[1]);
-            if (tokenIndex == null) {
-                throw new SAXException("Token with id '" + target + "' not found");
-            }
-            annotatedTokens.add(tokenIndex);
+            final String target = attributes.getValue("target");
+            final Integer tokenIndex = tokenIdsMap.get(target.split("#")[1]);
+            Option.of(tokenIndex)
+                    .peek(annotatedTokens::add)
+                    .onEmpty(()->new SAXException("Token with id '" + target + "' not found"));
         }
     }
 
     @Override
     public void endElement(String s, String s1, String element) throws SAXException {
-
         if (element.equals(Tei.TAG_SEGMENT)) {
             Annotation an = new Annotation(Sets.newTreeSet(annotatedTokens), annotationType, currentSentence);
             an.setGroup(annotationGroup);
             an.setId(tagId);
             currentSentence.addChunk(an);
             annotationsMap.put(String.format("%s#%s", filename, tagId), an);
-
+            Option.of(annotationType).onEmpty(()->getLogger().warn("[{}] Missing annotation type for {}", filename, an.toString()));
         } else if (element.equalsIgnoreCase(Tei.TAG_FEATURE)) {
             currentFeatureName = null;
         }
-
     }
 
     public List<Paragraph> getParagraphs() {

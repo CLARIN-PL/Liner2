@@ -73,25 +73,25 @@ public class ActionEval2 extends Action {
 
     @Override
     public void run() throws Exception {
-        AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(filename, inputFormat);
-        Wordnet3 wordnet = new Wordnet3(wordnetPath);
-        MaltParser malt = new MaltParser(maltparserModel);
-        SpatialRelationRecognizer2 recognizer = new SpatialRelationRecognizer2(malt, wordnet);
+        final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(filename, inputFormat);
+        final Wordnet3 wordnet = new Wordnet3(wordnetPath);
+        final MaltParser malt = new MaltParser(maltparserModel);
+        final SpatialRelationRecognizer2 recognizer = new SpatialRelationRecognizer2(malt, wordnet);
 
-        Set<String> regions = SpatialResources.getRegions();
+        final Set<String> regions = SpatialResources.getRegions();
 
-        KeyGenerator<SpatialExpression> keyGenerator = new SpatialExpressionKeyGeneratorSimple();
-        DecisionCollector<SpatialExpression> evalTotal = new DecisionCollector<>(keyGenerator);
-        DecisionCollector<SpatialExpression> evalNoSeedTotal = new DecisionCollector<>(keyGenerator);
+        final KeyGenerator<SpatialExpression> keyGenerator = new SpatialExpressionKeyGeneratorSimple();
+        final DecisionCollector<SpatialExpression> evalTotal = new DecisionCollector<>(keyGenerator);
+        final DecisionCollector<SpatialExpression> evalNoSeedTotal = new DecisionCollector<>(keyGenerator);
 
-        Map<String, FscoreEvaluator> evalByTypeTotal = Maps.newHashMap();
-        Sumo sumo = recognizer.getSemanticFilter().getSumo();
-        DocumentToSpatialExpressionConverter converter = new DocumentToSpatialExpressionConverter();
+        final Map<String, FscoreEvaluator> evalByTypeTotal = Maps.newHashMap();
+        final Sumo sumo = recognizer.getSemanticFilter().getSumo();
+        final DocumentToSpatialExpressionConverter converter = new DocumentToSpatialExpressionConverter();
 
-        Document document = null;
-        while ((document = reader.nextDocument()) != null) {
+        while (reader.hasNext()) {
+            final Document document = reader.nextDocument();
             printHeader1("Document: " + document.getName());
-            List<SpatialExpression> gold = converter.convert(document);
+            final List<SpatialExpression> gold = converter.convert(document);
             evalTotal.addAllGold(gold);
             evalNoSeedTotal.addAllGold(gold);
             for (Sentence sentence : document.getSentences()) {

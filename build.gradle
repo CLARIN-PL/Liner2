@@ -99,14 +99,6 @@ allprojects {
     jacoco {
         toolVersion = '0.7.1.201405082137'
     }
-//    jacocoTestReport {
-//        reports {
-//            xml.enabled true
-//            html.enabled true
-//            //csv.enabled false
-//            //html.destination "${buildDir}/reports/coverage"
-//        }
-//    }
 }
 
 subprojects {
@@ -193,4 +185,8 @@ coveralls {
 tasks.coveralls {
     dependsOn jacocoRootReport
     onlyIf { System.env.'CI' }
+}
+
+tasks.test {
+    dependsOn jacocoRootReport
 }

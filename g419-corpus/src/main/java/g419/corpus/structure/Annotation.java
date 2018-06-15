@@ -169,16 +169,17 @@ public class Annotation extends IdentifiableElement {
 		
 		this.setHead(head);
 		
-		if(this.tokens.size() == 1){ 
-			return;
-		}
+//		if(this.tokens.size() == 1){
+//			return;
+//		}
 
-		for(Annotation ann: this.sentence.getChunks()){
-			if(ann.hasHead() && this.tokens.equals(ann.tokens) && !this.type.equalsIgnoreCase(ann.type)){
-				this.setHead(ann.getHead());
-				return;
-			}
-		}
+//		for(Annotation ann: this.sentence.getChunks()){
+//			if(ann.hasHead() && this.tokens.equals(ann.tokens) && !this.type.equalsIgnoreCase(ann.type)){
+//				this.setHead(ann.getHead());
+//				return;
+//			}
+//		}
+
 	}
 
 	public Integer getHead(){
@@ -211,25 +212,19 @@ public class Annotation extends IdentifiableElement {
 
 	@Override
 	public boolean equals(Object object) {
-		Annotation chunk = (Annotation) object;
-		if (chunk == null){
+		if (object == null){
 			return false;
 		}
-		if( this.getSentence().getId() != null
-				&& chunk.getSentence().getId() != null
-				&& !this.getSentence().getId().equals(chunk.getSentence().getId())){
-			return false;
-		} else if (!this.tokens.equals(chunk.getTokens())) {
-			return false;
-		} else if (!this.getText().equals(chunk.getText())) {
-			return false;
-		} else if (!this.type.equals(chunk.getType())) {
-			return false;
-		}
-		return true;
+		Annotation that = (Annotation) object;
+		return equalsWithTrueOnNull (getSentence().getId(), that.getSentence().getId())
+				&& equalsWithTrueOnNull(getId(), that.getId())
+				&& Objects.equals(getTokens(), that.getTokens())
+				&& Objects.equals(getType(), that.getType());
 	}
 
-
+	private static boolean equalsWithTrueOnNull(final Object o1, final Object o2){
+		return o1==null || o2==null || Objects.equals(o1, o2);
+	}
 
     @Override
     public int hashCode() {

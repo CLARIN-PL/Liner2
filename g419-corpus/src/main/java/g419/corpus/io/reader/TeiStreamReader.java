@@ -55,10 +55,7 @@ public class TeiStreamReader extends AbstractDocumentReader {
         streams.add(annGroups);
         streams.add(annRelations);
 
-        attributeIndex = new TokenAttributeIndex();
-        attributeIndex.addAttribute("orth");
-        attributeIndex.addAttribute("base");
-        attributeIndex.addAttribute("ctag");
+        attributeIndex = new TokenAttributeIndex().with("orth").with("base").with("ctag");
         // TODO dodanie tego atrybutu "psuje" kolejność atrybutów
         //this.attributeIndex.addAttribute("tagTool");
 
@@ -67,12 +64,8 @@ public class TeiStreamReader extends AbstractDocumentReader {
         // ToDo: Sprawdzenie, czy poszczególne inputstream nie są nullem
         final AnnMorphosyntaxSAXParser morphoParser = new AnnMorphosyntaxSAXParser(docName, annMorphosyntax, this.attributeIndex);
         final AnnSegmentationSAXParser segmentationParser = new AnnSegmentationSAXParser(annSegmentation, morphoParser.getParagraphs());
+        final Map<String, Annotation> idToAnnotation = Maps.newHashMap();
         AnnWordsSAXParser wordsParser = null;
-        AnnAnnotationsSAXParser namedParser = null;
-        AnnAnnotationsSAXParser mentionParser = null;
-        AnnAnnotationsSAXParser chunksParser = null;
-        AnnAnnotationsSAXParser annotationsParser = null;
-        AnnPropsSAXParser propsParser;
 
         /* Read words from the ann_words.xml file */
         if (annWords != null) {
@@ -81,8 +74,9 @@ public class TeiStreamReader extends AbstractDocumentReader {
 
         /* Read names from the ann_names.xml file */
         if (annNamed != null) {
-            namedParser = new AnnAnnotationsSAXParser(annNamed, segmentationParser.getParagraphs(),
+            final AnnAnnotationsSAXParser namedParser = new AnnAnnotationsSAXParser(annNamed, segmentationParser.getParagraphs(),
                     morphoParser.getTokenIdsMap(), "ann_named.xml", "named");
+            idToAnnotation.putAll(namedParser.getAnnotaitonMap());
         }
 
         /* Read groups from the ann_groups.xml file */
@@ -92,32 +86,29 @@ public class TeiStreamReader extends AbstractDocumentReader {
         }
 
         if (annMentions != null) {
-            mentionParser = new AnnAnnotationsSAXParser(annMentions, segmentationParser.getParagraphs(),
+            final AnnAnnotationsSAXParser mentionParser = new AnnAnnotationsSAXParser(annMentions, segmentationParser.getParagraphs(),
                     morphoParser.getTokenIdsMap(), "ann_mentions.xml", "mentions");
+            idToAnnotation.putAll(mentionParser.getAnnotaitonMap());
         }
 
         if (annChunks != null) {
-            chunksParser = new AnnAnnotationsSAXParser(annChunks, segmentationParser.getParagraphs(),
+            final AnnAnnotationsSAXParser chunksParser = new AnnAnnotationsSAXParser(annChunks, segmentationParser.getParagraphs(),
                     morphoParser.getTokenIdsMap(),"ann_chunks.xml", "chunks");
+            idToAnnotation.putAll(chunksParser.getAnnotaitonMap());
         }
 
-        if (annChunks != null) {
-            annotationsParser = new AnnAnnotationsSAXParser(annAnnotations, segmentationParser.getParagraphs(),
+        if (annAnnotations != null) {
+            final AnnAnnotationsSAXParser annotationsParser = new AnnAnnotationsSAXParser(annAnnotations, segmentationParser.getParagraphs(),
                     morphoParser.getTokenIdsMap(), "ann_annotations.xml", "other");
+            idToAnnotation.putAll(annotationsParser.getAnnotaitonMap());
         }
 
         if (annCoreference != null) {
             //AnnCoreferenceSAXParser coreferenceParser = new AnnCoreferenceSAXParser(annCoreference, mentionsParser.getParagraphs(), mentionsParser.getAnnotaitonMap());
         }
 
-        Map<String, Annotation> idToAnnotation = Maps.newHashMap();
-        idToAnnotation.putAll(namedParser.getAnnotaitonMap());
-        idToAnnotation.putAll(mentionParser.getAnnotaitonMap());
-        idToAnnotation.putAll(annotationsParser.getAnnotaitonMap());
-        idToAnnotation.putAll(chunksParser.getAnnotaitonMap());
-
         if (annRelations != null) {
-            AnnRelationsSAXParser relationParser = new AnnRelationsSAXParser(annRelations, idToAnnotation);
+            final AnnRelationsSAXParser relationParser = new AnnRelationsSAXParser(annRelations, idToAnnotation);
             relationSet.getRelations().addAll(relationParser.getRelations());
         }
 
@@ -127,7 +118,7 @@ public class TeiStreamReader extends AbstractDocumentReader {
 
         if (annProps != null) {
             try {
-                propsParser = new AnnPropsSAXParser(annProps);
+                AnnPropsSAXParser propsParser = new AnnPropsSAXParser(annProps);
                 final Map<String, Map<String, String>> props = propsParser.getProps();
                 for (Paragraph p : document.getParagraphs()) {
                     for (Sentence s : p.getSentences()) {
