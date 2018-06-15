@@ -1,23 +1,28 @@
-package g419.liner2.core.chunker.factory;
+package g419.liner2.core.lib;
 
+import com.google.common.collect.Sets;
 import g419.liner2.core.Liner2;
 
 import java.io.*;
+import java.util.Set;
 
-public class SharedLibUtils {
-    static private String crfppPath = null;
+public abstract class LibLoader {
 
-    public static String getCrfppLibPath(){
-        if (crfppPath == null)
-            crfppPath = explodeCrfpp();
-        return crfppPath;
+    private static Set<String> loadedLibraries = Sets.newHashSet();
+
+    public static void load(String libName){
+        if (!LibLoader.loadedLibraries.contains(libName)){
+            String libPath = explodeLib(libName);
+            System.load(libPath);
+            LibLoader.loadedLibraries.add(libName);
+        }
     }
 
-    private static String explodeCrfpp(){
-        InputStream src = Liner2.class.getClassLoader().getResourceAsStream("libCRFPP.so");
+    private static String explodeLib(String libName){
+        InputStream src = Liner2.class.getClassLoader().getResourceAsStream(libName);
         OutputStream out = null;
         try {
-            File target = File.createTempFile("libCRFPP", ".so");
+            File target = File.createTempFile("lib", ".so");
             target.deleteOnExit();
             out = new FileOutputStream(target);
 
@@ -32,14 +37,15 @@ public class SharedLibUtils {
         } catch (IOException e) {
             throw new UnsatisfiedLinkError("IOException occured while exploding shared library: "+e.getMessage());
         } finally {
-            //todo: exception handling should be safer! ~Filip
             try {
                 src.close();
-                if (out!=null)
+                if (out!=null) {
                     out.close();
+                }
             } catch (IOException e) {
                 throw new UnsatisfiedLinkError("IOException occured while exploding shared library: "+e.getMessage());
             }
         }
     }
+
 }

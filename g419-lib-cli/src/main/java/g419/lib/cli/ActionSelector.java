@@ -119,8 +119,6 @@ public class ActionSelector {
 
         String lineFormat = " - %-" + maxLength + "s -- %s";
 
-        String newLine = String.format("   %"+maxLength+"s    ", " ");
-
         Set<String> actionNames = new TreeSet<String>();
         for (Action tool : this.actions.values()){
         	actionNames.add(tool.getName());
@@ -129,7 +127,7 @@ public class ActionSelector {
         for (String name : actionNames){
         	Action tool = this.actions.get(name);
         	List<String> lines = this.splitIntoLines(tool.getDescription(), 90 - maxLength);
-            System.out.println(String.format(lineFormat, tool.getName(), lines.get(0)) );
+            System.out.println(String.format(lineFormat, tool.getName(), lines.size() == 0 ? "" : lines.get(0)) );
             for ( int i=1; i<lines.size(); i++){
             	System.out.println(StringUtils.repeat(" ", maxLength+7) + lines.get(i));
             }

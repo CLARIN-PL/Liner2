@@ -1,11 +1,9 @@
 package g419.liner2.core.tools.parser;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
+import com.google.common.collect.Maps;
 import org.apache.log4j.Logger;
 
 import g419.corpus.structure.Annotation;
@@ -15,9 +13,6 @@ import g419.corpus.structure.TokenAttributeIndex;
 import g419.corpus.structure.WrappedToken;
 import g419.liner2.core.features.tokens.ClassFeature;
 
-/**
- * Created by michal on 1/9/15.
- */
 public class TokenWrapper {
 
     private static ClassFeature classFeature = new ClassFeature("class");
@@ -49,13 +44,11 @@ public class TokenWrapper {
                 }
                 if ( tokensToWrap.size() == 0 ){
                    System.out.println("no tokens");
-                }
-                else{
+                }else{
 	                Token head = getAnnotationHead(tokensToWrap, sentence);
 	                WrappedToken newToken = new WrappedToken(head.getOrth(), head.getTags().get(0), attrIdx, tokensToWrap, sentence);
 	                wrappedSent.addToken(newToken);
-	                //Logger.getLogger(TokenWrapper.class).info("Wrapped: " + newToken.getFullOrth());
-                }             
+                }
                 // ToDo: dodać pozostałe anotacje
                 for(Annotation an2: tokenAnnsToWrap){
                     wrappedSent.addChunk(new Annotation(wrappedSent.getTokenNumber()-1, an2.getType(), wrappedSent));
@@ -73,7 +66,6 @@ public class TokenWrapper {
                         newAnn.addToken(newIdx);
                     }
                 }
-                //System.out.println(newAnn);
                 if ( newAnn.getEnd() >= wrappedSent.getTokenNumber() ){
                 	Logger.getLogger(TokenWrapper.class).error("Annotation boundary exceeds sentence boundary");
                 } else {
@@ -92,8 +84,7 @@ public class TokenWrapper {
             if(tokClass != null){
                 if(tokClass.equals("subst")){
                     return tok;
-                }
-                else if(tokClass.equals("ign") && ign != null){
+                } else if(tokClass.equals("ign") && ign != null){
                     ign = tok;
                 }
             }
@@ -102,7 +93,7 @@ public class TokenWrapper {
     }
 
     private static List<Annotation> getLongestAnns(List<Annotation> annotations){
-        HashMap<Annotation, Integer> annsLen = new HashMap<Annotation, Integer>();
+        Map<Annotation, Integer> annsLen = Maps.newHashMap();
         int maxLen = 0;
         for(Annotation ann: annotations){
             int annLen = ann.getTokens().size();

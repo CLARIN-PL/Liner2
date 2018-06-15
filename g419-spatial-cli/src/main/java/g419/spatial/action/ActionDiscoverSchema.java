@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
@@ -135,7 +136,7 @@ public class ActionDiscoverSchema extends Action {
 					
 					this.splitPrepNg(sentence);
 					
-					MaltSentence maltSentence = new MaltSentence(sentence);
+					MaltSentence maltSentence = new MaltSentence(sentence, MappingNkjpToConllPos.get());
 					malt.parse(maltSentence);
 
 					/* Zaindeksuj frazy np */

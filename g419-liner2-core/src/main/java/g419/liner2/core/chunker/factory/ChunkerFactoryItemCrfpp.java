@@ -11,7 +11,7 @@ import g419.liner2.core.chunker.CrfppChunker;
 import g419.liner2.core.converter.Converter;
 import g419.liner2.core.converter.factory.ConverterFactory;
 import g419.liner2.core.features.TokenFeatureGenerator;
-import g419.liner2.core.tools.CrfppLoader;
+import g419.liner2.core.lib.LibLoaderCrfpp;
 import g419.liner2.core.tools.TemplateFactory;
 import org.ini4j.Ini;
 import org.ini4j.Profile;
@@ -35,7 +35,7 @@ public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
 	@Override
 	public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
         try {
-            CrfppLoader.load();
+            LibLoaderCrfpp.load();
         } catch (UnsatisfiedLinkError e) {
             System.exit(1);
         }

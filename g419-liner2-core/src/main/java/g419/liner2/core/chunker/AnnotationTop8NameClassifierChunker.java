@@ -20,6 +20,8 @@ import g419.liner2.core.features.annotations.AnnotationFeatureSubstModifierAfter
 import g419.liner2.core.features.annotations.AnnotationFeatureSubstModifierBefore;
 import g419.liner2.core.tools.FrequencyCounter;
 import g419.liner2.core.tools.TypedDictionary;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Combines two models (name and top8) into a single unified model top8. 
@@ -34,6 +36,7 @@ public class AnnotationTop8NameClassifierChunker extends Chunker {
 	private Chunker inputChunker = null;
 	private List<AnnotationAtomicFeature> substFeatures = new ArrayList<AnnotationAtomicFeature>();  
 	private TypedDictionary categoryIndicators = null;
+	final private Logger logger = LoggerFactory.getLogger(getClass());
 	
 	/**
 	 * 
@@ -146,13 +149,11 @@ public class AnnotationTop8NameClassifierChunker extends Chunker {
 				}					
 			}
 
-			System.out.println(String.format("MIXED TYPES: # %s [%3d]", groupText , groupedAnnotations.get(groupText).size()));
-			for ( Annotation an : anns ){
-				System.out.println(String.format("MIXED TYPES:    %s:%s (confidence=%4.2f)", an.getType(), an.getText(), an.getConfidence()));
-			}
-			System.out.println(String.format("MIXED TYPES: %s", String.join(", ", indicators)));
+			logger.debug(String.format("MIXED TYPES: # %s [%3d]", groupText , groupedAnnotations.get(groupText).size()));
+			anns.stream().map(an->String.format("MIXED TYPES:    %s:%s (confidence=%4.2f)", an.getType(), an.getText(), an.getConfidence())).forEach(logger::debug);
+			logger.debug(String.format("MIXED TYPES: %s", String.join(", ", indicators)));
 			if ( types.size()>1 ){
-				System.out.println(String.format("MIXED TYPES: MULTITYPE"));
+				logger.debug(String.format("MIXED TYPES: MULTITYPE"));
 			}
 
 			/* Ustaw najliczniejszą kategorię */
@@ -173,7 +174,7 @@ public class AnnotationTop8NameClassifierChunker extends Chunker {
 				if ( topIndicatorTypes.size() == 1 ){
 					this.setCategory(anns, topIndicatorTypes.iterator().next());
 				} else if ( topIndicatorTypes.size() == 0 && indicators.size() > 0) {
-					System.out.println("MIXED TYPES INDICATOR: " + String.join(", ", indicatorTypeFreq.getMostFrequent()));
+					logger.debug("MIXED TYPES INDICATOR: " + String.join(", ", indicatorTypeFreq.getMostFrequent()));
 				}
 			}
 		}
