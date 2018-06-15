@@ -2,20 +2,11 @@ package g419.liner2.core.tools.parser;
 
 public class MaltSentenceLink{
 	
-	int sourceIndex = 0;
-	int targetIndex = 0;
-	String relationType = null;
+	int sourceIndex;
+	int targetIndex;
+	String relationType;
 	
-	/**
-	 * Reprezentuje relację
-	 * <code>
-	 * sourceIndex --(relationType)--&gt; targetIndex
-	 * </code> 
-	 * @param sourceIndex
-	 * @param targetIndex
-	 * @param relationType
-	 */
-	public MaltSentenceLink(int sourceIndex, int targetIndex, String relationType){
+	public MaltSentenceLink(final int sourceIndex, final int targetIndex, final String relationType){
 		this.sourceIndex = sourceIndex;
 		this.targetIndex = targetIndex;
 		this.relationType = relationType;
@@ -25,7 +16,7 @@ public class MaltSentenceLink{
 		return this.sourceIndex;
 	}
 
-	public void setSourceIndex(int tokenIndex) {
+	public void setSourceIndex(final int tokenIndex) {
 		this.sourceIndex = tokenIndex;
 	}
 
@@ -33,7 +24,7 @@ public class MaltSentenceLink{
 		return targetIndex;
 	}
 
-	public void setTargetIndex(int targetIndex) {
+	public void setTargetIndex(final int targetIndex) {
 		this.targetIndex = targetIndex;
 	}
 
@@ -41,7 +32,7 @@ public class MaltSentenceLink{
 		return relationType;
 	}
 
-	public void setRelationType(String relationType) {
+	public void setRelationType(final String relationType) {
 		this.relationType = relationType;
 	}    	
 	

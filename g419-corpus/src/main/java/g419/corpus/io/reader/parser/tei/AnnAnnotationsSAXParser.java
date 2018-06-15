@@ -83,16 +83,22 @@ public class AnnAnnotationsSAXParser extends DefaultHandler implements HasLogger
             }
         } else if (elementName.equalsIgnoreCase(Tei.TAG_POINTER)) {
             final String target = attributes.getValue("target");
-            final Integer tokenIndex = tokenIdsMap.get(target.split("#")[1]);
-            Option.of(tokenIndex)
+            final String[] parts = target.split("#");
+            if ( parts.length != 2 ){
+                getLogger().warn("Invalid target value: {}", target);
+            } else {
+                final Integer tokenIndex = tokenIdsMap.get(parts[1]);
+            	Option.of(tokenIndex)
                     .peek(annotatedTokens::add)
                     .onEmpty(()->new SAXException("Token with id '" + target + "' not found"));
+            }
         }
     }
 
     @Override
     public void endElement(String s, String s1, String element) throws SAXException {
-        if (element.equals(Tei.TAG_SEGMENT)) {
+
+        if (element.equals(Tei.TAG_SEGMENT) && annotatedTokens.size() > 0) {
             Annotation an = new Annotation(Sets.newTreeSet(annotatedTokens), annotationType, currentSentence);
             an.setGroup(annotationGroup);
             an.setId(tagId);

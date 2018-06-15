@@ -93,7 +93,7 @@ public class WriterFactory {
 			case "token-lemma":
 				return new TokenLemmaWriter(outWrapped);
 			case "tuples":
-				return new TuplesStreamWriter(outWrapped);
+				return new AnnotationTupleStreamWriter(outWrapped);
 			case "json":
 				return new JsonStreamWriter(outWrapped);
 			case "json-annotations":

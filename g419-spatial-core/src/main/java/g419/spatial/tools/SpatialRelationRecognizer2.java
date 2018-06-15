@@ -3,6 +3,7 @@ package g419.spatial.tools;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import g419.corpus.schema.kpwr.KpwrSpatial;
+import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import g419.corpus.structure.*;
 import g419.liner2.core.features.tokens.ClassFeature;
 import g419.liner2.core.tools.parser.MaltParser;
@@ -123,7 +124,7 @@ public class SpatialRelationRecognizer2 {
 
 		SentenceAnnotationIndexTypePos anIndex = new SentenceAnnotationIndexTypePos(sentence);
 
-		MaltSentence maltSentence = new MaltSentence(sentence);
+		MaltSentence maltSentence = new MaltSentence(sentence, MappingNkjpToConllPos.get());
 		this.malt.parse(maltSentence);
 
 		/* Zaindeksuj różne typy fraz */
