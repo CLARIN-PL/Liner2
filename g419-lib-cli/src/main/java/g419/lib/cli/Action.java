@@ -3,11 +3,12 @@ package g419.lib.cli;
 import com.google.common.collect.Sets;
 import g419.corpus.ConsolePrinter;
 
+import g419.corpus.HasLogger;
 import org.apache.commons.cli.*;
 
 import java.util.HashSet;
 
-public abstract class Action {
+public abstract class Action implements HasLogger {
 
 	final protected String name;
 	protected String description = "";

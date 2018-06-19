@@ -73,7 +73,7 @@ public class SpatialRelationRecognizer2 {
 		return this.semanticFilter;
 	}
 
-	public List<SpatialExpression> recognize(Document document) throws MaltChainedException {
+	public List<SpatialExpression> recognize(Document document) {
 		List<SpatialExpression> expressions = Lists.newArrayList();
 		document.getSentences().stream().forEach((Sentence s) -> expressions.addAll(this.recognize(s)));
 		return expressions;

@@ -102,15 +102,19 @@ public class SpatialRelationRecognizer {
 	 * @param document
 	 * @throws MaltChainedException 
 	 */
-	public void recognizeInPlace(Document document) throws MaltChainedException{
-		for (Paragraph paragraph : document.getParagraphs()){
-			for (Sentence sentence : paragraph.getSentences()){
-				for ( SpatialExpression rel : this.recognize(sentence) ){
-					Frame f = SpatialRelationRecognizer.convertSpatialToFrame(rel);
-					document.getFrames().add(f);
-				}		
+	public void recognizeInPlace(Document document){
+		try {
+			for (Paragraph paragraph : document.getParagraphs()) {
+				for (Sentence sentence : paragraph.getSentences()) {
+					for (SpatialExpression rel : this.recognize(sentence)) {
+						Frame<Annotation> f = SpatialRelationRecognizer.convertSpatialToFrame(rel);
+						document.getFrames().add(f);
+					}
+				}
 			}
-		}		
+		} catch ( Exception ex ){
+			throw new RuntimeException(ex);
+		}
 	}
 	
 	/**
@@ -147,12 +151,12 @@ public class SpatialRelationRecognizer {
 	 * @param relation
 	 * @return
 	 */
-	public static Frame convertSpatialToFrame(SpatialExpression relation){
-		Frame f = new Frame(KpwrSpatial.SPATIAL_FRAME_TYPE);
-		f.setSlot(KpwrSpatial.SPATIAL_INDICATOR, relation.getSpatialIndicator());
-		f.setSlot(KpwrSpatial.SPATIAL_LANDMARK, relation.getLandmark().getSpatialObject());
-		f.setSlot(KpwrSpatial.SPATIAL_TRAJECTOR, relation.getTrajector().getSpatialObject());
-		f.setSlot(KpwrSpatial.SPATIAL_REGION, relation.getLandmark().getRegion());
+	public static Frame<Annotation> convertSpatialToFrame(SpatialExpression relation){
+		Frame<Annotation> f = new Frame<>(KpwrSpatial.SPATIAL_FRAME_TYPE);
+		f.set(KpwrSpatial.SPATIAL_INDICATOR, relation.getSpatialIndicator());
+		f.set(KpwrSpatial.SPATIAL_LANDMARK, relation.getLandmark().getSpatialObject());
+		f.set(KpwrSpatial.SPATIAL_TRAJECTOR, relation.getTrajector().getSpatialObject());
+		f.set(KpwrSpatial.SPATIAL_REGION, relation.getLandmark().getRegion());
 		
 		f.setSlotAttribute(KpwrSpatial.SPATIAL_TRAJECTOR, "sumo", String.join(", ",relation.getTrajectorConcepts()));
 		f.setSlotAttribute(KpwrSpatial.SPATIAL_LANDMARK, "sumo", String.join(", ",relation.getLandmarkConcepts()));

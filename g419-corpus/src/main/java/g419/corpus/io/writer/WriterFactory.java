@@ -48,7 +48,6 @@ public class WriterFactory {
 				gzOutput = true;
 				outputFormatNoGz = outputFormat.substring(0, outputFormat.length()-3);
 			}
-			
 			switch (outputFormatNoGz){
 				case "tei":
 					return this.getTEIWriter(outputFile, gzOutput);

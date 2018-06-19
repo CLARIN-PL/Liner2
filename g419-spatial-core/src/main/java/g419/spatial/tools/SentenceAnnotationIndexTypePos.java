@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Sentence;
-import org.slf4j.LoggerFactory;
+import io.vavr.control.Option;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,6 +22,10 @@ public class SentenceAnnotationIndexTypePos {
     public SentenceAnnotationIndexTypePos(final Sentence sentence) {
         this.sentence = sentence;
         sentence.getChunks().stream().forEach(this::add);
+    }
+
+    public Sentence getSentence(){
+        return sentence;
     }
 
     public static void sortAnnotationsLengthDescBeginAsc(List<Annotation> ans) {
@@ -56,8 +60,6 @@ public class SentenceAnnotationIndexTypePos {
 
     public Annotation getLongestAtPos(final Integer pos) {
         final List<Annotation> ans = getAtPos(pos);
-        //LoggerFactory.getLogger(getClass()).debug(getIndexDump());
-        //LoggerFactory.getLogger(getClass()).debug("" + pos + " " + ans);
         if (ans.size() == 0) {
             return null;
         }
@@ -65,15 +67,11 @@ public class SentenceAnnotationIndexTypePos {
         return ans.get(0);
     }
 
-    public String getIndexDump(){
-        final StringJoiner sjo = new StringJoiner("\n");
-        for (int i=0; i<sentence.getTokenNumber(); i++){
-            final StringJoiner sj = new StringJoiner(" ");
-            sj.add(String.format("[%2d]=%-15s => ", i, sentence.getTokens().get(i).getOrth()));
-            posToAnnIndex.getOrDefault(i, Lists.newArrayList()).stream().forEach(a->sj.add(a.getType()));
-            sjo.add(sj.toString());
-        }
-        return sjo.toString();
+    public Annotation getAnnotationOfTypeStartingFrom(final String type, final Integer position){
+        final List<Annotation> list = getAnnotationsOfTypeAtPos(type, position).stream()
+                .filter(an->an.getBegin()==position)
+                .collect(Collectors.toList());
+        return list.size() == 0 ? null : list.get(0);
     }
 
     /**

@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 
@@ -56,7 +57,7 @@ public class JsonFramesStreamWriter extends AbstractDocumentWriter {
 	
 	private List<Map<String, Object>> getFrames(Document document, Map<Annotation, String> annotationIds){
 		List<Map<String, Object>> frames = new ArrayList<Map<String,Object>>();
-		for ( Frame frame : document.getFrames() ){
+		for ( Frame<Annotation> frame : document.getFrames() ){
 			Map<String, Object> f = new HashMap<String, Object>();
 			Map<String, Object> slots = new HashMap<String, Object>();
 			

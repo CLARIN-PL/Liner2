@@ -4,22 +4,34 @@ import com.google.common.collect.Lists
 import com.google.common.collect.Maps
 import g419.corpus.structure.*
 import spock.lang.Specification
+import spock.lang.Unroll
 
-import java.util.stream.Collector
 import java.util.stream.Collectors
 
 class SentenceAnnotationIndexTypePosTest extends Specification {
 
-    def "getLongestAtPos should return valid annotation"() {
-        given:
-            Sentence sentence = getSampleSentenceWithAnnotations()
-            SentenceAnnotationIndexTypePos index = new SentenceAnnotationIndexTypePos(sentence)
+    Sentence sentence
+    SentenceAnnotationIndexTypePos index
+    Map<String, Annotation> map
+    Annotation an0
 
-        expect:
-            index.getLongestAtPos(pos).getId() == an
+    def setup() {
+        sentence = getSampleSentenceWithAnnotations()
+        index = new SentenceAnnotationIndexTypePos(sentence)
+        map = getAnnotationMap(sentence)
+        an0 = new Annotation("an0", 0, 0, "null", sentence)
+    }
+
+    @Unroll("getLongestAtPos(#pos) should return annotaiton with id=#anId")
+    def "getLongestAtPos should return valid annotation"() {
+        when:
+            def a = index.getLongestAtPos(pos)
+
+        then:
+            a.getId() == anId
 
         where:
-            pos || an
+            pos || anId
             1   || "an1"
             2   || "an1"
             3   || "an5"
@@ -28,20 +40,14 @@ class SentenceAnnotationIndexTypePosTest extends Specification {
     }
 
     def "getLongestAtPos should return null"() {
-        given:
-            Sentence sentence = getSampleSentenceWithAnnotations()
-            SentenceAnnotationIndexTypePos index = new SentenceAnnotationIndexTypePos(sentence)
-
         expect:
             index.getLongestAtPos(0) == null
+        and:
             index.getLongestAtPos(10) == null
     }
 
+    @Unroll("hasAnnotationOfTypeAtPosition(#type,#pos) should return #result")
     def "hasAnnotationOfTypeAtPosition should return valid results"() {
-        given:
-            Sentence sentence = getSampleSentenceWithAnnotations()
-            SentenceAnnotationIndexTypePos index = new SentenceAnnotationIndexTypePos(sentence)
-
         expect:
             index.hasAnnotationOfTypeAtPosition(type, pos) == result
 
@@ -59,32 +65,31 @@ class SentenceAnnotationIndexTypePosTest extends Specification {
             "action"   | 9   || false
     }
 
-    def "getAnnotationsOfTypeAtPosition should return valid list of annotations"(){
-        given:
-            Sentence sentence = getSampleSentenceWithAnnotations()
-            SentenceAnnotationIndexTypePos index = new SentenceAnnotationIndexTypePos(sentence)
+    @Unroll("getAnnotationsOfTypeAtPosition(#type,#pos) should return #ids")
+    def "getAnnotationsOfTypeAtPosition should return valid list of annotations"() {
+        when:
+            def annotations = index.getAnnotationsOfTypeAtPos(type, pos)
 
-        expect:
-            index.getAnnotationsOfTypeAtPos(type, pos).stream().map{an->an.getId()}.collect(Collectors.toList()).sort() == list
+        then:
+            toAnnotationIds(annotations) == ids
 
         where:
-            type       | pos || list
+            type       | pos || ids
             "artifact" | 0   || []
             "artifact" | 1   || ["an1"]
-            "artifact" | 2   || ["an1","an2"]
+            "artifact" | 2   || ["an1", "an2"]
             "action"   | 2   || []
             "action"   | 4   || ["an5"]
-            "person"   | 4   || ["an3","an4"]
-
+            "person"   | 4   || ["an3", "an4"]
     }
 
+    @Unroll("getAtPos(#pos) should return #len #ann")
     def "getAtPos should return valid list of annotations"() {
-        given:
-            Sentence sentence = getSampleSentenceWithAnnotations()
-            SentenceAnnotationIndexTypePos index = new SentenceAnnotationIndexTypePos(sentence)
+        when:
+            def annotations = index.getAtPos(pos)
 
-        expect:
-            index.getAtPos(pos).size() == len
+        then:
+            annotations.size() == len
 
         where:
             pos || len
@@ -96,25 +101,31 @@ class SentenceAnnotationIndexTypePosTest extends Specification {
             5   || 1
             6   || 1
             7   || 0
+            ann = len==1 ? "annotation" : "annotations"
     }
 
-    def "getLongestAtPosFromSet should return valid annotation"(){
-        given:
-            Sentence sentence = getSampleSentenceWithAnnotations()
-            Annotation an0 = new Annotation("an0", 0, 0, "null", sentence)
-            Map<String,Annotation> map = getAnnotationMap(sentence)
-            SentenceAnnotationIndexTypePos index = new SentenceAnnotationIndexTypePos(sentence)
+    def "getLongestAtPosFromSet should return null for empty list"() {
+        when:
+            def annotation = index.getLongestAtPosFromSet(0, [])
 
-        expect:
-            Optional.ofNullable(index.getLongestAtPosFromSet(pos, getAnnotationListFromIds(map, ans))).orElse(an0).getId() == an
+        then:
+            annotation == null
+    }
+
+    @Unroll("getLongestAtPosFromSet(#pos,#ans) should return annotation with id=#anId")
+    def "getLongestAtPosFromSet should return valid annotation"() {
+        when:
+            def annotation = index.getLongestAtPosFromSet(pos, toAnnotations(ans))
+
+        then:
+            annotation.getId() == anId
 
         where:
-            pos | ans           || an
-              0 | []            || "an0"
-              1 | ["an1","an2"] || "an1"
-              2 | ["an1","an2"] || "an1"
-              2 | ["an2"]       || "an2"
-              2 | ["an2","an5"] || "an2"
+            pos | ans            || anId
+            1   | ["an1", "an2"] || "an1"
+            2   | ["an1", "an2"] || "an1"
+            2   | ["an2"]        || "an2"
+            2   | ["an2", "an5"] || "an2"
 
 
     }
@@ -152,34 +163,77 @@ class SentenceAnnotationIndexTypePosTest extends Specification {
             list3 == [an1, an5, an2, an4]
     }
 
-    def "getFirstInRangeFromSet should return valid annotation"(){
-        given:
-            Sentence sentence = getSampleSentenceWithAnnotations()
-            Annotation an0 = new Annotation("an0", 0, 0, "null", sentence)
-            Map<String,Annotation> map = getAnnotationMap(sentence)
-            SentenceAnnotationIndexTypePos index = new SentenceAnnotationIndexTypePos(sentence)
+    @Unroll("getFirstInRangeFromSet(#start,#end,[]) should return null")
+    def "getFirstInRangeFromSet should return null"() {
+        when:
+            def annotation = index.getFirstInRangeFromSet(start, end, [])
 
-        expect:
-            Optional.ofNullable(index.getFirstInRangeFromSet(start, end, getAnnotationListFromIds(map,anns)))
-                    .orElse(an0).getId() == id
+        then:
+            annotation == null
 
         where:
-            start | end | anns          || id
-                0 |   0 | []            || "an0"
-                0 |   1 | []            || "an0"
-                0 |   6 | ["an1"]       || "an1"
-                0 |   6 | ["an3","an5"] || "an5"
-                4 |   6 | ["an1","an5"] || "an5"
-
+            start | end
+            0     | 0
+            0     | 1
     }
 
-    def getAnnotationListFromIds(Map<String,Annotation> map, List<String> ids){
-        return ids.stream().map{id->map.get(id)}.collect(Collectors.toList())
+    @Unroll("getFirstInRangeFromSet(#start,#end,#anns) should return annotation with id=#anId")
+    def "getFirstInRangeFromSet should return valid annotation"() {
+        given:
+            def annotation = index.getFirstInRangeFromSet(start, end, toAnnotations(anns))
+
+        expect:
+            annotation.getId() == anId
+
+        where:
+            start | end | anns           || anId
+            0     | 6   | ["an1"]        || "an1"
+            0     | 6   | ["an3", "an5"] || "an5"
+            4     | 6   | ["an1", "an5"] || "an5"
     }
 
-    def getAnnotationMap(Sentence sentence){
+
+    @Unroll("getAnnotationOfTypeStartingFrom(#type, #pos) should return null")
+    def "getAnnotationOfTypeStartingFrom should return null"() {
+        when:
+            def annotation = index.getAnnotationOfTypeStartingFrom(type, pos)
+
+        then:
+            annotation == null
+
+        where:
+            type     | pos
+            "any"    | 0
+            "any"    | 1
+            "action" | 4
+    }
+
+    @Unroll("getAnnotationOfTypeStartingFrom(#type, #pos) should return annotation with id=#anId")
+    def "getAnnotationOfTypeStartingFrom should return valid value"() {
+        when:
+            def annotation = index.getAnnotationOfTypeStartingFrom(type, pos)
+
+        then:
+            annotation.getId() == anId
+
+        where:
+            type       | pos || anId
+            "artifact" | 1   || "an1"
+            "artifact" | 2   || "an2"
+            "action"   | 3   || "an5"
+    }
+
+    def toAnnotationIds(List<Annotation> annotations) {
+        return annotations.stream().map { an -> an.getId() }.collect(Collectors.toList())
+    }
+
+    def toAnnotations(List<String> ids) {
+        return ids.stream().map { id -> map.get(id) }.collect(Collectors.toList())
+    }
+
+    def getAnnotationMap(Sentence sentence) {
         Map<String, Annotation> map = Maps.newHashMap()
-        sentence.getChunks().stream().forEach{a -> map.put(a.getId(), a)}
+        sentence.getChunks().stream().forEach { a -> map.put(a.getId(), a) }
         return map;
     }
 
