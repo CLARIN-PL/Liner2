@@ -120,7 +120,7 @@ public class SpatialRelationRecognizer2 {
 	 * @throws MaltChainedException
 	 */
 	public List<SpatialExpression> findCandidates(Sentence sentence) throws MaltChainedException{
-		this.splitPrepNg(sentence);
+		NkjpSyntacticChunks.splitPrepNg(sentence);
 
 		SentenceAnnotationIndexTypePos anIndex = new SentenceAnnotationIndexTypePos(sentence);
 
@@ -305,55 +305,6 @@ public class SpatialRelationRecognizer2 {
 		}
 	}
 	
-	/**
-	 * Wydziela z anotacji PrepNG* anotacje zagnieżdżone poprzez odcięcie przymika.
-	 * @param sentence
-	 */
-	public void splitPrepNg(Sentence sentence){
-		/* Zaindeksuj tokeny anotacji NG* */
-		Map<Integer, List<Annotation>> mapTokenIdToAnnotations = new HashMap<Integer, List<Annotation>>();
-		for ( Annotation an : sentence.getAnnotations(this.annotationsNg) ){
-			for ( int i = an.getBegin(); i<=an.getEnd(); i++ ){
-				if ( !mapTokenIdToAnnotations.containsKey(i) ){
-					mapTokenIdToAnnotations.put(i, new LinkedList<Annotation>());
-				}
-				mapTokenIdToAnnotations.get(i).add(an);
-			}
-		}
-
-		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){
-			if ( !mapTokenIdToAnnotations.containsKey(an.getBegin()+1) ){
-				Annotation ani = new Annotation(an.getBegin()+1, an.getEnd(), an.getType().substring(4), an.getSentence());
-				ani.setHead(an.getHead());
-				sentence.addChunk(ani);
-			}
-			else{
-				Integer newNgStart = null;
-				for ( int i=an.getBegin() + 1; i <= an.getEnd(); i++ ){
-					if ( mapTokenIdToAnnotations.get(i) == null ){
-						if ( newNgStart == null ){
-							newNgStart = i;
-						}
-					}
-					else{
-						if ( newNgStart != null ){
-							Annotation newNg = new Annotation(newNgStart, i-1, "NG", sentence);
-							this.logger.info("NEW NG: " + newNg.toString());
-							sentence.addChunk(newNg);
-							newNgStart = null;
-						}
-					}
-				}
-				if ( newNgStart != null ) {
-					Annotation newNg = new Annotation(newNgStart, an.getEnd(), "NG", sentence);
-					this.logger.info("NEW NG: " + newNg.toString());
-					sentence.addChunk(newNg);
-					newNgStart = null;
-				}
-			}
-		}
-	}
-
 	/**
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
 	 * @param sentence

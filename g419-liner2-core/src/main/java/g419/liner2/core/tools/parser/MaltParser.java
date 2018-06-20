@@ -1,7 +1,7 @@
 package g419.liner2.core.tools.parser;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import g419.corpus.structure.Sentence;
 import org.maltparser.MaltParserService;
 import org.maltparser.core.exception.MaltChainedException;
 import org.maltparser.core.syntaxgraph.DependencyStructure;
@@ -10,10 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 public class MaltParser {
 
@@ -47,6 +45,12 @@ public class MaltParser {
 
     public void parse(final MaltSentence sentence) throws MaltChainedException {
         sentence.setMaltDataAndLinks(parseTokens(sentence.getMaltData()));
+    }
+
+    public MaltSentence parse(final Sentence sentence, final Map<String, String> pos) throws MaltChainedException {
+        MaltSentence maltSentence = new MaltSentence(sentence, pos);
+        parse(maltSentence);
+        return maltSentence;
     }
 
 }

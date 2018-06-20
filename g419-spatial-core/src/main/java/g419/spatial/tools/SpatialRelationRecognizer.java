@@ -10,8 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import org.apache.log4j.Logger;
@@ -171,6 +174,17 @@ public class SpatialRelationRecognizer {
 		return f;
 	}
 
+	private Map<Integer, Annotation> createAnnotationIndex(final Collection<Annotation> annotations){
+		final Map<Integer, Annotation> index = Maps.newHashMap();
+		annotations.stream().forEach(
+				an->IntStream.rangeClosed(an.getBegin(), an.getEnd()).forEach(n->index.put(n, an)));
+		return index;
+	}
+
+	private Map<Integer, Annotation> createAnnotationIndex(final Collection<Annotation> annotations, final String annotationType){
+		return createAnnotationIndex(annotations.stream().filter(an->annotationType.equals(an.getType())).collect(Collectors.toList()));
+	}
+
 	/**
 	 * 
 	 * @param sentence
@@ -178,62 +192,22 @@ public class SpatialRelationRecognizer {
 	 * @throws MaltChainedException
 	 */
 	public List<SpatialExpression> findCandidates(Sentence sentence) throws MaltChainedException{
-		this.splitPrepNg(sentence);
-		
-		MaltSentence maltSentence = new MaltSentence(sentence, MappingNkjpToConllPos.get());
-		this.malt.parse(maltSentence);
+		NkjpSyntacticChunks.splitPrepNg(sentence);
+		MaltSentence maltSentence = malt.parse(sentence, MappingNkjpToConllPos.get());
 
 		/* Zaindeksuj różne typy fraz */
-		Map<Integer, Annotation> chunkNpTokens = new HashMap<Integer, Annotation>();
-		Map<Integer, Annotation> chunkVerbfinTokens = new HashMap<Integer, Annotation>();
-		Map<Integer, Annotation> chunkPrepTokens = new HashMap<Integer, Annotation>();
-		Map<Integer, Annotation> chunkPpasTokens = new HashMap<Integer, Annotation>();
-		Map<Integer, Annotation> chunkPactTokens = new HashMap<Integer, Annotation>();
-		Map<Integer, Annotation> chunkNamesTokens = new HashMap<Integer, Annotation>();
-		Map<Integer, List<Annotation>> chunkNgTokens = new HashMap<Integer, List<Annotation>>();
-		
-		for ( Annotation an : sentence.getChunks() ){
-			if ( an.getType().equals("chunk_np") ){
-				for ( Integer n = an.getBegin(); n <= an.getEnd(); n++){
-					chunkNpTokens.put(n, an);
-				}
-			}
-			else if ( an.getType().equals("Prep") ){
-				for ( Integer n = an.getBegin(); n <= an.getEnd(); n++){
-					chunkPrepTokens.put(n, an);					
-				}
-			}
-			else if ( an.getType().equals("Pact") ){
-				for ( Integer n = an.getBegin(); n <= an.getEnd(); n++){
-					chunkPactTokens.put(n, an);					
-				}
-			}
-			else if ( an.getType().equals("Ppas") ){
-				for ( Integer n = an.getBegin(); n <= an.getEnd(); n++){
-					chunkPpasTokens.put(n, an);					
-				}
-			}
-			else if ( an.getType().equals("Verbfin") ){
-				for ( Integer n = an.getBegin(); n <= an.getEnd(); n++){
-					chunkVerbfinTokens.put(n, an);					
-				}
-			}
-		}
+		Map<Integer, Annotation> chunkNpTokens = createAnnotationIndex(sentence.getChunks(), "chunk_np");
+		Map<Integer, Annotation> chunkVerbfinTokens = createAnnotationIndex(sentence.getChunks(), "Verbfin");
+		Map<Integer, Annotation> chunkPrepTokens = createAnnotationIndex(sentence.getChunks(), "Prep");
+		Map<Integer, Annotation> chunkPpasTokens = createAnnotationIndex(sentence.getChunks(), "Ppas");
+		Map<Integer, Annotation> chunkPactTokens = createAnnotationIndex(sentence.getChunks(), "Pact");
+		Map<Integer, Annotation> chunkNamesTokens = createAnnotationIndex(sentence.getAnnotations(this.patternAnnotationNam));
+		Map<Integer, List<Annotation>> chunkNgTokens = Maps.newHashMap();
 
-		/* Zaindeksuj tokeny jednostek identyfikacyjnych */
-		for ( Annotation an : sentence.getAnnotations(this.patternAnnotationNam) ){
-			for ( Integer n = an.getBegin(); n <= an.getEnd(); n++){
-				chunkNamesTokens.put(n, an);					
-			}
-		}
-		
 		/* Zaindeksuj pierwsze tokeny anotacji NG* */
 		for ( Annotation an : sentence.getAnnotations(this.annotationsNg) ){
 			for ( Integer n = an.getBegin(); n <= an.getEnd(); n++){
-				if ( !chunkNgTokens.containsKey(n) ){
-					chunkNgTokens.put(n, new LinkedList<Annotation>());
-				}
-				chunkNgTokens.get(n).add(an);
+				chunkNgTokens.computeIfAbsent(n, p->Lists.newLinkedList()).add(an);
 			}
 		}
 		
@@ -247,9 +221,6 @@ public class SpatialRelationRecognizer {
 				sentence, chunkNgTokens, chunkNpTokens, chunkPpasTokens, chunkPrepTokens));
 		relations.addAll( this.findCandidatesNgPactPrepNg(
 				sentence, chunkNgTokens, chunkNpTokens, chunkPactTokens, chunkPrepTokens));
-
-		// Eksperymentalnie
-		//relations.addAll( this.findCandidatesAllCombinations());
 
 
 		// Sprawdź, czy landmarkiem jest region. Jeżeli tak, to przesuń landmark na najbliższych ign lub subst
@@ -335,15 +306,6 @@ public class SpatialRelationRecognizer {
 		
 		return relations;
 	}
-	
-	/**
-	 * Generuje wszystkie możliwe kombinacje NG + PrepNG
-	 * @return
-	 */
-	private Collection<? extends SpatialExpression> findCandidatesAllCombinations() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	/**
 	 * Dla fraz NG, które pokrywają się z nazwą własną, zmienia NG na nazwę.
@@ -373,54 +335,6 @@ public class SpatialRelationRecognizer {
 		}
 	}
 	
-	/**
-	 * Wydziela z anotacji PrepNG* anotacje zagnieżdżone poprzez odcięcie przymika.
-	 * @param sentence
-	 */
-	public void splitPrepNg(Sentence sentence){
-		/* Zaindeksuj tokeny anotacji NG* */
-		Map<Integer, List<Annotation>> mapTokenIdToAnnotations = new HashMap<Integer, List<Annotation>>();
-		for ( Annotation an : sentence.getAnnotations(this.annotationsNg) ){
-			for ( int i = an.getBegin(); i<=an.getEnd(); i++ ){
-				if ( !mapTokenIdToAnnotations.containsKey(i) ){
-					mapTokenIdToAnnotations.put(i, new LinkedList<Annotation>());
-				}
-				mapTokenIdToAnnotations.get(i).add(an);
-			}
-		}
-		
-		for ( Annotation an : sentence.getAnnotations(this.annotationsPrep) ){
-			if ( !mapTokenIdToAnnotations.containsKey(an.getBegin()+1) ){
-				Annotation ani = new Annotation(an.getBegin()+1, an.getEnd(), an.getType().substring(4), an.getSentence());
-				ani.setHead(an.getHead());
-				sentence.addChunk(ani);
-			}
-			else{
-				Integer newNgStart = null;
-				for ( int i=an.getBegin() + 1; i <= an.getEnd(); i++ ){
-					if ( mapTokenIdToAnnotations.get(i) == null ){
-						if ( newNgStart == null ){
-							newNgStart = i;
-						}
-					}
-					else{
-						if ( newNgStart != null ){
-							Annotation newNg = new Annotation(newNgStart, i-1, "NG", sentence);
-							this.logger.info("NEW NG: " + newNg.toString());
-							sentence.addChunk(newNg);
-							newNgStart = null;
-						}
-					}
-				}
-				if ( newNgStart != null ) {
-					Annotation newNg = new Annotation(newNgStart, an.getEnd(), "NG", sentence);
-					this.logger.info("NEW NG: " + newNg.toString());
-					sentence.addChunk(newNg);
-					newNgStart = null;				
-				}
-			}
-		}
-	}
 
 	/**
 	 * Rozpoznaje wyrażenia przestrzenne występujące we wzrocu NG* prep NG*
