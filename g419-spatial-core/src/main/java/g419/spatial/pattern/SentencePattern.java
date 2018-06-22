@@ -15,7 +15,7 @@ public class SentencePattern {
     final private String type;
     final private List<SentencePatternMatch> matchers;
 
-    public SentencePattern(final String type, final List<SentencePatternMatch> matchers){
+    public SentencePattern(final String type, final List<SentencePatternMatch> matchers) {
         this.type = type;
         this.matchers = matchers;
     }
@@ -31,13 +31,11 @@ public class SentencePattern {
         final SentencePatternContext context = new SentencePatternContext(annotations, pos);
         final Iterator<SentencePatternMatch> itMatchers = matchers.iterator();
         boolean matches = true;
-        while ( itMatchers.hasNext() && matches ){
-            matches = itMatchers.next().match(context, null, null);
+        while (itMatchers.hasNext() && matches) {
+            final SentencePatternResult result = itMatchers.next().match(context, null, null);
+            matches = result.matched();
         }
-        return matches ? createFrame(context) : null;
+        return matches ? context.toFrame(type) : null;
     }
 
-    private Frame<Annotation> createFrame(final SentencePatternContext context){
-        return new Frame<>(type);
-    }
 }

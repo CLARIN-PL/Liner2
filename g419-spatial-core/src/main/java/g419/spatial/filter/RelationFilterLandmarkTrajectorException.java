@@ -1,10 +1,10 @@
 package g419.spatial.filter;
 
+import g419.spatial.structure.SpatialExpression;
+
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-
-import g419.spatial.structure.SpatialExpression;
 
 /**
  * Filtr sprawdza, czy przyimek występuje przed potencjalnych landmarkiem.

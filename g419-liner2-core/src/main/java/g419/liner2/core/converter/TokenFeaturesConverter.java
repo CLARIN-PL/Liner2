@@ -4,8 +4,6 @@ import g419.corpus.structure.CrfTemplate;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 
-import java.util.LinkedHashSet;
-
 /**
  * Created by michal on 8/20/14.
  */

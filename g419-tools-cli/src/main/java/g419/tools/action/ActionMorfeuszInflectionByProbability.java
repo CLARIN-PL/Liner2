@@ -1,22 +1,15 @@
 package g419.tools.action;
 
+import g419.lib.cli.Action;
+import g419.tools.utils.Counter;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
-
-import g419.lib.cli.Action;
-import g419.tools.utils.Counter;
+import java.util.*;
 
 public class ActionMorfeuszInflectionByProbability extends Action {
 	

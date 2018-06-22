@@ -8,12 +8,11 @@ import g419.crete.core.structure.Cluster;
 import g419.crete.core.structure.IHaveFeatures;
 import g419.crete.core.structure.Mention;
 import g419.crete.core.structure.MentionClusterPair;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
 import java.util.List;
-
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
 
 public class ClusterClassificationInstance extends AbstractCreteInstance<Double>{

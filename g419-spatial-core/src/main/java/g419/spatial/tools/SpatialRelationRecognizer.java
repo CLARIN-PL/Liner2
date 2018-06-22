@@ -1,47 +1,28 @@
 package g419.spatial.tools;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import g419.corpus.schema.tagset.MappingNkjpToConllPos;
-import org.apache.log4j.Logger;
-import org.maltparser.core.exception.MaltChainedException;
-
 import g419.corpus.schema.kpwr.KpwrSpatial;
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Frame;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
+import g419.corpus.schema.tagset.MappingNkjpToConllPos;
+import g419.corpus.structure.*;
 import g419.liner2.core.features.tokens.ClassFeature;
 import g419.liner2.core.tools.parser.MaltParser;
 import g419.liner2.core.tools.parser.MaltSentence;
 import g419.liner2.core.tools.parser.MaltSentenceLink;
-import g419.spatial.filter.IRelationFilter;
-import g419.spatial.filter.RelationFilterDifferentObjects;
-import g419.spatial.filter.RelationFilterHolonyms;
-import g419.spatial.filter.RelationFilterLandmarkTrajectorException;
-import g419.spatial.filter.RelationFilterPrepositionBeforeLandmark;
-import g419.spatial.filter.RelationFilterPronoun;
-import g419.spatial.filter.RelationFilterSemanticPattern;
+import g419.spatial.filter.*;
 import g419.spatial.structure.SpatialExpression;
 import g419.spatial.structure.SpatialRelationSchema;
 import g419.toolbox.wordnet.NamToWordnet;
 import g419.toolbox.wordnet.Wordnet3;
+import org.apache.log4j.Logger;
+import org.maltparser.core.exception.MaltChainedException;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class SpatialRelationRecognizer {
 

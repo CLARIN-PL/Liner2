@@ -1,18 +1,25 @@
 package g419.spatial.pattern;
 
-import g419.corpus.structure.Annotation;
+import io.vavr.control.Option;
 
 public class SentencePatternMatchAnnotationType extends SentencePatternMatch {
 
     final String annotationType;
 
-    public SentencePatternMatchAnnotationType(final String annotationType){
+    public SentencePatternMatchAnnotationType(final String annotationType) {
         this.annotationType = annotationType;
     }
 
     @Override
-    boolean match(SentencePatternContext context, Integer begin, Integer end) {
-        final Annotation an = context.getAnnotationIndex().getAnnotationOfTypeStartingFrom(annotationType, context.getCurrentPos());
-        return an != null;
+    SentencePatternResult match(final SentencePatternContext context, final Integer begin, final Integer end) {
+        final SentencePatternResult result = new SentencePatternResult();
+        Option.of(context.getAnnotationIndex().getAnnotationOfTypeStartingFrom(annotationType, context.getCurrentPos()))
+                .peek(an -> {
+                    result.addAnnotation(an);
+                    if (hasLabel()) {
+                        context.setMatch(getLabel(), an);
+                    }
+                });
+        return result;
     }
 }

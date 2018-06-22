@@ -1,12 +1,10 @@
 package g419.liner2.core.tools
 
-import g419.corpus.structure.Annotation
-import g419.corpus.structure.Sentence
-import g419.corpus.structure.Tag
-import g419.corpus.structure.Token
-import g419.corpus.structure.TokenAttributeIndex
+import g419.corpus.structure.*
+import org.junit.Ignore
 import spock.lang.Specification
 
+@Ignore
 class PolemLemmatizerTest extends Specification {
 
     def "lemmatize should return valid lemma for orths, bases, ctags and debug parameters"(){

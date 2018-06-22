@@ -1,30 +1,18 @@
 package g419.liner2.core.chunker;
 
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import g419.corpus.ConsolePrinter;
+import g419.corpus.structure.*;
+import g419.liner2.core.chunker.interfaces.DeserializableChunkerInterface;
+import g419.liner2.core.chunker.interfaces.SerializableChunkerInterface;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import g419.corpus.ConsolePrinter;
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.AnnotationSet;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-import g419.liner2.core.chunker.interfaces.DeserializableChunkerInterface;
-import g419.liner2.core.chunker.interfaces.SerializableChunkerInterface;
 
 
 

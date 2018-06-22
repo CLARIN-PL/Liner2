@@ -1,28 +1,9 @@
 package g419.spatial.action;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-
 import com.google.common.collect.Maps;
-import g419.spatial.tools.*;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
-import org.apache.log4j.Logger;
-
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Relation;
-import g419.corpus.structure.Sentence;
+import g419.corpus.structure.*;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.core.tools.FscoreEvaluator;
@@ -30,7 +11,14 @@ import g419.liner2.core.tools.parser.MaltParser;
 import g419.spatial.filter.IRelationFilter;
 import g419.spatial.structure.SpatialExpression;
 import g419.spatial.structure.SpatialRelationSchema;
+import g419.spatial.tools.*;
 import g419.toolbox.wordnet.Wordnet3;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.log4j.Logger;
+
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class ActionEval extends Action {
 	

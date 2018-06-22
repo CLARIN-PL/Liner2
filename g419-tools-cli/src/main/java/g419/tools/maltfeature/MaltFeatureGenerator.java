@@ -1,15 +1,6 @@
 package g419.tools.maltfeature;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.zip.DataFormatException;
-
 import g419.corpus.schema.tagset.MappingNkjpToConllPos;
-import org.maltparser.core.exception.MaltChainedException;
-
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
@@ -18,6 +9,14 @@ import g419.liner2.core.tools.parser.MaltSentence;
 import g419.toolbox.sumo.Sumo;
 import g419.toolbox.sumo.WordnetToSumo;
 import g419.tools.utils.SparseMatrixCounter;
+import org.maltparser.core.exception.MaltChainedException;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.zip.DataFormatException;
 
 public class MaltFeatureGenerator {
 

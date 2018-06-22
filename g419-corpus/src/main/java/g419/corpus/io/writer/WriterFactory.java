@@ -1,14 +1,13 @@
 package g419.corpus.io.writer;
 
+import g419.corpus.io.UnknownFormatException;
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.zip.GZIPOutputStream;
-
-import org.apache.commons.io.FilenameUtils;
-
-import g419.corpus.io.UnknownFormatException;
 
 /**
  * 

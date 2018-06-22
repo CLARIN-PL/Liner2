@@ -120,31 +120,30 @@ public class SpatialExpression {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        Annotation lastAn;
+        final StringBuilder sb = new StringBuilder();
+        Annotation lastAn = null;
         sb.append(String.format("%s:", type));
-        sb.append(String.format(" TR:[%s]%s", trajector.getSpatialObject().getText(true), trajector.getSpatialObject().getType()));
-        lastAn = trajector.getSpatialObject();
-        if (lastAn.getTokens().last() + 1 < spatialIndicator.getBegin()) {
+        lastAn = appendNext(sb, lastAn, trajector.getSpatialObject(), "TR");
+        lastAn = appendNext(sb, lastAn, spatialIndicator, "SI");
+        lastAn = appendNext(sb, lastAn, landmark.getRegion(), "RE");
+        lastAn = appendNext(sb, lastAn, landmark.getSpatialObject(), "LM");
+        return sb.toString();
+    }
+
+    private Annotation appendNext(final StringBuilder sb, final Annotation lastAn, final Annotation currentAn, final String role) {
+        if (lastAn != null && currentAn != null && lastAn.getEnd() + 1 != currentAn.getBegin()) {
             sb.append(" ...");
         }
-        sb.append(" " + spatialIndicator.getText());
-        lastAn = spatialIndicator;
-        if (landmark.getRegion() != null) {
-            if (lastAn != null && lastAn.getEnd() + 1 < landmark.getRegion().getBegin()) {
-                sb.append(" ...");
-            }
-            lastAn = landmark.getRegion();
-            sb.append(String.format(" RE:[%s]%s", landmark.getRegion().getText(true), landmark.getRegion().getType()));
-        }
-        if (landmark.getSpatialObject() != null) {
-            if (lastAn != null && lastAn.getEnd() + 1 < landmark.getSpatialObject().getBegin()) {
-                sb.append(" ...");
-            }
-            sb.append(String.format(" LM:[%s]%s", landmark.getSpatialObject().getText(true), landmark.getSpatialObject().getType()));
+        if (currentAn != null) {
+            sb.append(toString(currentAn, role));
+            return currentAn;
         } else {
-            sb.append(" NO_LANDMARK ");
+            return lastAn;
         }
-        return sb.toString();
+
+    }
+
+    private String toString(final Annotation an, final String role) {
+        return String.format(" %s:[%s:%s]", role, an.getText(true), an.getType());
     }
 }

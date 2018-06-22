@@ -1,12 +1,6 @@
 package g419.tools.utils;
 
-import java.util.Set;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Klasa reprezentuje rzadką macierz do zliczania częstości cech na przecięciu wieresza i kolumny.

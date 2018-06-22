@@ -1,11 +1,10 @@
 package g419.liner2.core.chunker.factory;
 
-import org.apache.log4j.Logger;
-import org.ini4j.Ini;
-
 import g419.liner2.core.chunker.Chunker;
 import g419.liner2.core.chunker.RuleRoadChunker;
 import g419.liner2.core.tools.TrieDictNode;
+import org.apache.log4j.Logger;
+import org.ini4j.Ini;
 
 /**
  * @author Michał Marcińczuk

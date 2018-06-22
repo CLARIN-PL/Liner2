@@ -1,18 +1,17 @@
 package g419.liner2.core.chunker.factory;
 
 
+import g419.corpus.ConsolePrinter;
+import g419.lib.cli.ParameterException;
+import g419.liner2.core.chunker.AnnotationRenameChunker;
+import g419.liner2.core.chunker.Chunker;
+import org.ini4j.Ini;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import g419.corpus.ConsolePrinter;
-import g419.lib.cli.ParameterException;
-import g419.liner2.core.chunker.AnnotationRenameChunker;
-import g419.liner2.core.chunker.Chunker;
-
-import org.ini4j.Ini;
 
 
 public class ChunkerFactoryItemAnnotationRename extends ChunkerFactoryItem {

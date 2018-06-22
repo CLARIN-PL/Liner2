@@ -1,7 +1,5 @@
 package g419.liner2.daemon;
 
-import java.util.HashMap;
-
 /**
  * Created by michal on 11/25/14.
  */

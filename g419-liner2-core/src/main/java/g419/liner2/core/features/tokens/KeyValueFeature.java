@@ -4,7 +4,6 @@ import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 

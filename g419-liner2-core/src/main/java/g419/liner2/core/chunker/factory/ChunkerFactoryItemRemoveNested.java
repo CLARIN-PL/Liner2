@@ -1,13 +1,12 @@
 package g419.liner2.core.chunker.factory;
 
+import g419.liner2.core.chunker.Chunker;
+import g419.liner2.core.chunker.RemoveNestedChunker;
+import org.ini4j.Ini;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import org.ini4j.Ini;
-
-import g419.liner2.core.chunker.Chunker;
-import g419.liner2.core.chunker.RemoveNestedChunker;
 
 
 public class ChunkerFactoryItemRemoveNested extends ChunkerFactoryItem {

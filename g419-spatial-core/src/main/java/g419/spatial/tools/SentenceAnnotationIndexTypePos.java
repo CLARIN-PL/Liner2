@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Sentence;
-import io.vavr.control.Option;
 
 import java.util.*;
 import java.util.stream.Collectors;

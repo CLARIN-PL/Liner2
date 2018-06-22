@@ -1,15 +1,15 @@
 package g419.liner2.core.features.annotations;
 
 
+import g419.corpus.structure.Annotation;
+import g419.corpus.structure.Token;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
-
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Token;
 
 /**
  * Created with IntelliJ IDEA.

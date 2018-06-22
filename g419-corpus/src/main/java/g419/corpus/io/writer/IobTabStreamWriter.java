@@ -1,10 +1,6 @@
 package g419.corpus.io.writer;
 
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-import g419.corpus.structure.TokenAttributeIndex;
+import g419.corpus.structure.*;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

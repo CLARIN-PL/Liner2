@@ -1,15 +1,5 @@
 package g419.spatial.action;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
-
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
@@ -17,6 +7,14 @@ import g419.corpus.structure.Token;
 import g419.lib.cli.Action;
 import g419.spatial.io.ConllDocumentReader;
 import g419.spatial.structure.NodeToken;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ActionTest extends Action {
 	

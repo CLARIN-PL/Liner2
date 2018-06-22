@@ -1,22 +1,20 @@
 package g419.corpus.io.reader.parser.tei;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
+import g419.corpus.io.DataFormatException;
+import g419.corpus.schema.tei.TeiAnnProps;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import g419.corpus.io.DataFormatException;
-import g419.corpus.schema.tei.TeiAnnProps;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AnnPropsSAXParser extends DefaultHandler{
     

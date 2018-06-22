@@ -5,7 +5,8 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
-import g419.corpus.structure.*;
+import g419.corpus.structure.Document;
+import g419.corpus.structure.Sentence;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.core.tools.FscoreEvaluator;
@@ -18,7 +19,10 @@ import g419.toolbox.wordnet.Wordnet3;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class ActionEval2 extends Action {

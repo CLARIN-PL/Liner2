@@ -1,12 +1,12 @@
 package g419.spatial.tools;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import g419.liner2.core.tools.FscoreEvaluator;
-import g419.spatial.structure.SpatialExpression;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DecisionCollector<T> {
 

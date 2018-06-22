@@ -1,10 +1,6 @@
 package g419.test
 
-import g419.corpus.structure.Annotation
-import g419.corpus.structure.Sentence
-import g419.corpus.structure.Tag
-import g419.corpus.structure.Token
-import g419.corpus.structure.TokenAttributeIndex
+import g419.corpus.structure.*
 
 trait TestSampleSentence {
 
@@ -14,6 +10,7 @@ trait TestSampleSentence {
      *     ┗━an1━━━━━━━━┛      ┗━an3━━━━━━━┛
      *              ┗an2┛      ┗an4┛
      *                    ┗━an5━━━━┛
+     *                    ┗━an6━━━━┛
      */
     def getSampleSentenceWithAnnotations() {
         Sentence sentence = getSampleSentence()
@@ -23,6 +20,7 @@ trait TestSampleSentence {
         sentence.addChunk(new Annotation("an4", 4, 4, "person", sentence))
         sentence.addChunk(new Annotation("an5", 3, 4, "action", sentence))
         sentence.addChunk(new Annotation("an6", 3, 4, "artifact", sentence))
+        sentence.addChunk(new Annotation("an7", 0, 0, "preposition", sentence))
         return sentence
     }
 
@@ -35,8 +33,8 @@ trait TestSampleSentence {
         attrIndex.addAttribute("orth")
         Sentence sentence = new Sentence()
         sentence.addToken(new Token("Na", new Tag("na", "prep:tag", true), attrIndex))
-        sentence.addToken(new Token("zielonej", new Tag("zielony", "tag", true), attrIndex))
-        sentence.addToken(new Token("łódce", new Tag("łódka", "tag", true), attrIndex))
+        sentence.addToken(new Token("zielonej", new Tag("zielony", "adj:tag", true), attrIndex))
+        sentence.addToken(new Token("łódce", new Tag("łódka", "subst:tag", true), attrIndex))
         sentence.addToken(new Token("stoi", new Tag("stać", "tag", true), attrIndex))
         sentence.addToken(new Token("rybak", new Tag("rybak", "tag", true), attrIndex))
         sentence.addToken(new Token("z", new Tag("z", "prep:tag", true), attrIndex))

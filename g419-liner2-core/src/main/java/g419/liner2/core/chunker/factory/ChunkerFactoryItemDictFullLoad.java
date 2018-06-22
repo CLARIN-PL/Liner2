@@ -1,9 +1,9 @@
 package g419.liner2.core.chunker.factory;
 
 
+import g419.corpus.ConsolePrinter;
 import g419.liner2.core.chunker.Chunker;
 import g419.liner2.core.chunker.FullDictionaryChunker;
-import g419.corpus.ConsolePrinter;
 import org.ini4j.Ini;
 
 

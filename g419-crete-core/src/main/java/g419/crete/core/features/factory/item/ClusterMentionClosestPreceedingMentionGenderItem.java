@@ -5,7 +5,6 @@ import g419.corpus.structure.AnnotationCluster;
 import g419.crete.core.features.AbstractFeature;
 import g419.crete.core.features.clustermention.preceeding.ClusterMentionClosestPreceedingMentionGender;
 import g419.crete.core.features.enumvalues.Gender;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 public class ClusterMentionClosestPreceedingMentionGenderItem   implements IFeatureFactoryItem<Pair<Annotation, AnnotationCluster>, Gender> {

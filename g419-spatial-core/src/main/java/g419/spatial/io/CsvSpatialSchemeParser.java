@@ -3,20 +3,15 @@ package g419.spatial.io;
 import g419.spatial.structure.SpatialRelationSchema;
 import g419.spatial.structure.SpatialRelationSchemaMatcher;
 import g419.toolbox.sumo.Sumo;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.log4j.Logger;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.*;
 
 /**
  * Klasa do parsowania schematów ontologicznych wyrażeń przestrzennych zapisanych w formacie CSV.

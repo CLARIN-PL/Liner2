@@ -1,12 +1,6 @@
 package g419.spatial.tools
 
-import g419.corpus.structure.Annotation
-import g419.corpus.structure.Document
-import g419.corpus.structure.Paragraph
-import g419.corpus.structure.Sentence
-import g419.corpus.structure.Tag
-import g419.corpus.structure.Token
-import g419.corpus.structure.TokenAttributeIndex
+import g419.corpus.structure.*
 import g419.spatial.structure.SpatialExpression
 import spock.lang.Specification
 

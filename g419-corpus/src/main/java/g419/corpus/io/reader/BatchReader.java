@@ -1,20 +1,14 @@
 package g419.corpus.io.reader;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.Logger;
-
 import g419.corpus.io.DataFormatException;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.TokenAttributeIndex;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.log4j.Logger;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**

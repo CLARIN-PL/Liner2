@@ -1,15 +1,5 @@
 package g419.liner2.cli.action;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.ParseException;
-import org.apache.log4j.Logger;
-
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
@@ -21,6 +11,12 @@ import g419.liner2.core.LinerOptions;
 import g419.liner2.core.converter.Converter;
 import g419.liner2.core.converter.factory.ConverterFactory;
 import g419.liner2.core.features.TokenFeatureGenerator;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class ActionConvert extends Action {
 

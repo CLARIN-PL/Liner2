@@ -3,7 +3,6 @@ package g419.liner2.core.converter.factory;
 import g419.liner2.core.converter.AnnotationFilterByRegexConverter;
 import g419.liner2.core.converter.Converter;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**

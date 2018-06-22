@@ -2,14 +2,13 @@ package g419.crete.core.features.annotations.pair;
 
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.TokenAttributeIndex;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 public class AnnotationPairFeatureCosineSimilarity extends  AbstractAnnotationPairFeature<Float>{
 

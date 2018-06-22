@@ -2,6 +2,7 @@ package g419.spatial.pattern;
 
 import com.google.common.collect.Maps;
 import g419.corpus.structure.Annotation;
+import g419.corpus.structure.Frame;
 import g419.corpus.structure.Sentence;
 import g419.spatial.tools.SentenceAnnotationIndexTypePos;
 
@@ -16,6 +17,10 @@ public class SentencePatternContext {
     public SentencePatternContext(final SentenceAnnotationIndexTypePos annotationIndex, final int pos) {
         this.annotationIndex = annotationIndex;
         currentPos = pos;
+    }
+
+    public void setMatch(final String label, final Annotation annotation){
+        matches.put(label, annotation);
     }
 
     public int getCurrentPos() {
@@ -40,5 +45,11 @@ public class SentencePatternContext {
 
     public SentenceAnnotationIndexTypePos getAnnotationIndex(){
         return annotationIndex;
+    }
+
+    public Frame<Annotation> toFrame(final String type){
+        final Frame<Annotation> frame = new Frame<>(type);
+        matches.entrySet().stream().forEach(p->frame.set(p.getKey(), p.getValue()));
+        return frame;
     }
 }

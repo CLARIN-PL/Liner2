@@ -4,11 +4,10 @@ import g419.crete.core.classifier.AbstractCreteClassifier;
 import g419.crete.core.instance.AbstractCreteInstance;
 import g419.crete.core.instance.converter.AbstractCreteInstanceConverter;
 import g419.crete.core.instance.converter.factory.item.ICreteInstanceConverterFactoryItem;
-
-import java.util.HashMap;
-
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
+
+import java.util.HashMap;
 
 public class CreteInstanceConverterFactory {
 

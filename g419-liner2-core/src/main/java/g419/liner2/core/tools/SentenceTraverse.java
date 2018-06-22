@@ -1,10 +1,10 @@
 package g419.liner2.core.tools;
 
-import java.util.List;
-import java.util.Set;
-
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Wraps a sentence and allow an easy navigation over the sentence tokens. The nagivation includes:

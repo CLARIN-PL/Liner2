@@ -6,7 +6,6 @@ import g419.crete.core.features.annotations.AnnotationFeaturePerson;
 import g419.crete.core.features.clustermention.AbstractClusterMentionFeature;
 import g419.crete.core.features.enumvalues.Person;
 import g419.crete.core.structure.AnnotationUtil;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 public class ClusterMentionClosestFollowingPersonAgreement extends AbstractClusterMentionFeature<Boolean> {

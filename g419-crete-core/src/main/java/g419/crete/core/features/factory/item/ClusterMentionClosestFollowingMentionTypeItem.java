@@ -5,7 +5,6 @@ import g419.corpus.structure.AnnotationCluster;
 import g419.crete.core.features.AbstractFeature;
 import g419.crete.core.features.clustermention.following.ClusterMentionClosestFollowingMentionType;
 import g419.crete.core.features.enumvalues.MentionType;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 public class ClusterMentionClosestFollowingMentionTypeItem implements IFeatureFactoryItem<Pair<Annotation, AnnotationCluster>, MentionType> {

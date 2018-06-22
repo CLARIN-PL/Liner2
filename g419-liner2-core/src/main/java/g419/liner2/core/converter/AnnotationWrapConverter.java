@@ -1,11 +1,19 @@
 package g419.liner2.core.converter;
 
-import g419.corpus.structure.*;
+import g419.corpus.structure.Annotation;
+import g419.corpus.structure.Document;
+import g419.corpus.structure.Sentence;
+import g419.corpus.structure.Token;
 import g419.liner2.core.features.tokens.ClassFeature;
 
-import java.io.*;
-import java.util.*;
-import java.util.zip.DataFormatException;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Created by michal on 2/20/15.

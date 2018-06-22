@@ -6,7 +6,6 @@ import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 import g419.liner2.core.chunker.Chunker;
 
-import javax.print.Doc;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;

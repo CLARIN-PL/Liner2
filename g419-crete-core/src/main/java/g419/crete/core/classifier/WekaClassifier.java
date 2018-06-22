@@ -4,6 +4,14 @@ import g419.crete.core.classifier.serialization.Serializer;
 import g419.crete.core.classifier.serialization.WekaModelSerializer;
 import g419.crete.core.features.AbstractFeature;
 import g419.crete.core.features.factory.FeatureFactory;
+import weka.classifiers.Classifier;
+import weka.classifiers.Evaluation;
+import weka.core.*;
+import weka.core.converters.ArffSaver;
+import weka.filters.AllFilter;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.NumericToNominal;
+import weka.filters.unsupervised.attribute.StringToNominal;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,15 +21,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import weka.core.*;
-import weka.filters.AllFilter;
-import weka.filters.Filter;
-import weka.classifiers.Classifier;
-import weka.classifiers.Evaluation;
-import weka.core.converters.ArffSaver;
-import weka.filters.unsupervised.attribute.NumericToNominal;
-import weka.filters.unsupervised.attribute.StringToNominal;
 
 public abstract class WekaClassifier extends AbstractCreteClassifier<Classifier, Instance, Double>{
 	protected Instances instances;

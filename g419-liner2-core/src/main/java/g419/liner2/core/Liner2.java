@@ -1,13 +1,13 @@
 package g419.liner2.core;
 
-import java.util.Map;
-
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 import g419.liner2.core.chunker.Chunker;
 import g419.liner2.core.chunker.factory.ChunkerManager;
 import g419.liner2.core.features.TokenFeatureGenerator;
+
+import java.util.Map;
 
 public class Liner2 extends Chunker {
 

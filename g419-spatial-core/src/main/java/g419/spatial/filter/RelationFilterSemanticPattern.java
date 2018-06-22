@@ -1,14 +1,5 @@
 package g419.spatial.filter;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.HashSet;
-import java.util.List;
-import java.util.MissingResourceException;
-import java.util.Set;
-import java.util.zip.DataFormatException;
-
 import g419.corpus.schema.kpwr.KpwrWsd;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Tag;
@@ -19,6 +10,15 @@ import g419.spatial.structure.SpatialRelationSchemaMatcher;
 import g419.toolbox.sumo.NamToSumo;
 import g419.toolbox.sumo.Sumo;
 import g419.toolbox.sumo.WordnetToSumo;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.List;
+import java.util.MissingResourceException;
+import java.util.Set;
+import java.util.zip.DataFormatException;
 
 public class RelationFilterSemanticPattern implements IRelationFilter {
 

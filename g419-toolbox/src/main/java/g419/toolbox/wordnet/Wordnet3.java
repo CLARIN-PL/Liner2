@@ -1,26 +1,11 @@
 package g419.toolbox.wordnet;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import com.google.common.collect.Maps;
-import org.apache.log4j.Logger;
+import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.*;
 
-import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataLemmaRaw;
-import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRaw;
-import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRelationRaw;
-import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonIndexRaw;
-import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonParser;
+import java.io.*;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Następca Wordnet i Wordnet2.

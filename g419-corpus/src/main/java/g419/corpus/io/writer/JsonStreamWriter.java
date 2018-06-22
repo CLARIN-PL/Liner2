@@ -1,25 +1,13 @@
 package g419.corpus.io.writer;
 
+import com.google.gson.Gson;
+import g419.corpus.structure.*;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import com.google.gson.Gson;
-
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Tag;
-import g419.corpus.structure.Token;
+import java.util.*;
 
 /**
  * Zapisuje strukturę dokumentu (podział na akapity, zdania, tokeny i anotacje) do formatu json o strukturze:

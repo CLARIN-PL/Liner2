@@ -2,16 +2,14 @@ package g419.crete.core.classifier.factory.item;
 
 import g419.crete.core.CreteOptions;
 import g419.crete.core.classifier.AbstractCreteClassifier;
-
-import java.util.HashMap;
-import java.util.List;
-
 import g419.crete.core.classifier.WekaSmoClassifier;
 import g419.crete.core.classifier.factory.WekaFilterFactory;
 import weka.classifiers.Classifier;
 import weka.classifiers.functions.supportVector.PolyKernel;
 import weka.core.Instance;
 import weka.filters.Filter;
+
+import java.util.List;
 
 public class WekaSmoClassifierItem implements IClassifierFactoryItem<Classifier, Instance, Double>{
 

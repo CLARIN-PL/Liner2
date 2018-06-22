@@ -1,14 +1,14 @@
 package g419.crete.core.features.annotations;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
 import g419.crete.core.features.AbstractFeature;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class AnnotationFeaturePreceedingSubordinateConjunction extends AbstractFeature<Annotation, Boolean>{
 

@@ -2,15 +2,10 @@ package g419.liner2.daemon.action;
 
 import g419.lib.cli.ParameterException;
 import g419.liner2.daemon.FilebasedDaemonThread;
-import g419.lib.cli.Action;
-
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
 import java.io.File;
-import java.util.HashSet;
 
 /**
  * Created by michal on 12/10/14.

@@ -2,17 +2,10 @@ package g419.liner2.core.features.tokens;
 
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataLemmaRaw;
 import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRaw;
+
+import java.util.*;
 
 public class TopHyperFeature extends TokenFeature{
 	

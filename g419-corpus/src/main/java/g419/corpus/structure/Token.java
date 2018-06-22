@@ -1,10 +1,6 @@
 package g419.corpus.structure;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Reprezentuje token, z których składa się zdanie (Sentence)

@@ -1,12 +1,7 @@
 package g419.spatial.io;
 
-import g419.corpus.io.DataFormatException;
 import g419.corpus.io.reader.AbstractDocumentReader;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-import g419.corpus.structure.TokenAttributeIndex;
+import g419.corpus.structure.*;
 import g419.spatial.structure.NodeToken;
 import org.slf4j.LoggerFactory;
 

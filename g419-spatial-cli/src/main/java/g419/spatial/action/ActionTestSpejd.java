@@ -1,16 +1,5 @@
 package g419.spatial.action;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import g419.spatial.tools.NkjpSyntacticChunks;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.schema.kpwr.KpwrSpatial;
@@ -19,7 +8,12 @@ import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
+import g419.spatial.tools.NkjpSyntacticChunks;
 import g419.spatial.tools.SpatialResources;
+import org.apache.commons.cli.CommandLine;
+
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class ActionTestSpejd extends Action {
 	

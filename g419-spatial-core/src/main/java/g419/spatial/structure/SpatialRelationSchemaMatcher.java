@@ -2,13 +2,11 @@ package g419.spatial.structure;
 
 import g419.corpus.structure.Token;
 import g419.toolbox.sumo.Sumo;
+import org.maltparser.core.helper.HashSet;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
-import org.apache.log4j.Logger;
-import org.maltparser.core.helper.HashSet;
 
 public class SpatialRelationSchemaMatcher {
 

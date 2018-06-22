@@ -2,7 +2,6 @@ package g419.lib.cli;
 
 import com.google.common.collect.Sets;
 import g419.corpus.ConsolePrinter;
-
 import g419.corpus.HasLogger;
 import org.apache.commons.cli.*;
 

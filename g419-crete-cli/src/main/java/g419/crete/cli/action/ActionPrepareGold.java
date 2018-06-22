@@ -13,7 +13,6 @@ import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.core.features.TokenFeatureGenerator;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
 
 /**
  * Akcja klasyfikacji koreferencji w dokumentach.

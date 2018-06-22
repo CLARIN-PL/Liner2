@@ -1,9 +1,9 @@
 package g419.crete.core.structure;
 
+import g419.crete.core.features.AbstractFeature;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import g419.crete.core.features.AbstractFeature;
 
 public abstract class IHaveFeatures<T> {
 	protected T featureHolder;

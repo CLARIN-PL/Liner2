@@ -3,17 +3,10 @@ package g419.liner2.core.tools;
 
 import g419.corpus.ConsolePrinter;
 import g419.corpus.structure.*;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.*;
+import java.util.regex.Pattern;
 
 
 /**

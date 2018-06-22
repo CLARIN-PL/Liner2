@@ -1,9 +1,12 @@
 package g419.corpus.structure;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import io.vavr.control.Option;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Klasa reprezentuje anotację jako ciągłą sekwencję tokenów w zdaniu.
@@ -22,7 +25,7 @@ public class Annotation extends IdentifiableElement {
 	private Sentence sentence = null;
 
 	/** Indices of tokens which form the annotation. */
-	private TreeSet<Integer> tokens = new TreeSet<Integer>();
+	private TreeSet<Integer> tokens = Sets.newTreeSet();
 
 	/** Index of a token that is the head of the annotation */
 	private int head;
@@ -168,18 +171,6 @@ public class Annotation extends IdentifiableElement {
 		}
 		
 		this.setHead(head);
-		
-//		if(this.tokens.size() == 1){
-//			return;
-//		}
-
-//		for(Annotation ann: this.sentence.getChunks()){
-//			if(ann.hasHead() && this.tokens.equals(ann.tokens) && !this.type.equalsIgnoreCase(ann.type)){
-//				this.setHead(ann.getHead());
-//				return;
-//			}
-//		}
-
 	}
 
 	public Integer getHead(){
@@ -194,20 +185,18 @@ public class Annotation extends IdentifiableElement {
 		return this.sentence.getTokens().get(this.head);
 	}
 
-	public void setHead(int idx){
-		this.hasHead = true;
-		this.head = idx;
+	public void setHead(final int idx){
+		hasHead = true;
+		head = idx;
 	}
 
-	public void addToken(int idx){
-		if ( !this.tokens.contains(idx) )
-			this.tokens.add(idx);
+	public void addToken(final int idx){
+	    tokens.add(idx);
 	}
 
-	public void replaceTokens(int begin, int end){
-		this.tokens.clear();
-		for(int i = begin; i <= end; i++)
-			this.tokens.add(i);
+	public void replaceTokens(final int begin, final int end){
+		tokens.clear();
+		IntStream.rangeClosed(begin, end).forEach(tokens::add);
 	}
 
 	@Override
@@ -409,24 +398,15 @@ public class Annotation extends IdentifiableElement {
 	}
 
 	public String toString(){
-		return "[" + getText() + "]_"+getSentence().getId()+"|"+getType();
+		return String.format("[%s:%s]", getText(), getType());
 	}
 
     public Annotation clone(){
-        Annotation cloned = new Annotation(getBegin(), getEnd(), getType(), this.sentence);
-        cloned.setId(this.id);
-        cloned.setHead(this.head);
+        final Annotation cloned = new Annotation(getBegin(), getEnd(), getType(), sentence);
+        cloned.setId(id);
+        cloned.setHead(head);
 		cloned.setMetadata(new HashMap<>(this.getMetadata()));
         return cloned;
-    }
-
-    private boolean equalsIndices(ArrayList<Integer> tab1, ArrayList<Integer> tab2){
-    	if ( tab1.size() != tab2.size() )
-    		return false;
-    	for ( int i=0; i<tab1.size(); i++)
-    		if ( tab1.get(i) != tab2.get(i) )
-    			return false;
-    	return true;
     }
 
     public int length(){
