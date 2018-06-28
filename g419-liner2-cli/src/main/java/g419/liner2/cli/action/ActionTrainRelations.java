@@ -83,12 +83,17 @@ public class ActionTrainRelations extends Action {
                 tokenType = annotationTo.getType();
             }
             //representation.add(tok.getOrth() + "\t" + tag.getBase() + "\t" + tag.getPos() + "\t" + tokenRelation + "\t" + tokenType);
-            representation.add(tag.getBase().toLowerCase());
+            representation.add(tokenType);
+            representation.add(tag.getPos());
+            //representation.add(tag.getBase().toLowerCase());
+            //representation.add(tok.getPos());            
+            //if (i == lastToken) 
+            //    representation.add(tokenType);            
         }
-        if (type.equals("slink")) {
+        if (type.equals("alink")) {
             avgLen += (representation.size() - 2);
             all += 1;
-            if (representation.size() - 2 <= 8) {
+            if (representation.size() - 2 <= 8+2) {
                 longer += 1;
             }
         }
@@ -106,7 +111,7 @@ public class ActionTrainRelations extends Action {
 
         TokenFeatureGenerator gen = null;
 
-        String RELATION_TYPE = "slink";
+        String RELATION_TYPE = "alink";
 
         if (!LinerOptions.getGlobal().features.isEmpty()) {
             gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
@@ -117,6 +122,7 @@ public class ActionTrainRelations extends Action {
         //cm.loadChunkers();
 
         //Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
+
 
         PrintWriter writer = new PrintWriter(this.output_file, "UTF-8");
         Document ps = reader.nextDocument();

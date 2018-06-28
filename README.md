@@ -38,6 +38,14 @@ Requirements
 
 * Java 8
 * C++ compiler (gcc 3.0 or higher) for CRF++ (https://taku910.github.io/crfpp/)
+* set JAVA_HOME variable:
+```bash
+export JAVA_HOME=/usr/lib/jvm/default-java
+```
+* install dh-autoreconf:
+```bash
+sudo apt-get install dh-autoreconf
+```
 
 ### Runtime
 
