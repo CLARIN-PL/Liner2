@@ -4,8 +4,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Sentence;
+import io.vavr.control.Option;
 
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -23,11 +25,11 @@ public class SentenceAnnotationIndexTypePos {
         sentence.getChunks().stream().forEach(this::add);
     }
 
-    public Sentence getSentence(){
+    public Sentence getSentence() {
         return sentence;
     }
 
-    public static void sortAnnotationsLengthDescBeginAsc(List<Annotation> ans) {
+    public static void sortAnnotationsLengthDescBeginAsc(final List<Annotation> ans) {
         Collections.sort(ans, Comparator.comparing(Annotation::length, Comparator.reverseOrder()).thenComparing(Annotation::getBegin));
     }
 
@@ -43,8 +45,26 @@ public class SentenceAnnotationIndexTypePos {
         return typeToPosToAnnIndex.containsKey(type) && typeToPosToAnnIndex.get(type).getOrDefault(pos, Lists.newArrayList()).size() > 0;
     }
 
+    public Option<Annotation> getLongestOfTypeAtPos(final String type, final Integer pos) {
+        return Option.ofOptional(getAnnotationsOfTypeAtPos(type, pos).stream()
+                .sorted(Comparator.comparing(Annotation::length).reversed())
+                .findFirst());
+    }
+
+    public Option<Annotation> getLongestOfTypeAtPos(final Pattern typePattern, final Integer pos) {
+        return Option.ofOptional(getAnnotationsOfTypeAtPos(typePattern, pos).stream()
+                .sorted(Comparator.comparing(Annotation::length).reversed())
+                .findFirst());
+    }
+
     public List<Annotation> getAnnotationsOfTypeAtPos(final String type, final Integer pos) {
         return typeToPosToAnnIndex.getOrDefault(type, Maps.newHashMap()).getOrDefault(pos, Lists.newArrayList());
+    }
+
+    public List<Annotation> getAnnotationsOfTypeAtPos(final Pattern typePattern, final Integer pos) {
+        return posToAnnIndex.computeIfAbsent(pos, n -> Lists.newArrayList()).stream()
+                .filter(an -> typePattern.matcher(an.getType()).find())
+                .collect(Collectors.toList());
     }
 
     /**
@@ -66,9 +86,16 @@ public class SentenceAnnotationIndexTypePos {
         return ans.get(0);
     }
 
-    public Annotation getAnnotationOfTypeStartingFrom(final String type, final Integer position){
+    public Annotation getAnnotationOfTypeStartingFrom(final String type, final Integer position) {
         final List<Annotation> list = getAnnotationsOfTypeAtPos(type, position).stream()
-                .filter(an->an.getBegin()==position)
+                .filter(an -> an.getBegin() == position)
+                .collect(Collectors.toList());
+        return list.size() == 0 ? null : list.get(0);
+    }
+
+    public Annotation getAnnotationOfTypeStartingFrom(final Pattern typePattern, final Integer position) {
+        final List<Annotation> list = getAnnotationsOfTypeAtPos(typePattern, position).stream()
+                .filter(an -> an.getBegin() == position)
                 .collect(Collectors.toList());
         return list.size() == 0 ? null : list.get(0);
     }
@@ -82,16 +109,16 @@ public class SentenceAnnotationIndexTypePos {
      * @return
      */
     public Annotation getLongestAtPosFromSet(final Integer pos, final Collection<Annotation> ans) {
-        List<Annotation> posAnnotations = getAtPos(pos).stream().filter(a -> ans.contains(a)).collect(Collectors.toList());
+        final List<Annotation> posAnnotations = getAtPos(pos).stream().filter(a -> ans.contains(a)).collect(Collectors.toList());
         sortAnnotationsLengthDescBeginAsc(posAnnotations);
         return posAnnotations.size() == 0 ? null : posAnnotations.get(0);
     }
 
-    public Annotation getFirstInRangeFromSet(final Integer startPos, final Integer endPos, final Collection<Annotation> ans){
-        int i=startPos;
+    public Annotation getFirstInRangeFromSet(final Integer startPos, final Integer endPos, final Collection<Annotation> ans) {
+        int i = startPos;
         Annotation found = null;
-        while (found==null && i<=endPos){
-            found = getLongestAtPosFromSet(i++,ans);
+        while (found == null && i <= endPos) {
+            found = getLongestAtPosFromSet(i++, ans);
         }
         return found;
     }

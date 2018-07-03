@@ -1,5 +1,6 @@
 package g419.spatial.pattern;
 
+import com.google.common.collect.Lists;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Frame;
 import g419.spatial.tools.SentenceAnnotationIndexTypePos;
@@ -14,6 +15,10 @@ public class SentencePattern {
 
     final private String type;
     final private List<SentencePatternMatch> matchers;
+
+    public SentencePattern(final String type, final SentencePatternMatch matcher) {
+        this(type, Lists.newArrayList(matcher));
+    }
 
     public SentencePattern(final String type, final List<SentencePatternMatch> matchers) {
         this.type = type;

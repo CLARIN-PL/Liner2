@@ -16,11 +16,11 @@ import java.util.Map;
 public class MaltParser {
 
     final static Logger logger = LoggerFactory.getLogger(MaltParser.class);
-    private static HashMap<String, MaltParserService> parsers = Maps.newHashMap();
+    private static final HashMap<String, MaltParserService> parsers = Maps.newHashMap();
 
     final MaltParserService parser;
 
-    public MaltParser(String modelPath) {
+    public MaltParser(final String modelPath) {
         parser = parsers.computeIfAbsent(modelPath, r -> MaltParser.loadParser(Paths.get(modelPath)));
     }
 
@@ -29,7 +29,7 @@ public class MaltParser {
             final MaltParserService parser = new MaltParserService();
             parser.initializeParserModel(String.format("-c %s -m parse -w %s", modelPath.toFile().getName(), modelPath.toFile().getParent()));
             return parser;
-        } catch (MaltChainedException e) {
+        } catch (final MaltChainedException e) {
             logger.error("Failed to load MaltParser model {}", modelPath, e);
         }
         return null;
@@ -47,10 +47,14 @@ public class MaltParser {
         sentence.setMaltDataAndLinks(parseTokens(sentence.getMaltData()));
     }
 
-    public MaltSentence parse(final Sentence sentence, final Map<String, String> pos) throws MaltChainedException {
-        MaltSentence maltSentence = new MaltSentence(sentence, pos);
-        parse(maltSentence);
-        return maltSentence;
+    public MaltSentence parse(final Sentence sentence, final Map<String, String> pos) {
+        try {
+            final MaltSentence maltSentence = new MaltSentence(sentence, pos);
+            parse(maltSentence);
+            return maltSentence;
+        } catch (final MaltChainedException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
 }

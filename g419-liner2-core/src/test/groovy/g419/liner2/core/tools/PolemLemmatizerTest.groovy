@@ -4,7 +4,7 @@ import g419.corpus.structure.*
 import org.junit.Ignore
 import spock.lang.Specification
 
-@Ignore
+//@Ignore
 class PolemLemmatizerTest extends Specification {
 
     def "lemmatize should return valid lemma for orths, bases, ctags and debug parameters"(){

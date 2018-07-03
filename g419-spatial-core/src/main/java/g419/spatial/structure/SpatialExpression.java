@@ -27,11 +27,15 @@ public class SpatialExpression {
     public SpatialExpression() {
     }
 
-    public SpatialExpression(String type, Annotation trajector, Annotation spatialIndicator, Annotation landmark) {
+    public SpatialExpression(final String type, final Annotation trajector, final Annotation spatialIndicator, final Annotation landmark) {
         this.type = type;
         this.trajector.setSpatialObject(trajector);
         this.spatialIndicator = spatialIndicator;
         this.landmark.setSpatialObject(landmark);
+    }
+
+    public void setType(final String type) {
+        this.type = type;
     }
 
     public String getType() {
@@ -107,7 +111,7 @@ public class SpatialExpression {
         ans.add(getTrajector().getRegion());
         ans.add(getSpatialIndicator());
         ans.add(getMotionIndicator());
-        for (SpatialObjectPath sop : pathsIndicators) {
+        for (final SpatialObjectPath sop : pathsIndicators) {
             ans.add(sop.getSpatialObject().getRegion());
             ans.add(sop.getSpatialObject().getSpatialObject());
             ans.add(sop.getPathIndicator());

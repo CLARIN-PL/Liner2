@@ -31,7 +31,7 @@ trait TestSampleSentence {
     def getSampleSentence() {
         TokenAttributeIndex attrIndex = new TokenAttributeIndex()
         attrIndex.addAttribute("orth")
-        Sentence sentence = new Sentence()
+        Sentence sentence = new Sentence().withId("s1")
         sentence.addToken(new Token("Na", new Tag("na", "prep:tag", true), attrIndex))
         sentence.addToken(new Token("zielonej", new Tag("zielony", "adj:tag", true), attrIndex))
         sentence.addToken(new Token("łódce", new Tag("łódka", "subst:tag", true), attrIndex))

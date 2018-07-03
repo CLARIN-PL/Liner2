@@ -12,6 +12,7 @@ import java.util.Map;
 public class Frame<T> {
 
     final String type;
+    //final Map<String, String> attributes = Maps.newHashMap();
     final Map<String, T> slots = Maps.newHashMap();
     final Map<String, Map<String, String>> slotsAttributes = Maps.newHashMap();
 
@@ -51,5 +52,14 @@ public class Frame<T> {
 
     public Map<String, Map<String, String>> getSlotAttributes() {
         return slotsAttributes;
+    }
+
+    @Override
+    public String toString() {
+        return "Frame{" +
+                "type='" + type + '\'' +
+                ", slots=" + slots +
+                ", slotsAttributes=" + slotsAttributes +
+                '}';
     }
 }
