@@ -33,9 +33,7 @@ class SpatialExpressionKeyGeneratorSimpleTest extends Specification implements T
         when:
             def key = keyGenerator.generateKey(se)
 
-        expect:
+        then:
             key == "doc:_sent:s1_tr-so:4_si:0_lm-so:2"
-
-
     }
 }
