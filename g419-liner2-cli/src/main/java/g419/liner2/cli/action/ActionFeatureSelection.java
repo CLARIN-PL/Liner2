@@ -52,7 +52,7 @@ public class ActionFeatureSelection extends Action {
 
 	public ActionFeatureSelection() {
 		super("selection");
-		this.setDescription("todo");
+		this.setDescription("performs a bottom-up or top-down feature selection based on the results of cross-validation");
 
 		this.options.addOption(CommonOptions.getInputFileNameOption());
 		this.options.addOption(CommonOptions.getModelFileOption());

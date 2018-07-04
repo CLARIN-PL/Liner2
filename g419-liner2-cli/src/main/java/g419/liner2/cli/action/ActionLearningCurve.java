@@ -31,7 +31,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
 
 /**
- * TODO
+ * Calculates a learning curve for the given dataset
  * 
  * @author Jan Kocoń
  */
@@ -42,6 +42,7 @@ public class ActionLearningCurve extends Action {
 
 	public ActionLearningCurve() {
 		super("curve");
+		this.setDescription("calculates a learning curve for the given dataset");
 		this.options.addOption(CommonOptions.getModelFileOption());
 		this.options.addOption(CommonOptions.getInputFileFormatOption());
 		this.options.addOption(CommonOptions.getInputFileNameOption());

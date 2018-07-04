@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import g419.liner2.core.chunker.ensemble.OverwriteChunker;
 import g419.liner2.core.normalizer.factory.AbstractNormalizerFactoryItem;
 import org.ini4j.Ini;
 
@@ -132,10 +133,14 @@ public class ChunkerFactory {
 	 *
 	 * Example: c1 --- getGlobal single chunker named `c1`
 	 *
+	 * TODO: These n getChunker* functions should be rewritten as a single and understandable function
 	 * @param description
 	 * @return
 	 */
     public static Chunker getChunkerPipe(String description, ChunkerManager cm) {
+    	if (description.contains(">>")){
+    		return getChunkerOverwritePipe(description.split("\\>\\>"), cm);
+		}
         return getChunkerUnionPipe(description.split("\\+"), cm);
     }
 
@@ -177,4 +182,11 @@ public class ChunkerFactory {
             return new CascadeChunker(chunkers);
         }
     }
+	private static Chunker getChunkerOverwritePipe(String[] chunkerNames, ChunkerManager cm) {
+		ArrayList<Chunker> chunkers = new ArrayList<Chunker>();
+		for (String name : chunkerNames) {
+			chunkers.add(cm.getChunkerByName(name));
+		}
+		return new OverwriteChunker(chunkers);
+	}
 }
