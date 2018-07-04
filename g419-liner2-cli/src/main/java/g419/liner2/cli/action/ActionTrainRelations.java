@@ -1,5 +1,7 @@
 package g419.liner2.cli.action;
 
+import fasttext.Args;
+import fasttext.Pair;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
@@ -14,22 +16,28 @@ import g419.liner2.core.chunker.factory.ChunkerManager;
 import g419.liner2.core.features.TokenFeatureGenerator;
 import org.apache.commons.cli.CommandLine;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
+import fasttext.FastText;
+import org.apache.commons.cli.Option;
 
 /**
- * Chunking in pipe mode.
+ * Training model with in-sentence relations like slink, alink
  *
- * @author Maciej Janicki, Michał Marcińczuk
+ * @author Jan Kocoń
  */
 public class ActionTrainRelations extends Action {
 
     private String input_file = null;
     private String input_format = "batch:cclrel";
-    private String output_file = null;
-    private int avgLen = 0;
-    private int all = 0;
-    private int longer = 0;
+    private String output_prefix = null;
+    private String mode = null;
+    private Set<String> chosenRelations = null;
 
     public ActionTrainRelations() {
         super("train-rel");
@@ -38,6 +46,12 @@ public class ActionTrainRelations extends Action {
         this.options.addOption(CommonOptions.getInputFileNameOption());
         this.options.addOption(CommonOptions.getOutputFileNameOption());
         this.options.addOption(CommonOptions.getModelFileOption());
+        this.options.addOption(Option.builder("mode").longOpt("mode")
+                .required()
+                .hasArg().argName("mode").desc("choose mode (train, test)").build());
+        this.options.addOption(Option.builder("relations")
+                .longOpt("relations")
+                .hasArg().argName("relations").desc("define relation subset, e.g.: alink,slink,null").build());
 
     }
 
@@ -47,13 +61,16 @@ public class ActionTrainRelations extends Action {
 
     @Override
     public void parseOptions(final CommandLine line) throws Exception {
-        this.output_file = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
+        this.output_prefix = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
+        this.mode = line.getOptionValue("mode");
+        if (!this.mode.equals("train") && !this.mode.equals("test") )
+            throw new Exception("mode must be 'train' or 'test'!");
+        this.chosenRelations = new HashSet<String>(Arrays.asList(line.getOptionValue("relations").split(",")));
         LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
     }
 
-
-    public String getRepresentation(Annotation annotationFrom, Annotation annotationTo, String type) throws IllegalArgumentException{
+    public static String getRepresentation(Annotation annotationFrom, Annotation annotationTo) throws IllegalArgumentException {
         Sentence s = annotationFrom.getSentence();
         if (!annotationTo.getSentence().equals(s))
             throw new IllegalArgumentException("Annotations " + annotationFrom + " and " + annotationTo + " are not from the same sentence!");
@@ -62,10 +79,8 @@ public class ActionTrainRelations extends Action {
         int lastToken = reverseRelation ? annotationFrom.getEnd() : annotationTo.getEnd();
         if (lastToken - firstToken > 7)
             return null;
-
         List<Token> sentenceTokens = s.getTokens();
         List<String> representation = new LinkedList<>();
-        representation.add("__label__" + type);
         representation.add(reverseRelation ? "1" : "0");
         Set<Token> tokensFrom = new HashSet<>(annotationFrom.getTokenTokens());
         Set<Token> tokensTo = new HashSet<>(annotationTo.getTokenTokens());
@@ -73,32 +88,21 @@ public class ActionTrainRelations extends Action {
             Token tok = sentenceTokens.get(i);
             Tag tag = tok.getDisambTag();
             String tokenType = "null";
-            int tokenRelation = 0;
-            if (tokensFrom.contains(tok)) {
-                tokenRelation = 1;
+            if (tokensFrom.contains(tok))
                 tokenType = annotationFrom.getType();
-            }
-            else if (tokensTo.contains(tok)) {
-                tokenRelation = 2;
+            else if (tokensTo.contains(tok))
                 tokenType = annotationTo.getType();
-            }
             //representation.add(tok.getOrth() + "\t" + tag.getBase() + "\t" + tag.getPos() + "\t" + tokenRelation + "\t" + tokenType);
             representation.add(tokenType);
             representation.add(tag.getPos());
             //representation.add(tag.getBase().toLowerCase());
-            //representation.add(tok.getPos());            
-            //if (i == lastToken) 
-            //    representation.add(tokenType);            
+            //representation.add(tok.getPos());
         }
-        if (type.equals("alink")) {
-            avgLen += (representation.size() - 2);
-            all += 1;
-            if (representation.size() - 2 <= 8+2) {
-                longer += 1;
-            }
-        }
-
         return String.join(" ", representation);
+    }
+
+    public String getRepresentation(Annotation annotationFrom, Annotation annotationTo, String type) throws IllegalArgumentException{
+        return "__label__" + type + " " + getRepresentation(annotationFrom, annotationTo);
     }
 
     /**
@@ -111,40 +115,31 @@ public class ActionTrainRelations extends Action {
 
         TokenFeatureGenerator gen = null;
 
-        String RELATION_TYPE = "alink";
-
         if (!LinerOptions.getGlobal().features.isEmpty()) {
             gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
         }
 
-        /* Create all defined chunkers. */
-        //ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
-        //cm.loadChunkers();
-
-        //Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
-
-
-        PrintWriter writer = new PrintWriter(this.output_file, "UTF-8");
+        PrintWriter writer = new PrintWriter(this.output_prefix + "." + this.mode + ".txt", "UTF-8");
         Document ps = reader.nextDocument();
         while (ps != null) {
-            //RelationSet relations = ps.getRelations();
             if (gen != null)
                 gen.generateFeatures(ps);
             Set<Relation> relations = ps.getRelationsSet();
 
+            Map<Map.Entry<Annotation, Annotation>, String> relationAnnotationTypes = new HashMap<>();
             Set<Map.Entry<Annotation, Annotation>> relationAnnotations = new HashSet<>();
             for (Relation relation : relations) {
                 Annotation annotationFrom = relation.getAnnotationFrom();
                 Annotation annotationTo = relation.getAnnotationTo();
                 String type = relation.getType();
-                if (type.equals(RELATION_TYPE)) {
+                if (this.chosenRelations.contains(type)) {
                     Map.Entry<Annotation, Annotation> entry = new AbstractMap.SimpleEntry<>(annotationFrom, annotationTo);
                     relationAnnotations.add(entry);
+                    relationAnnotationTypes.put(entry, type);
                 }
             }
 
 
-            Set<Map.Entry<Annotation, Annotation>> unrelatedAnnotations = new HashSet<>();
             for (Map.Entry<Sentence, AnnotationSet> entry : ps.getChunkings().entrySet()) {
                 Sentence sentence = entry.getKey();
                 LinkedHashSet<Annotation> annotationSet = entry.getValue().chunkSet();
@@ -154,28 +149,48 @@ public class ActionTrainRelations extends Action {
                             if (!annotationFrom.equals(annotationTo)) {
                                 Map.Entry<Annotation, Annotation> annotationEntry = new AbstractMap.SimpleEntry<>(annotationFrom, annotationTo);
                                 String representation = null;
-                                if (!relationAnnotations.contains(annotationEntry)) {
-                                    unrelatedAnnotations.add(annotationEntry);
-                                    representation = getRepresentation(annotationFrom, annotationTo, "null");
-                                }
-                                else
-                                    representation = getRepresentation(annotationFrom, annotationTo, RELATION_TYPE);
+                                String relationType = "null";
+                                if (relationAnnotations.contains(annotationEntry))
+                                    relationType = relationAnnotationTypes.get(annotationEntry);
+                                if (chosenRelations == null || chosenRelations.contains(relationType))
+                                    representation = getRepresentation(annotationFrom, annotationTo, relationType);
                                 if (representation != null)
                                     writer.println(representation);
                             }
             }
 
-            //chunker.chunkInPlace(ps);
-            //ps.setRelations(relations);
             ps = reader.nextDocument();
         }
 
         reader.close();
         writer.close();
-        System.out.println(avgLen);
-        System.out.println(all);
-        System.out.println(avgLen / (float)all);
-        System.out.println(longer);
+
+        if (this.mode.equals("train")) {
+            FastText fasttext = new FastText();
+            Args a = new Args();
+            a.parseArgs(new String[]{
+                    "supervised",
+                    "-input", this.output_prefix + ".train.txt",
+                    "-output", this.output_prefix + ".model",
+                    "-dim", "50",
+                    "-epoch", "100",
+                    "-ws", "5",
+                    "-wordNgrams", "2",
+                    "-minn", "0",
+                    "-maxn", "3",
+                    "-lr", "0.1",
+                    "-loss", "softmax",
+                    "-thread", "12",
+                    "-label", "__label__"
+            });
+            fasttext.train(a);
+        }
+        else {
+            FastText fasttext = new FastText();
+            fasttext.loadModel(this.output_prefix + ".model.bin");
+            fasttext.test(new FileInputStream(new File(this.output_prefix + ".test.txt")), 1);
+        }
+
     }
 
 
