@@ -86,18 +86,18 @@ public class SentenceAnnotationIndexTypePos {
         return ans.get(0);
     }
 
-    public Annotation getAnnotationOfTypeStartingFrom(final String type, final Integer position) {
+    public Option<Annotation> getAnnotationOfTypeStartingFrom(final String type, final Integer position) {
         final List<Annotation> list = getAnnotationsOfTypeAtPos(type, position).stream()
                 .filter(an -> an.getBegin() == position)
                 .collect(Collectors.toList());
-        return list.size() == 0 ? null : list.get(0);
+        return Option.of(list.size() == 0 ? null : list.get(0));
     }
 
-    public Annotation getAnnotationOfTypeStartingFrom(final Pattern typePattern, final Integer position) {
+    public Option<Annotation> getAnnotationOfTypeStartingFrom(final Pattern typePattern, final Integer position) {
         final List<Annotation> list = getAnnotationsOfTypeAtPos(typePattern, position).stream()
                 .filter(an -> an.getBegin() == position)
                 .collect(Collectors.toList());
-        return list.size() == 0 ? null : list.get(0);
+        return Option.of(list.size() == 0 ? null : list.get(0));
     }
 
     /**

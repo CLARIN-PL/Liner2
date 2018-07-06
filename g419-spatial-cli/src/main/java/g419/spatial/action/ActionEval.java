@@ -84,7 +84,7 @@ public class ActionEval extends Action {
         final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(this.filename, this.inputFormat);
         final Wordnet3 wordnet = new Wordnet3(this.wordnetPath);
         final MaltParser malt = new MaltParser(this.maltparserModel);
-        final SpatialRelationRecognizer recognizer = new SpatialRelationRecognizer(malt, wordnet);
+        final ISpatialRelationRecognizer recognizer = new SpatialRelationRecognizer(malt, wordnet);
         final Set<String> regions = SpatialResources.getRegions();
 
         //KeyGenerator<SpatialExpression> keyGenerator = new SpatialExpressionKeyGeneratorSimple();

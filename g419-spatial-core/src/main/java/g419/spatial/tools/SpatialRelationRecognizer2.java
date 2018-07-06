@@ -2,7 +2,6 @@ package g419.spatial.tools;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import g419.corpus.HasLogger;
 import g419.corpus.schema.annotation.NkjpSpejd;
 import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import g419.corpus.structure.*;
@@ -11,7 +10,8 @@ import g419.liner2.core.tools.parser.MaltParser;
 import g419.liner2.core.tools.parser.MaltSentence;
 import g419.liner2.core.tools.parser.MaltSentenceLink;
 import g419.spatial.filter.*;
-import g419.spatial.pattern.*;
+import g419.spatial.pattern.SentencePattern;
+import g419.spatial.pattern.SentencePatternMatchCustomNgPrepNg;
 import g419.spatial.structure.SpatialExpression;
 import g419.spatial.structure.SpatialObjectRegion;
 import g419.toolbox.wordnet.NamToWordnet;
@@ -23,16 +23,18 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.maltparser.core.exception.MaltChainedException;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class SpatialRelationRecognizer2 implements HasLogger {
+public class SpatialRelationRecognizer2 extends ISpatialRelationRecognizer {
 
     final private MaltParser malt;
-    final List<IRelationFilter> filters;
     final RelationFilterSemanticPattern semanticFilter = new RelationFilterSemanticPattern();
 
     final private Pattern patternAnnotationNam = Pattern.compile("^nam(_(fac|liv|loc|pro|oth).*|$)");
@@ -48,27 +50,12 @@ public class SpatialRelationRecognizer2 implements HasLogger {
      */
     public SpatialRelationRecognizer2(final MaltParser malt, final Wordnet3 wordnet) throws IOException {
         this.malt = malt;
-        filters = Lists.newLinkedList();
         filters.add(new RelationFilterPronoun());
         filters.add(new RelationFilterDifferentObjects());
-        filters.add(this.semanticFilter);
+        filters.add(semanticFilter);
         filters.add(new RelationFilterPrepositionBeforeLandmark());
         filters.add(new RelationFilterLandmarkTrajectorException());
         filters.add(new RelationFilterHolonyms(wordnet, new NamToWordnet(wordnet)));
-    }
-
-    /**
-     * @return
-     */
-    public List<IRelationFilter> getFilters() {
-        return filters;
-    }
-
-    /**
-     * @return
-     */
-    public RelationFilterSemanticPattern getSemanticFilter() {
-        return semanticFilter;
     }
 
     public List<SpatialExpression> recognize(final Document document) {
@@ -92,28 +79,11 @@ public class SpatialRelationRecognizer2 implements HasLogger {
     }
 
     /**
-     * Passes the spatial expression through the list of filters and return the first filter, for which
-     * the expressions was discarded.
-     *
-     * @param se Spatial expression to test
-     * @return
-     */
-    public Optional<String> getFilterDiscardingRelation(final SpatialExpression se) {
-        final Iterator<IRelationFilter> filters = this.getFilters().iterator();
-        while (filters.hasNext()) {
-            final IRelationFilter filter = filters.next();
-            if (!filter.pass(se)) {
-                return Optional.ofNullable(filter.getClass().getSimpleName());
-            }
-        }
-        return Optional.ofNullable(null);
-    }
-
-    /**
      * @param sentence
      * @return
      * @throws MaltChainedException
      */
+    @Override
     public List<SpatialExpression> findCandidates(final Sentence sentence) {
         NkjpSyntacticChunks.splitPrepNg(sentence);
         final SentenceAnnotationIndexTypePos anIndex = new SentenceAnnotationIndexTypePos(sentence);
@@ -141,19 +111,22 @@ public class SpatialRelationRecognizer2 implements HasLogger {
     private List<SentencePattern> getPatterns() {
         final List<SentencePattern> patterns = Lists.newArrayList();
 
-        patterns.add(new SentencePattern("NG*_Prep_NG*", new SentencePatternMatchSequence()
-                .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
-                .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
-                .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))));
+//        patterns.add(new SentencePattern("NG*_Prep_NG*", new SentencePatternMatchSequence()
+//                .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
+//                .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
+//                .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))));
 
-        patterns.add(new SentencePattern("NG*_comma_Prep_NG*", new SentencePatternMatchSequence()
-                .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
-                .append(new SentencePatternMatchTokenOrth(","))
-                .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
-                .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))));
+//        patterns.add(new SentencePattern("NG*_comma_Prep_NG*", new SentencePatternMatchSequence()
+//                .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
+//                .append(new SentencePatternMatchTokenOrth(","))
+//                .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
+//                .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))));
+
+        patterns.add(new SentencePattern("<NP_Prep_NG>", new SentencePatternMatchCustomNgPrepNg()));
 
         return patterns;
     }
+
 
     private SpatialExpression frameToSpatialExpression(final Frame<Annotation> frame) {
         final SpatialExpression se = new SpatialExpression();

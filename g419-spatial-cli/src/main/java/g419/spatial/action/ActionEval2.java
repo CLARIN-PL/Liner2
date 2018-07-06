@@ -10,6 +10,7 @@ import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
+import g419.lib.cli.ParameterException;
 import g419.liner2.core.features.tokens.ClassFeature;
 import g419.liner2.core.tools.FscoreEvaluator;
 import g419.liner2.core.tools.parser.MaltParser;
@@ -34,12 +35,13 @@ public class ActionEval2 extends Action {
     private String inputFormat = null;
     private String maltparserModel = null;
     private String wordnetPath = null;
+    private String model = null;
 
     private SpatialExpressionKeyGeneratorSimple keyGenerator;
     private DecisionCollector<SpatialExpression> evalTotal;
     private DecisionCollector<SpatialExpression> evalNoSeedTotal;
     private final Map<String, FscoreEvaluator> evalByTypeTotal = Maps.newHashMap();
-    private SpatialRelationRecognizer2 recognizer;
+    private ISpatialRelationRecognizer recognizer;
     private Sumo sumo;
     private final DocumentToSpatialExpressionConverter converter = new DocumentToSpatialExpressionConverter();
     private final Set<String> regions = SpatialResources.getRegions();
@@ -53,17 +55,23 @@ public class ActionEval2 extends Action {
     public ActionEval2() {
         super("eval2");
         this.setDescription("evaluate recognition of spatial expressions (new approach including dynamic)");
-        this.options.addOption(this.getOptionInputFilename());
-        this.options.addOption(CommonOptions.getInputFileFormatOption());
-        this.options.addOption(CommonOptions.getMaltparserModelFileOption());
-        this.options.addOption(CommonOptions.getWordnetOption(true));
+        options.addOption(getOptionModel());
+        options.addOption(getOptionInputFilename());
+        options.addOption(CommonOptions.getInputFileFormatOption());
+        options.addOption(CommonOptions.getMaltparserModelFileOption());
+        options.addOption(CommonOptions.getWordnetOption(true));
 
-        this.annotationsPrep.add(Pattern.compile("^PrepNG.*"));
-        this.annotationsNg.add(Pattern.compile("^NG.*"));
-        this.objectPos = Sets.newHashSet("subst", "ign", "brev");
+        annotationsPrep.add(Pattern.compile("^PrepNG.*"));
+        annotationsNg.add(Pattern.compile("^NG.*"));
+        objectPos = Sets.newHashSet("subst", "ign", "brev");
 
         elementsToIgnoreByPos.addAll(ClassFeature.BROAD_CLASSES.get("verb"));
         elementsToIgnoreByPos.addAll(ClassFeature.BROAD_CLASSES.get("pron"));
+    }
+
+    private Option getOptionModel() {
+        return Option.builder(CommonOptions.OPTION_MODEL).longOpt(CommonOptions.OPTION_MODEL_LONG)
+                .hasArg().argName("name").desc("v1|v2").required().build();
     }
 
     private Option getOptionInputFilename() {
@@ -77,6 +85,7 @@ public class ActionEval2 extends Action {
         inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
         maltparserModel = line.getOptionValue(CommonOptions.OPTION_MALT);
         wordnetPath = line.getOptionValue(CommonOptions.OPTION_WORDNET);
+        model = line.getOptionValue(CommonOptions.OPTION_MODEL);
     }
 
     @Override
@@ -84,14 +93,24 @@ public class ActionEval2 extends Action {
         keyGenerator = new SpatialExpressionKeyGeneratorSimple();
         evalTotal = new DecisionCollector<>(keyGenerator);
         evalNoSeedTotal = new DecisionCollector<>(keyGenerator);
-        recognizer = new SpatialRelationRecognizer2(new MaltParser(maltparserModel), new Wordnet3(wordnetPath));
+        switch (model) {
+            case "v1":
+                recognizer = new SpatialRelationRecognizer(new MaltParser(maltparserModel), new Wordnet3(wordnetPath));
+                break;
+            case "v2":
+                recognizer = new SpatialRelationRecognizer2(new MaltParser(maltparserModel), new Wordnet3(wordnetPath));
+                break;
+            default:
+                throw new ParameterException(String.format("Unrecognized value of '%s', expected: v1|v2", model));
+        }
+
         sumo = recognizer.getSemanticFilter().getSumo();
 
         try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(filename, inputFormat)) {
             reader.forEach(this::evaluateDocument);
         }
 
-        printHeader1("Z sitem semantycznym");
+        printHeader1("With semantic constraints on trajector and landmark");
         evalTotal.getConfusionMatrix().printTotal();
 
         printHr1().printHeader2(String.format("%-30s %6s %6s %6s", "Pattern", "P", "TP", "FP"));
@@ -100,7 +119,7 @@ public class ActionEval2 extends Action {
                 .sorted()
                 .forEach(System.out::println);
 
-        printHeader1("Bez sita semantycznego");
+        printHeader1("With semantic constraints");
         evalNoSeedTotal.getConfusionMatrix().printTotal();
         printHr2();
     }
@@ -123,7 +142,9 @@ public class ActionEval2 extends Action {
         if (!elementsToIgnoreByPos.contains(Nuller.resolve(() -> se.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getPos()).orElse(""))
                 && !elementsToIgnoreByBase.contains(Nuller.resolve(() -> se.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase()).orElse(""))
                 && !elementsToIgnoreByPos.contains(Nuller.resolve(() -> se.getTrajector().getSpatialObject().getHeadToken().getDisambTag().getPos()).orElse(""))
-                && !elementsToIgnoreByBase.contains(Nuller.resolve(() -> se.getTrajector().getSpatialObject().getHeadToken().getDisambTag().getBase()).orElse(""))) {
+                && !elementsToIgnoreByBase.contains(Nuller.resolve(() -> se.getTrajector().getSpatialObject().getHeadToken().getDisambTag().getBase()).orElse(""))
+                && objectPos.contains(Nuller.resolve(() -> se.getTrajector().getSpatialObject().getHeadToken().getDisambTag().getPos()).orElse(""))
+                && objectPos.contains(Nuller.resolve(() -> se.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getPos()).orElse(""))) {
             return true;
         } else {
             getLogger().debug("IGNORED: " + se.toString());
