@@ -22,7 +22,14 @@ public class Tei {
     public final static String TAG_METADATA = "metadata";
     public final static String TAG_ID = "xml:id";
     public final static String TAG_LANG = "xml:lang";
+
     public final static String ATTR_CORESP = "coresp";
     public final static String ATTR_NAME = "name";
+    public final static String ATTR_REJECTED = "nkjp:rejected";
+    public final static String ATTR_TARGET = "target";
+    public final static String ATTR_TYPE = "type";
+    public final static String ATTR_XMLID = "xml:id";
+
+    public final static String VAL_TRUE = "true";
 
 }

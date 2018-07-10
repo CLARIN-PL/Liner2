@@ -21,7 +21,7 @@ import java.io.StringReader;
 import java.util.List;
 import java.util.Map;
 
-public class AnnRelationsSAXParser extends DefaultHandler {
+public class TeiRelationsSAXParser extends DefaultHandler {
 
     final private Logger logger = LoggerFactory.getLogger(getClass());
     String relationType;
@@ -32,28 +32,28 @@ public class AnnRelationsSAXParser extends DefaultHandler {
     Map<String, Annotation> annotationsMap;
     List<Relation> relations = Lists.newArrayList();
 
-    public AnnRelationsSAXParser(InputStream is, Map<String, Annotation> annotationsMap) throws DataFormatException {
+    public TeiRelationsSAXParser(final InputStream is, final Map<String, Annotation> annotationsMap) throws DataFormatException {
         this.annotationsMap = annotationsMap;
-        SAXParserFactory factory = SAXParserFactory.newInstance();
+        final SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
-            SAXParser parser = factory.newSAXParser();
+            final SAXParser parser = factory.newSAXParser();
             parser.parse(is, this);
-        } catch (ParserConfigurationException e) {
+        } catch (final ParserConfigurationException e) {
             throw new DataFormatException("Parse error (ParserConfigurationException)");
-        } catch (SAXException e) {
+        } catch (final SAXException e) {
             throw new DataFormatException("Parse error (SAXException)");
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new DataFormatException("Parse error (IOException)");
         }
     }
 
     @Override
-    public InputSource resolveEntity(String publicId, String systemId) {
+    public InputSource resolveEntity(final String publicId, final String systemId) {
         return new InputSource(new StringReader(""));
     }
 
     @Override
-    public void startElement(String s, String s1, String elementName, Attributes attributes) throws SAXException {
+    public void startElement(final String s, final String s1, final String elementName, final Attributes attributes) throws SAXException {
         switch (elementName.toLowerCase()) {
             case Tei.TAG_SEGMENT:
                 relationType = attributes.getValue("type");
@@ -75,10 +75,10 @@ public class AnnRelationsSAXParser extends DefaultHandler {
     }
 
     @Override
-    public void endElement(String s, String s1, String element) throws SAXException {
+    public void endElement(final String s, final String s1, final String element) throws SAXException {
         if (element.equals(Tei.TAG_SEGMENT)) {
-            Annotation sourceAnn = annotationsMap.get(sourceRef);
-            Annotation targetAnn = annotationsMap.get(targetRef);
+            final Annotation sourceAnn = annotationsMap.get(sourceRef);
+            final Annotation targetAnn = annotationsMap.get(targetRef);
             if (sourceAnn == null) {
                 logger.error("Relation was skipped because source annotation was not found for the id {}", sourceRef);
             } else if (targetAnn == null) {
@@ -95,6 +95,6 @@ public class AnnRelationsSAXParser extends DefaultHandler {
     }
 
     public List<Relation> getRelations() {
-        return this.relations;
+        return relations;
     }
 }
