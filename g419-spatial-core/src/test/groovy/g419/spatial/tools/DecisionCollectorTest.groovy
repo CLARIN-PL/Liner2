@@ -6,23 +6,23 @@ import spock.lang.Specification
 
 class DecisionCollectorTest extends Specification {
 
-    def "DecisionCollector should produce valid confuction matrix"(){
+    def "DecisionCollector should produce valid confuction matrix"() {
         given:
             DecisionCollector<String> collector = new DecisionCollector<>(KeyGenerator.toStringKey())
 
         when:
             collector.addGold("item1")
         then:
-            collector.getGold().size()==1
-            collector.getDecision().size()==0
+            collector.getGold().size() == 1
+            collector.getDecision().size() == 0
             collector.containsAsGold("item1") == true
             collector.containsAsGold("item2") == false
 
         when:
             collector.addAllGold(Lists.newArrayList("item2", "item3", "item4"))
         then:
-            collector.getGold().size()==4
-            collector.getDecision().size()==0
+            collector.getGold().size() == 4
+            collector.getDecision().size() == 0
             collector.containsAsGold("item2") == true
             collector.containsAsGold("item3") == true
             collector.containsAsGold("item4") == true
@@ -30,15 +30,15 @@ class DecisionCollectorTest extends Specification {
         when:
             collector.addDecision("item1")
         then:
-            collector.getGold().size()==4
-            collector.getDecision().size()==1
+            collector.getGold().size() == 4
+            collector.getDecision().size() == 1
             collector.containsAsDecision("item1") == true
 
         when:
             collector.addAllDecision(Lists.newArrayList("item2", "item5", "item6"))
         then:
-            collector.getGold().size()==4
-            collector.getDecision().size()==4
+            collector.getGold().size() == 4
+            collector.getDecision().size() == 4
             collector.containsAsDecision("item2") == true
             collector.containsAsDecision("item5") == true
             collector.containsAsDecision("item6") == true
@@ -47,13 +47,12 @@ class DecisionCollectorTest extends Specification {
         when:
             FscoreEvaluator eval = collector.getConfusionMatrix()
         then:
-            collector.getTruePositives().sort() == ["item1","item2"]
-            collector.getFalsPositives().sort() == ["item5","item6"]
-            collector.getFalseNegative().sort() == ["item3","item4"]
+            collector.getTruePositives().sort() == ["item1", "item2"]
+            collector.getFalsePositives().sort() == ["item5", "item6"]
+            collector.getFalseNegatives().sort() == ["item3", "item4"]
             eval.getTruePositiveCount() == 2
             eval.getFalsePositiveCount() == 2
             eval.getFalsePositiveCount() == 2
-
     }
 
 }

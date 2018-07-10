@@ -1,8 +1,8 @@
 package g419.spatial.filter;
 
-import java.io.IOException;
-
 import g419.spatial.structure.SpatialExpression;
+
+import java.io.IOException;
 
 /**
  * Odrzuca relacje, które posiadają określone tr lub lm.

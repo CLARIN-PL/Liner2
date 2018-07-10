@@ -5,6 +5,8 @@ import g419.corpus.structure.AnnotationPositionComparator;
 import g419.crete.core.annotation.AbstractAnnotationSelector;
 import g419.crete.core.annotation.AnnotationSelectorFactory;
 import g419.crete.core.structure.AnnotationUtil;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,9 +14,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
 public class AnnotationPairFeaturePronounLink extends AbstractAnnotationPairFeature<Float> {
 

@@ -1,11 +1,11 @@
 package g419.corpus.structure;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class DocumentTest {
 

@@ -1,10 +1,9 @@
 package g419.corpus.structure;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.text.SimpleDateFormat;
 
 public class DocumentDescriptor {
     protected final Map<String, String> description;

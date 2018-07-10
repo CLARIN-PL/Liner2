@@ -1,8 +1,8 @@
 package g419.tools.maltfeature;
 
-import java.util.Set;
-
 import g419.liner2.core.tools.parser.MaltSentence;
+
+import java.util.Set;
 
 /**
  * 

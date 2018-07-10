@@ -1,31 +1,13 @@
 package g419.corpus.io.writer;
 
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Relation;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Tag;
-import g419.corpus.structure.Token;
-import g419.corpus.structure.TokenAttributeIndex;
-
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.zip.DataFormatException;
+import g419.corpus.structure.*;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import java.io.*;
+import java.util.*;
+import java.util.zip.DataFormatException;
 
 
 public class CclStreamWriter extends AbstractDocumentWriter {

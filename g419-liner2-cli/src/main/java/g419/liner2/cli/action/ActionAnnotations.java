@@ -13,6 +13,8 @@ import g419.lib.cli.CommonOptions;
 import g419.liner2.core.LinerOptions;
 import g419.liner2.core.features.AnnotationFeatureGenerator;
 import g419.liner2.core.features.TokenFeatureGenerator;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
 
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
@@ -23,8 +25,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import org.apache.commons.cli.*;
 
 /**
  * Generates an ARFF file with a list of annotations of defined types 

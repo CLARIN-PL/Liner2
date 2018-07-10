@@ -2,10 +2,7 @@ package g419.liner2.daemon;
 
 import g419.liner2.core.LinerOptions;
 
-import java.io.File;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 
 /**
  * Created by michal on 6/25/14.

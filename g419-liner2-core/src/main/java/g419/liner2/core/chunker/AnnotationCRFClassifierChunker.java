@@ -1,24 +1,12 @@
 package g419.liner2.core.chunker;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
-
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.AnnotationSet;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-import g419.corpus.structure.TokenAttributeIndex;
+import g419.corpus.structure.*;
 import g419.liner2.core.features.AnnotationFeatureGenerator;
 import g419.liner2.core.features.TokenFeatureGenerator;
 import g419.liner2.core.features.TokenToAnnotationFeatureGenerator;
+
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
 * @author Michał Krautforst

@@ -1,19 +1,7 @@
 package g419.liner2.core.chunker;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import g419.corpus.schema.kpwr.KpwrNer;
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.AnnotationSet;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
+import g419.corpus.structure.*;
 import g419.liner2.core.features.annotations.AnnotationAtomicFeature;
 import g419.liner2.core.features.annotations.AnnotationFeatureSubstList;
 import g419.liner2.core.features.annotations.AnnotationFeatureSubstModifierAfter;
@@ -22,6 +10,8 @@ import g419.liner2.core.tools.FrequencyCounter;
 import g419.liner2.core.tools.TypedDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * Combines two models (name and top8) into a single unified model top8. 

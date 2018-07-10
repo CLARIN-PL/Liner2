@@ -1,13 +1,9 @@
 package g419.corpus.io.reader;
 
 import g419.corpus.io.DataFormatException;
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Tag;
-import g419.corpus.structure.Token;
-import g419.corpus.structure.TokenAttributeIndex;
+import g419.corpus.structure.*;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,9 +12,6 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.LoggerFactory;
 
 
 public class IobStreamReader extends AbstractDocumentReader {

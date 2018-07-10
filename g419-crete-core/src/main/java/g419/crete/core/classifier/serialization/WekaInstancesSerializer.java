@@ -1,11 +1,11 @@
 package g419.crete.core.classifier.serialization;
 
-import java.io.File;
-import java.io.IOException;
-
 import weka.core.Instances;
 import weka.core.converters.ArffLoader;
 import weka.core.converters.ArffSaver;
+
+import java.io.File;
+import java.io.IOException;
 
 public class WekaInstancesSerializer extends Serializer<Instances> {
 

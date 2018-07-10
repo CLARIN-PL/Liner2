@@ -1,16 +1,6 @@
 package g419.liner2.cli.action;
 
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.StringJoiner;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.ParseException;
-
 import g419.corpus.ConsolePrinter;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
@@ -20,6 +10,13 @@ import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.core.LinerOptions;
 import g419.liner2.core.features.TokenFeatureGenerator;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.StringJoiner;
 
 
 /**

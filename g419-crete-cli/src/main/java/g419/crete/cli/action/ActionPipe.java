@@ -7,12 +7,10 @@ import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.Document;
 import g419.crete.core.Crete;
 import g419.crete.core.CreteOptions;
-import g419.lib.cli.CommonOptions;
 import g419.lib.cli.Action;
+import g419.lib.cli.CommonOptions;
 import g419.liner2.core.features.TokenFeatureGenerator;
-
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
 
 public class ActionPipe extends Action{
 

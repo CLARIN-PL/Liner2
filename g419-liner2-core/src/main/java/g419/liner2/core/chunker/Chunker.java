@@ -1,13 +1,12 @@
 package g419.liner2.core.chunker;
 
-import java.util.Map;
-
-import org.ini4j.Ini;
-
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
+import org.ini4j.Ini;
+
+import java.util.Map;
 
 
 public abstract class Chunker {

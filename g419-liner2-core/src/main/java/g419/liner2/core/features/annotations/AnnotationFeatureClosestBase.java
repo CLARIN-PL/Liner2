@@ -5,7 +5,9 @@ import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Michał Marcińczuk

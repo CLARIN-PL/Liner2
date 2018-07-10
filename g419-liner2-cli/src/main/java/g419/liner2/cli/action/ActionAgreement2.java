@@ -1,18 +1,5 @@
 package g419.liner2.cli.action;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.regex.Pattern;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.lang3.StringUtils;
-
 import g419.corpus.ConsolePrinter;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
@@ -23,6 +10,11 @@ import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.core.tools.ChunkerEvaluator;
 import g419.liner2.core.tools.ChunkerEvaluatorMuc;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Porównuje zbiory anotacji dla wskazanych korpusów. Korpusy porównywane są parami.

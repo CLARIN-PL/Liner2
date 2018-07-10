@@ -77,21 +77,24 @@ public class TeiRelationsSAXParser extends DefaultHandler {
     @Override
     public void endElement(final String s, final String s1, final String element) throws SAXException {
         if (element.equals(Tei.TAG_SEGMENT)) {
-            final Annotation sourceAnn = annotationsMap.get(sourceRef);
-            final Annotation targetAnn = annotationsMap.get(targetRef);
+            final Annotation sourceAnn = annotationsMap.get(getAnnotationId(sourceRef));
+            final Annotation targetAnn = annotationsMap.get(getAnnotationId(targetRef));
             if (sourceAnn == null) {
                 logger.error("Relation was skipped because source annotation was not found for the id {}", sourceRef);
             } else if (targetAnn == null) {
                 logger.error("Relation was skipped because target annotation was not found for the id {}", targetRef);
             } else {
-
                 relations.add(new Relation(relationId, sourceAnn, targetAnn, relationType, relationSet));
             }
             relationType = null;
             sourceRef = null;
             targetRef = null;
         }
+    }
 
+    private String getAnnotationId(final String target) {
+        final String[] cols = target.split("#");
+        return cols[cols.length - 1];
     }
 
     public List<Relation> getRelations() {

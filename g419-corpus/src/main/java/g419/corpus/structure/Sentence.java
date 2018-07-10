@@ -46,9 +46,20 @@ public class Sentence extends IdentifiableElement {
         attributeIndex = attrIndex;
     }
 
+    public Sentence withId(final String id) {
+        setId(id);
+        return this;
+    }
+
     public void addChunk(final Annotation chunk) {
         chunk.setSentence(this);
         chunks.add(chunk);
+    }
+
+    public Annotation createAnnotation(final Integer tokenIndex, final String type) {
+        final Annotation an = new Annotation(tokenIndex, type, this);
+        chunks.add(an);
+        return an;
     }
 
     public void addAnnotations(final AnnotationSet chunking) {

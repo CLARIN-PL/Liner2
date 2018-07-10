@@ -1,11 +1,11 @@
 package g419.liner2.core.features.annotations;
 
 
-import java.util.HashSet;
-import java.util.Set;
-
 import g419.corpus.structure.Annotation;
 import g419.liner2.core.tools.SentenceTraverse;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Michał Marcińczuk

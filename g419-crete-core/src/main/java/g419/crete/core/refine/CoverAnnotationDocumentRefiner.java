@@ -3,11 +3,13 @@ package g419.crete.core.refine;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
-import g419.crete.core.annotation.*;
+import g419.crete.core.annotation.AbstractAnnotationSelector;
+import g419.crete.core.annotation.AllAnnotationSelector;
+import g419.crete.core.annotation.AnnotationSelectorFactory;
+import g419.crete.core.annotation.PatternAnnotationSelector;
 
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * Created by akaczmarek on 26.10.15.

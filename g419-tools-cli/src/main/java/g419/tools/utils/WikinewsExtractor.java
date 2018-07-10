@@ -1,15 +1,14 @@
 package g419.tools.utils;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
-import org.apache.log4j.Logger;
-
 import edu.jhu.nlp.wikipedia.PageCallbackHandler;
 import edu.jhu.nlp.wikipedia.WikiPage;
 import edu.jhu.nlp.wikipedia.WikiXMLParser;
 import edu.jhu.nlp.wikipedia.WikiXMLParserFactory;
+import org.apache.log4j.Logger;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WikinewsExtractor implements PageCallbackHandler {
 

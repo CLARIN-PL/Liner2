@@ -1,15 +1,12 @@
 package g419.liner2.cli.action;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.ParseException;
-
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
+import org.apache.commons.cli.CommandLine;
 
 /**
  * Prints corpora statistics.

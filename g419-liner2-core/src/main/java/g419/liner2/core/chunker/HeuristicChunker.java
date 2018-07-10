@@ -1,12 +1,6 @@
 package g419.liner2.core.chunker;
 
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.AnnotationSet;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-import g419.corpus.structure.TokenAttributeIndex;
+import g419.corpus.structure.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;

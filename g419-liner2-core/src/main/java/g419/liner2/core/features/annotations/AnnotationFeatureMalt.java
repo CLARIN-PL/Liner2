@@ -1,13 +1,12 @@
 package g419.liner2.core.features.annotations;
 
+import g419.corpus.structure.Annotation;
+import g419.liner2.core.tools.parser.MaltParser;
+import org.maltparser.core.exception.MaltChainedException;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.maltparser.core.exception.MaltChainedException;
-
-import g419.corpus.structure.Annotation;
-import g419.liner2.core.tools.parser.MaltParser;
 
 /**
  * Created with IntelliJ IDEA.

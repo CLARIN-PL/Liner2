@@ -1,6 +1,7 @@
 package g419.liner2.core.chunker.factory;
 
 
+import g419.corpus.ConsolePrinter;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Document;
@@ -8,15 +9,16 @@ import g419.lib.cli.ParameterException;
 import g419.liner2.core.LinerOptions;
 import g419.liner2.core.chunker.AnnotationWekaClassifierChunker;
 import g419.liner2.core.chunker.Chunker;
-import g419.corpus.ConsolePrinter;
+import org.ini4j.Ini;
+import org.ini4j.Profile;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import org.ini4j.Ini;
-import org.ini4j.Profile;
 
 public class ChunkerFactoryItemAnnotationWekaClassifier extends ChunkerFactoryItem {
 

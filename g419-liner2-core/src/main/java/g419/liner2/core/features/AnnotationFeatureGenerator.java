@@ -1,7 +1,8 @@
 package g419.liner2.core.features;
 
 import g419.corpus.schema.tagset.MappingNkjpToConllPos;
-import g419.corpus.structure.*;
+import g419.corpus.structure.Annotation;
+import g419.corpus.structure.Sentence;
 import g419.liner2.core.features.annotations.*;
 import g419.liner2.core.tools.parser.MaltSentence;
 

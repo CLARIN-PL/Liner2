@@ -2,19 +2,12 @@ package g419.crete.core.features.annotations.pair;
 
 import g419.corpus.structure.Annotation;
 import g419.toolbox.wordnet.Wordnet;
+import org.apache.commons.lang3.tuple.Pair;
+import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRaw;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.tuple.Pair;
-
-import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRaw;
 
 public class AnnotationPairFeatureSemanticLinkAgP extends AbstractAnnotationPairFeature<Float>{
 

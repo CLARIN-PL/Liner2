@@ -7,13 +7,12 @@ import g419.crete.core.annotation.AbstractAnnotationSelector;
 import g419.crete.core.instance.MentionPairClassificationInstance;
 import g419.crete.core.resolver.disambiguator.IDisambiguator;
 import g419.crete.core.resolver.disambiguator.MentionPairClosestDisambiguator;
+import weka.classifiers.Classifier;
+import weka.core.Instance;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import weka.classifiers.Classifier;
-import weka.core.Instance;
 
 public class WekaJ48MentionPairResolver extends AbstractCreteResolver<Classifier, MentionPairClassificationInstance<Integer>, Instance, Integer>{
 

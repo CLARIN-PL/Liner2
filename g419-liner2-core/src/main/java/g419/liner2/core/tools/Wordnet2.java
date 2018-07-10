@@ -1,21 +1,13 @@
 package g419.liner2.core.tools;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.*;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataLemmaRaw;
-import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRaw;
-import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRelationRaw;
-import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonIndexRaw;
-import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonParser;
 
 public class Wordnet2 {
 	HashMap<String, HashMap<String, PrincetonDataRaw>> data = new HashMap<String, HashMap<String, PrincetonDataRaw>>();

@@ -1,14 +1,13 @@
 package g419.liner2.core.chunker.factory;
 
+import g419.liner2.core.chunker.Chunker;
+import g419.liner2.core.chunker.RuleTitleChunker;
+import org.ini4j.Ini;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.ini4j.Ini;
-
-import g419.liner2.core.chunker.Chunker;
-import g419.liner2.core.chunker.RuleTitleChunker;
 
 /**
  * Chunker rozpoznaje tytuły na podstawie przesłanek kontekstowych.

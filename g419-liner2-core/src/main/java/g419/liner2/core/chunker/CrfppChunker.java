@@ -1,32 +1,21 @@
 package g419.liner2.core.chunker;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import g419.corpus.ConsolePrinter;
+import g419.corpus.structure.*;
+import g419.liner2.core.chunker.interfaces.DeserializableChunkerInterface;
+import g419.liner2.core.chunker.interfaces.SerializableChunkerInterface;
+import g419.liner2.core.chunker.interfaces.TrainableChunkerInterface;
+import g419.liner2.core.tools.TemplateFactory;
+import org.apache.log4j.Logger;
+import org.chasen.crfpp.Tagger;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.log4j.Logger;
-import org.chasen.crfpp.Tagger;
-
-import g419.corpus.ConsolePrinter;
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.AnnotationSet;
-import g419.corpus.structure.CrfTemplate;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-import g419.liner2.core.chunker.interfaces.DeserializableChunkerInterface;
-import g419.liner2.core.chunker.interfaces.SerializableChunkerInterface;
-import g419.liner2.core.chunker.interfaces.TrainableChunkerInterface;
-import g419.liner2.core.tools.TemplateFactory;
 
 public class CrfppChunker extends Chunker
 	implements TrainableChunkerInterface, DeserializableChunkerInterface, SerializableChunkerInterface {

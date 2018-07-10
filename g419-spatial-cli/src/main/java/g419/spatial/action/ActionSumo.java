@@ -1,14 +1,12 @@
 package g419.spatial.action;
 
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.log4j.Logger;
-
 import g419.lib.cli.Action;
 import g419.toolbox.sumo.Sumo;
+import org.apache.commons.cli.CommandLine;
+import org.apache.log4j.Logger;
+
+import java.util.Set;
+import java.util.TreeSet;
 
 public class ActionSumo extends Action {
 	

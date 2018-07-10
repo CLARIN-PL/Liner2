@@ -2,21 +2,12 @@ package g419.crete.core;
 
 import g419.crete.core.annotation.AnnotationDescription;
 import g419.crete.core.annotation.AnnotationSelectorFactory;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Properties;
-
 import org.ini4j.Ini;
 import org.ini4j.Profile.Section;
+
+import java.io.*;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class CreteOptions {
 

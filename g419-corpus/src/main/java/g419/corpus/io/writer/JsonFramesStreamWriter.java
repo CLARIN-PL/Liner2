@@ -1,25 +1,13 @@
 package g419.corpus.io.writer;
 
+import com.google.gson.Gson;
+import g419.corpus.structure.*;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import com.google.gson.Gson;
-
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Frame;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
+import java.util.*;
 
 
 /**
@@ -56,7 +44,7 @@ public class JsonFramesStreamWriter extends AbstractDocumentWriter {
 	
 	private List<Map<String, Object>> getFrames(Document document, Map<Annotation, String> annotationIds){
 		List<Map<String, Object>> frames = new ArrayList<Map<String,Object>>();
-		for ( Frame frame : document.getFrames() ){
+		for ( Frame<Annotation> frame : document.getFrames() ){
 			Map<String, Object> f = new HashMap<String, Object>();
 			Map<String, Object> slots = new HashMap<String, Object>();
 			

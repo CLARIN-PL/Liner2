@@ -1,12 +1,6 @@
 package g419.liner2.core.chunker.factory;
 
 
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import org.ini4j.Ini;
-
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.structure.CrfTemplate;
 import g419.corpus.structure.Document;
@@ -14,6 +8,10 @@ import g419.liner2.core.LinerOptions;
 import g419.liner2.core.chunker.Chunker;
 import g419.liner2.core.chunker.CrfppChunker;
 import g419.liner2.core.features.TokenFeatureGenerator;
+import org.ini4j.Ini;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.

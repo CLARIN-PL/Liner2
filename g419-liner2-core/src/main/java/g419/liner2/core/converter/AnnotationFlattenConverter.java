@@ -4,11 +4,10 @@ import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 
 /**
  * Created by michal on 9/17/14.

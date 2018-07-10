@@ -1,109 +1,107 @@
 package g419.corpus.structure;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Reprezentuje token, z których składa się zdanie (Sentence)
- * @author czuk
  *
+ * @author czuk
  */
-public class Token extends IdentifiableElement{
+public class Token extends IdentifiableElement {
 
     /* Indeks atrybutów */
     public TokenAttributeIndex attrIdx;
 
-	/* Uporządkowana lista atrybutów */
-	ArrayList<String> attributes = new ArrayList<String>();
-	
-	/* Lista analiz morfologicznych, jeżeli dostępna. */
-	ArrayList<Tag> tags = new ArrayList<Tag>();
+    /* Uporządkowana lista atrybutów */
+    ArrayList<String> attributes = new ArrayList<>();
 
-	/* Opcjonalne cechy nazwanych atrybutów */
-	Map<String, String> props = new HashMap<String, String>();
-	
-	/* Oznaczenie, czy między bieżącym a następnym tokenem był biały znak. */
-	boolean noSpaceAfter = false;
+    /* Lista analiz morfologicznych, jeżeli dostępna. */
+    ArrayList<Tag> tags = new ArrayList<>();
 
-	public Token(TokenAttributeIndex attrIdx){
-		this.attrIdx = attrIdx;
-		packAtributes(attrIdx.getLength());
-	}
+    /* Opcjonalne cechy nazwanych atrybutów */
+    Map<String, String> props = new HashMap<>();
 
-	public Token(String orth, Tag firstTag, TokenAttributeIndex attrIdx){
-		this.attrIdx = attrIdx;
-		packAtributes(attrIdx.getLength());
-		int index = attrIdx.getIndex("orth");
-		if ( index == -1 ){
-			throw new Error("TokenAttribute Index does not contain the 'orth' attribute");
-		}
-		this.setAttributeValue(index, orth);
-		this.addTag(firstTag);
-	}
+    /* Oznaczenie, czy między bieżącym a następnym tokenem był biały znak. */
+    boolean noSpaceAfter = false;
 
-	public void clearAttributes() {
-		this.attributes = new ArrayList<String>();
-	}
-	
-	public void removeAttribute(int attrIdx){
-		this.attributes.remove(attrIdx);
-	}
+    public Token(final TokenAttributeIndex attrIdx) {
+        this.attrIdx = attrIdx;
+        packAtributes(attrIdx.getLength());
+    }
 
-	/**
-	 * TODO
-	 * Zwraca wartość atrybutu o podany indeksie.
-	 * @param index
-	 * @return
-	 */
-	public String getAttributeValue(int index){
-		return attributes.get(index);
-	}
+    public Token(final String orth, final Tag firstTag, final TokenAttributeIndex attrIdx) {
+        this.attrIdx = attrIdx;
+        packAtributes(attrIdx.getLength());
+        final int index = attrIdx.getIndex("orth");
+        if (index == -1) {
+            throw new Error("TokenAttribute Index does not contain the 'orth' attribute");
+        }
+        this.setAttributeValue(index, orth);
+        this.addTag(firstTag);
+    }
 
-	public String getAttributeValue(String attr){
-        	int index = this.attrIdx.getIndex(attr);
-        	return getAttributeValue(index);
-    	}
-	
-	public int getNumAttributes() {
-		return attributes.size();
-	}
+    public void clearAttributes() {
+        this.attributes = new ArrayList<>();
+    }
 
-	public Map<String, String> getProps(){
-		return this.props;
-	}
+    public void removeAttribute(final int attrIdx) {
+        this.attributes.remove(attrIdx);
+    }
 
-	public void setProp(String name, String value){
-		this.props.put(name, value);
-	}
+    /**
+     * TODO
+     * Zwraca wartość atrybutu o podany indeksie.
+     *
+     * @param index
+     * @return
+     */
+    public String getAttributeValue(final int index) {
+        return attributes.get(index);
+    }
 
-	/**
-	 * TODO
-	 * Funkcja pomocnicza zwraca wartość pierwszego atrybutu.
-	 * Przeważnie będzie to orth.
-	 * @return
-	 */
-	public String getOrth(){
-		return attributes.get(attrIdx.getIndex("orth"));
-	}
-	
-	/**
-	 * Gets the element.
-	 *
-	 * @param key the key
-	 * @return the element
-	 */
-	public String getElement(String key){
-		return attributes.get(attrIdx.getIndex(key));
-	}
-	
-	public boolean getNoSpaceAfter() {
-		return this.noSpaceAfter;
-	}
-	
-	public void addTag(Tag tag) {
+    public String getAttributeValue(final String attr) {
+        final int index = this.attrIdx.getIndex(attr);
+        return getAttributeValue(index);
+    }
+
+    public int getNumAttributes() {
+        return attributes.size();
+    }
+
+    public Map<String, String> getProps() {
+        return this.props;
+    }
+
+    public void setProp(final String name, final String value) {
+        this.props.put(name, value);
+    }
+
+    /**
+     * TODO
+     * Funkcja pomocnicza zwraca wartość pierwszego atrybutu.
+     * Przeważnie będzie to orth.
+     *
+     * @return
+     */
+    public String getOrth() {
+        return attributes.get(attrIdx.getIndex("orth"));
+    }
+
+    /**
+     * Gets the element.
+     *
+     * @param key the key
+     * @return the element
+     */
+    public String getElement(final String key) {
+        return attributes.get(attrIdx.getIndex(key));
+    }
+
+    public boolean getNoSpaceAfter() {
+        return this.noSpaceAfter;
+    }
+
+    public void addTag(final Tag tag) {
         tags.add(tag);
         if (attrIdx.getIndex("base") != -1 && attributes.get(attrIdx.getIndex("base")) == null) {
             this.setAttributeValue(this.attrIdx.getIndex("base"), tag.getBase());
@@ -112,112 +110,127 @@ public class Token extends IdentifiableElement{
             this.setAttributeValue(this.attrIdx.getIndex("ctag"), tag.getCtag());
         }
     }
-	
-	public ArrayList<Tag> getTags() {
-		return tags;
-	}
 
-    public Set<String> getDisambBases(){
-    	Set<String> bases = new HashSet<String>();
-    	for ( Tag tag : this.tags ){
-    		if ( tag.getDisamb() ){
-    			bases.add(tag.getBase());
-    		}
-    	}
-    	return bases;
+    public ArrayList<Tag> getTags() {
+        return tags;
     }
-    
-	public Tag getDisambTag() {
-		for ( Tag tag : this.tags ){
-			if ( tag.getDisamb() ){
-				return tag;
-			}
-		}
-		if ( this.tags.size() > 0 ){
-			return this.tags.get(0);
-		}
-		return null;
-	}
 
-	public Set<Tag> getDisambTags() {
-		Set<Tag> tags = new HashSet<Tag>();
-		for ( Tag tag : this.tags ){
-			if ( tag.getDisamb() ){
-				tags.add(tag);
-			}
-		}		
-		return tags;
-	}
+    public Set<String> getDisambBases() {
+        final Set<String> bases = new HashSet<>();
+        for (final Tag tag : this.tags) {
+            if (tag.getDisamb()) {
+                bases.add(tag.getBase());
+            }
+        }
+        return bases;
+    }
 
-	public void packAtributes(int size){
-		while(getNumAttributes()<size)
-			attributes.add(null);
-	}
-	
-	public void setAttributeValue(int index, String value) {
-		if (index < attributes.size())
-			attributes.set(index, value);
-		else if (index == attributes.size())
-			attributes.add(value);
-	}
+    @Override
+    public String toString() {
+        return "Token{" +
+                "attrIdx=" + attrIdx +
+                ", attributes=" + attributes +
+                ", tags=" + tags +
+                ", props=" + props +
+                ", noSpaceAfter=" + noSpaceAfter +
+                '}';
+    }
 
-    public void setAttributeValue(String attr, String value) {
-        int index = this.attrIdx.getIndex(attr);
+    public Tag getDisambTag() {
+        for (final Tag tag : this.tags) {
+            if (tag.getDisamb()) {
+                return tag;
+            }
+        }
+        if (this.tags.size() > 0) {
+            return this.tags.get(0);
+        }
+        return null;
+    }
+
+    public Set<Tag> getDisambTags() {
+        final Set<Tag> tags = new HashSet<>();
+        for (final Tag tag : this.tags) {
+            if (tag.getDisamb()) {
+                tags.add(tag);
+            }
+        }
+        return tags;
+    }
+
+    public void packAtributes(final int size) {
+        while (getNumAttributes() < size) {
+            attributes.add(null);
+        }
+    }
+
+    public void setAttributeValue(final int index, final String value) {
+        if (index < attributes.size()) {
+            attributes.set(index, value);
+        } else if (index == attributes.size()) {
+            attributes.add(value);
+        }
+    }
+
+    public void setAttributeValue(final String attr, final String value) {
+        final int index = this.attrIdx.getIndex(attr);
         setAttributeValue(index, value);
     }
-	
-	public void setNoSpaceAfter(boolean noSpaceAfter) {
-		this.noSpaceAfter = noSpaceAfter;
-	}
-	
-    public String getAttributesAsString(){
-    	StringBuilder sb = new StringBuilder();
-    	for ( String attr : this.attributes )
-    		sb.append((sb.length() == 0 ? "" : ", ") + attr);
-    	return sb.toString();
+
+    public void setNoSpaceAfter(final boolean noSpaceAfter) {
+        this.noSpaceAfter = noSpaceAfter;
     }
 
-    public Token clone(){
-        Token cloned = new Token(this.attrIdx.clone());
-        cloned.tags = new ArrayList<Tag>(this.tags);
-        cloned.attributes = new ArrayList<String>(this.attributes);
+    public String getAttributesAsString() {
+        final StringBuilder sb = new StringBuilder();
+        for (final String attr : this.attributes) {
+            sb.append((sb.length() == 0 ? "" : ", ") + attr);
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public Token clone() {
+        final Token cloned = new Token(this.attrIdx.clone());
+        cloned.tags = new ArrayList<>(this.tags);
+        cloned.attributes = new ArrayList<>(this.attributes);
         cloned.id = id;
         cloned.noSpaceAfter = this.noSpaceAfter;
         return cloned;
     }
 
-    public void setAttributeIndex(TokenAttributeIndex newAttrIdx){
-        ArrayList<String> newAttributes = new ArrayList<String>();
-        for(String feature: newAttrIdx.allAtributes()){
-            String value = attrIdx.getIndex(feature) == -1 ? null : getAttributeValue(feature);
+    public void setAttributeIndex(final TokenAttributeIndex newAttrIdx) {
+        final ArrayList<String> newAttributes = new ArrayList<>();
+        for (final String feature : newAttrIdx.allAtributes()) {
+            final String value = attrIdx.getIndex(feature) == -1 ? null : getAttributeValue(feature);
             newAttributes.add(value);
         }
         attrIdx = newAttrIdx;
         attributes = newAttributes;
     }
 
-	public boolean isWrapped(){
-		return this.getClass().isInstance(WrappedToken.class);
-	}
-	
-	public TokenAttributeIndex getAttributeIndex(){
-		return this.attrIdx;
-	}
-	
-	/**
-	 * Sprawdza, czy jakakolwiek interpretacja ma jako base wskazany lemat.
-	 *
-	 * @param base Szukany lemat
-	 * @param disambOnly Czy mają być sprawdzane same disamby.
-	 * @return true, if successful
-	 */
-	public boolean hasBase(String base, boolean disambOnly){
-		for ( Tag tag : this.tags ){
-			if ( tag.getBase().equals(base) && (disambOnly == false || tag.getDisamb() == true) ){
-				return true;
-			}
-		}
-		return false;
-	}
-	
+    public boolean isWrapped() {
+        return this.getClass().isInstance(WrappedToken.class);
+    }
+
+    public TokenAttributeIndex getAttributeIndex() {
+        return this.attrIdx;
+    }
+
+    /**
+     * Sprawdza, czy jakakolwiek interpretacja ma jako base wskazany lemat.
+     *
+     * @param base       Szukany lemat
+     * @param disambOnly Czy mają być sprawdzane same disamby.
+     * @return true, if successful
+     */
+    public boolean hasBase(final String base, final boolean disambOnly) {
+        for (final Tag tag : this.tags) {
+            if (tag.getBase().equals(base) && (disambOnly == false || tag.getDisamb() == true)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

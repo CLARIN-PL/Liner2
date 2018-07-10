@@ -1,20 +1,6 @@
 package g419.spatial.action;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
-
 import com.google.common.base.Charsets;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
-import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
-
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Annotation;
@@ -23,6 +9,14 @@ import g419.corpus.structure.Sentence;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.core.Liner2;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class ActionAnalyzeObjects extends Action {
 	

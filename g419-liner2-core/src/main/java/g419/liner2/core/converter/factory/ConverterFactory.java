@@ -1,7 +1,8 @@
 package g419.liner2.core.converter.factory;
 
-import g419.liner2.core.converter.*;
 import g419.corpus.ConsolePrinter;
+import g419.liner2.core.converter.Converter;
+import g419.liner2.core.converter.PipeConverter;
 
 import java.util.ArrayList;
 

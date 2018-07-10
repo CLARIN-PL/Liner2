@@ -1,16 +1,6 @@
 package g419.spatial.action;
 
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
-
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Document;
@@ -22,7 +12,14 @@ import g419.lib.cli.CommonOptions;
 import g419.spatial.tools.SpatialResources;
 import g419.toolbox.sumo.Sumo;
 import g419.toolbox.sumo.WordnetToSumo;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
 import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ActionRegions extends Action {
 	

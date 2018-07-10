@@ -2,12 +2,11 @@ package g419.liner2.core.features.tokens;
 
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
+import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataLemmaRaw;
+import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRaw;
 
 import java.util.ArrayList;
 import java.util.Collections;
-
-import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataLemmaRaw;
-import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRaw;
 
 public class HypernymFeature extends TokenFeature{
 	

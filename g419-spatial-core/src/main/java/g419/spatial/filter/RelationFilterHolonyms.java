@@ -1,13 +1,13 @@
 package g419.spatial.filter;
 
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-
 import g419.spatial.structure.SpatialExpression;
 import g419.toolbox.wordnet.NamToWordnet;
 import g419.toolbox.wordnet.Wordnet3;
 import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRaw;
+
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Filtr sprawdza, czy przyimek występuje przed potencjalnych landmarkiem.

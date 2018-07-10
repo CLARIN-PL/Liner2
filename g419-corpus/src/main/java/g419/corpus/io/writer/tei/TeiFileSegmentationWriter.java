@@ -11,7 +11,6 @@ import g419.corpus.structure.Token;
 import javax.xml.stream.XMLStreamException;
 import java.io.OutputStream;
 import java.util.Map;
-import java.util.StringJoiner;
 
 public class TeiFileSegmentationWriter extends TeiFileWriter {
 

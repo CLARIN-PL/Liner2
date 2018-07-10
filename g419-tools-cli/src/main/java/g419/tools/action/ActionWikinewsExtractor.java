@@ -1,14 +1,12 @@
 package g419.tools.action;
 
-import java.io.File;
-
+import g419.lib.cli.Action;
+import g419.tools.utils.WikinewsExtractor;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.log4j.Logger;
 
-import g419.lib.cli.Action;
-import g419.tools.utils.WikinewsExtractor;
+import java.io.File;
 
 public class ActionWikinewsExtractor extends Action {
 	

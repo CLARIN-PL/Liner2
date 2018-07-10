@@ -165,12 +165,13 @@ public class TeiAnnotationSAXParser extends DefaultHandler {
         if (elementKey == null) {
             return 0;
         }
-        final String[] cols = elementKey.split("#");
-        if (cols.length > 1 && cols[0].length() > 0) {
-            return tokensIdMap.get(elementsIdMap.get(cols[1]).get(0));
-        } else {
-            return getHead(headIds.get(cols[cols.length - 1]));
-        }
+        return getTokens(elementKey).get(0);
+//        final String[] cols = elementKey.split("#");
+//        if (cols.length > 1 && cols[0].length() > 0) {
+//            return tokensIdMap.get(elementsIdMap.get(cols[1]).get(0));
+//        } else {
+//            return getHead(headIds.get(cols[cols.length - 1]));
+//        }
     }
 
     @Override

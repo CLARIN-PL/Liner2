@@ -1,10 +1,9 @@
 package g419.crete.core.features.representation;
 
 import g419.crete.core.classifier.AbstractCreteClassifier;
+import weka.core.Instance;
 
 import java.util.HashMap;
-
-import weka.core.Instance;
 
 
 public class FeatureRepresentationFactory {

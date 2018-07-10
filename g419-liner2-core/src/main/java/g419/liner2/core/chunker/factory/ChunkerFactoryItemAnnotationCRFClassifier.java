@@ -1,14 +1,15 @@
 package g419.liner2.core.chunker.factory;
 
+import g419.corpus.ConsolePrinter;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
-import g419.corpus.structure.*;
+import g419.corpus.structure.CrfTemplate;
+import g419.corpus.structure.Document;
 import g419.liner2.core.LinerOptions;
 import g419.liner2.core.chunker.AnnotationCRFClassifierChunker;
 import g419.liner2.core.chunker.Chunker;
 import g419.liner2.core.chunker.CrfppChunker;
 import g419.liner2.core.features.TokenFeatureGenerator;
-import g419.corpus.ConsolePrinter;
 import g419.liner2.core.lib.LibLoaderCrfpp;
 import g419.liner2.core.tools.TemplateFactory;
 import org.ini4j.Ini;

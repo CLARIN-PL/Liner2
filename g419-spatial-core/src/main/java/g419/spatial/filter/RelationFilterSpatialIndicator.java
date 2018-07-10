@@ -1,5 +1,7 @@
 package g419.spatial.filter;
 
+import g419.spatial.structure.SpatialExpression;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,8 +9,6 @@ import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.MissingResourceException;
 import java.util.Set;
-
-import g419.spatial.structure.SpatialExpression;
 
 public class RelationFilterSpatialIndicator implements IRelationFilter {
 

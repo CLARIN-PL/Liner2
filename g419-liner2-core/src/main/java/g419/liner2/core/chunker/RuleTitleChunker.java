@@ -1,21 +1,16 @@
 package g419.liner2.core.chunker;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.google.common.collect.Sets;
-
 import g419.corpus.schema.kpwr.KpwrNer;
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.AnnotationSet;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
+import g419.corpus.structure.*;
 import g419.liner2.core.tools.QuotationFinder;
 import g419.liner2.core.tools.QuotationSize;
 import g419.liner2.core.tools.TrieDictFinder;
 import g419.liner2.core.tools.TrieDictNode;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Chunker znajduje tytuły chrematonimów (książki, wystawy, akcje, projekty, itd.) w oparciu o wystąpienie

@@ -2,12 +2,7 @@ package g419.corpus.structure;
 
 import g419.corpus.structure.AnnotationCluster.ReturningStrategy;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Zbiór klastrów anotacji będących w relacji przechodniej.

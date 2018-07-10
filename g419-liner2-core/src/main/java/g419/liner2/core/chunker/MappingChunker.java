@@ -1,12 +1,12 @@
 package g419.liner2.core.chunker;
 
-import java.util.HashMap;
-
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 import g419.liner2.core.converter.AnnotationMappingConverter;
 import g419.liner2.core.converter.Converter;
+
+import java.util.HashMap;
 
 public class MappingChunker extends Chunker {
 

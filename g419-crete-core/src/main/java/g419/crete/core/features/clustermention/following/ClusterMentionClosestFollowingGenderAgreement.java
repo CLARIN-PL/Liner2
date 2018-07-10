@@ -6,7 +6,6 @@ import g419.crete.core.features.annotations.AnnotationFeatureGender;
 import g419.crete.core.features.clustermention.AbstractClusterMentionFeature;
 import g419.crete.core.features.enumvalues.Gender;
 import g419.crete.core.structure.AnnotationUtil;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 public class ClusterMentionClosestFollowingGenderAgreement extends AbstractClusterMentionFeature<Boolean> {

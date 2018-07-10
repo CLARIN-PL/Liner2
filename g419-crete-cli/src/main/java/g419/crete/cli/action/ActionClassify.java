@@ -12,8 +12,8 @@ import g419.crete.core.CreteOptions;
 import g419.crete.core.annotation.AbstractAnnotationSelector;
 import g419.crete.core.annotation.AnnotationSelectorFactory;
 import g419.crete.core.classifier.factory.ClassifierFactory;
-import g419.crete.core.classifier.factory.item.WekaRandomForestClassifierItem;
 import g419.crete.core.classifier.factory.item.WekaLogisticRegressionClassifierItem;
+import g419.crete.core.classifier.factory.item.WekaRandomForestClassifierItem;
 import g419.crete.core.classifier.factory.item.WekaSmoClassifierItem;
 import g419.crete.core.classifier.serialization.WekaModelSerializer;
 import g419.crete.core.instance.ClusterClassificationInstance;
@@ -31,7 +31,6 @@ import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.core.features.TokenFeatureGenerator;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
 import weka.core.Instance;
 
 import java.util.ArrayList;

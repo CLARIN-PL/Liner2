@@ -1,9 +1,9 @@
 package g419.crete.core.cluster;
 
 import g419.corpus.structure.Annotation;
+import g419.corpus.structure.AnnotationClusterSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Relation;
-import g419.corpus.structure.AnnotationClusterSet;
 import g419.crete.core.annotation.AbstractAnnotationSelector;
 import g419.crete.core.annotation.AnnotationSelectorFactory;
 

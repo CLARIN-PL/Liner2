@@ -1,9 +1,11 @@
 package g419.corpus.structure;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Klasa reprezentuje anotację jako ciągłą sekwencję tokenów w zdaniu.
@@ -29,7 +31,7 @@ public class Annotation extends IdentifiableElement {
     /**
      * Indices of tokens which form the annotation.
      */
-    private TreeSet<Integer> tokens = new TreeSet<>();
+    private TreeSet<Integer> tokens = Sets.newTreeSet();
 
     /**
      * Index of a token that is the head of the annotation
@@ -190,17 +192,6 @@ public class Annotation extends IdentifiableElement {
         }
 
         setHead(head);
-
-        if (tokens.size() == 1) {
-            return;
-        }
-
-        for (final Annotation ann : sentence.getChunks()) {
-            if (ann.hasHead() && tokens.equals(ann.tokens) && !type.equalsIgnoreCase(ann.type)) {
-                setHead(ann.getHead());
-                return;
-            }
-        }
     }
 
     public Integer getHead() {
@@ -222,38 +213,29 @@ public class Annotation extends IdentifiableElement {
     }
 
     public void addToken(final int idx) {
-        if (!tokens.contains(idx)) {
-            tokens.add(idx);
-        }
+        tokens.add(idx);
     }
 
     public void replaceTokens(final int begin, final int end) {
         tokens.clear();
-        for (int i = begin; i <= end; i++) {
-            tokens.add(i);
-        }
+        IntStream.rangeClosed(begin, end).forEach(tokens::add);
     }
 
     @Override
     public boolean equals(final Object object) {
-        final Annotation chunk = (Annotation) object;
-        if (chunk == null) {
+        if (object == null) {
             return false;
         }
-        if (getSentence().getId() != null
-                && chunk.getSentence().getId() != null
-                && !getSentence().getId().equals(chunk.getSentence().getId())) {
-            return false;
-        } else if (!tokens.equals(chunk.getTokens())) {
-            return false;
-        } else if (!getText().equals(chunk.getText())) {
-            return false;
-        } else if (!type.equals(chunk.getType())) {
-            return false;
-        }
-        return true;
+        final Annotation that = (Annotation) object;
+        return equalsWithTrueOnNull(getSentence().getId(), that.getSentence().getId())
+                && equalsWithTrueOnNull(getId(), that.getId())
+                && Objects.equals(getTokens(), that.getTokens())
+                && Objects.equals(getType(), that.getType());
     }
 
+    private static boolean equalsWithTrueOnNull(final Object o1, final Object o2) {
+        return o1 == null || o2 == null || Objects.equals(o1, o2);
+    }
 
     @Override
     public int hashCode() {
@@ -479,6 +461,15 @@ public class Annotation extends IdentifiableElement {
 
     public int length() {
         return tokens.size();
+    }
+
+
+    public boolean contains(final Annotation inner) {
+        if (inner == null) {
+            return false;
+        }
+        return inner.getBegin() >= getBegin() && inner.getBegin() <= getEnd()
+                && inner.getEnd() >= getBegin() && inner.getEnd() <= getEnd();
     }
 
     public Annotation withGroup(final String groupName) {

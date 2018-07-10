@@ -1,12 +1,11 @@
 package g419.liner2.core.chunker.factory;
 
 
-import org.ini4j.Ini;
-
 import g419.lib.cli.ParameterException;
 import g419.liner2.core.chunker.AnnotationTop8NameClassifierChunker;
 import g419.liner2.core.chunker.Chunker;
 import g419.liner2.core.tools.TypedDictionary;
+import org.ini4j.Ini;
 
 public class ChunkerFactoryItemAnnotationTop8NameClassifierChunker extends ChunkerFactoryItem {
 

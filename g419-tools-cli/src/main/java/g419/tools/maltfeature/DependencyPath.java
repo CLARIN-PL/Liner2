@@ -1,11 +1,11 @@
 package g419.tools.maltfeature;
 
+import g419.corpus.structure.Sentence;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import g419.corpus.structure.Sentence;
 
 /**
  * 
