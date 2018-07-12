@@ -1,7 +1,9 @@
 package g419.corpus.io.writer;
 
 import g419.corpus.TerminateException;
+import g419.corpus.format.Iob;
 import g419.corpus.structure.*;
+import io.vavr.control.Option;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -9,6 +11,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 
 public class IobStreamWriter extends AbstractDocumentWriter {
@@ -25,10 +28,7 @@ public class IobStreamWriter extends AbstractDocumentWriter {
             return;
         }
         try {
-            String line = "-DOCSTART CONFIG FEATURES";
-            for (int i = 0; i < attributeIndex.getLength(); i++) {
-                line += " " + attributeIndex.getName(i);
-            }
+            final String line = Iob.IOB_HEADER_PREFIX + attributeIndex.getAttributes().stream().collect(Collectors.joining(" "));
             ow.write(line, 0, line.length());
             ow.newLine();
         } catch (final IOException ex) {
@@ -41,8 +41,8 @@ public class IobStreamWriter extends AbstractDocumentWriter {
     public void flush() {
         try {
             ow.flush();
-        } catch (final IOException e) {
-            e.printStackTrace();
+        } catch (final IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
@@ -51,15 +51,13 @@ public class IobStreamWriter extends AbstractDocumentWriter {
         try {
             ow.close();
         } catch (final IOException ex) {
-            ex.printStackTrace();
+            throw new RuntimeException(ex);
         }
     }
 
     @Override
     public void writeDocument(final Document document) {
-        for (final Paragraph paragraph : document.getParagraphs()) {
-            writeParagraph(paragraph);
-        }
+        document.getParagraphs().forEach(this::writeParagraph);
     }
 
     public void writeParagraph(final Paragraph paragraph) {
@@ -67,32 +65,30 @@ public class IobStreamWriter extends AbstractDocumentWriter {
             if (!init) {
                 init(paragraph.getAttributeIndex());
             }
-            String paragraphId = paragraph.getId();
-            if (paragraphId == null) {
-                paragraphId = "";
-            }
-            final String header = "-DOCSTART FILE " + paragraphId;
+            final String header = Iob.IOB_FILE_PREFIX + Option.of(paragraph.getId()).getOrElse("");
             ow.write(header, 0, header.length());
             ow.newLine();
-            for (final Sentence sentence : paragraph.getSentences()) {
-                writeSentence(sentence);
-            }
+            paragraph.getSentences().forEach(this::writeSentence);
         } catch (final IOException ex) {
-            ex.printStackTrace();
+            throw new RuntimeException(ex);
         }
     }
 
-    private void writeSentence(final Sentence sentence) throws IOException {
-        final List<Token> tokens = sentence.getTokens();
-        for (int i = 0; i < tokens.size(); i++) {
-            writeToken(i, tokens.get(i), sentence);
+    private void writeSentence(final Sentence sentence) {
+        try {
+            final List<Token> tokens = sentence.getTokens();
+            for (int i = 0; i < tokens.size(); i++) {
+                writeToken(i, tokens.get(i), sentence);
+            }
+            ow.newLine();
+        } catch (final IOException ex) {
+            throw new RuntimeException(ex);
         }
-        ow.newLine();
     }
 
     private void writeToken(final int idx, final Token token, final Sentence sentence)
             throws IOException {
-        final StringJoiner line = new StringJoiner("\t");
+        final StringJoiner line = new StringJoiner(Iob.IOB_COLUMN_SEPARATOR);
         for (int i = 0; i < sentence.getAttributeIndex().getLength(); i++) {
             try {
                 line.add(token.getAttributeValue(i));

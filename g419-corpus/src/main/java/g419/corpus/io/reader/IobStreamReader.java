@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import g419.corpus.HasLogger;
+import g419.corpus.format.Iob;
 import g419.corpus.io.DataFormatException;
 import g419.corpus.structure.*;
 import io.vavr.control.Option;
@@ -20,16 +21,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class IobStreamReader extends AbstractDocumentReader implements HasLogger {
 
-    final public String IOB_HEADER_PREFIX = "-DOCSTART CONFIG FEATURES";
-    final public String IOB_FILE_PREFIX = "-DOCSTART FILE";
-
     private final BufferedReader ir;
-    static private final Pattern annotationPattern = Pattern.compile("([IB])-([^#]*)");
     private final TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
     private int nextParagraphId = 1;
     private String nextFileId = null;
@@ -47,16 +43,16 @@ public class IobStreamReader extends AbstractDocumentReader implements HasLogger
         if (header == null) {
             throw new DataFormatException("Header not found. Empty file?");
         }
-        if (!header.startsWith(IOB_HEADER_PREFIX)) {
+        if (!header.startsWith(Iob.IOB_HEADER_PREFIX)) {
             throw new DataFormatException(
-                    String.format("First line does not contain attributes definition, i.e. '%s a1 a2 a3'", IOB_HEADER_PREFIX));
+                    String.format("First line does not contain attributes definition, i.e. '%s a1 a2 a3'", Iob.IOB_HEADER_PREFIX));
         }
         parseFileHeader(header).stream().forEach(attributeIndex::addAttribute);
         nextFileId = goToNextFileBlock();
     }
 
     private List<String> parseFileHeader(final String header) {
-        return Arrays.asList(header.substring(IOB_HEADER_PREFIX.length()).trim().split(" "));
+        return Arrays.asList(header.substring(Iob.IOB_HEADER_PREFIX.length()).trim().split(" "));
     }
 
     @Override
@@ -85,12 +81,12 @@ public class IobStreamReader extends AbstractDocumentReader implements HasLogger
         String line;
         do {
             line = ir.readLine();
-        } while (line != null && !line.startsWith(IOB_FILE_PREFIX));
+        } while (line != null && !line.startsWith(Iob.IOB_FILE_PREFIX));
         return parseFileId(line);
     }
 
     private String parseFileId(final String line) {
-        return Option.of(line).map(l -> l.substring(IOB_FILE_PREFIX.length()).trim()).getOrNull();
+        return Option.of(line).map(l -> l.substring(Iob.IOB_FILE_PREFIX.length()).trim()).getOrNull();
     }
 
     private Document readNextDocument() throws DataFormatException, IOException {
@@ -99,7 +95,7 @@ public class IobStreamReader extends AbstractDocumentReader implements HasLogger
         }
 
         final TokenAttributeIndex index = attributeIndex.clone();
-        final Document document = new Document("IOB todo", index);
+        final Document document = new Document(nextFileId, index);
         final Paragraph paragraph = new Paragraph("p" + (nextParagraphId++));
         document.addParagraph(paragraph);
         List<String> sentenceLabels = Lists.newArrayList();
@@ -108,7 +104,7 @@ public class IobStreamReader extends AbstractDocumentReader implements HasLogger
 
         while (sentence != null) {
             final String line = ir.readLine();
-            if (line == null || line.startsWith(IOB_FILE_PREFIX) || line.trim().length() == 0) {
+            if (line == null || line.startsWith(Iob.IOB_FILE_PREFIX) || line.trim().length() == 0) {
                 if (sentence.getTokenNumber() > 0) {
                     createAnnotations(sentence, sentenceLabels);
                     paragraph.addSentence(sentence);
@@ -116,7 +112,7 @@ public class IobStreamReader extends AbstractDocumentReader implements HasLogger
                 sentence = null;
                 if (line == null) {
                     nextFileId = null;
-                } else if (line.startsWith(IOB_FILE_PREFIX)) {
+                } else if (line.startsWith(Iob.IOB_FILE_PREFIX)) {
                     nextFileId = parseFileId(line);
                 } else {
                     sentence = new Sentence();
@@ -152,7 +148,7 @@ public class IobStreamReader extends AbstractDocumentReader implements HasLogger
                         .forEach(groups::add);
                 annsByType = Maps.newHashMap();
             } else {
-                final Matcher m = annotationPattern.matcher(label);
+                final Matcher m = Iob.IOB_LABEL_PATTERN.matcher(label);
                 while (m.find()) {
                     final String annType = m.group(2);
                     switch (m.group(1)) {
@@ -177,7 +173,7 @@ public class IobStreamReader extends AbstractDocumentReader implements HasLogger
     }
 
     private Pair<Token, String> parseToken(final String line, final TokenAttributeIndex index) throws DataFormatException {
-        final String[] cols = line.split("\t");
+        final String[] cols = line.split(Iob.IOB_COLUMN_SEPARATOR);
         final String[] attrs = Arrays.copyOfRange(cols, 0, cols.length - 1);
         final String labels = cols[cols.length - 1];
         return new ImmutablePair<>(createToken(attrs, index), labels);
