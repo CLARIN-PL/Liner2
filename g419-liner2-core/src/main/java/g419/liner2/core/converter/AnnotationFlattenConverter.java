@@ -3,20 +3,14 @@ package g419.liner2.core.converter;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Sentence;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
+import java.util.*;
 
-/**
- * Created by michal on 9/17/14.
- */
 public class AnnotationFlattenConverter extends Converter {
 
-    ArrayList<String> categories;
+    final List<String> categories;
     private final Comparator<Annotation> flattenConparator;
 
-    public AnnotationFlattenConverter(final ArrayList<String> cats) {
+    public AnnotationFlattenConverter(final List<String> cats) {
         categories = cats;
 
         flattenConparator = new Comparator<Annotation>() {

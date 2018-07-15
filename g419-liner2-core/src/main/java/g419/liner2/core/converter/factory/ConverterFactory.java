@@ -1,6 +1,7 @@
 package g419.liner2.core.converter.factory;
 
 import g419.corpus.ConsolePrinter;
+import g419.lib.cli.ParameterException;
 import g419.liner2.core.converter.Converter;
 import g419.liner2.core.converter.PipeConverter;
 
@@ -26,7 +27,7 @@ public class ConverterFactory {
         }
     };
 
-    public static Converter createConverter(final String description) {
+    public static Converter createConverter(final String description) throws ParameterException {
         ConsolePrinter.log("-> Setting up converter: " + description);
         for (final ConverterFactoryItem item : items) {
             if (item.matchPattern(description)) {
@@ -37,7 +38,7 @@ public class ConverterFactory {
         throw new Error(String.format("Converter description '%s' not recognized", description));
     }
 
-    public static Converter createPipe(final ArrayList<String> descriptions) {
+    public static Converter createPipe(final ArrayList<String> descriptions) throws ParameterException {
         final ArrayList<Converter> pipe = new ArrayList<>();
         for (final String desc : descriptions) {
             pipe.add(ConverterFactory.createConverter(desc));
