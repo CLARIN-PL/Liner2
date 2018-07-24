@@ -91,7 +91,7 @@ public class IobStreamWriter extends AbstractDocumentWriter {
         final StringJoiner line = new StringJoiner(Iob.IOB_COLUMN_SEPARATOR);
         for (int i = 0; i < sentence.getAttributeIndex().getLength(); i++) {
             try {
-                line.add(token.getAttributeValue(i));
+                line.add(token.getAttributeValue(i).replaceAll(Iob.IOB_COLUMN_SEPARATOR, ""));
             } catch (final IndexOutOfBoundsException e) {
                 throw new TerminateException(String.format("Token attribute with index %d not found in [%s]", i, token.getAttributesAsString()));
             }
