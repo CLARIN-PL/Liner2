@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Frame;
 import g419.corpus.structure.Sentence;
-import g419.spatial.tools.SentenceAnnotationIndexTypePos;
+import g419.corpus.structure.SentenceAnnotationIndexTypePos;
 
 import java.util.Map;
 
@@ -19,7 +19,7 @@ public class SentencePatternContext {
         currentPos = pos;
     }
 
-    public void setMatch(final String label, final Annotation annotation){
+    public void setMatch(final String label, final Annotation annotation) {
         matches.put(label, annotation);
     }
 
@@ -27,7 +27,7 @@ public class SentencePatternContext {
         return currentPos;
     }
 
-    public void setCurrentPos(int currentPos) {
+    public void setCurrentPos(final int currentPos) {
         this.currentPos = currentPos;
     }
 
@@ -39,17 +39,17 @@ public class SentencePatternContext {
         currentPos += n;
     }
 
-    public Sentence getSentence(){
+    public Sentence getSentence() {
         return annotationIndex.getSentence();
     }
 
-    public SentenceAnnotationIndexTypePos getAnnotationIndex(){
+    public SentenceAnnotationIndexTypePos getAnnotationIndex() {
         return annotationIndex;
     }
 
-    public Frame<Annotation> toFrame(final String type){
+    public Frame<Annotation> toFrame(final String type) {
         final Frame<Annotation> frame = new Frame<>(type);
-        matches.entrySet().stream().forEach(p->frame.set(p.getKey(), p.getValue()));
+        matches.entrySet().stream().forEach(p -> frame.set(p.getKey(), p.getValue()));
         return frame;
     }
 }

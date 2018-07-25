@@ -1,9 +1,7 @@
-package g419.spatial.tools;
+package g419.corpus.structure;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Sentence;
 import io.vavr.control.Option;
 
 import java.util.*;

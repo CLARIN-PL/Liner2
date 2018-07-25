@@ -4,7 +4,7 @@ import com.google.common.collect.Sets;
 import g419.corpus.schema.annotation.NkjpSpejd;
 import g419.corpus.schema.kpwr.KpwrSpatial;
 import g419.corpus.structure.Annotation;
-import g419.spatial.tools.SentenceAnnotationIndexTypePos;
+import g419.corpus.structure.SentenceAnnotationIndexTypePos;
 
 import java.util.Set;
 

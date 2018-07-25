@@ -3,7 +3,6 @@ package g419.corpus.io.reader.parser.tei;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import g419.corpus.ConsolePrinter;
-import g419.corpus.io.DataFormatException;
 import g419.corpus.io.Tei;
 import g419.corpus.structure.*;
 import org.slf4j.Logger;
@@ -23,10 +22,11 @@ import java.util.Map;
 
 public class TeiMorphosyntaxSAXParser extends DefaultHandler {
 
-    List<Paragraph> paragraphs;
+    final List<Paragraph> paragraphs = Lists.newArrayList();
+    final Map<String, Integer> tokenIdsMap = Maps.newHashMap();
+
     Paragraph currentParagraph = null;
     Sentence currentSentence = null;
-    Map<String, Integer> tokenIdsMap;
     Map<String, Tag> currentTokenTags;
     Token currentToken = null;
     String currentFeatureName = "";
@@ -41,22 +41,12 @@ public class TeiMorphosyntaxSAXParser extends DefaultHandler {
 
     final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public TeiMorphosyntaxSAXParser(final String docName, final InputStream is, final TokenAttributeIndex attributeIndex) throws DataFormatException {
+    public TeiMorphosyntaxSAXParser(final String docName, final InputStream is, final TokenAttributeIndex attributeIndex) throws IOException, ParserConfigurationException, SAXException {
         this.docName = docName;
         this.attributeIndex = attributeIndex;
-        paragraphs = Lists.newArrayList();
-        tokenIdsMap = Maps.newHashMap();
-        try {
-            SAXParserFactory.newInstance().newSAXParser().parse(is, this);
-            if (!foundSentenceId) {
-                ConsolePrinter.log("Generated sentence ids for document:" + docName);
-            }
-        } catch (final ParserConfigurationException e) {
-            throw new DataFormatException("Parse error (ParserConfigurationException)");
-        } catch (final SAXException e) {
-            throw new DataFormatException("Parse error (SAXException)");
-        } catch (final IOException e) {
-            throw new DataFormatException("Parse error (IOException)");
+        SAXParserFactory.newInstance().newSAXParser().parse(is, this);
+        if (!foundSentenceId) {
+            ConsolePrinter.log("Generated sentence ids for document:" + docName);
         }
     }
 

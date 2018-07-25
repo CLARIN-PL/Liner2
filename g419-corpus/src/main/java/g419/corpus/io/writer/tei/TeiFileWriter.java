@@ -24,7 +24,7 @@ public abstract class TeiFileWriter {
     final private XMLStreamWriter writer;
     final protected String filename;
     final protected TeiPointerManager pointers;
-    private int indent=0;
+    private int indent = 0;
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -32,7 +32,7 @@ public abstract class TeiFileWriter {
         this(stream, filename, pointers, Maps.newHashMap());
     }
 
-    public TeiFileWriter(final OutputStream stream, final String filename, final TeiPointerManager pointers, final Map<String,String> attributes) throws XMLStreamException {
+    public TeiFileWriter(final OutputStream stream, final String filename, final TeiPointerManager pointers, final Map<String, String> attributes) throws XMLStreamException {
         this.stream = stream;
         this.filename = filename;
         this.pointers = pointers;
@@ -55,7 +55,7 @@ public abstract class TeiFileWriter {
             writer.close();
         }
         if (stream != null && stream instanceof GZIPOutputStream) {
-            ((GZIPOutputStream)stream).finish();
+            ((GZIPOutputStream) stream).finish();
         }
         if (stream != null) {
             stream.close();
@@ -68,7 +68,7 @@ public abstract class TeiFileWriter {
 
     protected void writelnComment(final String comment) throws XMLStreamException {
         writeIndent(indent);
-        writer.writeComment(" " + comment + " ");
+        writer.writeComment(" " + comment.replaceAll("[-]+", "-") + " ");
         writeln();
     }
 
@@ -102,7 +102,7 @@ public abstract class TeiFileWriter {
     }
 
     protected void writeAttributes(final Map<String, String> attributes) throws XMLStreamException {
-        for (Map.Entry<String, String> entry : attributes.entrySet()) {
+        for (final Map.Entry<String, String> entry : attributes.entrySet()) {
             writer.writeAttribute(entry.getKey(), entry.getValue());
         }
     }

@@ -3,7 +3,7 @@ package g419.spatial.pattern
 import g419.corpus.structure.Annotation
 import g419.corpus.structure.Frame
 import g419.corpus.structure.Sentence
-import g419.spatial.tools.SentenceAnnotationIndexTypePos
+import g419.corpus.structure.SentenceAnnotationIndexTypePos
 import g419.test.TestSampleSentence
 import spock.lang.Specification
 

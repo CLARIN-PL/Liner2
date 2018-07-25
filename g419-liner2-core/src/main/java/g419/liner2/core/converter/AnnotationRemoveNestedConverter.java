@@ -13,24 +13,22 @@ public class AnnotationRemoveNestedConverter extends Converter {
     @Override
     public void apply(final Sentence sentence) {
         final LinkedHashSet<Annotation> sentenceAnnotations = sentence.getChunks();
-        final HashSet<Annotation> to_remove = new HashSet<>();
+        final HashSet<Annotation> toRemove = new HashSet<>();
         for (final String type : getTypes(sentenceAnnotations)) {
             final HashSet<Annotation> oneType = getOneType(type, sentenceAnnotations);
             for (final Annotation candidate : oneType) {
                 for (final Annotation ann : oneType) {
                     if (ann != candidate && ann.getTokens().containsAll(candidate.getTokens())) {
-                        to_remove.add(candidate);
+                        toRemove.add(candidate);
                         break;
                     }
 
                 }
             }
         }
-        for (final Annotation ann : to_remove) {
-            if (overlaps(ann, sentenceAnnotations)) {
-                sentenceAnnotations.remove(ann);
-            }
-        }
+        toRemove.stream()
+                .filter(an -> overlaps(an, sentenceAnnotations))
+                .forEach(sentenceAnnotations::remove);
     }
 
     /**

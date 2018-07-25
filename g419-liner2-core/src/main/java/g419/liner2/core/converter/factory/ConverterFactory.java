@@ -24,6 +24,7 @@ public class ConverterFactory {
             add(new TokenFeaturesFactoryItem());
             add(new AnnotaionWrapFactoryItem());
             add(new AnnotationSplitNonadjacentFactoryItem());
+            add(new AnnotationRemoveNestedByTypeFactoryItem());
         }
     };
 

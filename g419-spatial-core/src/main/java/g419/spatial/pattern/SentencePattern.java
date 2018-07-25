@@ -3,7 +3,7 @@ package g419.spatial.pattern;
 import com.google.common.collect.Lists;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Frame;
-import g419.spatial.tools.SentenceAnnotationIndexTypePos;
+import g419.corpus.structure.SentenceAnnotationIndexTypePos;
 
 import java.util.Iterator;
 import java.util.List;
