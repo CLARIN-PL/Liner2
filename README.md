@@ -42,8 +42,7 @@ Requirements
 ### Runtime
 
 * Java 8
-
-
+* CRF++ 0.57 (https://taku910.github.io/crfpp/)
 
 
 Installation
@@ -76,8 +75,6 @@ Output:
 *          G4.19 Research Group, Wrocław University of Technology                               *
 *-----------------------------------------------------------------------------------------------*
 
-
-[Error] Tool not given. 
 
 Use one of the following tools:
  - agreement           -- checks agreement (of annotations) between suplied documents
@@ -140,11 +137,3 @@ Expected console output:
 (4,11,nam_liv,"Ala Nowak")
 (20,28,nam_loc,"Warszawie")
 ```
-
-### TimeX for Polish
-
-ToDo
-
-### Events (according to TimeML) for Polish
-
-ToDo
