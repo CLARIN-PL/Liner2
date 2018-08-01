@@ -28,7 +28,7 @@ public class IobStreamWriter extends AbstractDocumentWriter {
             return;
         }
         try {
-            final String line = Iob.IOB_HEADER_PREFIX + attributeIndex.getAttributes().stream().collect(Collectors.joining(" "));
+            final String line = Iob.IOB_HEADER_PREFIX + " " + attributeIndex.getAttributes().stream().collect(Collectors.joining(" "));
             ow.write(line, 0, line.length());
             ow.newLine();
         } catch (final IOException ex) {
@@ -55,23 +55,26 @@ public class IobStreamWriter extends AbstractDocumentWriter {
         }
     }
 
-    @Override
-    public void writeDocument(final Document document) {
-        document.getParagraphs().forEach(this::writeParagraph);
-    }
-
-    public void writeParagraph(final Paragraph paragraph) {
+    private void write(final String line) {
         try {
-            if (!init) {
-                init(paragraph.getAttributeIndex());
-            }
-            final String header = Iob.IOB_FILE_PREFIX + Option.of(paragraph.getId()).getOrElse("");
-            ow.write(header, 0, header.length());
+            ow.write(line, 0, line.length());
             ow.newLine();
-            paragraph.getSentences().forEach(this::writeSentence);
         } catch (final IOException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    public void writeDocument(final Document document) {
+        if (!init) {
+            init(document.getAttributeIndex());
+        }
+        write(Iob.IOB_FILE_PREFIX + " " + Option.of(document.getName()).getOrElse(""));
+        document.getParagraphs().forEach(this::writeParagraph);
+    }
+
+    private void writeParagraph(final Paragraph paragraph) {
+        paragraph.getSentences().forEach(this::writeSentence);
     }
 
     private void writeSentence(final Sentence sentence) {
@@ -91,7 +94,9 @@ public class IobStreamWriter extends AbstractDocumentWriter {
         final StringJoiner line = new StringJoiner(Iob.IOB_COLUMN_SEPARATOR);
         for (int i = 0; i < sentence.getAttributeIndex().getLength(); i++) {
             try {
-                line.add(token.getAttributeValue(i).replaceAll(Iob.IOB_COLUMN_SEPARATOR, ""));
+                line.add(Option.of(token.getAttributeValue(i))
+                        .map(v -> v.replaceAll(Iob.IOB_COLUMN_SEPARATOR, ""))
+                        .getOrElse("NULL"));
             } catch (final IndexOutOfBoundsException e) {
                 throw new TerminateException(String.format("Token attribute with index %d not found in [%s]", i, token.getAttributesAsString()));
             }

@@ -17,38 +17,39 @@ public class Tag {
         this.disamb = disamb;
 
         // ToDo: specyficzne dla tagu nkjp
-        final String[] parts = ctag.split(":");
-        this.pos = parts[0];
-        if (parts.length > 2) {
-            this.cas = parts[2];
+        if (ctag != null) {
+            final String[] parts = ctag.split(":");
+            pos = parts[0];
+            if (parts.length > 2) {
+                cas = parts[2];
+            }
         }
     }
 
     public String getBase() {
-        return this.base;
+        return base;
     }
 
     public String getCtag() {
-        return this.ctag;
+        return ctag;
     }
 
     public boolean getDisamb() {
-        return this.disamb;
+        return disamb;
     }
 
     public String getPos() {
-        return this.pos;
+        return pos;
     }
 
     public String getCase() {
-        return this.cas;
+        return cas;
     }
 
     public void setDisamb(final boolean disamb) {
         this.disamb = disamb;
     }
 
-    // TODO
     public void setBase(final String base) {
         this.base = base;
     }
