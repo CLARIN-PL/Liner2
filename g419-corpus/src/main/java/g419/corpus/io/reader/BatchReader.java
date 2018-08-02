@@ -16,94 +16,97 @@ import java.util.List;
  */
 public class BatchReader extends AbstractDocumentReader {
 
-    private TokenAttributeIndex attributeIndex;
-    private int fileIndex=0;
-    private List<String> files = new ArrayList<String>();
+    private final TokenAttributeIndex attributeIndex;
+    private int fileIndex = 0;
+    private final List<String> files = new ArrayList<>();
     private File root = null;
     private String format = null;
 
     /**
-     * 
-     * @param is — the stream contains relative or absolute paths to ccl files,
+     * @param is   — the stream contains relative or absolute paths to ccl files,
      * @param root — absolute path to a root for absolute paths from the stream,
      * @throws DataFormatException
-     * @throws IOException 
-     * @throws FileNotFoundException 
+     * @throws IOException
+     * @throws FileNotFoundException
      */
-    public BatchReader(InputStream is, String root, String format) throws DataFormatException, IOException{
-    	this.root = new File(root);
+    public BatchReader(final InputStream is, final String root, final String format) throws DataFormatException, IOException {
+        this.root = new File(root);
         this.format = format;
-        this.attributeIndex = new TokenAttributeIndex();
-        this.attributeIndex.addAttribute("orth");
-        this.attributeIndex.addAttribute("base");
-        this.attributeIndex.addAttribute("ctag");
-        
-        BufferedReader ir = new BufferedReader(new InputStreamReader(is));
+        attributeIndex = new TokenAttributeIndex();
+        attributeIndex.addAttribute("orth");
+        attributeIndex.addAttribute("base");
+        attributeIndex.addAttribute("ctag");
+
+        final BufferedReader ir = new BufferedReader(new InputStreamReader(is));
         while (true) {
-            String line;
+            final String line;
             try {
                 line = ir.readLine();
-            } catch (IOException ex) {
+            } catch (final IOException ex) {
                 throw new DataFormatException("I/O error.");
             }
-            if(line == null){
+            if (line == null) {
                 break;
             }
-            String name = line.trim().split(";")[0];
+            final String name = line.trim().split(";")[0];
             String cclFile = name;
-            if (cclFile.length() == 0){
+            if (cclFile.length() == 0) {
                 break;
-            }
-            
-            if (!cclFile.startsWith("/")){
-            	cclFile = new File(this.root, cclFile).getAbsolutePath();
             }
 
-            if (!new File(cclFile).exists()){
-            	System.err.println("File not found while reading batch: " + cclFile);
+            if (!cclFile.startsWith("/")) {
+                cclFile = new File(this.root, cclFile).getAbsolutePath();
             }
-            else{
-            	this.files.add(name);
+
+            if (!new File(cclFile).exists()) {
+                System.err.println("File not found while reading batch: " + cclFile);
+            } else {
+                files.add(name);
             }
         }
         ir.close();
     }
-    
+
     @Override
     public Document nextDocument() throws Exception {
-    	while ( this.fileIndex < this.files.size() ){
-        	String name = this.files.get(this.fileIndex++);
-            String path;
-            if(name.startsWith("/")) {
+        while (fileIndex < files.size()) {
+            String name = files.get(fileIndex++);
+            final String path;
+            if (name.startsWith("/")) {
                 path = name;
-                File tmp = new File(path);
+                final File tmp = new File(path);
                 name = tmp.getName();
+            } else {
+                path = new File(root, name).getAbsolutePath();
             }
-            else {
-                path = new File(this.root, name).getAbsolutePath();
+            try {
+                Logger.getLogger(getClass()).info(String.format("Reading %d from %d: %s", fileIndex, files.size(), path));
+                final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(path, format);
+                final Document document = reader.nextDocument();
+                document.setName(getDocumnetBaseName(name, format));
+                reader.close();
+                return document;
+            } catch (final Exception ex) {
+                Logger.getLogger(getClass()).error("Błąd odczytu pliku: " + path, ex);
             }
-    		try{
-    			Logger.getLogger(this.getClass()).info(String.format("Reading %d from %d: %s", this.fileIndex,  this.files.size(), path));
-	            AbstractDocumentReader reader = null;
-	            reader = ReaderFactory.get().getStreamReader(path, this.format);
-	    		Document document = reader.nextDocument();
-	    		if ( name.endsWith(".gz") ){
-	    			name = name.substring(0, name.length()-3);
-	    		}
-	    		document.setName(FilenameUtils.removeExtension(name));
-	            reader.close();		            
-	    		return document;
-    		}
-    		catch(Exception ex){
-    			Logger.getLogger(this.getClass()).error("Błąd odczytu pliku: " + path, ex);
-    		}
-    	}
-    	return null;
+        }
+        return null;
     }
-    
+
+    private String getDocumnetBaseName(final String filename, final String format) {
+        String name = filename;
+        if (name.endsWith(".gz")) {
+            name = name.substring(0, name.length() - 3);
+        }
+        if (!"tei".equals(format)) {
+            name = FilenameUtils.removeExtension(name);
+        }
+        return name;
+    }
+
     @Override
     protected TokenAttributeIndex getAttributeIndex() {
-        return this.attributeIndex;
+        return attributeIndex;
     }
 
     @Override
@@ -111,8 +114,8 @@ public class BatchReader extends AbstractDocumentReader {
     }
 
     @Override
-    public boolean hasNext(){
-        return this.fileIndex < this.files.size();
+    public boolean hasNext() {
+        return fileIndex < files.size();
     }
 
 }

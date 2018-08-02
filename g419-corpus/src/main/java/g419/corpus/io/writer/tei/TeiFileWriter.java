@@ -63,7 +63,7 @@ public abstract class TeiFileWriter {
     }
 
     protected void writeIndent(final int size) throws XMLStreamException {
-        writer.writeCharacters(StringUtils.repeat(' ', size));
+        writer.writeCharacters(StringUtils.repeat("  ", size));
     }
 
     protected void writelnComment(final String comment) throws XMLStreamException {
@@ -116,4 +116,39 @@ public abstract class TeiFileWriter {
     protected void writeln() throws XMLStreamException {
         writer.writeCharacters("\n");
     }
+
+    /**
+     * Write the following structure to the xml file:
+     * <pre>
+     * <f name="NAME">
+     *   <string>VALUE</string>
+     * </f>
+     * </pre>
+     *
+     * @param name
+     * @param value
+     */
+    protected void writeElementFeatureString(final String name, final String value) throws XMLStreamException {
+        writelnStartElement(Tei.TAG_FEATURE, ImmutableMap.of("name", name));
+        writelnElement(Tei.TAG_STRING, Maps.newHashMap(), value);
+        writelnEndElement();
+    }
+
+    /**
+     * Write the following structure to the xml file:
+     * <pre>
+     * <f name="NAME">
+     *   <symbol value="VALUE"/>
+     * </f>
+     * </pre>
+     *
+     * @param name
+     * @param value
+     */
+    protected void writeElementFeatureSymbol(final String name, final String value) throws XMLStreamException {
+        writelnStartElement(Tei.TAG_FEATURE, ImmutableMap.of("name", name));
+        writelnEmptyElement(Tei.TAG_SYMBOL, ImmutableMap.of("value", value));
+        writelnEndElement();
+    }
+
 }

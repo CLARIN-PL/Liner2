@@ -2,11 +2,13 @@ package g419.corpus.io.reader.parser.tei;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import g419.corpus.HasLogger;
 import g419.corpus.io.DataFormatException;
 import g419.corpus.io.Tei;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
+import io.vavr.control.Option;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -24,7 +26,7 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-public class TeiAnnotationSAXParser extends DefaultHandler {
+public class TeiAnnotationSAXParser extends DefaultHandler implements HasLogger {
 
     final String filename;
     final String group;
@@ -137,12 +139,16 @@ public class TeiAnnotationSAXParser extends DefaultHandler {
                     tokens.addAll(ids);
                 }
             }
-            final Annotation an = new Annotation(tokens, group.getType(), group.getSentence())
-                    .withGroup(this.group)
-                    .withHead(getHead(group.getGroupId()))
-                    .withLemma(group.getBase())
-                    .withId(group.getGroupId());
-            group.getSentence().addChunk(an);
+            if (tokens.size() == 0) {
+                getLogger().error("Annotation with id={} from file={} does not have defined tokens (no ptr elements)", group.getGroupId(), filename);
+            } else {
+                final Annotation an = new Annotation(tokens, group.getType(), group.getSentence())
+                        .withGroup(this.group)
+                        .withHead(getHead(group.getGroupId()))
+                        .withLemma(group.getBase())
+                        .withId(group.getGroupId());
+                group.getSentence().addChunk(an);
+            }
         }
     }
 
@@ -162,16 +168,7 @@ public class TeiAnnotationSAXParser extends DefaultHandler {
     }
 
     private Integer getHead(final String elementKey) {
-        if (elementKey == null) {
-            return 0;
-        }
-        return getTokens(elementKey).get(0);
-//        final String[] cols = elementKey.split("#");
-//        if (cols.length > 1 && cols[0].length() > 0) {
-//            return tokensIdMap.get(elementsIdMap.get(cols[1]).get(0));
-//        } else {
-//            return getHead(headIds.get(cols[cols.length - 1]));
-//        }
+        return Option.of(elementKey).map(k -> getTokens(k).get(0)).getOrElse(0);
     }
 
     @Override

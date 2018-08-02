@@ -1,6 +1,5 @@
 package g419.lib.cli;
 
-import com.google.common.collect.Sets;
 import g419.corpus.ConsolePrinter;
 import g419.corpus.HasLogger;
 import org.apache.commons.cli.*;
@@ -13,14 +12,13 @@ public abstract class Action implements HasLogger {
     protected String description = "";
     protected String example = "";
     protected Options options = new Options();
-    protected HashSet<String> multipleValueOptions = Sets.newHashSet();
 
     /**
      * @param name -- nazwa trybu pracy.
      */
     public Action(final String name) {
         this.name = name;
-        this.options.addOption(CommonOptions.getVerboseOption());
+        options.addOption(CommonOptions.getVerboseOption());
     }
 
     /**
@@ -58,7 +56,7 @@ public abstract class Action implements HasLogger {
     public abstract void parseOptions(final CommandLine line) throws Exception;
 
     public Options getOptions() {
-        return this.options;
+        return options;
     }
 
     /**
@@ -67,11 +65,11 @@ public abstract class Action implements HasLogger {
      * @return
      */
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public String getDescription() {
-        return this.description;
+        return description;
     }
 
     /**
@@ -80,23 +78,23 @@ public abstract class Action implements HasLogger {
      * @return
      */
     public String getExample() {
-        return this.example;
+        return example;
     }
 
     public void printOptions() {
         final StringBuilder footer = new StringBuilder();
-        if (this.getExample() != null && this.getExample().length() > 0) {
+        if (getExample() != null && getExample().length() > 0) {
             footer.append("\n");
             footer.append("Example:\n");
             footer.append("--------\n");
-            footer.append(this.getExample());
+            footer.append(getExample());
         }
 
         final HelpFormatter formatter = new HelpFormatter();
         formatter.setWidth(98);
         formatter.printHelp(
                 String.format("./liner2-cli %s [options]",
-                        this.getName()), this.getDescription(), this.getOptions(), footer.toString());
+                        getName()), getDescription(), getOptions(), footer.toString());
     }
 
     abstract public void run() throws Exception;
@@ -106,7 +104,7 @@ public abstract class Action implements HasLogger {
             final HashSet<String> argNames = new HashSet<>();
             for (final Option opt : line.getOptions()) {
                 final String argName = opt.getOpt();
-                if (!multipleValueOptions.contains(argName) && argNames.contains(argName)) {
+                if (!opt.hasArgs() && argNames.contains(argName)) {
                     throw new ParameterException("Repeated argument: " + argName);
                 } else {
                     argNames.add(argName);

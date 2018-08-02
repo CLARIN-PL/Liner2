@@ -3,6 +3,7 @@ package g419.corpus.io.reader;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import g419.corpus.io.DataFormatException;
+import g419.corpus.io.Tei;
 import g419.corpus.io.reader.parser.tei.*;
 import g419.corpus.structure.*;
 import org.slf4j.Logger;
@@ -80,7 +81,7 @@ public class TeiStreamReader extends AbstractDocumentReader {
         /* Read names from the ann_names.xml file */
         if (annNamed != null) {
             new TeiAnnotationSAXParser("ann_named.xml", annNamed, segmentationParser.getParagraphs(),
-                    morphoParser.getTokenIdsMap(), globalElementIndex, "named");
+                    morphoParser.getTokenIdsMap(), globalElementIndex, Tei.ANNOTATION_GROUP_NAMED);
         }
 
         /* Read groups from the ann_groups.xml file */

@@ -32,4 +32,7 @@ public class Tei {
 
     public final static String VAL_TRUE = "true";
 
+    public final static String ANNOTATION_GROUP_NAMED = "named";
+    public final static String ANNOTATION_GROUP_GROUP = "group";
+    public final static String ANNOTATION_GROUP_SENSE = "sense";
 }
