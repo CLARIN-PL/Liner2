@@ -159,7 +159,8 @@ public class IobStreamReader extends AbstractDocumentReader implements HasLogger
                             if (annsByType.containsKey(annType)) {
                                 annsByType.get(annType).add(tokenIndex);
                             } else {
-                                throw new DataFormatException("Invalid sequence of labels");
+                                getLogger().error("Invalid sequence of labels in: " + String.join(" ", labels));
+                                //throw new DataFormatException("Invalid sequence of labels");
                             }
                             break;
                         default:
