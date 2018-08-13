@@ -13,10 +13,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -92,6 +89,7 @@ public class ActionAgreement2 extends Action {
         int onlyInReferenceSet = 0;
         int onlyInCompareSet = 0;
         int differentSentenceCount = 0;
+        int differentSentenceLength = 0;
         int foundInBoth = 0;
 
         final Map<String, Document> documentSet1 = loadDocuments(compareSet, compareSetFormat, loadAsSingleDocument);
@@ -122,10 +120,16 @@ public class ActionAgreement2 extends Action {
                 for (int i = 0; i < d1.getSentences().size(); i++) {
                     final Sentence s1 = d1.getSentences().get(i);
                     final Sentence s2 = d2.getSentences().get(i);
-                    final AnnotationSet set1 = new AnnotationSet(s1, s1.getChunks());
-                    final AnnotationSet set2 = new AnnotationSet(s2, s2.getChunks());
-                    globalEval.evaluate(s1, set1, set2);
-                    globalEvalMuc.evaluate(s1, set1, set2);
+                    if (s1.getTokenNumber() != s2.getTokenNumber()) {
+                        getLogger().warn("Sentences have different length: {} != {} for '{}' and '{}'",
+                                s1.getTokenNumber(), s2.getTokenNumber(), s1.toString(), s2.toString());
+                        differentSentenceLength++;
+                    } else {
+                        final AnnotationSet set1 = new AnnotationSet(s1, s1.getChunks());
+                        final AnnotationSet set2 = new AnnotationSet(s2, s2.getChunks());
+                        globalEval.evaluate(s1, set1, set2);
+                        globalEvalMuc.evaluate(s1, set1, set2);
+                    }
                 }
             }
         }
@@ -139,17 +143,15 @@ public class ActionAgreement2 extends Action {
         System.out.println(String.format("Documents only in 'compare set'               : %4d", onlyInCompareSet));
         System.out.println(String.format("Documents with different number of sentences  : %4d", differentSentenceCount));
         System.out.println(String.format("Documents found in both sets                  : %4d", foundInBoth));
+        System.out.println(String.format("Sentences with different length               : %4d", differentSentenceLength));
         globalEval.printResults();
         globalEvalMuc.printResults();
     }
 
-    private Map<String, Document> loadDocuments(final String filename, final String inputFormat, final boolean loadAsSingleDocument) throws Exception {
-        final Map<String, Document> documents = Maps.newHashMap();
+    private TreeMap<String, Document> loadDocuments(final String filename, final String inputFormat, final boolean loadAsSingleDocument) throws Exception {
+        final TreeMap<String, Document> documents = Maps.newTreeMap();
         ReaderFactory.get().getStreamReader(filename, inputFormat).forEach(doc -> documents.put(doc.getName(), doc));
-        return transformIfRequired(documents, loadAsSingleDocument);
-    }
 
-    private Map<String, Document> transformIfRequired(final Map<String, Document> documents, final boolean loadAsSingleDocument) {
         if (loadAsSingleDocument && documents.size() > 0) {
             final TokenAttributeIndex tai = documents.values().iterator().next().getAttributeIndex();
             final Paragraph p = new Paragraph("p1", tai);
@@ -158,12 +160,8 @@ public class ActionAgreement2 extends Action {
                     .flatMap(Collection::stream)
                     .filter(s -> s.getTokenNumber() > 0)
                     .forEach(p::addSentence);
-            int n = 1;
-            for (final Sentence s : p.getSentences()) {
-                System.out.println((n++) + " " + s.toString());
-            }
             final Document doc = new Document("joined", Lists.newArrayList(p), tai);
-            final Map<String, Document> newSet = Maps.newHashMap();
+            final TreeMap<String, Document> newSet = Maps.newTreeMap();
             newSet.put(doc.getName(), doc);
             return newSet;
         } else {
