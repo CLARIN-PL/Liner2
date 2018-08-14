@@ -1,15 +1,12 @@
 package g419.tools.utils;
 
-import java.io.IOException;
-import java.net.SocketTimeoutException;
-
 import org.apache.log4j.Logger;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.openqa.selenium.WebDriver;
 
-import net.sourceforge.htmlunit.corejs.javascript.JavaScriptException;
+import java.net.SocketTimeoutException;
 
 public class JsoupWrapped {
 

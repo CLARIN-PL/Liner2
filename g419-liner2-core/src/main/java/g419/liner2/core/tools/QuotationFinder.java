@@ -1,9 +1,9 @@
 package g419.liner2.core.tools;
 
-import java.util.regex.Pattern;
-
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
+
+import java.util.regex.Pattern;
 
 /**
  * Rozpoznaje sekwencje tekstu występujące w cudzysłowiu.

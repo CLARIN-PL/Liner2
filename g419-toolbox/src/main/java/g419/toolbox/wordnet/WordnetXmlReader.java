@@ -1,22 +1,20 @@
 package g419.toolbox.wordnet;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
+import g419.toolbox.wordnet.struct.LexicalRelation;
+import g419.toolbox.wordnet.struct.LexicalUnit;
+import g419.toolbox.wordnet.struct.WordnetPl;
 import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import g419.toolbox.wordnet.struct.LexicalRelation;
-import g419.toolbox.wordnet.struct.LexicalUnit;
-import g419.toolbox.wordnet.struct.WordnetPl;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
 
 /**
  * Klasa do wczytania wordnetu z pliku XML.

@@ -6,14 +6,12 @@ import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
 import g419.crete.core.features.clustermention.AbstractClusterMentionFeature;
 import g419.crete.core.structure.AnnotationUtil;
+import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 public class ClusterMentionClosestFollowingFollowedByCoordConj extends AbstractClusterMentionFeature<Boolean>{
 

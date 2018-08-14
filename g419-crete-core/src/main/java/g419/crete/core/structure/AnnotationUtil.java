@@ -1,17 +1,9 @@
 package g419.crete.core.structure;
 
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.AnnotationCluster;
-import g419.corpus.structure.AnnotationPositionComparator;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-import g419.corpus.structure.TokenAttributeIndex;
+import g419.corpus.structure.*;
 import g419.crete.core.features.enumvalues.MentionType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 

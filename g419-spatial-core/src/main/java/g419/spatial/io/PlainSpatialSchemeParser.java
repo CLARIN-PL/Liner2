@@ -3,6 +3,7 @@ package g419.spatial.io;
 import g419.spatial.structure.SpatialRelationSchema;
 import g419.spatial.structure.SpatialRelationSchemaMatcher;
 import g419.toolbox.sumo.Sumo;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,8 +12,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
-import org.apache.log4j.Logger;
 
 public class PlainSpatialSchemeParser {
 

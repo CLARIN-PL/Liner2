@@ -1,17 +1,12 @@
 package g419.liner2.core;
 
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import g419.liner2.core.lib.LibLoader;
+import org.ini4j.Ini;
+
+import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
-
-import g419.liner2.core.lib.LibLoader;
-import g419.liner2.core.lib.LibLoaderCrfpp;
-import org.ini4j.Ini;
 
 /**
  * This class handles module parameters. The parameters are read from

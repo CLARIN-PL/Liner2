@@ -1,9 +1,9 @@
 package g419.liner2.core.tools;
 
-import java.util.List;
-
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
+
+import java.util.List;
 
 /**
  * Znajduje sekwencje tokenów wystąpujące w słowniku TrieDict.

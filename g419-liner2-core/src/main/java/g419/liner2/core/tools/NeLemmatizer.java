@@ -1,20 +1,15 @@
 package g419.liner2.core.tools;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import g419.corpus.schema.kpwr.KpwrNer;
+import g419.corpus.structure.Annotation;
+import g419.corpus.structure.Token;
+import org.apache.log4j.Logger;
+
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
 import java.util.zip.GZIPInputStream;
-
-import org.apache.log4j.Logger;
-
-import g419.corpus.schema.kpwr.KpwrNer;
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Token;
 
 /**
  * 

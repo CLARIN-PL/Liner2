@@ -1,7 +1,5 @@
 package g419.crete.core.resolver;
 
-import java.util.List;
-
 import edu.berkeley.compbio.jlibsvm.binary.BinaryModel;
 import edu.berkeley.compbio.jlibsvm.util.SparseVector;
 import g419.corpus.structure.Annotation;
@@ -10,6 +8,8 @@ import g419.crete.core.classifier.AbstractCreteClassifier;
 import g419.crete.core.instance.ClusterRankingInstance;
 import g419.crete.core.instance.converter.AbstractCreteInstanceConverter;
 import g419.crete.core.instance.generator.AbstractCreteInstanceGenerator;
+
+import java.util.List;
 
 public class SvmClusterRankingResolver extends AbstractCreteResolver<BinaryModel<Integer, SparseVector>, ClusterRankingInstance, SparseVector, Integer>{
 

@@ -6,6 +6,7 @@ import g419.crete.core.features.AbstractFeature;
 import g419.crete.core.features.annotations.pair.AnnotationPairFeatureSemanticLinkAgP;
 import g419.crete.core.features.factory.item.IFeatureFactoryItem;
 import g419.toolbox.wordnet.Wordnet;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,8 +14,6 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 public class AnnotationPairFeatureSemanticLinkAgPItem implements IFeatureFactoryItem<Pair<Annotation, Annotation>, Float> {
 

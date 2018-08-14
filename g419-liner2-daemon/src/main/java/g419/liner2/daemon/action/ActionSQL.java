@@ -1,18 +1,10 @@
 package g419.liner2.daemon.action;
 
-import g419.corpus.ConsolePrinter;
-import g419.lib.cli.CommonOptions;
 import g419.lib.cli.ParameterException;
 import g419.liner2.daemon.SQLDaemonThread;
-import g419.lib.cli.Action;
-
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

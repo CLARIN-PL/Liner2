@@ -1,5 +1,8 @@
 package g419.liner2.core.chunker;
 
+import g419.corpus.structure.*;
+import g419.liner2.core.tools.TrieDictNode;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -7,14 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.AnnotationSet;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-import g419.liner2.core.tools.TrieDictNode;
 
 /**
  * Chunker rozpoznaje frazy w oparciu o słownik fraz.

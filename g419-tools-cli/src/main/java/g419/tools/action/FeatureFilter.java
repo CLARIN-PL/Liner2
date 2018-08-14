@@ -1,5 +1,11 @@
 package g419.tools.action;
 
+import g419.lib.cli.Action;
+import g419.lib.cli.CommonOptions;
+import g419.tools.utils.Counter;
+import org.apache.commons.cli.CommandLine;
+import org.apache.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -8,14 +14,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.log4j.Logger;
-
-import g419.lib.cli.Action;
-import g419.lib.cli.CommonOptions;
-import g419.tools.utils.Counter;
 
 public class FeatureFilter extends Action {
 	

@@ -1,32 +1,24 @@
 package g419.liner2.core.converter;
 
 import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
 
-/**
- * Created by michal on 9/17/14.
- */
 public class AnnotationFlattenConverter extends Converter {
 
-    ArrayList<String> categories;
-    private Comparator<Annotation> flattenConparator;
+    final List<String> categories;
+    private final Comparator<Annotation> flattenConparator;
 
-    public AnnotationFlattenConverter(ArrayList<String> cats){
-        this.categories = cats;
+    public AnnotationFlattenConverter(final List<String> cats) {
+        categories = cats;
 
         flattenConparator = new Comparator<Annotation>() {
-            public int compare(Annotation a, Annotation b) {
-                if(a == b || Collections.disjoint(a.getTokens(), b.getTokens())){
+            @Override
+            public int compare(final Annotation a, final Annotation b) {
+                if (a == b || Collections.disjoint(a.getTokens(), b.getTokens())) {
                     return 0;
-                }
-                else {
+                } else {
                     if (a.getTokens().size() == b.getTokens().size()) {
                         return Integer.signum(categories.indexOf(a.getType()) - categories.indexOf(b.getType()));
                     }
@@ -35,34 +27,25 @@ public class AnnotationFlattenConverter extends Converter {
             }
         };
     }
-    @Override
-    public void finish(Document doc) {
-
-    }
 
     @Override
-    public void start(Document doc) {
-
-    }
-
-    @Override
-    public void apply(Sentence sentence) {
-        ArrayList<Annotation> toFlatten = new ArrayList<Annotation>();
-        for(Annotation ann: sentence.getChunks()){
-            if(categories.contains(ann.getType())){
+    public void apply(final Sentence sentence) {
+        final ArrayList<Annotation> toFlatten = new ArrayList<>();
+        for (final Annotation ann : sentence.getChunks()) {
+            if (categories.contains(ann.getType())) {
                 toFlatten.add(ann);
             }
         }
-        for(Annotation annToRemove: flatten(toFlatten)){
+        for (final Annotation annToRemove : flatten(toFlatten)) {
             sentence.getChunks().remove(annToRemove);
         }
     }
 
-    private HashSet<Annotation> flatten(ArrayList<Annotation> toFlatten){
-        HashSet<Annotation> toRemove = new HashSet<Annotation>();
-        for(Annotation ann: toFlatten){
-            for(Annotation candidate: toFlatten){
-                if(flattenConparator.compare(ann, candidate) == -1){
+    private HashSet<Annotation> flatten(final ArrayList<Annotation> toFlatten) {
+        final HashSet<Annotation> toRemove = new HashSet<>();
+        for (final Annotation ann : toFlatten) {
+            for (final Annotation candidate : toFlatten) {
+                if (flattenConparator.compare(ann, candidate) == -1) {
                     toRemove.add(candidate);
                 }
             }

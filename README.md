@@ -42,7 +42,7 @@ Requirements
 ### Runtime
 
 * Java 8
-
+* CRF++
 
 
 

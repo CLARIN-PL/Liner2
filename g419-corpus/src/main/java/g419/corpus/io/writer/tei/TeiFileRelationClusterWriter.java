@@ -6,7 +6,6 @@ import g419.corpus.structure.*;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.OutputStream;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TeiFileRelationClusterWriter extends TeiFileWriter {

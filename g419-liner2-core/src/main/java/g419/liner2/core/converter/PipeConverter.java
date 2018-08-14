@@ -5,7 +5,6 @@ import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 
 /**
  * Created by michal on 6/3/14.

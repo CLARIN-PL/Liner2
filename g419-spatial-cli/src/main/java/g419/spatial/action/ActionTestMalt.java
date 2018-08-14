@@ -1,22 +1,9 @@
 package g419.spatial.action;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
-import g419.corpus.schema.tagset.MappingNkjpToConllPos;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
-import org.apache.log4j.Logger;
-
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
+import g419.corpus.schema.tagset.MappingNkjpToConllPos;
+import g419.corpus.structure.*;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.core.features.tokens.ClassFeature;
@@ -24,6 +11,12 @@ import g419.liner2.core.tools.parser.MaltParser;
 import g419.liner2.core.tools.parser.MaltSentence;
 import g419.liner2.core.tools.parser.MaltSentenceLink;
 import g419.spatial.structure.SpatialExpression;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ActionTestMalt extends Action {
 	

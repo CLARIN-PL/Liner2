@@ -1,15 +1,5 @@
 package g419.tools.action;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
-import org.apache.log4j.Logger;
-
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Document;
@@ -19,6 +9,14 @@ import g419.tools.maltfeature.MaltFeatureGenerator;
 import g419.tools.maltfeature.MaltPattern;
 import g419.tools.utils.GiniImpurity;
 import g419.tools.utils.SparseMatrixCounter;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.log4j.Logger;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by michal on 2/12/15.

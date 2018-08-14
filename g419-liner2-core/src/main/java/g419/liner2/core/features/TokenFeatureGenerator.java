@@ -1,18 +1,13 @@
 package g419.liner2.core.features;
 
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-import g419.corpus.structure.TokenAttributeIndex;
+import g419.corpus.ConsolePrinter;
+import g419.corpus.structure.*;
 import g419.liner2.core.features.tokens.Feature;
 import g419.liner2.core.features.tokens.TokenFeature;
 import g419.liner2.core.features.tokens.TokenFeatureFactory;
 import g419.liner2.core.features.tokens.TokenInSentenceFeature;
-import g419.corpus.ConsolePrinter;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 

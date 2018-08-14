@@ -1,9 +1,8 @@
 package g419.liner2.core.chunker.factory;
 
 
-import org.ini4j.Ini;
-
 import g419.liner2.core.chunker.Chunker;
+import org.ini4j.Ini;
 
 
 public class ChunkerFactoryItemEnsemble extends ChunkerFactoryItem {

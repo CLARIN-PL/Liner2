@@ -1,22 +1,16 @@
 package g419.crete.core.resolver;
 
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.AnnotationCluster;
-import g419.corpus.structure.AnnotationPositionComparator;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Relation;
+import g419.corpus.structure.*;
 import g419.crete.core.annotation.AbstractAnnotationSelector;
 import g419.crete.core.instance.ClusterClassificationInstance;
 import g419.crete.core.structure.AnnotationUtil;
+import weka.classifiers.Classifier;
+import weka.core.Instance;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import weka.classifiers.Classifier;
-import weka.core.Instance;
 
 public class WekaJ48SequentialResolver extends AbstractCreteResolver<Classifier, ClusterClassificationInstance, Instance, Double>{
 

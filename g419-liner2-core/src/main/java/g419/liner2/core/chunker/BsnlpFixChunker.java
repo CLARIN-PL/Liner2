@@ -1,21 +1,10 @@
 package g419.liner2.core.chunker;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import g419.corpus.schema.kpwr.KpwrNer;
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.AnnotationSet;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Tag;
-import g419.corpus.structure.Token;
+import g419.corpus.structure.*;
 import g419.liner2.core.tools.NeLemmatizer;
+
+import java.util.*;
 
 /**
  * Motody do korekcji typowych błędów popełnianych przez model statystyczny.

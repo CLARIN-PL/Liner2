@@ -1,12 +1,11 @@
 package g419.crete.core.instance.generator;
 
 import g419.crete.core.instance.AbstractCreteInstance;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.HashMap;
 import java.util.List;
-
-import org.apache.commons.lang3.tuple.ImmutableTriple;
-import org.apache.commons.lang3.tuple.Triple;
 
 public class CreteInstanceGeneratorFactory {
 	

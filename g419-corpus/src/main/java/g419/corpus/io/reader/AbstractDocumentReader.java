@@ -4,6 +4,7 @@ import g419.corpus.structure.Document;
 import g419.corpus.structure.TokenAttributeIndex;
 
 import java.io.Closeable;
+import java.util.Iterator;
 
 
 /**
@@ -14,11 +15,27 @@ import java.io.Closeable;
  *
  * @author czuk
  */
-public abstract class AbstractDocumentReader implements Closeable {
+public abstract class AbstractDocumentReader implements Closeable, Iterator<Document>, Iterable<Document> {
 
     protected abstract TokenAttributeIndex getAttributeIndex();
 
     public abstract Document nextDocument() throws Exception;
 
     public abstract boolean hasNext();
+
+    @Override
+    public Document next(){
+        final Document doc;
+        try {
+            doc = nextDocument();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+        return doc;
+    }
+
+    @Override
+    public Iterator<Document> iterator(){
+        return this;
+    }
 }

@@ -1,9 +1,8 @@
 package g419.crete.core.features.enumvalues;
 
-import java.util.Arrays;
-import java.util.Set;
-
 import org.maltparser.core.helper.HashSet;
+
+import java.util.Arrays;
 
 public enum MentionType {
 	NAMED_ENTITY,

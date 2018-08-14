@@ -1,10 +1,5 @@
 package g419.liner2.cli.action;
 
-import java.io.File;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
@@ -17,6 +12,9 @@ import g419.liner2.core.LinerOptions;
 import g419.liner2.core.chunker.Chunker;
 import g419.liner2.core.chunker.factory.ChunkerManager;
 import g419.liner2.core.features.TokenFeatureGenerator;
+import org.apache.commons.cli.CommandLine;
+
+import java.io.File;
 
 /**
  * Chunking in pipe mode.

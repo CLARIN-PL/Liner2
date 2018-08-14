@@ -1,97 +1,88 @@
 package g419.spatial.structure;
 
+import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Token;
 import g419.toolbox.sumo.Sumo;
+import io.vavr.control.Option;
 
-import java.util.LinkedList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-
-import org.apache.log4j.Logger;
-import org.maltparser.core.helper.HashSet;
+import java.util.stream.Collectors;
 
 public class SpatialRelationSchemaMatcher {
 
-	private List<SpatialRelationSchema> patterns = null;
-	private Sumo sumo = null;
-	
-	public SpatialRelationSchemaMatcher(List<SpatialRelationSchema> patterns, Sumo sumo){
-		this.patterns = patterns;
-		this.sumo = sumo;
-	}
-	
-	/**
-	 * Dopasowuje wszystkie wzorce, do których pasuje wyrażenie przestrzenne.
-	 * @param relation
-	 * @return
-	 */
-	public List<SpatialRelationSchema> matchAll(SpatialExpression relation){
-		List<SpatialRelationSchema> matching = new LinkedList<SpatialRelationSchema>();
-		
-		for ( SpatialRelationSchema pattern : this.patterns ){
-			if ( SpatialRelationSchemaMatcher.matches(relation, pattern, this.sumo)){
-				matching.add(pattern);
-			}
-		}
-		
-		return matching;
-	}
-	
-	/**
-	 * Sprawdza, czy relacja relation pasuje do wzorca pattern dla ontologii sumo.
-	 * @param relation
-	 * @param pattern
-	 * @param sumo
-	 * @return
-	 */
-	public static boolean matches(SpatialExpression relation, SpatialRelationSchema pattern, Sumo sumo){
+    private final List<SpatialRelationSchema> patterns;
+    private final Sumo sumo;
 
-		String preposition = relation.getSpatialIndicator().getText().toLowerCase();
-		if ( relation.getLandmark().getRegion() != null && relation.getLandmark().getRegion().getHeadToken().getDisambTag().getBase().equals("teren") ){
-			// Zamiana przyimka z "na" na "w" dla region=teren
-			preposition = "w";
-		}
+    public SpatialRelationSchemaMatcher(final List<SpatialRelationSchema> patterns, final Sumo sumo) {
+        this.patterns = patterns;
+        this.sumo = sumo;
+    }
 
-		if ( !pattern.getIndicators().contains(preposition) ){
-			return false;
-		}
+    /**
+     * Dopasowuje wszystkie wzorce, do których pasuje wyrażenie przestrzenne.
+     *
+     * @param relation
+     * @return
+     */
+    public List<SpatialRelationSchema> matchAll(final SpatialExpression relation) {
+        return patterns.stream()
+                .filter(pattern -> SpatialRelationSchemaMatcher.matches(relation, pattern, sumo))
+                .collect(Collectors.toList());
+    }
 
-		boolean trajector = false;
-		boolean landmark = false;
-		Token checkTokenPos = relation.getLandmark().getRegion() != null ? relation.getLandmark().getRegion().getHeadToken() : relation.getLandmark().getSpatialObject().getHeadToken();
-		
-		String[] parts = checkTokenPos.getDisambTag().getCtag().split(":"); 
-		if ( parts.length > 2 && !parts[2].equals(pattern.getCase()) ){
-			return false;
-		}
+    /**
+     * Sprawdza, czy relacja relation pasuje do wzorca pattern dla ontologii sumo.
+     *
+     * @param relation
+     * @param pattern
+     * @param sumo
+     * @return
+     */
+    public static boolean matches(final SpatialExpression relation, final SpatialRelationSchema pattern, final Sumo sumo) {
 
-		Set<String> landmarkSubclasses = new HashSet<String>();
-		Set<String> trajectorSubclasses = new HashSet<String>();
-		
-		for (String str : pattern.getLandmarkConcepts() ){
-			landmarkSubclasses.addAll(sumo.getSubclasses(str.toLowerCase()));
-			landmarkSubclasses.add(str.toLowerCase());
-		}
+        String preposition = relation.getSpatialIndicator().getText().toLowerCase();
+        if (relation.getLandmark().getRegion() != null && relation.getLandmark().getRegion().getHeadToken().getDisambTag().getBase().equals("teren")) {
+            // Zamiana przyimka z "na" na "w" dla region=teren
+            preposition = "w";
+        }
 
-		for (String str : pattern.getTrajectorConcepts() ){
-			trajectorSubclasses.addAll(sumo.getSubclasses(str.toLowerCase()));
-			trajectorSubclasses.add(str.toLowerCase());
-		}
+        if (!pattern.getIndicators().contains(preposition)) {
+            return false;
+        }
 
-		
-		for ( String concept : relation.getTrajectorConcepts() ){
-			if ( trajectorSubclasses.contains(concept.toLowerCase()) ){
-				trajector = true;
-			}
-		}
-				
-		for ( String concept : relation.getLandmarkConcepts() ){
-			if ( landmarkSubclasses.contains(concept.toLowerCase()) ){
-				landmark = true;
-			}
-		}
-				
-		return trajector && landmark;
-	}
-	
+        //LoggerFactory.getLogger(SpatialRelationSchemaMatcher.class).debug(pattern.toString());
+
+        final Token checkTokenPos = Option.of(relation.getLandmark().getRegion())
+                .map(Annotation::getHeadToken)
+                .getOrElse(relation.getLandmark().getSpatialObject().getHeadToken());
+
+        final String[] parts = checkTokenPos.getDisambTag().getCtag().split(":");
+        if (parts.length > 2 && !parts[2].equals(pattern.getCase())) {
+            return false;
+        }
+
+        return isSubconceptOf(pattern.getTrajectorConcepts(), relation.getTrajectorConcepts(), sumo)
+                && isSubconceptOf(pattern.getLandmarkConcepts(), relation.getLandmarkConcepts(), sumo);
+    }
+
+    private static boolean isSubconceptOf(final Collection<String> patternConcepts, final Collection<String> elementConcepts, final Sumo sumo) {
+        final Set<String> conceptsWithChildren = collectConceptswithSubclasses(patternConcepts, sumo);
+        return elementConcepts.stream()
+                .map(String::toLowerCase)
+                .filter(conceptsWithChildren::contains)
+                .count() > 0;
+    }
+
+    private static Set<String> collectConceptswithSubclasses(final Collection<String> concepts, final Sumo sumo) {
+        final Set<String> set = concepts.stream()
+                .map(String::toLowerCase)
+                .collect(Collectors.toSet());
+        concepts.stream()
+                .map(String::toLowerCase)
+                .map(sumo::getSubclasses)
+                .forEach(set::addAll);
+        return set;
+    }
 }

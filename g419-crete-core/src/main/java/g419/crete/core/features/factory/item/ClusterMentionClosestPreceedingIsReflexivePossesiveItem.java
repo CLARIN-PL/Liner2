@@ -4,7 +4,6 @@ import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationCluster;
 import g419.crete.core.features.AbstractFeature;
 import g419.crete.core.features.clustermention.preceeding.ClusterMentionClosestPreceedingIsReflexivePossesive;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 

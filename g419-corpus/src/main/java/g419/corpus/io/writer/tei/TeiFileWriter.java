@@ -11,7 +11,10 @@ import org.slf4j.LoggerFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
@@ -21,7 +24,7 @@ public abstract class TeiFileWriter {
     final private XMLStreamWriter writer;
     final protected String filename;
     final protected TeiPointerManager pointers;
-    private int indent=0;
+    private int indent = 0;
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -29,7 +32,7 @@ public abstract class TeiFileWriter {
         this(stream, filename, pointers, Maps.newHashMap());
     }
 
-    public TeiFileWriter(final OutputStream stream, final String filename, final TeiPointerManager pointers, final Map<String,String> attributes) throws XMLStreamException {
+    public TeiFileWriter(final OutputStream stream, final String filename, final TeiPointerManager pointers, final Map<String, String> attributes) throws XMLStreamException {
         this.stream = stream;
         this.filename = filename;
         this.pointers = pointers;
@@ -52,7 +55,7 @@ public abstract class TeiFileWriter {
             writer.close();
         }
         if (stream != null && stream instanceof GZIPOutputStream) {
-            ((GZIPOutputStream)stream).finish();
+            ((GZIPOutputStream) stream).finish();
         }
         if (stream != null) {
             stream.close();
@@ -60,12 +63,12 @@ public abstract class TeiFileWriter {
     }
 
     protected void writeIndent(final int size) throws XMLStreamException {
-        writer.writeCharacters(StringUtils.repeat(' ', size));
+        writer.writeCharacters(StringUtils.repeat("  ", size));
     }
 
     protected void writelnComment(final String comment) throws XMLStreamException {
         writeIndent(indent);
-        writer.writeComment(" " + comment + " ");
+        writer.writeComment(" " + comment.replaceAll("[-]+", "-") + " ");
         writeln();
     }
 
@@ -99,7 +102,7 @@ public abstract class TeiFileWriter {
     }
 
     protected void writeAttributes(final Map<String, String> attributes) throws XMLStreamException {
-        for (Map.Entry<String, String> entry : attributes.entrySet()) {
+        for (final Map.Entry<String, String> entry : attributes.entrySet()) {
             writer.writeAttribute(entry.getKey(), entry.getValue());
         }
     }
@@ -113,4 +116,39 @@ public abstract class TeiFileWriter {
     protected void writeln() throws XMLStreamException {
         writer.writeCharacters("\n");
     }
+
+    /**
+     * Write the following structure to the xml file:
+     * <pre>
+     * <f name="NAME">
+     *   <string>VALUE</string>
+     * </f>
+     * </pre>
+     *
+     * @param name
+     * @param value
+     */
+    protected void writeElementFeatureString(final String name, final String value) throws XMLStreamException {
+        writelnStartElement(Tei.TAG_FEATURE, ImmutableMap.of("name", name));
+        writelnElement(Tei.TAG_STRING, Maps.newHashMap(), value);
+        writelnEndElement();
+    }
+
+    /**
+     * Write the following structure to the xml file:
+     * <pre>
+     * <f name="NAME">
+     *   <symbol value="VALUE"/>
+     * </f>
+     * </pre>
+     *
+     * @param name
+     * @param value
+     */
+    protected void writeElementFeatureSymbol(final String name, final String value) throws XMLStreamException {
+        writelnStartElement(Tei.TAG_FEATURE, ImmutableMap.of("name", name));
+        writelnEmptyElement(Tei.TAG_SYMBOL, ImmutableMap.of("value", value));
+        writelnEndElement();
+    }
+
 }

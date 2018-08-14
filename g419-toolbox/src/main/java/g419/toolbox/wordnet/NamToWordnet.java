@@ -1,5 +1,7 @@
 package g419.toolbox.wordnet;
 
+import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRaw;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,8 +10,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRaw;
 
 /**
  * Klasa reprezentuje mapowanie kategorii jednostek identyfikacyjnych na koncepcje sumo.

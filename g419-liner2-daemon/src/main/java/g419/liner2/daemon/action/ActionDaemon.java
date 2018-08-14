@@ -1,18 +1,17 @@
 package g419.liner2.daemon.action;
 
-import g419.lib.cli.ParameterException;
 import g419.lib.cli.Action;
 import g419.liner2.core.LinerOptions;
 import g419.liner2.daemon.DaemonOptions;
 import g419.liner2.daemon.DaemonThread;
-
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.OptionBuilder;
 import org.ini4j.Ini;
 import org.ini4j.Profile;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * Created by michal on 12/10/14.

@@ -1,29 +1,20 @@
 package g419.tools.action;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
-import org.apache.log4j.Logger;
-
-import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRaw;
-
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.toolbox.wordnet.NamToWordnet;
 import g419.toolbox.wordnet.Wordnet3;
+import org.apache.commons.cli.CommandLine;
+import org.apache.log4j.Logger;
+import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRaw;
+
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class ActionNameCategories extends Action {
 	

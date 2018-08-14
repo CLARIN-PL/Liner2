@@ -13,24 +13,22 @@ import g419.liner2.core.LinerOptions;
 import g419.liner2.core.chunker.Chunker;
 import g419.liner2.core.chunker.factory.ChunkerManager;
 import g419.liner2.core.features.TokenFeatureGenerator;
-
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
 
 /**
  * Chunking in pipe mode.
- * @author Maciej Janicki, Michał Marcińczuk
  *
+ * @author Maciej Janicki, Michał Marcińczuk
  */
-public class ActionPipe extends Action{
+public class ActionPipe extends Action {
 
     private String input_file = null;
     private String input_format = null;
     private String output_file = null;
     private String output_format = null;
 
-	public ActionPipe(){
-		super("pipe");
+    public ActionPipe() {
+        super("pipe");
         this.setDescription("processes data with given model");
 
         this.options.addOption(CommonOptions.getInputFileFormatOption());
@@ -39,80 +37,81 @@ public class ActionPipe extends Action{
         this.options.addOption(CommonOptions.getOutputFileNameOption());
         this.options.addOption(CommonOptions.getFeaturesOption());
         this.options.addOption(CommonOptions.getModelFileOption());
-	}
-
-    protected ActionPipe(final String name){
-	    super(name);
     }
 
-        @Override
+    protected ActionPipe(final String name) {
+        super(name);
+    }
+
+    @Override
     public void parseOptions(final CommandLine line) throws Exception {
         this.output_file = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
         this.output_format = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT, "ccl");
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
         LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
-	}
-	
-	/**
-	 * Module entry function.
-	 */
-	public void run() throws Exception{
-	
-        if ( !LinerOptions.isGlobalOption(LinerOptions.OPTION_USED_CHUNKER) ){
-			throw new ParameterException("Parameter 'chunker' in 'main' section of model not set");
-		}		
-	
-        AbstractDocumentReader reader = getInputReader();
-		AbstractDocumentWriter writer = getOutputWriter();
-        TokenFeatureGenerator gen = null;
-        
-        if (!LinerOptions.getGlobal().features.isEmpty()){
-            gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);            
+    }
+
+    /**
+     * Module entry function.
+     */
+    @Override
+    public void run() throws Exception {
+
+        if (!LinerOptions.isGlobalOption(LinerOptions.OPTION_USED_CHUNKER)) {
+            throw new ParameterException("Parameter 'chunker' in 'main' section of model not set");
         }
-		
-		/* Create all defined chunkers. */
-        ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
+
+        //final AbstractDocumentReader reader = getInputReader();
+        //final AbstractDocumentWriter writer = getOutputWriter();
+        TokenFeatureGenerator gen = null;
+
+        if (!LinerOptions.getGlobal().features.isEmpty()) {
+            gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
+        }
+
+        /* Create all defined chunkers. */
+        final ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
         cm.loadChunkers();
 
-        Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
+        final Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
 
-		Document ps = reader.nextDocument();
-		while ( ps != null ){
-			RelationSet relations = ps.getRelations();
-			if ( gen != null )
-				gen.generateFeatures(ps);
-			chunker.chunkInPlace(ps);
-			ps.setRelations(relations);
-			writer.writeDocument(ps);
-			ps = reader.nextDocument();
-		}
-
-		reader.close();
-		writer.close();
-	}
+        try (final AbstractDocumentReader reader = getInputReader();
+             final AbstractDocumentWriter writer = getOutputWriter()
+        ) {
+            while (reader.hasNext()) {
+                final Document ps = reader.nextDocument();
+                final RelationSet relations = ps.getRelations();
+                if (gen != null) {
+                    gen.generateFeatures(ps);
+                }
+                chunker.chunkInPlace(ps);
+                ps.setRelations(relations);
+                writer.writeDocument(ps);
+            }
+        }
+    }
 
     /**
      * Get document writer defined with the -o and -t options.
+     *
      * @return
      * @throws Exception
      */
-    protected AbstractDocumentWriter getOutputWriter() throws Exception{
-        AbstractDocumentWriter writer;
+    protected AbstractDocumentWriter getOutputWriter() throws Exception {
+        final AbstractDocumentWriter writer;
 
-        if ( output_format.startsWith("batch:") && !input_format.startsWith("batch:") ) {
+        if (output_format.startsWith("batch:") && !input_format.startsWith("batch:")) {
             throw new Exception("Output format `batch:` (-o) is valid only for `batch:` input format (-i).");
         }
-        if (output_file == null){
+        if (output_file == null) {
             writer = WriterFactory.get().getStreamWriter(System.out, output_format);
-        }
-        else if (output_format.equals("arff")){
+        } else if (output_format.equals("arff")) {
 //            ToDo: format w postaci arff:{PLIK Z TEMPLATEM}
             writer = null;
 //            CrfTemplate arff_template = LinerOptions.getGlobal().getArffTemplate();
 //            writer = WriterFactory.get().getArffWriter(output_file, arff_template);
-        }
-        else{
+        } else {
             writer = WriterFactory.get().getStreamWriter(output_file, output_format);
         }
         return writer;
@@ -120,11 +119,12 @@ public class ActionPipe extends Action{
 
     /**
      * Get document reader defined with the -i and -f options.
+     *
      * @return
      * @throws Exception
      */
-    protected AbstractDocumentReader getInputReader() throws Exception{
+    protected AbstractDocumentReader getInputReader() throws Exception {
         return ReaderFactory.get().getStreamReader(this.input_file, this.input_format);
     }
-		
+
 }

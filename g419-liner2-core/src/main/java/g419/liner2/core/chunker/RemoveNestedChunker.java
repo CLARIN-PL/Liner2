@@ -1,17 +1,13 @@
 package g419.liner2.core.chunker;
 
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
+
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Chunker, który usuwa zagnieżdżone anotacje

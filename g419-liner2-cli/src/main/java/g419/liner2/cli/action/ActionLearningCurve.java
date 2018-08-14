@@ -1,17 +1,5 @@
 package g419.liner2.cli.action;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.regex.Pattern;
-
 import g419.corpus.io.DataFormatException;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.BatchReader;
@@ -24,11 +12,15 @@ import g419.liner2.core.LinerOptions;
 import g419.liner2.core.chunker.Chunker;
 import g419.liner2.core.chunker.factory.ChunkerManager;
 import g419.liner2.core.features.TokenFeatureGenerator;
-import g419.liner2.core.tools.*;
+import g419.liner2.core.tools.ChunkerEvaluator;
+import g419.liner2.core.tools.ChunkerEvaluatorMuc;
+import g419.liner2.core.tools.ProcessingTimer;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.IOUtils;
+
+import java.io.*;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * TODO

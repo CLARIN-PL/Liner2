@@ -1,14 +1,13 @@
 package g419.liner2.core.chunker.factory;
 
 
-import java.io.IOException;
-
-import org.apache.log4j.Logger;
-import org.ini4j.Ini;
-
 import g419.liner2.core.chunker.BsnlpFixChunker;
 import g419.liner2.core.chunker.Chunker;
 import g419.liner2.core.tools.NeLemmatizer;
+import org.apache.log4j.Logger;
+import org.ini4j.Ini;
+
+import java.io.IOException;
 
 
 public class ChunkerFactoryItemBsnlpFixChunker extends ChunkerFactoryItem {

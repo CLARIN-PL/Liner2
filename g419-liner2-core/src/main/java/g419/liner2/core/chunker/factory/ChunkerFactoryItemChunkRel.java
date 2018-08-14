@@ -2,7 +2,6 @@ package g419.liner2.core.chunker.factory;
 
 import g419.liner2.core.chunker.ChunkRelChunker;
 import g419.liner2.core.chunker.Chunker;
-
 import org.ini4j.Profile.Section;
 
 public class ChunkerFactoryItemChunkRel extends ChunkerFactoryItem {

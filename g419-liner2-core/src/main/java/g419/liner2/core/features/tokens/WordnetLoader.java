@@ -1,18 +1,14 @@
 package g419.liner2.core.features.tokens;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map.Entry;
-
 import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRaw;
 import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRelationRaw;
 import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonIndexRaw;
 import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonParser;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class WordnetLoader {
 	HashMap<String, HashMap<String, PrincetonDataRaw>> data = new HashMap<String, HashMap<String, PrincetonDataRaw>>();

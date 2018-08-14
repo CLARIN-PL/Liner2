@@ -6,12 +6,10 @@ import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Sentence;
 import org.apache.log4j.Logger;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.util.*;
+import java.io.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringJoiner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

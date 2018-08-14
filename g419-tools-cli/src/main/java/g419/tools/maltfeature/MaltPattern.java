@@ -1,14 +1,13 @@
 package g419.tools.maltfeature;
 
+import g419.liner2.core.tools.parser.MaltSentence;
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.log4j.Logger;
-
-import g419.liner2.core.tools.parser.MaltSentence;
 
 public class MaltPattern {
 

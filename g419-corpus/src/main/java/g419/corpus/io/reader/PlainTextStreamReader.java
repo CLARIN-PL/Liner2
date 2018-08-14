@@ -1,12 +1,6 @@
 package g419.corpus.io.reader;
 
-import g419.corpus.io.DataFormatException;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Tag;
-import g419.corpus.structure.Token;
-import g419.corpus.structure.TokenAttributeIndex;
+import g419.corpus.structure.*;
 
 import java.io.*;
 
