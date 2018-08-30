@@ -50,6 +50,18 @@ Installation
 
 ### Compile
 
+If you do not have CRF++ installed then do the following steps:
+```bash
+cd g419-external-dependencies
+tar -xvf CRF++-0.57.tar.gz
+cd CRF++-0.57
+./configure
+make
+sudo make install
+sudo ldconfig
+```
+
+Then:
 
 ```bash
 ./gradlew jar
@@ -116,7 +128,7 @@ Pre-trained models
 
 ### NER for Polish
 
-Download package with models:
+Download a package with models:
 ```bash
 cd Liner2
 wget -O liner25_model_ner_rev1.7z https://clarin-pl.eu/dspace/bitstream/handle/11321/263/liner25_model_ner_rev1.7z?sequence=1&isAllowed=y 
@@ -127,7 +139,7 @@ Unpack the package:
 7z x liner25_model_ner_rev1.7z
 ```
 
-Process sample CCL file:
+Process a sample CCL file:
 ```bash
 ./liner2-cli pipe -i ccl -o tuples -f stuff/resources/sample-sentence.xml -m liner25_model_ner_rev1/config-top9.ini
 ```
