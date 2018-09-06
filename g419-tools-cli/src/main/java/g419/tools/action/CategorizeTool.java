@@ -1,31 +1,8 @@
 package g419.tools.action;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.zip.DataFormatException;
-
-import g419.corpus.schema.tagset.MappingNkjpToConllPos;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
-import org.apache.log4j.Logger;
-
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
+import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
@@ -37,6 +14,15 @@ import g419.liner2.core.tools.parser.MaltSentence;
 import g419.toolbox.sumo.WordnetToSumo;
 import g419.tools.maltfeature.DependencyPath;
 import g419.tools.maltfeature.MaltPattern;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.log4j.Logger;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.zip.DataFormatException;
 
 /**
  * Created by michal on 2/12/15.

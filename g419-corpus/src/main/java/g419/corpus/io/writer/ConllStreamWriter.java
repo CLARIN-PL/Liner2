@@ -1,15 +1,12 @@
 package g419.corpus.io.writer;
 
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Tag;
-import g419.corpus.structure.Token;
-import g419.corpus.structure.TokenAttributeIndex;
+import g419.corpus.structure.*;
 
-//import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
+//import java.io.BufferedOutputStream;
 
 public class ConllStreamWriter extends AbstractDocumentWriter{
 

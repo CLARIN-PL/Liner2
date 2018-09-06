@@ -1,27 +1,26 @@
 package g419.liner2.core.chunker;
 
-import java.util.HashMap;
-
 import g419.corpus.structure.AnnotationSet;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 import g419.liner2.core.converter.AnnotationMappingConverter;
 import g419.liner2.core.converter.Converter;
+import io.vavr.control.Option;
+
+import java.util.HashMap;
 
 public class MappingChunker extends Chunker {
 
-    private Converter converter;
-    HashMap<String, Document> testData;
+    private final Converter converter;
 
-    public MappingChunker(String mappingFile){
+    public MappingChunker(final String mappingFile) {
         converter = new AnnotationMappingConverter(mappingFile);
     }
-    
+
     @Override
-    public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
-    	for ( Sentence sentence : ps.getSentences() ){
-    		converter.apply(sentence);
-    	}
-    	return ps.getChunkings();
+    public HashMap<Sentence, AnnotationSet> chunk(final Document document) {
+        return Option.of(document)
+                .peek(converter::apply)
+                .map(Document::getChunkings).get();
     }
 }

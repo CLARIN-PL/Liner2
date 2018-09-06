@@ -1,356 +1,365 @@
 package g419.corpus.structure;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Klasa reprezentuje anotację jako ciągłą sekwencję tokenów w zdaniu.
- * 
- * @author Michał Marcińczuk
  *
+ * @author Michał Marcińczuk
  */
 public class Annotation extends IdentifiableElement {
-	/** Annotation type, i.e. name of category.  */
-	private String type = null;
-	
-	/** Name of the group to which belongs the annotation type, ex. word, group, chunk, ne .*/
-	private String group = null;
+    /**
+     * Annotation type, i.e. name of category.
+     */
+    private String type = null;
 
-	/** Sentence to which the annotation belongs. */
-	private Sentence sentence = null;
+    /**
+     * Name of the group to which belongs the annotation type, ex. word, group, chunk, ne .
+     */
+    private String group = null;
 
-	/** Indices of tokens which form the annotation. */
-	private TreeSet<Integer> tokens = new TreeSet<Integer>();
+    /**
+     * Sentence to which the annotation belongs.
+     */
+    private Sentence sentence = null;
 
-	/** Index of a token that is the head of the annotation */
-	private int head;
-	
-	/** Lemmatized form of the annotation */
-	private String lemma = null;	
+    /**
+     * Indices of tokens which form the annotation.
+     */
+    private TreeSet<Integer> tokens = Sets.newTreeSet();
 
-	/**
-	 * Indeks anotacji w kanale.
-	 */
-	private int channelIdx;
+    /**
+     * Index of a token that is the head of the annotation
+     */
+    private int head;
 
-	/**
-	 * Informacja czy anotacja ma oznaczoną głowę.
-	 */
-	private boolean hasHead = false;
-	
-	/**
-	 * Wartość określająca pewność co do istnienia anotacji. 
-	 * Głównie używane przy autoamtycznym rozpoznawaniu anotacji w tekście.
-	 */
-	private double confidence = 1.0;
-	
+    /**
+     * Lemmatized form of the annotation
+     */
+    private String lemma = null;
 
-	private Map<String, String> metadata = Maps.newHashMap();
+    /**
+     * Indeks anotacji w kanale.
+     */
+    private int channelIdx;
 
-	public Annotation(String id, int begin, int end, String type, Sentence sentence){
-		this(begin,end,type,sentence);
-		this.id=id;
-	}
+    /**
+     * Informacja czy anotacja ma oznaczoną głowę.
+     */
+    private boolean hasHead = false;
 
-	public Annotation(int begin, int end, String type, Sentence sentence){
-		for(int i = begin; i <= end; i++){
-			this.tokens.add(i);
-		}
-		this.type = type;
-		this.sentence = sentence;
-		this.assignHead();
-	}
-
-	public Annotation(int tokenIndex, String type, Sentence sentence){
-		this(tokenIndex,tokenIndex,type,sentence);
-	}
-
-	public Annotation(int begin, String type, int channelIdx, Sentence sentence){
-		this(begin,begin,type,sentence);
-		this.channelIdx = channelIdx;
-	}
-
-	public Annotation(TreeSet<Integer> tokens, String type, Sentence sentence){
-		this.tokens = tokens;
-		this.type = type;
-		this.sentence = sentence;
-		this.assignHead();
-	}
-
-	public void setChannelIdx(int idx){
-		this.channelIdx = idx;
-	}
-
-	public int getChannelIdx(){
-		return this.channelIdx;
-	}
-
-	public boolean hasHead(){
-		return this.hasHead;
-	}
-
-	public void assignHead(){
-		this.assignHead(false);
-	}
-
-	/**
-	 * Set the value of annotation lemma.
-	 * @param lemma
-	 */
-	public void setLemma(String lemma){
-		this.lemma = lemma;
-	}
-	
-	/**
-	 * Get the value of annotation lemma.
-	 * @return
-	 */
-	public String getLemma(){
-		if ( this.lemma == null ){
-			if (this.metadata.containsKey("lemma")) {
-				return this.metadata.get("lemma");
-			} else {
-				return this.getText();
-			}
-		} else {
-			return this.lemma;
-		}
-	}
-	
-	/**
-	 * Ustaw pewność co do istnienia anotacji.
-	 * @param confidence
-	 */
-	public void setConfidence(double confidence){
-		this.confidence = confidence;
-	}
-
-	/**
-	 * Zwraca wartość określającą pewność istnienia anotacji.
-	 * @return
-	 */
-	public double getConfidence(){
-		return this.confidence;
-	}
-	
-	/**
-	 * Przypisuje głowę do anotacji na podst. równoległej anotacji, lub jako pierwszy token.
-	 * Do użytku z anotacjami "anafora_wyznacznik" na potrzeby piśnika TEI
-	 */
-	public void assignHead(boolean force){
-		if( !force && hasHead() ){
-			return;
-		}		
-
-		int head = -1;
-		for ( int i : this.getTokens() ){
-			Token t = this.sentence.getTokens().get(i);
-			if ( t.getDisambTag().getPos().equals("subst") ){
-				head = i;
-				break;
-			}
-		}
-		
-		if ( head == -1 ){
-			for ( int i : this.getTokens() ){
-				Token t = this.sentence.getTokens().get(i);
-				if ( t.getDisambTag().getPos().equals("ign") ){
-					head = i;
-					break;
-				}
-			}
-		}
-		
-		if ( head == -1 ){
-			head = this.tokens.first();
-		}
-		
-		this.setHead(head);
-		
-		if(this.tokens.size() == 1){ 
-			return;
-		}
-
-		for(Annotation ann: this.sentence.getChunks()){
-			if(ann.hasHead() && this.tokens.equals(ann.tokens) && !this.type.equalsIgnoreCase(ann.type)){
-				this.setHead(ann.getHead());
-				return;
-			}
-		}
-	}
-
-	public Integer getHead(){
-		return this.head;
-	}
-	
-	/**
-	 * Zwraca token będący głową frazy.
-	 * @return
-	 */
-	public Token getHeadToken(){
-		return this.sentence.getTokens().get(this.head);
-	}
-
-	public void setHead(int idx){
-		this.hasHead = true;
-		this.head = idx;
-	}
-
-	public void addToken(int idx){
-		if ( !this.tokens.contains(idx) )
-			this.tokens.add(idx);
-	}
-
-	public void replaceTokens(int begin, int end){
-		this.tokens.clear();
-		for(int i = begin; i <= end; i++)
-			this.tokens.add(i);
-	}
-
-	@Override
-	public boolean equals(Object object) {
-		Annotation chunk = (Annotation) object;
-		if (chunk == null){
-			return false;
-		}
-		if( this.getSentence().getId() != null
-				&& chunk.getSentence().getId() != null
-				&& !this.getSentence().getId().equals(chunk.getSentence().getId())){
-			return false;
-		} else if (!this.tokens.equals(chunk.getTokens())) {
-			return false;
-		} else if (!this.getText().equals(chunk.getText())) {
-			return false;
-		} else if (!this.type.equals(chunk.getType())) {
-			return false;
-		}
-		return true;
-	}
+    /**
+     * Wartość określająca pewność co do istnienia anotacji.
+     * Głównie używane przy autoamtycznym rozpoznawaniu anotacji w tekście.
+     */
+    private double confidence = 1.0;
 
 
+    private Map<String, String> metadata = Maps.newHashMap();
 
-    @Override
-    public int hashCode() {
-        return (this.getText() + this.tokens.toString() + this.getType() + this.getSentence()).hashCode();
+    public Annotation(final String id, final int begin, final int end, final String type, final Sentence sentence) {
+        this(begin, end, type, sentence);
+        this.id = id;
     }
 
-	public Map<String, String> getMetadata() {
-		return metadata;
-	}
-
-	public void setMetadata(Map<String, String> metadata) {
-		this.metadata = metadata;
-	}
-
-	public String getMetadata(String key) {
-		return metadata.get(key);
-	}
-
-	public void setMetadata(String key, String val) {
-		metadata.put(key, val);
-	}
-
-	public boolean metaDataMatches(Annotation other){
-		return this.metadata.equals(other.metadata);
-	}
-
-	public boolean metaDataMatchesKey(String key, Annotation other){
-		return this.metadata.getOrDefault(key, "none1").equals(other.metadata.getOrDefault(key, "none2"));
-	}
-
-	public int getBegin() {
-		return this.tokens.first();
-	}
-
-	public int getEnd() {
-		return this.tokens.last();
-	}
-
-	public TreeSet<Integer> getTokens(){
-		return this.tokens;
-	}
-
-	/**
-	 * We should rename this function and 'getTokens()'
-	 * @return
-	 */
-	public List<Token> getTokenTokens(){return this.tokens.stream().map(i -> this.sentence.getTokens().get(i)).collect(Collectors.toList());}
-
-	public Sentence getSentence() {
-		return this.sentence;
-	}
-
-    public void setSentence(Sentence sentence){
+    public Annotation(final int begin, final int end, final String type, final Sentence sentence) {
+        for (int i = begin; i <= end; i++) {
+            tokens.add(i);
+        }
+        this.type = type;
         this.sentence = sentence;
+        assignHead();
     }
 
-	public String getType() {
-		return this.type;
-	}
-	
-	public String getGroup() {
-		return this.group;
-	}
+    public Annotation(final int tokenIndex, final String type, final Sentence sentence) {
+        this(tokenIndex, tokenIndex, type, sentence);
+    }
 
-	/**
-	 * Zwraca treść chunku, jako konkatenację wartości pierwszych atrybutów.
-	 * @return
-	 */
-	public String getText(){
-		return this.getText(false);
-	}
+    public Annotation(final int begin, final String type, final int channelIdx, final Sentence sentence) {
+        this(begin, begin, type, sentence);
+        this.channelIdx = channelIdx;
+    }
 
-	/**
-	 * Zwraca treść chunku, jako konkatenację wartości pierwszych atrybutów.
-	 * @param markHead Jeżeli true, to głowa anotacji zostanie wypisana w nawiasach klamrowych.
-	 * @return
-	 */
-	public String getText(boolean markHead){
-		List<Token> tokens = this.sentence.getTokens();
-		if ( tokens == null ){
-			return "NO_TOKEN_IN_SENTENCE";
-		}
-		StringBuilder text = new StringBuilder();
-		for (int i : this.tokens) {
-			Token token = tokens.get(i);
-			if ( markHead && this.head == i ){
-				text.append("{");
-			}
-			text.append(token.getOrth());
-			if ( markHead && this.head == i ){
-				text.append("}");
-			}
-			if ((!token.getNoSpaceAfter()) && (i < getEnd())){
-				text.append(" ");
-			}
-		}
-		return text.toString();
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-    public String getBaseText(){
-    	return this.getBaseText(true);
+    public Annotation(final TreeSet<Integer> tokens, final String type, final Sentence sentence) {
+        this.tokens = tokens;
+        this.type = type;
+        this.sentence = sentence;
+        assignHead();
+    }
+
+    public Annotation(final Collection<Integer> tokens, final String type, final Sentence sentence) {
+        this.tokens = new TreeSet<>(tokens);
+        this.type = type;
+        this.sentence = sentence;
+        assignHead();
+    }
+
+    public void setChannelIdx(final int idx) {
+        channelIdx = idx;
+    }
+
+    public int getChannelIdx() {
+        return channelIdx;
+    }
+
+    public boolean hasHead() {
+        return hasHead;
+    }
+
+    public void assignHead() {
+        assignHead(false);
     }
 
     /**
-     * 
+     * Set the value of annotation lemma.
+     *
+     * @param lemma
+     */
+    public void setLemma(final String lemma) {
+        this.lemma = lemma;
+    }
+
+    /**
+     * Get the value of annotation lemma.
+     *
+     * @return
+     */
+    public String getLemma() {
+        if (lemma == null) {
+            if (metadata.containsKey("lemma")) {
+                return metadata.get("lemma");
+            } else {
+                return getText();
+            }
+        } else {
+            return lemma;
+        }
+    }
+
+    /**
+     * Ustaw pewność co do istnienia anotacji.
+     *
+     * @param confidence
+     */
+    public void setConfidence(final double confidence) {
+        this.confidence = confidence;
+    }
+
+    /**
+     * Zwraca wartość określającą pewność istnienia anotacji.
+     *
+     * @return
+     */
+    public double getConfidence() {
+        return confidence;
+    }
+
+    /**
+     * Przypisuje głowę do anotacji na podst. równoległej anotacji, lub jako pierwszy token.
+     * Do użytku z anotacjami "anafora_wyznacznik" na potrzeby piśnika TEI
+     */
+    public void assignHead(final boolean force) {
+        if (!force && hasHead()) {
+            return;
+        }
+
+        int head = -1;
+        for (final int i : getTokens()) {
+            final Token t = sentence.getTokens().get(i);
+            if (t.getDisambTag().getPos().equals("subst")) {
+                head = i;
+                break;
+            }
+        }
+
+        if (head == -1) {
+            for (final int i : getTokens()) {
+                final Token t = sentence.getTokens().get(i);
+                if (t.getDisambTag().getPos().equals("ign")) {
+                    head = i;
+                    break;
+                }
+            }
+        }
+
+        if (head == -1) {
+            head = tokens.first();
+        }
+
+        setHead(head);
+    }
+
+    public Integer getHead() {
+        return head;
+    }
+
+    /**
+     * Zwraca token będący głową frazy.
+     *
+     * @return
+     */
+    public Token getHeadToken() {
+        return sentence.getTokens().get(head);
+    }
+
+    public void setHead(final int idx) {
+        hasHead = true;
+        head = idx;
+    }
+
+    public void addToken(final int idx) {
+        tokens.add(idx);
+    }
+
+    public void replaceTokens(final int begin, final int end) {
+        tokens.clear();
+        IntStream.rangeClosed(begin, end).forEach(tokens::add);
+    }
+
+    @Override
+    public boolean equals(final Object object) {
+        if (object == null) {
+            return false;
+        }
+        final Annotation that = (Annotation) object;
+        return equalsWithTrueOnNull(getSentence().getId(), that.getSentence().getId())
+                && equalsWithTrueOnNull(getId(), that.getId())
+                && Objects.equals(getTokens(), that.getTokens())
+                && Objects.equals(getType(), that.getType());
+    }
+
+    private static boolean equalsWithTrueOnNull(final Object o1, final Object o2) {
+        return o1 == null || o2 == null || Objects.equals(o1, o2);
+    }
+
+    @Override
+    public int hashCode() {
+        return (getText() + tokens.toString() + getType() + getSentence()).hashCode();
+    }
+
+    public Map<String, String> getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(final Map<String, String> metadata) {
+        this.metadata = metadata;
+    }
+
+    public String getMetadata(final String key) {
+        return metadata.get(key);
+    }
+
+    public void setMetadata(final String key, final String val) {
+        metadata.put(key, val);
+    }
+
+    public boolean metaDataMatches(final Annotation other) {
+        return metadata.equals(other.metadata);
+    }
+
+    public boolean metaDataMatchesKey(final String key, final Annotation other) {
+        return metadata.getOrDefault(key, "none1").equals(other.metadata.getOrDefault(key, "none2"));
+    }
+
+    public int getBegin() {
+        return tokens.first();
+    }
+
+    public int getEnd() {
+        return tokens.last();
+    }
+
+    public TreeSet<Integer> getTokens() {
+        return tokens;
+    }
+
+    /**
+     * We should rename this function and 'getTokens()'
+     *
+     * @return
+     */
+    public List<Token> getTokenTokens() {
+        return tokens.stream().map(i -> sentence.getTokens().get(i)).collect(Collectors.toList());
+    }
+
+    public Sentence getSentence() {
+        return sentence;
+    }
+
+    public void setSentence(final Sentence sentence) {
+        this.sentence = sentence;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    /**
+     * Zwraca treść chunku, jako konkatenację wartości pierwszych atrybutów.
+     *
+     * @return
+     */
+    public String getText() {
+        return getText(false);
+    }
+
+    /**
+     * Zwraca treść chunku, jako konkatenację wartości pierwszych atrybutów.
+     *
+     * @param markHead Jeżeli true, to głowa anotacji zostanie wypisana w nawiasach klamrowych.
+     * @return
+     */
+    public String getText(final boolean markHead) {
+        final List<Token> tokens = sentence.getTokens();
+        if (tokens == null) {
+            return "NO_TOKEN_IN_SENTENCE";
+        }
+        final StringBuilder text = new StringBuilder();
+        for (final int i : this.tokens) {
+            final Token token = tokens.get(i);
+            if (markHead && head == i) {
+                text.append("{");
+            }
+            text.append(token.getOrth());
+            if (markHead && head == i) {
+                text.append("}");
+            }
+            if ((!token.getNoSpaceAfter()) && (i < getEnd())) {
+                text.append(" ");
+            }
+        }
+        return text.toString();
+    }
+
+    /**
+     * @return
+     */
+    public String getBaseText() {
+        return getBaseText(true);
+    }
+
+    /**
      * @param includeNs
      * @return
      */
-    public String getBaseText(boolean includeNs){
-        List<Token> tokens = this.sentence.getTokens();
-        StringBuilder text = new StringBuilder();
-        TokenAttributeIndex index = this.sentence.getAttributeIndex();
-        for (int i : this.tokens) {
-            Token token = tokens.get(i);
+    public String getBaseText(final boolean includeNs) {
+        final List<Token> tokens = sentence.getTokens();
+        final StringBuilder text = new StringBuilder();
+        final TokenAttributeIndex index = sentence.getAttributeIndex();
+        for (final int i : this.tokens) {
+            final Token token = tokens.get(i);
             text.append(token.getAttributeValue(index.getIndex("base")));
-			int a = getEnd();
-            if ( (includeNs == false || !token.getNoSpaceAfter()) && (i < getEnd())){
+            final int a = getEnd();
+            if ((includeNs == false || !token.getNoSpaceAfter()) && (i < getEnd())) {
                 text.append(" ");
             }
         }
@@ -359,83 +368,127 @@ public class Annotation extends IdentifiableElement {
 
     /**
      * Return a space-separated sequence of token ctags.
+     *
      * @return
      */
-    public String getCtags(){
-        List<Token> tokens = this.sentence.getTokens();
-        StringBuilder text = new StringBuilder();
-        for (int i : this.tokens) {
+    public String getCtags() {
+        final List<Token> tokens = sentence.getTokens();
+        final StringBuilder text = new StringBuilder();
+        for (final int i : this.tokens) {
             text.append(tokens.get(i).getDisambTag().getCtag());
             text.append(" ");
         }
         return text.toString().trim();
-    }    
+    }
 
     /**
      * Return a space-separated sequence of ns values.
+     *
      * @return
      */
-    public String getNss(){
-        List<Token> tokens = this.sentence.getTokens();
-        StringBuilder text = new StringBuilder();
-        for (int i : this.tokens) {
+    public String getNss() {
+        final List<Token> tokens = sentence.getTokens();
+        final StringBuilder text = new StringBuilder();
+        for (final int i : this.tokens) {
             text.append(tokens.get(i).getNoSpaceAfter() ? "True" : "False");
             text.append(" ");
         }
         return text.toString().trim();
-    }    
+    }
 
-	public void setType(String type){
-		this.type = type.toLowerCase();
-	}
-	
-	public void setGroup(String group){
-		this.group = group;
-	}
+    public void setType(final String type) {
+        this.type = type.toLowerCase();
+    }
 
-	public static Annotation[] sortChunks(Set<Annotation> chunkSet) {
-		int size = chunkSet.size();
-		Annotation[] sorted = new Annotation[size];
-		int idx = 0;
-	    for (Annotation c : chunkSet)
-	    	sorted[idx++] = c;
-	    for (int i = 0; i < size; i++){
-	    	for (int j = i+1; j < size; j++){
-	    		if ((sorted[i].getBegin() > sorted[j].getBegin()) ||
-	    			((sorted[i].getBegin() == sorted[j].getBegin()) &&
-	    			(sorted[i].getEnd() > sorted[j].getEnd()))) {
-	    			Annotation aux = sorted[i];
-	    			sorted[i] = sorted[j];
-	    			sorted[j] = aux;
-	    		}
-	    	}
-	    }
-		return sorted;
-	}
+    public void setGroup(final String group) {
+        this.group = group;
+    }
 
-	public String toString(){
-		return "[" + getText() + "]_"+getSentence().getId()+"|"+getType();
-	}
+    public static Annotation[] sortChunks(final Set<Annotation> chunkSet) {
+        final int size = chunkSet.size();
+        final Annotation[] sorted = new Annotation[size];
+        int idx = 0;
+        for (final Annotation c : chunkSet) {
+            sorted[idx++] = c;
+        }
+        for (int i = 0; i < size; i++) {
+            for (int j = i + 1; j < size; j++) {
+                if ((sorted[i].getBegin() > sorted[j].getBegin()) ||
+                        ((sorted[i].getBegin() == sorted[j].getBegin()) &&
+                                (sorted[i].getEnd() > sorted[j].getEnd()))) {
+                    final Annotation aux = sorted[i];
+                    sorted[i] = sorted[j];
+                    sorted[j] = aux;
+                }
+            }
+        }
+        return sorted;
+    }
 
-    public Annotation clone(){
-        Annotation cloned = new Annotation(getBegin(), getEnd(), getType(), this.sentence);
-        cloned.setId(this.id);
-        cloned.setHead(this.head);
-		cloned.setMetadata(new HashMap<>(this.getMetadata()));
+    @Override
+    public String toString() {
+        return "Annotation{" +
+                "id='" + id + '\'' +
+                ", type='" + type + '\'' +
+                ", group='" + group + '\'' +
+                ", sentence=" + sentence.getId() +
+                ", head=" + head +
+                ", lemma='" + lemma + '\'' +
+                ", confidence=" + confidence +
+                '}';
+    }
+
+    @Override
+    public Annotation clone() {
+        final Annotation cloned = new Annotation(getBegin(), getEnd(), getType(), sentence);
+        cloned.setId(id);
+        cloned.setHead(head);
+        cloned.setMetadata(new HashMap<>(getMetadata()));
         return cloned;
     }
 
-    private boolean equalsIndices(ArrayList<Integer> tab1, ArrayList<Integer> tab2){
-    	if ( tab1.size() != tab2.size() )
-    		return false;
-    	for ( int i=0; i<tab1.size(); i++)
-    		if ( tab1.get(i) != tab2.get(i) )
-    			return false;
-    	return true;
+    private boolean equalsIndices(final ArrayList<Integer> tab1, final ArrayList<Integer> tab2) {
+        if (tab1.size() != tab2.size()) {
+            return false;
+        }
+        for (int i = 0; i < tab1.size(); i++) {
+            if (tab1.get(i) != tab2.get(i)) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    public int length(){
-		return tokens.size();
-	}
+    public int length() {
+        return tokens.size();
+    }
 
+
+    public boolean contains(final Annotation inner) {
+        if (inner == null) {
+            return false;
+        }
+        return inner.getBegin() >= getBegin() && inner.getBegin() <= getEnd()
+                && inner.getEnd() >= getBegin() && inner.getEnd() <= getEnd();
+    }
+
+    public Annotation withGroup(final String groupName) {
+        setGroup(groupName);
+        return this;
+    }
+
+    public Annotation withHead(final int head) {
+        setHead(head);
+        return this;
+    }
+
+    public Annotation withLemma(final String lemma) {
+        setLemma(lemma);
+        return this;
+    }
+
+    public Annotation withId(final String id) {
+        setId(id);
+        return this;
+    }
 }

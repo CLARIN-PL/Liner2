@@ -1,16 +1,13 @@
 package g419.spatial.tools;
 
+import com.google.common.collect.Sets;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import com.google.common.collect.Sets;
-import org.apache.log4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class SpatialResources {
 

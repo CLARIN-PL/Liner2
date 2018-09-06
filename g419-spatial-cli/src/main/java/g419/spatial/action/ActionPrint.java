@@ -10,7 +10,6 @@ import g419.spatial.formatter.SpatialExpressionFormatterFactory;
 import g419.spatial.structure.SpatialExpression;
 import g419.spatial.tools.DocumentToSpatialExpressionConverter;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 
 import java.util.List;

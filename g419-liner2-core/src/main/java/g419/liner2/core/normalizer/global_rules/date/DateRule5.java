@@ -2,7 +2,9 @@ package g419.liner2.core.normalizer.global_rules.date;
 
 import g419.liner2.core.normalizer.global_rules.AbstractRule;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class DateRule5 extends AbstractRule{
     @Override

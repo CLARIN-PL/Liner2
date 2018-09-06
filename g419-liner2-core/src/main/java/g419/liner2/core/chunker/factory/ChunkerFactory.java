@@ -1,21 +1,19 @@
 package g419.liner2.core.chunker.factory;
 
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-
-import g419.liner2.core.normalizer.factory.AbstractNormalizerFactoryItem;
-import org.ini4j.Ini;
-
 import com.google.common.reflect.ClassPath;
-
 import g419.corpus.ConsolePrinter;
 import g419.liner2.core.chunker.Chunker;
 import g419.liner2.core.chunker.ensemble.CascadeChunker;
 import g419.liner2.core.chunker.ensemble.MajorityVotingChunker;
 import g419.liner2.core.chunker.ensemble.UnionChunker;
+import g419.liner2.core.normalizer.factory.AbstractNormalizerFactoryItem;
+import org.ini4j.Ini;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ChunkerFactory {

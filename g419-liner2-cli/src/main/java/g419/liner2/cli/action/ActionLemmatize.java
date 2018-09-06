@@ -9,7 +9,6 @@ import g419.liner2.core.features.tokens.CaseFeature;
 import g419.liner2.core.features.tokens.ClassFeature;
 import g419.liner2.core.tools.ValueComparator;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 
 import java.io.*;

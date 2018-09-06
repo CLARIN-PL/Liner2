@@ -1,18 +1,17 @@
 package g419.corpus.io.writer;
 
+import g419.corpus.structure.Annotation;
+import g419.corpus.structure.Document;
+import g419.corpus.structure.Relation;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
-import org.apache.log4j.Logger;
-
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Relation;
 
 /**
  * Zapisuje dane w formacie csv-relations. 

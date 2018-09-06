@@ -3,7 +3,6 @@ package g419.liner2.core.chunker.factory;
 import g419.liner2.core.chunker.Chunker;
 import g419.liner2.core.chunker.MinosChunker;
 import g419.liner2.core.chunker.MinosChunker.MinosVerb;
-
 import org.ini4j.Ini;
 
 /*

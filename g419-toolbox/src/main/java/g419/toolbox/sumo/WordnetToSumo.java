@@ -1,12 +1,6 @@
 package g419.toolbox.sumo;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.MissingResourceException;

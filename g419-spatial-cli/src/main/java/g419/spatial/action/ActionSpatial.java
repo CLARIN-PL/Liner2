@@ -1,11 +1,5 @@
 package g419.spatial.action;
 
-import java.util.List;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
-
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Document;
@@ -17,6 +11,10 @@ import g419.liner2.core.tools.parser.MaltParser;
 import g419.spatial.structure.SpatialExpression;
 import g419.spatial.tools.SpatialRelationRecognizer;
 import g419.toolbox.wordnet.Wordnet3;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+
+import java.util.List;
 
 public class ActionSpatial extends Action {
 	

@@ -7,9 +7,6 @@ import g419.crete.core.features.clustermention.AbstractClusterMentionFeature;
 import g419.crete.core.structure.AnnotationUtil;
 import g419.liner2.core.chunker.MinosChunker;
 import g419.liner2.core.tools.parser.MaltParser;
-
-import java.util.Set;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.maltparser.core.exception.MaltChainedException;
 import org.maltparser.core.syntaxgraph.DependencyStructure;

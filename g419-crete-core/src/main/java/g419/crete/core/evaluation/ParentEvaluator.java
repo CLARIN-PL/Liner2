@@ -1,12 +1,8 @@
 package g419.crete.core.evaluation;
 
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Relation;
-import g419.corpus.structure.AnnotationCluster;
+import g419.corpus.structure.*;
 import g419.corpus.structure.AnnotationCluster.ReturnRelationsToDistinctEntities;
 import g419.corpus.structure.AnnotationCluster.ReturningStrategy;
-import g419.corpus.structure.AnnotationClusterSet;
 import g419.crete.core.annotation.AbstractAnnotationSelector;
 import g419.crete.core.annotation.mapper.AnnotationMapper;
 import g419.liner2.core.tools.FscoreEvaluator;

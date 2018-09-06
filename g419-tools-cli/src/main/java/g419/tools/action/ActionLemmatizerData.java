@@ -1,26 +1,18 @@
 package g419.tools.action;
 
+import g419.corpus.io.DataFormatException;
+import g419.corpus.io.reader.parser.CclSaxParser;
+import g419.corpus.structure.*;
+import g419.lib.cli.Action;
+import g419.lib.cli.CommonOptions;
+import org.apache.commons.cli.CommandLine;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.xml.sax.SAXException;
-
-import g419.corpus.io.DataFormatException;
-import g419.corpus.io.reader.parser.CclSaxParser;
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Tag;
-import g419.corpus.structure.Token;
-import g419.corpus.structure.TokenAttributeIndex;
-import g419.lib.cli.Action;
-import g419.lib.cli.CommonOptions;
 
 public class ActionLemmatizerData extends Action {
 	

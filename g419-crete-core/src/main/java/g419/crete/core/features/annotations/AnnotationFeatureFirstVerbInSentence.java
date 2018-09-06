@@ -1,11 +1,11 @@
 package g419.crete.core.features.annotations;
 
-import java.util.List;
-
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
 import g419.crete.core.features.AbstractFeature;
+
+import java.util.List;
 
 public class AnnotationFeatureFirstVerbInSentence extends AbstractFeature<Annotation, Boolean> {
 

@@ -1,10 +1,9 @@
 package g419.spatial;
 
-import java.io.File;
-
+import g419.lib.cli.ActionSelector;
 import org.apache.log4j.PropertyConfigurator;
 
-import g419.lib.cli.ActionSelector;
+import java.io.File;
 
 public class Main {
 

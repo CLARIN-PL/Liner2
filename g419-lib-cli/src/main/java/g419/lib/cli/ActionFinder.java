@@ -1,11 +1,11 @@
 package g419.lib.cli;
 
+import com.google.common.reflect.ClassPath;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.reflect.ClassPath;
 
 /**
  * Klasa pomocnicza do wyszukiwania klas będących podklasą klasy Action.

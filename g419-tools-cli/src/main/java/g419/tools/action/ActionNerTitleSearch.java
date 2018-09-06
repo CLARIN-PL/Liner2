@@ -1,11 +1,5 @@
 package g419.tools.action;
 
-import java.util.regex.Pattern;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.log4j.Logger;
-
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.schema.kpwr.KpwrNer;
@@ -15,6 +9,10 @@ import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
+import org.apache.commons.cli.CommandLine;
+import org.apache.log4j.Logger;
+
+import java.util.regex.Pattern;
 
 public class ActionNerTitleSearch extends Action {
 	

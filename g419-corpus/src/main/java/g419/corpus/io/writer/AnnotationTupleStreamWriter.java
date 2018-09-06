@@ -27,7 +27,7 @@ public class AnnotationTupleStreamWriter extends AbstractDocumentWriter {
         flush();
         try {
             ow.close();
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             logger.error("Failed to close AnnotationTupleStreamWriter", ex);
         }
     }
@@ -45,24 +45,25 @@ public class AnnotationTupleStreamWriter extends AbstractDocumentWriter {
 
     private void writeSentence(final Sentence sentence) {
         Arrays.stream(Annotation.sortChunks(sentence.getChunks())).forEach(this::writeChunk);
-        sentenceOffset += sentence.getTokens().stream().mapToInt(t->t.getOrth().length()).sum();
+        sentenceOffset += sentence.getTokens().stream().mapToInt(t -> t.getOrth().length()).sum();
     }
 
-    private void writeChunk(final Annotation c){
+    private void writeChunk(final Annotation c) {
         try {
             ow.write(formatAnnotation(c) + "\n");
-        } catch (IOException ex){
+        } catch (final IOException ex) {
             logger.error("Failed to writeChunk", ex);
         }
     }
 
-    private String formatAnnotation(final Annotation c){
+    private String formatAnnotation(final Annotation c) {
         final List<Token> tokens = c.getSentence().getTokens();
-        final int begin = sentenceOffset + IntStream.range(0, c.getBegin()).map(i->tokens.get(i).getOrth().length()).sum();
-        final int end = begin + IntStream.rangeClosed(c.getBegin(), c.getEnd()).map(i->tokens.get(i).getOrth().length()).sum() - 1;
+        final int begin = sentenceOffset + IntStream.range(0, c.getBegin()).map(i -> tokens.get(i).getOrth().length()).sum();
+        final int end = begin + IntStream.rangeClosed(c.getBegin(), c.getEnd()).map(i -> tokens.get(i).getOrth().length()).sum() - 1;
         final StringJoiner joiner = new StringJoiner(",", "(", ")");
         joiner.add("" + begin);
         joiner.add("" + end);
+        joiner.add(c.getGroup());
         joiner.add(c.getType());
         joiner.add(quote(c.getText()));
         joiner.add(quote(c.getLemma()));
@@ -77,7 +78,7 @@ public class AnnotationTupleStreamWriter extends AbstractDocumentWriter {
     public void flush() {
         try {
             ow.flush();
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             logger.error("Failed to flush AnnotationTupleStreamWriter", ex);
         }
     }

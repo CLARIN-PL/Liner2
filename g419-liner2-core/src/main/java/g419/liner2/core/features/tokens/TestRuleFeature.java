@@ -1,12 +1,12 @@
 package g419.liner2.core.features.tokens;
 
+import g419.corpus.structure.Sentence;
+import g419.corpus.structure.Token;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
 
 /**
  * Created by michal on 5/14/15.

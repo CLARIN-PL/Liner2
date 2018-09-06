@@ -1,14 +1,14 @@
 package g419.liner2.core.features.tokens;
 
+import g419.corpus.structure.Sentence;
+import g419.corpus.structure.Token;
+import g419.liner2.core.tools.TrieDictNode;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-import g419.liner2.core.tools.TrieDictNode;
 
 
 public class DictFeature extends TokenInSentenceFeature{

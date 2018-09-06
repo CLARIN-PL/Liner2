@@ -1,10 +1,10 @@
 package g419.liner2.core.features.annotations;
 
 
-import java.util.List;
-
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Token;
+
+import java.util.List;
 
 /**
  * @author Michał Marcińczuk

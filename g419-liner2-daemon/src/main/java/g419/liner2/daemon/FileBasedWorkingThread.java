@@ -12,7 +12,9 @@ import g419.liner2.core.chunker.Chunker;
 import g419.liner2.core.features.TokenFeatureGenerator;
 import org.json.JSONObject;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
 
 /**
  * Created by michal on 11/25/14.

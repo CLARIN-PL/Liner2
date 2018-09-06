@@ -8,10 +8,7 @@ import weka.clusterers.Clusterer;
 import weka.clusterers.HierarchicalClusterer;
 import weka.core.*;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.util.*;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class WekaRandomForestMentionPairClusterClassifyResolver extends AbstractCreteResolver<Classifier, MentionPairClassificationInstance<Double>,  Instance, Double> {

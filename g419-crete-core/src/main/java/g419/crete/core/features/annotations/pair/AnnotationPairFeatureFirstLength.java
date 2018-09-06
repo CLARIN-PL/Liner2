@@ -1,7 +1,6 @@
 package g419.crete.core.features.annotations.pair;
 
 import g419.corpus.structure.Annotation;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 public class AnnotationPairFeatureFirstLength extends	AbstractAnnotationPairFeature<Integer> {

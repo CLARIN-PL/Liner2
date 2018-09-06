@@ -7,25 +7,15 @@ import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.zip.GZIPInputStream;
 
-
 public class ReaderFactory {
 
 	private static final ReaderFactory factory = new ReaderFactory();
-	
-	private ReaderFactory(){
-		
-	}
 	
 	public static ReaderFactory get(){
 		return ReaderFactory.factory; 
 	}
 	
-	/**
-	 * TODO
-	 * @return
-	 */
 	public AbstractDocumentReader getStreamReader(String inputFile, String inputFormat) throws Exception {
-		
 		boolean gz = false;
 		String intpuFormatNoGz = inputFormat;
 		if ( inputFormat.endsWith(":gz") ){
@@ -35,41 +25,21 @@ public class ReaderFactory {
 		
         if (inputFile == null){
 		    return getStreamReader("System.in", System.in, null, intpuFormatNoGz, gz);        	
-        }
-        else if (intpuFormatNoGz.equals("tei")){
+        } else if (intpuFormatNoGz.equals("tei")){
             return getTEIStreamReader(inputFile, inputFile, gz);
-        }
-        else if (intpuFormatNoGz.startsWith("batch:")){
+        } else if (intpuFormatNoGz.startsWith("batch:")){
             String format = inputFormat.substring(6);
             String root = new File(inputFile).getAbsoluteFile().getParent();
             return new BatchReader(new FileInputStream(inputFile), root, format);
-        }
-        else{
+        } else{
 		    return getStreamReader(inputFile, new FileInputStream(inputFile), (new File(inputFile)).getParent(), intpuFormatNoGz, gz);
         }
 	}
 
-	/**
-	 * 
-	 * @param uri
-	 * @param in
-	 * @param inputFormat
-	 * @return
-	 * @throws Exception
-	 */
 	public AbstractDocumentReader getStreamReader(String uri, InputStream in, String inputFormat) throws Exception {
 		return getStreamReader(uri, in, "", inputFormat);
 	}
 
-	/**
-	 * 
-	 * @param uri
-	 * @param in
-	 * @param root
-	 * @param inputFormat
-	 * @return
-	 * @throws Exception
-	 */
 	public AbstractDocumentReader getStreamReader(String uri, InputStream in, String root, String inputFormat) throws Exception {
 		boolean gz = false;
 		if ( inputFormat.endsWith(":gz") ){
@@ -79,16 +49,6 @@ public class ReaderFactory {
 		return this.getStreamReader(uri, in, root, inputFormat, gz);		
 	}
 
-	/**
-	 * 
-	 * @param uri
-	 * @param in
-	 * @param root
-	 * @param inputFormat
-	 * @param gz
-	 * @return
-	 * @throws Exception
-	 */
 	public AbstractDocumentReader getStreamReader(String uri, InputStream in, String root, String inputFormat, boolean gz) throws Exception {
 		if ( gz ){
 			in = new GZIPInputStream(in);
@@ -154,19 +114,18 @@ public class ReaderFactory {
 	 * @throws Exception
 	 */
     public AbstractDocumentReader getTEIStreamReader(String inputFolder, String docname, boolean gz) throws Exception{
-        InputStream annMorphosyntax = this.getInputStream(inputFolder, "ann_morphosyntax.xml", gz);
-        InputStream annSegmentation = this.getInputStream(inputFolder, "ann_segmentation.xml", gz);
-        InputStream annNamed = this.getInputStream(inputFolder, "ann_named.xml", gz);
-        InputStream annMentions = this.getInputStream(inputFolder, "ann_mentions.xml", gz);
-        InputStream annChunks = this.getInputStream(inputFolder, "ann_chunks.xml", gz);
-		InputStream annAnnotations = this.getInputStream(inputFolder, "ann_annotations.xml", gz);
-        InputStream annCoreference = this.getInputStream(inputFolder, "ann_coreference.xml", gz);
-        InputStream annGroups = this.getInputStream(inputFolder, "ann_groups.xml", gz);
-        InputStream annWords = this.getInputStream(inputFolder, "ann_words.xml", gz);
-        InputStream annRelations = this.getInputStream(inputFolder, "ann_relations.xml", gz);
-        InputStream annProps = this.getInputStream(inputFolder, "ann_props.xml", gz);
-        InputStream annMetadata = this.getInputStream(inputFolder, "metadata.xml", gz);
-
+        final InputStream annMorphosyntax = getInputStream(inputFolder, "ann_morphosyntax.xml", gz);
+		final InputStream annSegmentation = getInputStream(inputFolder, "ann_segmentation.xml", gz);
+		final InputStream annNamed = getInputStream(inputFolder, "ann_named.xml", gz);
+		final InputStream annMentions = getInputStream(inputFolder, "ann_mentions.xml", gz);
+		final InputStream annChunks = getInputStream(inputFolder, "ann_chunks.xml", gz);
+		final InputStream annAnnotations = getInputStream(inputFolder, "ann_annotations.xml", gz);
+		final InputStream annCoreference = getInputStream(inputFolder, "ann_coreference.xml", gz);
+		final InputStream annGroups = getInputStream(inputFolder, "ann_groups.xml", gz);
+		final InputStream annWords = getInputStream(inputFolder, "ann_words.xml", gz);
+		final InputStream annRelations = getInputStream(inputFolder, "ann_relations.xml", gz);
+		final InputStream annProps = getInputStream(inputFolder, "ann_props.xml", gz);
+		final InputStream annMetadata = getInputStream(inputFolder, "metadata.xml", gz);
         return new TeiStreamReader(inputFolder, annMetadata, annMorphosyntax, annProps, annSegmentation,
 				annNamed, annMentions, annChunks, annAnnotations,
         		annCoreference, annWords, annGroups, annRelations, docname);
@@ -183,15 +142,14 @@ public class ReaderFactory {
      * @throws Exception
      */
 	private InputStream getInputStream(String inputFolder, String inputFile, boolean gz) throws Exception {
-		if ((inputFile == null) || (inputFile.isEmpty()))
+		if ( inputFile == null || inputFile.isEmpty()) {
 			return System.in;
-		else {
+		} else {
 			try {
 				if ( gz && !inputFile.endsWith(".gz") ){
 					inputFile += ".gz";					 
 				}
 				File file = new File(inputFolder, inputFile); //todo: checking of existence returns always 'false' before ini reading!!
-				//File file = new File(inputFile);
 				InputStream stream = null;
 				if ( file.exists() ){
 					stream = new FileInputStream(file);

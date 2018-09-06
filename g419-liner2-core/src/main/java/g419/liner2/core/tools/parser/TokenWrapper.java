@@ -1,17 +1,12 @@
 package g419.liner2.core.tools.parser;
 
-import java.util.*;
-import java.util.regex.Pattern;
-
 import com.google.common.collect.Maps;
+import g419.corpus.structure.*;
+import g419.liner2.core.features.tokens.ClassFeature;
 import org.apache.log4j.Logger;
 
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-import g419.corpus.structure.TokenAttributeIndex;
-import g419.corpus.structure.WrappedToken;
-import g419.liner2.core.features.tokens.ClassFeature;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class TokenWrapper {
 

@@ -13,15 +13,13 @@ import g419.liner2.core.chunker.Chunker;
 import g419.liner2.core.chunker.factory.ChunkerManager;
 import g419.liner2.core.features.TokenFeatureGenerator;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
+import org.apache.log4j.Logger;
+import org.apache.log4j.varia.NullAppender;
 
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import org.apache.log4j.Logger;
-import org.apache.log4j.varia.NullAppender;
 
 /**
  * Chunking in pipe mode.

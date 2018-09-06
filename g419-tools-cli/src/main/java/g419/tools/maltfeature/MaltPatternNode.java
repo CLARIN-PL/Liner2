@@ -1,9 +1,9 @@
 package g419.tools.maltfeature;
 
+import g419.liner2.core.tools.parser.MaltSentence;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import g419.liner2.core.tools.parser.MaltSentence;
 
 /**
  * 

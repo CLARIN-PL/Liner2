@@ -4,340 +4,371 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 /**
- * 
  * @author Michał Marcińczuk
- *
  */
-public class Document{
+public class Document {
 
-	String name = null;
-	String uri = null;
-	TokenAttributeIndex attributeIndex = null;
-	List<Paragraph> paragraphs = new ArrayList<Paragraph>();
-	DocumentDescriptor documentDescriptor = new DocumentDescriptor();
-	Set<Frame> frames = new HashSet<Frame>();
+    String name = null;
+    String uri = null;
+    TokenAttributeIndex attributeIndex = null;
+    List<Paragraph> paragraphs = new ArrayList<>();
+    DocumentDescriptor documentDescriptor = new DocumentDescriptor();
+    Set<Frame> frames = new HashSet<>();
 
-	private HashMap<String, Integer> bases = null;
-	private HashMap<String, Integer> titleBases = null;
-	private int tokenNumber = 0;
+    private HashMap<String, Integer> bases = null;
+    private HashMap<String, Integer> titleBases = null;
+    private int tokenNumber = 0;
 
-	/* Zbiór relacji */
-	RelationSet relations = new RelationSet();
-	
-	public Document(String name, TokenAttributeIndex attributeIndex){
-		this.name = name;
-		this.attributeIndex = attributeIndex;
-	}
-	
-	public Document(String name, List<Paragraph> paragraphs, TokenAttributeIndex attributeIndex){
-		this.name = name;
-		this.paragraphs = paragraphs;
-		for(Paragraph paragraph: paragraphs) paragraph.setDocument(this);
-		this.attributeIndex = attributeIndex;
-	}
-	
-	public Document(String name, List<Paragraph> paragraphs, TokenAttributeIndex attributeIndex, RelationSet relations){
-		this.name = name;
-		this.paragraphs = paragraphs;
-		this.attributeIndex = attributeIndex;
-		this.relations = relations;
-	}
-	
-	public void setName(String name){
-		this.name = name;
-	}
-	
-	/**
-	 * Get the name of document source. If the document was read from a file, 
-	 * it is a relative path to the file. 
-	 * @return source of the document
-	 */
-	public String getName(){
-		return this.name;
-	}
-	
-	public String getUri(){
-		return this.uri;
-	}
-	
-	public void setUri(String uri){
-		this.uri = uri;
-	}
+    /* Zbiór relacji */
+    RelationSet relations = new RelationSet();
 
-	public Set<Relation> getRelationsSet(){
-		return relations.getRelations();
-	}
+    public Document(final String name, final TokenAttributeIndex attributeIndex) {
+        this.name = name;
+        this.attributeIndex = attributeIndex;
+    }
 
-	public RelationSet getRelations(){
-		return relations;
-	}
-	
-	public RelationSet getRelations(String set){
-		return relations.filterBySet(set);
-	}
-	
-	public void setRelations(RelationSet relations){
-		this.relations = relations;
-	}
-	
-	public void addParagraph(Paragraph paragraph) {
-		paragraphs.add(paragraph);
-		if (paragraph.getAttributeIndex() == null)
-			paragraph.setAttributeIndex(this.attributeIndex);
-	}
-	
-	public TokenAttributeIndex getAttributeIndex() {
-		return this.attributeIndex;
-	}
-	
-	public List<Paragraph> getParagraphs() {
-		return this.paragraphs;
-	}
-	
-	public Set<Frame> getFrames(){
-		return this.frames;
-	}
-	
-	public void setAttributeIndex(TokenAttributeIndex attributeIndex) {
-		this.attributeIndex = attributeIndex;
-		for (Paragraph p : this.paragraphs)
-			p.setAttributeIndex(this.attributeIndex);
-	}
+    public Document(final String name, final List<Paragraph> paragraphs, final TokenAttributeIndex attributeIndex) {
+        this.name = name;
+        this.paragraphs = paragraphs;
+        for (final Paragraph paragraph : paragraphs) {
+            paragraph.setDocument(this);
+        }
+        this.attributeIndex = attributeIndex;
+    }
 
-	/**
-	 * Creates a copy of collections of annotations. A new collection is created. The annotation
-	 * and sentence are not copied. 
-	 * @return
-	 */
-	public HashMap<Sentence, AnnotationSet> getChunkings() {
-		HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
-		for ( Paragraph paragraph : this.paragraphs)
-			for (Sentence sentence : paragraph.getSentences()){
-				LinkedHashSet<Annotation> annotations = new LinkedHashSet<Annotation>();
-				annotations.addAll(sentence.getChunks());
-				chunkings.put(sentence, new AnnotationSet(sentence, annotations));
-			}
-		return chunkings;
-	}
+    public Document(final String name, final List<Paragraph> paragraphs, final TokenAttributeIndex attributeIndex, final RelationSet relations) {
+        this.name = name;
+        this.paragraphs = paragraphs;
+        this.attributeIndex = attributeIndex;
+        this.relations = relations;
+    }
 
-	/**
-	 * Add annotations to sentences.
-	 * @param chunkings
-	 */
-	public void addAnnotations(HashMap<Sentence, AnnotationSet> chunkings) {
-		for ( Paragraph paragraph : this.paragraphs)
-			for (Sentence sentence : paragraph.getSentences())
-				sentence.addAnnotations(chunkings.get(sentence));
-	}
+    public void setName(final String name) {
+        this.name = name;
+    }
 
-	/**
-	 * Discard existing annotations and set given set.
-	 * @param chunkings
-	 */
-	public void setAnnotations(HashMap<Sentence, AnnotationSet> chunkings) {
-		for ( Paragraph paragraph : this.paragraphs)
-			for (Sentence sentence : paragraph.getSentences())
-				sentence.setAnnotations(chunkings.get(sentence));
-	}
+    /**
+     * Get the name of document source. If the document was read from a file,
+     * it is a relative path to the file.
+     *
+     * @return source of the document
+     */
+    public String getName() {
+        return name;
+    }
 
-	public ArrayList<Sentence> getSentences() {
-		ArrayList<Sentence> sentences = new ArrayList<Sentence>();
-		for ( Paragraph paragraph : this.paragraphs )
-			sentences.addAll(paragraph.getSentences());
-		return sentences;
-	}
+    public String getUri() {
+        return uri;
+    }
 
-	public void removeAnnotations(List<Annotation> annotations){
-		for(Annotation annotation : annotations){
-			annotation.getSentence().getChunks().remove(annotation);
-		}
-	}
+    public void setUri(final String uri) {
+        this.uri = uri;
+    }
 
-	/**
-	 * Removes all anotation with given name.
-	 * @param annotation
-	 */
-	public void removeAnnotations(String annotation) {
-		for (Paragraph paragraph : this.paragraphs){
-			for (Sentence sentence : paragraph.getSentences()){
-				sentence.removeAnnotations(annotation);
-			}
-		}
-	}
+    public Set<Relation> getRelationsSet() {
+        return relations.getRelations();
+    }
+
+    public RelationSet getRelations() {
+        return relations;
+    }
+
+    public RelationSet getRelations(final String set) {
+        return relations.filterBySet(set);
+    }
+
+    public void setRelations(final RelationSet relations) {
+        this.relations = relations;
+    }
+
+    public void addParagraph(final Paragraph paragraph) {
+        paragraphs.add(paragraph);
+        if (paragraph.getAttributeIndex() == null) {
+            paragraph.setAttributeIndex(attributeIndex);
+        }
+    }
+
+    public TokenAttributeIndex getAttributeIndex() {
+        return attributeIndex;
+    }
+
+    public List<Paragraph> getParagraphs() {
+        return paragraphs;
+    }
+
+    public Set<Frame> getFrames() {
+        return frames;
+    }
+
+    public void setAttributeIndex(final TokenAttributeIndex attributeIndex) {
+        this.attributeIndex = attributeIndex;
+        for (final Paragraph p : paragraphs) {
+            p.setAttributeIndex(this.attributeIndex);
+        }
+    }
+
+    /**
+     * Creates a copy of collections of annotations. A new collection is created. The annotation
+     * and sentence are not copied.
+     *
+     * @return
+     */
+    public HashMap<Sentence, AnnotationSet> getChunkings() {
+        final HashMap<Sentence, AnnotationSet> chunkings = new HashMap<>();
+        for (final Paragraph paragraph : paragraphs) {
+            for (final Sentence sentence : paragraph.getSentences()) {
+                final LinkedHashSet<Annotation> annotations = new LinkedHashSet<>();
+                annotations.addAll(sentence.getChunks());
+                chunkings.put(sentence, new AnnotationSet(sentence, annotations));
+            }
+        }
+        return chunkings;
+    }
+
+    /**
+     * Add annotations to sentences.
+     *
+     * @param chunkings
+     */
+    public void addAnnotations(final HashMap<Sentence, AnnotationSet> chunkings) {
+        for (final Paragraph paragraph : paragraphs) {
+            for (final Sentence sentence : paragraph.getSentences()) {
+                sentence.addAnnotations(chunkings.get(sentence));
+            }
+        }
+    }
+
+    /**
+     * Discard existing annotations and set given set.
+     *
+     * @param chunkings
+     */
+    public void setAnnotations(final HashMap<Sentence, AnnotationSet> chunkings) {
+        for (final Paragraph paragraph : paragraphs) {
+            for (final Sentence sentence : paragraph.getSentences()) {
+                sentence.setAnnotations(chunkings.get(sentence));
+            }
+        }
+    }
+
+    public ArrayList<Sentence> getSentences() {
+        final ArrayList<Sentence> sentences = new ArrayList<>();
+        for (final Paragraph paragraph : paragraphs) {
+            sentences.addAll(paragraph.getSentences());
+        }
+        return sentences;
+    }
+
+    public void removeAnnotations(final List<Annotation> annotations) {
+        for (final Annotation annotation : annotations) {
+            annotation.getSentence().getChunks().remove(annotation);
+        }
+    }
+
+    /**
+     * Removes all anotation with given name.
+     *
+     * @param annotation
+     */
+    public void removeAnnotations(final String annotation) {
+        for (final Paragraph paragraph : paragraphs) {
+            for (final Sentence sentence : paragraph.getSentences()) {
+                sentence.removeAnnotations(annotation);
+            }
+        }
+    }
 
     /**
      * Removes all anotation
      */
     public void removeAnnotations() {
-        for (Paragraph paragraph : this.paragraphs){
-            for (Sentence sentence : paragraph.getSentences()){
-                sentence.chunks = new LinkedHashSet<Annotation>();
+        for (final Paragraph paragraph : paragraphs) {
+            for (final Sentence sentence : paragraph.getSentences()) {
+                sentence.chunks = new LinkedHashSet<>();
             }
         }
     }
 
     /**
      * Remove all annotations which type matches one of given type name patterns.
+     *
      * @param types
      */
-	public void removeAnnotationsByTypePatterns(List<Pattern> types) {
-		for (Paragraph paragraph : this.paragraphs){
-			for (Sentence sentence : paragraph.getSentences()){
-				sentence.getChunks().removeAll(sentence.getAnnotations(types));
-			}
-		}
-	}
+    public void removeAnnotationsByTypePatterns(final List<Pattern> types) {
+        for (final Paragraph paragraph : paragraphs) {
+            for (final Sentence sentence : paragraph.getSentences()) {
+                sentence.getChunks().removeAll(sentence.getAnnotations(types));
+            }
+        }
+    }
 
-	/**
-	 * Removes metadata from chunks with given name
-	 */
-	public void removeMetadata(String key) {
-		for (Paragraph paragraph : this.paragraphs){
-			for (Sentence sentence : paragraph.getSentences()){
-				for (Annotation annotation : sentence.chunks){
-					annotation.getMetadata().remove(key);
-				}
-			}
-		}
-	}
+    /**
+     * Removes metadata from chunks with given name
+     */
+    public void removeMetadata(final String key) {
+        for (final Paragraph paragraph : paragraphs) {
+            for (final Sentence sentence : paragraph.getSentences()) {
+                for (final Annotation annotation : sentence.chunks) {
+                    annotation.getMetadata().remove(key);
+                }
+            }
+        }
+    }
 
     /**
      * Retreives Annotation given sentence id, channel and annotation index in channel
      */
-    public Annotation getAnnotation(String sentenceId, String channelName, int annotationIdx){
-    	for (Paragraph paragraph : this.paragraphs)
-			for (Sentence sentence : paragraph.getSentences())
-				if(sentence.getId().equals(sentenceId))
-					return sentence.getAnnotationInChannel(channelName, annotationIdx);
-    	return null;
-    }
-    
-    public ArrayList<Annotation> getAnnotations(List<Pattern> types){
-    	ArrayList<Annotation> annotations = new ArrayList<Annotation>();
-    	for(Sentence sentence: getSentences()){
-    		for(Annotation sentenceAnnotation: sentence.getAnnotations(types)){
-    			annotations.add(sentenceAnnotation);
-    		}
-    	}
-    	
-    	return annotations;
-    }
-    
-    public ArrayList<Annotation> getAnnotations(){
-    	ArrayList<Annotation> annotations = new ArrayList<Annotation>();
-    	
-    	for(Sentence sentence: getSentences()){
-    		for(Annotation sentenceAnnotation: sentence.getChunks()){
-    			annotations.add(sentenceAnnotation);
-    		}
-    	}
-    	
-    	return annotations;
+    public Annotation getAnnotation(final String sentenceId, final String channelName, final int annotationIdx) {
+        for (final Paragraph paragraph : paragraphs) {
+            for (final Sentence sentence : paragraph.getSentences()) {
+                if (sentence.getId().equals(sentenceId)) {
+                    return sentence.getAnnotationInChannel(channelName, annotationIdx);
+                }
+            }
+        }
+        return null;
     }
 
-    public Document clone(){
-        Document copy = new Document(name, attributeIndex.clone());
-        for(Paragraph p: paragraphs){
+    public ArrayList<Annotation> getAnnotations(final List<Pattern> types) {
+        final ArrayList<Annotation> annotations = new ArrayList<>();
+        for (final Sentence sentence : getSentences()) {
+            for (final Annotation sentenceAnnotation : sentence.getAnnotations(types)) {
+                annotations.add(sentenceAnnotation);
+            }
+        }
+
+        return annotations;
+    }
+
+    public ArrayList<Annotation> getAnnotations() {
+        final ArrayList<Annotation> annotations = new ArrayList<>();
+
+        for (final Sentence sentence : getSentences()) {
+            for (final Annotation sentenceAnnotation : sentence.getChunks()) {
+                annotations.add(sentenceAnnotation);
+            }
+        }
+
+        return annotations;
+    }
+
+    @Override
+    public Document clone() {
+        final Document copy = new Document(name, attributeIndex.clone());
+        for (final Paragraph p : paragraphs) {
             copy.addParagraph(p.clone());
         }
-		copy.documentDescriptor = documentDescriptor.clone();
+        copy.documentDescriptor = documentDescriptor.clone();
         return copy;
 
     }
-    
-    public void addRelation(Relation relation){
-    	this.relations.addRelation(relation);
+
+    public void addRelation(final Relation relation) {
+        relations.addRelation(relation);
     }
 
-	/**
-	 * Removes given annotations from relational clusters and refreshes
-	 * documents' relation set
-	 * @param annotations
-	 */
-    public void filterAnnotationClusters(List<Annotation> annotations){
-    	AnnotationClusterSet clusterSet = AnnotationClusterSet.fromRelationSet(relations);
-    	clusterSet.removeAnnotations(annotations);
-    	this.relations = clusterSet.getRelationSet(new AnnotationCluster.ReturnRelationsToHead());
+    /**
+     * Removes given annotations from relational clusters and refreshes
+     * documents' relation set
+     *
+     * @param annotations
+     */
+    public void filterAnnotationClusters(final List<Annotation> annotations) {
+        final AnnotationClusterSet clusterSet = AnnotationClusterSet.fromRelationSet(relations);
+        clusterSet.removeAnnotations(annotations);
+        relations = clusterSet.getRelationSet(new AnnotationCluster.ReturnRelationsToHead());
     }
 
     /**
      * Przepięcie relacji z anotacji źródłowej do anotacji docelowej
+     *
      * @param source
      * @param dest
      */
-	public void rewireSingleRelations(Annotation source, Annotation dest) {
-			List<Relation> rewired = new ArrayList<Relation>();
-		
-			if(this.relations.incomingRelations.containsKey(source)){
-				for(Relation incoming : this.relations.incomingRelations.get(source)){
-					if(incoming.getAnnotationTo().equals(dest)) continue;
-					Relation rwRel = new Relation(incoming.getAnnotationFrom(), dest, incoming.getType(), incoming.getSet(), this);
- 					rewired.add(rwRel);
-					this.relations.relations.remove(incoming);
-				}
-				this.relations.refresh();
+    public void rewireSingleRelations(final Annotation source, final Annotation dest) {
+        final List<Relation> rewired = new ArrayList<>();
+
+        if (relations.incomingRelations.containsKey(source)) {
+            for (final Relation incoming : relations.incomingRelations.get(source)) {
+                if (incoming.getAnnotationTo().equals(dest)) {
+                    continue;
+                }
+                final Relation rwRel = new Relation(incoming.getAnnotationFrom(), dest, incoming.getType(), incoming.getSet(), this);
+                rewired.add(rwRel);
+                relations.relations.remove(incoming);
+            }
+            relations.refresh();
 //				this.relations.incomingRelations.remove(source);
-			}
-				
-			if(this.relations.outgoingRelations.containsKey(source)){
-				for(Relation outgoing : this.relations.outgoingRelations.get(source)){
-					if(outgoing.getAnnotationFrom().equals(dest)) continue;
-					Relation rwRel = new Relation(dest, outgoing.getAnnotationTo(), outgoing.getType(), outgoing.getSet(), this);
-					rewired.add(rwRel);
-					this.relations.relations.remove(outgoing);
-				}
+        }
+
+        if (relations.outgoingRelations.containsKey(source)) {
+            for (final Relation outgoing : relations.outgoingRelations.get(source)) {
+                if (outgoing.getAnnotationFrom().equals(dest)) {
+                    continue;
+                }
+                final Relation rwRel = new Relation(dest, outgoing.getAnnotationTo(), outgoing.getType(), outgoing.getSet(), this);
+                rewired.add(rwRel);
+                relations.relations.remove(outgoing);
+            }
 //				this.relations.outgoingRelations.remove(source);
-			}
-			
-			for(Relation relation : rewired) this.relations.addRelation(relation);
-			this.relations.refresh();
-	}
-	
-	public DocumentDescriptor getDocumentDescriptor() {
-		return documentDescriptor;
-	}
+        }
 
-	public int getBaseCount(String base){
-		if (this.bases == null){
-			this.bases = new HashMap<>();
-			for (Paragraph p : this.paragraphs){
-				for (Sentence s : p.getSentences()){
-					for (Token t : s.getTokens()){
-						this.tokenNumber += 1;
-						String lemma = t.getAttributeValue("base");
-						if (this.bases.containsKey(lemma))
-							this.bases.put(lemma, this.bases.get(lemma) + 1);
-						else this.bases.put(lemma, 1);
-					}
-				}
-			}
-		}
-		if (this.bases.containsKey(base))
-			return this.bases.get(base);
-		return 0;
-	}
+        for (final Relation relation : rewired) {
+            relations.addRelation(relation);
+        }
+        relations.refresh();
+    }
 
-	public int getTokenNumber(){
-		return this.tokenNumber;
-	}
+    public DocumentDescriptor getDocumentDescriptor() {
+        return documentDescriptor;
+    }
+
+    public int getBaseCount(final String base) {
+        if (bases == null) {
+            bases = new HashMap<>();
+            for (final Paragraph p : paragraphs) {
+                for (final Sentence s : p.getSentences()) {
+                    for (final Token t : s.getTokens()) {
+                        tokenNumber += 1;
+                        final String lemma = t.getAttributeValue("base");
+                        if (bases.containsKey(lemma)) {
+                            bases.put(lemma, bases.get(lemma) + 1);
+                        } else {
+                            bases.put(lemma, 1);
+                        }
+                    }
+                }
+            }
+        }
+        if (bases.containsKey(base)) {
+            return bases.get(base);
+        }
+        return 0;
+    }
+
+    // ToDo: This should be removed or refactored. tokenNumber is buffered value calculated by getBaseCount.
+    public int getTokenNumber() {
+        return tokenNumber;
+    }
 
 
-	public int isInTitle(String base){
-		if (this.titleBases == null){
-			this.titleBases = new HashMap<>();
-			for (Paragraph p : this.paragraphs){
-				if (p.getChunkMetaData("type").equals("title")){
-					for (Sentence s : p.getSentences()){
-						for (Token t : s.getTokens()){
-							String lemma = t.getAttributeValue("base");
-							this.titleBases.put(lemma, 1);
-						}
-					}
-				}
-			}
-		}
-		if (this.titleBases.containsKey(base))
-			return this.titleBases.get(base);
-		return 0;
-	}
+    public int isInTitle(final String base) {
+        if (titleBases == null) {
+            titleBases = new HashMap<>();
+            for (final Paragraph p : paragraphs) {
+                if (p.getChunkMetaData("type").equals("title")) {
+                    for (final Sentence s : p.getSentences()) {
+                        for (final Token t : s.getTokens()) {
+                            final String lemma = t.getAttributeValue("base");
+                            titleBases.put(lemma, 1);
+                        }
+                    }
+                }
+            }
+        }
+        if (titleBases.containsKey(base)) {
+            return titleBases.get(base);
+        }
+        return 0;
+    }
 }

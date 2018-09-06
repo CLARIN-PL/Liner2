@@ -1,14 +1,12 @@
 package g419.tools.action;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
-
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.toolbox.wordnet.WordnetXmlReader;
 import g419.toolbox.wordnet.struct.LexicalRelation;
 import g419.toolbox.wordnet.struct.WordnetPl;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
 
 /**
  */

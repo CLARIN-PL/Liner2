@@ -1,13 +1,13 @@
 package g419.crete.core.features.annotations;
 
-import java.util.Arrays;
-import java.util.List;
-
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
 import g419.crete.core.features.AbstractFeature;
 import g419.crete.core.features.enumvalues.Case;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class AnnotationFeaturePreceedingRelativePronounCase extends AbstractFeature<Annotation, Case>{
 	

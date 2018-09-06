@@ -1,13 +1,13 @@
 package g419.spatial.action;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.MissingResourceException;
-
 import g419.lib.cli.Action;
 import g419.spatial.io.CsvSpatialSchemeParser;
 import g419.toolbox.sumo.Sumo;
 import org.apache.commons.cli.CommandLine;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.MissingResourceException;
 
 public class ActionSemanticPatterns extends Action {
 	

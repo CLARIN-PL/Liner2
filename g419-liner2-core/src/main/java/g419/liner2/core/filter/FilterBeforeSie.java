@@ -1,9 +1,9 @@
 package g419.liner2.core.filter;
 
-import java.util.List;
-
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Token;
+
+import java.util.List;
 
 
 public class FilterBeforeSie extends Filter {

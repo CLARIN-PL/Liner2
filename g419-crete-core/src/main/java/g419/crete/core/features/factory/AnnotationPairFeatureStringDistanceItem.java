@@ -5,7 +5,6 @@ import g419.crete.core.features.AbstractFeature;
 import g419.crete.core.features.annotations.pair.AnnotationPairFeatureStringDistance;
 import g419.crete.core.features.factory.item.IFeatureFactoryItem;
 import info.debatty.java.stringsimilarity.interfaces.StringDistance;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 public class AnnotationPairFeatureStringDistanceItem implements IFeatureFactoryItem<Pair<Annotation, Annotation>, Float> {

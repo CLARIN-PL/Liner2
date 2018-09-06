@@ -4,10 +4,7 @@ import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.core.LinerOptions;
 import g419.liner2.core.chunker.factory.ChunkerManager;
-
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.ParseException;
 
 /**
  * Train chunkers.

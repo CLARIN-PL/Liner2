@@ -6,7 +6,6 @@ import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 

@@ -3,12 +3,10 @@ package g419.corpus.io.writer.tei;
 import com.google.common.collect.ImmutableMap;
 import g419.corpus.io.Tei;
 import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.OutputStream;
 import java.util.Map;
-import java.util.StringJoiner;
 
 public class TeiFileMetadataWriter extends TeiFileWriter {
 

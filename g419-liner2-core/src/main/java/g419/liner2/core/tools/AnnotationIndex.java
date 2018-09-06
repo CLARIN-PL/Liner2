@@ -1,10 +1,10 @@
 package g419.liner2.core.tools;
 
+import g419.corpus.structure.Annotation;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
-import g419.corpus.structure.Annotation;
 
 /**
  * Index a set of annotation according to different criteria in order to fast look-up.

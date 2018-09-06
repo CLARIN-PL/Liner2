@@ -1,10 +1,9 @@
 package g419.liner2.daemon;
 
-import org.apache.log4j.PropertyConfigurator;
-
 import g419.lib.cli.ActionSelector;
 import g419.liner2.daemon.action.ActionFileBased;
 import g419.liner2.daemon.action.ActionSQL;
+import org.apache.log4j.PropertyConfigurator;
 
 /**
  * Run the module. 

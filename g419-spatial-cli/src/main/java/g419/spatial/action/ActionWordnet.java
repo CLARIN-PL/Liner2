@@ -1,18 +1,15 @@
 package g419.spatial.action;
 
-import java.util.HashSet;
+import g419.lib.cli.Action;
+import g419.toolbox.wordnet.Wordnet3;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.log4j.Logger;
+import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRaw;
+
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
-import org.apache.log4j.Logger;
-
-import g419.lib.cli.Action;
-import g419.toolbox.wordnet.Wordnet3;
-import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRaw;
 
 public class ActionWordnet extends Action {
 	

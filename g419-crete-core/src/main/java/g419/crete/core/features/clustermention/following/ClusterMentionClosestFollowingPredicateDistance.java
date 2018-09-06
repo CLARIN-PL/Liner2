@@ -5,10 +5,9 @@ import g419.corpus.structure.AnnotationCluster;
 import g419.corpus.structure.Token;
 import g419.crete.core.features.clustermention.AbstractClusterMentionFeature;
 import g419.crete.core.structure.AnnotationUtil;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 public class ClusterMentionClosestFollowingPredicateDistance extends AbstractClusterMentionFeature<Integer> {
 

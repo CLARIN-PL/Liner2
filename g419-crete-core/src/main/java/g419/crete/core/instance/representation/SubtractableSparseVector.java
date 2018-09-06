@@ -1,11 +1,10 @@
 package g419.crete.core.instance.representation;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
+import edu.berkeley.compbio.jlibsvm.util.SparseVector;
 import org.apache.commons.lang3.ArrayUtils;
 
-import edu.berkeley.compbio.jlibsvm.util.SparseVector;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SubtractableSparseVector extends SparseVector{
 

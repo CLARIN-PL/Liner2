@@ -1,16 +1,13 @@
 package g419.liner2.core.features;
 
-import g419.corpus.structure.*;
+import g419.corpus.structure.Annotation;
+import g419.corpus.structure.Sentence;
+import g419.corpus.structure.Token;
 import g419.liner2.core.features.tokens.TokenFeature;
 import g419.liner2.core.features.tokens.TokenInSentenceFeature;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by michal on 10/22/14.

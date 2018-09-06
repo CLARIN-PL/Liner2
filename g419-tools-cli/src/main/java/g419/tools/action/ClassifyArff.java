@@ -1,10 +1,8 @@
 package g419.tools.action;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
+import org.apache.commons.cli.CommandLine;
 
 /**
  * 

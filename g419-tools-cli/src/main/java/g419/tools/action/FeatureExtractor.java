@@ -1,24 +1,10 @@
 package g419.tools.action;
 
-import java.io.FileOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import g419.corpus.schema.tagset.MappingNkjpToConllPos;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
-
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.ArffAttributeType;
 import g419.corpus.io.writer.SparseArffWriter;
+import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
@@ -32,6 +18,13 @@ import g419.tools.maltfeature.MaltPattern;
 import g419.tools.utils.Counter;
 import g419.tools.utils.SparseMatrixCounter;
 import g419.tools.utils.SparseMatrixValue;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+
+import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
 
 /**
  * 

@@ -3,7 +3,6 @@ package g419.crete.core.features.annotations.pair;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.TokenAttributeIndex;
 import info.debatty.java.stringsimilarity.interfaces.StringDistance;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 public class AnnotationPairFeatureStringDistance extends  AbstractAnnotationPairFeature<Float>{

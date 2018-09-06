@@ -2,7 +2,6 @@ package g419.liner2.core.chunker.factory;
 
 import g419.liner2.core.chunker.Chunker;
 import g419.liner2.core.chunker.IobberChunker;
-
 import org.ini4j.Profile.Section;
 
 public class ChunkerFactoryItemIobber extends ChunkerFactoryItem {

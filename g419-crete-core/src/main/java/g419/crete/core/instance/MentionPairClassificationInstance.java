@@ -5,11 +5,10 @@ import g419.corpus.structure.Document;
 import g419.corpus.structure.Relation;
 import g419.crete.core.structure.IHaveFeatures;
 import g419.crete.core.structure.MentionPair;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.util.Arrays;
 import java.util.List;
-
-import org.apache.commons.lang3.tuple.ImmutablePair;
 
 public class MentionPairClassificationInstance<L> extends AbstractCreteInstance<L>{
 

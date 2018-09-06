@@ -1,11 +1,11 @@
 package g419.liner2.core.normalizer.global_rules;
 
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import org.joda.time.LocalDate;
 
 
 public abstract class AbstractRule implements Rule {

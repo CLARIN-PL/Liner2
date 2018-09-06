@@ -1,13 +1,11 @@
 package g419.liner2.core.chunker.factory;
 
 
+import g419.corpus.ConsolePrinter;
 import g419.liner2.core.chunker.Chunker;
 import g419.liner2.core.chunker.SmartDictionaryChunker;
 import g419.liner2.core.tools.TrieDictNode;
-import g419.corpus.ConsolePrinter;
 import org.ini4j.Ini;
-
-import java.util.ArrayList;
 
 
 public class ChunkerFactoryItemSmartDictionary extends ChunkerFactoryItem {

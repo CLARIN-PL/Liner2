@@ -1,10 +1,6 @@
 package g419.liner2.core.chunker.ensemble;
 
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.AnnotationSet;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
+import g419.corpus.structure.*;
 import g419.liner2.core.chunker.Chunker;
 
 import java.util.ArrayList;
