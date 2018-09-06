@@ -42,8 +42,7 @@ Requirements
 ### Runtime
 
 * Java 8
-* CRF++
-
+* CRF++ 0.57 (https://taku910.github.io/crfpp/)
 
 
 Installation
@@ -51,6 +50,18 @@ Installation
 
 ### Compile
 
+If you do not have CRF++ installed then do the following steps:
+```bash
+cd g419-external-dependencies
+tar -xvf CRF++-0.57.tar.gz
+cd CRF++-0.57
+./configure
+make
+sudo make install
+sudo ldconfig
+```
+
+Then:
 
 ```bash
 ./gradlew jar
@@ -76,8 +87,6 @@ Output:
 *          G4.19 Research Group, Wrocław University of Technology                               *
 *-----------------------------------------------------------------------------------------------*
 
-
-[Error] Tool not given. 
 
 Use one of the following tools:
  - agreement           -- checks agreement (of annotations) between suplied documents
@@ -119,7 +128,7 @@ Pre-trained models
 
 ### NER for Polish
 
-Download package with models:
+Download a package with models:
 ```bash
 cd Liner2
 wget -O liner25_model_ner_rev1.7z https://clarin-pl.eu/dspace/bitstream/handle/11321/263/liner25_model_ner_rev1.7z?sequence=1&isAllowed=y 
@@ -130,7 +139,7 @@ Unpack the package:
 7z x liner25_model_ner_rev1.7z
 ```
 
-Process sample CCL file:
+Process a sample CCL file:
 ```bash
 ./liner2-cli pipe -i ccl -o tuples -f stuff/resources/sample-sentence.xml -m liner25_model_ner_rev1/config-top9.ini
 ```
@@ -140,11 +149,3 @@ Expected console output:
 (4,11,nam_liv,"Ala Nowak")
 (20,28,nam_loc,"Warszawie")
 ```
-
-### TimeX for Polish
-
-ToDo
-
-### Events (according to TimeML) for Polish
-
-ToDo
