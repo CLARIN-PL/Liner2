@@ -1,4 +1,4 @@
-Liner2.5
+Liner2.6
 ========
 
 [![Build Status](https://travis-ci.org/CLARIN-PL/Liner2.svg)](https://travis-ci.org/CLARIN-PL/Liner2) [![Coverage Status](https://coveralls.io/repos/github/CLARIN-PL/Liner2/badge.svg?branch=feature%2Fspatial-dynamic)](https://coveralls.io/github/CLARIN-PL/Liner2?branch=feature%2Fspatial-dynamic) [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
@@ -43,6 +43,10 @@ Requirements
 
 * Java 8
 * CRF++ 0.57 (https://taku910.github.io/crfpp/)
+
+Optional libraries:
+
+* Polem (https://github.com/CLARIN-PL/Polem) — required by models using Polem to lemmatize phrases.
 
 
 Installation
@@ -128,10 +132,14 @@ Pre-trained models
 
 ### NER for Polish
 
-Download a package with models:
+DSpace page: https://clarin-pl.eu/dspace/handle/11321/263 
+
+Direct link to the package: https://clarin-pl.eu/dspace/bitstream/handle/11321/263/liner25_model_ner_rev1.7z
+
+Download the package with models:
 ```bash
 cd Liner2
-wget -O liner25_model_ner_rev1.7z https://clarin-pl.eu/dspace/bitstream/handle/11321/263/liner25_model_ner_rev1.7z?sequence=1&isAllowed=y 
+wget -O liner25_model_ner_rev1.7z https://clarin-pl.eu/dspace/bitstream/handle/11321/263/liner25_model_ner_rev1.7z 
 ```
 
 Unpack the package:
@@ -149,3 +157,12 @@ Expected console output:
 (4,11,nam_liv,"Ala Nowak")
 (20,28,nam_loc,"Warszawie")
 ```
+
+
+### PolEval 2018 Task 2: Named Entity Recognition
+
+DSpace page: https://clarin-pl.eu/dspace/handle/11321/598 
+
+Direct link to the package: https://clarin-pl.eu/dspace/bitstream/handle/11321/598/liner26_model_ner_nkjp.zip
+
+
