@@ -152,7 +152,7 @@ Process a sample CCL file:
 ./liner2-cli pipe -i ccl -o tuples -f stuff/resources/sample-sentence.xml -m liner25_model_ner_rev1/config-top9.ini
 ```
 
-Expected console output:
+Expected output:
 ```bash
 (4,11,nam_liv,"Ala Nowak")
 (20,28,nam_loc,"Warszawie")
@@ -165,4 +165,35 @@ DSpace page: https://clarin-pl.eu/dspace/handle/11321/598
 
 Direct link to the package: https://clarin-pl.eu/dspace/bitstream/handle/11321/598/liner26_model_ner_nkjp.zip
 
+Liner2 participated in [PolEval 2018 Task 2 on named entity recognition](http://poleval.pl/results/). 
+It won a third place with the following scores:
 
+| Metric  | F1 score |
+| ------- |   -----: |
+| Final   |    0.810 |
+| Exact   |    0.778 |
+| Overlap |    0.818 |
+
+Download the package with model:
+```bash
+cd Liner2
+wget -O liner26_model_ner_nkjp.zip https://clarin-pl.eu/dspace/bitstream/handle/11321/598/liner26_model_ner_nkjp.zip 
+```
+
+Unpack the model:
+```bash
+unzip liner26_model_ner_nkjp.zip
+```
+
+Process a sample CCL file:
+```bash
+./liner2-cli pipe -i ccl -o tuples -f stuff/resources/sample-sentence.xml -m liner26_model_ner_nkjp/config-nkjp-poleval2018.ini
+```
+
+Expected output:
+```bash
+(4,6,null,persname_forename,"Ala","Ala")
+(4,11,null,persName,"Ala Nowak","Ala Nowak")
+(7,11,null,persname_surname,"Nowak","Nowak")
+(20,28,null,placename_settlement,"Warszawie","Warszawie")
+```
