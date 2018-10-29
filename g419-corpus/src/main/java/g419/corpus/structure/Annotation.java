@@ -278,6 +278,10 @@ public class Annotation extends IdentifiableElement {
         return tokens;
     }
 
+    public int getTokenCount() {
+        return tokens.size();
+    }
+
     /**
      * We should rename this function and 'getTokens()'
      *
