@@ -1,4 +1,4 @@
-package g419.liner2.daemon;
+package g419.liner2.daemon.utils;
 
 import g419.liner2.core.LinerOptions;
 
@@ -14,7 +14,7 @@ public class DaemonOptions extends LinerOptions {
     public HashMap<String, LinerOptions> models = null;
     public String defaultModel = null;
 
-    public static DaemonOptions getGlobal(){
+    public static DaemonOptions getGlobal() {
         return daemonOptions;
     }
 

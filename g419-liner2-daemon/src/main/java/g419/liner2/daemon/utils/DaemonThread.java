@@ -1,4 +1,4 @@
-package g419.liner2.daemon;
+package g419.liner2.daemon.utils;
 
 import g419.corpus.ConsolePrinter;
 import g419.lib.cli.ParameterException;
@@ -13,64 +13,70 @@ import java.util.Vector;
 /**
  * Created by michal on 11/20/14.
  */
-public abstract class DaemonThread extends Thread{
+public abstract class DaemonThread extends Thread {
     public static final int DEFAULT_MAX_THREADS = 5;
 
     int maxThreads;
     protected Vector<WorkingThread> workingThreads;
     protected HashMap<String, TokenFeatureGenerator> featureGenerators;
-    protected  HashMap<String, Chunker> chunkers;
+    protected HashMap<String, Chunker> chunkers;
 
-    public DaemonThread(int maxThreads) throws ParameterException {
+    public DaemonThread(final int maxThreads) throws ParameterException {
         // setup maximum threads number
         this.maxThreads = maxThreads;
         // setup working threads
-        this.workingThreads = new Vector<WorkingThread>();
+        workingThreads = new Vector<>();
 
-        chunkers = new HashMap<String, Chunker>();
-        featureGenerators = new HashMap<String, TokenFeatureGenerator>();
+        chunkers = new HashMap<>();
+        featureGenerators = new HashMap<>();
         try {
-            for (String modelNam: DaemonOptions.getGlobal().models.keySet()){
-                LinerOptions modelConfig = DaemonOptions.getGlobal().models.get(modelNam);
-                ChunkerManager cm = new ChunkerManager(modelConfig);
+            for (final String modelNam : DaemonOptions.getGlobal().models.keySet()) {
+                final LinerOptions modelConfig = DaemonOptions.getGlobal().models.get(modelNam);
+                final ChunkerManager cm = new ChunkerManager(modelConfig);
                 cm.loadChunkers();
-                this.chunkers.put(modelNam, cm.getChunkerByName(modelConfig.getOptionUse()));
+                chunkers.put(modelNam, cm.getChunkerByName(modelConfig.getOptionUse()));
                 TokenFeatureGenerator gen = null;
                 if (!modelConfig.features.isEmpty()) {
                     gen = new TokenFeatureGenerator(modelConfig.features);
                 }
-                this.featureGenerators.put(modelNam, gen);
+                featureGenerators.put(modelNam, gen);
             }
 
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public  void run(){
+    public void run() {
         Runtime.getRuntime().addShutdownHook(new Thread() {
-            public void run() { shutdown(); }});
+            @Override
+            public void run() {
+                shutdown();
+            }
+        });
     }
 
-    public void finishWorkingThread(WorkingThread callingThread){
-        this.workingThreads.remove(callingThread);
-        if (this.workingThreads.isEmpty())
+    public void finishWorkingThread(final WorkingThread callingThread) {
+        workingThreads.remove(callingThread);
+        if (workingThreads.isEmpty()) {
             ConsolePrinter.log("Sleeping...", false);
+        }
     }
 
-    public void startWorkingThread(){
-        if (this.workingThreads.isEmpty()) {
+    public void startWorkingThread() {
+        if (workingThreads.isEmpty()) {
             ConsolePrinter.log("Woke up!", false);
         }
     }
 
-    public  void shutdown(){
+    public void shutdown() {
         try {
-            for (WorkingThread wt : this.workingThreads)
+            for (final WorkingThread wt : workingThreads) {
                 wt.interrupt();
-            this.interrupt();
-        } catch (Exception ex) {
+            }
+            interrupt();
+        } catch (final Exception ex) {
             ex.printStackTrace();
         }
         ConsolePrinter.log("Shutting down...", false);

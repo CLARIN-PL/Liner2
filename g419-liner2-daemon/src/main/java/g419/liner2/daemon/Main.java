@@ -2,25 +2,26 @@ package g419.liner2.daemon;
 
 import g419.lib.cli.ActionSelector;
 import g419.liner2.daemon.action.ActionFileBased;
+import g419.liner2.daemon.action.ActionRabbitMq;
 import g419.liner2.daemon.action.ActionSQL;
 import org.apache.log4j.PropertyConfigurator;
 
 /**
- * Run the module. 
- * 
+ * Run the module.
+ *
  * @author Michał Marcińczuk
  * @author Maciej Janicki
  */
 public class Main {
-    
+
     /**
      * Here the story begins.
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
 
-		PropertyConfigurator.configure("log4j.properties");
+        PropertyConfigurator.configure("log4j.properties");
 
-        StringBuilder info = new StringBuilder();        
+        final StringBuilder info = new StringBuilder();
         info.append("*-----------------------------------------------------------------------------------------------*\n");
         info.append("* A daemon for Liner2                                                                           *\n");
         info.append("*                                                                                               *\n");
@@ -31,12 +32,12 @@ public class Main {
         info.append("*          G4.19 Research Group, Wrocław University of Technology                               *\n");
         info.append("*-----------------------------------------------------------------------------------------------*\n");
 
-        ActionSelector main = new ActionSelector("./liner2-daemon");
+        final ActionSelector main = new ActionSelector("./liner2-daemon");
         main.setCredits(info.toString());
-        //main.addActions("g419.liner2.daemon.action");
         main.add(new ActionSQL());
         main.add(new ActionFileBased());
-        main.run(args);         
+        main.add(new ActionRabbitMq());
+        main.run(args);
     }
-    
+
 }

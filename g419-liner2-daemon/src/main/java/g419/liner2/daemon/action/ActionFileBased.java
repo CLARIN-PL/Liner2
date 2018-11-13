@@ -1,7 +1,7 @@
 package g419.liner2.daemon.action;
 
 import g419.lib.cli.ParameterException;
-import g419.liner2.daemon.FilebasedDaemonThread;
+import g419.liner2.daemon.utils.FilebasedDaemonThread;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.OptionBuilder;
 
@@ -13,6 +13,7 @@ import java.io.File;
 public class ActionFileBased extends ActionDaemon {
 
     public static final String OPTION_DB_PATH = "db_path";
+
     public static final String OPTION_URL = "url";
 
     File db_path;
@@ -20,7 +21,8 @@ public class ActionFileBased extends ActionDaemon {
 
     public ActionFileBased() {
         super("file");
-        this.setDescription("Starts daemon with file database.");
+        setDescription("Starts daemon with file database.");
+
 
         OptionBuilder.withArgName("db_path");
         OptionBuilder.hasArg();
@@ -36,10 +38,10 @@ public class ActionFileBased extends ActionDaemon {
     }
 
     @Override
-    public void parseOptions(CommandLine line) throws Exception {
+    public void parseOptions(final CommandLine line) throws Exception {
         db_path = new File(line.getOptionValue(OPTION_DB_PATH));
         tasker_url = line.getOptionValue(OPTION_URL);
-        if(!db_path.exists()){
+        if (!db_path.exists()) {
             throw new ParameterException("Database directory does not exist:" + line.getOptionValue(OPTION_DB_PATH));
         }
 
@@ -47,6 +49,6 @@ public class ActionFileBased extends ActionDaemon {
 
     @Override
     public void run() throws Exception {
-        new FilebasedDaemonThread(db_path, tasker_url, max_threads).run();
+        new FilebasedDaemonThread(db_path, tasker_url, maxThreads).run();
     }
 }

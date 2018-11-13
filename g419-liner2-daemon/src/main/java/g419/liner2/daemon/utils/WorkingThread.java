@@ -1,4 +1,4 @@
-package g419.liner2.daemon;
+package g419.liner2.daemon.utils;
 
 /**
  * Created by michal on 11/25/14.
