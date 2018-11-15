@@ -6,18 +6,18 @@ import g419.liner2.daemon.utils.RabbitMqWorker;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
-/**
- * Created by michal on 12/10/14.
- */
 public class ActionRabbitMq extends Action {
 
     public static final String OPTION_QUEUE = "q";
     public static final String OPTION_QUEUE_LONG = "queue";
     public static final String OPTION_QUEUE_DESC = "name of the RabbitMQ queue (liner2 is the default name)";
     public static final String OPTION_QUEUE_ARG = "name";
-    public static final String OPTION_QUEUE_DEFAULT = "liner2";
+    public static final String OPTION_QUEUE_DEFAULT = "liner2-input";
 
-    String queueName;
+    public static final String OPTION_OUTPUT_QUEUE_DEFAULT = "liner2-output";
+
+    String inputQueueName;
+    String outputQueueName;
     String modelPath = null;
     String inputFormat;
 
@@ -37,14 +37,15 @@ public class ActionRabbitMq extends Action {
 
     @Override
     public void parseOptions(final CommandLine line) throws Exception {
-        queueName = line.getOptionValue(OPTION_QUEUE, OPTION_QUEUE_DEFAULT);
+        inputQueueName = line.getOptionValue(OPTION_QUEUE, OPTION_QUEUE_DEFAULT);
+        outputQueueName = OPTION_OUTPUT_QUEUE_DEFAULT;
         modelPath = line.getOptionValue(CommonOptions.OPTION_MODEL);
         inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
     }
 
     @Override
     public void run() throws Exception {
-        final RabbitMqWorker worker = new RabbitMqWorker(queueName, modelPath, inputFormat);
+        final RabbitMqWorker worker = new RabbitMqWorker(inputQueueName, outputQueueName, modelPath, inputFormat);
         final Thread consumerThread = new Thread(worker);
         consumerThread.start();
     }

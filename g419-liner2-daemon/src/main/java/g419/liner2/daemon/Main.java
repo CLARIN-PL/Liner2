@@ -1,9 +1,7 @@
 package g419.liner2.daemon;
 
 import g419.lib.cli.ActionSelector;
-import g419.liner2.daemon.action.ActionFileBased;
 import g419.liner2.daemon.action.ActionRabbitMq;
-import g419.liner2.daemon.action.ActionSQL;
 import org.apache.log4j.PropertyConfigurator;
 
 /**
@@ -25,7 +23,7 @@ public class Main {
         info.append("*-----------------------------------------------------------------------------------------------*\n");
         info.append("* A daemon for Liner2                                                                           *\n");
         info.append("*                                                                                               *\n");
-        info.append("* Authors: Michał Marcińczuk (2011–2016)                                                        *\n");
+        info.append("* Authors: Michał Marcińczuk (2011–2018)                                                        *\n");
         info.append("*    Past: Michał Krautforst (2015), Maciej Janicki (2011)                                      *\n");
         info.append("* Contact: michal.marcinczuk@pwr.wroc.pl                                                        *\n");
         info.append("*                                                                                               *\n");
@@ -34,8 +32,6 @@ public class Main {
 
         final ActionSelector main = new ActionSelector("./liner2-daemon");
         main.setCredits(info.toString());
-        main.add(new ActionSQL());
-        main.add(new ActionFileBased());
         main.add(new ActionRabbitMq());
         main.run(args);
     }

@@ -14,21 +14,23 @@ import java.util.concurrent.TimeoutException;
 
 public class RabbitMqWorker implements Runnable, Consumer, HasLogger {
 
-    final String queueName;
+    final String inputQueueName;
+    final String outputQueueName;
     final Connection connection;
     final Channel channel;
     final Liner2 liner2;
     final String inputFormat;
 
-    public RabbitMqWorker(final String queueName, final String modelPath, final String inputFormat)
+    public RabbitMqWorker(final String inputQueueName, final String outputQueueName, final String modelPath, final String inputFormat)
             throws IOException, TimeoutException, Exception {
-        this.queueName = queueName;
+        this.inputQueueName = inputQueueName;
+        this.outputQueueName = outputQueueName;
         this.inputFormat = inputFormat;
         final ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
         connection = factory.newConnection();
         channel = connection.createChannel();
-        channel.queueDeclare(queueName, false, false, false, null);
+        channel.queueDeclare(inputQueueName, false, false, false, null);
         liner2 = new Liner2(modelPath);
     }
 
@@ -62,7 +64,20 @@ public class RabbitMqWorker implements Runnable, Consumer, HasLogger {
             throws IOException {
         try {
             final String message = new String(body, "UTF-8");
-            doWork(message);
+            final String[] parts = message.split(" ");
+            if (parts.length == 2) {
+                final String route = parts[0];
+                final String path = parts[1];
+                try {
+                    final String outputPath = doWork(path);
+                    submitWork(route, outputPath);
+                } catch (final Exception ex) {
+                    getLogger().error("An exception occured", ex);
+                    submitWork(route, "ERROR");
+                }
+            } else {
+                getLogger().error("Invalid format of the message: '{}'. Expecting: 'route path'", message);
+            }
         } catch (final Exception ex) {
             getLogger().error("Exception", ex);
         } finally {
@@ -73,14 +88,14 @@ public class RabbitMqWorker implements Runnable, Consumer, HasLogger {
     @Override
     public void run() {
         try {
-            getLogger().info("Listing to RabbitMQ on channel {} ...", queueName);
-            channel.basicConsume(queueName, true, this);
+            getLogger().info("Listing to RabbitMQ on channel {} ...", inputQueueName);
+            channel.basicConsume(inputQueueName, true, this);
         } catch (final IOException ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    private void doWork(final String path) throws Exception {
+    private String doWork(final String path) throws Exception {
         getLogger().info("Received path: '{}'", path);
 
         final Document document = ReaderFactory.get().getStreamReader(path, inputFormat).next();
@@ -91,6 +106,19 @@ public class RabbitMqWorker implements Runnable, Consumer, HasLogger {
         writer.writeDocument(document);
         writer.close();
         getLogger().info("Output saved to {}", path);
+
+        return outputPath;
+    }
+
+    private void submitWork(final String route, final String message) throws IOException, TimeoutException {
+        final ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        try (final Connection connection = factory.newConnection();
+             final Channel channel = connection.createChannel()) {
+            channel.exchangeDeclare(outputQueueName, "direct");
+            channel.basicPublish(outputQueueName, route, null, message.getBytes());
+        }
+        getLogger().info("Sent {} to {}:{}'", message, outputQueueName, route);
     }
 
     public void close() throws IOException {
