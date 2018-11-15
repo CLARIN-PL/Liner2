@@ -98,17 +98,18 @@ Requirements
 ### Compilation
 
 * Java 8
-* C++ compiler (gcc 3.0 or higher) for CRF++ (https://taku910.github.io/crfpp/)
+* C++ compiler (gcc 3.0 or higher) for [CRF++](https://taku910.github.io/crfpp/)
 
 ### Runtime
 
 * Java 8
-* CRF++ 0.57 (https://taku910.github.io/crfpp/)
+* [CRF++ 0.57](https://taku910.github.io/crfpp/)
 
 Optional libraries:
 
-* Polem (https://github.com/CLARIN-PL/Polem) — required by models using Polem to lemmatize phrases.
-
+* [Polem](https://github.com/CLARIN-PL/Polem) — required by models using Polem to lemmatize phrases, i.e.:
+  * `config-nkjp-poleval2018-polem.ini` from `liner26_model_ner_nkjp` 
+* [WCRFT2](http://nlp.pwr.wroc.pl/redmine/projects/wcrft/wiki) — morphological tagger required for `plain:wcrft` input format.
 
 Installation
 ------------
