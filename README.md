@@ -47,7 +47,7 @@ Requirements
 Optional libraries:
 
 * Polem (https://github.com/CLARIN-PL/Polem) — required by models using Polem to lemmatize phrases.
-
+* RabbitMQ (https://www.rabbitmq.com) — required to run Liner2 in service mode.
 
 Installation
 ------------
@@ -196,4 +196,101 @@ Expected output:
 (4,11,null,persName,"Ala Nowak","Ala Nowak")
 (7,11,null,persname_surname,"Nowak","Nowak")
 (20,28,null,placename_settlement,"Warszawie","Warszawie")
+```
+
+Service mode
+============
+
+Introduction
+------------
+
+Liner2 can be run a service which listen to a RabbitMQ queue for upcomming requests. 
+By default the *liner2-input* queue is used as an input for the service and *liner2-output* as an output queue.
+The input message (send by the client) should have the following format:
+```text
+ROUTE_KEY PATH
+```
+Where:
+* ROUTE_KEY — after processing the request Liner2 service will send message to the output queue with the provided routing key. The routing key is used by the client to receive the response for their request ignoring other,
+* PATH — an absolute path to a file to process.
+
+For example:
+```text
+client-001 /tmp/document.txt
+```
+
+The message send by the service will contain path to a file which contain the output of processing.
+
+Running the service
+-------------------
+```bash
+./liner2-daemon rabbitmq -m liner26_model_ner_nkjp/config-nkjp-poleval2018.ini -i plain:wcrft
+```
+
+Expected output:
+```bash
+ INFO [Thread-1] (RabbitMqWorker.java:91) - Listing to RabbitMQ on channel liner2-input ...
+Consumer amq.ctag-m6D9fIMI_Qsm61BH7HoxlA registered
+```
+
+It is possible to run more than one instance of `./liner2-daemon rabbitmq`. However, all of them should use the same model and input format.
+
+Testing
+-------
+
+Folder `stuff/python` contains a Python script to test the communication with the service. 
+The script takes a text to process, stores the texts in a temporal file, generates a routing key, send both to the `liner2-input` queue and listen to `liner2-output`.
+After receiving the response it reads the output file, removes both temporal files and prints the output. 
+
+```bash
+python3 stuff/python/liner2rmq.py "Ala z Krakowa ma kota"
+```
+
+Expected output:
+```text
+[INFO] Temp route: route-KO4KN5
+[INFO] Temp input file: /tmp/siu94xgg
+[INFO] Sent msg 'route-KO4KN5 /tmp/siu94xgg' to liner2-input
+[INFO] Temp output file: b'/tmp/siu94xgg-ner.xml'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chunkList SYSTEM "ccl.dtd">
+<chunkList>
+ <chunk id="ch1">
+  <sentence id="s1">
+   <tok>
+    <orth>Ala</orth>
+    <lex disamb="1"><base>Ala</base><ctag>subst:sg:nom:f</ctag></lex>
+    <ann chan="placename_settlement">0</ann>
+   </tok>
+   <tok>
+    <orth>z</orth>
+    <lex disamb="1"><base>z</base><ctag>prep:gen:nwok</ctag></lex>
+    <ann chan="placename_settlement">0</ann>
+   </tok>
+   <tok>
+    <orth>Krakowa</orth>
+    <lex disamb="1"><base>Kraków</base><ctag>subst:sg:gen:m3</ctag></lex>
+    <ann chan="placename_settlement" head="1">1</ann>
+   </tok>
+   <tok>
+    <orth>ma</orth>
+    <lex disamb="1"><base>mieć</base><ctag>fin:sg:ter:imperf</ctag></lex>
+    <ann chan="placename_settlement">0</ann>
+   </tok>
+   <tok>
+    <orth>kota</orth>
+    <lex disamb="1"><base>kot</base><ctag>subst:sg:acc:m2</ctag></lex>
+    <ann chan="placename_settlement">0</ann>
+   </tok>
+  </sentence>
+ </chunk>
+</chunkList>
+```
+
+Logs on the server side:
+```
+ INFO [pool-1-thread-4] (RabbitMqWorker.java:99) - Received path: '/tmp/siu94xgg'
+ INFO [pool-1-thread-4] (RabbitMqWorker.java:108) - Output saved to /tmp/siu94xgg
+ INFO [pool-1-thread-4] (RabbitMqWorker.java:121) - Sent /tmp/siu94xgg-ner.xml to liner2-output:route-KO4KN5'
+ INFO [pool-1-thread-4] (RabbitMqWorker.java:84) - Request processing done
 ```
