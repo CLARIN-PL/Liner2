@@ -60,7 +60,9 @@ pages 86–91, Valencia, Spain, 4 April 2017. Association for Computational Ling
   doi = 	"10.18653/v1/W17-1413",
   url = 	"http://aclweb.org/anthology/W17-1413"
 }
-```    
+```
+</p>
+</details>    
 
 ### NKJP NER model
 
