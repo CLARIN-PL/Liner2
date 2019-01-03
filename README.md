@@ -198,28 +198,29 @@ Expected output:
 (20,28,null,placename_settlement,"Warszawie","Warszawie")
 ```
 
-Service mode
+Service mode (using RabbitMQ)
 ============
 
 Introduction
 ------------
 
-Liner2 can be run a service which listen to a RabbitMQ queue for upcomming requests. 
-By default the *liner2-input* queue is used as an input for the service and *liner2-output* as an output queue.
+Liner2 can be run as a service which listen to a RabbitMQ queue for upcomming requests (*liner2-input*). 
+and submit the results to another queue (*liner2-output*).
 The input message (send by the client) should have the following format:
 ```text
 ROUTE_KEY PATH
 ```
 Where:
-* ROUTE_KEY — after processing the request Liner2 service will send message to the output queue with the provided routing key. The routing key is used by the client to receive the response for their request ignoring other,
-* PATH — an absolute path to a file to process.
+* ROUTE_KEY — name of a route used to post the results to the output queue. The routing key is used by the client to receive the response for their request ignoring others,
+* PATH — an absolute path to the file to process.
 
 For example:
 ```text
 client-001 /tmp/document.txt
 ```
 
-The message send by the service will contain path to a file which contain the output of processing.
+The message send by the service will contain path to a file which contains the output of processing.
+
 
 Running the service
 -------------------
@@ -243,44 +244,76 @@ The script takes a text to process, stores the texts in a temporal file, generat
 After receiving the response it reads the output file, removes both temporal files and prints the output. 
 
 ```bash
-python3 stuff/python/liner2rmq.py "Ala z Krakowa ma kota"
+python3 stuff/python/liner2rmq.py "Pani Ala Nowak mieszkw w Zielonej Górze"
 ```
 
-Expected output:
-```text
-[INFO] Temp route: route-KO4KN5
-[INFO] Temp input file: /tmp/siu94xgg
-[INFO] Sent msg 'route-KO4KN5 /tmp/siu94xgg' to liner2-input
-[INFO] Temp output file: b'/tmp/siu94xgg-ner.xml'
+The output should be as follows:
+```xml
+[INFO] Temp route: route-1DVRP4
+[INFO] Temp input file: /tmp/amu7_3at
+[INFO] Sent msg 'route-1DVRP4 /tmp/amu7_3at' to liner2-input
+[INFO] Temp output file: b'/tmp/amu7_3at-ner.xml'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE chunkList SYSTEM "ccl.dtd">
 <chunkList>
  <chunk id="ch1">
   <sentence id="s1">
    <tok>
+    <orth>Pani</orth>
+    <lex disamb="1"><base>pani</base><ctag>subst:sg:nom:f</ctag></lex>
+    <ann chan="persname">0</ann>
+    <ann chan="persname_forename">0</ann>
+    <ann chan="persname_surname">0</ann>
+    <ann chan="placename_settlement">0</ann>
+   </tok>
+   <tok>
     <orth>Ala</orth>
     <lex disamb="1"><base>Ala</base><ctag>subst:sg:nom:f</ctag></lex>
+    <ann chan="persname" head="1">1</ann>
+    <ann chan="persname_forename" head="1">1</ann>
+    <ann chan="persname_surname">0</ann>
     <ann chan="placename_settlement">0</ann>
    </tok>
    <tok>
-    <orth>z</orth>
-    <lex disamb="1"><base>z</base><ctag>prep:gen:nwok</ctag></lex>
+    <orth>Nowak</orth>
+    <lex disamb="1"><base>Nowak</base><ctag>subst:sg:nom:m1</ctag></lex>
+    <lex disamb="1"><base>nowak</base><ctag>subst:sg:nom:m1</ctag></lex>
+    <ann chan="persname">1</ann>
+    <ann chan="persname_forename">0</ann>
+    <ann chan="persname_surname" head="1">1</ann>
     <ann chan="placename_settlement">0</ann>
    </tok>
    <tok>
-    <orth>Krakowa</orth>
-    <lex disamb="1"><base>Kraków</base><ctag>subst:sg:gen:m3</ctag></lex>
+    <orth>mieszka</orth>
+    <lex disamb="1"><base>mieszkać</base><ctag>fin:sg:ter:imperf</ctag></lex>
+    <ann chan="persname">0</ann>
+    <ann chan="persname_forename">0</ann>
+    <ann chan="persname_surname">0</ann>
+    <ann chan="placename_settlement">0</ann>
+   </tok>
+   <tok>
+    <orth>w</orth>
+    <lex disamb="1"><base>w</base><ctag>prep:loc:nwok</ctag></lex>
+    <ann chan="persname">0</ann>
+    <ann chan="persname_forename">0</ann>
+    <ann chan="persname_surname">0</ann>
+    <ann chan="placename_settlement">0</ann>
+   </tok>
+   <tok>
+    <orth>Zielonej</orth>
+    <lex disamb="1"><base>zielony</base><ctag>adj:sg:loc:f:pos</ctag></lex>
+    <ann chan="persname">0</ann>
+    <ann chan="persname_forename">0</ann>
+    <ann chan="persname_surname">0</ann>
     <ann chan="placename_settlement" head="1">1</ann>
    </tok>
    <tok>
-    <orth>ma</orth>
-    <lex disamb="1"><base>mieć</base><ctag>fin:sg:ter:imperf</ctag></lex>
-    <ann chan="placename_settlement">0</ann>
-   </tok>
-   <tok>
-    <orth>kota</orth>
-    <lex disamb="1"><base>kot</base><ctag>subst:sg:acc:m2</ctag></lex>
-    <ann chan="placename_settlement">0</ann>
+    <orth>Górze</orth>
+    <lex disamb="1"><base>góra</base><ctag>subst:sg:loc:f</ctag></lex>
+    <ann chan="persname">0</ann>
+    <ann chan="persname_forename">0</ann>
+    <ann chan="persname_surname">0</ann>
+    <ann chan="placename_settlement">1</ann>
    </tok>
   </sentence>
  </chunk>
@@ -289,8 +322,8 @@ Expected output:
 
 Logs on the server side:
 ```
- INFO [pool-1-thread-4] (RabbitMqWorker.java:99) - Received path: '/tmp/siu94xgg'
- INFO [pool-1-thread-4] (RabbitMqWorker.java:108) - Output saved to /tmp/siu94xgg
- INFO [pool-1-thread-4] (RabbitMqWorker.java:121) - Sent /tmp/siu94xgg-ner.xml to liner2-output:route-KO4KN5'
- INFO [pool-1-thread-4] (RabbitMqWorker.java:84) - Request processing done
+ INFO [pool-1-thread-5] (RabbitMqWorker.java:99) - Received path: '/tmp/amu7_3at'
+ INFO [pool-1-thread-5] (RabbitMqWorker.java:108) - Output saved to /tmp/amu7_3at
+ INFO [pool-1-thread-5] (RabbitMqWorker.java:121) - Sent /tmp/amu7_3at-ner.xml to liner2-output:route-1DVRP4'
+ INFO [pool-1-thread-5] (RabbitMqWorker.java:84) - Request processing done
 ```
