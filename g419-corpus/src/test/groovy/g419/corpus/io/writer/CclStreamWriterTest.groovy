@@ -43,7 +43,7 @@ class CclStreamWriterTest extends Specification {
             String ccl = new String(os.toByteArray(), "UTF-8")
 
         then:
-            ccl.contains("<prop key=\"loc:lemma\">Zielona Góra </prop>")
+            ccl.contains("<prop key=\"loc:lemma\">Zielona Góra</prop>")
 
     }
 
