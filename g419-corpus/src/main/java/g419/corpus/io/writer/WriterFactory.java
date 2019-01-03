@@ -107,6 +107,8 @@ public class WriterFactory {
                 return new SimpleRelationClusterSetWriter(outWrapped);
             case "tuples-relations":
                 return new RelationTuplesWriter(outWrapped);
+            case "tsv-annotations":
+                return new AnnotationTsvWriter(outWrapped);
             case "csv-relations":
                 return new CsvRelationsWriter(outWrapped);
             case "bsnlp":
@@ -117,17 +119,6 @@ public class WriterFactory {
                 throw new UnknownFormatException("Output format " + outputFormat + " not recognized.");
         }
     }
-
-//	/**
-//	 * Zwraca piśnik do zapisu danych w formacie Arff.
-//	 * @param outputFile
-//	 * @param features
-//	 * @return
-//	 * @throws Exception
-//	 */
-//    public ArffGenericWriter getArffAnnotationWriter(String outputFile, String relationName, List<String> features) throws Exception {
-//        return new ArffGenericWriter(getOutputStreamGz(outputFile, false), relationName, features);
-//    }
 
     /**
      * Zwraca piśnik do formatu ccl. Dane zapisywane są do dwóch plików: .xml i .rel.xml.
