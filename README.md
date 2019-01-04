@@ -31,23 +31,88 @@ Contributors
 * Maciej Janicki (2011)
 
 
+Citing
+------------
+
+### System architecture and KPWr NER models
+
+Marcińczuk, Michał; Kocoń, Jan; Oleksy, Marcin.
+_Liner2 — a Generic Framework for Named Entity Recognition_
+In: Proceedings of the 6th Workshop on Balto-Slavic Natural Language Processing, 
+pages 86–91, Valencia, Spain, 4 April 2017. Association for Computational Linguistics 
+
+\[[PDF](https://www.researchgate.net/publication/315789247_Liner2_-_a_Generic_Framework_for_Named_Entity_Recognition)\]
+
+<details><summary>[Bibtex]</summary>
+<p>
+
+```
+@InProceedings{W17-1413,
+  author = 	"Marci{\'{n}}czuk, Micha{\l}
+		and Koco{\'{n}}, Jan
+		and Oleksy, Marcin",
+  title = 	"Liner2 --- a Generic Framework for Named Entity Recognition",
+  booktitle = 	"Proceedings of the 6th Workshop on Balto-Slavic Natural Language Processing",
+  year = 	"2017",
+  publisher = 	"Association for Computational Linguistics",
+  pages = 	"86--91",
+  location = 	"Valencia, Spain",
+  doi = 	"10.18653/v1/W17-1413",
+  url = 	"http://aclweb.org/anthology/W17-1413"
+}
+```
+</p>
+</details>    
+
+### NKJP NER model
+
+Marcińczuk, Michał; Kocoń, Jan; Gawor, Michał. 
+_Recognition of Named Entities for Polish-Comparison of Deep Learning and Conditional Random Fields Approaches_
+Ogrodniczuk, Maciej; Kobyliński, Łukasz (Eds.): 
+Proceedings of the PolEval 2018 Workshop, pp. 63-73, Institute of Computer Science, 
+Polish Academy of Science, Warszawa, 2018.
+
+\[[PDF](https://www.researchgate.net/publication/328429192_Recognition_of_Named_Entities_for_Polish-Comparison_of_Deep_Learning_and_Conditional_Random_Fields_Approaches)\]
+
+<details><summary>[Bibtex]</summary>
+<p>
+
+```
+@inproceedings{poldeepner2018,
+  title     = "Recognition of Named Entities for Polish-Comparison of Deep Learning and Conditional Random Fields Approaches",
+  author    = "Marcińczuk, Michał and Kocoń, Jan and Gawor, Michał",
+  year      = "2018",
+  editor    = "Ogrodniczuk, Maciej and Kobyliński, Łukasz",
+  booktitle = "Proceedings of the PolEval 2018 Workshop",
+  location  = "Warsaw, Poland",
+  pages     = "77--92",
+  publisher = "Institute of Computer Science, Polish Academy of Science"
+}
+```
+
+</p>
+</details>
+
+
 Requirements
 ------------
 
 ### Compilation
 
 * Java 8
-* C++ compiler (gcc 3.0 or higher) for CRF++ (https://taku910.github.io/crfpp/)
+* C++ compiler (gcc 3.0 or higher) for [CRF++](https://taku910.github.io/crfpp/)
 
 ### Runtime
 
 * Java 8
-* CRF++ 0.57 (https://taku910.github.io/crfpp/)
+* [CRF++ 0.57](https://taku910.github.io/crfpp/)
 
 Optional libraries:
 
 * Polem (https://github.com/CLARIN-PL/Polem) — required by models using Polem to lemmatize phrases.
+  * `config-nkjp-poleval2018-polem.ini` from `liner26_model_ner_nkjp` 
 * RabbitMQ (https://www.rabbitmq.com) — required to run Liner2 in service mode.
+* [WCRFT2](http://nlp.pwr.wroc.pl/redmine/projects/wcrft/wiki) — morphological tagger required for `plain:wcrft` input format.
 
 Installation
 ------------
@@ -130,13 +195,19 @@ usage: ./liner2-cli [action] [options]
 Pre-trained models
 ------------------
 
-### NER for Polish
+### KPWr NER for Polish
 
-DSpace page: https://clarin-pl.eu/dspace/handle/11321/263 
+The package contains three models for recognition named entities according to [KPWr NE guidelines](https://clarin-pl.eu/dspace/handle/11321/294).
 
-Direct link to the package: https://clarin-pl.eu/dspace/bitstream/handle/11321/263/liner25_model_ner_rev1.7z
+* *nam* — named entity boundaries,
+* *top9* — coarse-grained categories,
+* *n82* — fine-grained categories.
 
-Download the package with models:
+Resources:
+* DSpace page: https://clarin-pl.eu/dspace/handle/11321/263 
+* Direct link to the package: https://clarin-pl.eu/dspace/bitstream/handle/11321/263/liner25_model_ner_rev1.7z
+
+Download the package:
 ```bash
 cd Liner2
 wget -O liner25_model_ner_rev1.7z https://clarin-pl.eu/dspace/bitstream/handle/11321/263/liner25_model_ner_rev1.7z 
@@ -166,7 +237,7 @@ DSpace page: https://clarin-pl.eu/dspace/handle/11321/598
 Direct link to the package: https://clarin-pl.eu/dspace/bitstream/handle/11321/598/liner26_model_ner_nkjp.zip
 
 Liner2 participated in [PolEval 2018 Task 2 on named entity recognition](http://poleval.pl/results/). 
-It won a third place with the following scores:
+It got a third place with the following scores:
 
 | Metric  | F1 score |
 | ------- |   -----: |
