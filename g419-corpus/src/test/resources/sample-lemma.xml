@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chunkList SYSTEM "ccl.dtd">
+<chunkList>
+    <chunk id="p1">
+        <sentence>
+            <tok>
+                <orth>Spotkał</orth>
+                <lex disamb="1">
+                    <base>spotkać</base>
+                    <ctag>praet:sg:m1:perf</ctag>
+                </lex>
+                <ann chan="loc">0</ann>
+            </tok>
+            <tok>
+                <orth>em</orth>
+                <lex disamb="1">
+                    <base>być</base>
+                    <ctag>aglt:sg:pri:imperf:wok</ctag>
+                </lex>
+                <ann chan="loc">0</ann>
+            </tok>
+            <tok>
+                <orth>Karola</orth>
+                <lex disamb="1">
+                    <base>Karol</base>
+                    <ctag>subst:sg:acc:m1</ctag>
+                </lex>
+                <ann chan="loc">0</ann>
+            </tok>
+            <tok>
+                <orth>w</orth>
+                <lex disamb="1">
+                    <base>w</base>
+                    <ctag>prep:loc:nwok</ctag>
+                </lex>
+                <ann chan="loc">0</ann>
+            </tok>
+            <tok>
+                <orth>Zielonej</orth>
+                <lex disamb="1">
+                    <base>zielony</base>
+                    <ctag>adj:sg:loc:f:pos</ctag>
+                </lex>
+                <ann chan="loc">1</ann>
+                <prop key="loc:lemma">Zielona Góra</prop>
+            </tok>
+            <tok>
+                <orth>Górze</orth>
+                <lex disamb="1">
+                    <base>góra</base>
+                    <ctag>subst:sg:loc:f</ctag>
+                </lex>
+                <ann chan="loc" head="1">1</ann>
+            </tok>
+            <ns/>
+            <tok>
+                <orth>.</orth>
+                <lex disamb="1">
+                    <base>.</base>
+                    <ctag>interp</ctag>
+                </lex>
+                <ann chan="loc">0</ann>
+            </tok>
+        </sentence>
+    </chunk>
+</chunkList>

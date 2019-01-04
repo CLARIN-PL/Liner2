@@ -1,13 +1,12 @@
 package g419.corpus.io.reader;
 
+import com.google.common.collect.Lists;
 import g419.corpus.io.DataFormatException;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.TokenAttributeIndex;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.log4j.Logger;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,9 +17,9 @@ public class BatchReader extends AbstractDocumentReader {
 
     private final TokenAttributeIndex attributeIndex;
     private int fileIndex = 0;
-    private final List<String> files = new ArrayList<>();
-    private File root = null;
-    private String format = null;
+    private final List<String> files = Lists.newArrayList();
+    private final File root;
+    private final String format;
 
     /**
      * @param is   — the stream contains relative or absolute paths to ccl files,
@@ -59,7 +58,7 @@ public class BatchReader extends AbstractDocumentReader {
             }
 
             if (!new File(cclFile).exists()) {
-                System.err.println("File not found while reading batch: " + cclFile);
+                getLogger().error("File not found while reading batch: {}", cclFile);
             } else {
                 files.add(name);
             }
@@ -80,14 +79,14 @@ public class BatchReader extends AbstractDocumentReader {
                 path = new File(root, name).getAbsolutePath();
             }
             try {
-                Logger.getLogger(getClass()).info(String.format("Reading %d from %d: %s", fileIndex, files.size(), path));
+                getLogger().info("Reading {} from {}: {}", fileIndex, files.size(), path);
                 final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(path, format);
                 final Document document = reader.nextDocument();
                 document.setName(getDocumnetBaseName(name, format));
                 reader.close();
                 return document;
             } catch (final Exception ex) {
-                Logger.getLogger(getClass()).error("Błąd odczytu pliku: " + path, ex);
+                getLogger().error("Failed to read file {}", path);
             }
         }
         return null;

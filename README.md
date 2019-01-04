@@ -109,8 +109,9 @@ Requirements
 
 Optional libraries:
 
-* [Polem](https://github.com/CLARIN-PL/Polem) — required by models using Polem to lemmatize phrases, i.e.:
+* Polem (https://github.com/CLARIN-PL/Polem) — required by models using Polem to lemmatize phrases.
   * `config-nkjp-poleval2018-polem.ini` from `liner26_model_ner_nkjp` 
+* RabbitMQ (https://www.rabbitmq.com) — required to run Liner2 in service mode.
 * [WCRFT2](http://nlp.pwr.wroc.pl/redmine/projects/wcrft/wiki) — morphological tagger required for `plain:wcrft` input format.
 
 Installation
@@ -266,4 +267,134 @@ Expected output:
 (4,11,null,persName,"Ala Nowak","Ala Nowak")
 (7,11,null,persname_surname,"Nowak","Nowak")
 (20,28,null,placename_settlement,"Warszawie","Warszawie")
+```
+
+Service mode (using RabbitMQ)
+============
+
+Introduction
+------------
+
+Liner2 can be run as a service which listen to a RabbitMQ queue for upcomming requests (*liner2-input*). 
+and submit the results to another queue (*liner2-output*).
+The input message (send by the client) should have the following format:
+```text
+ROUTE_KEY PATH
+```
+Where:
+* ROUTE_KEY — name of a route used to post the results to the output queue. The routing key is used by the client to receive the response for their request ignoring others,
+* PATH — an absolute path to the file to process.
+
+For example:
+```text
+client-001 /tmp/document.txt
+```
+
+The message send by the service will contain path to a file which contains the output of processing.
+
+
+Running the service
+-------------------
+```bash
+./liner2-daemon rabbitmq -m liner26_model_ner_nkjp/config-nkjp-poleval2018.ini -i plain:wcrft
+```
+
+Expected output:
+```bash
+ INFO [Thread-1] (RabbitMqWorker.java:91) - Listing to RabbitMQ on channel liner2-input ...
+Consumer amq.ctag-m6D9fIMI_Qsm61BH7HoxlA registered
+```
+
+It is possible to run more than one instance of `./liner2-daemon rabbitmq`. However, all of them should use the same model and input format.
+
+Testing
+-------
+
+Folder `stuff/python` contains a Python script to test the communication with the service. 
+The script takes a text to process, stores the texts in a temporal file, generates a routing key, send both to the `liner2-input` queue and listen to `liner2-output`.
+After receiving the response it reads the output file, removes both temporal files and prints the output. 
+
+```bash
+python3 stuff/python/liner2rmq.py "Pani Ala Nowak mieszkw w Zielonej Górze"
+```
+
+The output should be as follows:
+```xml
+[INFO] Temp route: route-1DVRP4
+[INFO] Temp input file: /tmp/amu7_3at
+[INFO] Sent msg 'route-1DVRP4 /tmp/amu7_3at' to liner2-input
+[INFO] Temp output file: b'/tmp/amu7_3at-ner.xml'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chunkList SYSTEM "ccl.dtd">
+<chunkList>
+ <chunk id="ch1">
+  <sentence id="s1">
+   <tok>
+    <orth>Pani</orth>
+    <lex disamb="1"><base>pani</base><ctag>subst:sg:nom:f</ctag></lex>
+    <ann chan="persname">0</ann>
+    <ann chan="persname_forename">0</ann>
+    <ann chan="persname_surname">0</ann>
+    <ann chan="placename_settlement">0</ann>
+   </tok>
+   <tok>
+    <orth>Ala</orth>
+    <lex disamb="1"><base>Ala</base><ctag>subst:sg:nom:f</ctag></lex>
+    <ann chan="persname" head="1">1</ann>
+    <ann chan="persname_forename" head="1">1</ann>
+    <ann chan="persname_surname">0</ann>
+    <ann chan="placename_settlement">0</ann>
+   </tok>
+   <tok>
+    <orth>Nowak</orth>
+    <lex disamb="1"><base>Nowak</base><ctag>subst:sg:nom:m1</ctag></lex>
+    <lex disamb="1"><base>nowak</base><ctag>subst:sg:nom:m1</ctag></lex>
+    <ann chan="persname">1</ann>
+    <ann chan="persname_forename">0</ann>
+    <ann chan="persname_surname" head="1">1</ann>
+    <ann chan="placename_settlement">0</ann>
+   </tok>
+   <tok>
+    <orth>mieszka</orth>
+    <lex disamb="1"><base>mieszkać</base><ctag>fin:sg:ter:imperf</ctag></lex>
+    <ann chan="persname">0</ann>
+    <ann chan="persname_forename">0</ann>
+    <ann chan="persname_surname">0</ann>
+    <ann chan="placename_settlement">0</ann>
+   </tok>
+   <tok>
+    <orth>w</orth>
+    <lex disamb="1"><base>w</base><ctag>prep:loc:nwok</ctag></lex>
+    <ann chan="persname">0</ann>
+    <ann chan="persname_forename">0</ann>
+    <ann chan="persname_surname">0</ann>
+    <ann chan="placename_settlement">0</ann>
+   </tok>
+   <tok>
+    <orth>Zielonej</orth>
+    <lex disamb="1"><base>zielony</base><ctag>adj:sg:loc:f:pos</ctag></lex>
+    <ann chan="persname">0</ann>
+    <ann chan="persname_forename">0</ann>
+    <ann chan="persname_surname">0</ann>
+    <ann chan="placename_settlement" head="1">1</ann>
+   </tok>
+   <tok>
+    <orth>Górze</orth>
+    <lex disamb="1"><base>góra</base><ctag>subst:sg:loc:f</ctag></lex>
+    <ann chan="persname">0</ann>
+    <ann chan="persname_forename">0</ann>
+    <ann chan="persname_surname">0</ann>
+    <ann chan="placename_settlement">1</ann>
+   </tok>
+  </sentence>
+ </chunk>
+</chunkList>
+```
+
+Logs on the server side:
+```
+ INFO [pool-1-thread-5] (RabbitMqWorker.java:99) - Received path: '/tmp/amu7_3at'
+ INFO [pool-1-thread-5] (RabbitMqWorker.java:108) - Output saved to /tmp/amu7_3at
+ INFO [pool-1-thread-5] (RabbitMqWorker.java:121) - Sent /tmp/amu7_3at-ner.xml to liner2-output:route-1DVRP4'
+ INFO [pool-1-thread-5] (RabbitMqWorker.java:84) - Request processing done
 ```
