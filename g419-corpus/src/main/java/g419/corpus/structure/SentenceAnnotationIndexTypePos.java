@@ -55,6 +55,10 @@ public class SentenceAnnotationIndexTypePos {
                 .findFirst());
     }
 
+    public List<Annotation> getAnnotationsAtPos(final Integer pos) {
+        return posToAnnIndex.getOrDefault(pos, Lists.newArrayList());
+    }
+
     public List<Annotation> getAnnotationsOfTypeAtPos(final String type, final Integer pos) {
         return typeToPosToAnnIndex.getOrDefault(type, Maps.newHashMap()).getOrDefault(pos, Lists.newArrayList());
     }
@@ -82,6 +86,13 @@ public class SentenceAnnotationIndexTypePos {
         }
         sortAnnotationsLengthDescBeginAsc(ans);
         return ans.get(0);
+    }
+
+    public Option<Annotation> getAnnotationStartingFrom(final Integer position) {
+        final List<Annotation> list = getAnnotationsAtPos(position).stream()
+                .filter(an -> an.getBegin() == position)
+                .collect(Collectors.toList());
+        return Option.of(list.size() == 0 ? null : list.get(0));
     }
 
     public Option<Annotation> getAnnotationOfTypeStartingFrom(final String type, final Integer position) {

@@ -113,6 +113,8 @@ public class WriterFactory {
                 return new BsnlpStreamWriter(outWrapped);
             case "sentence":
                 return new SentenceStreamWriter(outWrapped);
+            case "inline-annotations":
+                return new InlineAnnotationWriter(outWrapped);
             default:
                 throw new UnknownFormatException("Output format " + outputFormat + " not recognized.");
         }
