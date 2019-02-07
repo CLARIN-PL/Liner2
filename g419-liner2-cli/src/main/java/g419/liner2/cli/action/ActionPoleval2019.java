@@ -65,7 +65,7 @@ public class ActionPoleval2019 extends Action {
         document.setName(getShortName(document.getName()));
         final List<Annotation> selectedAnnotations = selectAnnotations(document);
         selectedAnnotations.stream()
-                .peek(an -> an.setId("" + globalId.incrementAndGet()))
+                //.peek(an -> an.setId("" + globalId.incrementAndGet()))
                 .forEach(an -> writeAnnotation(csv, document, an));
 
         Stream.of(document)
