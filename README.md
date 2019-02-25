@@ -232,9 +232,11 @@ Expected output:
 
 ### PolEval 2018 Task 2: Named Entity Recognition
 
-DSpace page: https://clarin-pl.eu/dspace/handle/11321/598 
+Mirror: https://www.dropbox.com/s/wem3fp685zleuq6/liner26_model_ner_nkjp.zip?dl=0
 
-Direct link to the package: https://clarin-pl.eu/dspace/bitstream/handle/11321/598/liner26_model_ner_nkjp.zip
+DSpace page: https://clarin-pl.eu/dspace/handle/11321/598 (*temporarily off-line*)
+
+Direct link to the package: https://clarin-pl.eu/dspace/bitstream/handle/11321/598/liner26_model_ner_nkjp.zip (*temporarily off-line*)
 
 Liner2 participated in [PolEval 2018 Task 2 on named entity recognition](http://poleval.pl/results/). 
 It got a third place with the following scores:
