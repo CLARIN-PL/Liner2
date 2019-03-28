@@ -1,7 +1,6 @@
 package g419.liner2.core.tools
 
 import g419.corpus.structure.*
-import org.junit.Ignore
 import spock.lang.Specification
 
 //@Ignore
@@ -23,13 +22,13 @@ class PolemLemmatizerTest extends Specification {
             PolemLemmatizer polem = new PolemLemmatizer()
 
         expect:
-            an1.getLemma() == "zielonej łódce"
+            an1.getLemmaOrText() == "zielonej łódce"
 
         when:
             polem.lemmatize(an1)
 
         then:
-            an1.getLemma() == "zielona łódka"
+            an1.getLemmaOrText() == "zielona łódka"
     }
 
     /**
