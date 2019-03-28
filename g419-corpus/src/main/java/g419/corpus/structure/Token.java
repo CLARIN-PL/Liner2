@@ -36,16 +36,16 @@ public class Token extends IdentifiableElement {
         if (index == -1) {
             throw new Error("TokenAttribute Index does not contain the 'orth' attribute");
         }
-        this.setAttributeValue(index, orth);
-        this.addTag(firstTag);
+        setAttributeValue(index, orth);
+        addTag(firstTag);
     }
 
     public void clearAttributes() {
-        this.attributes = new ArrayList<>();
+        attributes = new ArrayList<>();
     }
 
     public void removeAttribute(final int attrIdx) {
-        this.attributes.remove(attrIdx);
+        attributes.remove(attrIdx);
     }
 
     /**
@@ -60,7 +60,7 @@ public class Token extends IdentifiableElement {
     }
 
     public String getAttributeValue(final String attr) {
-        final int index = this.attrIdx.getIndex(attr);
+        final int index = attrIdx.getIndex(attr);
         return getAttributeValue(index);
     }
 
@@ -69,11 +69,11 @@ public class Token extends IdentifiableElement {
     }
 
     public Map<String, String> getProps() {
-        return this.props;
+        return props;
     }
 
     public void setProp(final String name, final String value) {
-        this.props.put(name, value);
+        props.put(name, value);
     }
 
     /**
@@ -87,6 +87,10 @@ public class Token extends IdentifiableElement {
         return attributes.get(attrIdx.getIndex("orth"));
     }
 
+    public void setOrth(final String orth) {
+        attributes.set(attrIdx.getIndex("orth"), orth);
+    }
+
     /**
      * Gets the element.
      *
@@ -98,16 +102,16 @@ public class Token extends IdentifiableElement {
     }
 
     public boolean getNoSpaceAfter() {
-        return this.noSpaceAfter;
+        return noSpaceAfter;
     }
 
     public void addTag(final Tag tag) {
         tags.add(tag);
         if (attrIdx.getIndex("base") != -1 && attributes.get(attrIdx.getIndex("base")) == null) {
-            this.setAttributeValue(this.attrIdx.getIndex("base"), tag.getBase());
+            setAttributeValue(attrIdx.getIndex("base"), tag.getBase());
         }
         if (attrIdx.getIndex("ctag") != -1 && attributes.get(attrIdx.getIndex("ctag")) == null) {
-            this.setAttributeValue(this.attrIdx.getIndex("ctag"), tag.getCtag());
+            setAttributeValue(attrIdx.getIndex("ctag"), tag.getCtag());
         }
     }
 
@@ -117,7 +121,7 @@ public class Token extends IdentifiableElement {
 
     public Set<String> getDisambBases() {
         final Set<String> bases = new HashSet<>();
-        for (final Tag tag : this.tags) {
+        for (final Tag tag : tags) {
             if (tag.getDisamb()) {
                 bases.add(tag.getBase());
             }
@@ -137,13 +141,13 @@ public class Token extends IdentifiableElement {
     }
 
     public Tag getDisambTag() {
-        for (final Tag tag : this.tags) {
+        for (final Tag tag : tags) {
             if (tag.getDisamb()) {
                 return tag;
             }
         }
-        if (this.tags.size() > 0) {
-            return this.tags.get(0);
+        if (tags.size() > 0) {
+            return tags.get(0);
         }
         return null;
     }
@@ -173,7 +177,7 @@ public class Token extends IdentifiableElement {
     }
 
     public void setAttributeValue(final String attr, final String value) {
-        final int index = this.attrIdx.getIndex(attr);
+        final int index = attrIdx.getIndex(attr);
         setAttributeValue(index, value);
     }
 
@@ -183,7 +187,7 @@ public class Token extends IdentifiableElement {
 
     public String getAttributesAsString() {
         final StringBuilder sb = new StringBuilder();
-        for (final String attr : this.attributes) {
+        for (final String attr : attributes) {
             sb.append((sb.length() == 0 ? "" : ", ") + attr);
         }
         return sb.toString();
@@ -191,11 +195,11 @@ public class Token extends IdentifiableElement {
 
     @Override
     public Token clone() {
-        final Token cloned = new Token(this.attrIdx.clone());
-        cloned.tags = new ArrayList<>(this.tags);
-        cloned.attributes = new ArrayList<>(this.attributes);
+        final Token cloned = new Token(attrIdx.clone());
+        cloned.tags = new ArrayList<>(tags);
+        cloned.attributes = new ArrayList<>(attributes);
         cloned.id = id;
-        cloned.noSpaceAfter = this.noSpaceAfter;
+        cloned.noSpaceAfter = noSpaceAfter;
         return cloned;
     }
 
@@ -210,11 +214,11 @@ public class Token extends IdentifiableElement {
     }
 
     public boolean isWrapped() {
-        return this.getClass().isInstance(WrappedToken.class);
+        return getClass().isInstance(WrappedToken.class);
     }
 
     public TokenAttributeIndex getAttributeIndex() {
-        return this.attrIdx;
+        return attrIdx;
     }
 
     /**
@@ -225,7 +229,7 @@ public class Token extends IdentifiableElement {
      * @return true, if successful
      */
     public boolean hasBase(final String base, final boolean disambOnly) {
-        for (final Tag tag : this.tags) {
+        for (final Tag tag : tags) {
             if (tag.getBase().equals(base) && (disambOnly == false || tag.getDisamb() == true)) {
                 return true;
             }
