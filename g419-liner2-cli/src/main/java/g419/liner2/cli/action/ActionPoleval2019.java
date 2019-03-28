@@ -12,6 +12,7 @@ import io.vavr.control.Option;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -65,7 +66,6 @@ public class ActionPoleval2019 extends Action {
         document.setName(getShortName(document.getName()));
         final List<Annotation> selectedAnnotations = selectAnnotations(document);
         selectedAnnotations.stream()
-                //.peek(an -> an.setId("" + globalId.incrementAndGet()))
                 .forEach(an -> writeAnnotation(csv, document, an));
 
         Stream.of(document)
@@ -92,7 +92,9 @@ public class ActionPoleval2019 extends Action {
                 .map(Sentence::getChunks)
                 .flatMap(Collection::stream)
                 .filter(an -> an.getLemma() != null)
-                .filter(this::validAnnotation)
+                .filter(this::validAnnotationType)
+                .filter(this::isNotNumber)
+                .peek(Annotation::assignHead)
                 .map(this::annotationToKeyAnn)
                 .collect(Collectors.groupingBy(Pair::getKey))
                 .values()
@@ -107,7 +109,14 @@ public class ActionPoleval2019 extends Action {
 
     private void writeAnnotation(final CSVPrinter csv, final Document document, final Annotation annotation) {
         try {
-            csv.printRecord(annotation.getId(), document.getName(), annotation.getText(), annotation.getLemma());
+            csv.printRecord(
+                    annotation.getId(),
+                    document.getName(),
+                    annotation.getText().trim(),
+                    annotation.getLemma().trim()
+                    //annotation.getType(),
+                    //annotation.getHeadToken().getDisambTag().getCtag()
+            );
         } catch (final IOException ex) {
             getLogger().error("Exception thrown while writing to CSV", ex);
         }
@@ -117,9 +126,12 @@ public class ActionPoleval2019 extends Action {
         return new ImmutablePair<>(String.format("%d:%d", an.getBegin(), an.getEnd()), an);
     }
 
-    private boolean validAnnotation(final Annotation an) {
+    private boolean validAnnotationType(final Annotation an) {
         return ("keyword".equals(an.getType()) && an.getTokens().size() > 1)
                 || (Option.of(an.getType()).getOrElse("").startsWith("nam_"));
     }
 
+    private boolean isNotNumber(final Annotation an) {
+        return !StringUtils.isNumeric(an.getText());
+    }
 }

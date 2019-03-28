@@ -1,5 +1,7 @@
 package g419.corpus.io.writer;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import g419.corpus.structure.*;
 
 import javax.xml.stream.XMLOutputFactory;
@@ -8,6 +10,9 @@ import javax.xml.stream.XMLStreamWriter;
 import java.io.BufferedWriter;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -84,18 +89,33 @@ public class InlineAnnotationWriter extends AbstractDocumentWriter {
     private void writeSentence(final Sentence sentence) {
         try {
             final SentenceAnnotationIndexTypePos index = new SentenceAnnotationIndexTypePos(sentence);
-            final Stack<Integer> annotationEnds = new Stack<>();
+            final Stack<Annotation> annotationStack = new Stack<>();
+            final Map<Integer, List<Annotation>> annotationEnds = Maps.newHashMap();
             for (int n = 0; n < sentence.getTokenNumber(); n++) {
-                index.getAnnotationStartingFrom(n).forEach(an -> {
-                    annotationEnds.push(an.getEnd());
-                    writeAnnotationStart(an);
-                });
+                index.getAnnotationsStartingFrom(n)
+                        .stream()
+                        .sorted((o1, o2) -> Integer.compare(o2.getEnd(), o1.getEnd()))
+                        .forEach(an -> {
+                            annotationEnds.computeIfAbsent(an.getEnd(), v -> Lists.newArrayList()).add(an);
+                            annotationStack.add(an);
+                            writeAnnotationStart(an);
+                        });
                 final Token t = sentence.getTokens().get(n);
                 xmlw.writeCharacters(t.getOrth());
-                while (!annotationEnds.empty() && annotationEnds.peek() == n) {
-                    annotationEnds.pop();
-                    writeAnnotationEnd();
-                }
+
+                final List<Annotation> annotations = annotationEnds.computeIfAbsent(n, v -> Lists.newArrayList());
+                Collections.reverse(annotations);
+
+                annotations.stream()
+                        .forEach(an -> {
+                            final Annotation anStack = annotationStack.pop();
+                            if (an != anStack) {
+                                getLogger().error("Crossed annotations");
+                                getLogger().error("On stack : {}", anStack.toString());
+                                getLogger().error("Index    : {}", an.toString());
+                            }
+                            writeAnnotationEnd();
+                        });
                 if (!t.getNoSpaceAfter()) {
                     xmlw.writeCharacters(" ");
                 }
@@ -107,7 +127,6 @@ public class InlineAnnotationWriter extends AbstractDocumentWriter {
 
     private void writeAnnotationStart(final Annotation an) {
         try {
-            getLogger().debug(an.toString());
             xmlw.writeStartElement(TAG_PHRASE);
             xmlw.writeAttribute(ATTR_PHRASE_ID, an.getId());
         } catch (final XMLStreamException ex) {

@@ -59,6 +59,12 @@ public class SentenceAnnotationIndexTypePos {
         return posToAnnIndex.getOrDefault(pos, Lists.newArrayList());
     }
 
+    public List<Annotation> getAnnotationsStartingFrom(final Integer position) {
+        return getAnnotationsAtPos(position).stream()
+                .filter(an -> an.getBegin() == position)
+                .collect(Collectors.toList());
+    }
+
     public List<Annotation> getAnnotationsOfTypeAtPos(final String type, final Integer pos) {
         return typeToPosToAnnIndex.getOrDefault(type, Maps.newHashMap()).getOrDefault(pos, Lists.newArrayList());
     }
