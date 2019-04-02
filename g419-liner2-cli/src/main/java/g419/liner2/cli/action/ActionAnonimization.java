@@ -171,7 +171,7 @@ public class ActionAnonimization extends Action {
             concat += tokens.get(++n).getOrth();
         }
         if (concat.equals(phrase)) {
-            return Stream.rangeClosed(n, pos)
+            return Stream.rangeClosed(pos, n)
                     .map(tokens::get)
                     .collect(Collectors.toList());
         } else {
