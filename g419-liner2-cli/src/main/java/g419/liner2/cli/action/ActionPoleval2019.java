@@ -92,6 +92,7 @@ public class ActionPoleval2019 extends Action {
                 .map(Sentence::getChunks)
                 .flatMap(Collection::stream)
                 .filter(an -> an.getLemma() != null)
+                .filter(an -> an.getLemma().length() > 0)
                 .filter(this::validAnnotationType)
                 .filter(this::isNotNumber)
                 .peek(Annotation::assignHead)
