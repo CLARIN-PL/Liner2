@@ -93,16 +93,150 @@ Polish Academy of Science, Warszawa, 2018.
 </p>
 </details>
 
-
-Requirements
+Service in Docker
 ------------
 
-### Compilation
+### Requirements
+
+* Docker
+* Docker Compose
+* Python3 (for demo script)
+
+
+### Setup
+
+Build the Docker:
+```bash
+docker-compose build
+```
+
+Run the service:
+```bash
+docker-compose up
+```
+
+Test the service:
+```bash
+python3 stuff/python/liner2rmq.py "Pani Ala Nowak mieszkw w Zielonej Górze"
+```
+
+Expected output:
+```xml
+[INFO] Temp route: route-ET7DWN
+[INFO] Temp input file: /tmp/ez6s96sn
+[INFO] Sent msg 'route-ET7DWN /tmp/ez6s96sn' to liner2-input
+[INFO] Temp output file: b'/tmp/ez6s96sn-ner.xml'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chunkList SYSTEM "ccl.dtd">
+<chunkList>
+ <chunk id="ch1">
+  <sentence id="s1">
+   <tok>
+    <orth>Pani</orth>
+    <lex disamb="1"><base>pani</base><ctag>subst:sg:nom:f</ctag></lex>
+    <ann chan="persname">0</ann>
+    <ann chan="persname_forename">0</ann>
+    <ann chan="persname_surname">0</ann>
+    <ann chan="placename_settlement">0</ann>
+   </tok>
+   <tok>
+    <orth>Ala</orth>
+    <lex disamb="1"><base>Ala</base><ctag>subst:sg:nom:f</ctag></lex>
+    <ann chan="persname" head="1">1</ann>
+    <ann chan="persname_forename" head="1">1</ann>
+    <ann chan="persname_surname">0</ann>
+    <ann chan="placename_settlement">0</ann>
+    <prop key="persName:lemma">Ala Nowak</prop>
+    <prop key="persname_forename:lemma">Ala</prop>
+   </tok>
+   <tok>
+    <orth>Nowak</orth>
+    <lex disamb="1"><base>Nowak</base><ctag>subst:sg:nom:m1</ctag></lex>
+    <lex disamb="1"><base>nowak</base><ctag>subst:sg:nom:m1</ctag></lex>
+    <ann chan="persname">1</ann>
+    <ann chan="persname_forename">0</ann>
+    <ann chan="persname_surname" head="1">1</ann>
+    <ann chan="placename_settlement">0</ann>
+    <prop key="persname_surname:lemma">Nowak</prop>
+   </tok>
+   <tok>
+    <orth>mieszkw</orth>
+    <lex disamb="1"><base>mieszkw</base><ctag>subst:sg:nom:m1</ctag></lex>
+    <ann chan="persname">0</ann>
+    <ann chan="persname_forename">0</ann>
+    <ann chan="persname_surname">0</ann>
+    <ann chan="placename_settlement">0</ann>
+   </tok>
+   <tok>
+    <orth>w</orth>
+    <lex disamb="1"><base>w</base><ctag>prep:loc:nwok</ctag></lex>
+    <ann chan="persname">0</ann>
+    <ann chan="persname_forename">0</ann>
+    <ann chan="persname_surname">0</ann>
+    <ann chan="placename_settlement">0</ann>
+   </tok>
+   <tok>
+    <orth>Zielonej</orth>
+    <lex disamb="1"><base>zielony</base><ctag>adj:sg:loc:f:pos</ctag></lex>
+    <ann chan="persname">0</ann>
+    <ann chan="persname_forename">0</ann>
+    <ann chan="persname_surname">0</ann>
+    <ann chan="placename_settlement" head="1">1</ann>
+    <prop key="placename_settlement:lemma">Zielonej G</prop>
+   </tok>
+   <tok>
+    <orth>G</orth>
+    <lex disamb="1"><base>G</base><ctag>brev:pun</ctag></lex>
+    <lex disamb="1"><base>godzina</base><ctag>brev:pun</ctag></lex>
+    <ann chan="persname">0</ann>
+    <ann chan="persname_forename">0</ann>
+    <ann chan="persname_surname">0</ann>
+    <ann chan="placename_settlement">1</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>?</orth>
+    <lex disamb="1"><base>?</base><ctag>interp</ctag></lex>
+    <ann chan="persname">0</ann>
+    <ann chan="persname_forename">0</ann>
+    <ann chan="persname_surname">0</ann>
+    <ann chan="placename_settlement">0</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>?</orth>
+    <lex disamb="1"><base>?</base><ctag>interp</ctag></lex>
+    <ann chan="persname">0</ann>
+    <ann chan="persname_forename">0</ann>
+    <ann chan="persname_surname">0</ann>
+    <ann chan="placename_settlement">0</ann>
+   </tok>
+   <ns/>
+   <tok>
+    <orth>rze</orth>
+    <lex disamb="1"><base>rze</base><ctag>subst:sg:nom:n</ctag></lex>
+    <ann chan="persname">0</ann>
+    <ann chan="persname_forename">0</ann>
+    <ann chan="persname_surname">0</ann>
+    <ann chan="placename_settlement">0</ann>
+   </tok>
+  </sentence>
+ </chunk>
+</chunkList>
+```
+
+
+Complete installation
+------------
+
+### Requirements
+
+#### Compilation
 
 * Java 8
 * C++ compiler (gcc 3.0 or higher) for [CRF++](https://taku910.github.io/crfpp/)
 
-### Runtime
+#### Runtime
 
 * Java 8
 * [CRF++ 0.57](https://taku910.github.io/crfpp/)
