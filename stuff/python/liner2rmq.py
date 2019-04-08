@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-import pika
-import sys
-import random
-import string
 import codecs
 import os
+import pika
+import random
+import string
+import sys
 import tempfile
 
 
 class Liner2Rmq:
 
     def __init__(self, queue_prefix="liner2"):
-        self.input_queue = queue_prefix+"-input"
+        self.input_queue = queue_prefix + "-input"
         self.output_queue = queue_prefix + "-output"
         self.connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 
