@@ -1,5 +1,8 @@
 package g419.corpus.structure;
 
+import org.json.JSONObject;
+
+
 public class Tag {
 
     String base = null;
@@ -24,6 +27,15 @@ public class Tag {
                 cas = parts[2];
             }
         }
+    }
+
+    public JSONObject toJson(){
+        JSONObject json = new JSONObject();
+        json.put("base", base);
+        json.put("ctag", ctag);
+        if(disamb)
+            json.put("disamb", disamb ? 1 : 0);
+        return json;
     }
 
     public String getBase() {

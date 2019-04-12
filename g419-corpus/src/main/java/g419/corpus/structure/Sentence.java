@@ -1,9 +1,12 @@
 package g419.corpus.structure;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 
 /**
@@ -44,6 +47,32 @@ public class Sentence extends IdentifiableElement {
 
     public Sentence(final TokenAttributeIndex attrIndex) {
         attributeIndex = attrIndex;
+    }
+
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("id", getId());
+        JSONArray tok = new JSONArray();
+        IntStream.range(0, tokens.size()).forEach(idx -> {
+            List<Annotation> annot = getChunksAt(idx);
+            Token t = tokens.get(idx);
+            JSONArray ann = null;
+            if (!annot.isEmpty()) {
+                ann = new JSONArray();
+                for (Annotation a : annot) {
+                    JSONObject j = new JSONObject();
+                    j.put("chan", a.getType());
+                    if (a.getHead() == idx) {
+                        j.put("head", 1);
+                    }
+                    j.put("value", a.getChannelIdx());
+                    ann.put(j);
+                }
+            }
+            tok.put(t.toJson(ann));
+        });
+        json.put("tok", tok);
+        return json;
     }
 
     public Sentence withId(final String id) {

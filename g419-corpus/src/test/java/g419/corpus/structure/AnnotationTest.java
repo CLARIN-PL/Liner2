@@ -9,7 +9,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testHashCode() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 
 		Annotation annotation1 = new Annotation(0, "", sentence);
 		Annotation annotation2 = new Annotation(0, "", sentence);
@@ -20,7 +20,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testAnnotationIntIntStringSentence() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		int begin = 0;
 		int end = 1;
 		String type = "";
@@ -33,7 +33,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testAnnotationIntStringSentence() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		int begin = 0;
 		String type = "";
 		Annotation annotation = new Annotation(begin, type, sentence);
@@ -45,7 +45,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testAnnotationIntStringIntSentence() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		int begin = 0;
 		String type = "";
 		int channelIdx = 1;
@@ -58,7 +58,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testSetChannelIdx() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		int begin = 0;
 		String type = "";
 		int channelIdx = 1;
@@ -71,7 +71,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testGetChannelIdx() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		int begin = 0;
 		String type = "";
 		int channelIdx = 1;
@@ -85,7 +85,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testHasHead() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		int begin = 0;
 		String type = "";
 		Annotation annotation = new Annotation(begin, type, sentence);
@@ -97,7 +97,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testGetHead() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		int begin = 0;
 		String type = "";
 		Annotation annotation = new Annotation(begin, type, sentence);
@@ -109,7 +109,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testSetHead() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		int begin = 0;
 		String type = "";
 		Annotation annotation = new Annotation(begin, type, sentence);
@@ -120,7 +120,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testAddToken() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		int begin = 0;
 		String type = "";
 		Annotation annotation = new Annotation(begin, type, sentence);
@@ -132,7 +132,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testReplaceTokens() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		int begin = 0;
 		String type = "";
 		Annotation annotation = new Annotation(begin, type, sentence);
@@ -147,7 +147,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testGetId() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		int begin = 0;
 		String type = "";
 		Annotation annotation = new Annotation(begin, type, sentence);
@@ -159,7 +159,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testGetBegin() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		int begin = 0;
 		String type = "";
 		Annotation annotation = new Annotation(begin, type, sentence);
@@ -169,7 +169,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testGetEnd() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		int begin = 0;
 		int end = 1;
 		String type = "";
@@ -180,7 +180,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testGetTokens() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		int begin = 0;
 		int end = 10;
 		String type = "";
@@ -192,7 +192,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testGetSentence() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		int begin = 0;
 		String type = "";
 		Annotation annotation = new Annotation(begin, type, sentence);
@@ -202,7 +202,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testGetType() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		int begin = 0;
 		String type = "test_type";
 		Annotation annotation = new Annotation(begin, type, sentence);
@@ -212,7 +212,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testGetText() {
-		Sentence sentence1 = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence1 = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 
 		Annotation annotation1 = new Annotation(0, "", sentence1);
 		Annotation annotation2 = new Annotation(0, "", sentence1);
@@ -236,7 +236,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testGetBaseText() {
-		Sentence sentence1 = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence1 = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 
 		Annotation annotation1 = new Annotation(0, "", sentence1);
 		Annotation annotation2 = new Annotation(0, "", sentence1);
@@ -259,7 +259,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testSetId() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		int begin = 0;
 		String type = "";
 		Annotation annotation = new Annotation(begin, type, sentence);
@@ -271,7 +271,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testSetType() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		int begin = 0;
 		String type = "test_type";
 		Annotation annotation = new Annotation(begin, type, sentence);
@@ -295,7 +295,7 @@ public class AnnotationTest {
 
 	@Test
 	public void testClone() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		int begin = 0;
 		String type = "";
 		Annotation annotation = new Annotation(begin, type, sentence);
@@ -307,8 +307,8 @@ public class AnnotationTest {
 
 	@Test
 	public void testEquals() {
-		Sentence sentence1 = SentenceTest.getSampleSentence(new TokenAttributeIndex());
-		Sentence sentence2 = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence1 = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
+		Sentence sentence2 = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 
 		Annotation annotation1 = new Annotation(0, "", sentence1);
 		Annotation annotation2 = new Annotation(0, "", sentence1);

@@ -1,5 +1,9 @@
 package g419.corpus.structure;
 
+import com.google.gson.JsonArray;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.*;
 
 /**
@@ -123,6 +127,36 @@ public class Token extends IdentifiableElement {
             }
         }
         return bases;
+    }
+
+    public JSONObject toJson(JSONArray ann){
+
+        JSONObject json = new JSONObject();
+        json.put("orth", getOrth());
+
+        if(noSpaceAfter)
+            json.put("ns", true);
+
+        json.put("ann",ann);
+
+        JSONArray lex = new JSONArray();
+        getTags().stream()
+                .map(Tag::toJson)
+                .forEach(lex::put);
+
+        json.put("lex",lex);
+
+        if(! getProps().isEmpty()) {
+            JSONArray prop = new JSONArray();
+            getProps().forEach((key, value) -> {
+                JSONObject p = new JSONObject();
+                p.put(key, value);
+                prop.put(p);
+            });
+            json.put("prop", prop);
+        }
+
+        return  json;
     }
 
     @Override

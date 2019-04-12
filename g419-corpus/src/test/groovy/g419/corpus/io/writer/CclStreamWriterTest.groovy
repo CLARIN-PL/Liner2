@@ -4,6 +4,7 @@ import com.cedarsoftware.util.DeepEquals
 import g419.corpus.io.reader.AbstractDocumentReader
 import g419.corpus.io.reader.ReaderFactory
 import g419.corpus.structure.*
+import org.json.JSONObject
 import spock.lang.Specification
 
 class CclStreamWriterTest extends Specification {
@@ -36,7 +37,6 @@ class CclStreamWriterTest extends Specification {
             Document document = getSampleDocument()
             ByteArrayOutputStream os = new ByteArrayOutputStream()
             CclStreamWriter writer = new CclStreamWriter(new PrintStream(os))
-
         when:
             writer.writeDocument(document)
             writer.close()
@@ -45,6 +45,24 @@ class CclStreamWriterTest extends Specification {
         then:
             ccl.contains("<prop key=\"loc:lemma\">Zielona Góra</prop>")
 
+    }
+
+    def "read/ccl/json test"() {
+        given:
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("00099883.xml")
+        AbstractDocumentReader reader = ReaderFactory.get().getStreamReader("00099883.xml", inputStream, "ccl")
+
+        when:
+        Document original = reader.nextDocument()
+        JSONObject json = original.toJson()
+        println json
+
+        then:
+        json.has("chunk_list")
+
+        cleanup:
+        inputStream.close()
+        reader.close()
     }
 
     Document getSampleDocument() {
@@ -70,4 +88,6 @@ class CclStreamWriterTest extends Specification {
 
         return document
     }
+
+
 }

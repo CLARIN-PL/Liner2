@@ -93,6 +93,8 @@ public class WriterFactory {
                 return new AnnotationTupleStreamWriter(outWrapped);
             case "json":
                 return new JsonStreamWriter(outWrapped);
+            case "json-ccl":
+                return new JsonCclStreamWriter(outWrapped);
             case "json-annotations":
                 return new JsonAnnotationsStreamWriter(outWrapped);
             case "json-frames":

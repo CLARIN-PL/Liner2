@@ -22,7 +22,7 @@ public class AnnotationSetTest {
 
 	@Test
 	public void testAddChunk() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		Annotation annotation = new Annotation(1, "", sentence);
 		AnnotationSet annotationSet = new AnnotationSet(sentence);
 
@@ -33,7 +33,7 @@ public class AnnotationSetTest {
 
 	@Test
 	public void testRemoveChunk() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		Annotation annotation = new Annotation(1, "", sentence);
 		AnnotationSet annotationSet = new AnnotationSet(sentence);
 
@@ -45,7 +45,7 @@ public class AnnotationSetTest {
 
 	@Test
 	public void testChunkSet() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		Annotation annotation1 = new Annotation(1, "", sentence);
 		Annotation annotation2 = new Annotation(2, "", sentence);
 		Annotation annotation3 = new Annotation(3, "", sentence);
@@ -65,7 +65,7 @@ public class AnnotationSetTest {
 
 	@Test
 	public void testGetSentence() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		AnnotationSet annotationSet = new AnnotationSet(sentence);
 
 		assertNotNull(annotationSet.getSentence());
@@ -74,7 +74,7 @@ public class AnnotationSetTest {
 
 	@Test
 	public void testContains() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		Annotation annotation1 = new Annotation(1, "", sentence);
 		Annotation annotation2 = new Annotation(2, "", sentence);
 		Annotation annotation3 = new Annotation(3, "", sentence);
@@ -92,7 +92,7 @@ public class AnnotationSetTest {
 	@Test
 	public void testUnion() {
 		// Scenario 1 (same sentence, not intersecting annotation sets)
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		Annotation annotation1 = new Annotation(1, "", sentence);
 		Annotation annotation2 = new Annotation(2, "", sentence);
 		Annotation annotation3 = new Annotation(3, "", sentence);
@@ -110,7 +110,7 @@ public class AnnotationSetTest {
 		assertTrue(annotationSet1.contains(annotation3));
 
 		// Scenario 2 (same sentence, intersecting annotation sets)
-		sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		annotation1 = new Annotation(1, "", sentence);
 		annotation2 = new Annotation(2, "", sentence);
 		annotation3 = new Annotation(3, "", sentence);
@@ -129,7 +129,7 @@ public class AnnotationSetTest {
 //		assertFalse(annotationSet1.contains(annotation3));
 
 		// Scenario 3 (same sentence, equal annotation sets)
-		sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		annotation1 = new Annotation(1, "", sentence);
 		annotation2 = new Annotation(2, "", sentence);
 		annotation3 = new Annotation(3, "", sentence);
@@ -150,7 +150,7 @@ public class AnnotationSetTest {
 //		assertFalse(annotationSet1.contains(annotation3));
 
 		// Scenario 4 (same sentence, same annotation set)
-		sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		annotation1 = new Annotation(1, "", sentence);
 		annotation2 = new Annotation(2, "", sentence);
 		annotationSet1 = new AnnotationSet(sentence);
@@ -165,8 +165,8 @@ public class AnnotationSetTest {
 
 		// Scenario 5 (different sentence, not intersecting annotation sets)
 		// TODO What should happen? Exception or true/false, for now nothing.
-		sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
-		Sentence sentence2 = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
+		Sentence sentence2 = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		annotation1 = new Annotation(1, "", sentence);
 		annotation2 = new Annotation(2, "", sentence2);
 		annotationSet1 = new AnnotationSet(sentence);
@@ -184,7 +184,7 @@ public class AnnotationSetTest {
 	// TODO test do poprawy i podziału na mniejsze
 	@Test
 	public void testGetAnnotationTypes() {
-		Sentence sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		Annotation annotation1 = new Annotation(1, "1", sentence);
 		Annotation annotation2 = new Annotation(2, "2", sentence);
 		Annotation annotation3 = new Annotation(3, "3", sentence);
@@ -205,7 +205,7 @@ public class AnnotationSetTest {
 		
 		// Scenario 3 (filled annotation set, same type)
 		//TODO
-		sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		annotation1 = new Annotation(1, "1", sentence);
 		annotation2 = new Annotation(2, "1", sentence);
 		annotation3 = new Annotation(3, "1", sentence);
@@ -221,7 +221,7 @@ public class AnnotationSetTest {
 		
 		// Scenario 4 (filled annotation set, mixed types)
 		//TODO
-		sentence = SentenceTest.getSampleSentence(new TokenAttributeIndex());
+		sentence = TestDataProvider.sentence_Ala_ma_kota(new TokenAttributeIndex());
 		annotation1 = new Annotation(1, "1", sentence);
 		annotation2 = new Annotation(2, "1", sentence);
 		annotation3 = new Annotation(3, "2", sentence);

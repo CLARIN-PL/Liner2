@@ -1,5 +1,8 @@
 package g419.corpus.structure;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -18,6 +21,20 @@ public class Paragraph extends IdentifiableElement {
 
     public Paragraph(final String id) {
         this.id = id;
+    }
+
+    public JSONObject toJson(){
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("type", getChunkMetaData("type"));
+        if(!sentences.isEmpty()) {
+            JSONArray sent = new JSONArray();
+            sentences.stream()
+                    .map(Sentence::toJson)
+                    .forEach(sent::put);
+            json.put("sentences", sent);
+        }
+        return json;
     }
 
     public void addSentence(final Sentence sentence) {

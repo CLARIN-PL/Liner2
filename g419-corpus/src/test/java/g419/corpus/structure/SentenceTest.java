@@ -1,8 +1,27 @@
 package g419.corpus.structure;
 
+import org.json.JSONObject;
 import org.junit.Test;
 
+import static g419.corpus.structure.TestDataProvider.getTokenAttributeIndex;
+import static org.junit.Assert.*;
+
 public class SentenceTest {
+
+
+	@Test
+	public void shouldHaveOrthAttribute(){
+
+		TokenAttributeIndex index = getTokenAttributeIndex();
+
+		Sentence sentence = TestDataProvider.sentence_Ala_ma_kota(index);
+
+		JSONObject test = sentence.toJson();
+
+		assertEquals(4, test.getJSONArray("tok").length());
+		assertTrue(test.has("id"));
+		System.out.println(test);
+	}
 
 	@Test
 	public void testSentence() {
@@ -114,20 +133,5 @@ public class SentenceTest {
 		//fail("Not yet implemented"); // TODO
 	}
 
-	/**
-	 * Tworzy przykładowe zdanie "Ala ma kota.".
-	 * @return
-	 */
-	public static Sentence getSampleSentence(TokenAttributeIndex index){
-		Sentence sentence = new Sentence(index);
-		if ( index.getIndex("orth") == -1){
-			index.addAttribute("orth");
-		}
-		sentence.addToken(new Token("Ala", new Tag("Ala", "subst:sg:nom:f", true), index));
-		sentence.addToken(new Token("ma", new Tag("mieć", "fin:sg:ter:imperf", true), index));
-		sentence.addToken(new Token("kota", new Tag("kot", "subst:sg:gen:m2", true), index));
-		sentence.addToken(new Token(".", new Tag(".", "interp", true), index));
-		return sentence;
-	}
 	
 }

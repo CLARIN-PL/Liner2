@@ -39,8 +39,8 @@ public class DocumentTest {
 		TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
 		Document document = new Document(name, attributeIndex);
 
-		Sentence sentence1 = SentenceTest.getSampleSentence(attributeIndex);
-		Sentence sentence2 = SentenceTest.getSampleSentence(attributeIndex);
+		Sentence sentence1 = TestDataProvider.sentence_Ala_ma_kota(attributeIndex);
+		Sentence sentence2 = TestDataProvider.sentence_Ala_ma_kota(attributeIndex);
 		int begin1 = 0;
 		int begin2 = 2;
 		String type1 = "type1";
@@ -70,13 +70,46 @@ public class DocumentTest {
 	}
 
 	@Test
+	public void shouldReturnDocumentJson() {
+		String name = "Test name";
+		TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
+		Document document = new Document(name, attributeIndex);
+
+		Sentence sentence1 = TestDataProvider.sentence_Ala_ma_kota(attributeIndex);
+		Sentence sentence2 = TestDataProvider.sentence_Ala_ma_kota(attributeIndex);
+		int begin1 = 0;
+		int begin2 = 2;
+		String type1 = "type1";
+		String type2 = "type2";
+
+		Annotation annotation1 = new Annotation(begin1, type1, sentence1);
+		Annotation annotation2 = new Annotation(begin1, type1, sentence1);
+		Annotation annotation3 = new Annotation(begin2, type2, sentence1);
+		Annotation annotation4 = new Annotation(begin2, type2, sentence2);
+
+		Relation relation1 = new Relation(annotation1, annotation2, type1);
+		Relation relation2 = new Relation(annotation2, annotation3, type1);
+		Relation relation3 = new Relation(annotation3, annotation4, type2);
+		Relation relation4 = new Relation(annotation4, annotation1, type2);
+
+		document.addRelation(relation1);
+		document.addRelation(relation2);
+		document.addRelation(relation3);
+		document.addRelation(relation4);
+
+		RelationSet relations = document.getRelations();
+
+		System.out.println(document.toJson());
+	}
+
+	@Test
 	public void testSetRelations() {
 		String name = "Test name";
 		TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
 		Document document = new Document(name, attributeIndex);
 
-		Sentence sentence1 = SentenceTest.getSampleSentence(attributeIndex);
-		Sentence sentence2 = SentenceTest.getSampleSentence(attributeIndex);
+		Sentence sentence1 = TestDataProvider.sentence_Ala_ma_kota(attributeIndex);
+		Sentence sentence2 = TestDataProvider.sentence_Ala_ma_kota(attributeIndex);
 		int begin1 = 0;
 		int begin2 = 2;
 		String type1 = "type1";
@@ -176,8 +209,8 @@ public class DocumentTest {
 		TokenAttributeIndex attributeIndex1 = new TokenAttributeIndex();
 		Document document = new Document(name, attributeIndex1);
 		
-		Sentence sentence1 = SentenceTest.getSampleSentence(attributeIndex1);
-		Sentence sentence2 = SentenceTest.getSampleSentence(attributeIndex1);
+		Sentence sentence1 = TestDataProvider.sentence_Ala_ma_kota(attributeIndex1);
+		Sentence sentence2 = TestDataProvider.sentence_Ala_ma_kota(attributeIndex1);
 		int begin1 = 0;
 		int begin2 = 2;
 		String type1 = "type1";
@@ -214,8 +247,8 @@ public class DocumentTest {
 		
 		TokenAttributeIndex index = new TokenAttributeIndex();
 		
-		Sentence sentence1 = SentenceTest.getSampleSentence(index);
-		Sentence sentence2 = SentenceTest.getSampleSentence(index);
+		Sentence sentence1 = TestDataProvider.sentence_Ala_ma_kota(index);
+		Sentence sentence2 = TestDataProvider.sentence_Ala_ma_kota(index);
 		
 		Document document = new Document(name, index);
 		
@@ -264,8 +297,8 @@ public class DocumentTest {
 		TokenAttributeIndex attributeIndex1 = new TokenAttributeIndex();
 		Document document = new Document(name, attributeIndex1);
 		
-		Sentence sentence1 = SentenceTest.getSampleSentence(attributeIndex1);
-		Sentence sentence2 = SentenceTest.getSampleSentence(attributeIndex1);
+		Sentence sentence1 = TestDataProvider.sentence_Ala_ma_kota(attributeIndex1);
+		Sentence sentence2 = TestDataProvider.sentence_Ala_ma_kota(attributeIndex1);
 
 		Paragraph p = new Paragraph("p1");
 		p.addSentence(sentence1);

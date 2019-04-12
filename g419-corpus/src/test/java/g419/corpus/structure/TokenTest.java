@@ -1,8 +1,61 @@
 package g419.corpus.structure;
 
+import org.json.JSONObject;
 import org.junit.Test;
 
+import static g419.corpus.structure.TestDataProvider.getTokenAttributeIndex;
+import static org.junit.Assert.*;
+
 public class TokenTest {
+
+	@Test
+	public void shouldHaveOrthAttribute(){
+
+        TokenAttributeIndex index = getTokenAttributeIndex();
+
+        Token token = TestDataProvider.token_kota(index);
+
+		JSONObject test = token.toJson(null);
+
+		assertEquals(test.get("orth"), token.getOrth());
+
+		//System.out.println(test);
+	}
+
+
+
+    @Test
+    public void shouldHaveLexTokens(){
+
+        TokenAttributeIndex index = getTokenAttributeIndex();
+
+        Token token = TestDataProvider.token_Ala_dubble(index);
+
+        JSONObject test = token.toJson(null);
+
+        assertEquals(test.get("orth"), token.getOrth());
+        assertTrue(test.has("lex"));
+        assertEquals(test.getJSONArray("lex").length(), 2);
+
+       // System.out.println(test);
+    }
+
+
+    @Test
+    public void shouldHaveProps(){
+
+        TokenAttributeIndex index = getTokenAttributeIndex();
+
+        Token token = TestDataProvider.token_token_with_props(index);
+
+        JSONObject test = token.toJson(null);
+
+        assertEquals(test.get("orth"), token.getOrth());
+        assertTrue(test.has("prop"));
+        assertEquals(4, test.getJSONArray("prop").length());
+
+     //   System.out.println(test);
+    }
 
 	@Test
 	public void testTokenTokenAttributeIndex() {

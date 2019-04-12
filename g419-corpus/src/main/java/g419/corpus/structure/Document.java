@@ -1,5 +1,8 @@
 package g419.corpus.structure;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -43,6 +46,16 @@ public class Document {
         this.relations = relations;
     }
 
+    public JSONObject toJson(){
+        JSONObject json = new JSONObject();
+        JSONArray chunks = new JSONArray();
+        paragraphs.stream().map(Paragraph::toJson).forEach(chunks::put);
+        json.put("chunk_list", chunks);
+        JSONObject doc = new JSONObject();
+        doc.put("document", json);
+
+        return doc;
+    }
     public void setName(final String name) {
         this.name = name;
     }

@@ -1,6 +1,7 @@
 package g419.corpus.structure;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.json.JSONObject;
 
 /**
  * Klasa reprezentuje relację pomiędzy dwoma anotacjami 
@@ -42,6 +43,23 @@ public class Relation extends IdentifiableElement{
 	 */
 	private Document document;
 	public Document getDocument(){return document;}
+
+	public JSONObject toJson(){
+		JSONObject json = new JSONObject();
+		json.put("name",type);
+		json.put("set",set);
+		json.put("from", forAnnotation(annotationFrom));
+		json.put("to", forAnnotation(annotationTo));
+		return json;
+	}
+
+	private JSONObject forAnnotation(Annotation ann){
+		JSONObject json = new JSONObject();
+		json.put("sent", ann.getSentence().getId());
+		json.put("chan", ann.getType());
+		json.put("value", ann.getChannelIdx());
+		return  json;
+	}
 
 	public Relation(final String id, final Annotation from, final Annotation to, final String type){
 		this(from,to,type);
