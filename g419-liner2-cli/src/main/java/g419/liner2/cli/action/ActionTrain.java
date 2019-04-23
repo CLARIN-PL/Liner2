@@ -8,30 +8,30 @@ import org.apache.commons.cli.CommandLine;
 
 /**
  * Train chunkers.
- * @author Michał Marcińczuk
  *
+ * @author Michał Marcińczuk
  */
-public class ActionTrain extends Action{
+public class ActionTrain extends Action {
 
-	public ActionTrain(){
-		super("train");
-        this.setDescription("trains chunkers");
-        this.options.addOption(CommonOptions.getModelFileOption());
-	}
+  public ActionTrain() {
+    super("train");
+    this.setDescription("trains chunkers");
+    this.options.addOption(CommonOptions.getModelFileOption());
+  }
 
-	@Override
-	public void parseOptions(final CommandLine line) throws Exception {
-        LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
-	}
-	
-	/**
-	 * Module entry function.
-	 * 
-	 * Loads annotation recognizers.
-	 */
-	public void run() throws Exception{
-        ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
-        cm.loadChunkers();
-	}
-		
+  @Override
+  public void parseOptions(final CommandLine line) throws Exception {
+    LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
+  }
+
+  /**
+   * Module entry function.
+   * <p>
+   * Loads annotation recognizers.
+   */
+  public void run() throws Exception {
+    ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
+    cm.loadChunkers();
+  }
+
 }

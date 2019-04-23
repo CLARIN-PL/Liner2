@@ -14,51 +14,50 @@ import java.util.List;
  */
 public class AnnotationFeatureClosestBase extends AnnotationAtomicFeature {
 
-    private int distance;
-    private String pos;
-    private boolean searchForward;
+  private int distance;
+  private String pos;
+  private boolean searchForward;
 
-    /**
-     * 
-     * @param pos Part of speech to filter the tokens.
-     * @param offset Token offset from the annotation. Only tokens matching the POST are counted.
-     */
-    public AnnotationFeatureClosestBase(String pos, int offset){
-        this.pos = pos;
-        this.distance = Math.abs(offset);
-        searchForward = offset > 0;
+  /**
+   * @param pos    Part of speech to filter the tokens.
+   * @param offset Token offset from the annotation. Only tokens matching the POST are counted.
+   */
+  public AnnotationFeatureClosestBase(String pos, int offset) {
+    this.pos = pos;
+    this.distance = Math.abs(offset);
+    searchForward = offset > 0;
+  }
+
+  @Override
+  public String generate(Annotation an) {
+    String value = "NULL";
+    List<Token> candidateTokens = null;
+    Sentence sent = an.getSentence();
+    int posIndex = sent.getAttributeIndex().getIndex("ctag");
+    if (searchForward) {
+      candidateTokens = new ArrayList<Token>(sent.getTokens().subList(an.getEnd(), sent.getTokenNumber()));
+    } else {
+      candidateTokens = new ArrayList<Token>(sent.getTokens().subList(0, an.getBegin()));
+      Collections.reverse(candidateTokens);
     }
-
-	@Override
-	public String generate(Annotation an) {
-		String value = "NULL";
-	    List<Token> candidateTokens = null;
-	    Sentence sent = an.getSentence();
-	    int posIndex = sent.getAttributeIndex().getIndex("ctag");
-	    if(searchForward) {
-	        candidateTokens =  new ArrayList<Token>(sent.getTokens().subList(an.getEnd(), sent.getTokenNumber()));
-	    } else {
-	        candidateTokens = new ArrayList<Token>(sent.getTokens().subList(0, an.getBegin()));
-	        Collections.reverse(candidateTokens);
-	    }
-	    int currentDistance = 0;
-	    for(Token tok: candidateTokens){
-	        String posVal = tok.getAttributeValue(posIndex).split(":")[0];
-	        if(posVal.equals(this.pos)){
-	            if(!searchForward){
-	                currentDistance++;
-	            }
-	            if(currentDistance == distance){
-	                value = tok.getAttributeValue("base");
-	                break;
-	            }
-	            if(searchForward){
-	                currentDistance++;
-	            }
-	        }
-	    }
-	    return value;
-	}
+    int currentDistance = 0;
+    for (Token tok : candidateTokens) {
+      String posVal = tok.getAttributeValue(posIndex).split(":")[0];
+      if (posVal.equals(this.pos)) {
+        if (!searchForward) {
+          currentDistance++;
+        }
+        if (currentDistance == distance) {
+          value = tok.getAttributeValue("base");
+          break;
+        }
+        if (searchForward) {
+          currentDistance++;
+        }
+      }
+    }
+    return value;
+  }
 
 //    @Override
 //    public Map<Annotation, String> generate(Sentence sent, Set<Annotation> sentenceAnnotations) {
@@ -95,7 +94,6 @@ public class AnnotationFeatureClosestBase extends AnnotationAtomicFeature {
 //        }
 //        return features;
 //    }
-    
-    
+
 
 }

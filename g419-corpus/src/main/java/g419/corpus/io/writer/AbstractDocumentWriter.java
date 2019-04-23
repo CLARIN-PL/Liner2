@@ -7,8 +7,8 @@ import java.io.Closeable;
 
 public abstract class AbstractDocumentWriter implements Closeable, HasLogger {
 
-    public abstract void writeDocument(Document document);
+  public abstract void writeDocument(Document document);
 
-    public abstract void flush();
+  public abstract void flush();
 
 }

@@ -12,12 +12,12 @@ import java.io.IOException;
  */
 public class RelationFilterPrepositionBeforeLandmark implements IRelationFilter, HasLogger {
 
-    public RelationFilterPrepositionBeforeLandmark() throws IOException {
-    }
+  public RelationFilterPrepositionBeforeLandmark() throws IOException {
+  }
 
-    @Override
-    public boolean pass(final SpatialExpression relation) {
-        return relation.getSpatialIndicator().getHead() < relation.getLandmark().getSpatialObject().getHead();
-    }
+  @Override
+  public boolean pass(final SpatialExpression relation) {
+    return relation.getSpatialIndicator().getHead() < relation.getLandmark().getSpatialObject().getHead();
+  }
 
 }

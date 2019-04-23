@@ -9,26 +9,26 @@ import g419.corpus.structure.Sentence;
  */
 public class TokenFeaturesConverter extends Converter {
 
-    CrfTemplate template;
+  CrfTemplate template;
 
-    public TokenFeaturesConverter(CrfTemplate template){
-        this.template = template;
-    }
+  public TokenFeaturesConverter(CrfTemplate template) {
+    this.template = template;
+  }
 
-    @Override
-    public void apply(Sentence sentence) {
-        Sentence expanded = template.expandAttributes(sentence);
-        sentence.setTokens(expanded.getTokens());
-        sentence.setAttributeIndex(expanded.getAttributeIndex());
-    }
+  @Override
+  public void apply(Sentence sentence) {
+    Sentence expanded = template.expandAttributes(sentence);
+    sentence.setTokens(expanded.getTokens());
+    sentence.setAttributeIndex(expanded.getAttributeIndex());
+  }
 
-    @Override
-    public void finish(Document doc) {
-        doc.setAttributeIndex(template.expandAttributeIndex(doc.getAttributeIndex()));
-    }
+  @Override
+  public void finish(Document doc) {
+    doc.setAttributeIndex(template.expandAttributeIndex(doc.getAttributeIndex()));
+  }
 
-    @Override
-    public void start(Document doc) {
-        
-    }
+  @Override
+  public void start(Document doc) {
+
+  }
 }

@@ -16,58 +16,58 @@ import java.io.OutputStreamWriter;
  * @author Dominik Piasecki
  */
 public class TokensStreamWriter extends AbstractDocumentWriter {
-	private BufferedWriter ow;
-	
-	public TokensStreamWriter(OutputStream os) {
-		this.ow = new BufferedWriter(new OutputStreamWriter(os));
-	}
+  private final BufferedWriter ow;
 
-	@Override
-	public void close() {
-		try {
-			this.ow.flush();
-			this.ow.close();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
-	
-	@Override
-	public void writeDocument(Document document){
-		for (Paragraph paragraph : document.getParagraphs()){
-			this.writeParagraph(paragraph);
-		}
-	}
+  public TokensStreamWriter(final OutputStream os) {
+    ow = new BufferedWriter(new OutputStreamWriter(os));
+  }
 
-	public void writeParagraph(Paragraph paragraph) {
-		for (Sentence s : paragraph.getSentences()){
-			writeSentence(s);
-		}
-	}
+  @Override
+  public void close() {
+    try {
+      ow.flush();
+      ow.close();
+    } catch (final IOException ex) {
+      ex.printStackTrace();
+    }
+  }
 
-	private void writeSentence(Sentence sentence) {
-		String response ="";
-		try {
-			for (Annotation c : sentence.getChunks()) {
-				response += String.format("[%d,%d,%s]", c.getBegin()+1, c.getEnd()+1,
-					c.getType());
-			}
-			if (response.isEmpty()){
-				response = "NONE";
-			}
-			this.ow.write(response);
-			this.ow.newLine();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
+  @Override
+  public void writeDocument(final Document document) {
+    for (final Paragraph paragraph : document.getParagraphs()) {
+      writeParagraph(paragraph);
+    }
+  }
 
-	@Override
-	public void flush() {
-		try {
-			ow.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}		
-	}
+  public void writeParagraph(final Paragraph paragraph) {
+    for (final Sentence s : paragraph.getSentences()) {
+      writeSentence(s);
+    }
+  }
+
+  private void writeSentence(final Sentence sentence) {
+    String response = "";
+    try {
+      for (final Annotation c : sentence.getChunks()) {
+        response += String.format("[%d,%d,%s]", c.getBegin() + 1, c.getEnd() + 1,
+            c.getType());
+      }
+      if (response.isEmpty()) {
+        response = "NONE";
+      }
+      ow.write(response);
+      ow.newLine();
+    } catch (final IOException ex) {
+      ex.printStackTrace();
+    }
+  }
+
+  @Override
+  public void flush() {
+    try {
+      ow.flush();
+    } catch (final IOException e) {
+      e.printStackTrace();
+    }
+  }
 }

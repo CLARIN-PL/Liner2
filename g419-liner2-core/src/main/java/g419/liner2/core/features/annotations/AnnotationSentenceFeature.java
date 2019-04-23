@@ -7,8 +7,8 @@ import g419.corpus.structure.Sentence;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class AnnotationSentenceFeature extends AnnotationFeature{
+public abstract class AnnotationSentenceFeature extends AnnotationFeature {
 
-	public abstract Map<Annotation,String> generate(Sentence sent, Set<Annotation> sentenceAnnotations);
-	
+  public abstract Map<Annotation, String> generate(Sentence sent, Set<Annotation> sentenceAnnotations);
+
 }

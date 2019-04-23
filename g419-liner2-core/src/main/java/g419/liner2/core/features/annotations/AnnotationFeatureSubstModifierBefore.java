@@ -11,26 +11,26 @@ import java.util.List;
  */
 public class AnnotationFeatureSubstModifierBefore extends AnnotationAtomicFeature {
 
-    /**
-     * 
-     */
-    public AnnotationFeatureSubstModifierBefore(){
+  /**
+   *
+   */
+  public AnnotationFeatureSubstModifierBefore() {
+  }
+
+  @Override
+  public String generate(final Annotation an) {
+    String value = null;
+
+    final List<Token> tokens = an.getSentence().getTokens();
+
+    if ((an.getHeadToken().getDisambTag().getCase().equals("nom")
+        || an.getHeadToken().getDisambTag().getPos().equals("adj"))
+        && an.getBegin() > 0
+        && tokens.get(an.getBegin() - 1).getDisambTag().getPos().equals("subst")) {
+      value = tokens.get(an.getBegin() - 1).getDisambTag().getBase();
     }
 
-	@Override
-	public String generate(Annotation an) {
-		String value = null;
-		
-		List<Token> tokens = an.getSentence().getTokens();
-		
-		if ( ( an.getHeadToken().getDisambTag().getCase().equals("nom")
-				|| an.getHeadToken().getDisambTag().getPos().equals("adj") )
-				&& an.getBegin() > 0 
-				&& tokens.get(an.getBegin()-1).getDisambTag().getPos().equals("subst") ){
-			value = tokens.get(an.getBegin()-1).getDisambTag().getBase();
-		}
-		
-	    return value;
-	}
-    
+    return value;
+  }
+
 }

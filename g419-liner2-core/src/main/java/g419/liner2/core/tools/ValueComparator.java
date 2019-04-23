@@ -7,32 +7,32 @@ import java.util.*;
  */
 public class ValueComparator {
 
-    /*
-     * Java method to sort Map in Java by value e.g. HashMap or Hashtable
-     * throw NullPointerException if Map contains null values
-     * It also sort values even if they are duplicates
-     */
-    public static <K extends Comparable<K>,V extends Comparable<V>> Map<K,V> sortByValues(Map<K,V> map, boolean invertOrder){
-        List<Map.Entry<K,V>> entries = new LinkedList<>(map.entrySet());
+  /*
+   * Java method to sort Map in Java by value e.g. HashMap or Hashtable
+   * throw NullPointerException if Map contains null values
+   * It also sort values even if they are duplicates
+   */
+  public static <K extends Comparable<K>, V extends Comparable<V>> Map<K, V> sortByValues(Map<K, V> map, boolean invertOrder) {
+    List<Map.Entry<K, V>> entries = new LinkedList<>(map.entrySet());
 
-        Collections.sort(entries, new Comparator<Map.Entry<K, V>>() {
+    Collections.sort(entries, new Comparator<Map.Entry<K, V>>() {
 
-            @Override
-            public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
-                int compVal = o1.getValue().compareTo(o2.getValue());
-                return invertOrder ? compVal * -1 : compVal; // * -1 gives us max > min order
-            }
-        });
+      @Override
+      public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
+        int compVal = o1.getValue().compareTo(o2.getValue());
+        return invertOrder ? compVal * -1 : compVal; // * -1 gives us max > min order
+      }
+    });
 
-        //LinkedHashMap will keep the keys in the order they are inserted
-        //which is currently sorted on natural ordering
-        Map<K,V> sortedMap = new LinkedHashMap<>();
+    //LinkedHashMap will keep the keys in the order they are inserted
+    //which is currently sorted on natural ordering
+    Map<K, V> sortedMap = new LinkedHashMap<>();
 
-        for(Map.Entry<K,V> entry: entries){
-            sortedMap.put(entry.getKey(), entry.getValue());
-        }
-
-        return sortedMap;
+    for (Map.Entry<K, V> entry : entries) {
+      sortedMap.put(entry.getKey(), entry.getValue());
     }
+
+    return sortedMap;
+  }
 
 }

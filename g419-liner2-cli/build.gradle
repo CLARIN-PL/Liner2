@@ -13,13 +13,13 @@ run {
     def zipFile = file('src/test/resources/resources.zip')
     def outputDir = file("src/test/resources")
     def dataDir = file("src/test/resources/data")
-    if ( !dataDir.exists() ){
+    if (!dataDir.exists()) {
         copy {
             from zipTree(zipFile)
             into outputDir
         }
     }
-    if ( project.hasProperty("appArgs") ) {
+    if (project.hasProperty("appArgs")) {
         args appArgs.split("\\p{Z}")
     }
 }

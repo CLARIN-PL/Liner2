@@ -10,12 +10,12 @@ import org.ini4j.Ini;
 
 public class ChunkerFactoryItemNullChunker extends ChunkerFactoryItem {
 
-	public ChunkerFactoryItemNullChunker() {
-		super("null_chunker");
-	}
+  public ChunkerFactoryItemNullChunker() {
+    super("null_chunker");
+  }
 
-    @Override
-    public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
-        return new NullChunker();
-    }
+  @Override
+  public Chunker getChunker(final Ini.Section description, final ChunkerManager cm) throws Exception {
+    return new NullChunker();
+  }
 }

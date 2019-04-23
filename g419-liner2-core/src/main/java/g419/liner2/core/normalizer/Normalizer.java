@@ -8,20 +8,25 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public interface Normalizer {
-    public List<Pattern> getNormalizedChunkTypes();
-    /**
-     * Normalize given annotation in place. This will probably mean adding some metadata to it.
-     * @param annotation Annotation (chunk) to be normalized.
-     */
-    public void normalize(Annotation annotation);
+  public List<Pattern> getNormalizedChunkTypes();
 
-    //todo: those should be in "ObservableNormalizer" or smth like that - refactor in future
-    public void onNewDocument(Document document);
-    public void onDocumentEnd(Document document);
+  /**
+   * Normalize given annotation in place. This will probably mean adding some metadata to it.
+   *
+   * @param annotation Annotation (chunk) to be normalized.
+   */
+  public void normalize(Annotation annotation);
 
-    public void onNewSentence(Sentence sentence);
-    public void onSentenceEnd(Sentence sentence);
+  //todo: those should be in "ObservableNormalizer" or smth like that - refactor in future
+  public void onNewDocument(Document document);
 
-    public void onNewAnnotation(Annotation annotation);
-    public void onAnnotationEnd(Annotation annotation);
+  public void onDocumentEnd(Document document);
+
+  public void onNewSentence(Sentence sentence);
+
+  public void onSentenceEnd(Sentence sentence);
+
+  public void onNewAnnotation(Annotation annotation);
+
+  public void onAnnotationEnd(Annotation annotation);
 }

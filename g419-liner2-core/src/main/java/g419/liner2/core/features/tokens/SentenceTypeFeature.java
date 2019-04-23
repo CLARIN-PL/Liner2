@@ -6,25 +6,25 @@ import g419.corpus.structure.Token;
 import java.util.List;
 
 
-public class SentenceTypeFeature extends TokenInSentenceFeature{
+public class SentenceTypeFeature extends TokenInSentenceFeature {
 
-	public SentenceTypeFeature(String name){
-		super(name);
-	}
+  public SentenceTypeFeature(final String name) {
+    super(name);
+  }
 
 
-	@Override
-	public void generate(Sentence sentence){
-		int thisFeatureIdx = sentence.getAttributeIndex().getIndex(this.getName());
-		List<Token> tokens = sentence.getTokens();
-		String sentenceId = sentence.getId();
+  @Override
+  public void generate(final Sentence sentence) {
+    final int thisFeatureIdx = sentence.getAttributeIndex().getIndex(getName());
+    final List<Token> tokens = sentence.getTokens();
+    final String sentenceId = sentence.getId();
 
-		int tokenIdx = 0;
-		while (tokenIdx < sentence.getTokenNumber()) {
-			Token t = tokens.get(tokenIdx);
-			t.setAttributeValue(thisFeatureIdx, sentenceId);
-			tokenIdx++;
-		}
-	}
+    int tokenIdx = 0;
+    while (tokenIdx < sentence.getTokenNumber()) {
+      final Token t = tokens.get(tokenIdx);
+      t.setAttributeValue(thisFeatureIdx, sentenceId);
+      tokenIdx++;
+    }
+  }
 
 }

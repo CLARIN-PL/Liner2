@@ -9,34 +9,35 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
 /**
+ *
  */
 public class ActionWordnetVN extends Action {
 
-    public static final String OPTION_WORDNET = "w";
-    public static final String OPTION_WORDNET_LONG = "wordnet";
+  public static final String OPTION_WORDNET = "w";
+  public static final String OPTION_WORDNET_LONG = "wordnet";
 
-    String wordnet = null;
+  String wordnet = null;
 
-    public ActionWordnetVN(){
-        super("wordnet-vn");
-        this.setDescription("ToDo");
-        this.options.addOption(CommonOptions.getOutputFileNameOption());
-        this.options.addOption(Option.builder(OPTION_WORDNET).longOpt(OPTION_WORDNET_LONG).hasArg().argName("wordnet").required()
-        						.desc("ścieżka do pliku xml ze Słowosiecią").build());
+  public ActionWordnetVN() {
+    super("wordnet-vn");
+    this.setDescription("ToDo");
+    this.options.addOption(CommonOptions.getOutputFileNameOption());
+    this.options.addOption(Option.builder(OPTION_WORDNET).longOpt(OPTION_WORDNET_LONG).hasArg().argName("wordnet").required()
+        .desc("ścieżka do pliku xml ze Słowosiecią").build());
+  }
+
+  @Override
+  public void parseOptions(final CommandLine line) throws Exception {
+    this.wordnet = line.getOptionValue(OPTION_WORDNET);
+
+  }
+
+  @Override
+  public void run() throws Exception {
+    WordnetPl wordnet = WordnetXmlReader.load(this.wordnet);
+    for (LexicalRelation relation : wordnet.getLexicalRelations("141")) {
+      System.out.println(String.format("v2n\t%s\t%s", relation.getParent().getName(), relation.getChild().getName()));
     }
-
-    @Override
-    public void parseOptions(final CommandLine line) throws Exception {
-        this.wordnet = line.getOptionValue(OPTION_WORDNET);
-
-    }
-
-    @Override
-    public void run() throws Exception {
-    	WordnetPl wordnet = WordnetXmlReader.load(this.wordnet);
-    	for ( LexicalRelation relation : wordnet.getLexicalRelations("141") ){
-    		System.out.println(String.format("v2n\t%s\t%s", relation.getParent().getName(), relation.getChild().getName()));
-    	}
-    }
+  }
 
 }

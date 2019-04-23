@@ -13,24 +13,24 @@ import java.util.Iterator;
  */
 public abstract class AbstractDocumentReader implements Closeable, Iterator<Document>, Iterable<Document>, HasLogger {
 
-    protected abstract TokenAttributeIndex getAttributeIndex();
+  protected abstract TokenAttributeIndex getAttributeIndex();
 
-    public abstract Document nextDocument() throws Exception;
+  public abstract Document nextDocument() throws Exception;
 
-    @Override
-    public abstract boolean hasNext();
+  @Override
+  public abstract boolean hasNext();
 
-    @Override
-    public Document next() {
-        try {
-            return nextDocument();
-        } catch (final Exception ex) {
-            throw new RuntimeException(ex);
-        }
+  @Override
+  public Document next() {
+    try {
+      return nextDocument();
+    } catch (final Exception ex) {
+      throw new RuntimeException(ex);
     }
+  }
 
-    @Override
-    public Iterator<Document> iterator() {
-        return this;
-    }
+  @Override
+  public Iterator<Document> iterator() {
+    return this;
+  }
 }

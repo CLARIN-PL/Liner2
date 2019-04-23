@@ -6,22 +6,23 @@ import g419.corpus.structure.TokenAttributeIndex;
 import java.util.regex.Pattern;
 
 
-public class RegexFeature extends TokenFeature{
-	
-	private Pattern pattern;
-	
-	public RegexFeature(String name){
-		super(name);
-		this.pattern = Pattern.compile(name.substring(6));
-	}
-	
-	public String generate(Token t, TokenAttributeIndex index){
-		String orth = t.getAttributeValue(index.getIndex("orth"));
-		if (pattern.matcher(orth).find())
-			return "1";
-		else
-			return "O";
-	}
+public class RegexFeature extends TokenFeature {
+
+  private Pattern pattern;
+
+  public RegexFeature(String name) {
+    super(name);
+    this.pattern = Pattern.compile(name.substring(6));
+  }
+
+  public String generate(Token t, TokenAttributeIndex index) {
+    String orth = t.getAttributeValue(index.getIndex("orth"));
+    if (pattern.matcher(orth).find()) {
+      return "1";
+    } else {
+      return "O";
+    }
+  }
 
 	
 	/*public static void main(String args[]){

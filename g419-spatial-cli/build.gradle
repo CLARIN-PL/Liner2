@@ -7,7 +7,7 @@ def main = "g419.spatial.Main"
 mainClassName = main
 
 run {
-    if ( project.hasProperty("appArgs") ) {
+    if (project.hasProperty("appArgs")) {
         args appArgs.split("\\p{Z}")
     }
 }

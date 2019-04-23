@@ -16,25 +16,25 @@ import java.util.regex.Pattern;
 
 public class PolemChunker extends Chunker {
 
-    final List<Pattern> annotationPatterns;
-    final PolemLemmatizer polem = new PolemLemmatizer();
-    final private Chunker baseChunker;
+  final List<Pattern> annotationPatterns;
+  final PolemLemmatizer polem = new PolemLemmatizer();
+  final private Chunker baseChunker;
 
-    public PolemChunker(Chunker baseChunker, List<Pattern> annotationPatterns) {
-        this.baseChunker = baseChunker;
-        this.annotationPatterns = annotationPatterns;
-    }
+  public PolemChunker(Chunker baseChunker, List<Pattern> annotationPatterns) {
+    this.baseChunker = baseChunker;
+    this.annotationPatterns = annotationPatterns;
+  }
 
-    @Override
-    public void prepare(Document ps) {
+  @Override
+  public void prepare(Document ps) {
 
-    }
+  }
 
-    @Override
-    public Map<Sentence, AnnotationSet> chunk(Document ps) {
-        Map<Sentence, AnnotationSet> chunkings = this.baseChunker.chunk(ps);
-        chunkings.values().stream().forEach(set -> set.chunkSet().forEach(an -> polem.lemmatize(an)));
-        return chunkings;
-    }
+  @Override
+  public Map<Sentence, AnnotationSet> chunk(Document ps) {
+    Map<Sentence, AnnotationSet> chunkings = this.baseChunker.chunk(ps);
+    chunkings.values().stream().forEach(set -> set.chunkSet().forEach(an -> polem.lemmatize(an)));
+    return chunkings;
+  }
 
 }

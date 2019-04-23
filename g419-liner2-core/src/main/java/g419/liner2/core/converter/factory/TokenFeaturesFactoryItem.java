@@ -10,15 +10,18 @@ import g419.liner2.core.tools.TemplateFactory;
  */
 public class TokenFeaturesFactoryItem extends ConverterFactoryItem {
 
-    public TokenFeaturesFactoryItem(){ super("expand-features:(.*\\.txt)");}
-    @Override
-    public Converter getConverter() {
-        CrfTemplate template = null;
-        try {
-            template = TemplateFactory.parseTemplate(matcher.group(1));
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return new TokenFeaturesConverter(template);
+  public TokenFeaturesFactoryItem() {
+    super("expand-features:(.*\\.txt)");
+  }
+
+  @Override
+  public Converter getConverter() {
+    CrfTemplate template = null;
+    try {
+      template = TemplateFactory.parseTemplate(matcher.group(1));
+    } catch (final Exception e) {
+      System.out.println(e);
     }
+    return new TokenFeaturesConverter(template);
+  }
 }

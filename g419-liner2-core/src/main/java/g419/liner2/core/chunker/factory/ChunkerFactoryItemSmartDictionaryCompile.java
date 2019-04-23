@@ -9,19 +9,19 @@ import org.ini4j.Ini;
 
 public class ChunkerFactoryItemSmartDictionaryCompile extends ChunkerFactoryItem {
 
-	public static String PARAM_ANNOTATION = "annotation";
-	public static String PARAM_DICTIONARY = "dictionary";
+  public static String PARAM_ANNOTATION = "annotation";
+  public static String PARAM_DICTIONARY = "dictionary";
 
-	public ChunkerFactoryItemSmartDictionaryCompile() {
-		super("smart-dictionary-compile");
-	}
+  public ChunkerFactoryItemSmartDictionaryCompile() {
+    super("smart-dictionary-compile");
+  }
 
-	@Override
-	public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
-        ConsolePrinter.log("--> Smart Dictionary Chunker load");
-        String filename = description.get(PARAM_DICTIONARY);        
-        
-        return SmartDictionaryChunker.compile(filename);
-	}
+  @Override
+  public Chunker getChunker(final Ini.Section description, final ChunkerManager cm) throws Exception {
+    ConsolePrinter.log("--> Smart Dictionary Chunker load");
+    final String filename = description.get(PARAM_DICTIONARY);
+
+    return SmartDictionaryChunker.compile(filename);
+  }
 
 }

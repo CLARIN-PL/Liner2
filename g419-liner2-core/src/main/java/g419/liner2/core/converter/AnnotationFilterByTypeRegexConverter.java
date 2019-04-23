@@ -12,33 +12,33 @@ import java.util.regex.Pattern;
  */
 public class AnnotationFilterByTypeRegexConverter extends Converter {
 
-    private Pattern pattern = null;
+  private Pattern pattern = null;
 
-    public AnnotationFilterByTypeRegexConverter(final Pattern pattern) {
-        this.pattern = pattern;
+  public AnnotationFilterByTypeRegexConverter(final Pattern pattern) {
+    this.pattern = pattern;
+  }
+
+  @Override
+  public void finish(final Document doc) {
+
+  }
+
+  @Override
+  public void start(final Document doc) {
+
+  }
+
+  @Override
+  public void apply(final Sentence sentence) {
+    final LinkedHashSet<Annotation> sentenceAnnotations = sentence.getChunks();
+    final LinkedHashSet<Annotation> toRemove = new LinkedHashSet<>();
+    for (final Annotation ann : sentenceAnnotations) {
+      if (!pattern.matcher(ann.getType()).find()) {
+        toRemove.add(ann);
+      }
     }
-
-    @Override
-    public void finish(final Document doc) {
-
+    for (final Annotation ann : toRemove) {
+      sentenceAnnotations.remove(ann);
     }
-
-    @Override
-    public void start(final Document doc) {
-
-    }
-
-    @Override
-    public void apply(final Sentence sentence) {
-        final LinkedHashSet<Annotation> sentenceAnnotations = sentence.getChunks();
-        final LinkedHashSet<Annotation> toRemove = new LinkedHashSet<>();
-        for (final Annotation ann : sentenceAnnotations) {
-            if (!pattern.matcher(ann.getType()).find()) {
-                toRemove.add(ann);
-            }
-        }
-        for (final Annotation ann : toRemove) {
-            sentenceAnnotations.remove(ann);
-        }
-    }
+  }
 }
