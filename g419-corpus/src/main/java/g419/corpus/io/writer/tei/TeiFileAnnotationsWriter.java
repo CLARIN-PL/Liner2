@@ -50,7 +50,7 @@ public class TeiFileAnnotationsWriter extends TeiFileWriter {
         .filter(a -> Objects.equals(group, a.getGroup()))
         .collect(Collectors.toList());
 
-    final ImmutableMap attrs = ImmutableMap.of(
+    final ImmutableMap<String, String> attrs = ImmutableMap.of(
         "xml:id", Option.of(sentence.getId()).getOrElse("").replace("morph", Option.of(group).getOrElse("")),
         "corresp", pointers.getPointer(sentence));
     if (annotations.size() == 0) {

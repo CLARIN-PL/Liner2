@@ -144,7 +144,7 @@ public class IobStreamReader extends AbstractDocumentReader implements HasLogger
     for (final String label : labelsCopy) {
       if (label.equals("O")) {
         annsByType.entrySet().stream()
-            .map(p -> new ImmutablePair(p.getKey(), p.getValue()))
+            .map(p -> new ImmutablePair<>(p.getKey(), p.getValue()))
             .forEach(groups::add);
         annsByType = Maps.newHashMap();
       } else {

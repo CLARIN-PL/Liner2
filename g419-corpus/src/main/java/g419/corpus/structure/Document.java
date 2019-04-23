@@ -19,7 +19,7 @@ public class Document {
   private HashMap<String, Integer> bases = null;
   private HashMap<String, Integer> titleBases = null;
   private int tokenNumber = 0;
-  private final Set<Frame> frames = Sets.newHashSet();
+  private final Set<Frame<Annotation>> frames = Sets.newHashSet();
 
   /* Zbiór relacji */
   RelationSet relations = new RelationSet();
@@ -98,7 +98,7 @@ public class Document {
     return paragraphs;
   }
 
-  public Set<Frame> getFrames() {
+  public Set<Frame<Annotation>> getFrames() {
     return frames;
   }
 
