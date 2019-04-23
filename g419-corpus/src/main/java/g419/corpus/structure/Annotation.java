@@ -111,10 +111,6 @@ public class Annotation extends IdentifiableElement {
         return hasHead;
     }
 
-    public void assignHead() {
-        assignHead(false);
-    }
-
     /**
      * Set the value of annotation lemma.
      *
@@ -129,17 +125,20 @@ public class Annotation extends IdentifiableElement {
      *
      * @return
      */
+    public String getLemmaOrText() {
+        return Optional.ofNullable(getLemma()).orElseGet(this::getText);
+    }
+
     public String getLemma() {
-        if (lemma == null) {
-            if (metadata.containsKey("lemma")) {
-                return metadata.get("lemma");
-            } else {
-                return getText();
-            }
-        } else {
+        if (lemma != null) {
             return lemma;
+        } else if (metadata.containsKey("lemma")) {
+            return metadata.get("lemma");
+        } else {
+            return null;
         }
     }
+
 
     /**
      * Ustaw pewność co do istnienia anotacji.
@@ -157,6 +156,10 @@ public class Annotation extends IdentifiableElement {
      */
     public double getConfidence() {
         return confidence;
+    }
+
+    public void assignHead() {
+        assignHead(false);
     }
 
     /**
@@ -276,6 +279,10 @@ public class Annotation extends IdentifiableElement {
 
     public TreeSet<Integer> getTokens() {
         return tokens;
+    }
+
+    public int getTokenCount() {
+        return tokens.size();
     }
 
     /**
@@ -433,7 +440,7 @@ public class Annotation extends IdentifiableElement {
                 ", group='" + group + '\'' +
                 ", sentence=" + sentence.getId() +
                 ", head=" + head +
-                ", lemma='" + lemma + '\'' +
+                ", lemma='" + getLemma() + '\'' +
                 ", confidence=" + confidence +
                 '}';
     }

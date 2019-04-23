@@ -134,7 +134,7 @@ public class ChunkerEvaluator {
         for (final Annotation trueChunk : trueChunkSetIter) {
             for (final Annotation testedChunk : testedChunkSetIter) {
                 if (trueChunk.equals(testedChunk) &&
-                        (!checkLemma || trueChunk.getLemma().equalsIgnoreCase(testedChunk.getLemma()))) {
+                        (!checkLemma || trueChunk.getLemmaOrText().equalsIgnoreCase(testedChunk.getLemmaOrText()))) {
                     // wpisz klucz do tablicy, jeśli jeszcze nie ma
                     if (!chunksTruePositives.containsKey(testedChunk.getType())) {
                         chunksTruePositives.put(testedChunk.getType(), new ArrayList<>());
@@ -163,7 +163,7 @@ public class ChunkerEvaluator {
             Boolean truePositiveSkippedChannelCheck = false;
             for (final Annotation trueChunk : trueChunkSet) {
                 if (testedChunk.getTokens().equals(trueChunk.getTokens()) && testedChunk.getSentence().equals(trueChunk.getSentence()) &&
-                        (!checkLemma || trueChunk.getLemma().equalsIgnoreCase(testedChunk.getLemma()))) {
+                        (!checkLemma || trueChunk.getLemmaOrText().equalsIgnoreCase(testedChunk.getLemmaOrText()))) {
                     globalTruePositivesRangeOnly += 1;
                     truePositiveSkippedChannelCheck = true;
                     break;
@@ -187,7 +187,7 @@ public class ChunkerEvaluator {
             Boolean truePositiveSkippedChannelCheck = false;
             for (final Annotation testedChunk : testedChunkSet) {
                 if (testedChunk.getTokens().equals(trueChunk.getTokens()) && testedChunk.getSentence().equals(trueChunk.getSentence()) &&
-                        (!checkLemma || trueChunk.getLemma().equalsIgnoreCase(testedChunk.getLemma()))) {
+                        (!checkLemma || trueChunk.getLemmaOrText().equalsIgnoreCase(testedChunk.getLemmaOrText()))) {
                     truePositiveSkippedChannelCheck = true;
                     break;
                 }
@@ -508,8 +508,8 @@ public class ChunkerEvaluator {
             if (correctCategory != null) {
                 if (!chunk.getType().equals(correctCategory.getType())) {
                     errorType = String.format("incorrect category: %s => %s", chunk.getType(), correctCategory.getType());
-                } else if (!chunk.getLemma().equals(correctCategory.getLemma())) {
-                    errorType = String.format("incorrect lemma: %s => %s", chunk.getLemma(), correctCategory.getLemma());
+                } else if (!chunk.getLemmaOrText().equals(correctCategory.getLemmaOrText())) {
+                    errorType = String.format("incorrect lemma: %s => %s", chunk.getLemmaOrText(), correctCategory.getLemmaOrText());
                 }
             }
             ConsolePrinter.log(String.format("  FalsePositive %s [%d,%d] = %s (confidence=%.2f) (%s)", chunk.getType(), chunk.getBegin() + 1,

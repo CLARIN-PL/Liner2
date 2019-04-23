@@ -66,7 +66,7 @@ public class AnnotationTupleStreamWriter extends AbstractDocumentWriter {
         joiner.add(c.getGroup());
         joiner.add(c.getType());
         joiner.add(quote(c.getText()));
-        joiner.add(quote(c.getLemma()));
+        joiner.add(quote(c.getLemmaOrText()));
         return joiner.toString();
     }
 
