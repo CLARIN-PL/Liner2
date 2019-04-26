@@ -118,16 +118,31 @@ public class SpatialRelationRecognizer2 extends ISpatialRelationRecognizer {
 
   private List<SentencePattern> getPatterns() {
     final List<SentencePattern> patterns = Lists.newArrayList();
-    patterns.add(new SentencePattern("NG*_Prep_NG*", new SentencePatternMatchSequence()
-        .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
-        .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
-        .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))));
-    patterns.add(new SentencePattern("NG*_comma_Prep_NG*", new SentencePatternMatchSequence()
-        .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
-        .append(new SentencePatternMatchTokenOrth(","))
-        .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
-        .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))));
-    patterns.add(new SentencePattern("<NP_Prep_NG>", new SentencePatternMatchCustomNgPrepNg()));
+    patterns.add(
+        new SentencePattern("NG*_Prep_NG*",
+            new SentencePatternMatchSequence()
+                .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
+                .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
+                .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))
+        ));
+    patterns.add(
+        new SentencePattern("NG*_comma_Prep_NG*",
+            new SentencePatternMatchSequence()
+                .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
+                .append(new SentencePatternMatchTokenOrth(","))
+                .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
+                .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))
+        ));
+    patterns.add(
+        new SentencePattern("<NP_Prep_NG>", new SentencePatternMatchCustomNgPrepNg()));
+    patterns.add(
+        new SentencePattern("Prep_NG*_Fin_NG*",
+            new SentencePatternMatchSequence()
+                .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
+                .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))
+                .append(new SentencePatternMatchTokenPos("fin"))
+                .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
+        ));
     return patterns;
   }
 
