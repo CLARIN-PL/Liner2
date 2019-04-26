@@ -5,10 +5,38 @@ import spock.lang.Unroll
 
 class AnnotationTest extends Specification {
 
+    def "Constructor should throw an exception for empty list of tokens"() {
+        given:
+            Sentence sentence = getSampleSentence()
+
+        when:
+            Annotation an = new Annotation([] as Set, type, sentence)
+
+        then:
+            RuntimeException ex = thrown()
+            ex.message == "List of token indices cannot be empty"
+
+        where:
+            type = "any type"
+    }
+
+    def "Constructor should throw an exception for null annotaiton type"() {
+        given:
+            Sentence sentence = getSampleSentence()
+
+        when:
+            Annotation an1 = new Annotation("an1", 0, 0, null, sentence)
+
+        then:
+            RuntimeException ex = thrown()
+            ex.message == "Annotation type cannot be null"
+    }
+
+
     @Unroll
     def "findFirstTokenWithPos should return #index for #pos and indices #tokens"() {
         given:
-            Sentence sentence = getSampleSentece()
+            Sentence sentence = getSampleSentence()
             Annotation an = new Annotation(tokens as Set, type, sentence)
 
         when:
@@ -22,12 +50,11 @@ class AnnotationTest extends Specification {
             [0, 1] | "ign"   || -1
             [0, 1] | "praet" || 0
             [0, 1] | "aglt"  || 1
-            []     | "aglt"  || -1
 
             type = "any type"
     }
 
-    Sentence getSampleSentece() {
+    Sentence getSampleSentence() {
         TokenAttributeIndex index = new TokenAttributeIndex().with("orth").with("base").with("ctag")
 
         Sentence sentence = new Sentence(index)

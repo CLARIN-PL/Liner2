@@ -13,6 +13,7 @@ import g419.lib.cli.CommonOptions;
 import g419.lib.cli.ParameterException;
 import g419.liner2.core.features.tokens.ClassFeature;
 import g419.liner2.core.tools.FscoreEvaluator;
+import g419.liner2.core.tools.parser.MaltParser;
 import g419.spatial.converter.DocumentToSpatialExpressionConverter;
 import g419.spatial.structure.SpatialExpression;
 import g419.spatial.tools.*;
@@ -34,7 +35,7 @@ public class ActionEval2 extends Action {
   final private Set<String> objectPos;
   private String filename = null;
   private String inputFormat = null;
-  private String maltparserModel = null;
+  private Optional<String> maltparserModel = null;
   private String wordnetPath = null;
   private String model = null;
 
@@ -84,7 +85,8 @@ public class ActionEval2 extends Action {
   public void parseOptions(final CommandLine line) throws Exception {
     filename = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
     inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
-    maltparserModel = line.getOptionValue(CommonOptions.OPTION_MALT);
+    maltparserModel = line.hasOption(CommonOptions.OPTION_MALT) ?
+        Optional.of(line.getOptionValue(CommonOptions.OPTION_MALT)) : Optional.empty();
     wordnetPath = line.getOptionValue(CommonOptions.OPTION_WORDNET);
     model = line.getOptionValue(CommonOptions.OPTION_MODEL);
   }
@@ -129,7 +131,7 @@ public class ActionEval2 extends Action {
       default:
         throw new ParameterException(String.format("Unrecognized value of '%s', expected: v1|v2", model));
     }
-    //recognizer.withMaltParser(new MaltParser(maltparserModel));
+    maltparserModel.ifPresent(m -> recognizer.withMaltParser(new MaltParser(m)));
   }
 
   private void evaluateDocument(final Document document) {
