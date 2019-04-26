@@ -22,48 +22,48 @@ public class RelationFilterHolonyms implements IRelationFilter {
   private NamToWordnet nam2wordnet = null;
 
 
-  public RelationFilterHolonyms(Wordnet3 wordnet, NamToWordnet nam2wordnet) throws IOException {
+  public RelationFilterHolonyms(final Wordnet3 wordnet, final NamToWordnet nam2wordnet) throws IOException {
     this.wordnet = wordnet;
     this.nam2wordnet = nam2wordnet;
   }
 
   @Override
-  public boolean pass(SpatialExpression relation) {
+  public boolean pass(final SpatialExpression relation) {
 
     /* Utwórz listę holonimów landmarka */
-    Set<String> holonyms = new HashSet<String>();
+    final Set<String> holonyms = new HashSet<>();
     // Holonimy z dla kategorii jednostki
-    for (PrincetonDataRaw synset : this.nam2wordnet.getSynsets(relation.getLandmark().getSpatialObject().getType())) {
-      for (PrincetonDataRaw holonym : this.wordnet.getHolonyms(synset)) {
-        holonyms.addAll(this.wordnet.getLexicalUnits(holonym));
+    for (final PrincetonDataRaw synset : nam2wordnet.getSynsets(relation.getLandmark().getSpatialObject().getType())) {
+      for (final PrincetonDataRaw holonym : wordnet.getHolonyms(synset)) {
+        holonyms.addAll(wordnet.getLexicalUnits(holonym));
       }
     }
     // Holonimy dla głowy, jeżeli nie ma kategorii jednostki
     if (holonyms.size() == 0) {
-      for (PrincetonDataRaw synset : this.wordnet.getSynsets(relation.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase())) {
-        for (PrincetonDataRaw holonym : this.wordnet.getHolonyms(synset)) {
-          holonyms.addAll(this.wordnet.getLexicalUnits(holonym));
+      for (final PrincetonDataRaw synset : wordnet.getSynsets(relation.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase())) {
+        for (final PrincetonDataRaw holonym : wordnet.getHolonyms(synset)) {
+          holonyms.addAll(wordnet.getLexicalUnits(holonym));
         }
       }
     }
-    holonyms.removeAll(this.nam2wordnet.getSynsets(relation.getLandmark().getSpatialObject().getType()));
-    holonyms.removeAll(this.wordnet.getSynsets(relation.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase()));
+    holonyms.removeAll(nam2wordnet.getSynsets(relation.getLandmark().getSpatialObject().getType()));
+    holonyms.removeAll(wordnet.getSynsets(relation.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase()));
 
     // Jednostki trajectora
-    Set<PrincetonDataRaw> synsets = this.nam2wordnet.getSynsets(
+    final Set<PrincetonDataRaw> synsets = nam2wordnet.getSynsets(
         relation.getTrajector().getSpatialObject().getType());
 
     //System.out.println(synsets);
     //System.out.println(holonyms);
 
     if (synsets.size() > 0) {
-      Set<String> trajectors = new HashSet<String>();
-      for (PrincetonDataRaw synset : synsets) {
-        for (PrincetonDataRaw holonym : this.wordnet.getHolonyms(synset)) {
-          trajectors.addAll(this.wordnet.getLexicalUnits(holonym));
+      final Set<String> trajectors = new HashSet<>();
+      for (final PrincetonDataRaw synset : synsets) {
+        for (final PrincetonDataRaw holonym : wordnet.getHolonyms(synset)) {
+          trajectors.addAll(wordnet.getLexicalUnits(holonym));
         }
       }
-      for (String word : trajectors) {
+      for (final String word : trajectors) {
         if (holonyms.contains(word)) {
           //System.out.println("Contain: " + word);
           return false;

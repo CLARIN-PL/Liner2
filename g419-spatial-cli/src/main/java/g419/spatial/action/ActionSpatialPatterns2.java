@@ -8,9 +8,9 @@ import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
+import g419.spatial.converter.DocumentToSpatialExpressionConverter;
 import g419.spatial.pattern.AnnotationPatternGenerator;
 import g419.spatial.structure.SpatialExpression;
-import g419.spatial.tools.DocumentToSpatialExpressionConverter;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.slf4j.Logger;
@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class ActionSpatialPatterns2 extends Action {
 
-  private Logger logger = LoggerFactory.getLogger(getClass());
+  private final Logger logger = LoggerFactory.getLogger(getClass());
   final private AnnotationPatternGenerator generator = new AnnotationPatternGenerator();
   private String filename = null;
   private String inputFormat = null;
@@ -32,7 +32,7 @@ public class ActionSpatialPatterns2 extends Action {
   public ActionSpatialPatterns2() {
     super("spatial-patterns2");
     setDescription("new implementation of pattern generator for spatial expressions (includes static and dynamic expressions)");
-    options.addOption(this.getOptionInputFilename());
+    options.addOption(getOptionInputFilename());
     options.addOption(CommonOptions.getInputFileFormatOption());
   }
 
@@ -59,17 +59,17 @@ public class ActionSpatialPatterns2 extends Action {
 
   @Override
   public void run() throws Exception {
-    List<String> patterns = Lists.newArrayList();
-    try (AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(filename, inputFormat)) {
+    final List<String> patterns = Lists.newArrayList();
+    try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(filename, inputFormat)) {
       while (reader.hasNext()) {
-        Document document = reader.nextDocument();
-        List<SpatialExpression> ses = converter.convert(document);
+        final Document document = reader.nextDocument();
+        final List<SpatialExpression> ses = converter.convert(document);
         ses.stream().map(r -> generatePattern(r)).forEach(patterns::add);
       }
     }
-    Map<String, Integer> count = Maps.newHashMap();
+    final Map<String, Integer> count = Maps.newHashMap();
     patterns.stream().forEach(p -> count.put(p, count.getOrDefault(p, 0) + 1));
-    List<Map.Entry<String, Integer>> items = Lists.newArrayList(count.entrySet());
+    final List<Map.Entry<String, Integer>> items = Lists.newArrayList(count.entrySet());
     items.sort(Comparator.comparing(Map.Entry<String, Integer>::getValue).thenComparing(Map.Entry::getKey));
     items.stream().map(p -> String.format("[%3d] %s", p.getValue(), p.getKey())).forEach(System.out::println);
   }
@@ -80,13 +80,13 @@ public class ActionSpatialPatterns2 extends Action {
    * @param se
    * @return
    */
-  private String generatePattern(SpatialExpression se) {
-    List<Annotation> annotations = Lists.newArrayList(se.getAnnotations());
+  private String generatePattern(final SpatialExpression se) {
+    final List<Annotation> annotations = Lists.newArrayList(se.getAnnotations());
     String str = "";
     if (annotations.size() > 0) {
       try {
         str = generator.generate(annotations.get(0).getSentence(), annotations);
-      } catch (Exception ex) {
+      } catch (final Exception ex) {
         logger.warn("Failed to generate pattern for spatial expression: {}", se, ex);
       }
     }

@@ -2,10 +2,13 @@ package g419.spatial.tools;
 
 import com.google.common.collect.Lists;
 import g419.corpus.HasLogger;
-import g419.corpus.structure.Sentence;
+import g419.corpus.structure.*;
+import g419.liner2.core.tools.parser.MaltParser;
 import g419.spatial.filter.IRelationFilter;
 import g419.spatial.filter.RelationFilterSemanticPattern;
 import g419.spatial.structure.SpatialExpression;
+import io.vavr.control.Option;
+import org.maltparser.core.exception.MaltChainedException;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -14,11 +17,18 @@ import java.util.Optional;
 
 public abstract class ISpatialRelationRecognizer implements HasLogger {
 
+  Option<MaltParser> maltParser = Option.none();
+
   protected List<IRelationFilter> filters = Lists.newArrayList();
 
   protected final RelationFilterSemanticPattern semanticFilter = new RelationFilterSemanticPattern();
 
   protected ISpatialRelationRecognizer() throws IOException {
+  }
+
+  public ISpatialRelationRecognizer withMaltParser(final MaltParser maltParser) {
+    this.maltParser = Option.of(maltParser);
+    return this;
   }
 
   public abstract List<SpatialExpression> findCandidates(final Sentence sentence);
@@ -45,7 +55,7 @@ public abstract class ISpatialRelationRecognizer implements HasLogger {
    * @return
    */
   public Optional<String> getFilterDiscardingRelation(final SpatialExpression se) {
-    final Iterator<IRelationFilter> filters = this.getFilters().iterator();
+    final Iterator<IRelationFilter> filters = getFilters().iterator();
     while (filters.hasNext()) {
       final IRelationFilter filter = filters.next();
       if (!filter.pass(se)) {
@@ -54,4 +64,22 @@ public abstract class ISpatialRelationRecognizer implements HasLogger {
     }
     return Optional.ofNullable(null);
   }
+
+
+  public void recognizeInPlace(final Document document) {
+    try {
+      for (final Paragraph paragraph : document.getParagraphs()) {
+        for (final Sentence sentence : paragraph.getSentences()) {
+          for (final SpatialExpression rel : recognize(sentence)) {
+            final Frame<Annotation> f = SpatialRelationRecognizer.convertSpatialToFrame(rel);
+            document.getFrames().add(f);
+          }
+        }
+      }
+    } catch (final Exception ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+  public abstract List<SpatialExpression> recognize(final Sentence sentence) throws MaltChainedException;
 }

@@ -5,9 +5,11 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import g419.corpus.schema.kpwr.KpwrSpatial;
 import g419.corpus.schema.tagset.MappingNkjpToConllPos;
-import g419.corpus.structure.*;
+import g419.corpus.structure.Annotation;
+import g419.corpus.structure.Frame;
+import g419.corpus.structure.Sentence;
+import g419.corpus.structure.Token;
 import g419.liner2.core.features.tokens.ClassFeature;
-import g419.liner2.core.tools.parser.MaltParser;
 import g419.liner2.core.tools.parser.MaltSentence;
 import g419.liner2.core.tools.parser.MaltSentenceLink;
 import g419.spatial.filter.*;
@@ -26,8 +28,6 @@ import java.util.stream.IntStream;
 
 public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
 
-  private MaltParser malt = null;
-
   private final Pattern annotationsPrep = Pattern.compile("^PrepNG.*$");
   private final Pattern annotationsNg = Pattern.compile("^NG.*$");
   private final Pattern patternAnnotationNam = Pattern.compile("^nam(_(fac|liv|loc|pro|oth).*|$)");
@@ -35,20 +35,13 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
   private final Set<String> objectPos = Sets.newHashSet();
   private final Set<String> regions = SpatialResources.getRegions();
 
-  private final Logger logger = Logger.getLogger(this.getClass());
+  private final Logger logger = Logger.getLogger(getClass());
 
 
-  /**
-   * @param malt    Ścieżka do modelu Maltparsera
-   * @param wordnet Ścieżka do wordnetu w formacie PWN
-   * @throws IOException
-   */
-  public SpatialRelationRecognizer(final MaltParser malt, final Wordnet3 wordnet) throws IOException {
-    this.malt = malt;
-
-    this.objectPos.add("subst");
-    this.objectPos.add("ign");
-    this.objectPos.add("brev");
+  public SpatialRelationRecognizer(final Wordnet3 wordnet) throws IOException {
+    objectPos.add("subst");
+    objectPos.add("ign");
+    objectPos.add("brev");
 
     filters.add(new RelationFilterPronoun());
     filters.add(new RelationFilterDifferentObjects());
@@ -59,35 +52,15 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
   }
 
   /**
-   * Rozpoznaje wyrażenia przestrzenne i dodaje je do dokumentu jako obiekty Frame o type "spatial"
-   *
-   * @param document
-   * @throws MaltChainedException
-   */
-  public void recognizeInPlace(final Document document) {
-    try {
-      for (final Paragraph paragraph : document.getParagraphs()) {
-        for (final Sentence sentence : paragraph.getSentences()) {
-          for (final SpatialExpression rel : this.recognize(sentence)) {
-            final Frame<Annotation> f = SpatialRelationRecognizer.convertSpatialToFrame(rel);
-            document.getFrames().add(f);
-          }
-        }
-      }
-    } catch (final Exception ex) {
-      throw new RuntimeException(ex);
-    }
-  }
-
-  /**
    * Rozpoznaje wyrażenia przestrzenne i zwraca je jako listę obiektów SpatialExpression
    *
    * @param sentence
    * @return
    * @throws MaltChainedException
    */
+  @Override
   public List<SpatialExpression> recognize(final Sentence sentence) throws MaltChainedException {
-    final List<SpatialExpression> candidateRelations = this.findCandidates(sentence);
+    final List<SpatialExpression> candidateRelations = findCandidates(sentence);
     final List<SpatialExpression> finalRelations = new ArrayList<>();
     if (candidateRelations.size() > 0) {
       for (final SpatialExpression rel : candidateRelations) {
@@ -154,7 +127,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
   @Override
   public List<SpatialExpression> findCandidates(final Sentence sentence) {
     NkjpSyntacticChunks.splitPrepNg(sentence);
-    final MaltSentence maltSentence = malt.parse(sentence, MappingNkjpToConllPos.get());
+    final MaltSentence maltSentence = maltParser.get().parse(sentence, MappingNkjpToConllPos.get());
 
     /* Zaindeksuj różne typy fraz */
     final Map<Integer, Annotation> chunkNpTokens = createAnnotationIndex(sentence.getChunks(), "chunk_np");
@@ -162,11 +135,11 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
     final Map<Integer, Annotation> chunkPrepTokens = createAnnotationIndex(sentence.getChunks(), "Prep");
     final Map<Integer, Annotation> chunkPpasTokens = createAnnotationIndex(sentence.getChunks(), "Ppas");
     final Map<Integer, Annotation> chunkPactTokens = createAnnotationIndex(sentence.getChunks(), "Pact");
-    final Map<Integer, Annotation> chunkNamesTokens = createAnnotationIndex(sentence.getAnnotations(this.patternAnnotationNam));
+    final Map<Integer, Annotation> chunkNamesTokens = createAnnotationIndex(sentence.getAnnotations(patternAnnotationNam));
     final Map<Integer, List<Annotation>> chunkNgTokens = Maps.newHashMap();
 
     /* Zaindeksuj pierwsze tokeny anotacji NG* */
-    for (final Annotation an : sentence.getAnnotations(this.annotationsNg)) {
+    for (final Annotation an : sentence.getAnnotations(annotationsNg)) {
       for (Integer n = an.getBegin(); n <= an.getEnd(); n++) {
         chunkNgTokens.computeIfAbsent(n, p -> Lists.newLinkedList()).add(an);
       }
@@ -175,24 +148,24 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
     final List<SpatialExpression> relations = new LinkedList<>();
 
     // Second Iteration only
-    relations.addAll(this.findCandidatesFirstNgAnyPrepNg(sentence, chunkNgTokens, chunkNpTokens, chunkPrepTokens));
-    relations.addAll(this.findCandidatesByMalt(sentence, maltSentence, chunkPrepTokens, chunkNamesTokens, chunkNgTokens));
+    relations.addAll(findCandidatesFirstNgAnyPrepNg(sentence, chunkNgTokens, chunkNpTokens, chunkPrepTokens));
+    relations.addAll(findCandidatesByMalt(sentence, maltSentence, chunkPrepTokens, chunkNamesTokens, chunkNgTokens));
 
-    relations.addAll(this.findCandidatesNgPpasPrepNg(
+    relations.addAll(findCandidatesNgPpasPrepNg(
         sentence, chunkNgTokens, chunkNpTokens, chunkPpasTokens, chunkPrepTokens));
-    relations.addAll(this.findCandidatesNgPactPrepNg(
+    relations.addAll(findCandidatesNgPactPrepNg(
         sentence, chunkNgTokens, chunkNpTokens, chunkPactTokens, chunkPrepTokens));
 
 
     // Sprawdź, czy landmarkiem jest region. Jeżeli tak, to przesuń landmark na najbliższych ign lub subst
     for (final SpatialExpression rel : relations) {
-      if (this.regions.contains(rel.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase())) {
+      if (regions.contains(rel.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase())) {
         final int i = rel.getLandmark().getSpatialObject().getEnd() + 1;
         final List<Token> tokens = rel.getLandmark().getSpatialObject().getSentence().getTokens();
 
         if (i < tokens.size() && chunkNamesTokens.get(i) != null) {
           final Annotation an = chunkNamesTokens.get(i);
-          this.logger.info("REPLACE_REGION_NEXT_NAME " + rel.getLandmark().toString() + " => " + an.toString());
+          logger.info("REPLACE_REGION_NEXT_NAME " + rel.getLandmark().toString() + " => " + an.toString());
           rel.getLandmark().setRegion(rel.getLandmark().getSpatialObject());
           rel.getLandmark().setSpatialObject(an);
         } else {
@@ -211,7 +184,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
             j++;
           }
           if (ng != null) {
-            this.logger.info("REPLACE_REGION_INNER_NG" + rel.getLandmark().toString() + " => " + ng.toString());
+            logger.info("REPLACE_REGION_INNER_NG" + rel.getLandmark().toString() + " => " + ng.toString());
             Annotation newLandmark = null;
             final List<Annotation> newLandmakrs = chunkNgTokens.get(rel.getLandmark().getSpatialObject().getHead());
             if (newLandmakrs != null) {
@@ -231,7 +204,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
             Integer subst_or_ign = null;
             int k = rel.getLandmark().getSpatialObject().getHead() + 1;
             while (k <= rel.getLandmark().getSpatialObject().getEnd() && subst_or_ign == null) {
-              if (this.objectPos.contains(tokens.get(k).getDisambTag().getPos())) {
+              if (objectPos.contains(tokens.get(k).getDisambTag().getPos())) {
                 subst_or_ign = k;
               }
               k++;
@@ -242,7 +215,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
               final Annotation newLandmark = new Annotation(rel.getLandmark().getSpatialObject().getHead() + 1, rel.getLandmark().getSpatialObject().getEnd(), "NG", sentence);
               sentence.addChunk(newRegion);
               sentence.addChunk(newLandmark);
-              this.logger.info("REPLACE_REGION_INNER_SUBST_IGN" + rel.getLandmark().toString() + " => " + newLandmark);
+              logger.info("REPLACE_REGION_INNER_SUBST_IGN" + rel.getLandmark().toString() + " => " + newLandmark);
               rel.getLandmark().setSpatialObject(newLandmark);
               rel.getLandmark().setRegion(newRegion);
             }
@@ -261,7 +234,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
     relations.removeAll(toRemove);
 
     // Jeżeli frazy NG pokrywają się z nam_, to podmień anotacje
-    this.replaceNgWithNames(sentence, relations, chunkNamesTokens);
+    replaceNgWithNames(sentence, relations, chunkNamesTokens);
 
     return relations;
   }
@@ -279,7 +252,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
       final Integer landmarkKey = relation.getLandmark().getSpatialObject().getBegin();
       final Annotation landmarkName = names.get(landmarkKey);
       if (landmarkName != null && landmarkName != relation.getLandmark().getSpatialObject()) {
-        Logger.getLogger(this.getClass()).info(String.format("Replace %s (%s) with nam (%s)", relation.getLandmark().getSpatialObject().getType(), relation.getLandmark(), landmarkName));
+        Logger.getLogger(getClass()).info(String.format("Replace %s (%s) with nam (%s)", relation.getLandmark().getSpatialObject().getType(), relation.getLandmark(), landmarkName));
         landmarkName.setHead(relation.getLandmark().getSpatialObject().getHead());
         relation.getLandmark().setSpatialObject(landmarkName);
       }
@@ -288,7 +261,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
       final Integer trajectorKey = relation.getTrajector().getSpatialObject().getBegin();
       final Annotation trajectorName = names.get(trajectorKey);
       if (trajectorName != null && trajectorName != relation.getTrajector().getSpatialObject()) {
-        Logger.getLogger(this.getClass()).info(String.format("Replace %s (%s) with nam (%s)", relation.getTrajector().getSpatialObject().getType(), relation.getTrajector(), trajectorName));
+        Logger.getLogger(getClass()).info(String.format("Replace %s (%s) with nam (%s)", relation.getTrajector().getSpatialObject().getType(), relation.getTrajector(), trajectorName));
         trajectorName.setHead(relation.getTrajector().getSpatialObject().getHead());
         relation.getTrajector().setSpatialObject(trajectorName);
       }
@@ -307,10 +280,10 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
                                                            final Map<Integer, Annotation> chunkPrepTokens) {
     final List<SpatialExpression> relations = new LinkedList<>();
     /* Szukaj wzorców NG* prep NG* */
-    for (final Annotation an : sentence.getAnnotations(this.annotationsPrep)) {
+    for (final Annotation an : sentence.getAnnotations(annotationsPrep)) {
       final Annotation preposition = chunkPrepTokens.get(an.getBegin());
       if (preposition == null) {
-        this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+        logger.warn("Prep annotation for PrepNG not found: " + an.toString());
         continue;
       }
 
@@ -337,7 +310,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
         }
         final List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
         final List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-        relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+        relations.addAll(generateAllCombinations(type, trajectors, landmarks, preposition));
       }
     }
     return relations;
@@ -354,10 +327,10 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
                                                             final Map<Integer, Annotation> chunkPrepTokens) {
     final List<SpatialExpression> relations = new LinkedList<>();
     /* Szukaj wzorców NG* prep NG* */
-    for (final Annotation an : sentence.getAnnotations(this.annotationsPrep)) {
+    for (final Annotation an : sentence.getAnnotations(annotationsPrep)) {
       final Annotation preposition = chunkPrepTokens.get(an.getBegin());
       if (preposition == null) {
-        this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+        logger.warn("Prep annotation for PrepNG not found: " + an.toString());
         continue;
       }
 
@@ -370,7 +343,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
         final List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
         final List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
         if (trajectors != null) {
-          relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+          relations.addAll(generateAllCombinations(type, trajectors, landmarks, preposition));
         }
       }
     }
@@ -388,10 +361,10 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
                                                               final Map<Integer, Annotation> chunkPrepTokens) {
     final List<SpatialExpression> relations = new LinkedList<>();
     /* Szukaj wzorców NG* prep NG* */
-    for (final Annotation an : sentence.getAnnotations(this.annotationsPrep)) {
+    for (final Annotation an : sentence.getAnnotations(annotationsPrep)) {
       final Annotation preposition = chunkPrepTokens.get(an.getBegin());
       if (preposition == null) {
-        this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+        logger.warn("Prep annotation for PrepNG not found: " + an.toString());
         continue;
       }
 
@@ -405,7 +378,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
         final List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
         final List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
         if (trajectors != null) {
-          relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+          relations.addAll(generateAllCombinations(type, trajectors, landmarks, preposition));
         }
       }
     }
@@ -423,10 +396,10 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
                                                               final Map<Integer, Annotation> chunkPrepTokens) {
     final List<SpatialExpression> relations = new LinkedList<>();
     /* Szukaj wzorców NG* prep NG* */
-    for (final Annotation an : sentence.getAnnotations(this.annotationsPrep)) {
+    for (final Annotation an : sentence.getAnnotations(annotationsPrep)) {
       final Annotation preposition = chunkPrepTokens.get(an.getBegin());
       if (preposition == null) {
-        this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+        logger.warn("Prep annotation for PrepNG not found: " + an.toString());
         continue;
       }
 
@@ -439,7 +412,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
         final String type = "<PrepNG><NG>";
         final List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
         final List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-        relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+        relations.addAll(generateAllCombinations(type, trajectors, landmarks, preposition));
       }
     }
     return relations;
@@ -457,10 +430,10 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
                                                                   final Map<Integer, Annotation> chunkPpasTokens) {
     final List<SpatialExpression> relations = new LinkedList<>();
     /* Szukaj wzorców NG* prep NG* */
-    for (final Annotation an : sentence.getAnnotations(this.annotationsPrep)) {
+    for (final Annotation an : sentence.getAnnotations(annotationsPrep)) {
       final Annotation preposition = chunkPrepTokens.get(an.getBegin());
       if (preposition == null) {
-        this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+        logger.warn("Prep annotation for PrepNG not found: " + an.toString());
         continue;
       }
 
@@ -492,7 +465,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
         final List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
         final List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
         if (trajectors != null) {
-          relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+          relations.addAll(generateAllCombinations(type, trajectors, landmarks, preposition));
         }
       }
     }
@@ -510,10 +483,10 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
                                                                    final Map<Integer, Annotation> chunkPrepTokens) {
     final List<SpatialExpression> relations = new LinkedList<>();
     /* Szukaj wzorców NG* prep NG* */
-    for (final Annotation an : sentence.getAnnotations(this.annotationsPrep)) {
+    for (final Annotation an : sentence.getAnnotations(annotationsPrep)) {
       final Annotation preposition = chunkPrepTokens.get(an.getBegin());
       if (preposition == null) {
-        this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+        logger.warn("Prep annotation for PrepNG not found: " + an.toString());
         continue;
       }
 
@@ -551,7 +524,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
         final List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
         final List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
         if (trajectors != null) {
-          relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+          relations.addAll(generateAllCombinations(type, trajectors, landmarks, preposition));
         }
       }
     }
@@ -569,10 +542,10 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
                                                               final Map<Integer, Annotation> chunkPrepTokens) {
     final List<SpatialExpression> relations = new LinkedList<>();
     /* Szukaj wzorców NG* prep NG* */
-    for (final Annotation an : sentence.getAnnotations(this.annotationsPrep)) {
+    for (final Annotation an : sentence.getAnnotations(annotationsPrep)) {
       final Annotation preposition = chunkPrepTokens.get(an.getBegin());
       if (preposition == null) {
-        this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+        logger.warn("Prep annotation for PrepNG not found: " + an.toString());
         continue;
       }
 
@@ -604,7 +577,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
         final String type = "<NG|PrepNG|PrepNG>";
         final List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
         final List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-        relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+        relations.addAll(generateAllCombinations(type, trajectors, landmarks, preposition));
       }
     }
     return relations;
@@ -621,10 +594,10 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
                                                           final Map<Integer, Annotation> chunkPrepTokens) {
     final List<SpatialExpression> relations = new LinkedList<>();
     /* Szukaj wzorców NG* prep NG* */
-    for (final Annotation an : sentence.getAnnotations(this.annotationsPrep)) {
+    for (final Annotation an : sentence.getAnnotations(annotationsPrep)) {
       final Annotation preposition = chunkPrepTokens.get(an.getBegin());
       if (preposition == null) {
-        this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+        logger.warn("Prep annotation for PrepNG not found: " + an.toString());
         continue;
       }
 
@@ -649,7 +622,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
         final List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
         final List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
         if (trajectors != null) {
-          relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+          relations.addAll(generateAllCombinations(type, trajectors, landmarks, preposition));
         }
       }
     }
@@ -667,10 +640,10 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
                                                                 final Map<Integer, Annotation> chunkPrepTokens) {
     final List<SpatialExpression> relations = new LinkedList<>();
     /* Szukaj wzorców NG* prep NG* */
-    for (final Annotation an : sentence.getAnnotations(this.annotationsPrep)) {
+    for (final Annotation an : sentence.getAnnotations(annotationsPrep)) {
       final Annotation preposition = chunkPrepTokens.get(an.getBegin());
       if (preposition == null) {
-        this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+        logger.warn("Prep annotation for PrepNG not found: " + an.toString());
         continue;
       }
 
@@ -705,7 +678,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
 
         final List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
         final List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-        relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+        relations.addAll(generateAllCombinations(type, trajectors, landmarks, preposition));
       }
     }
     return relations;
@@ -722,10 +695,10 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
                                                         final Map<Integer, Annotation> chunkPrepTokens) {
     final List<SpatialExpression> relations = new LinkedList<>();
     /* Szukaj wzorców prep NG* NG* */
-    for (final Annotation an : sentence.getAnnotations(this.annotationsPrep)) {
+    for (final Annotation an : sentence.getAnnotations(annotationsPrep)) {
       final Annotation preposition = chunkPrepTokens.get(an.getBegin());
       if (preposition == null) {
-        this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+        logger.warn("Prep annotation for PrepNG not found: " + an.toString());
         continue;
       }
 
@@ -737,7 +710,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
         final String type = "<PrepNG|NG>";
         final List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
         final List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-        relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+        relations.addAll(generateAllCombinations(type, trajectors, landmarks, preposition));
       }
     }
     return relations;
@@ -754,7 +727,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
                                                         final Map<Integer, Annotation> chunkPrepTokens) {
     final List<SpatialExpression> relations = new LinkedList<>();
     /* Szukaj wzorców prep NG* NG* */
-    for (final Annotation landmark : sentence.getAnnotations(this.annotationsNg)) {
+    for (final Annotation landmark : sentence.getAnnotations(annotationsNg)) {
 
       final Integer prepId = landmark.getBegin() - 1;
       if (prepId <= 0
@@ -771,7 +744,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
         final String type = "<NG|prep|NG>";
         final List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
         final List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-        relations.addAll(this.generateAllCombinations(type, trajectors, landmarks,
+        relations.addAll(generateAllCombinations(type, trajectors, landmarks,
             new Annotation(prepId, "Prep", sentence)));
       }
     }
@@ -789,10 +762,10 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
                                                                final Map<Integer, Annotation> chunkPrepTokens) {
     final List<SpatialExpression> relations = new LinkedList<>();
     /* Szukaj wzorców prep NG* NG* */
-    for (final Annotation an : sentence.getAnnotations(this.annotationsPrep)) {
+    for (final Annotation an : sentence.getAnnotations(annotationsPrep)) {
       final Annotation preposition = chunkPrepTokens.get(an.getBegin());
       if (preposition == null) {
-        this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+        logger.warn("Prep annotation for PrepNG not found: " + an.toString());
         continue;
       }
 
@@ -805,7 +778,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
         final String type = "PrepNG|Verbfin|NG";
         final List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
         final List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
-        relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+        relations.addAll(generateAllCombinations(type, trajectors, landmarks, preposition));
       }
     }
     return relations;
@@ -822,10 +795,10 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
                                                                final Map<Integer, Annotation> chunkPrepTokens) {
     final List<SpatialExpression> relations = new LinkedList<>();
     /* Szukaj wzorców prep NG* NG* */
-    for (final Annotation an : sentence.getAnnotations(this.annotationsPrep)) {
+    for (final Annotation an : sentence.getAnnotations(annotationsPrep)) {
       final Annotation preposition = chunkPrepTokens.get(an.getBegin());
       if (preposition == null) {
-        this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+        logger.warn("Prep annotation for PrepNG not found: " + an.toString());
         continue;
       }
 
@@ -839,7 +812,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
         final List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
         final List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
         if (trajectors != null) {
-          relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+          relations.addAll(generateAllCombinations(type, trajectors, landmarks, preposition));
         }
       }
     }
@@ -858,10 +831,10 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
                                                             final Map<Integer, Annotation> chunkPrepTokens) {
     final List<SpatialExpression> relations = new LinkedList<>();
     /* Szukaj wzorców prep NG* NG* */
-    for (final Annotation an : sentence.getAnnotations(this.annotationsPrep)) {
+    for (final Annotation an : sentence.getAnnotations(annotationsPrep)) {
       final Annotation preposition = chunkPrepTokens.get(an.getBegin());
       if (preposition == null) {
-        this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+        logger.warn("Prep annotation for PrepNG not found: " + an.toString());
         continue;
       }
 
@@ -879,7 +852,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
         final List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
         final List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
         if (trajectors != null) {
-          relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+          relations.addAll(generateAllCombinations(type, trajectors, landmarks, preposition));
         }
       }
     }
@@ -898,10 +871,10 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
                                                             final Map<Integer, Annotation> chunkPrepTokens) {
     final List<SpatialExpression> relations = new LinkedList<>();
     /* Szukaj wzorców prep NG* NG* */
-    for (final Annotation an : sentence.getAnnotations(this.annotationsPrep)) {
+    for (final Annotation an : sentence.getAnnotations(annotationsPrep)) {
       final Annotation preposition = chunkPrepTokens.get(an.getBegin());
       if (preposition == null) {
-        this.logger.warn("Prep annotation for PrepNG not found: " + an.toString());
+        logger.warn("Prep annotation for PrepNG not found: " + an.toString());
         continue;
       }
 
@@ -919,7 +892,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
         final List<Annotation> trajectors = mapTokenIdToAnnotations.get(trajectorId);
         final List<Annotation> landmarks = mapTokenIdToAnnotations.get(landmarkId);
         if (trajectors != null) {
-          relations.addAll(this.generateAllCombinations(type, trajectors, landmarks, preposition));
+          relations.addAll(generateAllCombinations(type, trajectors, landmarks, preposition));
         }
       }
     }
@@ -953,7 +926,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
               for (final MaltSentenceLink trLink : maltSentence.getLinksByTargetIndex(link.getSourceIndex())) {
                 landmarks.add(trLink.getSourceIndex());
               }
-            } else if (this.objectPos.contains(tokenChild.getDisambTag().getPos())) {
+            } else if (objectPos.contains(tokenChild.getDisambTag().getPos())) {
               trajectors.add(link.getSourceIndex());
             }
           } else if (tokenChild.getDisambTag().getPos().equals("prep")) {
@@ -965,7 +938,7 @@ public class SpatialRelationRecognizer extends ISpatialRelationRecognizer {
                 for (final MaltSentenceLink prepLinkComma : maltSentence.getLinksByTargetIndex(prepLink.getSourceIndex())) {
                   landmarks.add(prepLinkComma.getSourceIndex());
                 }
-              } else if (this.objectPos.contains(lm.getDisambTag().getPos())) {
+              } else if (objectPos.contains(lm.getDisambTag().getPos())) {
                 landmarks.add(prepLink.getSourceIndex());
               }
             }

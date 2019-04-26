@@ -15,17 +15,17 @@ import java.util.Set;
  */
 public class RelationFilterLandmarkTrajectorException implements IRelationFilter {
 
-  Set<String> exceptions = new HashSet<String>();
+  Set<String> exceptions = new HashSet<>();
 
 
   public RelationFilterLandmarkTrajectorException() throws IOException {
-    this.exceptions.add("odcinek");
+    exceptions.add("odcinek");
   }
 
   @Override
-  public boolean pass(SpatialExpression relation) {
-    return !this.exceptions.contains(relation.getTrajector().getSpatialObject().getHeadToken().getDisambTag().getBase())
-        && !this.exceptions.contains(relation.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase());
+  public boolean pass(final SpatialExpression relation) {
+    return !exceptions.contains(relation.getTrajector().getSpatialObject().getHeadToken().getDisambTag().getBase())
+        && !exceptions.contains(relation.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase());
   }
 
 }

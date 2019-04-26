@@ -1,6 +1,5 @@
 package g419.corpus.io.reader.parser.tei;
 
-import com.google.common.collect.Lists;
 import g419.corpus.io.DataFormatException;
 import g419.corpus.io.Tei;
 import g419.corpus.structure.Annotation;
@@ -18,8 +17,6 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.util.List;
-import java.util.Map;
 
 public class TeiRelationsSAXParser extends DefaultHandler {
 
@@ -29,11 +26,10 @@ public class TeiRelationsSAXParser extends DefaultHandler {
   String relationId;
   String sourceRef = null;
   String targetRef = null;
-  Map<String, Annotation> annotationsMap;
-  List<Relation> relations = Lists.newArrayList();
+  TeiDocumentElements elements;
 
-  public TeiRelationsSAXParser(final InputStream is, final Map<String, Annotation> annotationsMap) throws DataFormatException {
-    this.annotationsMap = annotationsMap;
+  public TeiRelationsSAXParser(final InputStream is, final TeiDocumentElements elements) throws DataFormatException {
+    this.elements = elements;
     final SAXParserFactory factory = SAXParserFactory.newInstance();
     try {
       final SAXParser parser = factory.newSAXParser();
@@ -77,14 +73,14 @@ public class TeiRelationsSAXParser extends DefaultHandler {
   @Override
   public void endElement(final String s, final String s1, final String element) throws SAXException {
     if (element.equals(Tei.TAG_SEGMENT)) {
-      final Annotation sourceAnn = annotationsMap.get(getAnnotationId(sourceRef));
-      final Annotation targetAnn = annotationsMap.get(getAnnotationId(targetRef));
+      final Annotation sourceAnn = elements.getAnnotationMap().get(sourceRef);
+      final Annotation targetAnn = elements.getAnnotationMap().get(targetRef);
       if (sourceAnn == null) {
         logger.error("Relation was skipped because source annotation was not found for the id {}", sourceRef);
       } else if (targetAnn == null) {
         logger.error("Relation was skipped because target annotation was not found for the id {}", targetRef);
       } else {
-        relations.add(new Relation(relationId, sourceAnn, targetAnn, relationType, relationSet));
+        elements.getRelations().add(new Relation(relationId, sourceAnn, targetAnn, relationType, relationSet));
       }
       relationType = null;
       sourceRef = null;
@@ -92,12 +88,4 @@ public class TeiRelationsSAXParser extends DefaultHandler {
     }
   }
 
-  private String getAnnotationId(final String target) {
-    final String[] cols = target.split("#");
-    return cols[cols.length - 1];
-  }
-
-  public List<Relation> getRelations() {
-    return relations;
-  }
 }

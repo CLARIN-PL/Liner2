@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import g419.corpus.structure.Annotation;
 
 import java.util.Set;
+import java.util.StringJoiner;
 
 /**
  * Represents spatial expression, which consists of: trajector, landmark, spatial indicator, motion indicator, path
@@ -39,7 +40,7 @@ public class SpatialExpression {
   }
 
   public String getType() {
-    return this.type;
+    return type;
   }
 
   public SpatialObjectRegion getTrajector() {
@@ -87,15 +88,15 @@ public class SpatialExpression {
   }
 
   public Set<String> getTrajectorConcepts() {
-    return this.trajectorConcepts;
+    return trajectorConcepts;
   }
 
   public Set<String> getLandmarkConcepts() {
-    return this.landmarkConcepts;
+    return landmarkConcepts;
   }
 
   public Set<SpatialRelationSchema> getSchemas() {
-    return this.filtres;
+    return filtres;
   }
 
   /**
@@ -144,10 +145,22 @@ public class SpatialExpression {
     } else {
       return lastAn;
     }
-
   }
 
   private String toString(final Annotation an, final String role) {
     return String.format(" %s:[%s:%s]", role, an.getText(true), an.getType());
+  }
+
+  public String getKey() {
+    final StringJoiner joiner = new StringJoiner("_");
+    joiner.add("TR:" + getTrajector().getSpatialObject().getBegin());
+    if (getSpatialIndicator() != null) {
+      joiner.add("SI:" + getSpatialIndicator().getBegin());
+    }
+    if (getLandmark() != null && getLandmark().getSpatialObject() != null) {
+      joiner.add("LM:" + getLandmark().getSpatialObject().getBegin());
+    }
+    return joiner.toString();
+
   }
 }

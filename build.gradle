@@ -44,7 +44,9 @@ allprojects {
         compile(
                 'org.slf4j:slf4j-api:1.7.2',
                 'io.vavr:vavr:0.9.0',
-                'io.projectreactor:reactor-core:3.1.5.RELEASE'
+                'io.projectreactor:reactor-core:3.1.5.RELEASE',
+                'org.projectlombok:lombok:1.18.6'
+
         )
         runtime(
                 'org.slf4j:slf4j-log4j12:1.7.2',
@@ -57,49 +59,52 @@ allprojects {
                 'org.codehaus.groovy:groovy-all:2.4.4',
                 'org.spockframework:spock-core:1.0-groovy-2.4'
         )
+        annotationProcessor(
+                'org.projectlombok:lombok:1.18.6'
+        )
     }
+}
 
-    test {
-        useJUnit()
-    }
+test {
+    useJUnit()
+}
 
-    task sourcesJar(type: Jar, dependsOn: classes) {
-        description "Makes JAR with sources of this module."
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
+task sourcesJar(type: Jar, dependsOn: classes) {
+    description "Makes JAR with sources of this module."
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
 
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-        description "Makes JAR with javadocs of this module."
-        classifier = 'javadoc'
-        from javadoc.destinationDir
-    }
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    description "Makes JAR with javadocs of this module."
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
 
-    def artifactsTasks = [
-            jar,
-            sourcesJar,
+def artifactsTasks = [
+        jar,
+        sourcesJar,
 //        javadocJar //uncomment this when javadoc will work
-    ]
+]
 
-    plugins.withType(ApplicationPlugin) {
-        it.project.apply plugin: 'com.github.johnrengelman.shadow'
+plugins.withType(ApplicationPlugin) {
+    it.project.apply plugin: 'com.github.johnrengelman.shadow'
 
-        shadowJar {
-            classifier = 'all'
-        }
-
-        it.project.tasks.find { it.name == "jar" }.dependsOn it.project.tasks.find { it.name == "shadowJar" }
+    shadowJar {
+        classifier = 'all'
     }
 
-    artifacts {
-        artifactsTasks.each {
-            archives it
-        }
-    }
+    it.project.tasks.find { it.name == "jar" }.dependsOn it.project.tasks.find { it.name == "shadowJar" }
+}
 
-    jacoco {
-        toolVersion = '0.7.1.201405082137'
+artifacts {
+    artifactsTasks.each {
+        archives it
     }
+}
+
+jacoco {
+    toolVersion = '0.7.1.201405082137'
 }
 
 subprojects {

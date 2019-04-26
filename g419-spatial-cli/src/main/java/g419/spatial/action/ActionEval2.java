@@ -13,7 +13,7 @@ import g419.lib.cli.CommonOptions;
 import g419.lib.cli.ParameterException;
 import g419.liner2.core.features.tokens.ClassFeature;
 import g419.liner2.core.tools.FscoreEvaluator;
-import g419.liner2.core.tools.parser.MaltParser;
+import g419.spatial.converter.DocumentToSpatialExpressionConverter;
 import g419.spatial.structure.SpatialExpression;
 import g419.spatial.tools.*;
 import g419.toolbox.sumo.Sumo;
@@ -21,6 +21,7 @@ import g419.toolbox.wordnet.Wordnet3;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -38,8 +39,8 @@ public class ActionEval2 extends Action {
   private String model = null;
 
   private SpatialExpressionKeyGeneratorSimple keyGenerator;
-  private DecisionCollector<SpatialExpression> evalTotal;
-  private DecisionCollector<SpatialExpression> evalNoSeedTotal;
+  private DecisionCollector<SpatialExpression> evalTotalSemanticFilters;
+  private DecisionCollector<SpatialExpression> evalTotalCandidates;
   private final Map<String, FscoreEvaluator> evalByTypeTotal = Maps.newHashMap();
   private ISpatialRelationRecognizer recognizer;
   private Sumo sumo;
@@ -54,7 +55,7 @@ public class ActionEval2 extends Action {
    */
   public ActionEval2() {
     super("eval2");
-    this.setDescription("evaluate recognition of spatial expressions (new approach including dynamic)");
+    setDescription("evaluate recognition of spatial expressions (new approach including dynamic)");
     options.addOption(getOptionModel());
     options.addOption(getOptionInputFilename());
     options.addOption(CommonOptions.getInputFileFormatOption());
@@ -91,27 +92,19 @@ public class ActionEval2 extends Action {
   @Override
   public void run() throws Exception {
     keyGenerator = new SpatialExpressionKeyGeneratorSimple();
-    evalTotal = new DecisionCollector<>(keyGenerator);
-    evalNoSeedTotal = new DecisionCollector<>(keyGenerator);
-    switch (model) {
-      case "v1":
-        recognizer = new SpatialRelationRecognizer(new MaltParser(maltparserModel), new Wordnet3(wordnetPath));
-        break;
-      case "v2":
-        recognizer = new SpatialRelationRecognizer2(new MaltParser(maltparserModel), new Wordnet3(wordnetPath));
-        break;
-      default:
-        throw new ParameterException(String.format("Unrecognized value of '%s', expected: v1|v2", model));
-    }
-
+    evalTotalSemanticFilters = new DecisionCollector<>(keyGenerator);
+    evalTotalCandidates = new DecisionCollector<>(keyGenerator);
+    initializeRecognizer();
     sumo = recognizer.getSemanticFilter().getSumo();
-
     try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(filename, inputFormat)) {
       reader.forEach(this::evaluateDocument);
     }
+    printEvaluationResult();
+  }
 
+  private void printEvaluationResult() {
     printHeader1("With semantic constraints on trajector and landmark");
-    evalTotal.getConfusionMatrix().printTotal();
+    evalTotalSemanticFilters.getConfusionMatrix().printTotal();
 
     printHr1().printHeader2(String.format("%-30s %6s %6s %6s", "Pattern", "P", "TP", "FP"));
     evalByTypeTotal.entrySet().stream()
@@ -119,9 +112,24 @@ public class ActionEval2 extends Action {
         .sorted()
         .forEach(System.out::println);
 
-    printHeader1("With semantic constraints");
-    evalNoSeedTotal.getConfusionMatrix().printTotal();
+    printHeader1("Without semantic constraints");
+    evalTotalCandidates.getConfusionMatrix().printTotal();
     printHr2();
+  }
+
+  private void initializeRecognizer() throws IOException, ParameterException {
+    final Wordnet3 wordnet = new Wordnet3(wordnetPath);
+    switch (model) {
+      case "v1":
+        recognizer = new SpatialRelationRecognizer(wordnet);
+        break;
+      case "v2":
+        recognizer = new SpatialRelationRecognizer2(wordnet);
+        break;
+      default:
+        throw new ParameterException(String.format("Unrecognized value of '%s', expected: v1|v2", model));
+    }
+    //recognizer.withMaltParser(new MaltParser(maltparserModel));
   }
 
   private void evaluateDocument(final Document document) {
@@ -130,8 +138,8 @@ public class ActionEval2 extends Action {
         .map(converter::convert)
         .flatMap(Collection::stream)
         .filter(this::notIgnoredElement)
-        .peek(evalTotal::addGold)
-        .forEach(evalNoSeedTotal::addGold);
+        .peek(evalTotalSemanticFilters::addGold)
+        .forEach(evalTotalCandidates::addGold);
 
     document.getSentences().stream()
         .peek(sentence -> printHeader2("Sentence: " + sentence))
@@ -153,52 +161,58 @@ public class ActionEval2 extends Action {
   }
 
   private void evaluateSentence(final Sentence sentence) {
-    recognizer.findCandidates(sentence).forEach(rel -> {
-      final Optional<String> filterName = recognizer.getFilterDiscardingRelation(rel);
-      final String status = filterName.isPresent() ? "REMOVED by" : "OK    ";
-      String eval;
-
-      evalNoSeedTotal.addDecision(rel);
-      if (filterName.isPresent()) {
-        eval = evalTotal.containsAsGold(rel) ? "Filtered-False" : "Filtered-True";
-      } else {
-        final FscoreEvaluator evalType = evalByTypeTotal.computeIfAbsent(rel.getType(), k -> new FscoreEvaluator());
-        if (evalTotal.containsAsGold(rel)) {
-          eval = "TruePositive";
-          evalType.addTruePositive();
-        } else {
-          eval = "FalsePositive";
-          evalType.addFalsePositive();
-        }
-        eval += evalTotal.containsAsDecision(rel) ? "-DUPLICATE" : "-FIRST";
-        evalTotal.addDecision(rel);
-      }
-
-      final String concepts = recognizer.getSemanticFilter().match(rel).stream()
-          .map(p -> new StringBuilder(p.getName())
-              .append(" (TR subclass of: ")
-              .append(subconceptsOfToString(p.getTrajectorConcepts(), rel.getTrajectorConcepts(), sumo))
-              .append("; LM subclass of: ")
-              .append(subconceptsOfToString(p.getLandmarkConcepts(), rel.getLandmarkConcepts(), sumo))
-              .append(")").toString())
-          .collect(Collectors.joining(" & "));
-
-      String info = String.format(" %-20s %-60s\t%s %-10s Key=%s; schema=%s",
-          eval, rel.toString(), status, filterName.orElse(""), keyGenerator.generateKey(rel), concepts);
-      if (regions.contains(rel.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase())) {
-        info += " REGION_AS_LANDMARK";
-      }
-      System.out.println(info);
-      System.out.println(String.format(" %25s   SI: %s", "", io.vavr.control.Option.of(rel.getSpatialIndicator()).map(Annotation::getText).getOrElse("")));
-      System.out.println(String.format(" %25s   TR: %s", "", rel.getTrajector() + " => " + String.join(", ", rel.getTrajectorConcepts())));
-      System.out.println(String.format(" %25s   LM: %s", "", rel.getLandmark() + " => " + String.join(", ", rel.getLandmarkConcepts())));
-      System.out.println();
-    });
-    evalTotal.getFalseNegatives().stream()
+    recognizer.findCandidates(sentence).forEach(this::evaluateCandidate);
+    evalTotalSemanticFilters.getFalseNegatives().stream()
         .filter(r -> Nuller.resolve(() -> r.getLandmark().getSpatialObject().getSentence()).orElse(null) == sentence)
         .map(r -> String.format(" FalseNegative: %s [Key=%s]", r.toString(), keyGenerator.generateKey(r)))
         .sorted()
         .forEach(System.out::println);
+  }
+
+  private void evaluateCandidate(final SpatialExpression candidate) {
+    final Optional<String> filterName = recognizer.getFilterDiscardingRelation(candidate);
+    final String status = filterName.isPresent() ? "REMOVED by" : "OK    ";
+    String eval;
+
+    evalTotalCandidates.addDecision(candidate);
+    if (filterName.isPresent()) {
+      eval = evalTotalSemanticFilters.containsAsGold(candidate) ? "Filtered-False" : "Filtered-True";
+    } else {
+      final FscoreEvaluator evalType = evalByTypeTotal.computeIfAbsent(candidate.getType(), k -> new FscoreEvaluator());
+      if (evalTotalSemanticFilters.containsAsGold(candidate)) {
+        eval = "TruePositive";
+        evalType.addTruePositive();
+      } else {
+        eval = "FalsePositive";
+        evalType.addFalsePositive();
+      }
+      eval += evalTotalSemanticFilters.containsAsDecision(candidate) ? "-DUPLICATE" : "-FIRST";
+      evalTotalSemanticFilters.addDecision(candidate);
+    }
+    logCandidate(candidate, eval, status, filterName);
+
+  }
+
+  private void logCandidate(final SpatialExpression candidate, final String eval, final String status, final Optional<String> filterName) {
+    final String concepts = recognizer.getSemanticFilter().match(candidate).stream()
+        .map(p -> new StringBuilder(p.getName())
+            .append(" (TR subclass of: ")
+            .append(subconceptsOfToString(p.getTrajectorConcepts(), candidate.getTrajectorConcepts(), sumo))
+            .append("; LM subclass of: ")
+            .append(subconceptsOfToString(p.getLandmarkConcepts(), candidate.getLandmarkConcepts(), sumo))
+            .append(")").toString())
+        .collect(Collectors.joining(" & "));
+
+    String info = String.format(" %-20s %-60s\t%s %-10s Key=%s; schema=%s",
+        eval, candidate.toString(), status, filterName.orElse(""), keyGenerator.generateKey(candidate), concepts);
+    if (regions.contains(candidate.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase())) {
+      info += " REGION_AS_LANDMARK";
+    }
+    System.out.println(info);
+    System.out.println(String.format(" %25s   SI: %s", "", io.vavr.control.Option.of(candidate.getSpatialIndicator()).map(Annotation::getText).getOrElse("")));
+    System.out.println(String.format(" %25s   TR: %s", "", candidate.getTrajector() + " => " + String.join(", ", candidate.getTrajectorConcepts())));
+    System.out.println(String.format(" %25s   LM: %s", "", candidate.getLandmark() + " => " + String.join(", ", candidate.getLandmarkConcepts())));
+    System.out.println();
   }
 
   private String formatEvalLine(final String type, final FscoreEvaluator eval) {

@@ -28,7 +28,7 @@ public class SpatialObjectRegion {
 
   @Override
   public String toString() {
-    StringJoiner joiner = new StringJoiner("; ", "[", "]");
+    final StringJoiner joiner = new StringJoiner("; ", "[", "]");
     joiner.add("RE=" + (region == null ? "" : region.getText()));
     joiner.add("SO=" + (spatialObject == null ? "" : spatialObject.getText()));
     return joiner.toString();

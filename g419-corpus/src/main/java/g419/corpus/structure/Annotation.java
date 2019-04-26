@@ -2,6 +2,7 @@ package g419.corpus.structure;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import io.vavr.control.Option;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -68,12 +69,7 @@ public class Annotation extends IdentifiableElement {
   }
 
   public Annotation(final int begin, final int end, final String type, final Sentence sentence) {
-    for (int i = begin; i <= end; i++) {
-      tokens.add(i);
-    }
-    this.type = type;
-    this.sentence = sentence;
-    assignHead();
+    this(IntStream.rangeClosed(begin, end).boxed().collect(Collectors.toSet()), type, sentence);
   }
 
   public Annotation(final int tokenIndex, final String type, final Sentence sentence) {
@@ -85,18 +81,37 @@ public class Annotation extends IdentifiableElement {
     this.channelIdx = channelIdx;
   }
 
-  public Annotation(final TreeSet<Integer> tokens, final String type, final Sentence sentence) {
-    this.tokens = tokens;
+  public Annotation(final Collection<Integer> tokens, final String type, final Sentence sentence) {
+    if (tokens.isEmpty()) {
+      throw new RuntimeException("List of token indices cannot be empty");
+    }
+    if (type == null) {
+      throw new RuntimeException("Annotation type cannot be null");
+    }
+    this.tokens = new TreeSet<>(tokens);
     this.type = type;
     this.sentence = sentence;
     assignHead();
   }
 
-  public Annotation(final Collection<Integer> tokens, final String type, final Sentence sentence) {
+  public Annotation(final Collection<Integer> tokens,
+                    final String type,
+                    final Sentence sentence,
+                    final Optional<Integer> head) {
+    if (tokens.isEmpty()) {
+      throw new RuntimeException("List of token indices cannot be empty");
+    }
+    if (type == null) {
+      throw new RuntimeException("Annotation type cannot be null");
+    }
     this.tokens = new TreeSet<>(tokens);
     this.type = type;
     this.sentence = sentence;
-    assignHead();
+    if (head.isPresent()) {
+      this.head = head.get();
+    } else {
+      assignHead();
+    }
   }
 
   public void setChannelIdx(final int idx) {
@@ -171,30 +186,26 @@ public class Annotation extends IdentifiableElement {
       return;
     }
 
-    int head = -1;
+    Option<Integer> head = Option.none();
+    head = findFirstTokenWithPos("subst");
+    if (head.isEmpty()) {
+      head = findFirstTokenWithPos("ign");
+    }
+
+    if (head.isEmpty() && !tokens.isEmpty()) {
+      head = Option.of(tokens.first());
+    }
+
+    head.forEach(this::setHead);
+  }
+
+  private Option<Integer> findFirstTokenWithPos(final String pos) {
     for (final int i : getTokens()) {
-      final Token t = sentence.getTokens().get(i);
-      if (t.getDisambTag().getPos().equals("subst")) {
-        head = i;
-        break;
+      if (sentence.getTokens().get(i).getDisambTag().getPos().equals(pos)) {
+        return Option.of(i);
       }
     }
-
-    if (head == -1) {
-      for (final int i : getTokens()) {
-        final Token t = sentence.getTokens().get(i);
-        if (t.getDisambTag().getPos().equals("ign")) {
-          head = i;
-          break;
-        }
-      }
-    }
-
-    if (head == -1) {
-      head = tokens.first();
-    }
-
-    setHead(head);
+    return Option.none();
   }
 
   public Integer getHead() {
@@ -436,6 +447,7 @@ public class Annotation extends IdentifiableElement {
   public String toString() {
     return "Annotation{" +
         "id='" + id + '\'' +
+        ", text='" + getText() + '\'' +
         ", type='" + type + '\'' +
         ", group='" + group + '\'' +
         ", sentence=" + sentence.getId() +
