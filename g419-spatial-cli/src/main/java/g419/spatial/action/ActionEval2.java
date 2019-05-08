@@ -140,12 +140,14 @@ public class ActionEval2 extends Action {
         .map(converter::convert)
         .flatMap(Collection::stream)
         .filter(this::notIgnoredElement)
+        .filter(e -> e.getWidth() < 6)
         .peek(evalTotalSemanticFilters::addGold)
         .forEach(evalTotalCandidates::addGold);
 
     document.getSentences().stream()
         .peek(sentence -> printHeader2("Sentence: " + sentence))
-        .forEach(this::evaluateSentence);
+        .peek(this::evaluateSentence)
+        .forEach(sentence -> printHeader2("Sentence: " + sentence));
   }
 
   private boolean notIgnoredElement(final SpatialExpression se) {
@@ -165,10 +167,20 @@ public class ActionEval2 extends Action {
   private void evaluateSentence(final Sentence sentence) {
     recognizer.findCandidates(sentence).forEach(this::evaluateCandidate);
     evalTotalSemanticFilters.getFalseNegatives().stream()
-        .filter(r -> Nuller.resolve(() -> r.getLandmark().getSpatialObject().getSentence()).orElse(null) == sentence)
-        .map(r -> String.format(" FalseNegative: %s [Key=%s]", r.toString(), keyGenerator.generateKey(r)))
+        .filter(r -> r.getSentence().orElse(null) == sentence)
+        .map(r -> formatLogFalseNegative(r, "filtered"))
         .sorted()
         .forEach(System.out::println);
+    evalTotalCandidates.getFalseNegatives().stream()
+        .filter(r -> r.getSentence().orElse(null) == sentence)
+        .map(r -> formatLogFalseNegative(r, "candidate"))
+        .sorted()
+        .forEach(System.out::println);
+  }
+
+  private String formatLogFalseNegative(final SpatialExpression se, final String type) {
+    return String.format("[%s] FalseNegative: %s [key=%s] [width=%d]",
+        type, se.toString(), keyGenerator.generateKey(se), se.getWidth());
   }
 
   private void evaluateCandidate(final SpatialExpression candidate) {

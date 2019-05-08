@@ -14,5 +14,9 @@ public class NkjpSpejd {
 
   public final static String NG = "NG";
 
+  public final static Pattern NumGAny = Pattern.compile("^NumG.*$");
+
+  public final static Pattern AdjG = Pattern.compile("^AdjG$");
+
   public final static Pattern NGAny = Pattern.compile("^NG.*$");
 }

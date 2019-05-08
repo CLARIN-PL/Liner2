@@ -24,162 +24,165 @@ import java.util.TreeSet;
 
 public class TeiAnnotationSAXParser extends DefaultHandler implements HasLogger {
 
-  @Data
-  @NoArgsConstructor
-  class SentenceGroup {
-    private String groupId = null;
-    private Sentence sentence = null;
-    private String type = null;
-    private String base = null;
-    private List<String> tokens = Lists.newArrayList();
-    private String head = null;
-  }
-
-  final String filename;
-  final String group;
-
-  protected int currentParagraphIdx = 0;
-  protected int currentSentenceIdx = 0;
-  protected Paragraph currentParagraph = null;
-  protected Sentence currentSentence = null;
-  protected String currentFeatureName = null;
-  String tmpValue = "";
-
-  protected SentenceGroup currentGroup;
-
-  final List<SentenceGroup> groups = Lists.newLinkedList();
-  final TeiDocumentElements elements;
-
-  public TeiAnnotationSAXParser(final String filename,
-                                final InputStream is,
-                                final String group,
-                                final TeiDocumentElements elements
-  )
-      throws DataFormatException {
-    this.filename = filename;
-    this.group = group;
-    this.elements = elements;
-
-    try {
-      SAXParserFactory.newInstance().newSAXParser().parse(is, this);
-      final List<Annotation> annotations = createAnnotations();
-      annotations.forEach(an -> an.getSentence().addChunk(an));
-      annotations.forEach(an -> elements.addAnnotation(an.getId(), an));
-    } catch (final Exception e) {
-      throw new DataFormatException("TEI Parse error", e);
+    @Data
+    @NoArgsConstructor
+    class SentenceGroup {
+        private String groupId = null;
+        private Sentence sentence = null;
+        private String type = null;
+        private String base = null;
+        private List<String> tokens = Lists.newArrayList();
+        private String head = null;
     }
-  }
 
-  @Override
-  public InputSource resolveEntity(final String publicId, final String systemId) {
-    return new InputSource(new StringReader(""));
-  }
+    final String filename;
+    final String group;
 
-  @Override
-  public void startElement(final String s, final String s1, final String elementName, final Attributes attributes) throws SAXException {
-    tmpValue = "";
-    switch (elementName.toLowerCase()) {
-      case Tei.TAG_PARAGRAPH:
-        currentParagraph = elements.getParagraphs().get(currentParagraphIdx++);
-        currentSentenceIdx = 0;
-        break;
+    protected int currentParagraphIdx = 0;
+    protected int currentSentenceIdx = 0;
+    protected Paragraph currentParagraph = null;
+    protected Sentence currentSentence = null;
+    protected String currentFeatureName = null;
+    String tmpValue = "";
 
-      case Tei.TAG_SENTENCE:
-        currentSentence = currentParagraph.getSentences().get(currentSentenceIdx++);
-        break;
+    protected SentenceGroup currentGroup;
 
-      case Tei.TAG_SEGMENT:
-        currentGroup = new SentenceGroup();
-        currentGroup.setSentence(currentSentence);
-        currentGroup.setGroupId(absPtr(attributes.getValue("xml:id")));
-        elements.getElementsIdMap().put(filename + "#" + currentGroup.getGroupId(), currentGroup.getTokens());
-        break;
+    final List<SentenceGroup> groups = Lists.newLinkedList();
+    final TeiDocumentElements elements;
 
-      case Tei.TAG_FEATURE:
-        currentFeatureName = attributes.getValue("name");
-        break;
+    public TeiAnnotationSAXParser(final String filename,
+                                  final InputStream is,
+                                  final String group,
+                                  final TeiDocumentElements elements
+    )
+            throws DataFormatException {
+        this.filename = filename;
+        this.group = group;
+        this.elements = elements;
 
-      case Tei.TAG_SYMBOL:
-        if (currentFeatureName.equals("type")) {
-          currentGroup.setType(attributes.getValue("value"));
-        } else if (currentFeatureName.equals("subtype")) {
-          currentGroup.setType(currentGroup.getType() + "-" + attributes.getValue("value"));
+        try {
+            SAXParserFactory.newInstance().newSAXParser().parse(is, this);
+            final List<Annotation> annotations = createAnnotations();
+            annotations.forEach(an -> an.getSentence().addChunk(an));
+            annotations.forEach(an -> elements.addAnnotation(an.getId(), an));
+        } catch (final Exception e) {
+            throw new DataFormatException("TEI Parse error", e);
         }
-        break;
+    }
 
-      case Tei.TAG_POINTER:
-        final String target = attributes.getValue(Tei.ATTR_TARGET);
-        final String type = attributes.getValue(Tei.ATTR_TYPE);
-        currentGroup.getTokens().add(target);
-        if ("head".equals(type) || "semh".equals(type)) {
-          currentGroup.setHead(absPtr(target));
-          elements.getHeadIds().put(absPtr(currentGroup.getGroupId()), absPtr(target));
+    @Override
+    public InputSource resolveEntity(final String publicId, final String systemId) {
+        return new InputSource(new StringReader(""));
+    }
+
+    @Override
+    public void startElement(final String s, final String s1, final String elementName, final Attributes attributes) throws SAXException {
+        tmpValue = "";
+        switch (elementName.toLowerCase()) {
+            case Tei.TAG_PARAGRAPH:
+                currentParagraph = elements.getParagraphs().get(currentParagraphIdx++);
+                currentSentenceIdx = 0;
+                break;
+
+            case Tei.TAG_SENTENCE:
+                currentSentence = currentParagraph.getSentences().get(currentSentenceIdx++);
+                break;
+
+            case Tei.TAG_SEGMENT:
+                currentGroup = new SentenceGroup();
+                currentGroup.setSentence(currentSentence);
+                currentGroup.setGroupId(absPtr(attributes.getValue("xml:id")));
+                elements.getElementsIdMap().put(currentGroup.getGroupId(), currentGroup.getTokens());
+                break;
+
+            case Tei.TAG_FEATURE:
+                currentFeatureName = attributes.getValue("name");
+                break;
+
+            case Tei.TAG_SYMBOL:
+                if (currentFeatureName.equals("type")) {
+                    currentGroup.setType(attributes.getValue("value"));
+                } else if (currentFeatureName.equals("subtype")) {
+                    currentGroup.setType(currentGroup.getType() + "-" + attributes.getValue("value"));
+                }
+                break;
+
+            case Tei.TAG_POINTER:
+                final String target = absPtr(attributes.getValue(Tei.ATTR_TARGET));
+                final String type = attributes.getValue(Tei.ATTR_TYPE);
+                currentGroup.getTokens().add(target);
+                if ("head".equals(type) || "semh".equals(type)) {
+                    currentGroup.setHead(target);
+                    elements.getHeadIds().put(currentGroup.getGroupId(), target);
+                }
+                break;
         }
-        break;
     }
-  }
 
-  @Override
-  public void endElement(final String s, final String s1, final String element) throws SAXException {
-    switch (element) {
-      case Tei.TAG_SEGMENT:
-        groups.add(currentGroup);
-        currentGroup = new SentenceGroup();
-        break;
+    @Override
+    public void endElement(final String s, final String s1, final String element) throws SAXException {
+        switch (element) {
+            case Tei.TAG_SEGMENT:
+                groups.add(currentGroup);
+                currentGroup = new SentenceGroup();
+                break;
 
-      case Tei.TAG_FEATURE:
-        currentFeatureName = null;
-        break;
+            case Tei.TAG_FEATURE:
+                currentFeatureName = null;
+                break;
 
-      case Tei.TAG_STRING:
-        if ("base".equals(currentFeatureName)) {
-          currentGroup.setBase(tmpValue);
+            case Tei.TAG_STRING:
+                if ("base".equals(currentFeatureName)) {
+                    currentGroup.setBase(tmpValue);
+                }
+                break;
         }
-        break;
     }
-  }
 
-  protected String absPtr(final String pointer) {
-    final String localPointer = pointer.startsWith("#") ? pointer.substring(1) : pointer;
-    return localPointer.contains("#") ? localPointer : filename + "#" + localPointer;
-  }
+    protected String absPtr(final String pointer) {
+        final String localPointer = pointer.startsWith("#") ? pointer.substring(1) : pointer;
+        return localPointer.contains("#") ? localPointer : filename + "#" + localPointer;
+    }
 
-  /**
-   * Assign token index to annotations after loading all groups.
-   */
-  private List<Annotation> createAnnotations() {
-    final List<Annotation> annotations = Lists.newArrayList();
-    for (final SentenceGroup group : groups) {
-      final TreeSet<Integer> tokens = new TreeSet<>();
-      for (final String elementKey : group.getTokens()) {
-        final List<Integer> ids = elements.getTokens(elementKey);
-        if (ids.size() == 0) {
-          LoggerFactory.getLogger(getClass()).warn("No tokens found for " + elementKey);
-        } else {
-          tokens.addAll(ids);
+    /**
+     * Assign token index to annotations after loading all groups.
+     */
+    private List<Annotation> createAnnotations() {
+        final List<Annotation> annotations = Lists.newArrayList();
+        for (final SentenceGroup group : groups) {
+            final TreeSet<Integer> tokens = new TreeSet<>();
+            for (final String elementKey : group.getTokens()) {
+                final List<Integer> ids = elements.getTokens(elementKey);
+                if (ids.size() == 0) {
+                    LoggerFactory.getLogger(getClass()).warn("No tokens found for " + elementKey);
+                } else {
+                    tokens.addAll(ids);
+                }
+            }
+            if (tokens.size() == 0) {
+                getLogger().error("Annotation with id={} from file={} does not have defined tokens (no ptr elements)", group.getGroupId(), filename);
+            } else if (group.getType() == null) {
+                getLogger().error("Annotation with id={} from file={} has unknown type", group.getGroupId(), filename);
+            } else {
+                Optional<Integer> head = Optional.empty();
+                if (group.getHead() != null) {
+                    head = elements.getHeadToken(group.getHead());
+                }
+                final Annotation an = new Annotation(tokens, group.getType(), group.getSentence(), head)
+                        .withGroup(this.group)
+                        .withLemma(group.getBase())
+                        .withId(group.getGroupId());
+                annotations.add(an);
+            }
         }
-      }
-      if (tokens.size() == 0) {
-        getLogger().error("Annotation with id={} from file={} does not have defined tokens (no ptr elements)", group.getGroupId(), filename);
-      } else if (group.getType() == null) {
-        getLogger().error("Annotation with id={} from file={} has unknown type", group.getGroupId(), filename);
-      } else {
-        final Optional<Integer> head = elements.getHeadToken(group.getHead());
-        final Annotation an = new Annotation(tokens, group.getType(), group.getSentence(), head)
-            .withGroup(this.group)
-            .withLemma(group.getBase())
-            .withId(group.getGroupId());
-        annotations.add(an);
-      }
+        return annotations;
     }
-    return annotations;
-  }
 
-  @Override
-  public void characters(final char[] ac, final int start, final int length) throws SAXException {
-    for (int i = start; i < start + length; i++) {
-      tmpValue += ac[i];
+    @Override
+    public void characters(final char[] ac, final int start, final int length) throws SAXException {
+        for (int i = start; i < start + length; i++) {
+            tmpValue += ac[i];
+        }
     }
-  }
 
 }

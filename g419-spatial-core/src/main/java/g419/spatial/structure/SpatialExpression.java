@@ -2,9 +2,13 @@ package g419.spatial.structure;
 
 import com.google.common.collect.Sets;
 import g419.corpus.structure.Annotation;
+import g419.corpus.structure.Sentence;
 
+import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 /**
  * Represents spatial expression, which consists of: trajector, landmark, spatial indicator, motion indicator, path
@@ -121,6 +125,18 @@ public class SpatialExpression {
     ans.addAll(distances);
     ans.remove(null);
     return ans;
+  }
+
+  public int getWidth() {
+    final Set<Integer> tokens = getAnnotations().stream().map(Annotation::getTokens).flatMap(Collection::stream)
+        .collect(Collectors.toSet());
+    final int max = tokens.stream().mapToInt(d -> d).max().getAsInt();
+    final int min = tokens.stream().mapToInt(d -> d).min().getAsInt();
+    return max - min;
+  }
+
+  public Optional<Sentence> getSentence() {
+    return getAnnotations().stream().map(Annotation::getSentence).findFirst();
   }
 
   @Override

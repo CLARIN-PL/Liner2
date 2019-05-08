@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class NkjpSyntacticChunks {
 
-  static public Pattern annotationsPrep = Pattern.compile("^PrepNG.*$");
+  static public Pattern annotationsPrep = Pattern.compile("^Prep.+$");
   static public Pattern annotationsNg = Pattern.compile("^NG.*$");
 
   static public void splitPrepNg(final Sentence sentence) {
@@ -27,7 +27,7 @@ public class NkjpSyntacticChunks {
     if (!mapTokenIdToAnnotations.containsKey(an.getBegin() + 1)) {
       if (an.getTokenCount() > 1) {
         final Annotation ani = new Annotation(an.getBegin() + 1,
-            an.getEnd(), an.getType().substring(4), an.getSentence());
+                an.getEnd(), an.getType().substring(4), an.getSentence());
         if (ani.getTokens().contains(an.getHead())) {
           ani.setHead(an.getHead());
         } else {
