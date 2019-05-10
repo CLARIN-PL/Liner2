@@ -1,39 +1,52 @@
 package g419.liner2.core.features.tokens;
 
-import java.util.List;
 
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
+import g419.corpus.structure.Paragraph;
+
+import java.util.HashMap;
+
+public class BaseNumberFeature extends TokenInDocumentFeature {
+
+  public BaseNumberFeature(String name) {
+    super(name);
+  }
+
+  private HashMap<String, Integer> bases = null;
 
 
-public class BaseNumberFeature extends TokenInSentenceFeature{
+  private void countBasesFrequency(final Document document){
+    for (final Paragraph p : document.getParagraphs()) {
+      for (final Sentence s : p.getSentences()) {
+        for (final Token t : s.getTokens()) {
+          final String lemma = t.getAttributeValue("base");
+          if (this.bases.containsKey(lemma)) {
+            this.bases.put(lemma, bases.get(lemma) + 1);
+          } else {
+            this.bases.put(lemma, 1);
+          }
+        }
+      }
+    }
+  }
 
-	public BaseNumberFeature(String name){
-		super(name);
-	}
+  @Override
+  public void generate(final Document document) {
 
+    final int thisFeatureIdx = document.getAttributeIndex().getIndex(getName());
 
-	@Override
-	public void generate(Sentence sentence){
-		int thisFeatureIdx = sentence.getAttributeIndex().getIndex(this.getName());
-		List<Token> tokens = sentence.getTokens();
+    this.countBasesFrequency(document);
 
-		int tokenIdx = 0;
-		while (tokenIdx < sentence.getTokenNumber()) {
-			Token t = tokens.get(tokenIdx);
-			String base = t.getAttributeValue("base");
-			Document d = sentence.getDocument();
-			if (d != null) {
-				int baseCount = d.getBaseCount(base);
-				String baseCountStr = baseCount > 1 ? "1" : "0";
-				t.setAttributeValue(thisFeatureIdx, baseCountStr);
-			}
-			else {
-				t.setAttributeValue(thisFeatureIdx, "0");
-			}
-			tokenIdx++;
-		}
-	}
-
+    for (final Paragraph p : document.getParagraphs()) {
+      for (final Sentence s : p.getSentences()) {
+        for (final Token t : s.getTokens()) {
+          final String base = t.getAttributeValue("base");
+          t.setAttributeValue(thisFeatureIdx, this.bases.get(base) > 1 ? "1" : "0");
+        }
+      }
+    }
+    this.bases = null;
+  }
 }

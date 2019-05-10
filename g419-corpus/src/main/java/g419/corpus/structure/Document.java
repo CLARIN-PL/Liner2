@@ -297,26 +297,6 @@ public class Document{
 		return documentDescriptor;
 	}
 
-	public int getBaseCount(String base){
-		if (this.bases == null){
-			this.bases = new HashMap<>();
-			for (Paragraph p : this.paragraphs){
-				for (Sentence s : p.getSentences()){
-					for (Token t : s.getTokens()){
-						this.tokenNumber += 1;
-						String lemma = t.getAttributeValue("base");
-						if (this.bases.containsKey(lemma))
-							this.bases.put(lemma, this.bases.get(lemma) + 1);
-						else this.bases.put(lemma, 1);
-					}
-				}
-			}
-		}
-		if (this.bases.containsKey(base))
-			return this.bases.get(base);
-		return 0;
-	}
-
 	public int getTokenNumber(){
 		return this.tokenNumber;
 	}
