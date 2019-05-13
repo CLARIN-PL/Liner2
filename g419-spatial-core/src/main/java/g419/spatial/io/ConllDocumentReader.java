@@ -1,12 +1,7 @@
 package g419.spatial.io;
 
-import g419.corpus.io.DataFormatException;
 import g419.corpus.io.reader.AbstractDocumentReader;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-import g419.corpus.structure.TokenAttributeIndex;
+import g419.corpus.structure.*;
 import g419.spatial.structure.NodeToken;
 import org.slf4j.LoggerFactory;
 
@@ -17,111 +12,116 @@ import java.io.InputStreamReader;
 
 public class ConllDocumentReader extends AbstractDocumentReader {
 
-	private BufferedReader ir = null;
-	private TokenAttributeIndex index = null;
-	private Document documentBuffor=null;
-	
-	/**
-	 * Create reader for a file in ConLL format.
-	 * @param is Data input stream
-	 */
-	public ConllDocumentReader(InputStream is){
-		this.ir = new BufferedReader(new InputStreamReader(is));
-		
-		this.index = new TokenAttributeIndex();
-		this.index.addAttribute("orth");
-		this.index.addAttribute("base");
-		this.index.addAttribute("ctag");
-		this.index.addAttribute("pos2");
-		this.index.addAttribute("parent");
-		this.index.addAttribute("relation");
-		documentBuffor = readNextDocument();
-	}
-	
-	@Override
-	public void close() {
-		if ( this.ir != null ) {
-			try {
-				ir.close();
-			} catch (IOException ex) {
-				LoggerFactory.getLogger(getClass()).error("Failed to close the input stream", ex);
-			}
-		}
-	}
+  private BufferedReader ir = null;
+  private TokenAttributeIndex index = null;
+  private Document documentBuffor = null;
 
-	@Override
-	protected TokenAttributeIndex getAttributeIndex() {
-		return this.index;
-	}
+  /**
+   * Create reader for a file in ConLL format.
+   *
+   * @param is Data input stream
+   */
+  public ConllDocumentReader(InputStream is) {
+    this.ir = new BufferedReader(new InputStreamReader(is));
 
-	@Override
-	public Document nextDocument() throws Exception {
-		Document document = documentBuffor;
-		documentBuffor = readNextDocument();
-		return document;
-	}
+    this.index = new TokenAttributeIndex();
+    this.index.addAttribute("orth");
+    this.index.addAttribute("base");
+    this.index.addAttribute("ctag");
+    this.index.addAttribute("pos2");
+    this.index.addAttribute("parent");
+    this.index.addAttribute("relation");
+    documentBuffor = readNextDocument();
+  }
 
-	private Document readNextDocument() {
-		try {
-			Document document = new Document("ConllDocumentReader", this.index);
-			Paragraph paragraph = new Paragraph("p1");
-			document.addParagraph(paragraph);
+  @Override
+  public void close() {
+    if (this.ir != null) {
+      try {
+        ir.close();
+      } catch (IOException ex) {
+        LoggerFactory.getLogger(getClass()).error("Failed to close the input stream", ex);
+      }
+    }
+  }
 
-			String line = null;
-			int sentenceId = 1;
-			Sentence sentence = new Sentence();
-			while ((line = this.ir.readLine()) != null) {
-				line = line.trim();
-				if (line.length() == 0) {
-					if (sentence != null && sentence.getTokenNumber() > 0)
-						paragraph.addSentence(sentence);
-					sentence = new Sentence();
-					sentence.setId("s" + (sentenceId++));
-				} else {
-					String[] fields = line.split("\t");
-					if (fields.length < 8)
-						throw new Exception("Conll format exception for line: " + line);
-					NodeToken token = new NodeToken(this.index);
-					// Orth
-					token.setAttributeValue(0, fields[1]);
-					// Base
-					token.setAttributeValue(1, fields[2]);
-					// Ctag
-					token.setAttributeValue(2,
-							fields[3] + (fields[5].equals("_") ? "" : (":" + fields[5].replace("|", ":"))));
-					// Pos2
-					token.setAttributeValue(3, fields[4]);
-					// Parent
-					token.setAttributeValue(4, fields[6]);
-					// Relation
-					token.setAttributeValue(5, fields[7]);
+  @Override
+  protected TokenAttributeIndex getAttributeIndex() {
+    return this.index;
+  }
 
-					sentence.getTokens().add(token);
-				}
-			}
-			if (sentence != null && sentence.getTokenNumber() > 0)
-				paragraph.addSentence(sentence);
+  @Override
+  public Document nextDocument() throws Exception {
+    Document document = documentBuffor;
+    documentBuffor = readNextDocument();
+    return document;
+  }
 
-			// Setup children i parent nodes
-			int parentAttribute = 4;
-			for (Sentence s : paragraph.getSentences())
-				for (Token token : s.getTokens()) {
-					int parentIndex = Integer.parseInt(token.getAttributeValue(parentAttribute)) - 1;
-					if (parentIndex >= 0) {
-						((NodeToken) token).setParent((NodeToken) s.getTokens().get(parentIndex));
-						((NodeToken) s.getTokens().get(parentIndex)).addChild((NodeToken) token);
-					}
-				}
+  private Document readNextDocument() {
+    try {
+      Document document = new Document("ConllDocumentReader", this.index);
+      Paragraph paragraph = new Paragraph("p1");
+      document.addParagraph(paragraph);
 
-			return document;
-		} catch(Exception ex){
-			return null;
-		}
-	}
+      String line = null;
+      int sentenceId = 1;
+      Sentence sentence = new Sentence();
+      while ((line = this.ir.readLine()) != null) {
+        line = line.trim();
+        if (line.length() == 0) {
+          if (sentence != null && sentence.getTokenNumber() > 0) {
+            paragraph.addSentence(sentence);
+          }
+          sentence = new Sentence();
+          sentence.setId("s" + (sentenceId++));
+        } else {
+          String[] fields = line.split("\t");
+          if (fields.length < 8) {
+            throw new Exception("Conll format exception for line: " + line);
+          }
+          NodeToken token = new NodeToken(this.index);
+          // Orth
+          token.setAttributeValue(0, fields[1]);
+          // Base
+          token.setAttributeValue(1, fields[2]);
+          // Ctag
+          token.setAttributeValue(2,
+              fields[3] + (fields[5].equals("_") ? "" : (":" + fields[5].replace("|", ":"))));
+          // Pos2
+          token.setAttributeValue(3, fields[4]);
+          // Parent
+          token.setAttributeValue(4, fields[6]);
+          // Relation
+          token.setAttributeValue(5, fields[7]);
 
-	@Override
-	public boolean hasNext(){
-		return documentBuffor!=null;
-	}
+          sentence.getTokens().add(token);
+        }
+      }
+      if (sentence != null && sentence.getTokenNumber() > 0) {
+        paragraph.addSentence(sentence);
+      }
+
+      // Setup children i parent nodes
+      int parentAttribute = 4;
+      for (Sentence s : paragraph.getSentences()) {
+        for (Token token : s.getTokens()) {
+          int parentIndex = Integer.parseInt(token.getAttributeValue(parentAttribute)) - 1;
+          if (parentIndex >= 0) {
+            ((NodeToken) token).setParent((NodeToken) s.getTokens().get(parentIndex));
+            ((NodeToken) s.getTokens().get(parentIndex)).addChild((NodeToken) token);
+          }
+        }
+      }
+
+      return document;
+    } catch (Exception ex) {
+      return null;
+    }
+  }
+
+  @Override
+  public boolean hasNext() {
+    return documentBuffor != null;
+  }
 
 }

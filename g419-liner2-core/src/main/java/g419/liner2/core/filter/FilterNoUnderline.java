@@ -8,31 +8,32 @@ import java.util.regex.Pattern;
 
 public class FilterNoUnderline extends Filter {
 
-	private static String hasSymbol = "([_])";
-	private static Pattern pattern = null;
-	
-	public FilterNoUnderline(){
-		this.appliesTo.add("PERSON_FIRST_NAM");
-		this.appliesTo.add("PERSON_LAST_NAM");
-		this.appliesTo.add("CITY_NAM"); 
-		this.appliesTo.add("COUNTRY_NAM");
-		this.appliesTo.add("ROAD_NAM");
-		
-		pattern = Pattern.compile(hasSymbol);
-	}
-	
-	@Override
-	public String getDescription() {
-		return "Does not have any symbol: " + hasSymbol;
-	}
+  private static final String hasSymbol = "([_])";
+  private static Pattern pattern = null;
 
-	@Override
-	public Annotation pass(Annotation chunk, CharSequence charSeq) {
-		Matcher m = pattern.matcher(charSeq);
-		if ( !m.find() )
-			return chunk;
-		else
-			return null;
-	}
+  public FilterNoUnderline() {
+    appliesTo.add("PERSON_FIRST_NAM");
+    appliesTo.add("PERSON_LAST_NAM");
+    appliesTo.add("CITY_NAM");
+    appliesTo.add("COUNTRY_NAM");
+    appliesTo.add("ROAD_NAM");
+
+    pattern = Pattern.compile(hasSymbol);
+  }
+
+  @Override
+  public String getDescription() {
+    return "Does not have any symbol: " + hasSymbol;
+  }
+
+  @Override
+  public Annotation pass(final Annotation chunk, final CharSequence charSeq) {
+    final Matcher m = pattern.matcher(charSeq);
+    if (!m.find()) {
+      return chunk;
+    } else {
+      return null;
+    }
+  }
 
 }

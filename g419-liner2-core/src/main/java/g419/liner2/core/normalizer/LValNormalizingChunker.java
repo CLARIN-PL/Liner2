@@ -1,27 +1,27 @@
 package g419.liner2.core.normalizer;
 
 import g419.corpus.structure.Annotation;
+import g419.liner2.core.normalizer.lval.LValRuleContainer;
 
 import java.util.List;
 import java.util.regex.Pattern;
 
-import g419.liner2.core.normalizer.lval.LValRuleContainer;
-
 public class LValNormalizingChunker extends NormalizingChunker {
-    protected LValRuleContainer ruleContainer;
+  protected LValRuleContainer ruleContainer;
 
-    public LValNormalizingChunker(List<Pattern> normalizedChunkTypes, LValRuleContainer ruleContainer) {
-        super(normalizedChunkTypes);
-        this.ruleContainer = ruleContainer;
-    }
+  public LValNormalizingChunker(List<Pattern> normalizedChunkTypes, LValRuleContainer ruleContainer) {
+    super(normalizedChunkTypes);
+    this.ruleContainer = ruleContainer;
+  }
 
-    @Override
-    public void normalize(Annotation annotation) {
-        if (shouldNormalize(annotation)) {
-            String normalized = ruleContainer.getLVal(annotation);
-            if (normalized != null)
-                annotation.setMetadata("lval", normalized);
-        }
+  @Override
+  public void normalize(Annotation annotation) {
+    if (shouldNormalize(annotation)) {
+      String normalized = ruleContainer.getLVal(annotation);
+      if (normalized != null) {
+        annotation.setMetadata("lval", normalized);
+      }
     }
+  }
 
 }

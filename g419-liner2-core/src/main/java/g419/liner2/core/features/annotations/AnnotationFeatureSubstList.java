@@ -9,24 +9,24 @@ import g419.liner2.core.tools.SentenceTraverse;
  */
 public class AnnotationFeatureSubstList extends AnnotationAtomicFeature {
 
-    /**
-     * 
-     */
-    public AnnotationFeatureSubstList(){
+  /**
+   *
+   */
+  public AnnotationFeatureSubstList() {
+  }
+
+  @Override
+  public String generate(Annotation an) {
+    String value = null;
+    SentenceTraverse st = new SentenceTraverse(an.getSentence());
+    st.setPointer(an.getBegin());
+    if (st.backwardUnitFindBase(":") > 0
+        && st.backwardAny()
+        && st.matchesByPos("subst")) {
+      value = st.getCurrentToken().getDisambTag().getBase();
     }
 
-	@Override
-	public String generate(Annotation an) {
-		String value = null;
-		SentenceTraverse st = new SentenceTraverse(an.getSentence());
-		st.setPointer(an.getBegin());
-		if ( st.backwardUnitFindBase(":") > 0 
-				&& st.backwardAny()
-				&& st.matchesByPos("subst") ){
-			value = st.getCurrentToken().getDisambTag().getBase();
-		}
-		
-	    return value;
-	}
-    
+    return value;
+  }
+
 }

@@ -6,42 +6,41 @@ import java.util.List;
 /**
  * Created by michal on 1/8/15.
  */
-public class WrappedToken extends Token{
-    ArrayList<Token> oldTokens;
-    Sentence oldSentence;
+public class WrappedToken extends Token {
+  ArrayList<Token> oldTokens;
+  Sentence oldSentence;
 
-    public WrappedToken(String orth, Tag firstTag, TokenAttributeIndex attrIdx) {
-        super(orth, firstTag, attrIdx);
-        oldTokens = new ArrayList<Token>();
-    }
+  public WrappedToken(final String orth, final Tag firstTag, final TokenAttributeIndex attrIdx) {
+    super(orth, firstTag, attrIdx);
+    oldTokens = new ArrayList<>();
+  }
 
-    public WrappedToken(String orth, Tag firstTag, TokenAttributeIndex attrIdx, List<Token> oldTokens, Sentence oldSentence) {
-        super(orth, firstTag, attrIdx);
-        this.oldTokens = (ArrayList<Token>) oldTokens;
-        this.oldSentence = oldSentence;
-    }
+  public WrappedToken(final String orth, final Tag firstTag, final TokenAttributeIndex attrIdx, final List<Token> oldTokens, final Sentence oldSentence) {
+    super(orth, firstTag, attrIdx);
+    this.oldTokens = (ArrayList<Token>) oldTokens;
+    this.oldSentence = oldSentence;
+  }
 
-    public void addToken(Token t){
-        oldTokens.add(t);
-    }
+  public void addToken(final Token t) {
+    oldTokens.add(t);
+  }
 
-    public void setOldSentence(Sentence s){
-        oldSentence = s;
+  public void setOldSentence(final Sentence s) {
+    oldSentence = s;
+  }
+
+  public String getFullOrth() {
+    String str = "";
+    for (final Token token : oldTokens) {
+      if (!noSpaceAfter) {
+        str += " ";
+      }
+      if (token instanceof WrappedToken) {
+        str += ((WrappedToken) token).getFullOrth();
+      } else {
+        str += token.getOrth();
+      }
     }
-    
-    public String getFullOrth(){
-    	String str = "";
-    	for ( Token token : oldTokens ){
-    		if ( !this.noSpaceAfter ){
-    			str += " ";
-    		}
-    		if ( token instanceof WrappedToken ){
-    			str += ((WrappedToken)token).getFullOrth();
-    		}
-    		else{
-    			str += token.getOrth();
-    		}
-    	}
-    	return str.trim();
-    }
+    return str.trim();
+  }
 }

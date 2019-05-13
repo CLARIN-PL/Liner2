@@ -11,7 +11,7 @@ import g419.liner2.core.chunker.CrfppChunker;
 import g419.liner2.core.converter.Converter;
 import g419.liner2.core.converter.factory.ConverterFactory;
 import g419.liner2.core.features.TokenFeatureGenerator;
-import g419.liner2.core.tools.CrfppLoader;
+import g419.liner2.core.lib.LibLoaderCrfpp;
 import g419.liner2.core.tools.TemplateFactory;
 import org.ini4j.Ini;
 import org.ini4j.Profile;
@@ -26,157 +26,159 @@ import java.util.regex.Pattern;
 
 public class ChunkerFactoryItemCrfpp extends ChunkerFactoryItem {
 
-	public static final String PARAM_WRAP = "wrap";
-	
-	public ChunkerFactoryItemCrfpp() {
-		super("crfpp");
-	}
+  public static final String PARAM_WRAP = "wrap";
 
-	@Override
-	public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
-        try {
-            CrfppLoader.load();
-        } catch (UnsatisfiedLinkError e) {
-            System.exit(1);
-        }
-        String mode = description.get("mode");
-        TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
-        if(mode.equals("train")){
-            return train(description, cm, gen);
-        } else if(mode.equals("load")){
-            return load(description, cm, gen);
-        } else{
-            throw new Exception("Unrecognized mode for CRFPP chunker: " + mode + "(Valid: train/load)");
-        }
-	}
+  public ChunkerFactoryItemCrfpp() {
+    super("crfpp");
+  }
 
-	/**
-	 * Load the model from a file.
-	 * @param description
-	 * @return
-	 * @throws Exception
-	 */
-    private Chunker load(Profile.Section description, ChunkerManager cm, TokenFeatureGenerator gen) throws Exception {
-        String store = description.get("store");
-        String wrap = description.get(PARAM_WRAP);
+  @Override
+  public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
+    try {
+      LibLoaderCrfpp.load();
+    } catch (UnsatisfiedLinkError e) {
+      System.exit(1);
+    }
+    String mode = description.get("mode");
+    TokenFeatureGenerator gen = new TokenFeatureGenerator(cm.opts.features);
+    if (mode.equals("train")) {
+      return train(description, cm, gen);
+    } else if (mode.equals("load")) {
+      return load(description, cm, gen);
+    } else {
+      throw new Exception("Unrecognized mode for CRFPP chunker: " + mode + "(Valid: train/load)");
+    }
+  }
 
-        ConsolePrinter.log("--> CRFPP Chunker deserialize from " + store);
+  /**
+   * Load the model from a file.
+   *
+   * @param description
+   * @return
+   * @throws Exception
+   */
+  private Chunker load(Profile.Section description, ChunkerManager cm, TokenFeatureGenerator gen) throws Exception {
+    String store = description.get("store");
+    String wrap = description.get(PARAM_WRAP);
 
-        CrfTemplate template = getTemplate(description, cm, gen);
-        List<String> features = description.containsKey("features") ? loadUsedFeatures(description.get("features")) : template.getUsedFeatures();
-        CrfppChunker chunker = new CrfppChunker(features, wrap);
-        chunker.deserialize(store);
-        chunker.setTemplate(template);
-        
-        ConsolePrinter.log("--> CRFPP Chunker deserialize done ");
+    ConsolePrinter.log("--> CRFPP Chunker deserialize from " + store);
 
-        return chunker;
+    CrfTemplate template = getTemplate(description, cm, gen);
+    List<String> features = description.containsKey("features") ? loadUsedFeatures(description.get("features")) : template.getUsedFeatures();
+    CrfppChunker chunker = new CrfppChunker(features, wrap);
+    chunker.deserialize(store);
+    chunker.setTemplate(template);
+
+    ConsolePrinter.log("--> CRFPP Chunker deserialize done ");
+
+    return chunker;
+  }
+
+  /**
+   * Train the chunker and serialize the model to a file.
+   *
+   * @param description
+   * @param cm
+   * @return
+   * @throws Exception
+   */
+  private Chunker train(Profile.Section description, ChunkerManager cm, TokenFeatureGenerator gen) throws Exception {
+    ConsolePrinter.log("--> CRFPP Chunker train");
+    String wrap = description.get(PARAM_WRAP);
+
+    Converter trainingDataConverter = null;
+    if (description.containsKey("training-data-converter")) {
+      ArrayList<String> converters = new ArrayList<String>();
+      for (String in : description.get("training-data-converter").split(",")) {
+        converters.add(in);
+      }
+      trainingDataConverter = ConverterFactory.createPipe(converters);
     }
 
-    /**
-     * Train the chunker and serialize the model to a file.
-     * @param description
-     * @param cm
-     * @return
-     * @throws Exception
-     */
-    private Chunker train(Profile.Section description, ChunkerManager cm, TokenFeatureGenerator gen) throws Exception {
-        ConsolePrinter.log("--> CRFPP Chunker train");
-        String wrap = description.get(PARAM_WRAP);
+    int threads = Integer.parseInt(description.get("threads"));
+    String inputFile = description.get("training-data");
+    String inputFormat;
+    String modelFilename = description.get("store");
 
-        Converter trainingDataConverter = null;
-        if ( description.containsKey("training-data-converter") ){
-        	ArrayList<String> converters = new ArrayList<String>();
-        	for ( String in : description.get("training-data-converter").split(","))
-        		converters.add(in);
-        	trainingDataConverter = ConverterFactory.createPipe(converters);
+    ArrayList<Document> trainData = new ArrayList<Document>();
+
+    // Setup training data
+    if (inputFile.equals("{CV_TRAIN}")) {
+      if (trainingDataConverter != null) {
+        for (Document doc : cm.trainingData) {
+          Document docClone = doc.clone();
+          trainingDataConverter.apply(docClone);
+          trainData.add(docClone);
         }
-        
-        int threads = Integer.parseInt(description.get("threads"));
-        String inputFile = description.get("training-data");
-        String inputFormat;
-        String modelFilename = description.get("store");
-
-        ArrayList<Document> trainData = new ArrayList<Document>();
-
-        // Setup training data 
-        if(inputFile.equals("{CV_TRAIN}")){
-        	if ( trainingDataConverter != null ){
-        		for ( Document doc : cm.trainingData ){
-        			Document docClone = doc.clone();
-        			trainingDataConverter.apply(docClone);
-        			trainData.add(docClone);
-        		}        			
-        	}
-        	else{
-        		trainData = cm.trainingData;
-        	}
+      } else {
+        trainData = cm.trainingData;
+      }
+    } else {
+      inputFormat = description.get("format");
+      AbstractDocumentReader reader =
+          ReaderFactory.get().getStreamReader(inputFile, inputFormat);
+      Document document = reader.nextDocument();
+      while (document != null) {
+        gen.generateFeatures(document);
+        if (trainingDataConverter != null) {
+          trainingDataConverter.apply(document);
         }
-        else{
-            inputFormat = description.get("format");
-            AbstractDocumentReader reader = 
-            		ReaderFactory.get().getStreamReader(inputFile, inputFormat);
-            Document document = reader.nextDocument();
-            while ( document != null ){
-                gen.generateFeatures(document);
-                if ( trainingDataConverter != null )
-                	trainingDataConverter.apply(document);
-                trainData.add(document);
-                document = reader.nextDocument();
-            }
-        }
-        
-        List<Pattern> types = new ArrayList<Pattern>();
-        if ( description.containsKey("types")) {
-            types = LinerOptions.getGlobal().parseTypes(description.get("types"));
-        }
-
-        ConsolePrinter.log("--> Training on file=" + inputFile);
-
-        CrfTemplate template = getTemplate(description, cm, gen);
-        List<String> features = description.containsKey("features") ? loadUsedFeatures(description.get("features")) : template.getUsedFeatures();
-        CrfppChunker chunker = new CrfppChunker(threads, types, features, wrap);
-
-        chunker.setTemplate(template);
-
-        chunker.setTrainingDataFilename(description.get("store-training-data"));
-        chunker.setModelFilename(modelFilename);
-
-        for(Document document: trainData)
-             chunker.addTrainingData(document);
-        chunker.train();
-
-        return chunker;
+        trainData.add(document);
+        document = reader.nextDocument();
+      }
     }
 
-    private List<String> loadUsedFeatures(String file) throws IOException {
-        List<String> usedFeatures = new ArrayList<>();
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        String line = reader.readLine();
-        while(line != null){
-            if(!(line.isEmpty() || line.startsWith("#"))){
-                usedFeatures.add(line.trim());
-            }
-            line = reader.readLine();
-        }
-        return usedFeatures;
+    List<Pattern> types = new ArrayList<Pattern>();
+    if (description.containsKey("types")) {
+      types = LinerOptions.getGlobal().parseTypes(description.get("types"));
     }
 
-    private CrfTemplate getTemplate(Ini.Section description, ChunkerManager cm, TokenFeatureGenerator gen) throws Exception {
-        String templateData = description.get("template");
+    ConsolePrinter.log("--> Training on file=" + inputFile);
 
-        String chunkerName = description.getName().substring(8);
-        CrfTemplate template = cm.getChunkerTemplate(chunkerName);
-        if(template != null){
-            template.setAttributeIndex(gen.getAttributeIndex());
-        }
-        else if(!templateData.equals("null")){
-            template = TemplateFactory.parseTemplate(templateData);
+    CrfTemplate template = getTemplate(description, cm, gen);
+    List<String> features = description.containsKey("features") ? loadUsedFeatures(description.get("features")) : template.getUsedFeatures();
+    CrfppChunker chunker = new CrfppChunker(threads, types, features, wrap);
 
+    chunker.setTemplate(template);
 
-            template.setAttributeIndex(gen.getAttributeIndex());
-        }
-        return template;
+    chunker.setTrainingDataFilename(description.get("store-training-data"));
+    chunker.setModelFilename(modelFilename);
+
+    for (Document document : trainData) {
+      chunker.addTrainingData(document);
     }
+    chunker.train();
+
+    return chunker;
+  }
+
+  private List<String> loadUsedFeatures(String file) throws IOException {
+    List<String> usedFeatures = new ArrayList<>();
+    BufferedReader reader = new BufferedReader(new FileReader(file));
+    String line = reader.readLine();
+    while (line != null) {
+      if (!(line.isEmpty() || line.startsWith("#"))) {
+        usedFeatures.add(line.trim());
+      }
+      line = reader.readLine();
+    }
+    return usedFeatures;
+  }
+
+  private CrfTemplate getTemplate(Ini.Section description, ChunkerManager cm, TokenFeatureGenerator gen) throws Exception {
+    String templateData = description.get("template");
+
+    String chunkerName = description.getName().substring(8);
+    CrfTemplate template = cm.getChunkerTemplate(chunkerName);
+    if (template != null) {
+      template.setAttributeIndex(gen.getAttributeIndex());
+    } else if (!templateData.equals("null")) {
+      template = TemplateFactory.parseTemplate(templateData);
+
+
+      template.setAttributeIndex(gen.getAttributeIndex());
+    }
+    return template;
+  }
 
 }
