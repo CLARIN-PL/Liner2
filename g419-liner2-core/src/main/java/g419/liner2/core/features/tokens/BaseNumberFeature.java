@@ -14,18 +14,21 @@ public class BaseNumberFeature extends TokenInDocumentFeature {
     super(name);
   }
 
-  private HashMap<String, Integer> bases = null;
+  private HashMap<String, Integer> baseCount = null;
 
+  public int getBaseCount(final String base){
+    return this.baseCount.get(base);
+  }
 
   private void countBasesFrequency(final Document document){
     for (final Paragraph p : document.getParagraphs()) {
       for (final Sentence s : p.getSentences()) {
         for (final Token t : s.getTokens()) {
           final String lemma = t.getAttributeValue("base");
-          if (this.bases.containsKey(lemma)) {
-            this.bases.put(lemma, bases.get(lemma) + 1);
+          if (this.baseCount.containsKey(lemma)) {
+            this.baseCount.put(lemma, baseCount.get(lemma) + 1);
           } else {
-            this.bases.put(lemma, 1);
+            this.baseCount.put(lemma, 1);
           }
         }
       }
@@ -43,10 +46,9 @@ public class BaseNumberFeature extends TokenInDocumentFeature {
       for (final Sentence s : p.getSentences()) {
         for (final Token t : s.getTokens()) {
           final String base = t.getAttributeValue("base");
-          t.setAttributeValue(thisFeatureIdx, this.bases.get(base) > 1 ? "1" : "0");
+          t.setAttributeValue(thisFeatureIdx, this.baseCount.get(base) > 1 ? "1" : "0");
         }
       }
     }
-    this.bases = null;
   }
 }
