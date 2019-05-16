@@ -11,40 +11,41 @@ import java.io.OutputStreamWriter;
 
 public class SimpleRelationClusterSetWriter extends AbstractDocumentWriter {
 
-	private BufferedWriter writer;
-	
-	public SimpleRelationClusterSetWriter(OutputStream os){
-		this.writer = new BufferedWriter(new OutputStreamWriter(os));
-	}
-	
-	
-	@Override
-	public void writeDocument(Document document) {
-		for(AnnotationCluster cluster : AnnotationClusterSet.fromRelationSet(document.getRelations()).getClusters())
-			try {
-				writer.write(cluster.toString() + "\n");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	}
+  private final BufferedWriter writer;
 
-	@Override
-	public void flush() {
-		try {
-			this.writer.flush();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
+  public SimpleRelationClusterSetWriter(final OutputStream os) {
+    writer = new BufferedWriter(new OutputStreamWriter(os));
+  }
 
-	@Override
-	public void close() {
-		try {
-			writer.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+
+  @Override
+  public void writeDocument(final Document document) {
+    for (final AnnotationCluster cluster : AnnotationClusterSet.fromRelationSet(document.getRelations()).getClusters()) {
+      try {
+        writer.write(cluster.toString() + "\n");
+      } catch (final IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+  }
+
+  @Override
+  public void flush() {
+    try {
+      writer.flush();
+    } catch (final IOException ex) {
+      ex.printStackTrace();
+    }
+  }
+
+  @Override
+  public void close() {
+    try {
+      writer.flush();
+    } catch (final IOException e) {
+      e.printStackTrace();
+    }
+  }
 
 }

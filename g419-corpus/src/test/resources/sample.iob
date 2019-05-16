@@ -1,0 +1,41 @@
+-DOCSTART CONFIG FEATURES orth base ctag
+-DOCSTART FILE file1
+Toronto	Toronto	subst:sg:nom:n	B-chunk_agp#B-chunk_app#B-chunk_np#B-nam_fac_goe#B-chunk_head_agp#B-chunk_head_np#B-nam_loc_gpe_city
+Dominion	dominion	subst:sg:nom:n	I-chunk_agp#I-chunk_app#I-chunk_np#I-nam_fac_goe
+Centre	centre	subst:sg:nom:n	I-chunk_agp#I-chunk_app#I-chunk_np#I-nam_fac_goe
+
+-DOCSTART FILE file2
+Toronto	Toronto	subst:sg:nom:n	B-chunk_agp#B-chunk_app#B-chunk_np#B-keyword#B-nam_fac_goe#B-chunk_head_agp#B-chunk_head_np#B-nam_loc_gpe_city
+Dominion	dominion	subst:sg:nom:n	I-chunk_agp#I-chunk_app#I-chunk_np#I-keyword#I-nam_fac_goe
+Centre	centre	subst:sg:nom:n	I-chunk_agp#I-chunk_app#I-chunk_np#I-keyword#I-nam_fac_goe
+-	-	interp	O
+kompleks	kompleks	subst:sg:nom:m3	B-chunk_np#B-chunk_agp#B-keyword#B-chunk_head_agp#B-chunk_head_np#B-spatial_object
+handlowo	handlowo	adv:pos	I-chunk_np#I-chunk_agp#I-keyword
+-	-	interp	I-chunk_np#I-chunk_agp#I-keyword
+kulturalny	kulturalny	adj:sg:nom:m1:pos	I-chunk_np#I-chunk_agp#I-keyword
+w	w	prep:loc:nwok	I-chunk_np#B-chunk_agp#B-chunk_app#B-spatial_indicator_3
+kanadyjskim	kanadyjski	adj:sg:loc:n:pos	I-chunk_np#I-chunk_agp#I-chunk_app#B-nam_adj_country
+mieście	miasto	subst:sg:loc:n	I-chunk_np#I-chunk_agp#I-chunk_app#B-chunk_head_agp#B-spatial_object
+Toronto	Toronto	subst:sg:nom:n	I-chunk_np#I-chunk_agp#I-chunk_app#B-nam_loc_gpe_city
+,	,	interp	I-chunk_np
+w	w	prep:loc:nwok	I-chunk_np#B-chunk_agp#B-chunk_app#B-spatial_indicator_3
+Financial	financial	subst:sg:loc:n	I-chunk_np#I-chunk_agp#I-chunk_app#B-nam_loc_gpe_district#B-chunk_head_agp#B-spatial_object
+District	district	subst:sg:loc:n	I-chunk_np#I-chunk_agp#I-chunk_app#I-nam_loc_gpe_district
+.	.	interp	O
+
+Składa	składać	fin:sg:ter:imperf	B-chunk_vp#B-anafora_verb_null#B-anafora_wyznacznik#B-chunk_head_vp
+się	się	qub	I-chunk_vp
+z	z	prep:gen:nwok	B-chunk_np#B-chunk_agp
+3	3	num:pl:gen:m3:congr	I-chunk_np#I-chunk_agp#B-chunk_head_agp#B-chunk_head_np#B-chunk_numord
+czarnych	czarny	adj:pl:gen:m3:pos	I-chunk_np#I-chunk_agp#B-wsd_czarny
+budynków	budynek	subst:pl:gen:m3	I-chunk_np#I-chunk_agp
+,	,	interp	I-chunk_np#I-chunk_agp
+zaprojektowanych	zaprojektować	ppas:pl:gen:m3:perf:aff	I-chunk_np#I-chunk_agp
+przez	przez	prep:acc:nwok	I-chunk_np#B-chunk_agp
+architekta	architekt	subst:sg:acc:m1	I-chunk_np#I-chunk_agp#B-chunk_head_agp
+Ludwiga	Ludwig	subst:sg:acc:m1	I-chunk_np#I-chunk_agp#B-keyword#B-nam_liv_person#B-nam_liv_person_first
+Mies	mies	subst:sg:acc:m1	I-chunk_np#I-chunk_agp#I-keyword#I-nam_liv_person#B-nam_liv_person_last
+van	van	subst:sg:nom:m2	I-chunk_np#I-chunk_agp#I-keyword#I-nam_liv_person
+der	dera	subst:pl:gen:f	I-chunk_np#I-chunk_agp#I-keyword#I-nam_liv_person
+Rohe	rohe	subst:sg:gen:m2	I-chunk_np#I-chunk_agp#I-keyword#I-nam_liv_person#B-nam_liv_person_last
+.	.	interp	O

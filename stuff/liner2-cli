@@ -1,6 +1,0 @@
-# Get liner2 location
-DIR="$( cd "$( dirname "$0" )" && pwd )"
-
-# Run g419-liner2-cli
-java -Xmx4024M -cp -Djava.library.path=$DIR/libs -jar $DIR/libs/g419-liner2-cli-2.5-SNAPSHOT-all.jar $@
-

@@ -1,6 +1,6 @@
 description = "g419-spatial-core"
 
-repositories{
+repositories {
     mavenCentral()
     maven {
         url "http://streamreasoning.org/maven/"
