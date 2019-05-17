@@ -17,6 +17,14 @@ import java.util.stream.Collectors;
  */
 public class SpatialExpression {
 
+  public static String LANDMARK = "landmark";
+
+  public static String TRAJECTOR = "trajector";
+
+  public static String SPATIAL_INDICATOR = "spatial_indicator";
+
+  public static String MOTION_INDICATOR = "motion_indicator";
+
   final private SpatialObjectRegion trajector = new SpatialObjectRegion();
   final private SpatialObjectRegion landmark = new SpatialObjectRegion();
   final private Set<Annotation> directions = Sets.newHashSet();

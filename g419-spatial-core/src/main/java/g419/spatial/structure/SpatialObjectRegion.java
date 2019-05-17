@@ -1,6 +1,7 @@
 package g419.spatial.structure;
 
 import g419.corpus.structure.Annotation;
+import g419.spatial.tools.Nuller;
 
 import java.util.StringJoiner;
 
@@ -24,6 +25,14 @@ public class SpatialObjectRegion {
 
   public Annotation getSpatialObject() {
     return spatialObject;
+  }
+
+  public String getSpatialObjectHeadPos() {
+    return Nuller.resolve(() -> getSpatialObject().getHeadToken().getDisambTag().getPos()).orElse("");
+  }
+
+  public String getSpatialObjectHeadBase() {
+    return Nuller.resolve(() -> getSpatialObject().getHeadToken().getDisambTag().getBase()).orElse("");
   }
 
   @Override

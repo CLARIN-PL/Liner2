@@ -8,6 +8,7 @@ import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
+import g419.corpus.utils.SentencePrinter;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.lib.cli.ParameterException;
@@ -16,6 +17,7 @@ import g419.liner2.core.tools.FscoreEvaluator;
 import g419.liner2.core.tools.parser.MaltParser;
 import g419.spatial.converter.DocumentToSpatialExpressionConverter;
 import g419.spatial.structure.SpatialExpression;
+import g419.spatial.structure.SpatialObjectRegion;
 import g419.spatial.tools.*;
 import g419.toolbox.sumo.Sumo;
 import g419.toolbox.wordnet.Wordnet3;
@@ -50,6 +52,9 @@ public class ActionEval2 extends Action {
 
   private final Set<String> elementsToIgnoreByPos = Sets.newHashSet();
   private final Set<String> elementsToIgnoreByBase = Sets.newHashSet("ten", "który", "drugi", "jeden");
+
+  private static final String LABEL_SPATIAL = "label-spatial";
+  private static final String LABEL_OTHER = "label-other";
 
   /**
    *
@@ -104,7 +109,33 @@ public class ActionEval2 extends Action {
     printEvaluationResult();
   }
 
+  private void evaluateDocument(final Document document) {
+    Stream.of(document)
+        .peek(doc -> printHeader1("Document: " + doc.getName()))
+        .map(converter::convert)
+        .flatMap(Collection::stream)
+        .filter(this::notIgnoredElement)
+        .filter(e -> e.getWidth() < 6)
+        .peek(evalTotalSemanticFilters::addGold)
+        .forEach(evalTotalCandidates::addGold);
+
+    document.getSentences().stream()
+        .peek(sentence -> printHeader1("Sentence"))
+        .peek(sentence -> printHeader2("" + sentence))
+        .peek(this::printSentenceAnnotations)
+        .peek(this::evaluateSentence)
+        .forEach(sentence -> printHeader2("" + sentence));
+  }
+
   private void printEvaluationResult() {
+    printHeader1("TSV data");
+    evalTotalCandidates.getTruePositives().stream()
+        .map(se -> formatSpatialExpressionAsTsvWithLabel(se, LABEL_SPATIAL))
+        .forEach(System.out::println);
+    evalTotalCandidates.getFalsePositives().stream()
+        .map(se -> formatSpatialExpressionAsTsvWithLabel(se, LABEL_OTHER))
+        .forEach(System.out::println);
+
     printHeader1("With semantic constraints on trajector and landmark");
     evalTotalSemanticFilters.getConfusionMatrix().printTotal();
 
@@ -134,34 +165,24 @@ public class ActionEval2 extends Action {
     maltparserModel.ifPresent(m -> recognizer.withMaltParser(new MaltParser(m)));
   }
 
-  private void evaluateDocument(final Document document) {
-    Stream.of(document)
-        .peek(doc -> printHeader1("Document: " + doc.getName()))
-        .map(converter::convert)
-        .flatMap(Collection::stream)
-        .filter(this::notIgnoredElement)
-        .filter(e -> e.getWidth() < 6)
-        .peek(evalTotalSemanticFilters::addGold)
-        .forEach(evalTotalCandidates::addGold);
-
-    document.getSentences().stream()
-        .peek(sentence -> printHeader2("Sentence: " + sentence))
-        .peek(this::evaluateSentence)
-        .forEach(sentence -> printHeader2("Sentence: " + sentence));
-  }
-
   private boolean notIgnoredElement(final SpatialExpression se) {
-    if (!elementsToIgnoreByPos.contains(Nuller.resolve(() -> se.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getPos()).orElse(""))
-        && !elementsToIgnoreByBase.contains(Nuller.resolve(() -> se.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase()).orElse(""))
-        && !elementsToIgnoreByPos.contains(Nuller.resolve(() -> se.getTrajector().getSpatialObject().getHeadToken().getDisambTag().getPos()).orElse(""))
-        && !elementsToIgnoreByBase.contains(Nuller.resolve(() -> se.getTrajector().getSpatialObject().getHeadToken().getDisambTag().getBase()).orElse(""))
-        && objectPos.contains(Nuller.resolve(() -> se.getTrajector().getSpatialObject().getHeadToken().getDisambTag().getPos()).orElse(""))
-        && objectPos.contains(Nuller.resolve(() -> se.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getPos()).orElse(""))) {
+    if (notIngoredElement(se.getLandmark()) && notIngoredElement(se.getTrajector())) {
       return true;
     } else {
       getLogger().debug("IGNORED: " + se.toString());
       return false;
     }
+  }
+
+  private boolean notIngoredElement(final SpatialObjectRegion object) {
+    return !elementsToIgnoreByPos.contains(object.getSpatialObjectHeadPos())
+        && !elementsToIgnoreByBase.contains(object.getSpatialObjectHeadBase())
+        && objectPos.contains(object.getSpatialObjectHeadPos());
+  }
+
+  private void printSentenceAnnotations(final Sentence sentence) {
+    final SentencePrinter printer = new SentencePrinter(sentence);
+    printer.getLinesWithAnnotationsByGroup("group").forEach(System.out::println);
   }
 
   private void evaluateSentence(final Sentence sentence) {
@@ -181,6 +202,16 @@ public class ActionEval2 extends Action {
   private String formatLogFalseNegative(final SpatialExpression se, final String type) {
     return String.format("[%s] FalseNegative: %s [key=%s] [width=%d]",
         type, se.toString(), keyGenerator.generateKey(se), se.getWidth());
+  }
+
+  private String formatSpatialExpressionAsTsvWithLabel(final SpatialExpression se, final String label) {
+    final StringJoiner sj = new StringJoiner("\t");
+    sj.add(se.getTrajector().getSpatialObject().getHeadToken().getOrth());
+    sj.add(se.getMotionIndicator() != null ? se.getMotionIndicator().getText() : "");
+    sj.add(se.getSpatialIndicator().getText());
+    sj.add(se.getLandmark().getSpatialObject().getHeadToken().getOrth());
+    sj.add(label);
+    return sj.toString();
   }
 
   private void evaluateCandidate(final SpatialExpression candidate) {

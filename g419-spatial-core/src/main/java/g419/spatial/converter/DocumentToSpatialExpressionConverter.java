@@ -25,11 +25,13 @@ public class DocumentToSpatialExpressionConverter {
    * Annotation type which represents spatial objects
    */
   private final String annotationSpatialObject = "spatial_object3";
+  //private final String annotationSpatialObject = "spatial_object";
 
   /**
    * Annotation type which represents spatial indicator
    */
   private final String annotationSpatialIndicator = "spatial_indicator3";
+  //private final String annotationSpatialIndicator = "spatial_indicator_3";
 
   private final String annotationRegion = "region3";
 
