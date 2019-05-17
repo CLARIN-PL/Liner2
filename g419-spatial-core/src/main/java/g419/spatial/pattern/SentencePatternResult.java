@@ -10,44 +10,44 @@ import java.util.stream.IntStream;
 
 public class SentencePatternResult {
 
-    final TreeSet<Integer> matchedTokens = Sets.newTreeSet();
-    final LinkedHashSet<Annotation> matchedAnnotations = Sets.newLinkedHashSet();
+  final TreeSet<Integer> matchedTokens = Sets.newTreeSet();
+  final LinkedHashSet<Annotation> matchedAnnotations = Sets.newLinkedHashSet();
 
-    public boolean matched() {
-        return matchedTokens.size() > 0;
-    }
+  public boolean matched() {
+    return matchedTokens.size() > 0;
+  }
 
-    public Integer getMatchEnd() {
-        return matchedTokens.last();
-    }
+  public Integer getMatchEnd() {
+    return matchedTokens.last();
+  }
 
-    public void addToken(final int tokenIndex) {
-        matchedTokens.add(tokenIndex);
-    }
+  public void addToken(final int tokenIndex) {
+    matchedTokens.add(tokenIndex);
+  }
 
-    public void addTokes(final int beginIndex, final int endIndex) {
-        IntStream.rangeClosed(beginIndex, endIndex).forEach(matchedTokens::add);
-    }
+  public void addTokes(final int beginIndex, final int endIndex) {
+    IntStream.rangeClosed(beginIndex, endIndex).forEach(matchedTokens::add);
+  }
 
-    public void addTokes(final Collection<Integer> tokens) {
-        matchedTokens.addAll(tokens);
-    }
+  public void addTokes(final Collection<Integer> tokens) {
+    matchedTokens.addAll(tokens);
+  }
 
-    public TreeSet<Integer> getTokens() {
-        return matchedTokens;
-    }
+  public TreeSet<Integer> getTokens() {
+    return matchedTokens;
+  }
 
-    public LinkedHashSet<Annotation> getAnnotations() {
-        return matchedAnnotations;
-    }
+  public LinkedHashSet<Annotation> getAnnotations() {
+    return matchedAnnotations;
+  }
 
-    public void addAnnotation(final Annotation annotation) {
-        matchedAnnotations.add(annotation);
-        matchedTokens.addAll(annotation.getTokens());
-    }
+  public void addAnnotation(final Annotation annotation) {
+    matchedAnnotations.add(annotation);
+    matchedTokens.addAll(annotation.getTokens());
+  }
 
-    public void mergeWith(final SentencePatternResult result) {
-        addTokes(result.getTokens());
-        result.getAnnotations().forEach(this::addAnnotation);
-    }
+  public void mergeWith(final SentencePatternResult result) {
+    addTokes(result.getTokens());
+    result.getAnnotations().forEach(this::addAnnotation);
+  }
 }

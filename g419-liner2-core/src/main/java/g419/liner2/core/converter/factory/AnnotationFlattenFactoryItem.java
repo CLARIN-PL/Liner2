@@ -13,28 +13,28 @@ import java.util.List;
 
 public class AnnotationFlattenFactoryItem extends ConverterFactoryItem {
 
-    public AnnotationFlattenFactoryItem() {
-        super("annotation-flatten:(.*\\.txt)");
+  public AnnotationFlattenFactoryItem() {
+    super("annotation-flatten:(.*\\.txt)");
+  }
+
+  @Override
+  public Converter getConverter() throws ParameterException {
+    final List<String> categories = Lists.newArrayList();
+    final String filename = matcher.group(1);
+    final File file = new File(filename);
+    if (!file.exists()) {
+      throw new ParameterException(String.format("The file %s given as a parameter of annotation-flatten does not exists", filename));
     }
 
-    @Override
-    public Converter getConverter() throws ParameterException {
-        final List<String> categories = Lists.newArrayList();
-        final String filename = matcher.group(1);
-        final File file = new File(filename);
-        if (!file.exists()) {
-            throw new ParameterException(String.format("The file %s given as a parameter of annotation-flatten does not exists", filename));
-        }
-
-        try (final BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line = br.readLine();
-            while (line != null) {
-                categories.add(line);
-                line = br.readLine();
-            }
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
-        return new AnnotationFlattenConverter(categories);
+    try (final BufferedReader br = new BufferedReader(new FileReader(file))) {
+      String line = br.readLine();
+      while (line != null) {
+        categories.add(line);
+        line = br.readLine();
+      }
+    } catch (final IOException e) {
+      throw new RuntimeException(e);
     }
+    return new AnnotationFlattenConverter(categories);
+  }
 }

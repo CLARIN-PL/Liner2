@@ -5,10 +5,10 @@ package g419.liner2.core.features.annotations;
  */
 public abstract class AnnotationFeature {
 
-    public String name;
+  public String name;
 
-    public void setFeatureName(String featureDesc){
-        name = featureDesc.replace("/", ">");
-        name = name.replace(":", "-");
-    }
+  public void setFeatureName(final String featureDesc) {
+    name = featureDesc.replace("/", ">");
+    name = name.replace(":", "-");
+  }
 }

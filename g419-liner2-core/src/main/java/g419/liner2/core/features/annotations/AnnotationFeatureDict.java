@@ -20,54 +20,54 @@ import java.util.List;
  */
 public class AnnotationFeatureDict extends AnnotationAtomicFeature {
 
-    private HashSet<String> entries;
-    private String form;
+  private HashSet<String> entries;
+  private String form;
 
-    public AnnotationFeatureDict(String dictFile, String form){
-        entries = new HashSet<String>();
-        this.form = form;
+  public AnnotationFeatureDict(String dictFile, String form) {
+    entries = new HashSet<String>();
+    this.form = form;
 
-        try{
-            BufferedReader br = null;
-            try {
-                br = new BufferedReader(new FileReader(dictFile));
-                String line = br.readLine();
-                while (line != null) {
-                    entries.add(line.toLowerCase());
-                    line = br.readLine();
-                }
-            } catch (FileNotFoundException e) {
-              System.out.println("Dictionary file not found: "+dictFile);
-            } finally {
-                br.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    try {
+      BufferedReader br = null;
+      try {
+        br = new BufferedReader(new FileReader(dictFile));
+        String line = br.readLine();
+        while (line != null) {
+          entries.add(line.toLowerCase());
+          line = br.readLine();
         }
-
+      } catch (FileNotFoundException e) {
+        System.out.println("Dictionary file not found: " + dictFile);
+      } finally {
+        br.close();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
     }
 
-    @Override
-    public String generate(Annotation an) {
-        String annotationText = null;
-        if(form.equals("orth"))
-            annotationText = an.getText();
-        else if(form.equals("base"))
-            annotationText = an.getBaseText();
+  }
 
-        if(entries.contains(annotationText.toLowerCase())){
-            return "E";
-        }
-        else{
-            List<Token> sentenceTokens = an.getSentence().getTokens();
-            for(int tokenIdx: an.getTokens()){
-                String tokenText = sentenceTokens.get(tokenIdx).getAttributeValue(form).toLowerCase();
-                if(entries.contains(tokenText)){
-                    return "C";
-                }
-            }
-            return "O";
-        }
-
+  @Override
+  public String generate(Annotation an) {
+    String annotationText = null;
+    if (form.equals("orth")) {
+      annotationText = an.getText();
+    } else if (form.equals("base")) {
+      annotationText = an.getBaseText();
     }
+
+    if (entries.contains(annotationText.toLowerCase())) {
+      return "E";
+    } else {
+      List<Token> sentenceTokens = an.getSentence().getTokens();
+      for (int tokenIdx : an.getTokens()) {
+        String tokenText = sentenceTokens.get(tokenIdx).getAttributeValue(form).toLowerCase();
+        if (entries.contains(tokenText)) {
+          return "C";
+        }
+      }
+      return "O";
+    }
+
+  }
 }

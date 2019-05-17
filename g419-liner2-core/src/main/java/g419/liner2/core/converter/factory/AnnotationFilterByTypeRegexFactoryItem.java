@@ -7,12 +7,12 @@ import java.util.regex.Pattern;
 
 public class AnnotationFilterByTypeRegexFactoryItem extends ConverterFactoryItem {
 
-    public AnnotationFilterByTypeRegexFactoryItem() {
-        super("annotation-filter-by-type-regex:(.*)");
-    }
+  public AnnotationFilterByTypeRegexFactoryItem() {
+    super("annotation-filter-by-type-regex:(.*)");
+  }
 
-    @Override
-    public Converter getConverter() {
-        return new AnnotationFilterByTypeRegexConverter(Pattern.compile("^" + matcher.group(1) + "$"));
-    }
+  @Override
+  public Converter getConverter() {
+    return new AnnotationFilterByTypeRegexConverter(Pattern.compile("^" + matcher.group(1) + "$"));
+  }
 }

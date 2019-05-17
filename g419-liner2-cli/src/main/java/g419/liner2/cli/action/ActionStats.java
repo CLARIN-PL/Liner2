@@ -10,54 +10,53 @@ import org.apache.commons.cli.CommandLine;
 
 /**
  * Prints corpora statistics.
- * 
- * @author Michał Marcińczuk
  *
+ * @author Michał Marcińczuk
  */
-public class ActionStats extends Action{
+public class ActionStats extends Action {
 
-    private String input_file = null;
-    private String input_format = null;
+  private String input_file = null;
+  private String input_format = null;
 
-	public ActionStats(){
-		super("stats");
-        this.setDescription("prints corpus statistics");
-        this.options.addOption(CommonOptions.getInputFileFormatOption());
-        this.options.addOption(CommonOptions.getInputFileNameOption());
-	}
+  public ActionStats() {
+    super("stats");
+    this.setDescription("prints corpus statistics");
+    this.options.addOption(CommonOptions.getInputFileFormatOption());
+    this.options.addOption(CommonOptions.getInputFileNameOption());
+  }
 
-	@Override
-	public void parseOptions(final CommandLine line) throws Exception {
-        this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
-        this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
-	}
-	
-	/**
-	 * Module entry function.
-	 * 
-	 * Loads annotation recognizers.
-	 */
-	public void run() throws Exception{
-		AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(this.input_file, this.input_format);
-		Document document = null;
-		int documents = 0;
-		int sentences = 0;
-		int tokens = 0;
-		int annotations = 0;
-		while ( (document = reader.nextDocument()) != null ){	
-			documents++;
-			for ( Sentence sentence : document.getSentences() ){
-				sentences++;
-				tokens += sentence.getTokenNumber();
-				annotations += sentence.getChunks().size();
-			}			
-		}
+  @Override
+  public void parseOptions(final CommandLine line) throws Exception {
+    this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
+    this.input_format = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
+  }
 
-		String line = "%20s: %10d";
-		System.out.println(String.format(line, "Documents", documents));
-		System.out.println(String.format(line, "Sentences", sentences));
-		System.out.println(String.format(line, "Tokens", tokens));
-		System.out.println(String.format(line, "Annotations", annotations));
-	}
-		
+  /**
+   * Module entry function.
+   * <p>
+   * Loads annotation recognizers.
+   */
+  public void run() throws Exception {
+    AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(this.input_file, this.input_format);
+    Document document = null;
+    int documents = 0;
+    int sentences = 0;
+    int tokens = 0;
+    int annotations = 0;
+    while ((document = reader.nextDocument()) != null) {
+      documents++;
+      for (Sentence sentence : document.getSentences()) {
+        sentences++;
+        tokens += sentence.getTokenNumber();
+        annotations += sentence.getChunks().size();
+      }
+    }
+
+    String line = "%20s: %10d";
+    System.out.println(String.format(line, "Documents", documents));
+    System.out.println(String.format(line, "Sentences", sentences));
+    System.out.println(String.format(line, "Tokens", tokens));
+    System.out.println(String.format(line, "Annotations", annotations));
+  }
+
 }

@@ -28,11 +28,11 @@ public class LibLoaderPolem extends LibLoader {
 //        }
 //    }
 
-    /**
-     * Loads default crfpp module if not loaded.
-     */
-    public static void load() {
-        LibLoader.load("libPolemJava.so");
-    }
+  /**
+   * Loads default crfpp module if not loaded.
+   */
+  public static void load() {
+    LibLoader.load("libPolemJava.so");
+  }
 
 }

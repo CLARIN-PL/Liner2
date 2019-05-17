@@ -17,81 +17,87 @@ import java.util.Map;
  * @author Jan Kocoń
  */
 public class JsonAnnotationsStreamWriter extends AbstractDocumentWriter {
-	private BufferedWriter ow;
-	private int sentenceOffset = 0;
+  private final BufferedWriter ow;
+  private int sentenceOffset = 0;
 
-	public JsonAnnotationsStreamWriter(OutputStream os){
-		this.ow = new BufferedWriter(new OutputStreamWriter(os));
-	}
+  public JsonAnnotationsStreamWriter(final OutputStream os) {
+    ow = new BufferedWriter(new OutputStreamWriter(os));
+  }
 
-	private JSONObject getChunk(Annotation c, Sentence s) throws IOException {
-		int begin = this.sentenceOffset;
-		int end = this.sentenceOffset;
-		JSONObject o = new JSONObject();
+  private JSONObject getChunk(final Annotation c, final Sentence s) throws IOException {
+    int begin = sentenceOffset;
+    int end = sentenceOffset;
+    final JSONObject o = new JSONObject();
 
-		List<Token> tokens = s.getTokens();
-		for (int i = 0; i < c.getBegin(); i++)
-			begin += tokens.get(i).getOrth().length();
-		end = begin;
-		for (int i = c.getBegin(); i <= c.getEnd(); i++)
-			end += tokens.get(i).getOrth().length();
-		o.put("from", begin);
-		o.put("to", (end-1));
-		o.put("type", c.getType());
-		o.put("text", c.getText());
+    final List<Token> tokens = s.getTokens();
+    for (int i = 0; i < c.getBegin(); i++) {
+      begin += tokens.get(i).getOrth().length();
+    }
+    end = begin;
+    for (int i = c.getBegin(); i <= c.getEnd(); i++) {
+      end += tokens.get(i).getOrth().length();
+    }
+    o.put("from", begin);
+    o.put("to", (end - 1));
+    o.put("type", c.getType());
+    o.put("text", c.getText());
 
-		//this.ow.write("(" + begin + "," + (end-1) + "," + c.getType() + ",\"" + c.getText() + "\")");
-		if (!c.getMetadata().isEmpty()){
-			JSONObject o1 = new JSONObject();
-			for (Map.Entry<String, String> entry: c.getMetadata().entrySet()){
-				o1.put(entry.getKey(), entry.getValue());
-			}
-			o.put("metadata", o1);
-		}
-		//this.ow.write(o.toString());
-		return o;
-	}
+    //this.ow.write("(" + begin + "," + (end-1) + "," + c.getType() + ",\"" + c.getText() + "\")");
+    if (!c.getMetadata().isEmpty()) {
+      final JSONObject o1 = new JSONObject();
+      for (final Map.Entry<String, String> entry : c.getMetadata().entrySet()) {
+        o1.put(entry.getKey(), entry.getValue());
+      }
+      o.put("metadata", o1);
+    }
+    //this.ow.write(o.toString());
+    return o;
+  }
 
-	@Override
-	public void writeDocument(Document document) {
-		JSONArray a = new JSONArray();
-		this.sentenceOffset = 0;
-		for (Paragraph paragraph : document.getParagraphs())
-			for (Sentence s : paragraph.getSentences())
-				try {
-					Annotation[] chunks = Annotation.sortChunks(s.getChunks());
-					for (Annotation c : chunks)
-						a.put(getChunk(c, s));
+  @Override
+  public void writeDocument(final Document document) {
+    final JSONArray a = new JSONArray();
+    sentenceOffset = 0;
+    for (final Paragraph paragraph : document.getParagraphs()) {
+      for (final Sentence s : paragraph.getSentences()) {
+        try {
+          final Annotation[] chunks = Annotation.sortChunks(s.getChunks());
+          for (final Annotation c : chunks) {
+            a.put(getChunk(c, s));
+          }
 
-					for (Token t : s.getTokens())
-						this.sentenceOffset += t.getOrth().length();
+          for (final Token t : s.getTokens()) {
+            sentenceOffset += t.getOrth().length();
+          }
 
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
-		try {
-			this.ow.write(a.toString());
-			this.ow.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+        } catch (final IOException ex) {
+          ex.printStackTrace();
+        }
+      }
+    }
+    try {
+      ow.write(a.toString());
+      ow.flush();
+    } catch (final IOException e) {
+      e.printStackTrace();
+    }
+  }
 
-	@Override
-	public void flush() {
-		try {
-			ow.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+  @Override
+  public void flush() {
+    try {
+      ow.flush();
+    } catch (final IOException e) {
+      e.printStackTrace();
+    }
+  }
 
-	@Override
-	public void close() {
-		try {
-			this.ow.flush();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
+  @Override
+  public void close() {
+    try {
+      ow.flush();
+    } catch (final IOException ex) {
+      ex.printStackTrace();
+    }
+  }
 }

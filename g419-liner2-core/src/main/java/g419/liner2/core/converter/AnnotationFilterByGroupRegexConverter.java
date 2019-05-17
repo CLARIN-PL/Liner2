@@ -9,17 +9,17 @@ import java.util.stream.Collectors;
 
 public class AnnotationFilterByGroupRegexConverter extends Converter {
 
-    final private Pattern pattern;
+  final private Pattern pattern;
 
-    public AnnotationFilterByGroupRegexConverter(final Pattern pattern) {
-        this.pattern = pattern;
-    }
+  public AnnotationFilterByGroupRegexConverter(final Pattern pattern) {
+    this.pattern = pattern;
+  }
 
-    @Override
-    public void apply(final Sentence sentence) {
-        final List<Annotation> toRemove = sentence.getChunks().stream()
-                .filter(an -> !pattern.matcher(an.getGroup()).find())
-                .collect(Collectors.toList());
-        sentence.getChunks().removeAll(toRemove);
-    }
+  @Override
+  public void apply(final Sentence sentence) {
+    final List<Annotation> toRemove = sentence.getChunks().stream()
+        .filter(an -> !pattern.matcher(an.getGroup()).find())
+        .collect(Collectors.toList());
+    sentence.getChunks().removeAll(toRemove);
+  }
 }

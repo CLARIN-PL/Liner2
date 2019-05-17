@@ -14,72 +14,72 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Zapisuje dane w formacie csv-relations. 
- * Opis formatu znajduje się na stronie: 
+ * Zapisuje dane w formacie csv-relations.
+ * Opis formatu znajduje się na stronie:
  * http://nlp.pwr.wroc.pl/redmine/projects/inforex-liner/wiki/csv-relations
- * 
- * @author czuk
  *
+ * @author czuk
  */
 public class CsvRelationsWriter extends AbstractDocumentWriter {
 
-	private CSVPrinter writer = null;
-	
-	public CsvRelationsWriter(OutputStream os) throws IOException{
-		this.writer = new CSVPrinter(new OutputStreamWriter(os), CSVFormat.DEFAULT);
-	}
-		
-	@Override
-	public void writeDocument(Document document) {
-		for (Relation relation : document.getRelations().getRelations()){
-			try {
-				List<String> record = new ArrayList<String>();
-				record.add(document.getName());
-				record.add(relation.getType());
-				this.annotationAttributes(record, relation.getAnnotationFrom());
-				this.annotationAttributes(record, relation.getAnnotationTo());
-				record.add(relation.getAnnotationFrom().getSentence().toString());
-				
-				writer.printRecord(record);
-				
-			} catch (IOException e) {
-				e.printStackTrace();
-				Logger.getLogger(this.getClass()).error("Writing error", e);
-			}
-		}
-	}
+  private CSVPrinter writer = null;
 
-	/**
-	 * Put annotation attributes to the list.
-	 * @param record
-	 * @param an
-	 */
-	private void annotationAttributes(List<String> record, Annotation an){
-		record.add(an.getSentence().getId());
-		record.add("" + an.getBegin());
-		record.add("" + an.getBegin());
-		record.add(an.getType());
-		record.add(an.getText());
-		record.add(an.getBaseText(false));		
-	}
-	
-	@Override
-	public void flush() {
-		try {
-			this.writer.flush();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
+  public CsvRelationsWriter(OutputStream os) throws IOException {
+    this.writer = new CSVPrinter(new OutputStreamWriter(os), CSVFormat.DEFAULT);
+  }
 
-	@Override
-	public void close() {
-		try {
-			writer.flush();
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+  @Override
+  public void writeDocument(Document document) {
+    for (Relation relation : document.getRelations().getRelations()) {
+      try {
+        List<String> record = new ArrayList<String>();
+        record.add(document.getName());
+        record.add(relation.getType());
+        this.annotationAttributes(record, relation.getAnnotationFrom());
+        this.annotationAttributes(record, relation.getAnnotationTo());
+        record.add(relation.getAnnotationFrom().getSentence().toString());
+
+        writer.printRecord(record);
+
+      } catch (IOException e) {
+        e.printStackTrace();
+        Logger.getLogger(this.getClass()).error("Writing error", e);
+      }
+    }
+  }
+
+  /**
+   * Put annotation attributes to the list.
+   *
+   * @param record
+   * @param an
+   */
+  private void annotationAttributes(List<String> record, Annotation an) {
+    record.add(an.getSentence().getId());
+    record.add("" + an.getBegin());
+    record.add("" + an.getBegin());
+    record.add(an.getType());
+    record.add(an.getText());
+    record.add(an.getBaseText(false));
+  }
+
+  @Override
+  public void flush() {
+    try {
+      this.writer.flush();
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    }
+  }
+
+  @Override
+  public void close() {
+    try {
+      writer.flush();
+      writer.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 
 }

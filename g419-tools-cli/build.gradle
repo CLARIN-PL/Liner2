@@ -10,7 +10,7 @@ def main = "g419.Main"
 mainClassName = main
 
 run {
-    if ( project.hasProperty("appArgs") ) {
+    if (project.hasProperty("appArgs")) {
         args appArgs.split("\\p{Z}")
     }
 }

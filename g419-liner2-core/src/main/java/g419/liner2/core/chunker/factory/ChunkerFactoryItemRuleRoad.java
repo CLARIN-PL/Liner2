@@ -11,30 +11,29 @@ import org.ini4j.Ini;
  */
 public class ChunkerFactoryItemRuleRoad extends ChunkerFactoryItem {
 
-	public static String PARAM_ANNOTATION = "annotation";
-	public static String PARAM_DICTIONARY = "dictionary";
+  public static String PARAM_ANNOTATION = "annotation";
+  public static String PARAM_DICTIONARY = "dictionary";
 
-	public ChunkerFactoryItemRuleRoad() {
-		super("rule-road");
-	}
+  public ChunkerFactoryItemRuleRoad() {
+    super("rule-road");
+  }
 
-	@Override
-	public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
-        TrieDictNode dict = null;
-        String annotationType = null;
-        
-        String dictionaryPath = description.get(PARAM_DICTIONARY);
-        if ( dictionaryPath == null ){
-        	dict = new TrieDictNode(false);
-        	Logger.getLogger(this.getClass()).error("Brak parametru 'dictionary' w opisie chunkera rule-road");
-        }
-        else{
-        	dict = TrieDictNode.loadPlain(dictionaryPath);
-        }
-        
-        annotationType = description.get(PARAM_ANNOTATION);
-        
-        return new RuleRoadChunker(annotationType, dict);
-	}
+  @Override
+  public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
+    TrieDictNode dict = null;
+    String annotationType = null;
+
+    String dictionaryPath = description.get(PARAM_DICTIONARY);
+    if (dictionaryPath == null) {
+      dict = new TrieDictNode(false);
+      Logger.getLogger(this.getClass()).error("Brak parametru 'dictionary' w opisie chunkera rule-road");
+    } else {
+      dict = TrieDictNode.loadPlain(dictionaryPath);
+    }
+
+    annotationType = description.get(PARAM_ANNOTATION);
+
+    return new RuleRoadChunker(annotationType, dict);
+  }
 
 }

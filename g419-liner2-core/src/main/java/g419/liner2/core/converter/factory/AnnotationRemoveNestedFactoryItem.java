@@ -8,11 +8,13 @@ import g419.liner2.core.converter.Converter;
  */
 public class AnnotationRemoveNestedFactoryItem extends ConverterFactoryItem {
 
-    public AnnotationRemoveNestedFactoryItem(){super("annotation-remove-nested");}
+  public AnnotationRemoveNestedFactoryItem() {
+    super("annotation-remove-nested");
+  }
 
 
-    @Override
-    public Converter getConverter() {
-        return new AnnotationRemoveNestedConverter();
-    }
+  @Override
+  public Converter getConverter() {
+    return new AnnotationRemoveNestedConverter();
+  }
 }

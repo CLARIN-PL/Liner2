@@ -6,72 +6,72 @@ import java.util.Set;
 
 public class Paragraph extends IdentifiableElement {
 
-    private TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
-    private HashMap<String, String> chunkMetaData = new HashMap<>();
+  private TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
+  private HashMap<String, String> chunkMetaData = new HashMap<>();
 
-    private final ArrayList<Sentence> sentences = new ArrayList<>();
+  private final ArrayList<Sentence> sentences = new ArrayList<>();
 
-    public Paragraph(final String id, final TokenAttributeIndex attributeIndex) {
-        this.id = id;
-        this.attributeIndex = attributeIndex;
+  public Paragraph(final String id, final TokenAttributeIndex attributeIndex) {
+    this.id = id;
+    this.attributeIndex = attributeIndex;
+  }
+
+  public Paragraph(final String id) {
+    this.id = id;
+  }
+
+  public void addSentence(final Sentence sentence) {
+    sentences.add(sentence);
+    if (sentence.getAttributeIndex() == null) {
+      sentence.setAttributeIndex(attributeIndex);
     }
+  }
 
-    public Paragraph(final String id) {
-        this.id = id;
-    }
+  public TokenAttributeIndex getAttributeIndex() {
+    return attributeIndex;
+  }
 
-    public void addSentence(final Sentence sentence) {
-        sentences.add(sentence);
-        if (sentence.getAttributeIndex() == null) {
-            sentence.setAttributeIndex(attributeIndex);
-        }
-    }
+  public ArrayList<Sentence> getSentences() {
+    return sentences;
+  }
 
-    public TokenAttributeIndex getAttributeIndex() {
-        return attributeIndex;
+  public void setAttributeIndex(final TokenAttributeIndex attributeIndex) {
+    this.attributeIndex = attributeIndex;
+    for (final Sentence s : sentences) {
+      s.setAttributeIndex(attributeIndex);
     }
+  }
 
-    public ArrayList<Sentence> getSentences() {
-        return sentences;
-    }
+  public void setChunkMetaData(final HashMap<String, String> chunkMetaData) {
+    this.chunkMetaData = chunkMetaData;
+  }
 
-    public void setAttributeIndex(final TokenAttributeIndex attributeIndex) {
-        this.attributeIndex = attributeIndex;
-        for (final Sentence s : sentences) {
-            s.setAttributeIndex(attributeIndex);
-        }
-    }
+  public Set<String> getKeysChunkMetaData() {
+    return chunkMetaData.keySet();
+  }
 
-    public void setChunkMetaData(final HashMap<String, String> chunkMetaData) {
-        this.chunkMetaData = chunkMetaData;
-    }
+  public String getChunkMetaData(final String key) {
+    return chunkMetaData.get(key);
+  }
 
-    public Set<String> getKeysChunkMetaData() {
-        return chunkMetaData.keySet();
+  @Override
+  public Paragraph clone() {
+    final Paragraph copy = new Paragraph(id);
+    copy.chunkMetaData = new HashMap<>(chunkMetaData);
+    copy.attributeIndex = attributeIndex.clone();
+    for (final Sentence s : sentences) {
+      copy.addSentence(s.clone());
     }
+    return copy;
+  }
 
-    public String getChunkMetaData(final String key) {
-        return chunkMetaData.get(key);
-    }
+  public int numSentences() {
+    return sentences.size();
+  }
 
-    @Override
-    public Paragraph clone() {
-        final Paragraph copy = new Paragraph(id);
-        copy.chunkMetaData = new HashMap<>(chunkMetaData);
-        copy.attributeIndex = attributeIndex.clone();
-        for (final Sentence s : sentences) {
-            copy.addSentence(s.clone());
-        }
-        return copy;
+  public void setDocument(final Document document) {
+    for (final Sentence sentence : sentences) {
+      sentence.setDocument(document);
     }
-
-    public int numSentences() {
-        return sentences.size();
-    }
-
-    public void setDocument(final Document document) {
-        for (final Sentence sentence : sentences) {
-            sentence.setDocument(document);
-        }
-    }
+  }
 }
