@@ -1,5 +1,6 @@
 package g419.liner2.core.chunker.factory;
 
+import g419.liner2.core.tools.ParameterException;
 import g419.liner2.core.chunker.AnnotationToPropertyChunker;
 import g419.liner2.core.chunker.Chunker;
 import g419.liner2.core.chunker.ClosestRelationChunker;

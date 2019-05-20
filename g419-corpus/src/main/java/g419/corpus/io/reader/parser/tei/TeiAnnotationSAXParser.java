@@ -142,8 +142,7 @@ public class TeiAnnotationSAXParser extends DefaultHandler implements HasLogger 
       if (tokens.size() == 0) {
         getLogger().error("Annotation with id={} from file={} does not have defined tokens (no ptr elements)", group.getGroupId(), filename);
       } else {
-        final Annotation an = new Annotation(tokens, group.getType(), group.getSentence())
-            .withGroup(this.group)
+        final Annotation an = new Annotation(tokens, group.getType(), group.getSentence()).withGroup(this.group)
             .withHead(getHead(group.getGroupId()))
             .withLemma(group.getBase())
             .withId(group.getGroupId());
