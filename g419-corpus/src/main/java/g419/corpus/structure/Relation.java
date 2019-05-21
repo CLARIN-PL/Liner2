@@ -3,137 +3,146 @@ package g419.corpus.structure;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Klasa reprezentuje relację pomiędzy dwoma anotacjami 
- * @author Adam Kaczmarek
+ * Klasa reprezentuje relację pomiędzy dwoma anotacjami
  *
+ * @author Adam Kaczmarek
  */
-public class Relation extends IdentifiableElement{
-	public static final String COREFERENCE = "Coreference";
-	public static final String SUBJECT = "subj";
-	public static final String OBJECT="obj";
-	public static final String COPULA = "cop";
+public class Relation extends IdentifiableElement {
+  public static final String COREFERENCE = "Coreference";
+  public static final String SUBJECT = "subj";
+  public static final String OBJECT = "obj";
+  public static final String COPULA = "cop";
 
-	public static final String EMPTY = "";
-	
-	public static final AnnotationPositionComparator annPosComparator = new AnnotationPositionComparator();
+  public static final String EMPTY = "";
 
-	/**
-	 * Typ relacji
-	 */
-	private String type;
-	
-	/**
-	 * Podzbiór relacji
-	 */
-	private String set;
-	
-	/**
-	 * Anotacja źródłowa relacji
-	 */
-	private Annotation annotationFrom;
-	
-	/**
-	 * Anotacja docelowa relacji
-	 */
-	private Annotation annotationTo;
-	
-	/**
-	 * Dokument zawierający relację
-	 */
-	private Document document;
-	public Document getDocument(){return document;}
+  public static final AnnotationPositionComparator annPosComparator = new AnnotationPositionComparator();
 
-	public Relation(final String id, final Annotation from, final Annotation to, final String type){
-		this(from,to,type);
-		this.id = id;
-	}
+  /**
+   * Typ relacji
+   */
+  private String type;
 
-	public Relation(final Annotation from, final Annotation to, final String type){
-		this.setAnnotationFrom(from);
-		this.setAnnotationTo(to);
-		this.setSet(type);
-		this.setType(type);
-	}
+  /**
+   * Podzbiór relacji
+   */
+  private String set;
 
-	public Relation(final String id, final Annotation from, final Annotation to, final String type, final String set){
-		this.id = id;
-		this.setAnnotationFrom(from);
-		this.setAnnotationTo(to);
-		this.setSet(set);
-		this.setType(type);
-	}
+  /**
+   * Anotacja źródłowa relacji
+   */
+  private Annotation annotationFrom;
 
-	public Relation(final Annotation from, final Annotation to, final String type, final String set, final Document document){
-		this.document = document;
-		this.setAnnotationFrom(from);
-		this.setAnnotationTo(to);
-		this.setSet(set);
-		this.setType(type);
-	}
-	
-	public Annotation getAnnotationFrom() {
-		return annotationFrom;
-	}
+  /**
+   * Anotacja docelowa relacji
+   */
+  private Annotation annotationTo;
 
+  /**
+   * Dokument zawierający relację
+   */
+  private Document document;
 
-	public void setAnnotationFrom(Annotation annotationFrom) {
-		this.annotationFrom = annotationFrom;
-	}
+  public Document getDocument() {
+    return document;
+  }
+
+  public Relation(final String id, final Annotation from, final Annotation to, final String type) {
+    this(from, to, type);
+    this.id = id;
+  }
+
+  public Relation(final Annotation from, final Annotation to, final String type) {
+    setAnnotationFrom(from);
+    setAnnotationTo(to);
+    setSet(type);
+    setType(type);
+  }
+
+  public Relation(final String id, final Annotation from, final Annotation to, final String type, final String set) {
+    this.id = id;
+    setAnnotationFrom(from);
+    setAnnotationTo(to);
+    setSet(set);
+    setType(type);
+  }
+
+  public Relation(final Annotation from, final Annotation to, final String type, final String set, final Document document) {
+    this.document = document;
+    setAnnotationFrom(from);
+    setAnnotationTo(to);
+    setSet(set);
+    setType(type);
+  }
+
+  public Annotation getAnnotationFrom() {
+    return annotationFrom;
+  }
 
 
-	public Annotation getAnnotationTo() {
-		return annotationTo;
-	}
+  public void setAnnotationFrom(final Annotation annotationFrom) {
+    this.annotationFrom = annotationFrom;
+  }
 
 
-	public void setAnnotationTo(Annotation annotationTo) {
-		this.annotationTo = annotationTo;
-	}
+  public Annotation getAnnotationTo() {
+    return annotationTo;
+  }
 
 
-	public String getType() {
-		return type;
-	}
+  public void setAnnotationTo(final Annotation annotationTo) {
+    this.annotationTo = annotationTo;
+  }
 
 
-	public void setType(String type) {
-		this.type = type;
-	}
-	
-	public void setSet(String set){
-		this.set = set;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public String getSet() {
-		return this.set == null ? Relation.EMPTY : this.set;
-	}
 
-	@Override
-	public String toString(){
-		return annotationFrom.toString() + " ->- " + type + " ->- " + annotationTo.toString();
-	}
-	
-	@Override
-	public boolean equals(Object other){
-		if (other == null) return false;
-	    if (other == this) return true;
-	    if (!(other instanceof Relation))return false;
-	    Relation otherRelation = (Relation) other;
-	    
-		return this.set.equalsIgnoreCase(otherRelation.set) 
-				&& this.type.equalsIgnoreCase(otherRelation.type) 
-				&& this.annotationFrom.equals(otherRelation.annotationFrom)
-				&& this.annotationTo.equals(otherRelation.annotationTo);
-	}
-	
-	@Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 31). 
-            append(set).
-            append(type).
-            append(annotationFrom).
-            append(annotationTo).
-            toHashCode();
+  public void setType(final String type) {
+    this.type = type;
+  }
+
+  public void setSet(final String set) {
+    this.set = set;
+  }
+
+  public String getSet() {
+    return set == null ? Relation.EMPTY : set;
+  }
+
+  @Override
+  public String toString() {
+    return annotationFrom.toString() + " ->- " + type + " ->- " + annotationTo.toString();
+  }
+
+  @Override
+  public boolean equals(final Object other) {
+    if (other == null) {
+      return false;
     }
-	
+    if (other == this) {
+      return true;
+    }
+    if (!(other instanceof Relation)) {
+      return false;
+    }
+    final Relation otherRelation = (Relation) other;
+
+    return set.equalsIgnoreCase(otherRelation.set)
+        && type.equalsIgnoreCase(otherRelation.type)
+        && annotationFrom.equals(otherRelation.annotationFrom)
+        && annotationTo.equals(otherRelation.annotationTo);
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 31).
+        append(set).
+        append(type).
+        append(annotationFrom).
+        append(annotationTo).
+        toHashCode();
+  }
+
 }

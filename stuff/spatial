@@ -1,7 +1,0 @@
-#!/bin/bash
-
-# Get current location
-DIR="$( cd "$( dirname "$0" )" && pwd )"
-
-# Run g419-spatial
-java -Xmx4024M -cp -Djava.library.path=$DIR -jar $DIR/lib/g419-spatial.jar $@

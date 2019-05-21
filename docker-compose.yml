@@ -1,0 +1,23 @@
+version: '2'
+services:
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    hostname: "rabbitmq"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+      - "5671:5671"
+    labels:
+      NAME: "rabbitmq"
+    #volumes:
+    #  - ./rabbitmq-isolated.conf:/etc/rabbitmq/rabbitmq.config
+
+  liner2:
+    build: .
+    volumes:
+      - /tmp:/tmp
+    command: /bin/bash /liner2/liner2-daemon-run.sh
+    links:
+      - rabbitmq
+    depends_on:
+      - rabbitmq

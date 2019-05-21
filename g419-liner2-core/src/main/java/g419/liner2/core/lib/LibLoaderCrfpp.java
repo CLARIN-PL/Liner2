@@ -3,7 +3,7 @@ package g419.liner2.core.lib;
 /**
  * Class for dynamic loading crfpp module. Prevent from loading the module multiple times.
  */
-public class LibLoaderCrfpp extends LibLoader{
+public class LibLoaderCrfpp extends LibLoader {
 
 //    private static boolean loaded = false;
 //
@@ -31,11 +31,11 @@ public class LibLoaderCrfpp extends LibLoader{
 //        }
 //    }
 
-    /**
-     * Loads default crfpp module if not loaded.
-     */
-    public static void load(){
-        LibLoader.load("libCRFPP.so");
-    }
+  /**
+   * Loads default crfpp module if not loaded.
+   */
+  public static void load() {
+    LibLoader.load("libCRFPP.so");
+  }
 
 }

@@ -1,62 +1,58 @@
 package g419.spatial.action;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
-import org.apache.log4j.Logger;
-
 import g419.lib.cli.Action;
 import g419.toolbox.wordnet.Wordnet3;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.log4j.Logger;
 import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.PrincetonDataRaw;
 
+import java.util.Set;
+
 public class ActionWordnetVN extends Action {
-	
-	// ToDo: przerobić na parametr 
-	private String wordnet = null;
-	
-	public ActionWordnetVN() {
-		super("wordnet-vn");
-		this.setDescription("test wordnet core");
-		
-		this.options.addOption(Option.builder("w").hasArg().argName("FILENAME").required()
-						.desc("ścieżka do katalogu z wordnetem w formacie Princeton").longOpt("wordnet").build());
-	}
-	
-	/**
-	 * Parse action options
-	 * @param arg0 The array with command line parameters
-	 */
-	@Override
-	public void parseOptions(final CommandLine line) throws Exception {
-        if ( line.hasOption("w") ){
-        	this.wordnet = line.getOptionValue("w");
+
+  // ToDo: przerobić na parametr
+  private String wordnet = null;
+
+  public ActionWordnetVN() {
+    super("wordnet-vn");
+    this.setDescription("test wordnet core");
+
+    this.options.addOption(Option.builder("w").hasArg().argName("FILENAME").required()
+        .desc("ścieżka do katalogu z wordnetem w formacie Princeton").longOpt("wordnet").build());
+  }
+
+  /**
+   * Parse action options
+   *
+   * @param arg0 The array with command line parameters
+   */
+  @Override
+  public void parseOptions(final CommandLine line) throws Exception {
+    if (line.hasOption("w")) {
+      this.wordnet = line.getOptionValue("w");
+    }
+  }
+
+  @Override
+  public void run() throws Exception {
+    Logger.getLogger(this.getClass()).info("Wczytuję wordnet ...");
+    Wordnet3 w = new Wordnet3(this.wordnet);
+    Logger.getLogger(this.getClass()).info("gotowe.");
+
+    for (PrincetonDataRaw synset : w.getSynsets()) {
+      Set<PrincetonDataRaw> directs = w.getDirectSynsets(synset, "sn");
+      for (PrincetonDataRaw direct : directs) {
+        if (direct != null && synset != null) {
+          for (String word1 : w.getLexicalUnits(synset)) {
+            for (String word2 : w.getLexicalUnits(direct)) {
+              System.out.println(String.format("v2n\t%s\t%s", word1, word2));
+            }
+          }
         }
+      }
     }
 
-	@Override
-	public void run() throws Exception {
-		Logger.getLogger(this.getClass()).info("Wczytuję wordnet ...");
-		Wordnet3 w = new Wordnet3(this.wordnet);
-		Logger.getLogger(this.getClass()).info("gotowe.");
-		
-		for ( PrincetonDataRaw synset : w.getSynsets() ){
-			Set<PrincetonDataRaw> directs = w.getDirectSynsets(synset, "sn");
-			for ( PrincetonDataRaw direct : directs ){
-				if ( direct != null && synset != null ){
-					for ( String word1 : w.getLexicalUnits(synset) ){
-						for ( String word2 : w.getLexicalUnits(direct) ){
-							System.out.println(String.format("v2n\t%s\t%s", word1, word2));
-						}
-					}
-				}
-			}
-		}
-		
 //		w.getAllSynsets(synset, relation)
 //		
 //		String line = null;
@@ -83,9 +79,9 @@ public class ActionWordnetVN extends Action {
 //			System.out.println();
 //			System.out.print("Podaj słowo: ");
 //		}
-		
-		
-	}
-	
+
+
+  }
+
 
 }

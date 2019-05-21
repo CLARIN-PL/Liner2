@@ -2,13 +2,13 @@ package g419.corpus.structure;
 
 public abstract class IdentifiableElement {
 
-    protected String id;
+  protected String id;
 
-    public String getId(){
-        return id;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public void setId(String id){
-        this.id = id;
-    }
+  public void setId(final String id) {
+    this.id = id;
+  }
 }

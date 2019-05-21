@@ -21,52 +21,52 @@ import java.util.stream.Collectors;
 
 public class ActionMaltparserWrappedAnnotations extends Action {
 
-    final Logger logger = LoggerFactory.getLogger(getClass());
-    String inputFormat;
-    String inputName;
-    String maltModel;
-    List<Pattern> annotationTypePatterns;
+  final Logger logger = LoggerFactory.getLogger(getClass());
+  String inputFormat;
+  String inputName;
+  String maltModel;
+  List<Pattern> annotationTypePatterns;
 
-    public ActionMaltparserWrappedAnnotations() {
-        super("maltparser-wrapped-annotations");
-        setDescription("Parse document(s) with wrapped annotation of specified types");
-        options.addOption(CommonOptions.getOutputFileNameOption());
-        options.addOption(CommonOptions.getInputFileFormatOption());
-        options.addOption(CommonOptions.getInputFileNameOption());
-        options.addOption(CommonOptions.getMaltparserModelFileOption());
-        options.addOption(CommonOptions.getAnnotationTypePatterns());
-    }
+  public ActionMaltparserWrappedAnnotations() {
+    super("maltparser-wrapped-annotations");
+    setDescription("Parse document(s) with wrapped annotation of specified types");
+    options.addOption(CommonOptions.getOutputFileNameOption());
+    options.addOption(CommonOptions.getInputFileFormatOption());
+    options.addOption(CommonOptions.getInputFileNameOption());
+    options.addOption(CommonOptions.getMaltparserModelFileOption());
+    options.addOption(CommonOptions.getAnnotationTypePatterns());
+  }
 
-    @Override
-    public void parseOptions(final CommandLine line) throws Exception {
-        inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
-        inputName = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
-        maltModel = line.getOptionValue(CommonOptions.OPTION_MALT);
-        annotationTypePatterns =
-                Arrays.stream(Optional.ofNullable(line.getOptionValues(CommonOptions.OPTION_ANNOTATION_PATTERN)).orElse(new String[]{}))
-                        .map(p -> Pattern.compile(p))
-                        .collect(Collectors.toList());
-    }
+  @Override
+  public void parseOptions(final CommandLine line) throws Exception {
+    inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
+    inputName = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
+    maltModel = line.getOptionValue(CommonOptions.OPTION_MALT);
+    annotationTypePatterns =
+        Arrays.stream(Optional.ofNullable(line.getOptionValues(CommonOptions.OPTION_ANNOTATION_PATTERN)).orElse(new String[] {}))
+            .map(p -> Pattern.compile(p))
+            .collect(Collectors.toList());
+  }
 
-    @Override
-    public void run() throws Exception {
-        final MaltParser malt = new MaltParser(maltModel);
-        try (AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputName, inputFormat)) {
-            while (reader.hasNext()) {
-                reader.nextDocument().getSentences().stream()
-                        .map(sentence -> TokenWrapper.wrapAnnotations(sentence, annotationTypePatterns))
-                        .map(sentence -> new MaltSentence(sentence, MappingNkjpToConllPos.get()))
-                        .forEach(sentence -> {
-                            try {
-                                malt.parse(sentence);
-                                Arrays.stream(sentence.getMaltData()).forEach(System.out::println);
-                                System.out.println();
-                            } catch (MaltChainedException e) {
-                                logger.warn("Failed to parse sentence with MaltParser", e);
-                            }
-                        });
-            }
-        }
+  @Override
+  public void run() throws Exception {
+    final MaltParser malt = new MaltParser(maltModel);
+    try (AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputName, inputFormat)) {
+      while (reader.hasNext()) {
+        reader.nextDocument().getSentences().stream()
+            .map(sentence -> TokenWrapper.wrapAnnotations(sentence, annotationTypePatterns))
+            .map(sentence -> new MaltSentence(sentence, MappingNkjpToConllPos.get()))
+            .forEach(sentence -> {
+              try {
+                malt.parse(sentence);
+                Arrays.stream(sentence.getMaltData()).forEach(System.out::println);
+                System.out.println();
+              } catch (MaltChainedException e) {
+                logger.warn("Failed to parse sentence with MaltParser", e);
+              }
+            });
+      }
     }
+  }
 
 }

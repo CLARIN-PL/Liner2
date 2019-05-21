@@ -1,30 +1,30 @@
 package g419.liner2.core.features.tokens;
 
-import java.util.List;
-
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 
-
-public class InTitleFeature extends TokenInSentenceFeature{
-
-	public InTitleFeature(String name){
-		super(name);
-	}
+import java.util.List;
 
 
-	@Override
-	public void generate(Sentence sentence){
-		int thisFeatureIdx = sentence.getAttributeIndex().getIndex(this.getName());
-		List<Token> tokens = sentence.getTokens();
+public class InTitleFeature extends TokenInSentenceFeature {
 
-		int tokenIdx = 0;
-		while (tokenIdx < sentence.getTokenNumber()) {
-			Token t = tokens.get(tokenIdx);
-			String base = t.getAttributeValue("base");
-			t.setAttributeValue(thisFeatureIdx, sentence.getDocument().isInTitle(base) + "");
-			tokenIdx++;
-		}
-	}
+  public InTitleFeature(final String name) {
+    super(name);
+  }
+
+
+  @Override
+  public void generate(final Sentence sentence) {
+    final int thisFeatureIdx = sentence.getAttributeIndex().getIndex(getName());
+    final List<Token> tokens = sentence.getTokens();
+
+    int tokenIdx = 0;
+    while (tokenIdx < sentence.getTokenNumber()) {
+      final Token t = tokens.get(tokenIdx);
+      final String base = t.getAttributeValue("base");
+      t.setAttributeValue(thisFeatureIdx, sentence.getDocument().isInTitle(base) + "");
+      tokenIdx++;
+    }
+  }
 
 }
