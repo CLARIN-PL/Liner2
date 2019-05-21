@@ -21,6 +21,7 @@ public class BaseNumberFeature extends TokenInDocumentFeature {
   }
 
   private void countBasesFrequency(final Document document){
+    this.baseCount = new HashMap<>();
     for (final Paragraph p : document.getParagraphs()) {
       for (final Sentence s : p.getSentences()) {
         for (final Token t : s.getTokens()) {
@@ -39,8 +40,7 @@ public class BaseNumberFeature extends TokenInDocumentFeature {
   public void generate(final Document document) {
 
     final int thisFeatureIdx = document.getAttributeIndex().getIndex(getName());
-
-    this.countBasesFrequency(document);
+    if(this.baseCount == null) { this.countBasesFrequency(document); }
 
     for (final Paragraph p : document.getParagraphs()) {
       for (final Sentence s : p.getSentences()) {
