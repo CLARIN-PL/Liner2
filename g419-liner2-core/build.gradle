@@ -16,4 +16,5 @@ dependencies {
     compile 'com.googlecode.json-simple:json-simple:1.1.1'
     runtime 'org.slf4j:slf4j-log4j12:1.7.2'
     compile files('../lib/PolemJava.jar')
+    compile files('../lib/fasttext.jar')
 }
