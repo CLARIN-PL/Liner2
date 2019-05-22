@@ -499,6 +499,3 @@ public class Annotation extends IdentifiableElement {
     return this;
   }
 }
-
-
-
