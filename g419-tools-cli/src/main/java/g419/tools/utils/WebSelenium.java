@@ -6,23 +6,23 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class WebSelenium implements IWeb {
 
-	private WebDriver driver = null;
-	
-	public WebSelenium() {
-		System.setProperty("webdriver.gecko.driver","/home/czuk/nlp/tools/geckodriver");
-		this.driver = new FirefoxDriver();
-	}
-	
-	public Document get(String url) {		
-		return JsoupWrapped.getWithSelenium(driver, url);
-	}
+  private WebDriver driver = null;
 
-	@Override
-	public void close() {
-		this.driver.close();
-	}
-	
-	public WebDriver getDriver(){
-		return this.driver;
-	}
+  public WebSelenium() {
+    System.setProperty("webdriver.gecko.driver", "/home/czuk/nlp/tools/geckodriver");
+    this.driver = new FirefoxDriver();
+  }
+
+  public Document get(String url) {
+    return JsoupWrapped.getWithSelenium(driver, url);
+  }
+
+  @Override
+  public void close() {
+    this.driver.close();
+  }
+
+  public WebDriver getDriver() {
+    return this.driver;
+  }
 }

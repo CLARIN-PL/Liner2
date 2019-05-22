@@ -11,33 +11,30 @@ import java.util.HashSet;
  */
 public class ParenthesisFeature extends TokenInSentenceFeature {
 
-    static HashSet<String> openingCharacters = new HashSet<String>(Arrays.asList("(", "[", "{"));
-    static HashSet<String> closingCharacters = new HashSet<String>(Arrays.asList(")", "]", "}"));
+  static HashSet<String> openingCharacters = new HashSet<String>(Arrays.asList("(", "[", "{"));
+  static HashSet<String> closingCharacters = new HashSet<String>(Arrays.asList(")", "]", "}"));
 
-    public ParenthesisFeature(String name) {
-        super(name);
+  public ParenthesisFeature(String name) {
+    super(name);
+  }
+
+
+  @Override
+  public void generate(Sentence sentence) {
+    int thisFeatureIdx = sentence.getAttributeIndex().addAttribute(this.getName());
+    int inParanthesis = 0;
+    for (Token t : sentence.getTokens()) {
+      if (openingCharacters.contains(t.getOrth())) {
+        t.setAttributeValue(thisFeatureIdx, "B");
+        inParanthesis++;
+      } else if (closingCharacters.contains(t.getOrth())) {
+        t.setAttributeValue(thisFeatureIdx, "E");
+        inParanthesis--;
+      } else if (inParanthesis > 0) {
+        t.setAttributeValue(thisFeatureIdx, "I");
+      } else {
+        t.setAttributeValue(thisFeatureIdx, "O");
+      }
     }
-
-
-    @Override
-    public void generate(Sentence sentence) {
-        int thisFeatureIdx = sentence.getAttributeIndex().addAttribute(this.getName());
-        int inParanthesis = 0;
-        for(Token t: sentence.getTokens()){
-            if(openingCharacters.contains(t.getOrth())){
-                t.setAttributeValue(thisFeatureIdx, "B");
-                inParanthesis++;
-            }
-            else if(closingCharacters.contains(t.getOrth())){
-                t.setAttributeValue(thisFeatureIdx, "E");
-                inParanthesis--;
-            }
-            else if(inParanthesis > 0){
-                t.setAttributeValue(thisFeatureIdx, "I");
-            }
-            else{
-                t.setAttributeValue(thisFeatureIdx, "O");
-            }
-        }
-    }
+  }
 }

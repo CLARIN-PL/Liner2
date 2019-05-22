@@ -6,7 +6,7 @@ import spock.lang.Specification
 
 class AnnotationTupleStreamWriterTest extends Specification {
 
-    def "xx"(){
+    def "writeDocument should write correct content to the file"(){
         given:
             Document document = new CclSAXStreamReader("0099883", getClass().getResourceAsStream("/00099883.xml"), null, null).nextDocument()
             String tuples = getClass().getResource("/00099883.annotation-tuple.txt").text

@@ -7,7 +7,7 @@ def main = "g419.liner2.daemon.Main"
 mainClassName = main
 
 run {
-    if ( project.hasProperty("appArgs") ) {
+    if (project.hasProperty("appArgs")) {
         args appArgs.split("\\p{Z}")
     }
 }
@@ -24,6 +24,7 @@ dependencies {
     compile 'org.ini4j:ini4j:0.5.2'
     compile 'org.json:json:20141113'
     compile 'mysql:mysql-connector-java:5.1.10'
+    compile 'com.rabbitmq:amqp-client:5.5.0'
     compile project(":g419-corpus")
     compile project(":g419-liner2-core")
     compile project(":g419-lib-cli")

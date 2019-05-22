@@ -1,12 +1,9 @@
 package g419.liner2.core.tools
 
-import g419.corpus.structure.Annotation
-import g419.corpus.structure.Sentence
-import g419.corpus.structure.Tag
-import g419.corpus.structure.Token
-import g419.corpus.structure.TokenAttributeIndex
+import g419.corpus.structure.*
 import spock.lang.Specification
 
+//@Ignore
 class PolemLemmatizerTest extends Specification {
 
     def "lemmatize should return valid lemma for orths, bases, ctags and debug parameters"(){
@@ -25,13 +22,13 @@ class PolemLemmatizerTest extends Specification {
             PolemLemmatizer polem = new PolemLemmatizer()
 
         expect:
-            an1.getLemma() == "zielonej łódce"
+            an1.getLemmaOrText() == "zielonej łódce"
 
         when:
             polem.lemmatize(an1)
 
         then:
-            an1.getLemma() == "zielona łódka"
+            an1.getLemmaOrText() == "zielona łódka"
     }
 
     /**

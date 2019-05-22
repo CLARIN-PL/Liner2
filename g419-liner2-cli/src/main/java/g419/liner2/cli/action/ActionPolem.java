@@ -6,20 +6,20 @@ import org.apache.commons.cli.CommandLine;
 
 public class ActionPolem extends Action {
 
-    public ActionPolem() {
-        super("polem");
-        this.setDescription("test lemmatization module powered by Polem");
-    }
+  public ActionPolem() {
+    super("polem");
+    this.setDescription("test lemmatization module powered by Polem");
+  }
 
-    @Override
-    public void parseOptions(CommandLine line) throws Exception {
+  @Override
+  public void parseOptions(CommandLine line) throws Exception {
 
-    }
+  }
 
-    @Override
-    public void run() throws Exception {
-        PolemLemmatizer polem = new PolemLemmatizer();
-        System.out.println(polem.lemmatize("Rady Ministrów", "rada minister", "subst:sg:gen:f subst:pl:gen:m1", false));
-    }
+  @Override
+  public void run() throws Exception {
+    PolemLemmatizer polem = new PolemLemmatizer();
+    System.out.println(polem.lemmatize("Rady Ministrów", "rada minister", "subst:sg:gen:f subst:pl:gen:m1", false));
+  }
 
 }
