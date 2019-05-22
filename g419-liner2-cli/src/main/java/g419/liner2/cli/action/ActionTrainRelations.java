@@ -12,6 +12,7 @@ import g419.lib.cli.CommonOptions;
 import g419.lib.cli.ParameterException;
 import g419.liner2.core.LinerOptions;
 import g419.liner2.core.chunker.Chunker;
+import g419.liner2.core.chunker.FastTextRelationChunker;
 import g419.liner2.core.chunker.factory.ChunkerManager;
 import g419.liner2.core.features.TokenFeatureGenerator;
 import org.apache.commons.cli.CommandLine;
@@ -26,6 +27,7 @@ import java.util.*;
 import fasttext.FastText;
 import org.apache.commons.cli.Option;
 
+
 /**
  * Training model with in-sentence relations like slink, alink
  *
@@ -38,6 +40,7 @@ public class ActionTrainRelations extends Action {
     private String output_prefix = null;
     private String mode = null;
     private Set<String> chosenRelations = null;
+    private boolean content = false;
 
     public ActionTrainRelations() {
         super("train-rel");
@@ -52,6 +55,9 @@ public class ActionTrainRelations extends Action {
         this.options.addOption(Option.builder("relations")
                 .longOpt("relations")
                 .hasArg().argName("relations").desc("define relation subset, e.g.: alink,slink,null").build());
+        this.options.addOption(Option.builder("content")
+                .longOpt("content")
+                .desc("include content between annotations in training/testing data").build());
 
     }
 
@@ -64,45 +70,20 @@ public class ActionTrainRelations extends Action {
         this.output_prefix = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
         this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.mode = line.getOptionValue("mode");
+        this.content = line.hasOption("content");
         if (!this.mode.equals("train") && !this.mode.equals("test") )
             throw new Exception("mode must be 'train' or 'test'!");
         this.chosenRelations = new HashSet<String>(Arrays.asList(line.getOptionValue("relations").split(",")));
         LinerOptions.getGlobal().parseModelIni(line.getOptionValue(CommonOptions.OPTION_MODEL));
     }
 
-    public static String getRepresentation(Annotation annotationFrom, Annotation annotationTo) throws IllegalArgumentException {
-        Sentence s = annotationFrom.getSentence();
-        if (!annotationTo.getSentence().equals(s))
-            throw new IllegalArgumentException("Annotations " + annotationFrom + " and " + annotationTo + " are not from the same sentence!");
-        boolean reverseRelation = annotationFrom.getBegin() > annotationTo.getBegin();
-        int firstToken = reverseRelation ? annotationTo.getBegin() : annotationFrom.getBegin();
-        int lastToken = reverseRelation ? annotationFrom.getEnd() : annotationTo.getEnd();
-        if (lastToken - firstToken > 7)
-            return null;
-        List<Token> sentenceTokens = s.getTokens();
-        List<String> representation = new LinkedList<>();
-        representation.add(reverseRelation ? "1" : "0");
-        Set<Token> tokensFrom = new HashSet<>(annotationFrom.getTokenTokens());
-        Set<Token> tokensTo = new HashSet<>(annotationTo.getTokenTokens());
-        for (int i = firstToken; i <= lastToken; i++){
-            Token tok = sentenceTokens.get(i);
-            Tag tag = tok.getDisambTag();
-            String tokenType = "null";
-            if (tokensFrom.contains(tok))
-                tokenType = annotationFrom.getType();
-            else if (tokensTo.contains(tok))
-                tokenType = annotationTo.getType();
-            //representation.add(tok.getOrth() + "\t" + tag.getBase() + "\t" + tag.getPos() + "\t" + tokenRelation + "\t" + tokenType);
-            representation.add(tokenType);
-            representation.add(tag.getPos());
-            //representation.add(tag.getBase().toLowerCase());
-            //representation.add(tok.getPos());
-        }
-        return String.join(" ", representation);
-    }
+
 
     public String getRepresentation(Annotation annotationFrom, Annotation annotationTo, String type) throws IllegalArgumentException{
-        return "__label__" + type + " " + getRepresentation(annotationFrom, annotationTo);
+        String representation = FastTextRelationChunker.getRepresentation(annotationFrom, annotationTo, this.content);
+        if (representation != null)
+            return "__label__" + type + " " + representation;
+        return null;
     }
 
     /**
