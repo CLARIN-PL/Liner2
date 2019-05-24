@@ -2,21 +2,27 @@ FROM ubuntu:16.04
 
 MAINTAINER Michał Marcińczuk <marcinczuk@gmail.com>
 
-RUN apt-get update && \
-    apt-get -y upgrade
+RUN apt-get update && apt-get -y upgrade
 
 # Set the locale
-RUN apt-get install locales
+RUN apt-get update && apt-get install locales
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
+RUN apt-get update && apt-get -y upgrade
+
 RUN apt-get install -y openjdk-8-jdk netcat unzip && \
     apt-get clean;
 
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+
 RUN apt-get update && \
-    apt-get -y install git libboost-all-dev libicu-dev git-core wget cmake libantlr-dev libloki-dev python-dev swig libxml2-dev libsigc++-2.0-dev libglibmm-2.4-dev libxml++2.6-dev p7zip-full
+    apt-get -y install git libboost-all-dev libicu-dev git-core wget \
+    cmake libantlr-dev libloki-dev python-dev swig libxml2-dev \
+    libsigc++-2.0-dev libglibmm-2.4-dev libxml++2.6-dev p7zip-full \
+    autoconf
 
 WORKDIR /liner2
 
