@@ -75,7 +75,8 @@ public class ActionPipe extends Action {
     final ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
     cm.loadChunkers();
 
-    final Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
+    Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
+    chunker.setFeatureGenerator(gen);
 
     try (final AbstractDocumentReader reader = getInputReader();
          final AbstractDocumentWriter writer = getOutputWriter()
