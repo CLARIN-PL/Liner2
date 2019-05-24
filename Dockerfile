@@ -5,6 +5,13 @@ MAINTAINER Michał Marcińczuk <marcinczuk@gmail.com>
 RUN apt-get update && \
     apt-get -y upgrade
 
+# Set the locale
+RUN apt-get install locales
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+
 RUN apt-get install -y openjdk-8-jdk netcat unzip && \
     apt-get clean;
 
