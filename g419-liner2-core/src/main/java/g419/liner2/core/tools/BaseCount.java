@@ -7,6 +7,12 @@ import g419.corpus.structure.Paragraph;
 
 import java.util.HashMap;
 
+/**
+ * Class for counting base occurrence frequency document-wise.
+ *
+ * @author Michał Gawor
+ */
+
 public class BaseCount {
     private HashMap<String, Integer> baseCount = null;
 
