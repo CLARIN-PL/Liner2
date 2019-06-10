@@ -25,6 +25,7 @@ Contributors
 ------------
 * **Michał Marcińczuk** (2010–present), 
 * **Jan Kocoń** (2014–present), 
+* Michał Gawor (2019),
 * Adam Kaczmarek (2014–2015),
 * Michał Krautforst (2013-2015), 
 * Dominik Piasecki (2013), 
@@ -33,19 +34,6 @@ Contributors
 
 Citing
 ------------
-
-### System architecture and KPWr NER models
-
-* Java 8
-* C++ compiler (gcc 3.0 or higher) for CRF++ (https://taku910.github.io/crfpp/)
-* set JAVA_HOME variable:
-```bash
-export JAVA_HOME=/usr/lib/jvm/default-java
-```
-* install dh-autoreconf:
-```bash
-sudo apt-get install dh-autoreconf
-```
 Marcińczuk, Michał; Kocoń, Jan; Oleksy, Marcin.
 _Liner2 — a Generic Framework for Named Entity Recognition_
 In: Proceedings of the 6th Workshop on Balto-Slavic Natural Language Processing, 
