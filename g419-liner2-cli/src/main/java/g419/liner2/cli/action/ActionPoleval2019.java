@@ -29,8 +29,8 @@ import java.util.stream.Stream;
 
 public class ActionPoleval2019 extends Action {
 
-  private static final String OPTION_NO_LEMMA = "no-lemma";
-  private static final String OPTION_NO_LEMMA_LONG = "n";
+  private static final String OPTION_NO_LEMMA = "n";
+  private static final String OPTION_NO_LEMMA_LONG = "no-lemma";
   private static final String OPTION_NO_LEMMA_DESC = "replace annotation lemmas with 'xx'";
 
   private static final String NO_LEMMA_REPLACEMENT = "xx";
@@ -127,6 +127,18 @@ public class ActionPoleval2019 extends Action {
 
   private void writeAnnotation(final CSVPrinter csv, final Document document, final Annotation annotation) {
     try {
+//      csv.printRecord(
+//          annotation.getLemma(),
+//          annotation.getTokenTokens().stream().map(Token::getOrth).collect(Collectors.joining(" ")),
+//          annotation.getTokenTokens().stream().map(Token::getDisambTag)
+//              .map(Tag::getBase).collect(Collectors.joining(" ")),
+//          annotation.getTokenTokens().stream().map(Token::getDisambTag)
+//              .map(Tag::getCtag).collect(Collectors.joining(" ")),
+//          annotation.getTokenTokens().stream().map(Token::getNoSpaceAfter).
+//              map(space -> space ? "False" : "True").collect(Collectors.joining(" ")),
+//          //isAnnotationProperName(annotation) ? annotation.getType() : "null"
+//          "null"
+//      );
       csv.printRecord(
           annotation.getId(),
           document.getName(),
