@@ -323,6 +323,7 @@ class AnnotationTest extends Specification {
 
         then:
         annotation == cloned_annotation
+        !annotation.is(cloned_annotation)
     }
 
     def "Should correctly compare Annotations"() {

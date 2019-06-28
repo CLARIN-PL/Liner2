@@ -3,7 +3,7 @@ package g419.corpus.structure
 import spock.lang.Shared
 import spock.lang.Specification
 
-class _AnnotationPositionComparatorTest extends Specification {
+class AnnotationPositionComparatorTest extends Specification {
     @Shared
             sampleSentence1
     @Shared
@@ -39,6 +39,14 @@ class _AnnotationPositionComparatorTest extends Specification {
         tok.setNoSpaceAfter(true)
         sampleSentence2.addToken(tok1)
         sampleSentence2.addToken(new Token(".", new Tag(".", "interp", true), attrIndex))
+    }
+
+    def createSampleDocument() {
+        // TODO
+    }
+
+    def createSampleParagraph() {
+        // TODO
     }
 
     def "Annotation should be equal to itself"() {

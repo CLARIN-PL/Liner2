@@ -343,5 +343,6 @@ class SentenceTest extends Specification {
 
         expect:
         clonedSentence.toString() == sampleSentence.toString()
+        !clonedSentence.is(sampleSentence)
     }
 }
