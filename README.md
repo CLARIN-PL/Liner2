@@ -25,6 +25,7 @@ Contributors
 ------------
 * **Michał Marcińczuk** (2010–present), 
 * **Jan Kocoń** (2014–present), 
+* Michał Gawor (2019),
 * Adam Kaczmarek (2014–2015),
 * Michał Krautforst (2013-2015), 
 * Dominik Piasecki (2013), 
@@ -33,19 +34,6 @@ Contributors
 
 Citing
 ------------
-
-### System architecture and KPWr NER models
-
-* Java 8
-* C++ compiler (gcc 3.0 or higher) for CRF++ (https://taku910.github.io/crfpp/)
-* set JAVA_HOME variable:
-```bash
-export JAVA_HOME=/usr/lib/jvm/default-java
-```
-* install dh-autoreconf:
-```bash
-sudo apt-get install dh-autoreconf
-```
 Marcińczuk, Michał; Kocoń, Jan; Oleksy, Marcin.
 _Liner2 — a Generic Framework for Named Entity Recognition_
 In: Proceedings of the 6th Workshop on Balto-Slavic Natural Language Processing, 
@@ -421,6 +409,70 @@ Expected output:
 (20,28,null,placename_settlement,"Warszawie","Warszawie")
 ```
 
+
+### PolEval 2019 Task 1: Recognition and normalisation of temporal expressions
+
+DSpace page: https://clarin-pl.eu/dspace/handle/11321/668
+
+Download the package with model:
+```bash
+cd Liner2
+wget -0 https://clarin-pl.eu/dspace/bitstream/handle/11321/668/2018-05-15-kpwr-event.tar.gz
+```
+
+Unpack the model:
+```bash
+tar xvzf 2018-05-15-kpwr-event.tar.gz
+```
+
+Process a sample CCL file:
+```bash
+./liner2-cli pipe -m 2018-05-15-kpwr-event/events_model_full/cfg.ini -f 2018-05-15-kpwr-event/test2.xml -i ccl -o tuples
+```
+
+Expected output:
+```bash
+(0,24,null,t3_date,"Ostatnia niedziela września","Ostatnia niedziela września")
+(25,34,null,action,"zaskoczyła","zaskoczyła")
+(58,67,null,action,"oświetlały","oświetlały")
+(99,105,null,action,"unosiło","unosiło")
+(127,136,null,action,"wydarzenia","wydarzenia")
+(147,155,null,state,"wyglądały","wyglądały")
+(156,158,null,modality,"już","już")
+(175,186,null,state,"towarzysząca","towarzysząca")
+(208,214,null,action,"zdarzeń","zdarzeń")
+(215,224,null,aspectual,"rozpoczęła","rozpoczęła")
+(225,230,null,action,"awaria","awaria")
+(259,270,null,action,"napędzającym","napędzającym")
+(309,322,null,action,"unieruchomiony","unieruchomiony")
+(361,376,null,action,"unieruchomionych","unieruchomionych")
+(384,391,null,action,"dołączył","dołączył")
+(392,399,null,state,"należący","należący")
+(436,441,null,action,"złamał","złamał")
+(452,459,null,action,"Sytuacja","Sytuacja")
+(477,485,null,state,"wyglądała","wyglądała")
+(516,525,null,state,"należących","należących")
+(542,546,null,action,"gasły","gasły")
+(569,576,null,action,"pomagała","pomagała")
+(582,590,null,action,"regulacja","regulacja")
+(595,600,null,action,"zmiana","zmiana")
+(610,615,null,action,"groźby","groźby")
+(617,622,null,action,"prośby","prośby")
+(652,660,null,action,"spotkania","spotkania")
+(671,676,null,action,"awaria","awaria")
+(718,725,null,action,"diagnozy","diagnozy")
+(749,753,null,action,"padło","padło")
+(780,788,null,action,"spotkaniu","spotkaniu")
+(789,797,null,action,"poprawiło","poprawiło")
+(805,814,null,action,"pojawienie","pojawienie")
+(831,840,null,action,"przyjechał","przyjechał")
+(848,857,null,action,"odzyskanym","odzyskanym")
+(896,904,null,action,"przywiózł","przywiózł")
+(955,961,null,action,"gościły","gościły")
+(990,998,null,action,"wzbudziły","wzbudziły")
+(1003,1017,null,action,"zainteresowanie","zainteresowanie")
+```
+ 
 Service mode (using RabbitMQ)
 ============
 
