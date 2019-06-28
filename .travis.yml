@@ -2,7 +2,7 @@ language: java
 sudo: required
 
 jdk:
-  - oraclejdk8
+  - openjdk8
 
 install: ./stuff/install-dependencies-travisci-ubuntu1404.sh
 
