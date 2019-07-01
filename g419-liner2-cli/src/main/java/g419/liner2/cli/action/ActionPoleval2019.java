@@ -29,17 +29,32 @@ import java.util.stream.Stream;
 
 public class ActionPoleval2019 extends Action {
 
+  private static final String OPTION_NO_LEMMA = "n";
+  private static final String OPTION_NO_LEMMA_LONG = "no-lemma";
+  private static final String OPTION_NO_LEMMA_DESC = "replace annotation lemmas with 'xx'";
+
+  private static final String NO_LEMMA_REPLACEMENT = "xx";
+
   private String inputFile = null;
   private String inputFormat = null;
   private String outputFolder = null;
+  private boolean noLemma = false;
   private final AtomicInteger globalId = new AtomicInteger();
 
   public ActionPoleval2019() {
     super("poleval2019");
-    setDescription("generates data for PolEval 2019 lemmatization task");
+    setDescription("generates data for PolEval 2019 Task 2 on lemmatization");
     options.addOption(CommonOptions.getInputFileFormatOption());
     options.addOption(CommonOptions.getInputFileNameOption());
     options.addOption(CommonOptions.getOutputFileNameOption());
+    options.addOption(getNoLemmaOption());
+  }
+
+  private org.apache.commons.cli.Option getNoLemmaOption() {
+    return org.apache.commons.cli.Option.builder(OPTION_NO_LEMMA)
+        .longOpt(OPTION_NO_LEMMA_LONG)
+        .desc(OPTION_NO_LEMMA_DESC)
+        .build();
   }
 
   @Override
@@ -47,12 +62,14 @@ public class ActionPoleval2019 extends Action {
     inputFile = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
     inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT, "ccl");
     outputFolder = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
+    noLemma = line.hasOption(OPTION_NO_LEMMA);
   }
 
   @Override
   public void run() throws Exception {
     try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFile, inputFormat);
-         final CSVPrinter tsv = new CSVPrinter(Files.newBufferedWriter(Paths.get(outputFolder, "index.tsv")), CSVFormat.TDF)) {
+         final CSVPrinter tsv = new CSVPrinter(
+             Files.newBufferedWriter(Paths.get(outputFolder, "index.tsv")), CSVFormat.TDF)) {
       reader.forEachRemaining(d -> processDocument(d, tsv, outputFolder));
     }
   }
@@ -110,13 +127,23 @@ public class ActionPoleval2019 extends Action {
 
   private void writeAnnotation(final CSVPrinter csv, final Document document, final Annotation annotation) {
     try {
+//      csv.printRecord(
+//          annotation.getLemma(),
+//          annotation.getTokenTokens().stream().map(Token::getOrth).collect(Collectors.joining(" ")),
+//          annotation.getTokenTokens().stream().map(Token::getDisambTag)
+//              .map(Tag::getBase).collect(Collectors.joining(" ")),
+//          annotation.getTokenTokens().stream().map(Token::getDisambTag)
+//              .map(Tag::getCtag).collect(Collectors.joining(" ")),
+//          annotation.getTokenTokens().stream().map(Token::getNoSpaceAfter).
+//              map(space -> space ? "False" : "True").collect(Collectors.joining(" ")),
+//          //isAnnotationProperName(annotation) ? annotation.getType() : "null"
+//          "null"
+//      );
       csv.printRecord(
           annotation.getId(),
           document.getName(),
           annotation.getText().trim(),
-          annotation.getLemma().trim()
-          //annotation.getType(),
-          //annotation.getHeadToken().getDisambTag().getCtag()
+          noLemma ? NO_LEMMA_REPLACEMENT : annotation.getLemma().trim()
       );
     } catch (final IOException ex) {
       getLogger().error("Exception thrown while writing to CSV", ex);
@@ -128,8 +155,15 @@ public class ActionPoleval2019 extends Action {
   }
 
   private boolean validAnnotationType(final Annotation an) {
-    return ("keyword".equals(an.getType()) && an.getTokens().size() > 1)
-        || (Option.of(an.getType()).getOrElse("").startsWith("nam_"));
+    return isAnnotationMultiwordKeyword(an) || isAnnotationProperName(an);
+  }
+
+  private boolean isAnnotationMultiwordKeyword(final Annotation an) {
+    return "keyword".equals(an.getType()) && an.getTokens().size() > 1;
+  }
+
+  private boolean isAnnotationProperName(final Annotation an) {
+    return (Option.of(an.getType()).getOrElse("").startsWith("nam_"));
   }
 
   private boolean isNotNumber(final Annotation an) {
