@@ -44,8 +44,13 @@ allprojects {
         compile(
                 'org.slf4j:slf4j-api:1.7.2',
                 'io.vavr:vavr:0.9.0',
-                'io.projectreactor:reactor-core:3.1.5.RELEASE'
+                'io.projectreactor:reactor-core:3.1.5.RELEASE',
         )
+        compileOnly(
+                'org.projectlombok:lombok:1.18.8'
+        )
+        annotationProcessor 'org.projectlombok:lombok:1.18.8'
+
         runtime(
                 'org.slf4j:slf4j-log4j12:1.7.2',
                 'com.google.code.gson:gson:2.7',
