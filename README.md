@@ -117,7 +117,7 @@ docker-compose up
 
 Test the service:
 ```bash
-python3 stuff/python/liner2rmq.py "Pani Ala Nowak mieszkw w Zielonej Górze"
+python3 stuff/python/liner2rmq.py -t "Pani Ala Nowak mieszkw w Zielonej Górze"
 ```
 
 Expected output:
@@ -451,7 +451,7 @@ The script takes a text to process, stores the texts in a temporal file, generat
 After receiving the response it reads the output file, removes both temporal files and prints the output. 
 
 ```bash
-python3 stuff/python/liner2rmq.py "Pani Ala Nowak mieszkw w Zielonej Górze"
+python3 stuff/python/liner2rmq.py -t "Pani Ala Nowak mieszkw w Zielonej Górze"
 ```
 
 The output should be as follows:
