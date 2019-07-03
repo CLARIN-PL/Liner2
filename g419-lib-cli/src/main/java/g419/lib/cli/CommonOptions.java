@@ -145,7 +145,11 @@ public class CommonOptions {
   }
 
   public static Option getAnnotationTypePatterns() {
-    return Option.builder(OPTION_ANNOTATION_PATTERN).longOpt(OPTION_ANNOTATION_PATTERN_LONG).desc(OPTION_ANNOTATION_PATTERN_DESC).hasArgs().build();
+    return Option.builder(OPTION_ANNOTATION_PATTERN)
+        .longOpt(OPTION_ANNOTATION_PATTERN_LONG)
+        .desc(OPTION_ANNOTATION_PATTERN_DESC)
+        .hasArgs()
+        .build();
   }
 
 }
