@@ -5,23 +5,18 @@ import spock.lang.Specification
 
 class AnnotationPositionComparatorTest extends Specification {
     @Shared
-            sampleSentence1
-    @Shared
-            sampleSentence2
-    @Shared
-            comparator
-    @Shared
-            lower
-    @Shared
-            equal
-    @Shared
-            greater
+            sampleSentence1,
+            sampleSentence2,
+            lower,
+            equal,
+            greater,
+            sampleParagraph,
+            sampleDocument
 
     def setupSpec() {
         lower = -1
         equal = 0
         greater = 1
-        comparator = new AnnotationPositionComparator()
         TokenAttributeIndex attrIndex = new TokenAttributeIndex()
         attrIndex.addAttribute("orth")
         sampleSentence1 = new Sentence(attrIndex)
@@ -39,18 +34,26 @@ class AnnotationPositionComparatorTest extends Specification {
         tok.setNoSpaceAfter(true)
         sampleSentence2.addToken(tok1)
         sampleSentence2.addToken(new Token(".", new Tag(".", "interp", true), attrIndex))
+
+        sampleParagraph = new Paragraph("test_paragraph_id")
+        sampleParagraph.addSentence(sampleSentence1)
+        sampleParagraph.addSentence(sampleSentence2)
+
+        sampleDocument = new Document("test_sentence_name", attrIndex)
+        sampleDocument.addParagraph(sampleParagraph)
     }
 
-    def createSampleDocument() {
-        // TODO
-    }
+    def "Should create the comparator"() {
+        given:
+        AnnotationPositionComparator comparator = new AnnotationPositionComparator()
 
-    def createSampleParagraph() {
-        // TODO
+        expect:
+        comparator != null
     }
 
     def "Annotation should be equal to itself"() {
         given:
+        AnnotationPositionComparator comparator = new AnnotationPositionComparator()
         Annotation annotation = new Annotation(0, 3, "test_type", sampleSentence1)
 
         expect:
@@ -59,6 +62,7 @@ class AnnotationPositionComparatorTest extends Specification {
 
     def "Annotation should be equal to same annotation"() {
         given:
+        AnnotationPositionComparator comparator = new AnnotationPositionComparator()
         Annotation annotation1 = new Annotation(0, 3, "test_type", sampleSentence1)
         Annotation annotation2 = new Annotation(0, 3, "test_type", sampleSentence1)
 
@@ -68,6 +72,7 @@ class AnnotationPositionComparatorTest extends Specification {
 
     def "Annotation occurring earlier in sentence should be lower"() {
         given:
+        AnnotationPositionComparator comparator = new AnnotationPositionComparator()
         Annotation annotation1 = new Annotation(0, 3, "test_type", sampleSentence1)
         Annotation annotation2 = new Annotation(1, 3, "test_type", sampleSentence1)
 
@@ -76,6 +81,7 @@ class AnnotationPositionComparatorTest extends Specification {
     }
 
     def "Annotation occurring later in sentence should be greater"() {
+        AnnotationPositionComparator comparator = new AnnotationPositionComparator()
         Annotation annotation1 = new Annotation(0, 3, "test_type", sampleSentence1)
         Annotation annotation2 = new Annotation(1, 3, "test_type", sampleSentence1)
 
@@ -85,6 +91,7 @@ class AnnotationPositionComparatorTest extends Specification {
 
     def "Annotation with smaller annotation set should be lower"() {
         given:
+        AnnotationPositionComparator comparator = new AnnotationPositionComparator()
         Annotation annotation1 = new Annotation(1, 2, "test_type", sampleSentence1)
         Annotation annotation2 = new Annotation(1, 3, "test_type", sampleSentence1)
 
@@ -94,6 +101,7 @@ class AnnotationPositionComparatorTest extends Specification {
 
     def "Annotation with bigger annotation set should be greater"() {
         given:
+        AnnotationPositionComparator comparator = new AnnotationPositionComparator()
         Annotation annotation1 = new Annotation(1, 3, "test_type", sampleSentence1)
         Annotation annotation2 = new Annotation(1, 2, "test_type", sampleSentence1)
 
@@ -101,5 +109,29 @@ class AnnotationPositionComparatorTest extends Specification {
         comparator.compare(annotation1, annotation2) == greater
     }
 
-    // TODO cases when sentences are different
+    def "Annotation on sentence occurring earlier in the document should be lower"() {
+        given:
+        AnnotationPositionComparator comparator = new AnnotationPositionComparator()
+        Annotation annotation1 = new Annotation(1, 3, "test_type", sampleSentence1)
+        Annotation annotation2 = new Annotation(1, 3, "test_type", sampleSentence2)
+        sampleSentence1.setDocument(sampleDocument)
+        sampleSentence2.setDocument(sampleDocument)
+
+        expect:
+        annotation1.getSentence().getOrd() == 0
+        annotation2.getSentence().getOrd() == 1
+        comparator.compare(annotation1, annotation2) == lower
+    }
+
+    def "Annotation on sentence occurring later in the document should be lower"() {
+        given:
+        AnnotationPositionComparator comparator = new AnnotationPositionComparator()
+        Annotation annotation1 = new Annotation(1, 3, "test_type", sampleSentence1)
+        Annotation annotation2 = new Annotation(1, 3, "test_type", sampleSentence2)
+        sampleSentence1.setDocument(sampleDocument)
+        sampleSentence2.setDocument(sampleDocument)
+
+        expect:
+        comparator.compare(annotation2, annotation1) == greater
+    }
 }

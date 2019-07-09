@@ -6,9 +6,11 @@ import spock.lang.Specification
 class AnnotationSetTest extends Specification {
     @Shared
             sampleSentence
+    @Shared
+            attrIndex
 
     def setup() {
-        TokenAttributeIndex attrIndex = new TokenAttributeIndex()
+        attrIndex = new TokenAttributeIndex()
         attrIndex.addAttribute("orth")
         sampleSentence = new Sentence(attrIndex)
         sampleSentence.addToken(new Token("Ala", new Tag("Ala", "subst:sg:nom:f", true), attrIndex))
@@ -26,7 +28,7 @@ class AnnotationSetTest extends Specification {
 
         expect:
         annotationSet != null
-        annotationSet.getSentence() == sampleSentence
+        annotationSet.sentence == sampleSentence
     }
 
     def "Should add chunk"() {
@@ -266,5 +268,86 @@ class AnnotationSetTest extends Specification {
         annotationSet.getAnnotationTypes().contains(annotation2.getType())
         annotationSet.getAnnotationTypes().contains(annotation3.getType())
         !annotationSet.getAnnotationTypes().contains("3")
+    }
+
+    def "Empty sets should be equal"() {
+        given:
+        AnnotationSet annotationSet1 = new AnnotationSet(sampleSentence)
+        AnnotationSet annotationSet2 = new AnnotationSet(sampleSentence)
+
+        expect:
+        annotationSet1.equals(annotationSet2)
+    }
+
+    def "Same sets on same sentence should be equal"() {
+        given:
+        Annotation annotation1 = new Annotation(1, "1", sampleSentence)
+        Annotation annotation2 = new Annotation(1, "1", sampleSentence)
+
+        AnnotationSet annotationSet1 = new AnnotationSet(sampleSentence)
+        AnnotationSet annotationSet2 = new AnnotationSet(sampleSentence)
+
+        annotationSet1.addChunk(annotation1)
+        annotationSet1.addChunk(annotation1)
+
+        annotationSet2.addChunk(annotation2)
+        annotationSet2.addChunk(annotation2)
+
+        expect:
+        annotationSet1 == annotationSet2
+    }
+
+    def "Same sets on different sentence should not be equal"() {
+        given:
+        Annotation annotation1 = new Annotation(1, "1", sampleSentence)
+        Sentence anotherSentence = sampleSentence.clone()
+        anotherSentence.addToken(new Token(".", new Tag(".", "interp", true), attrIndex))
+        Annotation annotation2 = new Annotation(1, "1", anotherSentence)
+
+        AnnotationSet annotationSet1 = new AnnotationSet(sampleSentence)
+        AnnotationSet annotationSet2 = new AnnotationSet(anotherSentence)
+
+        annotationSet1.addChunk(annotation1)
+
+        annotationSet2.addChunk(annotation2)
+
+        expect:
+        annotationSet1 != annotationSet2
+    }
+
+    def "Different sets on same sentence should not be equal"() {
+        given:
+        Annotation annotation1 = new Annotation(1, "1", sampleSentence)
+        Annotation annotation2 = new Annotation(2, "1", sampleSentence)
+
+        AnnotationSet annotationSet1 = new AnnotationSet(sampleSentence)
+        AnnotationSet annotationSet2 = new AnnotationSet(sampleSentence)
+
+        annotationSet1.addChunk(annotation1)
+        annotationSet1.addChunk(annotation1)
+
+        annotationSet2.addChunk(annotation2)
+        annotationSet2.addChunk(annotation2)
+
+        expect:
+        annotationSet1 != annotationSet2
+    }
+
+    def "Different sets on different sentence should not be equal"() {
+        given:
+        Annotation annotation1 = new Annotation(1, "1", sampleSentence)
+        Sentence anotherSentence = sampleSentence.clone()
+        anotherSentence.addToken(new Token(".", new Tag(".", "interp", true), attrIndex))
+        Annotation annotation2 = new Annotation(2, "1", anotherSentence)
+
+        AnnotationSet annotationSet1 = new AnnotationSet(sampleSentence)
+        AnnotationSet annotationSet2 = new AnnotationSet(anotherSentence)
+
+        annotationSet1.addChunk(annotation1)
+
+        annotationSet2.addChunk(annotation2)
+
+        expect:
+        annotationSet1 != annotationSet2
     }
 }

@@ -19,7 +19,6 @@ class SentenceTest extends Specification {
         tok.setNoSpaceAfter(true)
         sampleSentence.addToken(tok)
         sampleSentence.addToken(new Token(".", new Tag(".", "interp", true), attrIndex))
-        return sampleSentence
     }
 
     def "Should create sentence"() {
@@ -318,24 +317,6 @@ class SentenceTest extends Specification {
         sampleSentence.toString() == "Ala ma kota."
     }
 
-    def "Should set tokens"() {
-        expect:
-        sampleSentence.toString() == "Ala ma kota."
-
-        when:
-        TokenAttributeIndex attrIndex = new TokenAttributeIndex()
-        attrIndex.addAttribute("orth")
-        sampleSentence = new Sentence(attrIndex)
-        sampleSentence.addToken(new Token("Kot", new Tag("kot", "subst:sg:gen:m2", true), attrIndex))
-        sampleSentence.addToken(new Token("jest", new Tag("mieć", "fin:sg:ter:imperf", true), attrIndex))
-        Token tok = new Token("Ali", new Tag("Ala", "subst:sg:nom:f", true), attrIndex)
-        tok.setNoSpaceAfter(true)
-        sampleSentence.addToken(tok)
-        sampleSentence.addToken(new Token(".", new Tag(".", "interp", true), attrIndex))\
-
-        then:
-        sampleSentence.toString() == 'Kot jest Ali.'
-    }
 
     def "Should clone itself"() {
         given:
