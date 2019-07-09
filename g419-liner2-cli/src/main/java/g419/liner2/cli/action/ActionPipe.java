@@ -63,8 +63,6 @@ public class ActionPipe extends Action {
       throw new ParameterException("Parameter 'chunker' in 'main' section of model not set");
     }
 
-    //final AbstractDocumentReader reader = getInputReader();
-    //final AbstractDocumentWriter writer = getOutputWriter();
     TokenFeatureGenerator gen = null;
 
     if (!LinerOptions.getGlobal().features.isEmpty()) {
@@ -82,13 +80,13 @@ public class ActionPipe extends Action {
          final AbstractDocumentWriter writer = getOutputWriter()
     ) {
       while (reader.hasNext()) {
-        final Document ps = reader.nextDocument();
+        Document ps = reader.nextDocument();
         final RelationSet relations = ps.getRelations();
         if (gen != null) {
           gen.generateFeatures(ps);
         }
         chunker.chunkInPlace(ps);
-        ps.setRelations(relations);
+        relations.getRelations().forEach(ps::addRelation);
         writer.writeDocument(ps);
       }
     }
