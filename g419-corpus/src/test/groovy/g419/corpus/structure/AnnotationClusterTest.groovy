@@ -76,7 +76,7 @@ class AnnotationClusterTest extends Specification {
         Relation relation2 = new Relation("test_relation_id", annotation2, annotation3, "test_relation_type")
 
         expect:
-        annotationCluster.annotations == [].toSet() []
+        annotationCluster.annotations == (Set) []
 
         when:
         annotationCluster.addRelation(relation1)
