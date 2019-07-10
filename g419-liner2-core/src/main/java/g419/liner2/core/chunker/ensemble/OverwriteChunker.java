@@ -36,9 +36,8 @@ public class OverwriteChunker extends Chunker implements Normalizer {
         e.printStackTrace();
       }
       chunker.chunkInPlace(document);
-
-
     }
+
     for (int i = 0; i < document.getSentences().size(); i++) {
       Sentence sentence = ps.getSentences().get(i);
       AnnotationSet set = new AnnotationSet(sentence);
@@ -53,10 +52,11 @@ public class OverwriteChunker extends Chunker implements Normalizer {
           set.addChunk(an);
         }
       }
-      if (chunkings.containsKey(sentence))
-        chunkings.get(sentence).union(set);
-      else
-        chunkings.put(sentence, set);
+      chunkings.computeIfPresent(sentence, (k, v) -> {
+        v.union(set);
+        return v;
+      });
+      chunkings.computeIfAbsent(sentence, k -> set);
     }
 
     // Add relation - e.g. for ChunkRel
