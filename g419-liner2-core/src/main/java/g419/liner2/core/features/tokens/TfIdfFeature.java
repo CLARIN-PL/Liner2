@@ -20,8 +20,13 @@ public class TfIdfFeature extends TokenInDocumentFeature {
     BaseCount baseCount = new BaseCount(document);
     int thisFeatureIdx = document.getAttributeIndex().getIndex(this.getName());
 
-    float tokenNumber = (float) document.getTokenNumber();
-    
+    float tokenNumber = 0;
+    for (Paragraph paragraph: document.getParagraphs()) {
+      for (Sentence sentence: paragraph.getSentences()) {
+        tokenNumber += sentence.getTokenNumber();
+        }
+      }
+
     for(Paragraph paragraph : document.getParagraphs()){
       for(Sentence sentence : paragraph.getSentences()){
         for(Token token : sentence.getTokens()){
