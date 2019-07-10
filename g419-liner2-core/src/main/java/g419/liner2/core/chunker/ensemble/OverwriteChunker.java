@@ -56,7 +56,7 @@ public class OverwriteChunker extends Chunker implements Normalizer {
         v.union(set);
         return v;
       });
-      chunkings.computeIfAbsent(sentence, k -> set);
+      chunkings.putIfAbsent(sentence, set);
     }
 
     // Add relation - e.g. for ChunkRel
