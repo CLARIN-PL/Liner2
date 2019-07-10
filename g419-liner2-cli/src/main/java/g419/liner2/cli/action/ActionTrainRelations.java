@@ -1,28 +1,19 @@
 package g419.liner2.cli.action;
 
 import fasttext.Args;
-import fasttext.Pair;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
-import g419.corpus.io.writer.AbstractDocumentWriter;
-import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.*;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.lib.cli.ParameterException;
 import g419.liner2.core.LinerOptions;
-import g419.liner2.core.chunker.Chunker;
 import g419.liner2.core.chunker.FastTextRelationChunker;
-import g419.liner2.core.chunker.factory.ChunkerManager;
 import g419.liner2.core.features.TokenFeatureGenerator;
 import org.apache.commons.cli.CommandLine;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import fasttext.FastText;
 import org.apache.commons.cli.Option;
@@ -35,9 +26,9 @@ import org.apache.commons.cli.Option;
  */
 public class ActionTrainRelations extends Action {
 
-    private String input_file = null;
-    private String input_format = "batch:cclrel";
-    private String output_prefix = null;
+    private String inputFile = null;
+    private String inputFormat = "batch:cclrel";
+    private String outputPrefix = null;
     private String mode = null;
     private Set<String> chosenRelations = null;
     private boolean content = false;
@@ -67,8 +58,8 @@ public class ActionTrainRelations extends Action {
 
     @Override
     public void parseOptions(final CommandLine line) throws Exception {
-        this.output_prefix = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
-        this.input_file = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
+        this.outputPrefix = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
+        this.inputFile = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
         this.mode = line.getOptionValue("mode");
         this.content = line.hasOption("content");
         if (!this.mode.equals("train") && !this.mode.equals("test") )
@@ -92,7 +83,7 @@ public class ActionTrainRelations extends Action {
     public void run() throws Exception {
 
 
-        AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(this.input_file, this.input_format);
+        AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(this.inputFile, this.inputFormat);
 
         TokenFeatureGenerator gen = null;
 
@@ -100,7 +91,7 @@ public class ActionTrainRelations extends Action {
             gen = new TokenFeatureGenerator(LinerOptions.getGlobal().features);
         }
 
-        PrintWriter writer = new PrintWriter(this.output_prefix + "." + this.mode + ".txt", "UTF-8");
+        PrintWriter writer = new PrintWriter(this.outputPrefix + "." + this.mode + ".txt", "UTF-8");
         Document ps = reader.nextDocument();
         while (ps != null) {
             if (gen != null)
@@ -151,8 +142,8 @@ public class ActionTrainRelations extends Action {
             Args a = new Args();
             a.parseArgs(new String[]{
                     "supervised",
-                    "-input", this.output_prefix + ".train.txt",
-                    "-output", this.output_prefix + ".model",
+                    "-input", this.outputPrefix + ".train.txt",
+                    "-output", this.outputPrefix + ".model",
                     "-dim", "50",
                     "-epoch", "100",
                     "-ws", "5",
@@ -168,8 +159,8 @@ public class ActionTrainRelations extends Action {
         }
         else {
             FastText fasttext = new FastText();
-            fasttext.loadModel(this.output_prefix + ".model.bin");
-            fasttext.test(new FileInputStream(new File(this.output_prefix + ".test.txt")), 1);
+            fasttext.loadModel(this.outputPrefix + ".model.bin");
+            fasttext.test(new FileInputStream(new File(this.outputPrefix + ".test.txt")), 1);
         }
 
     }
