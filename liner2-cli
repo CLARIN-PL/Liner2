@@ -5,9 +5,6 @@ DIR="$( cd "$( dirname "$0" )" && pwd )"
 name=g419-liner2-cli
 jar=`find $DIR/$name/build/libs -name "$name*-all.jar" -type f`
 
-echo $jar
-echo $@
-
 if [ -f "$jar" ] 
 then
   java -Xss4m -Xmx10000M -jar $jar $@
