@@ -171,8 +171,6 @@ public class TokenFeatureFactory {
         sourceFeatureIndex = 2;
       }
       return new KeyValueFeature(fData[0], fData[2], sourceFeatureIndex);
-    } else if (feature.equals("tfidf")) {
-      return new TfIdfFeature(feature);
     } else {
       throw new DataFormatException("Invalid feature: " + feature);
     }
