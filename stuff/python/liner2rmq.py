@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import codecs
 import os
 import pika
@@ -68,17 +69,35 @@ class Liner2Rmq:
         self.connection.close()
 
 
-if __name__ == "__main__":
-    if len(sys.argv) > 2:
-        liner2 = Liner2Rmq()
-        text = sys.argv[2]
-        while True:
-            output = liner2.process(text)
-            print(output)
-    elif len(sys.argv) > 1:
-        liner2 = Liner2Rmq()
-        xml = liner2.process(sys.argv[1])
-        liner2.close()
-        print(xml)
+def print_result(result, output_path=None):
+    if output_path is None:
+        print(result)
     else:
-        print("[ERROR] No text to send. Run ./liner2.py 'Text to process'")
+        codecs.open(output_path, "w", "utf-8").write(result)
+        print("[INFO] The result of processing was saved to %s" % output_path)
+
+
+def process_text(text, output_path):
+    liner2 = Liner2Rmq()
+    xml = liner2.process(text)
+    liner2.close()
+    print_result(xml, output_path)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description='Process given text with Liner2 service.',
+        usage="./liner2rmq.py -t 'Text to process'\n       ./liner2rmq.py -i PATH")
+    parser.add_argument('-t', required=False, metavar='TEXT', help='text to process')
+    parser.add_argument('-i', required=False, metavar='PATH', help='path to a file with text to process')
+    parser.add_argument('-o', required=False, metavar='PATH', help='path to a file where to save the processing result')
+    args = parser.parse_args()
+
+    if args.i is not None:
+        text = codecs.open(args.i, "r", "utf-8").read()
+        process_text(text, args.o)
+    elif args.t is not None:
+        text = args.t
+        process_text(text, args.o)
+    else:
+        parser.print_help(sys.stdout)
