@@ -8,10 +8,15 @@ import g419.corpus.io.writer.WriterFactory;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.core.tools.parser.MaltParser;
+import g419.spatial.io.SpatialOutputFormat;
+import g419.spatial.io.writer.SpatialWriterFactory;
+import g419.spatial.tools.ISpatialRelationRecognizer;
 import g419.spatial.tools.SpatialRelationRecognizer;
 import g419.toolbox.wordnet.Wordnet3;
 import org.apache.commons.cli.CommandLine;
 import reactor.core.publisher.Flux;
+
+import java.io.OutputStream;
 
 public class ActionPipe extends Action {
 
@@ -55,11 +60,12 @@ public class ActionPipe extends Action {
   public void run() throws Exception {
     final Wordnet3 wordnet = new Wordnet3(wordnetPath.get());
     final MaltParser malt = new MaltParser(maltparserModel.get());
-    final SpatialRelationRecognizer recognizer = new SpatialRelationRecognizer(malt, wordnet);
+    final ISpatialRelationRecognizer recognizer = new SpatialRelationRecognizer(wordnet).withMaltParser(malt);
+    final OutputStream os = WriterFactory.get().getOutputStreamFileOrOut(outputFilename.get());
 
     try (
-        AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename.get(), inputFormat.get());
-        AbstractDocumentWriter writer = getWriter(outputFilename, outputFormat)
+        final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename.get(), inputFormat.get());
+        final AbstractDocumentWriter writer = SpatialWriterFactory.create(SpatialOutputFormat.valueOf(outputFormat.or("").toUpperCase()), os)
     ) {
       Flux.fromIterable(reader)
           .doOnNext(doc -> getLogger().info("Processing document {}", doc.getName()))

@@ -14,11 +14,10 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.util.List;
 
 public class TeiSegmentationSAXParser extends DefaultHandler {
 
-  final List<Paragraph> paragraphs;
+  final TeiDocumentElements elements;
 
   Token currentToken;
   Sentence currentSentence;
@@ -27,9 +26,11 @@ public class TeiSegmentationSAXParser extends DefaultHandler {
   int currentParagraphIdx;
   int currentSentenceIdx;
 
-  public TeiSegmentationSAXParser(final InputStream is, final List<Paragraph> paragraphs) throws IOException, SAXException, ParserConfigurationException {
-    this.paragraphs = paragraphs;
-    currentSentence = paragraphs.get(0).getSentences().get(0);
+  public TeiSegmentationSAXParser(final InputStream is,
+                                  final TeiDocumentElements elements)
+      throws IOException, SAXException, ParserConfigurationException {
+    this.elements = elements;
+    currentSentence = elements.getParagraphs().get(0).getSentences().get(0);
     SAXParserFactory.newInstance().newSAXParser().parse(is, this);
   }
 
@@ -41,7 +42,7 @@ public class TeiSegmentationSAXParser extends DefaultHandler {
   @Override
   public void startElement(final String s, final String s1, final String elementName, final Attributes attributes) throws SAXException {
     if (elementName.equalsIgnoreCase(Tei.TAG_PARAGRAPH)) {
-      currentParagraph = paragraphs.get(currentParagraphIdx++);
+      currentParagraph = elements.getParagraphs().get(currentParagraphIdx++);
       currentSentenceIdx = 0;
     } else if (elementName.equalsIgnoreCase(Tei.TAG_SENTENCE)) {
       currentSentence = currentParagraph.getSentences().get(currentSentenceIdx++);
@@ -58,7 +59,4 @@ public class TeiSegmentationSAXParser extends DefaultHandler {
   public void endElement(final String s, final String s1, final String element) throws SAXException {
   }
 
-  public List<Paragraph> getParagraphs() {
-    return paragraphs;
-  }
 }

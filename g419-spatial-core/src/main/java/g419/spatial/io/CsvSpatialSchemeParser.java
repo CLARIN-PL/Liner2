@@ -55,13 +55,13 @@ public class CsvSpatialSchemeParser implements HasLogger {
     int columnLandmark = 14;
 
     // Kolumny zawierające uszczegółowione koncepty dla trajektorów i landmarków
-    if (!this.general) {
+    if (!general) {
       columnTrajector = 13;
       columnLandmark = 15;
     }
     final List<SpatialRelationSchema> patterns = new LinkedList<>();
 
-    final CSVParser csv = new CSVParser(this.reader, CSVFormat.DEFAULT);
+    final CSVParser csv = new CSVParser(reader, CSVFormat.DEFAULT);
 
     final Iterator<CSVRecord> it = csv.iterator();
 
@@ -81,7 +81,7 @@ public class CsvSpatialSchemeParser implements HasLogger {
       final boolean use = record.get(3).toLowerCase().trim().equals("t");
 
       if (!use) {
-        Logger.getLogger(this.getClass()).info(String.format("Schemat %s został pominięty (use=N)", id));
+        Logger.getLogger(getClass()).info(String.format("Schemat %s został pominięty (use=N)", id));
         continue;
       }
 
@@ -108,8 +108,8 @@ public class CsvSpatialSchemeParser implements HasLogger {
         sis.add(si.trim());
       }
 
-      final Set<String> trajectorConcepts = this.parseConcepts(id, trajectorIds);
-      final Set<String> landmarkConcepts = this.parseConcepts(id, landmarkIds);
+      final Set<String> trajectorConcepts = parseConcepts(id, trajectorIds);
+      final Set<String> landmarkConcepts = parseConcepts(id, landmarkIds);
 
       if (trajectorConcepts.size() > 0 && landmarkConcepts.size() > 0) {
         patterns.add(new SpatialRelationSchema(id, cas, sis, trajectorConcepts, landmarkConcepts));
@@ -123,7 +123,7 @@ public class CsvSpatialSchemeParser implements HasLogger {
     csv.close();
 
     logger.info(String.format("Liczba wczytanych wzorców: %d", patterns.size()));
-    return new SpatialRelationSchemaMatcher(patterns, this.sumo);
+    return new SpatialRelationSchemaMatcher(patterns, sumo);
   }
 
   /**
@@ -140,7 +140,7 @@ public class CsvSpatialSchemeParser implements HasLogger {
         getLogger().warn("Nazwa konceptu nie zaczyna się od #: {} (schemat {})", part, id);
       } else {
         part = part.trim().substring(1);
-        if (this.sumo.containsClass(part)) {
+        if (sumo.containsClass(part)) {
           concepts.add(part);
         } else {
           getLogger().warn("Koncept '{}' nie został znaleziony w SUMO (schemat {})", part, id);

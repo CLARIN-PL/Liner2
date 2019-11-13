@@ -6,6 +6,7 @@ import g419.corpus.structure.TokenAttributeIndex;
 
 import java.io.Closeable;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 
 /**
@@ -22,6 +23,9 @@ public abstract class AbstractDocumentReader implements Closeable, Iterator<Docu
 
   @Override
   public Document next() {
+    if (!hasNext()) {
+      throw new NoSuchElementException();
+    }
     try {
       return nextDocument();
     } catch (final Exception ex) {

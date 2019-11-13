@@ -31,15 +31,6 @@ class AnnotationEqualTest extends Specification {
             an1.equals(an1)
     }
 
-    def "Annotation with null type is equal to itself"() {
-        given:
-            Sentence sentence = getSampleSentence()
-            Annotation an1 = new Annotation("an1", 0, 0, null, sentence)
-
-        expect:
-            an1.equals(an1)
-    }
-
     @Unroll("With an1.id=#id1 and an2.id=#id2 the annotations should be equal")
     def "Two annotations with the same data or missing id are equal"() {
         given:

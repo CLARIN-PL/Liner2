@@ -15,7 +15,7 @@ public class RelationFilterDifferentObjects implements IRelationFilter {
   }
 
   @Override
-  public boolean pass(SpatialExpression relation) {
+  public boolean pass(final SpatialExpression relation) {
     return relation.getTrajector().getSpatialObject().getHead() != relation.getLandmark().getSpatialObject().getHead();
   }
 

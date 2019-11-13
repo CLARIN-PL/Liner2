@@ -1,6 +1,5 @@
 package g419.corpus.io.reader.parser.tei;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import g419.corpus.ConsolePrinter;
 import g419.corpus.io.Tei;
@@ -17,13 +16,11 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.util.List;
 import java.util.Map;
 
 public class TeiMorphosyntaxSAXParser extends DefaultHandler {
 
-  final List<Paragraph> paragraphs = Lists.newArrayList();
-  final Map<String, Integer> tokenIdsMap = Maps.newHashMap();
+  final TeiDocumentElements elements;
 
   Paragraph currentParagraph = null;
   Sentence currentSentence = null;
@@ -41,9 +38,14 @@ public class TeiMorphosyntaxSAXParser extends DefaultHandler {
 
   final Logger logger = LoggerFactory.getLogger(getClass());
 
-  public TeiMorphosyntaxSAXParser(final String docName, final InputStream is, final TokenAttributeIndex attributeIndex) throws IOException, ParserConfigurationException, SAXException {
+  public TeiMorphosyntaxSAXParser(final String docName,
+                                  final InputStream is,
+                                  final TokenAttributeIndex attributeIndex,
+                                  final TeiDocumentElements elements)
+      throws IOException, ParserConfigurationException, SAXException {
     this.docName = docName;
     this.attributeIndex = attributeIndex;
+    this.elements = elements;
     SAXParserFactory.newInstance().newSAXParser().parse(is, this);
     if (!foundSentenceId) {
       ConsolePrinter.log("Generated sentence ids for document:" + docName);
@@ -68,7 +70,7 @@ public class TeiMorphosyntaxSAXParser extends DefaultHandler {
     } else if (elementName.equalsIgnoreCase(Tei.TAG_SEGMENT)) {
       currentToken = new Token(attributeIndex);
       currentTokenTags = Maps.newHashMap();
-      tokenIdsMap.put("ann_morphosyntax.xml#" + attributes.getValue(Tei.TAG_ID), idx++);
+      elements.getTokensIdMap().put("ann_morphosyntax.xml#" + attributes.getValue(Tei.TAG_ID), idx++);
       currentToken.setId(attributes.getValue(Tei.TAG_ID));
       foundSentenceId = true;
 
@@ -95,7 +97,7 @@ public class TeiMorphosyntaxSAXParser extends DefaultHandler {
   @Override
   public void endElement(final String s, final String s1, final String element) throws SAXException {
     if (element.equalsIgnoreCase(Tei.TAG_PARAGRAPH)) {
-      paragraphs.add(currentParagraph);
+      elements.getParagraphs().add(currentParagraph);
     } else if (element.equalsIgnoreCase(Tei.TAG_SENTENCE)) {
       if (!currentSentence.hasId()) {
         currentSentence.setId("sent" + currentParagraph.numSentences() + 1);
@@ -118,8 +120,6 @@ public class TeiMorphosyntaxSAXParser extends DefaultHandler {
         tmpBase = tmpValue;
       }
     }
-
-
   }
 
   @Override
@@ -127,14 +127,6 @@ public class TeiMorphosyntaxSAXParser extends DefaultHandler {
     for (int i = start; i < start + length; i++) {
       tmpValue += ac[i];
     }
-  }
-
-  public List<Paragraph> getParagraphs() {
-    return paragraphs;
-  }
-
-  public Map<String, Integer> getTokenIdsMap() {
-    return tokenIdsMap;
   }
 
 }

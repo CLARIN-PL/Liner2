@@ -14,7 +14,13 @@ run {
 
 jar {
     manifest {
-        attributes "Main-Class": main
+        attributes(
+                "Main-Class": main
+        )
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 

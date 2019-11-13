@@ -1,12 +1,13 @@
 package g419.liner2.core.tools
 
 import g419.corpus.structure.*
+import spock.lang.Ignore
 import spock.lang.Specification
 
-//@Ignore
+@Ignore("Test disabled because Polem is not installed locally")
 class PolemLemmatizerTest extends Specification {
 
-    def "lemmatize should return valid lemma for orths, bases, ctags and debug parameters"(){
+    def "lemmatize should return valid lemma for orths, bases, ctags and debug parameters"() {
         given:
             PolemLemmatizer polem = new PolemLemmatizer()
 
@@ -14,7 +15,7 @@ class PolemLemmatizerTest extends Specification {
             polem.lemmatize("Rady Ministrów", "rada minister", "subst:sg:gen:f subst:pl:gen:m1") == "rada ministrów"
     }
 
-    def "lemmatize should return valid lemma for annotation parameter"(){
+    def "lemmatize should return valid lemma for annotation parameter"() {
         given:
             Sentence sentence = getSampleSentence()
             Annotation an1 = new Annotation("an1", 1, 2, "artifact", sentence)
