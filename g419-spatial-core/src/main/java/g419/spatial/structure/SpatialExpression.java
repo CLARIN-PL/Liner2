@@ -2,8 +2,13 @@ package g419.spatial.structure;
 
 import com.google.common.collect.Sets;
 import g419.corpus.structure.Annotation;
+import g419.corpus.structure.Sentence;
 
+import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 /**
  * Represents spatial expression, which consists of: trajector, landmark, spatial indicator, motion indicator, path
@@ -12,142 +17,174 @@ import java.util.Set;
  */
 public class SpatialExpression {
 
-    final private SpatialObjectRegion trajector = new SpatialObjectRegion();
-    final private SpatialObjectRegion landmark = new SpatialObjectRegion();
-    final private Set<Annotation> directions = Sets.newHashSet();
-    final private Set<Annotation> distances = Sets.newHashSet();
-    final private Set<SpatialObjectPath> pathsIndicators = Sets.newHashSet();
-    final private Set<SpatialRelationSchema> filtres = Sets.newHashSet();
-    final private Set<String> trajectorConcepts = Sets.newHashSet();
-    final private Set<String> landmarkConcepts = Sets.newHashSet();
-    private String type;
-    private Annotation spatialIndicator = null;
-    private Annotation motionIndicator = null;
+  public static String LANDMARK = "landmark";
 
-    public SpatialExpression() {
+  public static String TRAJECTOR = "trajector";
+
+  public static String SPATIAL_INDICATOR = "spatial_indicator";
+
+  public static String MOTION_INDICATOR = "motion_indicator";
+
+  final private SpatialObjectRegion trajector = new SpatialObjectRegion();
+  final private SpatialObjectRegion landmark = new SpatialObjectRegion();
+  final private Set<Annotation> directions = Sets.newHashSet();
+  final private Set<Annotation> distances = Sets.newHashSet();
+  final private Set<SpatialObjectPath> pathsIndicators = Sets.newHashSet();
+  final private Set<SpatialRelationSchema> filtres = Sets.newHashSet();
+  final private Set<String> trajectorConcepts = Sets.newHashSet();
+  final private Set<String> landmarkConcepts = Sets.newHashSet();
+  private String type;
+  private Annotation spatialIndicator = null;
+  private Annotation motionIndicator = null;
+
+  public SpatialExpression() {
+  }
+
+  public SpatialExpression(final String type, final Annotation trajector, final Annotation spatialIndicator, final Annotation landmark) {
+    this.type = type;
+    this.trajector.setSpatialObject(trajector);
+    this.spatialIndicator = spatialIndicator;
+    this.landmark.setSpatialObject(landmark);
+  }
+
+  public void setType(final String type) {
+    this.type = type;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public SpatialObjectRegion getTrajector() {
+    return trajector;
+  }
+
+  public void setTrajector(final Annotation trajector) {
+    this.trajector.setSpatialObject(trajector);
+  }
+
+  public Annotation getSpatialIndicator() {
+    return spatialIndicator;
+  }
+
+  public void setSpatialIndicator(final Annotation spatialIndicator) {
+    this.spatialIndicator = spatialIndicator;
+  }
+
+  public SpatialObjectRegion getLandmark() {
+    return landmark;
+  }
+
+  public void setLandmark(final Annotation landmark) {
+    this.landmark.setSpatialObject(landmark);
+  }
+
+  public Annotation getMotionIndicator() {
+    return motionIndicator;
+  }
+
+  public void setMotionIndicator(final Annotation motionIndicator) {
+    this.motionIndicator = motionIndicator;
+  }
+
+  public Set<Annotation> getDirections() {
+    return directions;
+  }
+
+  public Set<Annotation> getDistances() {
+    return distances;
+  }
+
+  public Set<SpatialObjectPath> getPathsIndicators() {
+    return pathsIndicators;
+  }
+
+  public Set<String> getTrajectorConcepts() {
+    return trajectorConcepts;
+  }
+
+  public Set<String> getLandmarkConcepts() {
+    return landmarkConcepts;
+  }
+
+  public Set<SpatialRelationSchema> getSchemas() {
+    return filtres;
+  }
+
+  /**
+   * Returns a set of all annotations which are part of the expression.
+   *
+   * @return
+   */
+  public Set<Annotation> getAnnotations() {
+    final Set<Annotation> ans = Sets.newHashSet();
+    ans.add(getLandmark().getSpatialObject());
+    ans.add(getLandmark().getRegion());
+    ans.add(getTrajector().getSpatialObject());
+    ans.add(getTrajector().getRegion());
+    ans.add(getSpatialIndicator());
+    ans.add(getMotionIndicator());
+    for (final SpatialObjectPath sop : pathsIndicators) {
+      ans.add(sop.getSpatialObject().getRegion());
+      ans.add(sop.getSpatialObject().getSpatialObject());
+      ans.add(sop.getPathIndicator());
     }
+    ans.addAll(directions);
+    ans.addAll(distances);
+    ans.remove(null);
+    return ans;
+  }
 
-    public SpatialExpression(final String type, final Annotation trajector, final Annotation spatialIndicator, final Annotation landmark) {
-        this.type = type;
-        this.trajector.setSpatialObject(trajector);
-        this.spatialIndicator = spatialIndicator;
-        this.landmark.setSpatialObject(landmark);
+  public int getWidth() {
+    final Set<Integer> tokens = getAnnotations().stream().map(Annotation::getTokens).flatMap(Collection::stream)
+        .collect(Collectors.toSet());
+    final int max = tokens.stream().mapToInt(d -> d).max().getAsInt();
+    final int min = tokens.stream().mapToInt(d -> d).min().getAsInt();
+    return max - min;
+  }
+
+  public Optional<Sentence> getSentence() {
+    return getAnnotations().stream().map(Annotation::getSentence).findFirst();
+  }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder();
+    Annotation lastAn = null;
+    sb.append(String.format("%s:", type));
+    lastAn = appendNext(sb, lastAn, trajector.getSpatialObject(), "TR");
+    lastAn = appendNext(sb, lastAn, spatialIndicator, "SI");
+    lastAn = appendNext(sb, lastAn, landmark.getRegion(), "RE");
+    lastAn = appendNext(sb, lastAn, landmark.getSpatialObject(), "LM");
+    return sb.toString();
+  }
+
+  private Annotation appendNext(final StringBuilder sb, final Annotation lastAn, final Annotation currentAn, final String role) {
+    if (lastAn != null && currentAn != null && lastAn.getEnd() + 1 != currentAn.getBegin()) {
+      sb.append(" ...");
     }
-
-    public void setType(final String type) {
-        this.type = type;
+    if (currentAn != null) {
+      sb.append(toString(currentAn, role));
+      return currentAn;
+    } else {
+      return lastAn;
     }
+  }
 
-    public String getType() {
-        return this.type;
+  private String toString(final Annotation an, final String role) {
+    return String.format(" %s:[%s:%s]", role, an.getText(true), an.getType());
+  }
+
+  public String getKey() {
+    final StringJoiner joiner = new StringJoiner("_");
+    joiner.add("TR:" + getTrajector().getSpatialObject().getBegin());
+    if (getSpatialIndicator() != null) {
+      joiner.add("SI:" + getSpatialIndicator().getBegin());
     }
-
-    public SpatialObjectRegion getTrajector() {
-        return trajector;
+    if (getLandmark() != null && getLandmark().getSpatialObject() != null) {
+      joiner.add("LM:" + getLandmark().getSpatialObject().getBegin());
     }
+    return joiner.toString();
 
-    public void setTrajector(final Annotation trajector) {
-        this.trajector.setSpatialObject(trajector);
-    }
-
-    public Annotation getSpatialIndicator() {
-        return spatialIndicator;
-    }
-
-    public void setSpatialIndicator(final Annotation spatialIndicator) {
-        this.spatialIndicator = spatialIndicator;
-    }
-
-    public SpatialObjectRegion getLandmark() {
-        return landmark;
-    }
-
-    public void setLandmark(final Annotation landmark) {
-        this.landmark.setSpatialObject(landmark);
-    }
-
-    public Annotation getMotionIndicator() {
-        return motionIndicator;
-    }
-
-    public void setMotionIndicator(final Annotation motionIndicator) {
-        this.motionIndicator = motionIndicator;
-    }
-
-    public Set<Annotation> getDirections() {
-        return directions;
-    }
-
-    public Set<Annotation> getDistances() {
-        return distances;
-    }
-
-    public Set<SpatialObjectPath> getPathsIndicators() {
-        return pathsIndicators;
-    }
-
-    public Set<String> getTrajectorConcepts() {
-        return this.trajectorConcepts;
-    }
-
-    public Set<String> getLandmarkConcepts() {
-        return this.landmarkConcepts;
-    }
-
-    public Set<SpatialRelationSchema> getSchemas() {
-        return this.filtres;
-    }
-
-    /**
-     * Returns a set of all annotations which are part of the expression.
-     *
-     * @return
-     */
-    public Set<Annotation> getAnnotations() {
-        final Set<Annotation> ans = Sets.newHashSet();
-        ans.add(getLandmark().getSpatialObject());
-        ans.add(getLandmark().getRegion());
-        ans.add(getTrajector().getSpatialObject());
-        ans.add(getTrajector().getRegion());
-        ans.add(getSpatialIndicator());
-        ans.add(getMotionIndicator());
-        for (final SpatialObjectPath sop : pathsIndicators) {
-            ans.add(sop.getSpatialObject().getRegion());
-            ans.add(sop.getSpatialObject().getSpatialObject());
-            ans.add(sop.getPathIndicator());
-        }
-        ans.addAll(directions);
-        ans.addAll(distances);
-        ans.remove(null);
-        return ans;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        Annotation lastAn = null;
-        sb.append(String.format("%s:", type));
-        lastAn = appendNext(sb, lastAn, trajector.getSpatialObject(), "TR");
-        lastAn = appendNext(sb, lastAn, spatialIndicator, "SI");
-        lastAn = appendNext(sb, lastAn, landmark.getRegion(), "RE");
-        lastAn = appendNext(sb, lastAn, landmark.getSpatialObject(), "LM");
-        return sb.toString();
-    }
-
-    private Annotation appendNext(final StringBuilder sb, final Annotation lastAn, final Annotation currentAn, final String role) {
-        if (lastAn != null && currentAn != null && lastAn.getEnd() + 1 != currentAn.getBegin()) {
-            sb.append(" ...");
-        }
-        if (currentAn != null) {
-            sb.append(toString(currentAn, role));
-            return currentAn;
-        } else {
-            return lastAn;
-        }
-
-    }
-
-    private String toString(final Annotation an, final String role) {
-        return String.format(" %s:[%s:%s]", role, an.getText(true), an.getType());
-    }
+  }
 }

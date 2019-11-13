@@ -7,49 +7,49 @@ import java.util.*;
 
 public class AnnotationFlattenConverter extends Converter {
 
-    final List<String> categories;
-    private final Comparator<Annotation> flattenConparator;
+  final List<String> categories;
+  private final Comparator<Annotation> flattenConparator;
 
-    public AnnotationFlattenConverter(final List<String> cats) {
-        categories = cats;
+  public AnnotationFlattenConverter(final List<String> cats) {
+    categories = cats;
 
-        flattenConparator = new Comparator<Annotation>() {
-            @Override
-            public int compare(final Annotation a, final Annotation b) {
-                if (a == b || Collections.disjoint(a.getTokens(), b.getTokens())) {
-                    return 0;
-                } else {
-                    if (a.getTokens().size() == b.getTokens().size()) {
-                        return Integer.signum(categories.indexOf(a.getType()) - categories.indexOf(b.getType()));
-                    }
-                    return Integer.signum(b.getTokens().size() - a.getTokens().size());
-                }
-            }
-        };
-    }
-
-    @Override
-    public void apply(final Sentence sentence) {
-        final ArrayList<Annotation> toFlatten = new ArrayList<>();
-        for (final Annotation ann : sentence.getChunks()) {
-            if (categories.contains(ann.getType())) {
-                toFlatten.add(ann);
-            }
+    flattenConparator = new Comparator<Annotation>() {
+      @Override
+      public int compare(final Annotation a, final Annotation b) {
+        if (a == b || Collections.disjoint(a.getTokens(), b.getTokens())) {
+          return 0;
+        } else {
+          if (a.getTokens().size() == b.getTokens().size()) {
+            return Integer.signum(categories.indexOf(a.getType()) - categories.indexOf(b.getType()));
+          }
+          return Integer.signum(b.getTokens().size() - a.getTokens().size());
         }
-        for (final Annotation annToRemove : flatten(toFlatten)) {
-            sentence.getChunks().remove(annToRemove);
-        }
-    }
+      }
+    };
+  }
 
-    private HashSet<Annotation> flatten(final ArrayList<Annotation> toFlatten) {
-        final HashSet<Annotation> toRemove = new HashSet<>();
-        for (final Annotation ann : toFlatten) {
-            for (final Annotation candidate : toFlatten) {
-                if (flattenConparator.compare(ann, candidate) == -1) {
-                    toRemove.add(candidate);
-                }
-            }
-        }
-        return toRemove;
+  @Override
+  public void apply(final Sentence sentence) {
+    final ArrayList<Annotation> toFlatten = new ArrayList<>();
+    for (final Annotation ann : sentence.getChunks()) {
+      if (categories.contains(ann.getType())) {
+        toFlatten.add(ann);
+      }
     }
+    for (final Annotation annToRemove : flatten(toFlatten)) {
+      sentence.getChunks().remove(annToRemove);
+    }
+  }
+
+  private HashSet<Annotation> flatten(final ArrayList<Annotation> toFlatten) {
+    final HashSet<Annotation> toRemove = new HashSet<>();
+    for (final Annotation ann : toFlatten) {
+      for (final Annotation candidate : toFlatten) {
+        if (flattenConparator.compare(ann, candidate) == -1) {
+          toRemove.add(candidate);
+        }
+      }
+    }
+    return toRemove;
+  }
 }

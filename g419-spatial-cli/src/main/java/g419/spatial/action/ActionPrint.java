@@ -2,61 +2,51 @@ package g419.spatial.action;
 
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
-import g419.corpus.structure.Document;
+import g419.corpus.io.writer.AbstractDocumentWriter;
+import g419.corpus.io.writer.WriterFactory;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.spatial.formatter.ISpatialExpressionFormatter;
-import g419.spatial.formatter.SpatialExpressionFormatterFactory;
-import g419.spatial.structure.SpatialExpression;
-import g419.spatial.tools.DocumentToSpatialExpressionConverter;
+import g419.spatial.io.SpatialOutputFormat;
+import g419.spatial.io.writer.SpatialWriterFactory;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
-import java.util.List;
+import java.io.OutputStream;
 
 public class ActionPrint extends Action {
 
-	public static final String OPTION_OUTPUT_ARG = "tree|tsv";
+  public static final String OPTION_OUTPUT_ARG = "tree|tsv";
 
-	private String inputFilename;
-	private String inputFormat;
-	private String output;
+  private String inputFilename;
+  private String inputFormat;
+  private String output;
+  private String outputFilename;
 
-	/**
-	 *
-	 */
-	public ActionPrint() {
-		super("print");
-		this.setDescription("Reads spatial expressions from the documents and print them on the screen");
-		this.options.addOption(CommonOptions.getInputFileNameOption());		
-		this.options.addOption(CommonOptions.getInputFileFormatOption());
-		this.options.addOption(Option.builder(CommonOptions.OPTION_OUTPUT_FORMAT)
-				.longOpt(CommonOptions.OPTION_OUTPUT_FORMAT_LONG).hasArg().argName(OPTION_OUTPUT_ARG).required().build());
-	}
-	
-	/**
-	 * Parse action options
-	 * @param args The array with command line parameters
-	 */
-	@Override
-	public void parseOptions(final CommandLine line) throws Exception {
-        inputFilename = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
-        inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
-        output = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT);
+  public ActionPrint() {
+    super("print");
+    setDescription("Reads spatial expressions from the documents and print them on the screen");
+    options.addOption(CommonOptions.getInputFileNameOption());
+    options.addOption(CommonOptions.getInputFileFormatOption());
+    options.addOption(Option.builder(CommonOptions.OPTION_OUTPUT_FORMAT)
+        .longOpt(CommonOptions.OPTION_OUTPUT_FORMAT_LONG).hasArg().argName(OPTION_OUTPUT_ARG).required().build());
+    options.addOption(CommonOptions.getOutputFileNameOption());
+  }
+
+  @Override
+  public void parseOptions(final CommandLine line) throws Exception {
+    inputFilename = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
+    inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
+    output = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT);
+    outputFilename = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
+  }
+
+  @Override
+  public void run() throws Exception {
+    final OutputStream os = WriterFactory.get().getOutputStreamFileOrOut(outputFilename);
+    try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
+         final AbstractDocumentWriter writer = SpatialWriterFactory.create(SpatialOutputFormat.valueOf(output.toUpperCase()), os)) {
+      reader.forEach(writer::writeDocument);
     }
-
-	@Override
-	public void run() throws Exception {
-		AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(this.inputFilename, this.inputFormat);
-		DocumentToSpatialExpressionConverter converter = new DocumentToSpatialExpressionConverter();
-		ISpatialExpressionFormatter formatter = SpatialExpressionFormatterFactory.create(output);
-		formatter.getHeader().forEach(System.out::println);
-		Document document = null;
-		while ( ( document = reader.nextDocument() ) != null ){
-			List<SpatialExpression> spatialExpressions = converter.convert(document);
-			formatter.format(document, spatialExpressions).forEach(System.out::println);
-		}
-		reader.close();
-	}
+  }
 
 }

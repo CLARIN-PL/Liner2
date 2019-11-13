@@ -7,14 +7,20 @@ def main = "g419.spatial.Main"
 mainClassName = main
 
 run {
-    if ( project.hasProperty("appArgs") ) {
+    if (project.hasProperty("appArgs")) {
         args appArgs.split("\\p{Z}")
     }
 }
 
 jar {
     manifest {
-        attributes "Main-Class": main
+        attributes(
+                "Main-Class": main
+        )
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 

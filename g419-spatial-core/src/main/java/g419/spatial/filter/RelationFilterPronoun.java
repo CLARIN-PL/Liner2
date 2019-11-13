@@ -8,18 +8,18 @@ import java.util.Set;
 
 public class RelationFilterPronoun implements IRelationFilter {
 
-	Set<String> pronouns = new HashSet<String>();
-		
-	public RelationFilterPronoun() throws IOException{
-		this.pronouns.add("ppron12");
-		this.pronouns.add("ppron3");
-		this.pronouns.add("siebie");
-	}
-		
-	@Override
-	public boolean pass(SpatialExpression relation) {
-		return !this.pronouns.contains(relation.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getPos())
-				&& !this.pronouns.contains(relation.getTrajector().getSpatialObject().getHeadToken().getDisambTag().getPos());
-	}
-	
+  Set<String> pronouns = new HashSet<>();
+
+  public RelationFilterPronoun() throws IOException {
+    pronouns.add("ppron12");
+    pronouns.add("ppron3");
+    pronouns.add("siebie");
+  }
+
+  @Override
+  public boolean pass(final SpatialExpression relation) {
+    return !pronouns.contains(relation.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getPos())
+        && !pronouns.contains(relation.getTrajector().getSpatialObject().getHeadToken().getDisambTag().getPos());
+  }
+
 }

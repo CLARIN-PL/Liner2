@@ -9,32 +9,32 @@ import java.util.ArrayList;
 /**
  * Created by michal on 6/3/14.
  */
-public class PipeConverter extends Converter{
-    ArrayList<Converter> pipe;
+public class PipeConverter extends Converter {
+  ArrayList<Converter> pipe;
 
-    public PipeConverter(ArrayList<Converter> converters){
-        pipe = converters;
+  public PipeConverter(ArrayList<Converter> converters) {
+    pipe = converters;
+  }
+
+  @Override
+  public void finish(Document doc) {
+    for (Converter c : pipe) {
+      c.finish(doc);
     }
 
-    @Override
-    public void finish(Document doc) {
-        for(Converter c: pipe){
-            c.finish(doc);
-        }
+  }
 
+  @Override
+  public void start(Document doc) {
+    for (Converter c : pipe) {
+      c.start(doc);
     }
+  }
 
-    @Override
-    public void start(Document doc) {
-        for(Converter c: pipe){
-            c.start(doc);
-        }
+  @Override
+  public void apply(Sentence sentence) {
+    for (Converter c : pipe) {
+      c.apply(sentence);
     }
-
-    @Override
-    public void apply(Sentence sentence) {
-        for(Converter c: pipe){
-            c.apply(sentence);
-        }
-    }
+  }
 }

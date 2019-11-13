@@ -10,7 +10,7 @@ def main = "g419.Main"
 mainClassName = main
 
 run {
-    if ( project.hasProperty("appArgs") ) {
+    if (project.hasProperty("appArgs")) {
         args appArgs.split("\\p{Z}")
     }
 }
@@ -18,6 +18,10 @@ run {
 jar {
     manifest {
         attributes "Main-Class": main
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 

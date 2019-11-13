@@ -1,10 +1,13 @@
 language: java
 sudo: required
+dist: trusty
 
 jdk:
-- oraclejdk8
+  #- oraclejdk8
+  - openjdk12
 
-install: ./install-dependencies-travisci-ubuntu1404.sh
+# ToDo Temporary disabled to speed up testing
+# install: ./stuff/install-dependencies-travisci-ubuntu1404.sh
 
 after_success:
-- ./gradlew jacocoRootReport coveralls
+  - ./gradlew jacocoRootReport coveralls

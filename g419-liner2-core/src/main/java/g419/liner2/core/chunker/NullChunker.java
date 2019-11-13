@@ -6,11 +6,11 @@ import g419.corpus.structure.Sentence;
 
 import java.util.HashMap;
 
-public class NullChunker extends Chunker{
+public class NullChunker extends Chunker {
 
-	@Override
-	public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
-		return new HashMap<Sentence, AnnotationSet>();
-	}
+  @Override
+  public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
+    return new HashMap<Sentence, AnnotationSet>();
+  }
 
 }

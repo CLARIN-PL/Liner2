@@ -10,12 +10,12 @@ import org.ini4j.Ini;
 
 public class ChunkerFactoryItemAnnotationAdderWithZero extends ChunkerFactoryItem {
 
-	public ChunkerFactoryItemAnnotationAdderWithZero() {
-		super("annotation_adder_with_zero");
-	}
+  public ChunkerFactoryItemAnnotationAdderWithZero() {
+    super("annotation_adder_with_zero");
+  }
 
-    @Override
-    public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
-        return new IkarAnnotationAdderChunker(true, true, true);
-    }
+  @Override
+  public Chunker getChunker(final Ini.Section description, final ChunkerManager cm) throws Exception {
+    return new IkarAnnotationAdderChunker(true, true, true);
+  }
 }

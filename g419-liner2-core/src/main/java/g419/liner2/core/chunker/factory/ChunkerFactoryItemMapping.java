@@ -9,11 +9,12 @@ import org.ini4j.Ini;
  */
 public class ChunkerFactoryItemMapping extends ChunkerFactoryItem {
 
-    public ChunkerFactoryItemMapping() {
-        super("mapping");
-    }
-    @Override
-    public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
-        return new MappingChunker(description.get("mapping"));
-    }
+  public ChunkerFactoryItemMapping() {
+    super("mapping");
+  }
+
+  @Override
+  public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
+    return new MappingChunker(description.get("mapping"));
+  }
 }

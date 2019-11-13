@@ -4,15 +4,19 @@ import java.util.regex.Pattern;
 
 public class NkjpSpejd {
 
-    public final static String Prep = "Prep";
+  public final static String Prep = "Prep";
 
-    public final static String Ppas = "Ppas";
+  public final static String Ppas = "Ppas";
 
-    public final static String Pact = "Pact";
+  public final static String Pact = "Pact";
 
-    public final static String Verbfin = "Verbfin";
+  public final static String Verbfin = "Verbfin";
 
-    public final static String NG = "NG";
+  public final static String NG = "NG";
 
-    public final static Pattern NGAny = Pattern.compile("^NG.*$");
+  public final static Pattern NumGAny = Pattern.compile("^NumG.*$");
+
+  public final static Pattern AdjG = Pattern.compile("^AdjG$");
+
+  public final static Pattern NGAny = Pattern.compile("^NG.*$");
 }

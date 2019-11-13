@@ -1,9 +1,10 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
-from jpype import *
 import corpus2
+from jpype import *
 
 startJVM(getDefaultJVMPath(), "-Djava.library.path=../lib", "-Djava.class.path=../liner2.jar")
+
 
 class Liner2(object):
     def __init__(self, liner_ini, tagset='nkjp'):
@@ -24,7 +25,6 @@ class Liner2(object):
         if not name:
             name = self.options.getOptionUse()
         return self.chunkerManager.getChunkerByName(name)
-
 
     def process_sentence(self, sentence, chunker_name='', only_new=False):
         chunker = self.get_chunker(chunker_name)
@@ -74,7 +74,7 @@ class Liner2(object):
         attribute_index = JClass("liner2.structure.TokenAttributeIndex")()
         attribute_index.addAttribute("orth");
         attribute_index.addAttribute("base");
-        attribute_index.addAttribute("ctag"); 
+        attribute_index.addAttribute("ctag");
         ps = JClass("liner2.structure.ParagraphSet")()
         ps.setAttributeIndex(attribute_index)
         return ps
@@ -88,7 +88,8 @@ class Liner2(object):
         for chan_name in asent.all_channels():
             for ann in asent.get_channel(chan_name).make_annotation_vector():
                 indices = [i for i in ann.indices]
-                annotation = JClass("liner2.structure.Annotation")(indices[0], chan_name.decode('utf-8'), ann.seg_number, sentence)
+                annotation = JClass("liner2.structure.Annotation")(indices[0], chan_name.decode('utf-8'),
+                                                                   ann.seg_number, sentence)
                 for i in indices[1:]:
                     annotation.addToken(i)
                 annotation.setHead(ann.head_index)
@@ -112,11 +113,11 @@ class Liner2(object):
     def liner_annotations_to_corpus_sentence(self, liner_sentence, corpus_sentence):
         annotated_sentence = corpus2.AnnotatedSentence.wrap_sentence(corpus_sentence)
         for chan in annotated_sentence.all_channels():
-                annotated_sentence.remove_channel(chan)
+            annotated_sentence.remove_channel(chan)
         for ann in liner_sentence.getChunks():
             chan_name = str(ann.getType().encode('utf-8'))
             if not annotated_sentence.has_channel(chan_name):
-                annotated_sentence.create_channel(chan_name)    
+                annotated_sentence.create_channel(chan_name)
             chan = annotated_sentence.get_channel(chan_name)
             new_ann_idx = chan.get_new_segment_index()
             for tok_idx in ann.getTokens():

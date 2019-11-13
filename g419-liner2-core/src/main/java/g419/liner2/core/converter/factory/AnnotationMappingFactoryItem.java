@@ -8,10 +8,12 @@ import g419.liner2.core.converter.Converter;
  */
 public class AnnotationMappingFactoryItem extends ConverterFactoryItem {
 
-    public AnnotationMappingFactoryItem() {super("annotation-mapping:(.*\\.txt)");}
+  public AnnotationMappingFactoryItem() {
+    super("annotation-mapping:(.*\\.txt)");
+  }
 
-    @Override
-    public Converter getConverter() {
-        return new AnnotationMappingConverter(matcher.group(1));
-    }
+  @Override
+  public Converter getConverter() {
+    return new AnnotationMappingConverter(matcher.group(1));
+  }
 }

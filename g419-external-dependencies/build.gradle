@@ -28,19 +28,19 @@ ext.statusFile = new File(workspace, "status.txt")
  * Helper function, printing provided text with border made of # signs. Second parameter defines width of border (number
  * of signs making top and bottom borders).
  */
-def header(str, width=60){
-    println "#"*width
-    def  diff = width - str.size() - 4
-    if (diff<0) diff = 0
-    println "# " + str + " "*diff + " #"
-    println "#"*width
+def header(str, width = 60) {
+    println "#" * width
+    def diff = width - str.size() - 4
+    if (diff < 0) diff = 0
+    println "# " + str + " " * diff + " #"
+    println "#" * width
 }
 
 /**
  * Function that takes Makefile and removes java-related parts from it (keeps only C++ compilation, Java
  * compilation will be handled by gradle).
  */
-def removeJavac(File f){
+def removeJavac(File f) {
     def lines = f.readLines()
     f.text = ""
     lines.each { String line ->
@@ -48,14 +48,14 @@ def removeJavac(File f){
         if (l.startsWith("INCLUDE"))
             f.append("INCLUDE=${System.getenv("JAVA_HOME")}/include\n")
         else if (!(l.startsWith("\$(JAVAC)") || l.startsWith("env") || l.startsWith("test") || l.startsWith("\$(JAR)")))
-            f.append(line+"\n")
+            f.append(line + "\n")
     }
 }
 
 /**
  * Copy CRFPP wrapper sources and compiled library to source set, so that gradle may handle it in future.
  */
-def fillSourceSet(){
+def fillSourceSet() {
     header("Append wrapper codebase to source directories")
     def javaSource = new File(project.projectDir, "src/main/java")
     javaSource.mkdirs()
@@ -69,71 +69,75 @@ def fillSourceSet(){
     ant.copy(file: new File(crfppDir, "java/libCRFPP.so"), tofile: new File(javaRes, "libCRFPP.so"))
 }
 
-def markSuccess(){
+def markSuccess() {
     statusFile.text = "$SUCCESS_MARKER\n${new SimpleDateFormat().format(new Date())}"
 }
 
-def isCompiled(){
+def isCompiled() {
     try {
         def lines = statusFile.text.split("\n")
-        if (! (lines.first() == SUCCESS_MARKER && lines.size()==2))
+        if (!(lines.first() == SUCCESS_MARKER && lines.size() == 2))
             return false
         lastCompilationDate = lines[1]
         return true
-    } catch (FileNotFoundException fnfe){
+    } catch (FileNotFoundException fnfe) {
         return false
     }
 }
 
-task compileCRFPP << {
-    if (isCompiled()) {
-        header("CRFPP already compiled (on $lastCompilationDate)")
-    } else {
-        if (!System.getenv("JAVA_HOME")) {
-            throw new RuntimeException("There is no JAVA_HOME environment variable! Cannot compile CRFPP")
+task compileCRFPP {
+    doLast {
+        if (isCompiled()) {
+            header("CRFPP already compiled (on $lastCompilationDate)")
+        } else {
+            if (!System.getenv("JAVA_HOME")) {
+                throw new RuntimeException("There is no JAVA_HOME environment variable! Cannot compile CRFPP")
+            }
+            header("Preparing CRFPP")
+            workspace.mkdirs()
+            header("tar xvf CRF++-0.57.tar.gz")
+            def tarSrc = new File(project.projectDir, "CRF++-0.57.tar.gz")
+            copy {
+                from tarTree(tarSrc)
+                into workspace
+            }
+            header("m4 hack")
+            def m4 = new File(crfppDir, "m4")
+            m4.mkdirs()
+            exec {
+                workingDir crfppDir
+                commandLine "autoreconf", "--force", "--install"
+            }
+            header("./configure")
+            exec {
+                workingDir crfppDir
+                commandLine "./configure"
+            }
+            header("make")
+            exec {
+                workingDir crfppDir
+                commandLine "make"
+            }
+            removeJavac(new File(crfppDir, "java/Makefile"))
+            header("make binaries")
+            exec {
+                workingDir new File(crfppDir, "java")
+                commandLine "make"
+            }
+            fillSourceSet()
+            markSuccess()
         }
-        header("Preparing CRFPP")
-        workspace.mkdirs()
-        header("tar xvf CRF++-0.57.tar.gz")
-        def tarSrc = new File(project.projectDir, "CRF++-0.57.tar.gz")
-        copy {
-            from tarTree(tarSrc)
-            into workspace
-        }
-        header("m4 hack")
-        def m4 = new File(crfppDir, "m4")
-        m4.mkdirs()
-        exec {
-            workingDir crfppDir
-            commandLine "autoreconf", "--force", "--install"
-        }
-        header("./configure")
-        exec {
-            workingDir crfppDir
-            commandLine "./configure"
-        }
-        header("make")
-        exec {
-            workingDir crfppDir
-            commandLine "make"
-        }
-        removeJavac(new File(crfppDir, "java/Makefile"))
-        header("make binaries")
-        exec {
-            workingDir new File(crfppDir, "java")
-            commandLine "make"
-        }
-        fillSourceSet()
-        markSuccess()
     }
 }
 
-task cleanCRFPP << {
-    header("Clean CRFPP workspace")
-    delete { delete workspace }
-    header("Clean source sets")
-    delete {
-        delete new File(project.projectDir, "src")
+task cleanCRFPP {
+    doLast {
+        header("Clean CRFPP workspace")
+        delete { delete workspace }
+        header("Clean source sets")
+        delete {
+            delete new File(project.projectDir, "src")
+        }
     }
 }
 

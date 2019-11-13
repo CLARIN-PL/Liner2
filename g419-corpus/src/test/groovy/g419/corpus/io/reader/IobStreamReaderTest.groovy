@@ -12,7 +12,7 @@ class IobStreamReaderTest extends Specification {
     IobStreamReader reader
 
     def setup() {
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream("sample.iob.txt")
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream("sample.iob")
         reader = new IobStreamReader(is)
     }
 

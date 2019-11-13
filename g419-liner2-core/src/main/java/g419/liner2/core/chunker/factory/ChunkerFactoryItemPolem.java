@@ -12,14 +12,14 @@ import java.util.regex.Pattern;
 
 public class ChunkerFactoryItemPolem extends ChunkerFactoryItem {
 
-    public ChunkerFactoryItemPolem() {
-        super("polem");
-    }
+  public ChunkerFactoryItemPolem() {
+    super("polem");
+  }
 
-    @Override
-    public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
-        final List<Pattern> patterns = Arrays.asList(Pattern.compile(getParameterString(description, "annotations")));
-        return new PolemChunker(cm.getChunkerByName(getParameterString(description, "base-chunker")), patterns);
+  @Override
+  public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
+    final List<Pattern> patterns = Arrays.asList(Pattern.compile(getParameterString(description, "annotations")));
+    return new PolemChunker(cm.getChunkerByName(getParameterString(description, "base-chunker")), patterns);
 
-    }
+  }
 }

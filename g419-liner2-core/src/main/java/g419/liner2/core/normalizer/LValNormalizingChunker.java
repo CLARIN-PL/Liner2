@@ -7,20 +7,21 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class LValNormalizingChunker extends NormalizingChunker {
-    protected LValRuleContainer ruleContainer;
+  protected LValRuleContainer ruleContainer;
 
-    public LValNormalizingChunker(List<Pattern> normalizedChunkTypes, LValRuleContainer ruleContainer) {
-        super(normalizedChunkTypes);
-        this.ruleContainer = ruleContainer;
-    }
+  public LValNormalizingChunker(List<Pattern> normalizedChunkTypes, LValRuleContainer ruleContainer) {
+    super(normalizedChunkTypes);
+    this.ruleContainer = ruleContainer;
+  }
 
-    @Override
-    public void normalize(Annotation annotation) {
-        if (shouldNormalize(annotation)) {
-            String normalized = ruleContainer.getLVal(annotation);
-            if (normalized != null)
-                annotation.setMetadata("lval", normalized);
-        }
+  @Override
+  public void normalize(Annotation annotation) {
+    if (shouldNormalize(annotation)) {
+      String normalized = ruleContainer.getLVal(annotation);
+      if (normalized != null) {
+        annotation.setMetadata("lval", normalized);
+      }
     }
+  }
 
 }

@@ -8,18 +8,18 @@ import java.util.regex.Pattern;
 
 abstract public class ConverterFactoryItem {
 
-    protected Pattern pattern;
-    protected Matcher matcher;
+  protected Pattern pattern;
+  protected Matcher matcher;
 
-    public ConverterFactoryItem(final String stringPattern) {
-        pattern = Pattern.compile("^" + stringPattern + "$");
+  public ConverterFactoryItem(final String stringPattern) {
+    pattern = Pattern.compile("^" + stringPattern + "$");
 
-    }
+  }
 
-    public boolean matchPattern(final String description) {
-        matcher = pattern.matcher(description);
-        return matcher.find();
-    }
+  public boolean matchPattern(final String description) {
+    matcher = pattern.matcher(description);
+    return matcher.find();
+  }
 
-    abstract public Converter getConverter() throws ParameterException;
+  abstract public Converter getConverter() throws ParameterException;
 }

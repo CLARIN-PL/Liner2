@@ -4,6 +4,7 @@ import g419.corpus.structure.Annotation
 import g419.corpus.structure.Sentence
 import g419.spatial.structure.SpatialExpression
 import g419.test.TestSampleSentence
+import spock.lang.Ignore
 import spock.lang.Specification
 
 class SpatialExpressionKeyGeneratorSimpleTest extends Specification implements TestSampleSentence {
@@ -16,7 +17,7 @@ class SpatialExpressionKeyGeneratorSimpleTest extends Specification implements T
         keyGenerator = new SpatialExpressionKeyGeneratorSimple()
     }
 
-
+    @Ignore
     def "generateKey should return valid key"() {
         given:
             Annotation an1 = new Annotation("an1", 0, 0, "spatial_indicator", sentence)

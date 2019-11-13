@@ -18,41 +18,41 @@ import java.util.stream.Collectors;
 
 public class AnnotationRemoveNestedByTypeFactoryItem extends ConverterFactoryItem {
 
-    public AnnotationRemoveNestedByTypeFactoryItem() {
-        super("annotation-remove-nested-by-type:(.*\\.txt)");
+  public AnnotationRemoveNestedByTypeFactoryItem() {
+    super("annotation-remove-nested-by-type:(.*\\.txt)");
+  }
+
+
+  @Override
+  public Converter getConverter() throws ParameterException {
+    final Set<String> typesUnconditioned = Sets.newHashSet();
+    final Map<String, Set<String>> typesConditionedByOuterType = Maps.newHashMap();
+    final File file = Paths.get(matcher.group(1)).toFile();
+
+    if (!file.exists()) {
+      throw new ParameterException(String.format("The file %s given as a parameter of annotation-remove-nested-by-type does not exists", file.getName()));
     }
 
-
-    @Override
-    public Converter getConverter() throws ParameterException {
-        final Set<String> typesUnconditioned = Sets.newHashSet();
-        final Map<String, Set<String>> typesConditionedByOuterType = Maps.newHashMap();
-        final File file = Paths.get(matcher.group(1)).toFile();
-
-        if (!file.exists()) {
-            throw new ParameterException(String.format("The file %s given as a parameter of annotation-remove-nested-by-type does not exists", file.getName()));
-        }
-
-        try {
-            FileUtils.readLines(file, "utf8").forEach(line -> parseLine(line, typesUnconditioned, typesConditionedByOuterType));
-        } catch (final IOException ex) {
-            throw new RuntimeException(ex);
-        }
-        typesUnconditioned.forEach(typesUnconditioned::remove);
-
-        return new AnnotationRemoveNestedByTypeConverter(typesUnconditioned, typesConditionedByOuterType);
+    try {
+      FileUtils.readLines(file, "utf8").forEach(line -> parseLine(line, typesUnconditioned, typesConditionedByOuterType));
+    } catch (final IOException ex) {
+      throw new RuntimeException(ex);
     }
+    typesUnconditioned.forEach(typesUnconditioned::remove);
 
-    private void parseLine(final String line, final Set<String> typesUnconditioned, final Map<String, Set<String>> typesConditionedByOuterType) {
-        final String[] cols = line.trim().split("( )+");
-        if (cols.length == 1) {
-            typesUnconditioned.add(cols[0]);
-        } else if (cols.length > 1) {
-            final String type = cols[0];
-            typesConditionedByOuterType.computeIfAbsent(type, k -> Sets.newHashSet()).addAll(
-                    Arrays.stream(cols)
-                            .filter(c -> !Objects.equals(c, type))
-                            .collect(Collectors.toSet()));
-        }
+    return new AnnotationRemoveNestedByTypeConverter(typesUnconditioned, typesConditionedByOuterType);
+  }
+
+  private void parseLine(final String line, final Set<String> typesUnconditioned, final Map<String, Set<String>> typesConditionedByOuterType) {
+    final String[] cols = line.trim().split("( )+");
+    if (cols.length == 1) {
+      typesUnconditioned.add(cols[0]);
+    } else if (cols.length > 1) {
+      final String type = cols[0];
+      typesConditionedByOuterType.computeIfAbsent(type, k -> Sets.newHashSet()).addAll(
+          Arrays.stream(cols)
+              .filter(c -> !Objects.equals(c, type))
+              .collect(Collectors.toSet()));
     }
+  }
 }

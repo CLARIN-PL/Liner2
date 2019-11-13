@@ -15,54 +15,54 @@ import java.util.List;
  */
 public class RulesChunker extends Chunker {
 
-    ArrayList<TestRuleFeature> rules;
-//    HashMap<String, Integer> rulesDebug;
+  ArrayList<TestRuleFeature> rules;
+  //    HashMap<String, Integer> rulesDebug;
 //    HashMap<String, String> labelsDebug;
-    ArrayList<String> tokensD;
-    ArrayList<String> labelsD;
-    ArrayList<Integer> rulesD;
-    int tokensCount;
-    boolean missing = false;
-    Document current;
+  ArrayList<String> tokensD;
+  ArrayList<String> labelsD;
+  ArrayList<Integer> rulesD;
+  int tokensCount;
+  boolean missing = false;
+  Document current;
 
-    public RulesChunker(ArrayList<TestRuleFeature> rules){
-        tokensCount = 0;
-        this.rules = rules;
+  public RulesChunker(ArrayList<TestRuleFeature> rules) {
+    tokensCount = 0;
+    this.rules = rules;
 //        rulesDebug = new HashMap<>();
 //        labelsDebug = new HashMap<>();
-        tokensD = new ArrayList<>();
-        labelsD = new ArrayList<>();
-        rulesD = new ArrayList<>();
-        try {
-            Files.lines(Paths.get("/home/michal/Downloads/ga_k_2_005_covered_tokens.txt")).forEach(l -> parseLine(l));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
+    tokensD = new ArrayList<>();
+    labelsD = new ArrayList<>();
+    rulesD = new ArrayList<>();
+    try {
+      Files.lines(Paths.get("/home/michal/Downloads/ga_k_2_005_covered_tokens.txt")).forEach(l -> parseLine(l));
+    } catch (IOException e) {
+      e.printStackTrace();
     }
 
-    private void parseLine(String line){
-        String[] attrs = line.split("\\s+");
-        int ruleNr = Integer.parseInt(attrs[2].substring(attrs[2].lastIndexOf('X') + 1));
-        tokensD.add(attrs[0]);
-        labelsD.add(attrs[1]);
-        rulesD.add(ruleNr);
-    }
 
-    @Override
-    public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
-        HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
-        missing = false;
-        current = ps;
-        for(Sentence sent: ps.getSentences()){
-            chunkings.put(sent, chunkSentence(sent));
-        }
+  }
+
+  private void parseLine(String line) {
+    String[] attrs = line.split("\\s+");
+    int ruleNr = Integer.parseInt(attrs[2].substring(attrs[2].lastIndexOf('X') + 1));
+    tokensD.add(attrs[0]);
+    labelsD.add(attrs[1]);
+    rulesD.add(ruleNr);
+  }
+
+  @Override
+  public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
+    HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
+    missing = false;
+    current = ps;
+    for (Sentence sent : ps.getSentences()) {
+      chunkings.put(sent, chunkSentence(sent));
+    }
 //        System.out.println(tokensCount);
-        return chunkings;
-    }
+    return chunkings;
+  }
 
-    private AnnotationSet chunkSentence(Sentence sent){
+  private AnnotationSet chunkSentence(Sentence sent) {
 //        for(Token t: sent.getTokens()){
 //            if(!t.getOrth().equals(tokensD.get(tokensCount))){
 //                System.out.println(current.getName() + " | " + tokensCount + " Wrong tok: " + t.getOrth() + " | "  + tokensD.get(tokensCount));
@@ -71,12 +71,12 @@ public class RulesChunker extends Chunker {
 //            tokensCount++;
 //        }
 //        System.out.println("SENT: " + sent.getId());
-        AnnotationSet chunking = new AnnotationSet(sent);
-        Sentence sentCopy = sent.clone();
-        HashMap<Integer, String> tokenLabels = new HashMap<>();
-        HashMap<Integer, Integer> tokenRules = new HashMap<>();
-        HashMap<Integer, String> debugOutput = new HashMap<>();
-        int ruleNr = 0;
+    AnnotationSet chunking = new AnnotationSet(sent);
+    Sentence sentCopy = sent.clone();
+    HashMap<Integer, String> tokenLabels = new HashMap<>();
+    HashMap<Integer, Integer> tokenRules = new HashMap<>();
+    HashMap<Integer, String> debugOutput = new HashMap<>();
+    int ruleNr = 0;
 //        System.out.println("NUM TOKENS: " + sent.getTokenNumber());
 //        for(Token t: sent.getTokens()){
 ////                                System.out.print(t.getOrth() + " = starts_with_lower_case: " + t.getAttributeValue("starts_with_lower_case") + " | ");
@@ -99,21 +99,21 @@ public class RulesChunker extends Chunker {
 //
 //            System.out.println();
 //        }
-        for(TestRuleFeature rule: rules){
-            sentCopy.getAttributeIndex().addAttribute(rule.getName());
-            rule.generate(sentCopy);
-            List<Token> sentTokens = sentCopy.getTokens();
+    for (TestRuleFeature rule : rules) {
+      sentCopy.getAttributeIndex().addAttribute(rule.getName());
+      rule.generate(sentCopy);
+      List<Token> sentTokens = sentCopy.getTokens();
 
-            for(int i=0; i<sentTokens.size(); i++){
-                String label = sentTokens.get(i).getAttributeValue(rule.getName());
+      for (int i = 0; i < sentTokens.size(); i++) {
+        String label = sentTokens.get(i).getAttributeValue(rule.getName());
 //                System.out.println(sentTokens.get(i).getOrth() +  " LABEL " + label);
-                if(!tokenLabels.containsKey(i) && !label.equals("0")){
-                    StringBuilder sb =new StringBuilder();
-                    sb.append(label + " | " + rule.rule + "\n");
+        if (!tokenLabels.containsKey(i) && !label.equals("0")) {
+          StringBuilder sb = new StringBuilder();
+          sb.append(label + " | " + rule.rule + "\n");
 
-                    debugOutput.put(i, sb.toString());
-                    String orth = sentTokens.get(i).getOrth();
-                    int tokidx =tokensCount+i;
+          debugOutput.put(i, sb.toString());
+          String orth = sentTokens.get(i).getOrth();
+          int tokidx = tokensCount + i;
 //                    if(tokensD.get(tokidx).equals(orth)){
 //                        if(rulesD.get(tokidx) != ruleNr){
 //                            TestRuleFeature properRule = rules.get(rulesD.get(tokidx));
@@ -192,78 +192,74 @@ public class RulesChunker extends Chunker {
 //                            missing = true;
 //                        }
 //                    }
-                    tokenLabels.put(i, label);
-                    tokenRules.put(i, ruleNr);
-                }
-            }
-            ruleNr++;
+          tokenLabels.put(i, label);
+          tokenRules.put(i, ruleNr);
+        }
+      }
+      ruleNr++;
 //            for(int i: tokenLabels.keySet()){
 //                System.out.println(i + " | " + tokenLabels.get(i));
 //            }
 //            System.exit(0);
-        }
-        List<Token> sentTokens = sent.getTokens();
-        for(int i=0; i<sentTokens.size(); i++){
-            int ourRule = tokenRules.get(i);
-            int properRule = rulesD.get(tokensCount + i);
-            if(ourRule != properRule){
-                System.out.println(tokensCount + i + "\t" + sentTokens.get(i).getOrth() + "\t" + ourRule +"\t" + properRule);
-            }
+    }
+    List<Token> sentTokens = sent.getTokens();
+    for (int i = 0; i < sentTokens.size(); i++) {
+      int ourRule = tokenRules.get(i);
+      int properRule = rulesD.get(tokensCount + i);
+      if (ourRule != properRule) {
+        System.out.println(tokensCount + i + "\t" + sentTokens.get(i).getOrth() + "\t" + ourRule + "\t" + properRule);
+      }
 
-        }
+    }
 //        System.exit(0);
-        if(!missing){
-            tokensCount += sent.getTokenNumber();
-        }
+    if (!missing) {
+      tokensCount += sent.getTokenNumber();
+    }
 //        for(int i=0; i<sent.getTokenNumber(); i++){
 //            String output = debugOutput.containsKey(i) ? debugOutput.get(i) : "NO MATCH";
 //            System.out.println(sent.getTokens().get(i).getOrth() + " | " + output);
 //        }
 
-        Annotation ann = null;
-        for(int i=0; i<sentTokens.size(); i++){
-            if(tokenLabels.containsKey(i)){
-                String label = tokenLabels.get(i);
-                if(label.startsWith("B")){
-                    if(ann != null){
-                        chunking.addChunk(ann);
-//                        System.out.println(ann.getText());
-                    }
-                    ann = new Annotation(i, label.substring(2), sent);
-                }
-                else if(label.startsWith("I")){
-                    if(ann != null){
-                        ann.addToken(i);
-                    }
-                    else{
-                        ann = new Annotation(i, label.substring(2), sent);
-                    }
-                }
-                else if(label.equals("O")){
-                    if(ann != null){
-                        chunking.addChunk(ann);
-//                        System.out.println(ann.getText());
-                        ann = null;
-                    }
-                }
-            }
-            else{
-                System.out.println("NO RULE MATCHED");
-                if(ann != null){
-                    chunking.addChunk(ann);
-//                    System.out.println(ann.getText());
-                    ann = null;
-                }
-            }
-        }
-        if(ann != null){
+    Annotation ann = null;
+    for (int i = 0; i < sentTokens.size(); i++) {
+      if (tokenLabels.containsKey(i)) {
+        String label = tokenLabels.get(i);
+        if (label.startsWith("B")) {
+          if (ann != null) {
             chunking.addChunk(ann);
-//            System.out.println(ann.getText());
+//                        System.out.println(ann.getText());
+          }
+          ann = new Annotation(i, label.substring(2), sent);
+        } else if (label.startsWith("I")) {
+          if (ann != null) {
+            ann.addToken(i);
+          } else {
+            ann = new Annotation(i, label.substring(2), sent);
+          }
+        } else if (label.equals("O")) {
+          if (ann != null) {
+            chunking.addChunk(ann);
+//                        System.out.println(ann.getText());
+            ann = null;
+          }
         }
+      } else {
+        System.out.println("NO RULE MATCHED");
+        if (ann != null) {
+          chunking.addChunk(ann);
+//                    System.out.println(ann.getText());
+          ann = null;
+        }
+      }
+    }
+    if (ann != null) {
+      chunking.addChunk(ann);
+//            System.out.println(ann.getText());
+    }
 
 //        for(Annotation a: chunking.chunkSet()){
 //            System.out.println(a.getText());
 //        }
-        return chunking;
-    }
+    return chunking;
+  }
 }
