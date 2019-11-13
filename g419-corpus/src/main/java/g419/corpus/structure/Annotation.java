@@ -2,6 +2,7 @@ package g419.corpus.structure;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import g419.corpus.EmptySentenceException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -62,12 +63,15 @@ public class Annotation extends IdentifiableElement {
 
   private Map<String, String> metadata = Maps.newHashMap();
 
-  public Annotation(final String id, final int begin, final int end, final String type, final Sentence sentence) {
+  public Annotation(final String id, final int begin, final int end, final String type, final Sentence sentence)  throws EmptySentenceException{
     this(begin, end, type, sentence);
     this.id = id;
   }
 
-  public Annotation(final int begin, final int end, final String type, final Sentence sentence) {
+  public Annotation(final int begin, final int end, final String type, final Sentence sentence) throws EmptySentenceException {
+    if(sentence.getTokens().size() == 0){
+      throw new EmptySentenceException("Can not create annotation on empty Sentence; Sentence has to have at least one Token");
+    }
     for (int i = begin; i <= end; i++) {
       tokens.add(i);
     }
@@ -76,23 +80,29 @@ public class Annotation extends IdentifiableElement {
     assignHead();
   }
 
-  public Annotation(final int tokenIndex, final String type, final Sentence sentence) {
+  public Annotation(final int tokenIndex, final String type, final Sentence sentence) throws EmptySentenceException{
     this(tokenIndex, tokenIndex, type, sentence);
   }
 
-  public Annotation(final int begin, final String type, final int channelIdx, final Sentence sentence) {
+  public Annotation(final int begin, final String type, final int channelIdx, final Sentence sentence) throws EmptySentenceException{
     this(begin, begin, type, sentence);
     this.channelIdx = channelIdx;
   }
 
-  public Annotation(final TreeSet<Integer> tokens, final String type, final Sentence sentence) {
+  public Annotation(final TreeSet<Integer> tokens, final String type, final Sentence sentence) throws EmptySentenceException {
+    if(sentence.getTokens().size() == 0){
+      throw new EmptySentenceException("Can not create annotation on empty Sentence; Sentence has to have at least one Token");
+    }
     this.tokens = tokens;
     this.type = type;
     this.sentence = sentence;
     assignHead();
   }
 
-  public Annotation(final Collection<Integer> tokens, final String type, final Sentence sentence) {
+  public Annotation(final Collection<Integer> tokens, final String type, final Sentence sentence) throws EmptySentenceException {
+    if(sentence.getTokens().size() == 0){
+      throw new EmptySentenceException("Can not create annotation on empty Sentence; Sentence has to have at least one Token");
+    }
     this.tokens = new TreeSet<>(tokens);
     this.type = type;
     this.sentence = sentence;
@@ -211,8 +221,10 @@ public class Annotation extends IdentifiableElement {
   }
 
   public void setHead(final int idx) {
-    hasHead = true;
-    head = idx;
+    if(tokens.size() >= idx) {
+      hasHead = true;
+      head = idx;
+    }
   }
 
   public void addToken(final int idx) {
@@ -364,7 +376,9 @@ public class Annotation extends IdentifiableElement {
     final TokenAttributeIndex index = sentence.getAttributeIndex();
     for (final int i : this.tokens) {
       final Token token = tokens.get(i);
-      text.append(token.getAttributeValue(index.getIndex("base")));
+      Tag tag = token.getDisambTag();
+      text.append(tag.getBase());
+//      text.append(token.getAttributeValue(index.getIndex("base")));
       final int a = getEnd();
       if ((includeNs == false || !token.getNoSpaceAfter()) && (i < getEnd())) {
         text.append(" ");
@@ -446,7 +460,7 @@ public class Annotation extends IdentifiableElement {
   }
 
   @Override
-  public Annotation clone() {
+  public Annotation clone() throws EmptySentenceException{
     final Annotation cloned = new Annotation(getBegin(), getEnd(), getType(), sentence);
     cloned.setId(id);
     cloned.setHead(head);

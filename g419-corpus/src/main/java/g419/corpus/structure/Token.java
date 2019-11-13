@@ -78,8 +78,7 @@ public class Token extends IdentifiableElement {
 
   /**
    * TODO
-   * Funkcja pomocnicza zwraca wartość pierwszego atrybutu.
-   * Przeważnie będzie to orth.
+   * Funkcja pomocnicza zwraca wartość orth.
    *
    * @return
    */
