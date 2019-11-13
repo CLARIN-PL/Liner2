@@ -4,22 +4,23 @@ import com.google.common.collect.Maps
 import g419.corpus.structure.Annotation
 import g419.corpus.structure.Sentence
 import g419.test.TestSampleSentence
+import spock.lang.Ignore
 import spock.lang.Specification
 
 import java.util.stream.Collectors
 
-class SpatialExpressionTest extends Specification implements TestSampleSentence{
+class SpatialExpressionTest extends Specification implements TestSampleSentence {
 
     Sentence sentence
-    Map<String,Annotation> ids
+    Map<String, Annotation> ids
 
-    def setup(){
+    def setup() {
         sentence = getSampleSentenceWithAnnotations()
         ids = Maps.newHashMap()
-        sentence.getChunks().stream().forEach{a->ids.put(a.getId(),a)}
+        sentence.getChunks().stream().forEach { a -> ids.put(a.getId(), a) }
     }
 
-    def "getters should return values set by the constructor"(){
+    def "getters should return values set by the constructor"() {
         when:
             SpatialExpression se = new SpatialExpression("type", ids["an1"], ids["an2"], ids["an3"])
 
@@ -36,7 +37,7 @@ class SpatialExpressionTest extends Specification implements TestSampleSentence{
             se.getPathsIndicators().size() == 0
     }
 
-    def "getters should return values set by the setters"(){
+    def "getters should return values set by the setters"() {
         given:
             SpatialExpression se = new SpatialExpression()
 
@@ -61,7 +62,7 @@ class SpatialExpressionTest extends Specification implements TestSampleSentence{
             se.getPathsIndicators().size() == 0
     }
 
-    def "getAnnotations should return valid set of annotations"(){
+    def "getAnnotations should return valid set of annotations"() {
         given:
             SpatialExpression se = new SpatialExpression()
             se.setLandmark(ids["an1"])
@@ -76,10 +77,11 @@ class SpatialExpressionTest extends Specification implements TestSampleSentence{
 
         then:
             list.size() == 6
-            list.stream().map{a->a.getId()}.collect(Collectors.toList()).sort() == ["an1","an2","an3","an4","an5","an6"]
+            list.stream().map { a -> a.getId() }.collect(Collectors.toList()).sort() == ["an1", "an2", "an3", "an4", "an5", "an6"]
     }
 
-    def "toString should return valid value"(){
+    @Ignore
+    def "toString should return valid value"() {
         given:
             SpatialExpression se = new SpatialExpression("type", ids["an3"], ids["an7"], ids["an1"])
 
