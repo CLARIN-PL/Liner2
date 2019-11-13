@@ -1,5 +1,3 @@
-apply plugin: 'com.github.kt3k.coveralls' //version '2.6.3'
-
 buildscript {
     repositories {
         jcenter()
@@ -7,16 +5,19 @@ buildscript {
     }
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.4'
     }
 }
 
+plugins {
+    id 'jacoco'
+    id 'com.github.kt3k.coveralls' version '2.8.4'
+}
+
 description = "g419 - Top-level project"
-version = "2.5-SNAPSHOT"
+version = "2.6-SNAPSHOT"
+group = "pl.pwr.nlp"
 
 apply plugin: 'wrapper'
-
-group = "pl.pwr.nlp"
 
 allprojects {
     apply plugin: 'java'
