@@ -22,9 +22,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Chunking in pipe mode.
+ * Evaluation of the normalisation of temporal expressions.
  *
- * @author Maciej Janicki, Michał Marcińczuk
+ * @author Jan Kocoń
  */
 public class ActionNormalizerEval3 extends Action {
 
@@ -33,7 +33,6 @@ public class ActionNormalizerEval3 extends Action {
   private String point_from = null;
   private String point_what = null;
   private String point_how = null;
-
 
   public static final String OPTION_CONFIGURATION = "c";
   public static final String OPTION_CONFIGURATION_LONG = "configuration";

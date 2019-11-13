@@ -2,10 +2,7 @@ package g419.liner2.core.features;
 
 import g419.corpus.ConsolePrinter;
 import g419.corpus.structure.*;
-import g419.liner2.core.features.tokens.Feature;
-import g419.liner2.core.features.tokens.TokenFeature;
-import g419.liner2.core.features.tokens.TokenFeatureFactory;
-import g419.liner2.core.features.tokens.TokenInSentenceFeature;
+import g419.liner2.core.features.tokens.*;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -27,6 +24,7 @@ public class TokenFeatureGenerator {
   protected ArrayList<TokenFeature> tokenGenerators = new ArrayList<TokenFeature>();
   protected ArrayList<TokenInSentenceFeature> sentenceGenerators
       = new ArrayList<TokenInSentenceFeature>();
+  protected ArrayList<TokenInDocumentFeature> documentGenerators = new ArrayList<TokenInDocumentFeature>();
   private TokenAttributeIndex attributeIndex = new TokenAttributeIndex();
   protected ArrayList<String> featureNames;
 
@@ -43,7 +41,9 @@ public class TokenFeatureGenerator {
       for (String feature : features.values()) {
         Feature f = TokenFeatureFactory.create(feature);
         if (f != null) {
-          if (TokenInSentenceFeature.class.isInstance(f)) {
+          if (TokenInDocumentFeature.class.isInstance(f)) {
+            this.documentGenerators.add((TokenInDocumentFeature) f);
+          } else if (TokenInSentenceFeature.class.isInstance(f)) {
             this.sentenceGenerators.add((TokenInSentenceFeature) f);
           } else if (TokenFeature.class.isInstance(f)) {
             this.tokenGenerators.add((TokenFeature) f);
@@ -83,6 +83,10 @@ public class TokenFeatureGenerator {
       generateFeatures(p, false);
     }
     ps.getAttributeIndex().update(featureNames);
+
+    for (TokenInDocumentFeature f : this.documentGenerators) {
+      f.generate(ps);
+    }
   }
 
   public void generateFeatures(Paragraph p, boolean updateAttributeIndex) throws Exception {
@@ -126,6 +130,4 @@ public class TokenFeatureGenerator {
           f.generate(t, this.attributeIndex));
     }
   }
-
-
 }

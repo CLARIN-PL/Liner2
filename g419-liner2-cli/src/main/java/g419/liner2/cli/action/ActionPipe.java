@@ -5,6 +5,7 @@ import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.Document;
+import g419.corpus.structure.Relation;
 import g419.corpus.structure.RelationSet;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
@@ -62,8 +63,6 @@ public class ActionPipe extends Action {
       throw new ParameterException("Parameter 'chunker' in 'main' section of model not set");
     }
 
-    //final AbstractDocumentReader reader = getInputReader();
-    //final AbstractDocumentWriter writer = getOutputWriter();
     TokenFeatureGenerator gen = null;
 
     if (!LinerOptions.getGlobal().features.isEmpty()) {
@@ -74,19 +73,20 @@ public class ActionPipe extends Action {
     final ChunkerManager cm = new ChunkerManager(LinerOptions.getGlobal());
     cm.loadChunkers();
 
-    final Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
+    Chunker chunker = cm.getChunkerByName(LinerOptions.getGlobal().getOptionUse());
+    chunker.setFeatureGenerator(gen);
 
     try (final AbstractDocumentReader reader = getInputReader();
          final AbstractDocumentWriter writer = getOutputWriter()
     ) {
       while (reader.hasNext()) {
-        final Document ps = reader.nextDocument();
+        Document ps = reader.nextDocument();
         final RelationSet relations = ps.getRelations();
         if (gen != null) {
           gen.generateFeatures(ps);
         }
         chunker.chunkInPlace(ps);
-        ps.setRelations(relations);
+        relations.getRelations().forEach(ps::addRelation);
         writer.writeDocument(ps);
       }
     }

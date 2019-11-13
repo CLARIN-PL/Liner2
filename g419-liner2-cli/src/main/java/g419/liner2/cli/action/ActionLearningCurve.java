@@ -23,8 +23,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 /**
- * TODO
- *
+ * Calculates a learning curve for the given dataset
  * @author Jan Kocoń
  */
 public class ActionLearningCurve extends Action {

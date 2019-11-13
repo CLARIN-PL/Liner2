@@ -39,6 +39,8 @@ public class TokenFeatureFactory {
       return new StructureFeature(feature);
     } else if (feature.startsWith("regex")) {
       return new RegexFeature(feature);
+    } else if (feature.startsWith("base_number")) {
+      return new BaseNumberFeature(feature);
     } else if (feature.equals("all_alphanumeric")) {
       return new AllAlphanumericFeature(feature);
     } else if (feature.equals("all_digits")) {
@@ -77,8 +79,6 @@ public class TokenFeatureFactory {
       return new NoSpaceFeature();
     } else if (feature.equals("paragraph_type")) {
       return new ParagraphTypeFeature(feature);
-    } else if (feature.equals("base_number")) {
-      return new BaseNumberFeature(feature);
     } else if (feature.equals("in_title")) {
       return new InTitleFeature(feature);
     } else if (feature.equals("sentence_type")) {
@@ -171,8 +171,6 @@ public class TokenFeatureFactory {
         sourceFeatureIndex = 2;
       }
       return new KeyValueFeature(fData[0], fData[2], sourceFeatureIndex);
-    } else if (feature.equals("tfidf")) {
-      return new TfIdfFeature(feature);
     } else {
       throw new DataFormatException("Invalid feature: " + feature);
     }

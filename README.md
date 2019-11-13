@@ -25,6 +25,7 @@ Contributors
 ------------
 * **Michał Marcińczuk** (2010–present), 
 * **Jan Kocoń** (2014–present), 
+* Michał Gawor (2019),
 * Adam Kaczmarek (2014–2015),
 * Michał Krautforst (2013-2015), 
 * Dominik Piasecki (2013), 
@@ -33,9 +34,6 @@ Contributors
 
 Citing
 ------------
-
-### System architecture and KPWr NER models
-
 Marcińczuk, Michał; Kocoń, Jan; Oleksy, Marcin.
 _Liner2 — a Generic Framework for Named Entity Recognition_
 In: Proceedings of the 6th Workshop on Balto-Slavic Natural Language Processing, 
@@ -117,7 +115,7 @@ docker-compose up
 
 Test the service:
 ```bash
-python3 stuff/python/liner2rmq.py "Pani Ala Nowak mieszkw w Zielonej Górze"
+python3 stuff/python/liner2rmq.py -t "Pani Ala Nowak mieszkw w Zielonej Górze"
 ```
 
 Expected output:
@@ -225,8 +223,6 @@ Expected output:
 </chunkList>
 ```
 
-
-Complete installation
 ------------
 
 ### Requirements
@@ -235,6 +231,14 @@ Complete installation
 
 * Java 8
 * C++ compiler (gcc 3.0 or higher) for [CRF++](https://taku910.github.io/crfpp/)
+* set JAVA_HOME variable:
+```bash
+export JAVA_HOME=/usr/lib/jvm/default-java
+```
+* install dh-autoreconf:
+```bash
+sudo apt-get install dh-autoreconf
+```
 
 #### Runtime
 
@@ -405,8 +409,35 @@ Expected output:
 (20,28,null,placename_settlement,"Warszawie","Warszawie")
 ```
 
+
+### PolEval 2019 Task 1: Recognition and normalisation of temporal expressions
+
+DSpace page: https://clarin-pl.eu/dspace/handle/11321/697
+
+Download the package with model:
+```bash
+cd Liner2
+wget -0 https://clarin-pl.eu/dspace/handle/11321/697/timex_model_full.tar.gz
+```
+
+Unpack the model:
+```bash
+tar xvzf timex_model_full.tar.gz
+```
+
+Process a sample CCL file:
+```bash
+./liner2-cli pipe -m timex_model_full/timex_model_full/cfg.ini -f timex_model_full/test2.xml -i ccl -o tuples
+```
+
+Expected output:
+```bash
+(0,24,null,t3_date,"Ostatnia niedziela września","Ostatnia niedziela września")
+```
+ 
 Service mode (using RabbitMQ)
 ============
+
 
 Introduction
 ------------
@@ -451,7 +482,7 @@ The script takes a text to process, stores the texts in a temporal file, generat
 After receiving the response it reads the output file, removes both temporal files and prints the output. 
 
 ```bash
-python3 stuff/python/liner2rmq.py "Pani Ala Nowak mieszkw w Zielonej Górze"
+python3 stuff/python/liner2rmq.py -t "Pani Ala Nowak mieszkw w Zielonej Górze"
 ```
 
 The output should be as follows:

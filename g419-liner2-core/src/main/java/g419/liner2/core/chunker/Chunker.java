@@ -1,17 +1,15 @@
 package g419.liner2.core.chunker;
 
-import g419.corpus.structure.AnnotationSet;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
-import g419.corpus.structure.Sentence;
-import org.ini4j.Ini;
-
 import java.util.Map;
 
+import g419.corpus.structure.*;
+import g419.liner2.core.features.TokenFeatureGenerator;
+import org.ini4j.Ini;
 
 public abstract class Chunker {
 
   Ini.Section description;
+  TokenFeatureGenerator generator = null;
 
   /**
    * Recognize annotations in the document.
@@ -33,7 +31,6 @@ public abstract class Chunker {
     }
   }
 
-
   public void setDescription(final Ini.Section description) {
     this.description = description;
   }
@@ -42,6 +39,13 @@ public abstract class Chunker {
     return description;
   }
 
+  public void setFeatureGenerator(TokenFeatureGenerator generator){
+    this.generator = generator;
+  }
+
+  public TokenFeatureGenerator getFeatureGenerator(){
+    return this.generator;
+  }
 
   /**
    * Zwolnienie zasobów wykorzystywanych przez chunker,
@@ -59,5 +63,4 @@ public abstract class Chunker {
    */
   public void prepare(final Document ps) {
   }
-
 }

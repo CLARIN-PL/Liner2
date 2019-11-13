@@ -2,6 +2,7 @@ package g419.corpus.structure;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import g419.corpus.EmptySentenceException;
 import io.vavr.control.Option;
 
 import java.util.*;
@@ -63,25 +64,28 @@ public class Annotation extends IdentifiableElement {
 
   private Map<String, String> metadata = Maps.newHashMap();
 
-  public Annotation(final String id, final int begin, final int end, final String type, final Sentence sentence) {
+  public Annotation(final String id, final int begin, final int end, final String type, final Sentence sentence) throws EmptySentenceException {
     this(begin, end, type, sentence);
     this.id = id;
   }
 
-  public Annotation(final int begin, final int end, final String type, final Sentence sentence) {
+  public Annotation(final int begin, final int end, final String type, final Sentence sentence) throws EmptySentenceException {
     this(IntStream.rangeClosed(begin, end).boxed().collect(Collectors.toSet()), type, sentence);
   }
 
-  public Annotation(final int tokenIndex, final String type, final Sentence sentence) {
+  public Annotation(final int tokenIndex, final String type, final Sentence sentence) throws EmptySentenceException {
     this(tokenIndex, tokenIndex, type, sentence);
   }
 
-  public Annotation(final int begin, final String type, final int channelIdx, final Sentence sentence) {
+  public Annotation(final int begin, final String type, final int channelIdx, final Sentence sentence) throws EmptySentenceException {
     this(begin, begin, type, sentence);
     this.channelIdx = channelIdx;
   }
 
-  public Annotation(final Collection<Integer> tokens, final String type, final Sentence sentence) {
+  public Annotation(final Collection<Integer> tokens, final String type, final Sentence sentence) throws EmptySentenceException {
+    if (sentence.getTokens().size() == 0) {
+      throw new EmptySentenceException("Can not create annotation on empty Sentence; Sentence has to have at least one Token");
+    }
     if (tokens.isEmpty()) {
       throw new RuntimeException("List of token indices cannot be empty");
     }
@@ -97,7 +101,10 @@ public class Annotation extends IdentifiableElement {
   public Annotation(final Collection<Integer> tokens,
                     final String type,
                     final Sentence sentence,
-                    final Optional<Integer> head) {
+                    final Optional<Integer> head) throws EmptySentenceException {
+    if (sentence.getTokens().size() == 0) {
+      throw new EmptySentenceException("Can not create annotation on empty Sentence; Sentence has to have at least one Token");
+    }
     if (tokens.isEmpty()) {
       throw new RuntimeException("List of token indices cannot be empty");
     }
@@ -375,7 +382,8 @@ public class Annotation extends IdentifiableElement {
     final TokenAttributeIndex index = sentence.getAttributeIndex();
     for (final int i : this.tokens) {
       final Token token = tokens.get(i);
-      text.append(token.getAttributeValue(index.getIndex("base")));
+      final Tag tag = token.getDisambTag();
+      text.append(tag.getBase());
       final int a = getEnd();
       if ((includeNs == false || !token.getNoSpaceAfter()) && (i < getEnd())) {
         text.append(" ");
@@ -458,7 +466,7 @@ public class Annotation extends IdentifiableElement {
   }
 
   @Override
-  public Annotation clone() {
+  public Annotation clone() throws EmptySentenceException {
     final Annotation cloned = new Annotation(getBegin(), getEnd(), getType(), sentence);
     cloned.setId(id);
     cloned.setHead(head);
