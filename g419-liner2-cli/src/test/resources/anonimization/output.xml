@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chunkList SYSTEM "ccl.dtd">
+<chunkList>
+ <chunk type="p" id="ch1">
+  <sentence id="s1">
+   <tok>
+    <orth>@PERSON</orth>
+    <lex disamb="1"><base>@PERSON</base><ctag>subst:sg:gen:m1</ctag></lex>
+    <lex disamb="1"><base>@PERSON</base><ctag>subst:sg:gen:m1</ctag></lex>
+   </tok>
+   <tok>
+    <orth>@PERSON</orth>
+    <lex disamb="1"><base>@PERSON</base><ctag>subst:sg:nom:m1</ctag></lex>
+    <lex disamb="1"><base>@PERSON</base><ctag>subst:sg:nom:m1</ctag></lex>
+   </tok>
+   <tok>
+    <orth>mieszka</orth>
+    <lex disamb="1"><base>mieszek</base><ctag>subst:sg:gen:m3</ctag></lex>
+   </tok>
+   <tok>
+    <orth>w</orth>
+    <lex disamb="1"><base>w</base><ctag>prep:acc:nwok</ctag></lex>
+   </tok>
+   <tok>
+    <orth>@LOCATION</orth>
+    <lex disamb="1"><base>@LOCATION</base><ctag>subst:sg:loc:m3</ctag></lex>
+   </tok>
+  </sentence>
+ </chunk>
+</chunkList>
