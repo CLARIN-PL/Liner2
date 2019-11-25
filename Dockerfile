@@ -82,7 +82,7 @@ RUN ldconfig
 # morfeusz
 RUN mkdir /build/morfeusz
 WORKDIR /build/morfeusz
-RUN wget http://tools.clarin-pl.eu/share/morfeusz-SGJP-linux64-20130413.tar.bz2
+RUN wget http://download.sgjp.pl/morfeusz/older/morfeusz1/morfeusz-SGJP-linux64-20130413.tar.bz2
 RUN tar -jxvf morfeusz-SGJP-linux64-20130413.tar.bz2
 RUN mv libmorfeusz* /usr/local/lib/
 RUN mv morfeusz /usr/local/bin/
