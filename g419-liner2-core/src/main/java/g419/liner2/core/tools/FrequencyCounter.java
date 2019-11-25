@@ -1,6 +1,7 @@
 package g419.liner2.core.tools;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A thread-safe element frequency counter.
@@ -10,21 +11,26 @@ import java.util.*;
  */
 public class FrequencyCounter<T> {
 
-  private Map<T, Integer> frequency = new HashMap<T, Integer>();
+  private final Map<T, Integer> frequency = new HashMap<>();
 
-  public synchronized void add(T object) {
-    Integer c = this.frequency.get(object);
+  public synchronized void add(final T object) {
+    Integer c = frequency.get(object);
     if (c == null) {
       c = 0;
     }
     c += 1;
-    this.frequency.put(object, c);
+    frequency.put(object, c);
   }
 
-  public void addAll(Collection<T> objects) {
-    for (T o : objects) {
-      this.add(o);
+  public void addAll(final Collection<T> objects) {
+    for (final T o : objects) {
+      add(o);
     }
+  }
+
+  public List<java.util.Map.Entry<T, Integer>> getSorted() {
+    return frequency.entrySet().stream().sorted((o1, o2) -> o2.getValue().compareTo(o1.getValue()))
+        .collect(Collectors.toList());
   }
 
   /**
@@ -33,13 +39,13 @@ public class FrequencyCounter<T> {
    * @return
    */
   public Set<T> getMostFrequent() {
-    Set<T> itemsWithMaxFrequency = new HashSet<T>();
-    if (this.frequency.size() == 0) {
+    final Set<T> itemsWithMaxFrequency = new HashSet<>();
+    if (frequency.size() == 0) {
       return itemsWithMaxFrequency;
     } else {
-      int max = Collections.max(this.frequency.values());
-      for (T o : this.frequency.keySet()) {
-        if (this.frequency.get(o) == max) {
+      final int max = Collections.max(frequency.values());
+      for (final T o : frequency.keySet()) {
+        if (frequency.get(o) == max) {
           itemsWithMaxFrequency.add(o);
         }
       }
