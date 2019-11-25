@@ -21,31 +21,20 @@ import java.util.stream.Collectors;
  */
 public class DocumentToSpatialExpressionConverter {
 
-  /**
-   * Annotation type which represents spatial objects
-   */
-  private final String annotationSpatialObject = "spatial_object3";
-  //private final String annotationSpatialObject = "spatial_object";
+  private final String annotationSpatialObject = "spatial_object";
 
-  /**
-   * Annotation type which represents spatial indicator
-   */
-  private final String annotationSpatialIndicator = "spatial_indicator3";
-  //private final String annotationSpatialIndicator = "spatial_indicator_3";
+  private final String annotationSpatialIndicator = "spatial_indicator";
 
-  private final String annotationRegion = "region3";
+  private final String annotationRegion = "region";
 
-  private final String annotationPathIndicator = "path_indicator3";
+  private final String annotationPathIndicator = "path_indicator";
 
-  private final String annotationMotionIndicator = "motion_indicator3";
+  private final String annotationMotionIndicator = "motion_indicator";
 
-  private final String annotationDirection = "direction3";
+  private final String annotationDirection = "direction";
 
-  private final String annotationDistance = "distance3";
+  private final String annotationDistance = "distance";
 
-  /**
-   *
-   */
   private final String relationLandmark = "landmark";
 
   private final String relationTrajector = "trajector";
