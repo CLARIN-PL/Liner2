@@ -20,10 +20,10 @@ public abstract class Chunker {
    */
   abstract public Map<Sentence, AnnotationSet> chunk(Document ps);
 
-  public void chunkInPlace(Document ps) {
-    Map<Sentence, AnnotationSet> chunking = this.chunk(ps);
-    for (Paragraph paragraph : ps.getParagraphs()) {
-      for (Sentence sentence : paragraph.getSentences()) {
+  public void chunkInPlace(final Document ps) {
+    final Map<Sentence, AnnotationSet> chunking = chunk(ps);
+    for (final Paragraph paragraph : ps.getParagraphs()) {
+      for (final Sentence sentence : paragraph.getSentences()) {
         if (chunking.containsKey(sentence)) {
           sentence.addAnnotations(chunking.get(sentence));
         }
@@ -31,7 +31,7 @@ public abstract class Chunker {
     }
   }
 
-  public void setDescription(Ini.Section description) {
+  public void setDescription(final Ini.Section description) {
     this.description = description;
   }
 
@@ -61,6 +61,6 @@ public abstract class Chunker {
    * Przygotowanie do klasyfikacji danego tekstu. Tą metodę przeciążają klasyfikatory,
    * które wymagają podania całego tekstu przed rozpoczęciem pracy, np. dwuprzebiegowe.
    */
-  public void prepare(Document ps) {
+  public void prepare(final Document ps) {
   }
 }

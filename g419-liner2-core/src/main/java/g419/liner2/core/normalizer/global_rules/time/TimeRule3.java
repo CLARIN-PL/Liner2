@@ -30,9 +30,8 @@ public class TimeRule3 extends AbstractRule {
     else {
       System.out.println("Add support for lval [" + lval + "] of base [" + base + "]");
     }
-    return null; 
+    return null;
   }
-
 
   @Override
   public boolean matches(String lval, String base) {

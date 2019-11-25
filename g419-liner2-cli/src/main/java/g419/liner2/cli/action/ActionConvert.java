@@ -79,8 +79,9 @@ public class ActionConvert extends Action {
     }
 
     final AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(output_file, output_format);
-    Document ps = reader.nextDocument();
-    while (ps != null) {
+    while (reader.hasNext()) {
+      final Document ps = reader.next();
+
       Logger.getLogger(getClass()).info("Processing " + ps.getName() + " ...");
       if (gen != null) {
         if (gen != null) {
@@ -96,7 +97,6 @@ public class ActionConvert extends Action {
 
       Logger.getLogger(getClass()).info(" - writing ...");
       writer.writeDocument(ps);
-      ps = reader.nextDocument();
     }
 
     reader.close();

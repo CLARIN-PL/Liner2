@@ -45,7 +45,7 @@ public class IobStreamReader extends AbstractDocumentReader implements HasLogger
     }
     if (!header.startsWith(Iob.IOB_HEADER_PREFIX)) {
       throw new DataFormatException(
-          String.format("First line does not contain attributes definition, i.e. '%s a1 a2 a3'", Iob.IOB_HEADER_PREFIX));
+              String.format("First line does not contain attributes definition, i.e. '%s a1 a2 a3'", Iob.IOB_HEADER_PREFIX));
     }
     parseFileHeader(header).stream().forEach(attributeIndex::addAttribute);
     nextFileId = goToNextFileBlock();
@@ -131,8 +131,8 @@ public class IobStreamReader extends AbstractDocumentReader implements HasLogger
   private void createAnnotations(final Sentence sentence, final List<String> labels) throws DataFormatException {
     final List<Pair<String, Set<Integer>>> groups = labelsToAnnotations(labels);
     groups.stream()
-        .map(p -> new Annotation(p.getRight(), p.getLeft(), sentence))
-        .forEach(sentence::addChunk);
+            .map(p -> new Annotation(p.getRight(), p.getLeft(), sentence))
+            .forEach(sentence::addChunk);
   }
 
   private List<Pair<String, Set<Integer>>> labelsToAnnotations(final List<String> labels) throws DataFormatException {
@@ -144,8 +144,8 @@ public class IobStreamReader extends AbstractDocumentReader implements HasLogger
     for (final String label : labelsCopy) {
       if (label.equals("O")) {
         annsByType.entrySet().stream()
-            .map(p -> new ImmutablePair<>(p.getKey(), p.getValue()))
-            .forEach(groups::add);
+                .map(p -> new ImmutablePair<>(p.getKey(), p.getValue()))
+                .forEach(groups::add);
         annsByType = Maps.newHashMap();
       } else {
         final Matcher m = Iob.IOB_LABEL_PATTERN.matcher(label);
@@ -173,7 +173,7 @@ public class IobStreamReader extends AbstractDocumentReader implements HasLogger
     return groups;
   }
 
-  private Pair<Token, String> parseToken(final String line, final TokenAttributeIndex index) throws DataFormatException {
+  private Pair<Token, String> parseToken(final String line, final TokenAttributeIndex index) throws DataFormatException{
     final String[] cols = line.split(Iob.IOB_COLUMN_SEPARATOR);
     final String[] attrs = Arrays.copyOfRange(cols, 0, cols.length - 1);
     final String labels = cols[cols.length - 1];
@@ -185,7 +185,7 @@ public class IobStreamReader extends AbstractDocumentReader implements HasLogger
     final Token token = new Token(index);
     if (attrs.length != index.getLength()) {
       throw new DataFormatException("Invalid number of attributes: " + StringUtils.join(attrs)
-          + ". Expecting " + index.getLength());
+              + ". Expecting " + index.getLength());
     }
     for (int i = 0; i < attrs.length; i++) {
       token.setAttributeValue(i, attrs[i]);

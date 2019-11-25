@@ -28,9 +28,9 @@ public class ActionTestMalt extends Action {
 
   public ActionTestMalt() {
     super("test-malt");
-    this.setDescription("recognize spatial relations");
-    this.options.addOption(this.getOptionInputFilename());
-    this.options.addOption(CommonOptions.getInputFileFormatOption());
+    setDescription("recognize spatial relations");
+    options.addOption(getOptionInputFilename());
+    options.addOption(CommonOptions.getInputFileFormatOption());
   }
 
   /**
@@ -50,27 +50,27 @@ public class ActionTestMalt extends Action {
    */
   @Override
   public void parseOptions(final CommandLine line) throws Exception {
-    this.filename = line.getOptionValue(ActionTestMalt.OPTION_FILENAME);
-    this.inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
+    filename = line.getOptionValue(ActionTestMalt.OPTION_FILENAME);
+    inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
   }
 
   @Override
   public void run() throws Exception {
-    AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(this.filename, this.inputFormat);
+    final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(filename, inputFormat);
     Document document = reader.nextDocument();
 
-    MaltParser malt = new MaltParser("/nlp/resources/maltparser/skladnica_liblinear_stackeager_final.mco");
+    final MaltParser malt = new MaltParser("/nlp/resources/maltparser/skladnica_liblinear_stackeager_final.mco");
 
     while (document != null) {
-      Logger.getLogger(this.getClass()).info("\nDocument: " + document.getName());
+      Logger.getLogger(getClass()).info("\nDocument: " + document.getName());
 
-      for (Paragraph paragraph : document.getParagraphs()) {
-        for (Sentence sentence : paragraph.getSentences()) {
-          MaltSentence maltSentence = new MaltSentence(sentence, MappingNkjpToConllPos.get());
+      for (final Paragraph paragraph : document.getParagraphs()) {
+        for (final Sentence sentence : paragraph.getSentences()) {
+          final MaltSentence maltSentence = new MaltSentence(sentence, MappingNkjpToConllPos.get());
           malt.parse(maltSentence);
 
-          List<SpatialExpression> srs = this.findByMalt(sentence, maltSentence);
-          for (SpatialExpression sr : srs) {
+          final List<SpatialExpression> srs = findByMalt(sentence, maltSentence);
+          for (final SpatialExpression sr : srs) {
             System.out.println(sr.toString());
           }
         }
@@ -86,25 +86,25 @@ public class ActionTestMalt extends Action {
    * @param maltSentence
    * @return
    */
-  public List<SpatialExpression> findByMalt(Sentence sentence, MaltSentence maltSentence) {
-    List<SpatialExpression> srs = new ArrayList<SpatialExpression>();
+  public List<SpatialExpression> findByMalt(final Sentence sentence, final MaltSentence maltSentence) {
+    final List<SpatialExpression> srs = new ArrayList<>();
     for (int i = 0; i < sentence.getTokens().size(); i++) {
-      Token token = sentence.getTokens().get(i);
-      List<Integer> landmarks = new ArrayList<Integer>();
-      List<Integer> trajectors = new ArrayList<Integer>();
+      final Token token = sentence.getTokens().get(i);
+      final List<Integer> landmarks = new ArrayList<>();
+      final List<Integer> trajectors = new ArrayList<>();
       Integer indicator = null;
-      String type = "MALT";
+      final String type = "MALT";
       String typeLM = "";
       String typeTR = "";
       if (ClassFeature.BROAD_CLASSES.get("verb").contains(token.getDisambTag().getPos())) {
-        List<MaltSentenceLink> links = maltSentence.getLinksByTargetIndex(i);
-        for (MaltSentenceLink link : links) {
-          Token tokenChild = sentence.getTokens().get(link.getSourceIndex());
+        final List<MaltSentenceLink> links = maltSentence.getLinksByTargetIndex(i);
+        for (final MaltSentenceLink link : links) {
+          final Token tokenChild = sentence.getTokens().get(link.getSourceIndex());
           if (link.getRelationType().equals("subj")) {
             if (tokenChild.getDisambTag().getBase().equals("i")
                 || tokenChild.getDisambTag().getBase().equals("oraz")) {
               typeTR = "_TRconj";
-              for (MaltSentenceLink trLink : maltSentence.getLinksByTargetIndex(link.getSourceIndex())) {
+              for (final MaltSentenceLink trLink : maltSentence.getLinksByTargetIndex(link.getSourceIndex())) {
                 landmarks.add(trLink.getSourceIndex());
               }
             } else if (!tokenChild.getDisambTag().getPos().equals("interp")) {
@@ -112,11 +112,11 @@ public class ActionTestMalt extends Action {
             }
           } else if (tokenChild.getDisambTag().getPos().equals("prep")) {
             indicator = link.getSourceIndex();
-            for (MaltSentenceLink prepLink : maltSentence.getLinksByTargetIndex(link.getSourceIndex())) {
-              Token lm = sentence.getTokens().get(prepLink.getSourceIndex());
+            for (final MaltSentenceLink prepLink : maltSentence.getLinksByTargetIndex(link.getSourceIndex())) {
+              final Token lm = sentence.getTokens().get(prepLink.getSourceIndex());
               if (lm.getOrth().equals(",")) {
                 typeLM = "_LMconj";
-                for (MaltSentenceLink prepLinkComma : maltSentence.getLinksByTargetIndex(prepLink.getSourceIndex())) {
+                for (final MaltSentenceLink prepLinkComma : maltSentence.getLinksByTargetIndex(prepLink.getSourceIndex())) {
                   landmarks.add(prepLinkComma.getSourceIndex());
                 }
               } else if (!lm.getDisambTag().getPos().equals("interp")) {
@@ -128,9 +128,9 @@ public class ActionTestMalt extends Action {
       }
 
       if (landmarks.size() > 0 && trajectors.size() > 0 && indicator != null) {
-        for (Integer landmark : landmarks) {
-          for (Integer trajector : trajectors) {
-            SpatialExpression sr = new SpatialExpression(
+        for (final Integer landmark : landmarks) {
+          for (final Integer trajector : trajectors) {
+            final SpatialExpression sr = new SpatialExpression(
                 type + typeLM + typeTR,
                 new Annotation(trajector, "trajector", sentence),
                 new Annotation(indicator, "indicator", sentence),

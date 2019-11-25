@@ -14,13 +14,13 @@ public class SpatialObjectPath {
 
   }
 
-  public SpatialObjectPath(Annotation pathIndicator, Annotation spatialObject) {
+  public SpatialObjectPath(final Annotation pathIndicator, final Annotation spatialObject) {
     this.pathIndicator = pathIndicator;
     this.spatialObject.setSpatialObject(spatialObject);
 
   }
 
-  public void setPathIndicator(Annotation pathIndicator) {
+  public void setPathIndicator(final Annotation pathIndicator) {
     this.pathIndicator = pathIndicator;
   }
 
@@ -34,8 +34,8 @@ public class SpatialObjectPath {
 
   @Override
   public String toString() {
-    StringJoiner joiner = new StringJoiner("; ", "[", "]");
-    joiner.add("" + pathIndicator);
+    final StringJoiner joiner = new StringJoiner("; ", "[", "]");
+    joiner.add("PI=" + pathIndicator.getText());
     joiner.add(spatialObject.toString());
     return joiner.toString();
   }
