@@ -42,18 +42,18 @@ public class ActionEval extends Action {
    */
   public ActionEval() {
     super("eval");
-    this.setDescription("evaluate recognition of spatial expressions (only for static)");
-    this.options.addOption(this.getOptionInputFilename());
-    this.options.addOption(CommonOptions.getInputFileFormatOption());
-    this.options.addOption(CommonOptions.getMaltparserModelFileOption());
-    this.options.addOption(CommonOptions.getWordnetOption(true));
+    setDescription("evaluate recognition of spatial expressions (only for static)");
+    options.addOption(getOptionInputFilename());
+    options.addOption(CommonOptions.getInputFileFormatOption());
+    options.addOption(CommonOptions.getMaltparserModelFileOption());
+    options.addOption(CommonOptions.getWordnetOption(true));
 
-    this.annotationsPrep.add(Pattern.compile("^PrepNG.*"));
-    this.annotationsNg.add(Pattern.compile("^NG.*"));
+    annotationsPrep.add(Pattern.compile("^PrepNG.*"));
+    annotationsNg.add(Pattern.compile("^NG.*"));
 
-    this.objectPos.add("subst");
-    this.objectPos.add("ign");
-    this.objectPos.add("brev");
+    objectPos.add("subst");
+    objectPos.add("ign");
+    objectPos.add("brev");
   }
 
   /**
@@ -73,18 +73,18 @@ public class ActionEval extends Action {
    */
   @Override
   public void parseOptions(final CommandLine line) throws Exception {
-    this.filename = line.getOptionValue(ActionEval.OPTION_FILENAME);
-    this.inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
-    this.maltparserModel = line.getOptionValue(CommonOptions.OPTION_MALT);
-    this.wordnetPath = line.getOptionValue(CommonOptions.OPTION_WORDNET);
+    filename = line.getOptionValue(ActionEval.OPTION_FILENAME);
+    inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
+    maltparserModel = line.getOptionValue(CommonOptions.OPTION_MALT);
+    wordnetPath = line.getOptionValue(CommonOptions.OPTION_WORDNET);
   }
 
   @Override
   public void run() throws Exception {
-    final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(this.filename, this.inputFormat);
-    final Wordnet3 wordnet = new Wordnet3(this.wordnetPath);
-    final MaltParser malt = new MaltParser(this.maltparserModel);
-    final ISpatialRelationRecognizer recognizer = new SpatialRelationRecognizer(malt, wordnet);
+    final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(filename, inputFormat);
+    final Wordnet3 wordnet = new Wordnet3(wordnetPath);
+    final MaltParser malt = new MaltParser(maltparserModel);
+    final ISpatialRelationRecognizer recognizer = new SpatialRelationRecognizer(wordnet).withMaltParser(malt);
     final Set<String> regions = SpatialResources.getRegions();
 
     //KeyGenerator<SpatialExpression> keyGenerator = new SpatialExpressionKeyGeneratorSimple();
@@ -99,7 +99,7 @@ public class ActionEval extends Action {
       final Document document = reader.next();
       printHeader1("Document: " + document.getName());
 
-      final List<SpatialExpression> gold = this.getSpatialRelations(document);
+      final List<SpatialExpression> gold = getSpatialRelations(document);
 
       if (gold.size() == 0) {
         continue;

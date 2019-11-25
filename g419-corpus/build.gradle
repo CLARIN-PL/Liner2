@@ -9,5 +9,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.5'
     compile 'commons-io:commons-io:2.4'
     compile 'org.apache.commons:commons-csv:1.2'
+    compile 'org.projectlombok:lombok:1.18.6'
     testCompile 'com.cedarsoftware:java-util:1.13.3'
 }

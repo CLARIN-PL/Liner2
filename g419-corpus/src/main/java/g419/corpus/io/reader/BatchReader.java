@@ -8,6 +8,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.*;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 /**
@@ -89,7 +90,7 @@ public class BatchReader extends AbstractDocumentReader {
         getLogger().error("Failed to read file {}", path);
       }
     }
-    return null;
+    throw new NoSuchElementException();
   }
 
   private String getDocumnetBaseName(final String filename, final String format) {

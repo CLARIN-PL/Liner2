@@ -6,12 +6,10 @@ import g419.corpus.schema.annotation.NkjpSpejd;
 import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import g419.corpus.structure.*;
 import g419.liner2.core.features.tokens.ClassFeature;
-import g419.liner2.core.tools.parser.MaltParser;
 import g419.liner2.core.tools.parser.MaltSentence;
 import g419.liner2.core.tools.parser.MaltSentenceLink;
 import g419.spatial.filter.*;
-import g419.spatial.pattern.SentencePattern;
-import g419.spatial.pattern.SentencePatternMatchCustomNgPrepNg;
+import g419.spatial.pattern.*;
 import g419.spatial.structure.SpatialExpression;
 import g419.spatial.structure.SpatialObjectRegion;
 import g419.toolbox.wordnet.NamToWordnet;
@@ -34,22 +32,13 @@ import java.util.stream.Stream;
 
 public class SpatialRelationRecognizer2 extends ISpatialRelationRecognizer {
 
-  final private MaltParser malt;
-  final RelationFilterSemanticPattern semanticFilter = new RelationFilterSemanticPattern();
-
   final private Pattern patternAnnotationNam = Pattern.compile("^nam(_(fac|liv|loc|pro|oth).*|$)");
   final private Set<String> orthConj = Sets.newHashSet("i", "oraz", ",");
 
   final private Set<String> objectPos = Sets.newHashSet("subst", "ign", "brev");
   final private Set<String> regions = SpatialResources.getRegions();
 
-  /**
-   * @param malt    Ścieżka do modelu Maltparsera
-   * @param wordnet Ścieżka do wordnetu w formacie PWN
-   * @throws IOException
-   */
-  public SpatialRelationRecognizer2(final MaltParser malt, final Wordnet3 wordnet) throws IOException {
-    this.malt = malt;
+  public SpatialRelationRecognizer2(final Wordnet3 wordnet) throws IOException {
     filters.add(new RelationFilterPronoun());
     filters.add(new RelationFilterDifferentObjects());
     filters.add(semanticFilter);
@@ -72,7 +61,10 @@ public class SpatialRelationRecognizer2 extends ISpatialRelationRecognizer {
    * @return
    * @throws MaltChainedException
    */
+  @Override
   public List<SpatialExpression> recognize(final Sentence sentence) {
+    // ToDo: splitPrepNg should be moved outside
+    NkjpSyntacticChunks.splitPrepNg(sentence);
     return findCandidates(sentence).stream()
         .filter(se -> !getFilterDiscardingRelation(se).isPresent())
         .collect(Collectors.toList());
@@ -85,59 +77,171 @@ public class SpatialRelationRecognizer2 extends ISpatialRelationRecognizer {
    */
   @Override
   public List<SpatialExpression> findCandidates(final Sentence sentence) {
+    // ToDo: splitPrepNg should be moved outside
     NkjpSyntacticChunks.splitPrepNg(sentence);
     final SentenceAnnotationIndexTypePos anIndex = new SentenceAnnotationIndexTypePos(sentence);
 
-    final List<SpatialExpression> relations = Stream.of(sentence)
-        .map(s -> malt.parse(s, MappingNkjpToConllPos.get()))
-        .peek(MaltSentence::printAsTree)
-        .map(s -> findCandidatesByMalt(s, anIndex))
-        .flatMap(Collection::stream)
-        .collect(Collectors.toList());
+    final List<SpatialExpression> candidates = Lists.newArrayList();
+    candidates.addAll(getCandidateWithDependencyParser(sentence, anIndex));
+    candidates.addAll(getCandidateWithSequencePatterns(sentence, anIndex));
 
-    getPatterns().stream()
-        .map(p -> p.match(anIndex))
-        .flatMap(Collection::stream)
-        .map(this::frameToSpatialExpression)
-        .forEach(relations::add);
-
-    return relations.stream()
+    return candidates.stream()
         .peek(r -> updateLandmarkIfRegion(r, anIndex))
         .peek(r -> replaceSpatialObjectsWithNamedEntities(r, anIndex))
         .collect(Collectors.toList());
   }
 
-  // ToDo: Read patterns from a file after implementig ANTL parser.
+  private List<SpatialExpression> getCandidateWithDependencyParser(final Sentence sentence,
+                                                                   final SentenceAnnotationIndexTypePos anIndex) {
+    final List<SpatialExpression> candidates = Lists.newArrayList();
+    if (!maltParser.isEmpty()) {
+      Stream.of(sentence)
+          .map(s -> maltParser.get().parse(s, MappingNkjpToConllPos.get()))
+          .peek(MaltSentence::printAsTree)
+          .map(s -> findCandidatesByMalt(s, anIndex))
+          .flatMap(Collection::stream)
+          .forEach(candidates::add);
+    }
+    return candidates;
+  }
+
+  private List<SpatialExpression> getCandidateWithSequencePatterns(final Sentence sentence,
+                                                                   final SentenceAnnotationIndexTypePos anIndex) {
+    return getPatterns().stream()
+        .map(p -> p.match(anIndex))
+        .flatMap(Collection::stream)
+        .map(this::frameToSpatialExpression)
+        .collect(Collectors.toList());
+  }
+
   private List<SentencePattern> getPatterns() {
     final List<SentencePattern> patterns = Lists.newArrayList();
-
-//        patterns.add(new SentencePattern("NG*_Prep_NG*", new SentencePatternMatchSequence()
-//                .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
-//                .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
-//                .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))));
-
-//        patterns.add(new SentencePattern("NG*_comma_Prep_NG*", new SentencePatternMatchSequence()
-//                .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
-//                .append(new SentencePatternMatchTokenOrth(","))
-//                .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
-//                .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))));
-
-    patterns.add(new SentencePattern("<NP_Prep_NG>", new SentencePatternMatchCustomNgPrepNg()));
-
+    patterns.add(
+        new SentencePattern("NG*_Prep_NG*", new SentencePatternMatchSequence()
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
+            .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))
+        ));
+    patterns.add(
+        new SentencePattern("NumG*_Prep_NG*", new SentencePatternMatchSequence()
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NumGAny).withLabel("trajector"))
+            .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))
+        ));
+    patterns.add(
+        new SentencePattern("NG*_Prep_NumG*", new SentencePatternMatchSequence()
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
+            .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NumGAny).withLabel("landmark"))
+        ));
+    patterns.add(
+        new SentencePattern("NG*_Pact_sie_Prep_NG*", new SentencePatternMatchSequence()
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
+            .append(new SentencePatternMatchTokenPos("pact"))
+            .append(new SentencePatternMatchTokenPos("qub"))
+            .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NumGAny).withLabel("landmark"))
+        ));
+    patterns.add(
+        new SentencePattern("NG*_comma_Prep_NG*", new SentencePatternMatchSequence()
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
+            .append(new SentencePatternMatchTokenOrth(","))
+            .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))
+        ));
+    patterns.add(
+        new SentencePattern("<NP_Prep_NG>", new SentencePatternMatchCustomNgPrepNg()));
+    patterns.add(
+        new SentencePattern("Prep_NG*_Pred_NG*", new SentencePatternMatchSequence()
+            .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))
+            .append(new SentencePatternMatchTokenPos("pred").withLabel(SpatialExpression.MOTION_INDICATOR))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
+        ));
+    patterns.add(
+        new SentencePattern("Prep_NG*_Fin_NG*", new SentencePatternMatchSequence()
+            .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))
+            .append(new SentencePatternMatchTokenPos("fin").withLabel(SpatialExpression.MOTION_INDICATOR))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
+        ));
+    patterns.add(
+        new SentencePattern("Prep_NG*_Imps_NG*", new SentencePatternMatchSequence()
+            .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))
+            .append(new SentencePatternMatchTokenPos("imps").withLabel(SpatialExpression.MOTION_INDICATOR))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
+        ));
+    patterns.add(
+        new SentencePattern("Prep_NG*_Praet_NG*", new SentencePatternMatchSequence()
+            .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))
+            .append(new SentencePatternMatchTokenPos("praet").withLabel(SpatialExpression.MOTION_INDICATOR))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
+        ));
+    patterns.add(
+        new SentencePattern("Prep_NG*_Praet_NumG*", new SentencePatternMatchSequence()
+            .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))
+            .append(new SentencePatternMatchTokenPos("praet").withLabel(SpatialExpression.MOTION_INDICATOR))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NumGAny).withLabel("trajector"))
+        ));
+    patterns.add(
+        new SentencePattern("Prep_AdjG_NG*_Praet_NG*", new SentencePatternMatchSequence()
+            .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.AdjG))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))
+            .append(new SentencePatternMatchTokenPos("praet").withLabel(SpatialExpression.MOTION_INDICATOR))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
+        ));
+    patterns.add(
+        new SentencePattern("Prep_NG*_Fin_Inf_NG*", new SentencePatternMatchSequence()
+            .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))
+            .append(new SentencePatternMatchTokenPos("fin"))
+            .append(new SentencePatternMatchTokenPos("inf"))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
+        ));
+    patterns.add(
+        new SentencePattern("Ppas_NG*_Prep_NG*", new SentencePatternMatchSequence()
+            .append(new SentencePatternMatchTokenPos("ppas").withLabel(SpatialExpression.MOTION_INDICATOR))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
+            .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))
+        ));
+    patterns.add(
+        new SentencePattern("Ppas_Adv_Prep_NG*_NG*", new SentencePatternMatchSequence()
+            .append(new SentencePatternMatchTokenPos("ppas").withLabel(SpatialExpression.MOTION_INDICATOR))
+            .append(new SentencePatternMatchTokenPos("adv"))
+            .append(new SentencePatternMatchTokenPos("prep").withLabel("spatial_indicator"))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("landmark"))
+            .append(new SentencePatternMatchAnnotationPattern(NkjpSpejd.NGAny).withLabel("trajector"))
+        ));
+    patterns.add(
+        new SentencePattern("prep_subst_subst", new SentencePatternMatchSequence()
+            .append(new SentencePatternMatchTokenPos("prep").withLabel(SpatialExpression.SPATIAL_INDICATOR))
+            .append(new SentencePatternMatchTokenPos("subst").withLabel(SpatialExpression.LANDMARK))
+            .append(new SentencePatternMatchTokenPos("subst").withLabel(SpatialExpression.TRAJECTOR))
+        ));
     return patterns;
   }
 
-
   private SpatialExpression frameToSpatialExpression(final Frame<Annotation> frame) {
     final SpatialExpression se = new SpatialExpression();
-    se.setTrajector(frame.getSlot("trajector"));
-    se.setLandmark(frame.getSlot("landmark"));
-    se.setSpatialIndicator(frame.getSlot("spatial_indicator"));
+    se.setTrajector(
+        frame.getSlot(SpatialExpression.TRAJECTOR));
+    se.setLandmark(
+        frame.getSlot(SpatialExpression.LANDMARK));
+    se.setSpatialIndicator(
+        frame.getSlot(SpatialExpression.SPATIAL_INDICATOR));
+    se.setMotionIndicator(
+        frame.getSlot(SpatialExpression.MOTION_INDICATOR));
     se.setType(frame.getType());
     return se;
   }
 
-  private void updateLandmarkIfRegion(final SpatialExpression se, final SentenceAnnotationIndexTypePos anIndex) {
+  private void updateLandmarkIfRegion(final SpatialExpression se,
+                                      final SentenceAnnotationIndexTypePos anIndex) {
     if (!isLandmarkObjectARegion(se)) {
       return;
     }
@@ -192,12 +296,14 @@ public class SpatialRelationRecognizer2 extends ISpatialRelationRecognizer {
     return regions.contains(rel.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase());
   }
 
-  private void replaceSpatialObjectsWithNamedEntities(final SpatialExpression relation, final SentenceAnnotationIndexTypePos anIndex) {
+  private void replaceSpatialObjectsWithNamedEntities(final SpatialExpression relation,
+                                                      final SentenceAnnotationIndexTypePos anIndex) {
     replaceSpatialObjectWithNamedEntity(relation.getLandmark(), anIndex);
     replaceSpatialObjectWithNamedEntity(relation.getTrajector(), anIndex);
   }
 
-  private void replaceSpatialObjectWithNamedEntity(final SpatialObjectRegion spatialObject, final SentenceAnnotationIndexTypePos anIndex) {
+  private void replaceSpatialObjectWithNamedEntity(final SpatialObjectRegion spatialObject,
+                                                   final SentenceAnnotationIndexTypePos anIndex) {
     anIndex.getLongestOfTypeAtPos(patternAnnotationNam, spatialObject.getSpatialObject().getBegin())
         .filter(an -> an != spatialObject.getSpatialObject())
         .peek(an -> getLogger().debug("Replace {} ({}) with nam ({})", spatialObject.getSpatialObject().getType(), spatialObject, an))
@@ -205,14 +311,16 @@ public class SpatialRelationRecognizer2 extends ISpatialRelationRecognizer {
         .forEach(spatialObject::setSpatialObject);
   }
 
-  public List<SpatialExpression> findCandidatesByMalt(final MaltSentence maltSentence, final SentenceAnnotationIndexTypePos anIndex) {
+  public List<SpatialExpression> findCandidatesByMalt(final MaltSentence maltSentence,
+                                                      final SentenceAnnotationIndexTypePos anIndex) {
     return IntStream.range(0, maltSentence.getSentence().getTokens().size())
         .mapToObj(pos -> findCandidatesByMalt(pos, maltSentence, anIndex))
         .flatMap(Collection::stream)
         .collect(Collectors.toList());
   }
 
-  private List<SpatialExpression> findCandidatesByMalt(final int pos, final MaltSentence maltSentence, final SentenceAnnotationIndexTypePos anIndex) {
+  private List<SpatialExpression> findCandidatesByMalt(final int pos,
+                                                       final MaltSentence maltSentence, final SentenceAnnotationIndexTypePos anIndex) {
     final List<SpatialExpression> ses = Lists.newArrayList();
     ses.addAll(findMaltCandidatesRootTrajector(pos, maltSentence, anIndex));
     ses.addAll(findMaltCandidatesRootVerb(pos, maltSentence, anIndex, "subj"));
@@ -221,7 +329,8 @@ public class SpatialRelationRecognizer2 extends ISpatialRelationRecognizer {
     return ses;
   }
 
-  private List<SpatialExpression> findMaltCandidatesRootTrajector(final int pos, final MaltSentence maltSentence, final SentenceAnnotationIndexTypePos anIndex) {
+  private List<SpatialExpression> findMaltCandidatesRootTrajector(final int pos,
+                                                                  final MaltSentence maltSentence, final SentenceAnnotationIndexTypePos anIndex) {
     final List<Token> tokens = maltSentence.getSentence().getTokens();
     final Token root = tokens.get(pos);
     final List<Integer> trajectors = Lists.newArrayList();
@@ -248,7 +357,9 @@ public class SpatialRelationRecognizer2 extends ISpatialRelationRecognizer {
     return componentsToSpatialExpressions(anIndex, trajectors, indicatorLandmark, "Malt_RootTr");
   }
 
-  private List<SpatialExpression> findMaltCandidatesRootVerb(final int pos, final MaltSentence maltSentence, final SentenceAnnotationIndexTypePos anIndex, final String trPos) {
+  private List<SpatialExpression> findMaltCandidatesRootVerb(final int pos,
+                                                             final MaltSentence maltSentence, final SentenceAnnotationIndexTypePos anIndex,
+                                                             final String trPos) {
     final List<Token> tokens = maltSentence.getSentence().getTokens();
     if (!ClassFeature.BROAD_CLASSES.get("verb").contains(tokens.get(pos).getDisambTag().getPos())) {
       return Lists.newArrayList();
@@ -272,7 +383,8 @@ public class SpatialRelationRecognizer2 extends ISpatialRelationRecognizer {
     return componentsToSpatialExpressions(anIndex, trajectors, indicatorLandmark, "Malt_RootVerb_" + trPos);
   }
 
-  private List<Integer> getElementConjunction(final MaltSentence maltSentence, final int nodeIndex) {
+  private List<Integer> getElementConjunction(final MaltSentence maltSentence,
+                                              final int nodeIndex) {
     final Token token = maltSentence.getSentence().getTokens().get(nodeIndex);
     if (orthConj.contains(token.getOrth().toLowerCase())) {
       return maltSentence.getLinksByTargetIndex(nodeIndex).stream()
@@ -280,7 +392,7 @@ public class SpatialRelationRecognizer2 extends ISpatialRelationRecognizer {
           .map(index -> getObjectOnPath(maltSentence, index))
           .flatMap(Collection::stream)
           .collect(Collectors.toList());
-    } else if (this.objectPos.contains(token.getDisambTag().getPos())) {
+    } else if (objectPos.contains(token.getDisambTag().getPos())) {
       return getObjectOnPath(maltSentence, nodeIndex);
     } else {
       return Lists.newArrayList();
@@ -292,9 +404,10 @@ public class SpatialRelationRecognizer2 extends ISpatialRelationRecognizer {
     return Lists.newArrayList(nodeIndex);
   }
 
-  private List<SpatialExpression>
-  componentsToSpatialExpressions(final SentenceAnnotationIndexTypePos anIndex, final List<Integer> trajectors,
-                                 final List<Pair<Integer, List<Integer>>> indicatorLandmark, final String type) {
+  private List<SpatialExpression> componentsToSpatialExpressions(final SentenceAnnotationIndexTypePos anIndex,
+                                                                 final List<Integer> trajectors,
+                                                                 final List<Pair<Integer, List<Integer>>> indicatorLandmark,
+                                                                 final String type) {
     final Sentence sentence = anIndex.getSentence();
     final List<SpatialExpression> srs = Lists.newArrayList();
     final String typeTR = trajectors.size() > 1 ? "_TrSet" : "";
@@ -314,7 +427,10 @@ public class SpatialRelationRecognizer2 extends ISpatialRelationRecognizer {
   }
 
 
-  private Annotation getOrCreateAnnotation(final Sentence sentence, final Integer index, final String type, final SentenceAnnotationIndexTypePos anIndex) {
+  private Annotation getOrCreateAnnotation(final Sentence sentence,
+                                           final Integer index,
+                                           final String type,
+                                           final SentenceAnnotationIndexTypePos anIndex) {
     return Option.of(anIndex.getAnnotationsOfTypeAtPos(NkjpSpejd.NGAny, index))
         .filter(list -> list.size() > 0)
         .map(list -> list.stream().sorted(Comparator.comparing(Annotation::length)).collect(Collectors.toList()))

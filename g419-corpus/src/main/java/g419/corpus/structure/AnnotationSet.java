@@ -91,4 +91,16 @@ public class AnnotationSet {
     return types;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o)
+      return true;
+
+    if (getClass() != o.getClass())
+      return false;
+
+    AnnotationSet otherAnnSet = (AnnotationSet) o;
+
+    return this.sentence.toString().equals(otherAnnSet.getSentence().toString()) && this.chunks.equals(otherAnnSet.chunkSet());
+  }
 }

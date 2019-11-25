@@ -2,8 +2,13 @@ package g419.spatial.structure;
 
 import com.google.common.collect.Sets;
 import g419.corpus.structure.Annotation;
+import g419.corpus.structure.Sentence;
 
+import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 /**
  * Represents spatial expression, which consists of: trajector, landmark, spatial indicator, motion indicator, path
@@ -11,6 +16,14 @@ import java.util.Set;
  * @author czuk
  */
 public class SpatialExpression {
+
+  public static String LANDMARK = "landmark";
+
+  public static String TRAJECTOR = "trajector";
+
+  public static String SPATIAL_INDICATOR = "spatial_indicator";
+
+  public static String MOTION_INDICATOR = "motion_indicator";
 
   final private SpatialObjectRegion trajector = new SpatialObjectRegion();
   final private SpatialObjectRegion landmark = new SpatialObjectRegion();
@@ -39,7 +52,7 @@ public class SpatialExpression {
   }
 
   public String getType() {
-    return this.type;
+    return type;
   }
 
   public SpatialObjectRegion getTrajector() {
@@ -87,15 +100,15 @@ public class SpatialExpression {
   }
 
   public Set<String> getTrajectorConcepts() {
-    return this.trajectorConcepts;
+    return trajectorConcepts;
   }
 
   public Set<String> getLandmarkConcepts() {
-    return this.landmarkConcepts;
+    return landmarkConcepts;
   }
 
   public Set<SpatialRelationSchema> getSchemas() {
-    return this.filtres;
+    return filtres;
   }
 
   /**
@@ -122,6 +135,18 @@ public class SpatialExpression {
     return ans;
   }
 
+  public int getWidth() {
+    final Set<Integer> tokens = getAnnotations().stream().map(Annotation::getTokens).flatMap(Collection::stream)
+        .collect(Collectors.toSet());
+    final int max = tokens.stream().mapToInt(d -> d).max().getAsInt();
+    final int min = tokens.stream().mapToInt(d -> d).min().getAsInt();
+    return max - min;
+  }
+
+  public Optional<Sentence> getSentence() {
+    return getAnnotations().stream().map(Annotation::getSentence).findFirst();
+  }
+
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder();
@@ -144,10 +169,22 @@ public class SpatialExpression {
     } else {
       return lastAn;
     }
-
   }
 
   private String toString(final Annotation an, final String role) {
     return String.format(" %s:[%s:%s]", role, an.getText(true), an.getType());
+  }
+
+  public String getKey() {
+    final StringJoiner joiner = new StringJoiner("_");
+    joiner.add("TR:" + getTrajector().getSpatialObject().getBegin());
+    if (getSpatialIndicator() != null) {
+      joiner.add("SI:" + getSpatialIndicator().getBegin());
+    }
+    if (getLandmark() != null && getLandmark().getSpatialObject() != null) {
+      joiner.add("LM:" + getLandmark().getSpatialObject().getBegin());
+    }
+    return joiner.toString();
+
   }
 }

@@ -29,8 +29,8 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
 
   public RelationFilterSemanticPattern() throws IOException {
     try {
-      this.wts = new WordnetToSumo();
-      this.patternMatcher = this.getPatternMatcher();
+      wts = new WordnetToSumo();
+      patternMatcher = getPatternMatcher();
     } catch (final DataFormatException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -45,9 +45,9 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
     final String location = "/g419/spatial/resources/spatial_schemes.csv";
     final boolean general = true;
 
-    try (final InputStream resource = this.getClass().getResourceAsStream(location)) {
+    try (final InputStream resource = getClass().getResourceAsStream(location)) {
       if (resource == null) {
-        throw new MissingResourceException("Resource not found: " + location, this.getClass().getName(), location);
+        throw new MissingResourceException("Resource not found: " + location, getClass().getName(), location);
       } else {
         return (new CsvSpatialSchemeParser(new InputStreamReader(resource), new Sumo(false), general)).parse();
       }
@@ -64,10 +64,10 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
    * @return
    */
   public List<SpatialRelationSchema> match(final SpatialExpression relation) {
-    relation.getLandmarkConcepts().addAll(this.getAnnotationConcepts(relation.getLandmark().getSpatialObject()));
-    relation.getTrajectorConcepts().addAll(this.getAnnotationConcepts(relation.getTrajector().getSpatialObject()));
+    relation.getLandmarkConcepts().addAll(getAnnotationConcepts(relation.getLandmark().getSpatialObject()));
+    relation.getTrajectorConcepts().addAll(getAnnotationConcepts(relation.getTrajector().getSpatialObject()));
 
-    final List<SpatialRelationSchema> matching = this.patternMatcher.matchAll(relation);
+    final List<SpatialRelationSchema> matching = patternMatcher.matchAll(relation);
     relation.getSchemas().addAll(matching);
 
     return matching;
@@ -83,7 +83,7 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
     final Set<String> allConcepts = new HashSet<>();
     final String synsetId = an.getHeadToken().getProps().get(KpwrWsd.TOKEN_PROP_SYNSET_ID);
     if (synsetId != null) {
-      final Set<String> wsdConcepts = this.wts.getSynsetConcepts(synsetId);
+      final Set<String> wsdConcepts = wts.getSynsetConcepts(synsetId);
       if (wsdConcepts != null) {
         allConcepts.addAll(wsdConcepts);
       }
@@ -98,7 +98,7 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
 //			}
       /* ... tylko tagi oznaczone jako disamb */
       for (final Tag tag : an.getHeadToken().getDisambTags()) {
-        final Set<String> lemmaConcepts = this.wts.getLemmaConcepts(tag.getBase());
+        final Set<String> lemmaConcepts = wts.getLemmaConcepts(tag.getBase());
         if (lemmaConcepts != null) {
           allConcepts.addAll(lemmaConcepts);
         }
@@ -106,7 +106,7 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
     }
 
     /* Pojęcia SUMO po kategorii anotacji */
-    final Set<String> typeConcepts = this.namToSumo.getConcept(an.getType());
+    final Set<String> typeConcepts = namToSumo.getConcept(an.getType());
     if (typeConcepts != null) {
       allConcepts.addAll(typeConcepts);
     }
@@ -118,6 +118,6 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
    * @return
    */
   public Sumo getSumo() {
-    return this.sumo;
+    return sumo;
   }
 }

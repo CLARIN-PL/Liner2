@@ -18,7 +18,6 @@ public class Document {
 
   private HashMap<String, Integer> bases = null;
   private HashMap<String, Integer> titleBases = null;
-  private int tokenNumber = 0;
   private final Set<Frame<Annotation>> frames = Sets.newHashSet();
 
   /* Zbiór relacji */
@@ -324,35 +323,6 @@ public class Document {
   public DocumentDescriptor getDocumentDescriptor() {
     return documentDescriptor;
   }
-
-  public int getBaseCount(final String base) {
-    if (bases == null) {
-      bases = new HashMap<>();
-      for (final Paragraph p : paragraphs) {
-        for (final Sentence s : p.getSentences()) {
-          for (final Token t : s.getTokens()) {
-            tokenNumber += 1;
-            final String lemma = t.getAttributeValue("base");
-            if (bases.containsKey(lemma)) {
-              bases.put(lemma, bases.get(lemma) + 1);
-            } else {
-              bases.put(lemma, 1);
-            }
-          }
-        }
-      }
-    }
-    if (bases.containsKey(base)) {
-      return bases.get(base);
-    }
-    return 0;
-  }
-
-  // ToDo: This should be removed or refactored. tokenNumber is buffered value calculated by getBaseCount.
-  public int getTokenNumber() {
-    return tokenNumber;
-  }
-
 
   public int isInTitle(final String base) {
     if (titleBases == null) {

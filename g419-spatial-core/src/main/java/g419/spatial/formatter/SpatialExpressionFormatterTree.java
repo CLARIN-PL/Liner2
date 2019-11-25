@@ -16,14 +16,14 @@ public class SpatialExpressionFormatterTree implements ISpatialExpressionFormatt
   }
 
   @Override
-  public List<String> format(Document document, List<SpatialExpression> spatialExpressions) {
-    List<String> lines = Lists.newArrayList();
+  public List<String> format(final Document document, final List<SpatialExpression> spatialExpressions) {
+    final List<String> lines = Lists.newArrayList();
 
     lines.add("");
     lines.add("Document: " + document.getName());
 
     int count = 1;
-    for (SpatialExpression se : spatialExpressions) {
+    for (final SpatialExpression se : spatialExpressions) {
       lines.add("");
       lines.add(String.format("Expression #%d", count++));
       lines.add(" ┝━TR━┯━RE: " + printAnnotation(se.getTrajector().getRegion()));
@@ -33,15 +33,15 @@ public class SpatialExpressionFormatterTree implements ISpatialExpressionFormatt
       lines.add(" │    ┕━SO: " + printAnnotation(se.getLandmark().getSpatialObject()));
       lines.add(" ┕━MI━┯━━━: " + printAnnotation(se.getMotionIndicator()));
       lines.add("      ┝━DR: ");
-      for (Annotation direction : se.getDirections()) {
+      for (final Annotation direction : se.getDirections()) {
         lines.add("      │  ┕: " + printAnnotation(direction));
       }
       lines.add("      ┝━DS ");
-      for (Annotation distance : se.getDistances()) {
+      for (final Annotation distance : se.getDistances()) {
         lines.add("      │  ┕: " + printAnnotation(distance));
       }
       lines.add("      ┕━PA ");
-      for (SpatialObjectPath path : se.getPathsIndicators()) {
+      for (final SpatialObjectPath path : se.getPathsIndicators()) {
         lines.add("         ┕━┯━PI: " + printAnnotation(path.getPathIndicator()));
         lines.add("           ┝━RE: " + printAnnotation(path.getSpatialObject().getRegion()));
         lines.add("           ┕━SO: " + printAnnotation(path.getSpatialObject().getSpatialObject()));
@@ -50,7 +50,7 @@ public class SpatialExpressionFormatterTree implements ISpatialExpressionFormatt
     return lines;
   }
 
-  private String printAnnotation(Annotation an) {
+  private String printAnnotation(final Annotation an) {
     return an == null ? "" : String.format("%-20s %-10s %s", an.getText(), an.getSentence().getId(), an.getType());
   }
 

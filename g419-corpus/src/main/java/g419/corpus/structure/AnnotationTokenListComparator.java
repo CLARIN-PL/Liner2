@@ -25,5 +25,4 @@ public class AnnotationTokenListComparator implements Comparator<Annotation> {
     }
     return -1;
   }
-
 }

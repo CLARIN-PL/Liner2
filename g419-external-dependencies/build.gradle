@@ -85,55 +85,59 @@ def isCompiled() {
     }
 }
 
-task compileCRFPP << {
-    if (isCompiled()) {
-        header("CRFPP already compiled (on $lastCompilationDate)")
-    } else {
-        if (!System.getenv("JAVA_HOME")) {
-            throw new RuntimeException("There is no JAVA_HOME environment variable! Cannot compile CRFPP")
+task compileCRFPP {
+    doLast {
+        if (isCompiled()) {
+            header("CRFPP already compiled (on $lastCompilationDate)")
+        } else {
+            if (!System.getenv("JAVA_HOME")) {
+                throw new RuntimeException("There is no JAVA_HOME environment variable! Cannot compile CRFPP")
+            }
+            header("Preparing CRFPP")
+            workspace.mkdirs()
+            header("tar xvf CRF++-0.57.tar.gz")
+            def tarSrc = new File(project.projectDir, "CRF++-0.57.tar.gz")
+            copy {
+                from tarTree(tarSrc)
+                into workspace
+            }
+            header("m4 hack")
+            def m4 = new File(crfppDir, "m4")
+            m4.mkdirs()
+            exec {
+                workingDir crfppDir
+                commandLine "autoreconf", "--force", "--install"
+            }
+            header("./configure")
+            exec {
+                workingDir crfppDir
+                commandLine "./configure"
+            }
+            header("make")
+            exec {
+                workingDir crfppDir
+                commandLine "make"
+            }
+            removeJavac(new File(crfppDir, "java/Makefile"))
+            header("make binaries")
+            exec {
+                workingDir new File(crfppDir, "java")
+                commandLine "make"
+            }
+            fillSourceSet()
+            markSuccess()
         }
-        header("Preparing CRFPP")
-        workspace.mkdirs()
-        header("tar xvf CRF++-0.57.tar.gz")
-        def tarSrc = new File(project.projectDir, "CRF++-0.57.tar.gz")
-        copy {
-            from tarTree(tarSrc)
-            into workspace
-        }
-        header("m4 hack")
-        def m4 = new File(crfppDir, "m4")
-        m4.mkdirs()
-        exec {
-            workingDir crfppDir
-            commandLine "autoreconf", "--force", "--install"
-        }
-        header("./configure")
-        exec {
-            workingDir crfppDir
-            commandLine "./configure"
-        }
-        header("make")
-        exec {
-            workingDir crfppDir
-            commandLine "make"
-        }
-        removeJavac(new File(crfppDir, "java/Makefile"))
-        header("make binaries")
-        exec {
-            workingDir new File(crfppDir, "java")
-            commandLine "make"
-        }
-        fillSourceSet()
-        markSuccess()
     }
 }
 
-task cleanCRFPP << {
-    header("Clean CRFPP workspace")
-    delete { delete workspace }
-    header("Clean source sets")
-    delete {
-        delete new File(project.projectDir, "src")
+task cleanCRFPP {
+    doLast {
+        header("Clean CRFPP workspace")
+        delete { delete workspace }
+        header("Clean source sets")
+        delete {
+            delete new File(project.projectDir, "src")
+        }
     }
 }
 

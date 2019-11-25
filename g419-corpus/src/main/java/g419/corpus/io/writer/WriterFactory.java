@@ -184,7 +184,7 @@ public class WriterFactory {
    * @return System.out jeżeli outputFile jest nullem, wpp obiekt FileOutputStream dla outputFile.
    * @throws FileNotFoundException
    */
-  private OutputStream getOutputStreamFileOrOut(final String outputFile) throws FileNotFoundException {
+  public OutputStream getOutputStreamFileOrOut(final String outputFile) throws FileNotFoundException {
     if ((outputFile == null) || (outputFile.isEmpty())) {
       return System.out;
     } else {

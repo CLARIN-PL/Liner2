@@ -32,6 +32,10 @@ jar {
     manifest {
         attributes "Main-Class": main
     }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 dependencies {

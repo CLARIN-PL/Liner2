@@ -1,6 +1,6 @@
 package g419.liner2.core.features.tokens;
 
-
+import g419.liner2.core.tools.BaseCount;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
@@ -14,39 +14,15 @@ public class BaseNumberFeature extends TokenInDocumentFeature {
     super(name);
   }
 
-  private HashMap<String, Integer> baseCount = null;
-
-  public int getBaseCount(final String base){
-    return this.baseCount.get(base);
-  }
-
-  private void countBasesFrequency(final Document document){
-    this.baseCount = new HashMap<>();
-    for (final Paragraph p : document.getParagraphs()) {
-      for (final Sentence s : p.getSentences()) {
-        for (final Token t : s.getTokens()) {
-          final String lemma = t.getAttributeValue("base");
-          if (this.baseCount.containsKey(lemma)) {
-            this.baseCount.put(lemma, baseCount.get(lemma) + 1);
-          } else {
-            this.baseCount.put(lemma, 1);
-          }
-        }
-      }
-    }
-  }
-
   @Override
   public void generate(final Document document) {
-
+    BaseCount baseCount = new BaseCount(document);
     final int thisFeatureIdx = document.getAttributeIndex().getIndex(getName());
-    if(this.baseCount == null) { this.countBasesFrequency(document); }
 
     for (final Paragraph p : document.getParagraphs()) {
       for (final Sentence s : p.getSentences()) {
         for (final Token t : s.getTokens()) {
-          final String base = t.getAttributeValue("base");
-          t.setAttributeValue(thisFeatureIdx, this.baseCount.get(base) > 1 ? "1" : "0");
+          t.setAttributeValue(thisFeatureIdx, baseCount.getBaseCount(t) > 1 ? "1" : "0");
         }
       }
     }

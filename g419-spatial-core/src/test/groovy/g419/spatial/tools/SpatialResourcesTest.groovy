@@ -1,5 +1,6 @@
 package g419.spatial.tools
 
+import spock.lang.Ignore
 import spock.lang.Specification
 
 import java.lang.reflect.Field
@@ -7,7 +8,7 @@ import java.lang.reflect.Modifier
 
 class SpatialResourcesTest extends Specification {
 
-    def "getRegions() should return valid set of regions"(){
+    def "getRegions() should return valid set of regions"() {
         given:
             Set<String> regions1 = SpatialResources.getRegions()
             Set<String> regions2 = SpatialResources.getRegions()
@@ -19,7 +20,8 @@ class SpatialResourcesTest extends Specification {
             regions1.contains("zbieg")
     }
 
-    def "getRegions() should fail to read the file with regions"(){
+    @Ignore
+    def "getRegions() should fail to read the file with regions"() {
         given:
             Field field = SpatialResources.getDeclaredField("RESOURCE_REGIONS")
             field.setAccessible(true)

@@ -18,7 +18,7 @@ public class ChunkerFactoryItemClosestRelation extends ChunkerFactoryItem {
 
   @Override
   public Chunker getChunker(Ini.Section description, ChunkerManager cm) throws Exception {
-    String annotationFromPattern = description.get("annotation_from_pattern");
+    String annotationFromPattern = this.getParameterString(description, "annotation_from_pattern");
     if (annotationFromPattern == null){
       throw new ParameterException("annotation_from_pattern can not be null");
     }

@@ -141,11 +141,15 @@ public class CommonOptions {
 
   public static Option getMaltparserModelFileOption() {
     return Option.builder(OPTION_MALT).longOpt(OPTION_MALT_LONG).hasArg().argName(OPTION_MALT_ARG)
-        .desc(OPTION_MALT_DESC).required().build();
+        .desc(OPTION_MALT_DESC).build();
   }
 
   public static Option getAnnotationTypePatterns() {
-    return Option.builder(OPTION_ANNOTATION_PATTERN).longOpt(OPTION_ANNOTATION_PATTERN_LONG).desc(OPTION_ANNOTATION_PATTERN_DESC).hasArgs().build();
+    return Option.builder(OPTION_ANNOTATION_PATTERN)
+        .longOpt(OPTION_ANNOTATION_PATTERN_LONG)
+        .desc(OPTION_ANNOTATION_PATTERN_DESC)
+        .hasArgs()
+        .build();
   }
 
 }

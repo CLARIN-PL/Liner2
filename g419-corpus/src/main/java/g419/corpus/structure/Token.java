@@ -78,13 +78,16 @@ public class Token extends IdentifiableElement {
 
   /**
    * TODO
-   * Funkcja pomocnicza zwraca wartość pierwszego atrybutu.
-   * Przeważnie będzie to orth.
+   * Funkcja pomocnicza zwraca wartość orth.
    *
    * @return
    */
   public String getOrth() {
     return attributes.get(attrIdx.getIndex("orth"));
+  }
+
+  public void setOrth(final String orth) {
+    attributes.set(attrIdx.getIndex("orth"), orth);
   }
 
   /**

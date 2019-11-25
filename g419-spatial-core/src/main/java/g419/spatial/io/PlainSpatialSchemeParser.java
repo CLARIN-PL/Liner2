@@ -19,79 +19,79 @@ public class PlainSpatialSchemeParser {
   private Sumo sumo = null;
   private int lineNo = 0;
   private String currentLine = null;
-  private Logger logger = Logger.getLogger(PlainSpatialSchemeParser.class);
+  private final Logger logger = Logger.getLogger(PlainSpatialSchemeParser.class);
 
-  public PlainSpatialSchemeParser(Reader reader, Sumo sumo) {
+  public PlainSpatialSchemeParser(final Reader reader, final Sumo sumo) {
     this.reader = new BufferedReader(reader);
     this.sumo = sumo;
   }
 
   private String nextLine() throws IOException {
-    this.lineNo++;
-    this.currentLine = this.reader.readLine();
-    return this.currentLine;
+    lineNo++;
+    currentLine = reader.readLine();
+    return currentLine;
   }
 
   public SpatialRelationSchemaMatcher parse() throws IOException {
-    this.nextLine();
-    List<SpatialRelationSchema> patterns = new LinkedList<SpatialRelationSchema>();
+    nextLine();
+    final List<SpatialRelationSchema> patterns = new LinkedList<>();
 
-    while (this.currentLine != null) {
-      if (this.currentLine.startsWith("si:")) {
-        Set<String> sis = new HashSet<String>();
-        for (String si : this.currentLine.substring(3).trim().split(",")) {
+    while (currentLine != null) {
+      if (currentLine.startsWith("si:")) {
+        final Set<String> sis = new HashSet<>();
+        for (final String si : currentLine.substring(3).trim().split(",")) {
           sis.add(si.trim());
         }
-        this.nextLine();
-        if (this.currentLine == null || !this.currentLine.startsWith("tr:")) {
+        nextLine();
+        if (currentLine == null || !currentLine.startsWith("tr:")) {
           Logger.getLogger(PlainSpatialSchemeParser.class).warn(
-              String.format("Linia nr %d: oczekiwano 'tr:', ale napotkano '%s'", this.lineNo, this.currentLine));
+              String.format("Linia nr %d: oczekiwano 'tr:', ale napotkano '%s'", lineNo, currentLine));
           continue;
         }
-        Set<String> trajectorConcepts = this.parseConcepts(this.currentLine.substring(3).trim());
+        final Set<String> trajectorConcepts = parseConcepts(currentLine.substring(3).trim());
 
-        this.nextLine();
-        if (this.currentLine == null || !this.currentLine.startsWith("lm:")) {
+        nextLine();
+        if (currentLine == null || !currentLine.startsWith("lm:")) {
           logger.warn(
-              String.format("Linia nr %d: oczekiwano 'lm:', ale napotkano '%s'", this.lineNo, this.currentLine));
+              String.format("Linia nr %d: oczekiwano 'lm:', ale napotkano '%s'", lineNo, currentLine));
           continue;
         }
-        Set<String> landmarkConcepts = this.parseConcepts(this.currentLine.substring(3).trim());
+        final Set<String> landmarkConcepts = parseConcepts(currentLine.substring(3).trim());
 
         if (trajectorConcepts.size() > 0 && landmarkConcepts.size() > 0) {
           patterns.add(new SpatialRelationSchema(String.join("-", sis), "loc", sis, trajectorConcepts, landmarkConcepts));
         } else if (trajectorConcepts.size() == 0) {
-          this.logWarning("Pusty zbiór trajectorConcept");
+          logWarning("Pusty zbiór trajectorConcept");
         } else if (landmarkConcepts.size() == 0) {
-          this.logWarning("Pusty zbiór landmarkConcept");
+          logWarning("Pusty zbiór landmarkConcept");
         }
 
-        this.nextLine();
-      } else if (this.currentLine.length() > 0) {
+        nextLine();
+      } else if (currentLine.length() > 0) {
         logger.warn(
-            String.format("Linia nr %d: oczekiwano 'si:', ale napotkano '%s'", this.lineNo, this.currentLine));
+            String.format("Linia nr %d: oczekiwano 'si:', ale napotkano '%s'", lineNo, currentLine));
       }
-      this.nextLine();
+      nextLine();
     }
 
     logger.info(String.format("Liczba wczytanych wzorców: %d", patterns.size()));
-    return new SpatialRelationSchemaMatcher(patterns, this.sumo);
+    return new SpatialRelationSchemaMatcher(patterns, sumo);
   }
 
-  private Set<String> parseConcepts(String line) {
-    Set<String> concepts = new HashSet<String>();
+  private Set<String> parseConcepts(final String line) {
+    final Set<String> concepts = new HashSet<>();
     for (String part : line.split(",( )*")) {
       part = part.trim().substring(1);
-      if (this.sumo.containsClass(part)) {
+      if (sumo.containsClass(part)) {
         concepts.add(part);
       } else {
-        this.logWarning(String.format("Concept '%s' not found in SUMO", part));
+        logWarning(String.format("Concept '%s' not found in SUMO", part));
       }
     }
     return concepts;
   }
 
-  private void logWarning(String message) {
-    this.logger.warn(String.format("Linia nr %d: %s", this.lineNo, message));
+  private void logWarning(final String message) {
+    logger.warn(String.format("Linia nr %d: %s", lineNo, message));
   }
 }

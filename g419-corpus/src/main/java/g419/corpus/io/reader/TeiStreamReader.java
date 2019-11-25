@@ -1,7 +1,6 @@
 package g419.corpus.io.reader;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import g419.corpus.io.DataFormatException;
 import g419.corpus.io.Tei;
 import g419.corpus.io.reader.parser.tei.*;
@@ -11,12 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * SAX reader for a document in TEI (NKJP) format.
@@ -57,71 +53,54 @@ public class TeiStreamReader extends AbstractDocumentReader {
     streams.add(annGroups);
     streams.add(annRelations);
 
-    attributeIndex = new TokenAttributeIndex();
-    attributeIndex.addAttribute("orth");
-    attributeIndex.addAttribute("base");
-    attributeIndex.addAttribute("ctag");
+    attributeIndex = new TokenAttributeIndex().with("orth").with("base").with("ctag");
     // TODO dodanie tego atrybutu "psuje" kolejność atrybutów
     //this.attributeIndex.addAttribute("tagTool");
 
     final RelationSet relationSet = new RelationSet();
 
+    final TeiDocumentElements elements = new TeiDocumentElements();
+
     // ToDo: Sprawdzenie, czy poszczególne inputstream nie są nullem
-    final TeiMorphosyntaxSAXParser morphoParser = new TeiMorphosyntaxSAXParser(docName, annMorphosyntax, attributeIndex);
-    final TeiSegmentationSAXParser segmentationParser = new TeiSegmentationSAXParser(annSegmentation, morphoParser.getParagraphs());
+    new TeiMorphosyntaxSAXParser(docName, annMorphosyntax, attributeIndex, elements);
+    new TeiSegmentationSAXParser(annSegmentation, elements);
+
     final TeiPropsSAXParser propsParser;
-    final Map<String, List<String>> globalElementIndex = Maps.newHashMap();
 
-    /* Read words from the ann_words.xml file */
     if (annWords != null) {
-      new TeiAnnotationWordsSAXParser("ann_words.xml", annWords, segmentationParser.getParagraphs(),
-          morphoParser.getTokenIdsMap(), globalElementIndex, "word");
+      new TeiAnnotationWordsSAXParser("ann_words.xml", annWords, "word", elements);
     }
 
-    /* Read names from the ann_names.xml file */
     if (annNamed != null) {
-      new TeiAnnotationSAXParser("ann_named.xml", annNamed, segmentationParser.getParagraphs(),
-          morphoParser.getTokenIdsMap(), globalElementIndex, Tei.ANNOTATION_GROUP_NAMED);
+      new TeiAnnotationSAXParser("ann_named.xml", annNamed, Tei.ANNOTATION_GROUP_NAMED, elements);
     }
 
-    /* Read groups from the ann_groups.xml file */
     if (annGroups != null) {
-      new TeiAnnotationSAXParser("ann_groups.xml", annGroups, segmentationParser.getParagraphs(),
-          morphoParser.getTokenIdsMap(), globalElementIndex, "group");
+      new TeiAnnotationSAXParser("ann_groups.xml", annGroups, "group", elements);
     }
 
     if (annMentions != null) {
-      new TeiAnnotationSAXParser("ann_mentions.xml", annMentions, segmentationParser.getParagraphs(),
-          morphoParser.getTokenIdsMap(), globalElementIndex, "mentions");
+      new TeiAnnotationSAXParser("ann_mentions.xml", annMentions, "mentions", elements);
     }
 
     if (annChunks != null) {
-      new TeiAnnotationSAXParser("ann_chunks.xml", annChunks, segmentationParser.getParagraphs(),
-          morphoParser.getTokenIdsMap(), globalElementIndex, "chunks");
+      new TeiAnnotationSAXParser("ann_chunks.xml", annChunks, "chunks", elements);
     }
 
     if (annAnnotations != null) {
-      new TeiAnnotationSAXParser("ann_annotations.xml", annAnnotations, segmentationParser.getParagraphs(),
-          morphoParser.getTokenIdsMap(), globalElementIndex, "other");
+      new TeiAnnotationSAXParser("ann_annotations.xml", annAnnotations, "other", elements);
     }
 
     if (annCoreference != null) {
       //TeiCoreferenceSAXParser coreferenceParser = new TeiCoreferenceSAXParser(annCoreference, mentionsParser.getParagraphs(), mentionsParser.getAnnotaitonMap());
     }
 
-    final Map<String, Annotation> idToAnnotation = segmentationParser.getParagraphs().stream()
-        .map(Paragraph::getSentences)
-        .flatMap(Collection::stream)
-        .map(Sentence::getChunks)
-        .flatMap(Collection::stream)
-        .collect(Collectors.toMap(Annotation::getId, Function.identity()));
-
     if (annRelations != null) {
-      final TeiRelationsSAXParser relationParser = new TeiRelationsSAXParser(annRelations, idToAnnotation);
-      relationSet.getRelations().addAll(relationParser.getRelations());
+      new TeiRelationsSAXParser(annRelations, elements);
+      relationSet.getRelations().addAll(elements.getRelations());
     }
 
-    document = new Document(docName, segmentationParser.getParagraphs(), attributeIndex, relationSet);
+    document = new Document(docName, elements.getParagraphs(), attributeIndex, relationSet);
     document.setUri(uri);
     document.getSentences().stream().forEach(s -> s.setDocument(document));
 
