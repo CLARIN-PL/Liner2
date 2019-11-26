@@ -70,10 +70,12 @@ allprojects {
     jacoco {
         toolVersion = '0.8.3'
     }
-}
 
-test {
-    useJUnit()
+    test {
+        useJUnit()
+        testLogging.showStandardStreams = true
+    }
+
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
