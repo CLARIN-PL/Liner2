@@ -1,10 +1,17 @@
 package g419.corpus.io.reader;
 
+import g419.corpus.structure.Document;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import java.util.zip.GZIPInputStream;
 
 public class ReaderFactory {
@@ -15,7 +22,13 @@ public class ReaderFactory {
     return ReaderFactory.factory;
   }
 
-  public AbstractDocumentReader getStreamReader(String inputFile, String inputFormat) throws Exception {
+  public static List<Document> loadDocuments(final String path, final String format) throws Exception {
+    return StreamSupport.stream(
+        Spliterators.spliteratorUnknownSize(get().getStreamReader(path, format), Spliterator.ORDERED),
+        false).collect(Collectors.toList());
+  }
+
+  public AbstractDocumentReader getStreamReader(final String inputFile, final String inputFormat) throws Exception {
     boolean gz = false;
     String intpuFormatNoGz = inputFormat;
     if (inputFormat.endsWith(":gz")) {
@@ -28,53 +41,62 @@ public class ReaderFactory {
     } else if (intpuFormatNoGz.equals("tei")) {
       return getTEIStreamReader(inputFile, inputFile, gz);
     } else if (intpuFormatNoGz.startsWith("batch:")) {
-      String format = inputFormat.substring(6);
-      String root = new File(inputFile).getAbsoluteFile().getParent();
+      final String format = inputFormat.substring(6);
+      final String root = new File(inputFile).getAbsoluteFile().getParent();
       return new BatchReader(new FileInputStream(inputFile), root, format);
     } else {
-      return getStreamReader(inputFile, new FileInputStream(inputFile), (new File(inputFile)).getParent(), intpuFormatNoGz, gz);
+      return getStreamReader(inputFile, new FileInputStream(inputFile),
+          (new File(inputFile)).getParent(), intpuFormatNoGz, gz);
     }
   }
 
-  public AbstractDocumentReader getStreamReader(String uri, InputStream in, String inputFormat) throws Exception {
+  public AbstractDocumentReader getStreamReader(final String uri,
+                                                final InputStream in,
+                                                final String inputFormat) throws Exception {
     return getStreamReader(uri, in, "", inputFormat);
   }
 
-  public AbstractDocumentReader getStreamReader(String uri, InputStream in, String root, String inputFormat) throws Exception {
+  public AbstractDocumentReader getStreamReader(final String uri,
+                                                final InputStream in,
+                                                final String root, String inputFormat) throws Exception {
     boolean gz = false;
     if (inputFormat.endsWith(":gz")) {
       gz = true;
       inputFormat = inputFormat.substring(0, inputFormat.length() - 3);
     }
-    return this.getStreamReader(uri, in, root, inputFormat, gz);
+    return getStreamReader(uri, in, root, inputFormat, gz);
   }
 
-  public AbstractDocumentReader getStreamReader(String uri, InputStream in, String root, String inputFormat, boolean gz) throws Exception {
+  public AbstractDocumentReader getStreamReader(final String uri,
+                                                InputStream in,
+                                                final String root,
+                                                final String inputFormat,
+                                                final boolean gz) throws Exception {
     if (gz) {
       in = new GZIPInputStream(in);
     }
     if (inputFormat.equals("ccl")) {
       InputStream desc = null;
-      String cclPath = Paths.get(uri).getFileName().toString();
+      final String cclPath = Paths.get(uri).getFileName().toString();
       if (cclPath.endsWith(".xml")) {
         // Sama podmiana bez sprawdzenia rozszerzenia powoduje, że dla pliku z innym rozszerzenie niż xml
         // jako ini brany jest plik ccl.
-        desc = getInputStream(root, Paths.get(uri).getFileName().toString().replace(".xml", ".ini"), gz);
+        desc = getInputStream(root, xmlToIni(uri), gz);
       } else if (cclPath.endsWith(".tag")) {
         desc = getInputStream(root, Paths.get(uri).getFileName().toString().replace(".tag", ".ini"), gz);
       }
       return new CclSAXStreamReader(uri, in, desc, null);
     } else if (inputFormat.equals("cclrel")) {
-      InputStream rel = getInputStream(root, uri.replace(root, "").replace(".xml", ".rel.xml"), gz);
-      InputStream desc = getInputStream(root, Paths.get(uri).getFileName().toString().replace(".xml", ".ini"), gz);
+      final InputStream rel = getInputStream(root, uri.replace(root, "").replace(".xml", ".rel.xml"), gz);
+      final InputStream desc = getInputStream(root, xmlToIni(uri), gz);
       return new CclSAXStreamReader(uri, in, desc, rel);
     } else if (inputFormat.equals("cclrelr")) {
-      InputStream rel = getInputStream(root, uri.replace(".xml", ".rel_r"), gz);
-      InputStream desc = getInputStream(root, Paths.get(uri).getFileName().toString().replace(".xml", ".ini"), gz);
+      final InputStream rel = getInputStream(root, uri.replace(".xml", ".rel_r"), gz);
+      final InputStream desc = getInputStream(root, xmlToIni(uri), gz);
       return new CclSAXStreamReader(uri, in, desc, rel);
     } else if (inputFormat.equals("cclrelcls")) {
-      InputStream rel = getInputStream(root, uri.replace(".xml", ".rel_cls"), gz);
-      InputStream desc = getInputStream(root, Paths.get(uri).getFileName().toString().replace(".xml", ".ini"), gz);
+      final InputStream rel = getInputStream(root, uri.replace(".xml", ".rel_cls"), gz);
+      final InputStream desc = getInputStream(root, xmlToIni(uri), gz);
       return new CclSAXStreamReader(uri, in, desc, rel);
     } else if (inputFormat.equals("iob")) {
       return new IobStreamReader(in);
@@ -91,14 +113,18 @@ public class ReaderFactory {
     }
   }
 
+  private String xmlToIni(final String path) {
+    return Paths.get(path).getFileName().toString().replace(".xml", ".ini");
+  }
+
   /**
    * @param inputFolder
    * @param docname
    * @return
    * @throws Exception
    */
-  public AbstractDocumentReader getTEIStreamReader(String inputFolder, String docname) throws Exception {
-    return this.getTEIStreamReader(inputFolder, docname, false);
+  public AbstractDocumentReader getTEIStreamReader(final String inputFolder, final String docname) throws Exception {
+    return getTEIStreamReader(inputFolder, docname, false);
   }
 
   /**
@@ -109,7 +135,7 @@ public class ReaderFactory {
    * @return
    * @throws Exception
    */
-  public AbstractDocumentReader getTEIStreamReader(String inputFolder, String docname, boolean gz) throws Exception {
+  public AbstractDocumentReader getTEIStreamReader(final String inputFolder, final String docname, final boolean gz) throws Exception {
     final InputStream annMorphosyntax = getInputStream(inputFolder, "ann_morphosyntax.xml", gz);
     final InputStream annSegmentation = getInputStream(inputFolder, "ann_segmentation.xml", gz);
     final InputStream annNamed = getInputStream(inputFolder, "ann_named.xml", gz);
@@ -138,7 +164,7 @@ public class ReaderFactory {
    * @return
    * @throws Exception
    */
-  private InputStream getInputStream(String inputFolder, String inputFile, boolean gz) throws Exception {
+  private InputStream getInputStream(final String inputFolder, String inputFile, final boolean gz) throws Exception {
     if (inputFile == null || inputFile.isEmpty()) {
       return System.in;
     } else {
@@ -146,7 +172,7 @@ public class ReaderFactory {
         if (gz && !inputFile.endsWith(".gz")) {
           inputFile += ".gz";
         }
-        File file = new File(inputFolder, inputFile); //todo: checking of existence returns always 'false' before ini reading!!
+        final File file = new File(inputFolder, inputFile); //todo: checking of existence returns always 'false' before ini reading!!
         InputStream stream = null;
         if (file.exists()) {
           stream = new FileInputStream(file);
@@ -157,7 +183,7 @@ public class ReaderFactory {
         } else {
           return null;
         }
-      } catch (IOException ex) {
+      } catch (final IOException ex) {
         throw new Exception("Unable to read input file: " + inputFile + " (" + ex.getMessage() + ")");
       }
     }

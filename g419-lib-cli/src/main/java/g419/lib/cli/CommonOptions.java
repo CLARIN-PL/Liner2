@@ -49,6 +49,8 @@ public class CommonOptions {
   public static final String OPTION_ANNOTATION_PATTERN_LONG = "annotation-type-pattern";
   public static final String OPTION_ANNOTATION_PATTERN_DESC = "pattern of annotation type";
 
+  public static final String OPTION_INPUT_TYPES = "input format [iob, ccl, plain, plain:maca, plain:wcrft, tei, batch:{format}]";
+
   public static Option getOutputFileNameOption() {
     return Option.builder(CommonOptions.OPTION_OUTPUT_FILE)
         .longOpt(CommonOptions.OPTION_OUTPUT_FILE_LONG)
