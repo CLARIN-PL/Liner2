@@ -4,7 +4,6 @@ import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Token;
 import g419.toolbox.sumo.Sumo;
 import io.vavr.control.Option;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -20,30 +19,21 @@ public class SpatialRelationSchemaMatcher {
     this.sumo = sumo;
   }
 
-  /**
-   * Dopasowuje wszystkie wzorce, do których pasuje wyrażenie przestrzenne.
-   *
-   * @param relation
-   * @return
-   */
   public List<SpatialRelationSchema> matchAll(final SpatialExpression relation) {
     return patterns.stream()
         .filter(pattern -> SpatialRelationSchemaMatcher.matches(relation, pattern, sumo))
         .collect(Collectors.toList());
   }
 
-  /**
-   * Sprawdza, czy relacja relation pasuje do wzorca pattern dla ontologii sumo.
-   *
-   * @param relation
-   * @param pattern
-   * @param sumo
-   * @return
-   */
   public static boolean matches(final SpatialExpression relation, final SpatialRelationSchema pattern, final Sumo sumo) {
 
+    if (relation.getSpatialIndicator() == null) {
+      return false;
+    }
+
     String preposition = relation.getSpatialIndicator().getText().toLowerCase();
-    if (relation.getLandmark().getRegion() != null && relation.getLandmark().getRegion().getHeadToken().getDisambTag().getBase().equals("teren")) {
+    if (relation.getLandmark().getRegion() != null
+        && relation.getLandmark().getRegion().getHeadToken().getDisambTag().getBase().equals("teren")) {
       // Zamiana przyimka z "na" na "w" dla region=teren
       preposition = "w";
     }
@@ -51,8 +41,6 @@ public class SpatialRelationSchemaMatcher {
     if (!pattern.getIndicators().contains(preposition)) {
       return false;
     }
-
-    //LoggerFactory.getLogger(SpatialRelationSchemaMatcher.class).debug(pattern.toString());
 
     final Token checkTokenPos = Option.of(relation.getLandmark().getRegion())
         .map(Annotation::getHeadToken)
@@ -67,7 +55,9 @@ public class SpatialRelationSchemaMatcher {
         && isSubconceptOf(pattern.getLandmarkConcepts(), relation.getLandmarkConcepts(), sumo);
   }
 
-  private static boolean isSubconceptOf(final Collection<String> patternConcepts, final Collection<String> elementConcepts, final Sumo sumo) {
+  private static boolean isSubconceptOf(final Collection<String> patternConcepts,
+                                        final Collection<String> elementConcepts,
+                                        final Sumo sumo) {
     final Set<String> conceptsWithChildren = collectConceptswithSubclasses(patternConcepts, sumo);
     return elementConcepts.stream()
         .map(String::toLowerCase)

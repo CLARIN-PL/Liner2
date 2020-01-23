@@ -1,5 +1,6 @@
 package g419.spatial.filter;
 
+import com.google.common.collect.Sets;
 import g419.corpus.schema.kpwr.KpwrWsd;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Tag;
@@ -10,7 +11,6 @@ import g419.spatial.structure.SpatialRelationSchemaMatcher;
 import g419.toolbox.sumo.NamToSumo;
 import g419.toolbox.sumo.Sumo;
 import g419.toolbox.sumo.WordnetToSumo;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -80,8 +80,11 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
    * @return
    */
   public Set<String> getAnnotationConcepts(final Annotation an) {
+    if (an == null) {
+      return Sets.newHashSet();
+    }
     final Set<String> allConcepts = new HashSet<>();
-    final String synsetId = an.getHeadToken().getProps().get(KpwrWsd.TOKEN_PROP_SYNSET_ID);
+    final String synsetId = getHeadSynsetId(an);
     if (synsetId != null) {
       final Set<String> wsdConcepts = wts.getSynsetConcepts(synsetId);
       if (wsdConcepts != null) {
@@ -114,10 +117,16 @@ public class RelationFilterSemanticPattern implements IRelationFilter {
     return allConcepts;
   }
 
-  /**
-   * @return
-   */
+  public String getHeadSynsetId(final Annotation an) {
+    return an.getHeadToken().getProps().get(KpwrWsd.TOKEN_PROP_SYNSET_ID);
+  }
+
+  public String getHeadSynsetStr(final Annotation an) {
+    return an.getHeadToken().getProps().get(KpwrWsd.TOKEN_PROP_SYNSET_STR);
+  }
+
   public Sumo getSumo() {
     return sumo;
   }
+
 }

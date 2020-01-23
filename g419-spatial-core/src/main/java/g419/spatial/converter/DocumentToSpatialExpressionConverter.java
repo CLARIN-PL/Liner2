@@ -8,13 +8,12 @@ import g419.corpus.structure.Document;
 import g419.corpus.structure.Relation;
 import g419.spatial.structure.SpatialExpression;
 import g419.spatial.structure.SpatialObjectPath;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Converts set of annotations and relations between annotations into a set of spatial expressions.
@@ -24,24 +23,24 @@ public class DocumentToSpatialExpressionConverter {
   /**
    * Annotation type which represents spatial objects
    */
-  private final String annotationSpatialObject = "spatial_object3";
+  private final String annotationSpatialObject = "spatial_object";
   //private final String annotationSpatialObject = "spatial_object";
 
   /**
    * Annotation type which represents spatial indicator
    */
-  private final String annotationSpatialIndicator = "spatial_indicator3";
+  private final String annotationSpatialIndicator = "spatial_indicator";
   //private final String annotationSpatialIndicator = "spatial_indicator_3";
 
-  private final String annotationRegion = "region3";
+  private final String annotationRegion = "region";
 
-  private final String annotationPathIndicator = "path_indicator3";
+  private final String annotationPathIndicator = "path_indicator";
 
-  private final String annotationMotionIndicator = "motion_indicator3";
+  private final String annotationMotionIndicator = "motion_indicator";
 
-  private final String annotationDirection = "direction3";
+  private final String annotationDirection = "direction";
 
-  private final String annotationDistance = "distance3";
+  private final String annotationDistance = "distance";
 
   /**
    *
