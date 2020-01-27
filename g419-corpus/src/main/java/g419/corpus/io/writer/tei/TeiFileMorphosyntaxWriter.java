@@ -5,18 +5,19 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import g419.corpus.io.Tei;
 import g419.corpus.structure.*;
-import org.apache.commons.lang3.tuple.Pair;
-
-import javax.xml.stream.XMLStreamException;
 import java.io.OutputStream;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import javax.xml.stream.XMLStreamException;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class TeiFileMorphosyntaxWriter extends TeiFileWriter {
 
-  public TeiFileMorphosyntaxWriter(OutputStream stream, String filename, TeiPointerManager pointers) throws XMLStreamException {
+  public TeiFileMorphosyntaxWriter(final OutputStream stream,
+                                   final String filename,
+                                   final TeiPointerManager pointers) throws XMLStreamException {
     super(stream, filename, pointers, ImmutableMap.of("xml:lang", "pl"));
     writelnStartElement(Tei.TAG_BODY);
   }
@@ -39,13 +40,14 @@ public class TeiFileMorphosyntaxWriter extends TeiFileWriter {
 
   private void writeSentence(final Sentence sentence) throws XMLStreamException {
     pointers.addPointer(sentence, String.format("%s#%s", filename, sentence.getId()));
-    writelnStartElement(Tei.TAG_SENTENCE,
-        ImmutableMap.of("corresp", "ann_segmentation.xml#" + sentence.getId(), "xml:id", sentence.getId()));
+    writelnStartElement(Tei.TAG_SENTENCE, ImmutableMap.of(
+        "corresp", "ann_segmentation.xml#" + sentence.getId(),
+        "xml:id", sentence.getId()));
 
     int tokenStart = 0;
     boolean noSpaceBefore = false;
     for (final Token token : sentence.getTokens()) {
-      writeToken(token, sentence.getId(), tokenStart, noSpaceBefore, sentence.getAttributeIndex());
+      writeToken(token, tokenStart, noSpaceBefore, sentence.getAttributeIndex());
       tokenStart += token.getOrth().length();
       tokenStart += token.getNoSpaceAfter() ? 0 : 1;
       noSpaceBefore = token.getNoSpaceAfter();
@@ -53,12 +55,14 @@ public class TeiFileMorphosyntaxWriter extends TeiFileWriter {
     writelnEndElement();
   }
 
-  private void writeToken(final Token token, final String sentenceid, final int tokenStart, final boolean noSpaceBefore,
-                          TokenAttributeIndex attributeIndex) throws XMLStreamException {
+  private void writeToken(final Token token, final int tokenStart, final boolean noSpaceBefore,
+                          final TokenAttributeIndex attributeIndex) throws XMLStreamException {
     pointers.addPointer(token, String.format("%s#%s", filename, token.getId()));
 
     writelnStartElement(Tei.TAG_SEGMENT,
-        ImmutableMap.of("corresp", "ann_segmentation.xml#" + token.getId(), "xml:id", token.getId()));
+        ImmutableMap.of(
+            "corresp", "ann_segmentation.xml#" + token.getId(),
+            "xml:id", token.getId()));
     writelnStartElement(Tei.TAG_FEATURESET, ImmutableMap.of("type", "morph"));
     writelnStartElement(Tei.TAG_FEATURE, ImmutableMap.of("name", "orth"));
     writelnElement(Tei.TAG_STRING, Maps.newHashMap(), token.getOrth());
@@ -69,42 +73,46 @@ public class TeiFileMorphosyntaxWriter extends TeiFileWriter {
       writelnEmptyElement(Tei.TAG_BINARY, ImmutableMap.of("value", "true"));
       writelnEndElement();
     }
-    writelnComment(String.format("%s [%s,%s]", token.getOrth(), tokenStart, token.getOrth().length()));
     writelnStartElement(Tei.TAG_FEATURE, ImmutableMap.of("name", "interps"));
 
-    Interps interps = new Interps(token.getTags());
-    writeTags(interps, token.getId());
+    final Interps interps = new Interps(token.getTags());
+    writeTags(interps);
     writelnEndElement();
 
-    String tagTool = Optional.ofNullable(attributeIndex.getAttributeValue(token, "tagTool")).orElse("#unknown");
     writelnStartElement(Tei.TAG_FEATURE, ImmutableMap.of("name", "disamb"));
-    writelnStartElement(Tei.TAG_FEATURESET, ImmutableMap.of("feats", tagTool, "type", "tool_report"));
-    writelnEmptyElement(Tei.TAG_FEATURE,
-        ImmutableMap.of("fVal", "#" + token.getId() + "_" + interps.getDisambIdx() + "-msd", "name", "choice"));
+
+    final Map<String, String> fsAttr = ImmutableMap.of("type", "tool_report");
+    if (attributeIndex.getAttributeValue(token, "tagTool") != null) {
+      fsAttr.put("tagTool", attributeIndex.getAttributeValue(token, "tagTool"));
+    }
+    writelnStartElement(Tei.TAG_FEATURESET, fsAttr);
+    writelnEmptyElement(Tei.TAG_FEATURE, ImmutableMap.of("" +
+            "fVal", "#" + getMsdId(interps.getDisambLex().getId(), interps.getDisambIdx() + 1),
+        "name", "choice"));
     writelnStartElement(Tei.TAG_FEATURE, ImmutableMap.of("name", "interpretation"));
-    writelnElement(Tei.TAG_STRING, Maps.newHashMap(), interps.getDisamb());
+    writelnElement(Tei.TAG_STRING, Maps.newHashMap(), interps.getDisambLex().getFullCtag());
     for (int i = 10; i > 5; i--) {
       writelnEndElement();
     }
   }
 
-  private void writeTags(final Interps interps, final String morphId) throws XMLStreamException {
-    if (interps.getLexemes().size() > 1) {
-      writelnStartElement(Tei.TAG_VALT);
-    }
-    int lexCount = 0;
-    List<TeiLex> lexs = Lists.newArrayList(interps.getLexemes());
+  private void writeTags(final Interps interps) throws XMLStreamException {
+//    if (interps.getLexemes().size() > 1) {
+//      writelnStartElement(Tei.TAG_VALT);
+//    }
+    final List<TeiLex> lexs = Lists.newArrayList(interps.getLexemes());
     Collections.sort(lexs, Comparator.comparing(TeiLex::getBase).thenComparing(TeiLex::getCtag));
-    for (TeiLex lex : lexs) {
-      writeLexeme(lex, morphId, String.format("%s_%d-lex", morphId, lexCount++));
+    for (final TeiLex lex : lexs) {
+      writeLexeme(lex);
     }
-    if (interps.getLexemes().size() > 1) {
-      writelnEndElement();
-    }
+//    if (interps.getLexemes().size() > 1) {
+//      writelnEndElement();
+//    }
   }
 
-  private void writeLexeme(final TeiLex lex, final String morphId, final String lexId) throws XMLStreamException {
-    writelnStartElement(Tei.TAG_FEATURESET, ImmutableMap.of("type", "lex", "xml:id", lexId));
+  private void writeLexeme(final TeiLex lex) throws XMLStreamException {
+    writelnStartElement(Tei.TAG_FEATURESET,
+        ImmutableMap.of("type", "lex", "xml:id", lex.getId()));
     writelnStartElement(Tei.TAG_FEATURE, ImmutableMap.of("name", "base"));
     writelnElement(Tei.TAG_STRING, Maps.newHashMap(), lex.getBase());
     writelnEndElement();
@@ -115,16 +123,25 @@ public class TeiFileMorphosyntaxWriter extends TeiFileWriter {
     if (lex.msdSize() > 1) {
       writelnStartElement(Tei.TAG_VALT);
     }
-    for (Pair<String, Integer> entry : lex.getMsds()) {
-      String msd = entry.getLeft();
-      int msdIdx = entry.getRight();
+    for (final Pair<String, Integer> entry : lex.getMsds()) {
+      final String msd = entry.getLeft();
+      final int msdIdx = entry.getRight();
       writelnEmptyElement(Tei.TAG_SYMBOL,
-          ImmutableMap.of("value", msd, "xml:id", morphId + "_" + msdIdx + "-msd"));
+          ImmutableMap.of("value", msd, "xml:id", getMsdId(lex.getId(), 1)));
     }
     if (lex.msdSize() > 1) {
       writelnEndElement();
     }
     writelnEndElement();
     writelnEndElement();
+  }
+
+  private String getMsdId(final String lexId, final int msdIdx) {
+    String msdId = lexId;
+    if (msdId.endsWith("-lex")) {
+      msdId = msdId.substring(0, msdId.length() - 4);
+    }
+    msdId += "." + msdIdx + "-msd";
+    return msdId;
   }
 }

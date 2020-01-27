@@ -3,6 +3,7 @@ package g419.corpus.structure;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -16,7 +17,7 @@ import java.util.TreeSet;
  *
  * @author Adam Kaczmarek
  */
-public class RelationSet {
+public class RelationSet implements Iterable<Relation> {
 
   Set<Relation> relations = Sets.newHashSet();
   // Zbiór relacji indeksowany anotacjami docelowymi
@@ -89,5 +90,10 @@ public class RelationSet {
 
   public Set<Relation> getOutgoingRelations(final Annotation annotation) {
     return outgoingRelations.get(annotation) != null ? outgoingRelations.get(annotation) : new TreeSet<>();
+  }
+
+  @Override
+  public Iterator<Relation> iterator() {
+    return relations.iterator();
   }
 }

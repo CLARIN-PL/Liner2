@@ -35,7 +35,7 @@ public class SpatialObjectPath {
   @Override
   public String toString() {
     final StringJoiner joiner = new StringJoiner("; ", "[", "]");
-    joiner.add("" + pathIndicator);
+    joiner.add("PI=" + pathIndicator.getText());
     joiner.add(spatialObject.toString());
     return joiner.toString();
   }

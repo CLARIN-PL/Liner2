@@ -86,6 +86,10 @@ public class Token extends IdentifiableElement {
     return attributes.get(attrIdx.getIndex("orth"));
   }
 
+  public void setOrth(final String orth) {
+    attributes.set(attrIdx.getIndex("orth"), orth);
+  }
+
   /**
    * Gets the element.
    *

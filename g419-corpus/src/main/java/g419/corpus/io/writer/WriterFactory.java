@@ -1,13 +1,12 @@
 package g419.corpus.io.writer;
 
 import g419.corpus.io.UnknownFormatException;
-import org.apache.commons.io.FilenameUtils;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.zip.GZIPOutputStream;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * Factory for creating a writer from its' description.
@@ -155,6 +154,8 @@ public class WriterFactory {
         getOutputStreamGz(new File(folder, "ann_named.xml").getPath(), gz),
         getOutputStreamGz(new File(folder, "ann_mentions.xml").getPath(), gz),
         getOutputStreamGz(new File(folder, "ann_chunks.xml").getPath(), gz),
+        getOutputStreamGz(new File(folder, "ann_groups.xml").getPath(), gz),
+        getOutputStreamGz(new File(folder, "ann_words.xml").getPath(), gz),
         getOutputStreamGz(new File(folder, "ann_annotations.xml").getPath(), gz),
         getOutputStreamGz(new File(folder, "ann_coreference.xml").getPath(), gz),
         getOutputStreamGz(new File(folder, "ann_relations.xml").getPath(), gz),

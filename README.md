@@ -34,6 +34,9 @@ Contributors
 
 Citing
 ------------
+
+### System architecture and KPWr NER models
+
 Marcińczuk, Michał; Kocoń, Jan; Oleksy, Marcin.
 _Liner2 — a Generic Framework for Named Entity Recognition_
 In: Proceedings of the 6th Workshop on Balto-Slavic Natural Language Processing, 

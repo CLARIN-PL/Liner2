@@ -5,14 +5,13 @@ import g419.corpus.io.DataFormatException;
 import g419.corpus.io.Tei;
 import g419.corpus.io.reader.parser.tei.*;
 import g419.corpus.structure.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * SAX reader for a document in TEI (NKJP) format.
@@ -54,8 +53,6 @@ public class TeiStreamReader extends AbstractDocumentReader {
     streams.add(annRelations);
 
     attributeIndex = new TokenAttributeIndex().with("orth").with("base").with("ctag");
-    // TODO dodanie tego atrybutu "psuje" kolejność atrybutów
-    //this.attributeIndex.addAttribute("tagTool");
 
     final RelationSet relationSet = new RelationSet();
 
