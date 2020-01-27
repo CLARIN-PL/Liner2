@@ -1,12 +1,12 @@
 package g419.corpus.io.writer.tei;
 
 import com.google.common.collect.Lists;
+import g419.corpus.structure.IdentifiableElement;
+import java.util.List;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.List;
-
-public class TeiLex {
+public class TeiLex extends IdentifiableElement {
 
   String base;
   String ctag;
@@ -14,7 +14,7 @@ public class TeiLex {
   boolean disamb;
   int disambMsdIdx;
 
-  public TeiLex(String base, String ctag) {
+  public TeiLex(final String base, final String ctag) {
     this.base = base;
     this.ctag = ctag;
     msdList = Lists.newArrayList();
@@ -22,11 +22,20 @@ public class TeiLex {
   }
 
   public String getBase() {
-    return this.base;
+    return base;
   }
 
   public String getCtag() {
-    return this.ctag;
+    return ctag;
+  }
+
+  public String getFullCtag() {
+    final List<String> full = Lists.newArrayList(base, ctag);
+    if (msdList.size() > 0 && disambMsdIdx < msdList.size()
+        && msdList.get(disambMsdIdx).getKey().length() > 0) {
+      full.add(msdList.get(disambMsdIdx).getKey());
+    }
+    return String.join(":", full);
   }
 
   public boolean isDisamb() {
@@ -34,21 +43,21 @@ public class TeiLex {
   }
 
   public List<Pair<String, Integer>> getMsds() {
-    return this.msdList;
+    return msdList;
   }
 
-  public void setDisambTrue(int msdIdx) {
+  public void setDisambTrue(final int msdIdx) {
     if (!disamb) {
       disamb = true;
       disambMsdIdx = msdIdx;
     }
   }
 
-  public void addMsd(String msd, int idx) {
+  public void addMsd(final String msd, final int idx) {
     msdList.add(new ImmutablePair<>(msd, idx));
   }
 
-  public boolean match(String base, String ctag) {
+  public boolean match(final String base, final String ctag) {
     return this.base.equals(base) && this.ctag.equals(ctag);
   }
 
