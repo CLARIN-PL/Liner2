@@ -4,19 +4,18 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import g419.corpus.io.Tei;
 import g419.corpus.structure.Document;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class TeiFileWriter {
 
@@ -39,8 +38,10 @@ public abstract class TeiFileWriter {
     writer = stream == null ? null : XMLOutputFactory.newFactory().createXMLStreamWriter(new BufferedWriter(new OutputStreamWriter(stream)));
     writer.writeStartDocument("UTF-8", "1.0");
     writer.writeCharacters("\n");
-    writelnStartElement(Tei.TAG_CORPUS,
-        ImmutableMap.of("xmlns", "http://www.tei-c.org/ns/1.0", "xmlns:xi", "http://www.w3.org/2001/XInclude", "xmlns:nkjp", "http://www.nkjp.pl/ns/1.0"));
+    writelnStartElement(Tei.TAG_CORPUS, ImmutableMap.of(
+        "xmlns", "http://www.tei-c.org/ns/1.0",
+        "xmlns:nkjp", "http://www.nkjp.pl/ns/1.0",
+        "xmlns:xi", "http://www.w3.org/2001/XInclude"));
     writelnStartElement(Tei.TAG_TEI);
     writelnStartElement(Tei.TAG_TEXT, attributes);
   }
@@ -63,7 +64,7 @@ public abstract class TeiFileWriter {
   }
 
   protected void writeIndent(final int size) throws XMLStreamException {
-    writer.writeCharacters(StringUtils.repeat("  ", size));
+    writer.writeCharacters(StringUtils.repeat(" ", size));
   }
 
   protected void writelnComment(final String comment) throws XMLStreamException {

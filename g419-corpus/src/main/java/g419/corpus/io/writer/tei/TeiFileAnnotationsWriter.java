@@ -4,19 +4,20 @@ import com.google.common.collect.ImmutableMap;
 import g419.corpus.io.Tei;
 import g419.corpus.structure.*;
 import io.vavr.control.Option;
-
-import javax.xml.stream.XMLStreamException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.xml.stream.XMLStreamException;
 
 public class TeiFileAnnotationsWriter extends TeiFileWriter {
 
   final String group;
 
-  public TeiFileAnnotationsWriter(final OutputStream stream, final String filename,
-                                  final TeiPointerManager pointers, final String group) throws XMLStreamException {
+  public TeiFileAnnotationsWriter(final OutputStream stream,
+                                  final String filename,
+                                  final TeiPointerManager pointers,
+                                  final String group) throws XMLStreamException {
     super(stream, filename, pointers, ImmutableMap.of("xml:lang", "pl"));
     this.group = group;
     writelnStartElement(Tei.TAG_BODY);
@@ -36,7 +37,8 @@ public class TeiFileAnnotationsWriter extends TeiFileWriter {
   private void writeParagraph(final Paragraph paragraph) throws XMLStreamException {
     writelnStartElement(Tei.TAG_PARAGRAPH,
         ImmutableMap.of(
-            "xml:id", Option.of(paragraph.getId()).getOrElse("").replace("morph", Option.of(group).getOrElse("")),
+            "xml:id", Option.of(paragraph.getId()).getOrElse("")
+                .replace("morph", Option.of(group).getOrElse("")),
             "corresp", pointers.getPointer(paragraph)));
     for (final Sentence sentence : paragraph.getSentences()) {
       writeSentence(sentence);
@@ -47,20 +49,19 @@ public class TeiFileAnnotationsWriter extends TeiFileWriter {
   private void writeSentence(final Sentence sentence) throws XMLStreamException {
     final List<Annotation> annotations = sentence.getChunks().stream()
         .filter(a -> !pointers.hasPointer(a))
-        .filter(a -> Objects.equals(group, a.getGroup()))
+        .filter(a -> Objects.equals(group, a.getGroup()) || group == null)
         .collect(Collectors.toList());
 
     final ImmutableMap<String, String> attrs = ImmutableMap.of(
-        "xml:id", Option.of(sentence.getId()).getOrElse("").replace("morph", Option.of(group).getOrElse("")),
+        "xml:id", Option.of(sentence.getId()).getOrElse("")
+            .replace("morph", Option.of(group).getOrElse("")),
         "corresp", pointers.getPointer(sentence));
     if (annotations.size() == 0) {
       writelnEmptyElement(Tei.TAG_SENTENCE, attrs);
     } else {
       writelnStartElement(Tei.TAG_SENTENCE, attrs);
-      for (final Annotation ann : sentence.getChunks()) {
-        if (!pointers.hasPointer(ann) && Objects.equals(group, ann.getGroup())) {
-          writeAnnotation(ann);
-        }
+      for (final Annotation ann : annotations) {
+        writeAnnotation(ann);
       }
       writelnEndElement();
     }

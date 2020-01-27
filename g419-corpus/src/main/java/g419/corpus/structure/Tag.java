@@ -1,6 +1,6 @@
 package g419.corpus.structure;
 
-public class Tag {
+public class Tag extends IdentifiableElement {
 
   String base = null;
   String ctag = null;

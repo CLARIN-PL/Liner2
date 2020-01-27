@@ -2,7 +2,6 @@ package g419.corpus.io.writer.tei;
 
 import com.google.common.collect.Lists;
 import g419.corpus.structure.Tag;
-
 import java.util.List;
 
 public class Interps {
@@ -11,30 +10,34 @@ public class Interps {
   String disamb = null;
   int disambIdx = 0;
 
-  public Interps(List<Tag> tags) {
+  public Interps(final List<Tag> tags) {
     tagsToTEI(tags);
   }
 
   public List<TeiLex> getLexemes() {
-    return this.lexemes;
+    return lexemes;
   }
 
   public int getDisambIdx() {
-    return this.disambIdx;
+    return disambIdx;
   }
 
   public String getDisamb() {
-    return this.disamb;
+    return disamb;
   }
 
-  public void tagsToTEI(List<Tag> tags) {
+  public TeiLex getDisambLex() {
+    return lexemes.get(disambIdx);
+  }
+
+  public void tagsToTEI(final List<Tag> tags) {
     lexemes = Lists.newArrayList();
     int msdIdx = 0;
-    for (Tag tag : tags) {
-      String base = tag.getBase();
-      String[] ctag = tag.getCtag().split(":");
-      String TEIctag = ctag[0];
-      String msd;
+    for (final Tag tag : tags) {
+      final String base = tag.getBase();
+      final String[] ctag = tag.getCtag().split(":");
+      final String TEIctag = ctag[0];
+      final String msd;
       if (ctag.length > 1) {
         msd = tag.getCtag().substring(TEIctag.length() + 1);
       } else {
@@ -47,7 +50,7 @@ public class Interps {
       }
 
       boolean foundMatch = false;
-      for (TeiLex lex : lexemes) {
+      for (final TeiLex lex : lexemes) {
         if (lex.match(base, TEIctag)) {
           foundMatch = true;
           lex.addMsd(msd, msdIdx++);
@@ -55,14 +58,15 @@ public class Interps {
         }
       }
       if (!foundMatch) {
-        TeiLex newLex = new TeiLex(base, TEIctag);
+        final TeiLex newLex = new TeiLex(base, TEIctag);
         newLex.addMsd(msd, msdIdx++);
+        newLex.setId(tag.getId());
         lexemes.add(newLex);
       }
     }
 
     if (disamb == null) {
-      TeiLex firstLex = lexemes.get(0);
+      final TeiLex firstLex = lexemes.get(0);
       disamb = firstLex.base + ":" + firstLex.ctag + ":" + firstLex.msdList.get(0).getLeft();
     }
   }
