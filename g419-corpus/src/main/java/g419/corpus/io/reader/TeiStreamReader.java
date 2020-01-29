@@ -55,7 +55,7 @@ public class TeiStreamReader extends AbstractDocumentReader {
     attributeIndex = new TokenAttributeIndex().with("orth").with("base").with("ctag");
 
     final RelationSet relationSet = new RelationSet();
-
+    final AnnotationClusterSet annotationClusterSet = new AnnotationClusterSet();
     final TeiDocumentElements elements = new TeiDocumentElements();
 
     // ToDo: Sprawdzenie, czy poszczególne inputstream nie są nullem
@@ -65,31 +65,38 @@ public class TeiStreamReader extends AbstractDocumentReader {
     final TeiPropsSAXParser propsParser;
 
     if (annWords != null) {
-      new TeiAnnotationWordsSAXParser("ann_words.xml", annWords, "word", elements);
+      new TeiAnnotationWordsSAXParser("ann_words.xml", annWords,
+          "word", elements);
     }
 
     if (annNamed != null) {
-      new TeiAnnotationSAXParser("ann_named.xml", annNamed, Tei.ANNOTATION_GROUP_NAMED, elements);
+      new TeiAnnotationSAXParser("ann_named.xml", annNamed,
+          Tei.ANNOTATION_GROUP_NAMED, elements);
     }
 
     if (annGroups != null) {
-      new TeiAnnotationSAXParser("ann_groups.xml", annGroups, "group", elements);
+      new TeiAnnotationSAXParser("ann_groups.xml", annGroups,
+          "group", elements);
     }
 
     if (annMentions != null) {
-      new TeiAnnotationSAXParser("ann_mentions.xml", annMentions, "mentions", elements);
+      new TeiAnnotationSAXParser("ann_mentions.xml", annMentions,
+          "mentions", "mention", elements);
     }
 
     if (annChunks != null) {
-      new TeiAnnotationSAXParser("ann_chunks.xml", annChunks, "chunks", elements);
+      new TeiAnnotationSAXParser("ann_chunks.xml", annChunks,
+          "chunks", elements);
     }
 
     if (annAnnotations != null) {
-      new TeiAnnotationSAXParser("ann_annotations.xml", annAnnotations, "other", elements);
+      new TeiAnnotationSAXParser("ann_annotations.xml", annAnnotations,
+          "other", elements);
     }
 
     if (annCoreference != null) {
-      //TeiCoreferenceSAXParser coreferenceParser = new TeiCoreferenceSAXParser(annCoreference, mentionsParser.getParagraphs(), mentionsParser.getAnnotaitonMap());
+      new TeiCoreferenceSAXParser(annCoreference, elements).getAnnotationClusters()
+          .getClusters().stream().forEach(annotationClusterSet::addRelationCluster);
     }
 
     if (annRelations != null) {
@@ -97,7 +104,8 @@ public class TeiStreamReader extends AbstractDocumentReader {
       relationSet.getRelations().addAll(elements.getRelations());
     }
 
-    document = new Document(docName, elements.getParagraphs(), attributeIndex, relationSet);
+    document = new Document(docName,
+        elements.getParagraphs(), attributeIndex, relationSet, annotationClusterSet);
     document.setUri(uri);
     document.getSentences().stream().forEach(s -> s.setDocument(document));
 

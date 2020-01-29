@@ -4,19 +4,18 @@ import com.google.common.collect.Maps;
 import g419.corpus.ConsolePrinter;
 import g419.corpus.io.Tei;
 import g419.corpus.structure.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.util.Map;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.util.Map;
 
 public class TeiMorphosyntaxSAXParser extends DefaultHandler {
 
@@ -108,7 +107,9 @@ public class TeiMorphosyntaxSAXParser extends DefaultHandler {
       currentParagraph.addSentence(currentSentence);
     } else if (element.equals(Tei.TAG_SEGMENT)) {
       final Tag disambTag = currentTokenTags.get(disambTagId);
-      disambTag.setDisamb(true);
+      if (disambTag != null) {
+        disambTag.setDisamb(true);
+      }
       currentTokenTags.values().stream().forEach(currentToken::addTag);
       currentSentence.addToken(currentToken);
     } else if (element.equalsIgnoreCase(Tei.TAG_FEATURE)) {

@@ -1,7 +1,6 @@
 package g419.corpus.structure;
 
 import com.google.common.collect.Sets;
-
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -16,19 +15,22 @@ public class Document {
   List<Paragraph> paragraphs = new ArrayList<>();
   DocumentDescriptor documentDescriptor = new DocumentDescriptor();
 
-  private HashMap<String, Integer> bases = null;
+  private final HashMap<String, Integer> bases = null;
   private HashMap<String, Integer> titleBases = null;
   private final Set<Frame<Annotation>> frames = Sets.newHashSet();
 
-  /* Zbiór relacji */
   RelationSet relations = new RelationSet();
+  AnnotationClusterSet annotationClusters = new AnnotationClusterSet();
 
-  public Document(final String name, final TokenAttributeIndex attributeIndex) {
+  public Document(final String name,
+                  final TokenAttributeIndex attributeIndex) {
     this.name = name;
     this.attributeIndex = attributeIndex;
   }
 
-  public Document(final String name, final List<Paragraph> paragraphs, final TokenAttributeIndex attributeIndex) {
+  public Document(final String name,
+                  final List<Paragraph> paragraphs,
+                  final TokenAttributeIndex attributeIndex) {
     this.name = name;
     this.paragraphs = paragraphs;
     for (final Paragraph paragraph : paragraphs) {
@@ -37,11 +39,26 @@ public class Document {
     this.attributeIndex = attributeIndex;
   }
 
-  public Document(final String name, final List<Paragraph> paragraphs, final TokenAttributeIndex attributeIndex, final RelationSet relations) {
+  public Document(final String name,
+                  final List<Paragraph> paragraphs,
+                  final TokenAttributeIndex attributeIndex,
+                  final RelationSet relations) {
     this.name = name;
     this.paragraphs = paragraphs;
     this.attributeIndex = attributeIndex;
     this.relations = relations;
+  }
+
+  public Document(final String name,
+                  final List<Paragraph> paragraphs,
+                  final TokenAttributeIndex attributeIndex,
+                  final RelationSet relations,
+                  final AnnotationClusterSet annotationClusters) {
+    this.name = name;
+    this.paragraphs = paragraphs;
+    this.attributeIndex = attributeIndex;
+    this.relations = relations;
+    this.annotationClusters = annotationClusters;
   }
 
   public void setName(final String name) {
@@ -68,6 +85,10 @@ public class Document {
 
   public Set<Relation> getRelationsSet() {
     return relations.getRelations();
+  }
+
+  public AnnotationClusterSet getAnnotationClusters() {
+    return annotationClusters;
   }
 
   public RelationSet getRelations() {

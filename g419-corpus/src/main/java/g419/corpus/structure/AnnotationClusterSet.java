@@ -1,18 +1,8 @@
 package g419.corpus.structure;
 
 import g419.corpus.structure.AnnotationCluster.ReturningStrategy;
-
 import java.util.*;
 
-/**
- * Zbiór klastrów anotacji będących w relacji przechodniej.
- *
- * @author Adam Kaczmarek
- * <p>
- * Opisuje relacje na poziomie dokumentu
- */
-
-// TODO: przerobić na automatyczne tworzenie klastrów singletonowych
 public class AnnotationClusterSet {
 
   private String relationType;
@@ -85,6 +75,10 @@ public class AnnotationClusterSet {
     return relationClusters;
   }
 
+  public Optional<AnnotationCluster> getExistingClusterWithAnnotation(final Annotation an) {
+    return Optional.ofNullable(annotationInCluster.get(an));
+  }
+
   public boolean inSameCluster(final Annotation ann1, final Annotation ann2) {
     final AnnotationCluster cluster1 = annotationInCluster.get(ann1);
     final AnnotationCluster cluster2 = annotationInCluster.get(ann2);
@@ -153,10 +147,6 @@ public class AnnotationClusterSet {
   public static AnnotationClusterSet fromRelationSetWithSingletons(final Document document, String type, String set, final RelationSet relations, final List<Annotation> singletonAnnotations) {
     final AnnotationClusterSet relationClusterSet = new AnnotationClusterSet();
     final List<Annotation> singletons = new ArrayList<>(singletonAnnotations);
-
-    // Relation Type and Set for setting properties of singleton relation clusters
-//		String type = "";
-//		String set="";
 
     // Add every non-singleton cluster to set of resulting clusters
     for (final Relation relation : relations.getRelations()) {

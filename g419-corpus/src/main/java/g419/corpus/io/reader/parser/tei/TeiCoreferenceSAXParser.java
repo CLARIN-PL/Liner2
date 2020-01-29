@@ -2,32 +2,38 @@ package g419.corpus.io.reader.parser.tei;
 
 import g419.corpus.io.DataFormatException;
 import g419.corpus.io.Tei;
-import g419.corpus.structure.*;
+import g419.corpus.structure.AnnotationCluster;
+import g419.corpus.structure.AnnotationClusterSet;
+import g419.corpus.structure.Paragraph;
+import g419.corpus.structure.Relation;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.util.List;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Map;
-
 public class TeiCoreferenceSAXParser extends DefaultHandler {
 
-  ArrayList<Paragraph> paragraphs;
-  Map<String, Annotation> annotationsMap;
+  List<Paragraph> paragraphs;
+  TeiDocumentElements elements;
   AnnotationClusterSet coreferenceClusters;
   AnnotationCluster currentRelationCluster;
 
 
-  public TeiCoreferenceSAXParser(final InputStream is, final ArrayList<Paragraph> paragraphs, final Map<String, Annotation> annotationsMap) throws DataFormatException {
-    this.paragraphs = paragraphs;
-    this.annotationsMap = annotationsMap;
+  public TeiCoreferenceSAXParser(final InputStream is,
+                                 final TeiDocumentElements elements) throws DataFormatException {
+    paragraphs = elements.getParagraphs();
+    this.elements = elements;
     coreferenceClusters = new AnnotationClusterSet();
+    parse(is);
+  }
+
+  private void parse(final InputStream is) throws DataFormatException {
     try {
       SAXParserFactory.newInstance().newSAXParser().parse(is, this);
     } catch (final ParserConfigurationException e) {
@@ -49,8 +55,8 @@ public class TeiCoreferenceSAXParser extends DefaultHandler {
     if (elementName.equalsIgnoreCase(Tei.TAG_SEGMENT)) {
       currentRelationCluster = new AnnotationCluster(Relation.COREFERENCE, Relation.COREFERENCE);
     } else if (elementName.equalsIgnoreCase(Tei.TAG_POINTER)) {
-      final String target = attributes.getValue("target").split("#")[1];
-      currentRelationCluster.addAnnotation(annotationsMap.get(target));
+      final String target = attributes.getValue("target");
+      currentRelationCluster.addAnnotation(elements.getAnnotationMap().get(target));
     }
   }
 
@@ -62,9 +68,8 @@ public class TeiCoreferenceSAXParser extends DefaultHandler {
     }
   }
 
-  public RelationSet getRelations() {
-    return coreferenceClusters.getRelationSet(null);
+  public AnnotationClusterSet getAnnotationClusters() {
+    return coreferenceClusters;
   }
-
 
 }

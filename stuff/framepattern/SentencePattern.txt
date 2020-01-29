@@ -1,0 +1,3 @@
+#NP<trajector:#NG spatial_indicator:[pos=prep] landmark:#NG>
+
+#NP<trajector:#NG> spatial_indicator:[pos=prep] #NP<landmark:#NG>

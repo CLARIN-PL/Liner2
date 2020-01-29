@@ -2,14 +2,14 @@ package g419.lib.cli;
 
 import g419.corpus.TerminateException;
 import g419.corpus.io.UnknownFormatException;
-import org.apache.commons.cli.MissingOptionException;
-import org.apache.commons.cli.UnrecognizedOptionException;
-import org.apache.commons.lang3.StringUtils;
-
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.*;
+import org.apache.commons.cli.MissingOptionException;
+import org.apache.commons.cli.UnrecognizedOptionException;
+import org.apache.commons.lang3.StringUtils;
 
 public class ActionSelector {
 
@@ -56,6 +56,8 @@ public class ActionSelector {
         } catch (final ParameterException e) {
           System.err.println("Error: " + e.getMessage());
         } catch (final UnknownFormatException e) {
+          System.err.println("Error: " + e.getMessage());
+        } catch (final FileNotFoundException e) {
           System.err.println("Error: " + e.getMessage());
         } catch (final TerminateException e) {
           System.err.println("Error: " + e.getMessage());
