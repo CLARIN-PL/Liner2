@@ -1,10 +1,7 @@
 package g419.lib.cli;
 
-import g419.corpus.ConsolePrinter;
-import g419.corpus.HasLogger;
-import org.apache.commons.cli.*;
-
 import java.util.HashSet;
+import org.apache.commons.cli.*;
 
 public abstract class Action implements HasLogger {
 
@@ -47,9 +44,6 @@ public abstract class Action implements HasLogger {
   public void parseOptions(final String[] args) throws Exception {
     final CommandLine line = new DefaultParser().parse(options, args);
     checkOptionRepetition(line);
-    if (line.hasOption(CommonOptions.OPTION_VERBOSE)) {
-      ConsolePrinter.verbose = true;
-    }
     parseOptions(line);
   }
 

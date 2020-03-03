@@ -4,7 +4,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import g419.corpus.EmptySentenceException;
 import io.vavr.control.Option;
-
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -208,7 +207,8 @@ public class Annotation extends IdentifiableElement {
 
   private Option<Integer> findFirstTokenWithPos(final String pos) {
     for (final int i : getTokens()) {
-      if (sentence.getTokens().get(i).getDisambTag().getPos().equals(pos)) {
+      if (sentence.getTokens().get(i).hasDisambTag()
+          && sentence.getTokens().get(i).getDisambTag().getPos().equals(pos)) {
         return Option.of(i);
       }
     }
@@ -383,8 +383,9 @@ public class Annotation extends IdentifiableElement {
     for (final int i : this.tokens) {
       final Token token = tokens.get(i);
       final Tag tag = token.getDisambTag();
-      text.append(tag.getBase());
-      final int a = getEnd();
+      if (tag != null) {
+        text.append(tag.getBase());
+      }
       if ((includeNs == false || !token.getNoSpaceAfter()) && (i < getEnd())) {
         text.append(" ");
       }
