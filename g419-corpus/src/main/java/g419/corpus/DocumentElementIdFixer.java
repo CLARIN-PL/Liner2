@@ -1,9 +1,7 @@
 package g419.corpus;
 
 import com.google.common.collect.Maps;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.IdentifiableElement;
-
+import g419.corpus.structure.*;
 import java.util.Map;
 
 /**
@@ -16,7 +14,7 @@ public class DocumentElementIdFixer {
     int value = 1;
     final String pattern;
 
-    public IdGenerator(String pattern) {
+    public IdGenerator(final String pattern) {
       this.pattern = pattern;
     }
 
@@ -34,6 +32,7 @@ public class DocumentElementIdFixer {
   final IdGenerator nextTokenId = new IdGenerator("tok-%04d");
   final IdGenerator nextRelationId = new IdGenerator("rel-%03d");
   final IdGenerator nextAnnotationId = new IdGenerator("ann-%03d");
+  final String defaultLexId = "morph_%d.%d.%d.%d-lex";
 
   Map<String, IdentifiableElement> usedIdentifiers = Maps.newHashMap();
 
@@ -75,6 +74,33 @@ public class DocumentElementIdFixer {
         .forEach(r -> assignNextAvailableIdentifier(nextRelationId, r));
     document.getAnnotations().stream().filter(a -> a.getId() == null)
         .forEach(a -> assignNextAvailableIdentifier(nextAnnotationId, a));
+    assignMissingLexIds(document);
+  }
+
+  private void assignMissingLexIds(final Document document) {
+    int pIndex = 0;
+    int sIndex = 0;
+    for (final Paragraph p : document.getParagraphs()) {
+      pIndex++;
+      for (final Sentence s : p.getSentences()) {
+        sIndex++;
+        int tIndex = 0;
+        for (final Token t : s.getTokens()) {
+          tIndex++;
+          int tagIndex = 0;
+          for (final Tag tag : t.getTags()) {
+            tagIndex++;
+            if (tag.getId() == null) {
+              tag.setId(getLexTag(pIndex, sIndex, tIndex, tagIndex));
+            }
+          }
+        }
+      }
+    }
+  }
+
+  private String getLexTag(final int paragraph, final int sentence, final int token, final int lex) {
+    return String.format(defaultLexId, paragraph, sentence, token, lex);
   }
 
   private void assignNextAvailableIdentifier(final IdGenerator idGenerator, final IdentifiableElement object) {

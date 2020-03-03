@@ -1,16 +1,16 @@
 package g419.corpus.io.writer;
 
 import com.google.common.collect.Lists;
-import g419.corpus.structure.*;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
-
+import g419.corpus.structure.Annotation;
+import g419.corpus.structure.Document;
+import g419.corpus.structure.Token;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 
 public class AnnotationTsvWriter extends AbstractDocumentWriter {
 
@@ -34,28 +34,32 @@ public class AnnotationTsvWriter extends AbstractDocumentWriter {
   @Override
   public void writeDocument(final Document document) {
     sentenceOffset = 0;
-    document.getParagraphs().forEach(this::writeParagraph);
+    document.getAnnotations().forEach(a -> writeAnnotation(document, a));
     flush();
   }
 
-  public void writeParagraph(final Paragraph paragraph) {
-    paragraph.getSentences().forEach(this::writeSentence);
-  }
+//  public void writeParagraph(final Document doc, final Paragraph paragraph) {
+//    paragraph.getSentences()
+//        .forEach(s -> writeSentence(doc, s));
+//  }
+//
+//  private void writeSentence(final Document doc, final Sentence sentence) {
+//    Arrays.stream(Annotation.sortChunks(sentence.getChunks()))
+//        .forEach(a -> writeAnnotation(doc, a));
+//    sentenceOffset += sentence.getTokens().stream().mapToInt(t -> t.getOrth().length()).sum();
+//  }
 
-  private void writeSentence(final Sentence sentence) {
-    Arrays.stream(Annotation.sortChunks(sentence.getChunks())).forEach(this::writeAnnotation);
-    sentenceOffset += sentence.getTokens().stream().mapToInt(t -> t.getOrth().length()).sum();
-  }
-
-  private void writeAnnotation(final Annotation an) {
+  private void writeAnnotation(final Document doc, final Annotation an) {
     try {
-      writer.printRecord(formatAnnotation(an));
+      final List<String> cols = Lists.newArrayList(doc.getName());
+      cols.addAll(getAnnotationFields(an));
+      writer.printRecord(cols);
     } catch (final IOException ex) {
       getLogger().error("Failed to writeAnnotation", ex);
     }
   }
 
-  private List<String> formatAnnotation(final Annotation c) {
+  private List<String> getAnnotationFields(final Annotation c) {
     final List<String> cols = Lists.newArrayList();
     final List<Token> tokens = c.getSentence().getTokens();
     final int begin = sentenceOffset + IntStream.range(0, c.getBegin()).map(i -> tokens.get(i).getOrth().length()).sum();
