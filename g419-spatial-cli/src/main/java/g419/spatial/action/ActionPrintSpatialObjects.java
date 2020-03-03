@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.apache.commons.cli.CommandLine;
 
-public class ActionStatsSpatialObjects extends Action {
+public class ActionPrintSpatialObjects extends Action {
 
   private String inputFilename = null;
   private String inputFormat = null;
@@ -24,8 +24,8 @@ public class ActionStatsSpatialObjects extends Action {
   RelationFilterSemanticPattern semanticPatterns = null;
 
 
-  public ActionStatsSpatialObjects() {
-    super("stats-spatial-objects");
+  public ActionPrintSpatialObjects() {
+    super("print-spatial-objects");
     setDescription("prints list of gold-standard spatial objects with their attributes");
     options.addOption(CommonOptions.getInputFileNameOption());
     options.addOption(CommonOptions.getInputFileFormatOption());
