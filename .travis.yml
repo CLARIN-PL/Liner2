@@ -3,8 +3,7 @@ sudo: required
 dist: trusty
 
 jdk:
-  #- oraclejdk8
-  - openjdk11
+  - oraclejdk11
 
 # ToDo Temporary disabled to speed up testing
 # install: ./stuff/install-dependencies-travisci-ubuntu1404.sh
