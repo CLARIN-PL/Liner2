@@ -1,48 +1,67 @@
 package g419.spatial.action;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
-import g419.corpus.structure.*;
+import g419.corpus.structure.Annotation;
+import g419.corpus.structure.Document;
+import g419.corpus.structure.Sentence;
+import g419.corpus.utils.SentencePrinter;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
+import g419.lib.cli.ParameterException;
+import g419.liner2.core.features.tokens.ClassFeature;
 import g419.liner2.core.tools.FscoreEvaluator;
 import g419.liner2.core.tools.parser.MaltParser;
-import g419.spatial.filter.IRelationFilter;
+import g419.spatial.converter.DocumentToSpatialExpressionConverter;
 import g419.spatial.structure.SpatialExpression;
-import g419.spatial.structure.SpatialRelationSchema;
+import g419.spatial.structure.SpatialObjectRegion;
 import g419.spatial.tools.*;
 import g419.toolbox.sumo.Sumo;
 import g419.toolbox.wordnet.Wordnet3;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Option;
-
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
 
 public class ActionEval extends Action {
 
-  private final static String OPTION_FILENAME_LONG = "filename";
-  private final static String OPTION_FILENAME = "f";
-
-  private final List<Pattern> annotationsPrep = new LinkedList<>();
-  private final List<Pattern> annotationsNg = new LinkedList<>();
-
+  final private List<Pattern> annotationsPrep = Lists.newLinkedList();
+  final private List<Pattern> annotationsNg = Lists.newLinkedList();
+  final private Set<String> objectPos;
   private String filename = null;
   private String inputFormat = null;
-
-  private final Set<String> objectPos = new HashSet<>();
-
-  private String maltparserModel = null;
+  private Optional<String> maltparserModel = null;
   private String wordnetPath = null;
+  private String model = null;
+
+  private SpatialExpressionKeyGeneratorSimple keyGenerator;
+  private DecisionCollector<SpatialExpression> evalTotalSemanticFilters;
+  private DecisionCollector<SpatialExpression> evalTotalCandidates;
+  private final Map<String, FscoreEvaluator> evalByTypeTotal = Maps.newHashMap();
+  private ISpatialRelationRecognizer recognizer;
+  private Sumo sumo;
+  private final DocumentToSpatialExpressionConverter converter = new DocumentToSpatialExpressionConverter();
+  private final Set<String> regions = SpatialResources.getRegions();
+
+  private final Set<String> elementsToIgnoreByPos = Sets.newHashSet();
+  private final Set<String> elementsToIgnoreByBase = Sets.newHashSet("ten", "który", "drugi", "jeden");
+
+  private static final String LABEL_SPATIAL = "label-spatial";
+  private static final String LABEL_OTHER = "label-other";
 
   /**
    *
    */
   public ActionEval() {
-    super("eval");
-    setDescription("evaluate recognition of spatial expressions (only for static)");
+    super("eval2");
+    setDescription("evaluate recognition of spatial expressions (new approach including dynamic)");
+    options.addOption(getOptionModel());
     options.addOption(getOptionInputFilename());
     options.addOption(CommonOptions.getInputFileFormatOption());
     options.addOption(CommonOptions.getMaltparserModelFileOption());
@@ -50,176 +69,199 @@ public class ActionEval extends Action {
 
     annotationsPrep.add(Pattern.compile("^PrepNG.*"));
     annotationsNg.add(Pattern.compile("^NG.*"));
+    objectPos = Sets.newHashSet("subst", "ign", "brev");
 
-    objectPos.add("subst");
-    objectPos.add("ign");
-    objectPos.add("brev");
+    elementsToIgnoreByPos.addAll(ClassFeature.BROAD_CLASSES.get("verb"));
+    elementsToIgnoreByPos.addAll(ClassFeature.BROAD_CLASSES.get("pron"));
   }
 
-  /**
-   * Create Option object for input file name.
-   *
-   * @return Object for input file name parameter.
-   */
+  private Option getOptionModel() {
+    return Option.builder(CommonOptions.OPTION_MODEL).longOpt(CommonOptions.OPTION_MODEL_LONG)
+        .hasArg().argName("name").desc("v1|v2").required().build();
+  }
+
   private Option getOptionInputFilename() {
-    return Option.builder(ActionEval.OPTION_FILENAME).hasArg().argName("FILENAME").required()
-        .desc("path to the input file").longOpt(OPTION_FILENAME_LONG).build();
+    return Option.builder(CommonOptions.OPTION_INPUT_FILE).hasArg().argName("path").required()
+        .desc("path to the input file").longOpt(CommonOptions.OPTION_INPUT_FILE_LONG).build();
   }
 
-  /**
-   * Parse action options
-   *
-   * @param line The array with command line parameters
-   */
   @Override
   public void parseOptions(final CommandLine line) throws Exception {
-    filename = line.getOptionValue(ActionEval.OPTION_FILENAME);
+    filename = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
     inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
-    maltparserModel = line.getOptionValue(CommonOptions.OPTION_MALT);
+    maltparserModel = line.hasOption(CommonOptions.OPTION_MALT) ?
+        Optional.of(line.getOptionValue(CommonOptions.OPTION_MALT)) : Optional.empty();
     wordnetPath = line.getOptionValue(CommonOptions.OPTION_WORDNET);
+    model = line.getOptionValue(CommonOptions.OPTION_MODEL);
   }
 
   @Override
   public void run() throws Exception {
-    final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(filename, inputFormat);
-    final Wordnet3 wordnet = new Wordnet3(wordnetPath);
-    final MaltParser malt = new MaltParser(maltparserModel);
-    final ISpatialRelationRecognizer recognizer = new SpatialRelationRecognizer(wordnet).withMaltParser(malt);
-    final Set<String> regions = SpatialResources.getRegions();
-
-    //KeyGenerator<SpatialExpression> keyGenerator = new SpatialExpressionKeyGeneratorSimple();
-    final KeyGenerator<SpatialExpression> keyGenerator = new SpatialExpressionKeyGeneratorSpatialIndicator();
-    final DecisionCollector<SpatialExpression> evalTotal = new DecisionCollector<>(keyGenerator);
-    final DecisionCollector<SpatialExpression> evalNoSeedTotal = new DecisionCollector<>(keyGenerator);
-
-    final Map<String, FscoreEvaluator> evalByTypeTotal = Maps.newHashMap();
-    final Sumo sumo = new Sumo();
-
-    while (reader.hasNext()) {
-      final Document document = reader.next();
-      printHeader1("Document: " + document.getName());
-
-      final List<SpatialExpression> gold = getSpatialRelations(document);
-
-      if (gold.size() == 0) {
-        continue;
-      }
-
-      for (final SpatialExpression relation : gold) {
-        evalTotal.addGold(relation);
-        evalNoSeedTotal.addGold(relation);
-      }
-
-      for (final Paragraph paragraph : document.getParagraphs()) {
-        for (final Sentence sentence : paragraph.getSentences()) {
-
-          final List<SpatialExpression> relations = recognizer.findCandidates(sentence);
-
-          if (relations.size() > 0) {
-            printHeader2("Sentence: " + sentence + "\n");
-
-            for (final SpatialExpression relation : gold) {
-              if (relation.getLandmark().getSpatialObject().getSentence() == sentence) {
-                System.out.println(relation.toString() + " " + keyGenerator.generateKey(relation));
-              }
-            }
-            System.out.println();
-
-            for (final SpatialExpression rel : relations) {
-              String status = "OK    ";
-              String filterName = "";
-              String eval = "";
-              final String duplicate;
-
-              for (final IRelationFilter filter : recognizer.getFilters()) {
-                if (!filter.pass(rel)) {
-                  status = "REMOVE";
-                  filterName = filter.getClass().getSimpleName();
-                  break;
-                }
-              }
-
-              duplicate = evalTotal.containsAsDecision(rel) ? "-DUPLICATE" : "-FIRST";
-
-              evalNoSeedTotal.addDecision(rel);
-              if (status.equals("REMOVE")) {
-                if (evalTotal.containsAsGold(rel)) {
-                  eval = "FalseNegative";
-                }
-              } else {
-                FscoreEvaluator evalType = evalByTypeTotal.get(rel.getType());
-                if (evalType == null) {
-                  evalType = new FscoreEvaluator();
-                  evalByTypeTotal.put(rel.getType(), evalType);
-                }
-
-                if (evalTotal.containsAsGold(rel)) {
-                  evalType.addTruePositive();
-                  eval = "TruePositive";
-                } else {
-                  evalType.addFalsePositive();
-                  eval = "FalsePositive";
-                }
-                evalTotal.addDecision(rel);
-              }
-
-              eval += duplicate;
-
-              final StringBuilder sb = new StringBuilder();
-              for (final SpatialRelationSchema p : recognizer.getSemanticFilter().match(rel)) {
-                if (sb.length() > 0) {
-                  sb.append(" & ");
-                }
-
-                sb.append(p.getName());
-                sb.append(" (TR subclass of:");
-                for (final String concept : p.getTrajectorConcepts()) {
-                  if (recognizer.getSemanticFilter().getSumo().isClassOrSubclassOf(rel.getTrajectorConcepts(), concept)) {
-                    sb.append(" " + concept);
-                  }
-                }
-
-                sb.append("; LM subclass of:");
-                sb.append(subconceptsOfToString(p.getLandmarkConcepts(), rel.getLandmarkConcepts(), sumo));
-                for (final String concept : p.getLandmarkConcepts()) {
-                  if (recognizer.getSemanticFilter().getSumo().isClassOrSubclassOf(rel.getLandmarkConcepts(), concept)) {
-                    sb.append(" " + concept);
-                  }
-                }
-                sb.append(")");
-
-              }
-
-              String info = String.format("  - %s\t %-80s\t%s %s; id=%s; schema=%s", status, rel.toString(), filterName, eval, keyGenerator.generateKey(rel), sb.toString());
-              if (regions.contains(rel.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase())) {
-                info += " REGION_AS_LANDMARK";
-              }
-              System.out.println(info);
-
-              System.out.println("\t\t\tTrajector = " + rel.getTrajector() + " => " + String.join(", ", rel.getTrajectorConcepts()));
-              System.out.println("\t\t\tLandmark  = " + rel.getLandmark() + " => " + String.join(", ", rel.getLandmarkConcepts()));
-              System.out.println();
-            }
-
-          }
-        }
-      }
+    keyGenerator = new SpatialExpressionKeyGeneratorSimple();
+    evalTotalSemanticFilters = new DecisionCollector<>(keyGenerator);
+    evalTotalCandidates = new DecisionCollector<>(keyGenerator);
+    initializeRecognizer();
+    sumo = recognizer.getSemanticFilter().getSumo();
+    try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(filename, inputFormat)) {
+      reader.forEach(this::evaluateDocument);
     }
-
-    reader.close();
-    printHeader1("Z sitem semantycznym");
-    evalTotal.getConfusionMatrix().printTotal();
-    System.out.println("-----------------------------");
-
-    for (final String type : evalByTypeTotal.keySet()) {
-      final FscoreEvaluator evalType = evalByTypeTotal.get(type);
-      System.out.println(String.format("%-20s P=%5.2f TP=%d FP=%d", type, evalType.precision() * 100, evalType.getTruePositiveCount(), evalType.getFalsePositiveCount()));
-    }
-
-    printHeader1("Bez sita semantycznego");
-    evalNoSeedTotal.getConfusionMatrix().printTotal();
+    printEvaluationResult();
   }
 
+  private void evaluateDocument(final Document document) {
+    Stream.of(document)
+        .peek(doc -> printHeader1("Document: " + doc.getName()))
+        .map(converter::convert)
+        .flatMap(Collection::stream)
+        .filter(this::notIgnoredElement)
+        .filter(e -> e.getWidth() < 6)
+        .peek(evalTotalSemanticFilters::addGold)
+        .forEach(evalTotalCandidates::addGold);
+
+    document.getSentences().stream()
+        .peek(sentence -> printHeader1("Sentence"))
+        .peek(sentence -> printHeader2("" + sentence))
+        .peek(this::printSentenceAnnotations)
+        .peek(this::evaluateSentence)
+        .forEach(sentence -> printHeader2("" + sentence));
+  }
+
+  private void printEvaluationResult() {
+    printHeader1("TSV data");
+    evalTotalCandidates.getTruePositives().stream()
+        .map(se -> formatSpatialExpressionAsTsvWithLabel(se, LABEL_SPATIAL))
+        .forEach(System.out::println);
+    evalTotalCandidates.getFalsePositives().stream()
+        .map(se -> formatSpatialExpressionAsTsvWithLabel(se, LABEL_OTHER))
+        .forEach(System.out::println);
+
+    printHeader1("With semantic constraints on trajector and landmark");
+    evalTotalSemanticFilters.getConfusionMatrix().printTotal();
+
+    printHr1().printHeader2(String.format("%-30s %6s %6s %6s", "Pattern", "P", "TP", "FP"));
+    evalByTypeTotal.entrySet().stream()
+        .map(p -> formatEvalLine(p.getKey(), p.getValue()))
+        .sorted()
+        .forEach(System.out::println);
+
+    printHeader1("Without semantic constraints");
+    evalTotalCandidates.getConfusionMatrix().printTotal();
+    printHr2();
+  }
+
+  private void initializeRecognizer() throws IOException, ParameterException {
+    final Wordnet3 wordnet = new Wordnet3(wordnetPath);
+    switch (model) {
+      case "v1":
+        recognizer = new SpatialRelationRecognizer(wordnet);
+        break;
+      case "v2":
+        recognizer = new SpatialRelationRecognizer(wordnet);
+        break;
+      default:
+        throw new ParameterException(String.format("Unrecognized value of '%s', expected: v1|v2", model));
+    }
+    maltparserModel.ifPresent(m -> recognizer.withMaltParser(new MaltParser(m)));
+  }
+
+  private boolean notIgnoredElement(final SpatialExpression se) {
+    if (notIngoredElement(se.getLandmark()) && notIngoredElement(se.getTrajector())) {
+      return true;
+    } else {
+      getLogger().debug("IGNORED: " + se.toString());
+      return false;
+    }
+  }
+
+  private boolean notIngoredElement(final SpatialObjectRegion object) {
+    return !elementsToIgnoreByPos.contains(object.getSpatialObjectHeadPos())
+        && !elementsToIgnoreByBase.contains(object.getSpatialObjectHeadBase())
+        && objectPos.contains(object.getSpatialObjectHeadPos());
+  }
+
+  private void printSentenceAnnotations(final Sentence sentence) {
+    final SentencePrinter printer = new SentencePrinter(sentence);
+    printer.getLinesWithAnnotationsByGroup("group").forEach(System.out::println);
+  }
+
+  private void evaluateSentence(final Sentence sentence) {
+    recognizer.findCandidates(sentence).forEach(this::evaluateCandidate);
+    evalTotalSemanticFilters.getFalseNegatives().stream()
+        .filter(r -> r.getSentence().orElse(null) == sentence)
+        .map(r -> formatLogFalseNegative(r, "filtered"))
+        .sorted()
+        .forEach(System.out::println);
+    evalTotalCandidates.getFalseNegatives().stream()
+        .filter(r -> r.getSentence().orElse(null) == sentence)
+        .map(r -> formatLogFalseNegative(r, "candidate"))
+        .sorted()
+        .forEach(System.out::println);
+  }
+
+  private String formatLogFalseNegative(final SpatialExpression se, final String type) {
+    return String.format("[%s] FalseNegative: %s [key=%s] [width=%d]",
+        type, se.toString(), keyGenerator.generateKey(se), se.getWidth());
+  }
+
+  private String formatSpatialExpressionAsTsvWithLabel(final SpatialExpression se, final String label) {
+    final StringJoiner sj = new StringJoiner("\t");
+    sj.add(se.getTrajector().getSpatialObject().getHeadToken().getOrth());
+    sj.add(se.getMotionIndicator() != null ? se.getMotionIndicator().getText() : "");
+    sj.add(se.getSpatialIndicator().getText());
+    sj.add(se.getLandmark().getSpatialObject().getHeadToken().getOrth());
+    sj.add(label);
+    return sj.toString();
+  }
+
+  private void evaluateCandidate(final SpatialExpression candidate) {
+    final Optional<String> filterName = recognizer.getFilterDiscardingRelation(candidate);
+    final String status = filterName.isPresent() ? "REMOVED by" : "OK    ";
+    String eval;
+
+    evalTotalCandidates.addDecision(candidate);
+    if (filterName.isPresent()) {
+      eval = evalTotalSemanticFilters.containsAsGold(candidate) ? "Filtered-False" : "Filtered-True";
+    } else {
+      final FscoreEvaluator evalType = evalByTypeTotal.computeIfAbsent(candidate.getType(), k -> new FscoreEvaluator());
+      if (evalTotalSemanticFilters.containsAsGold(candidate)) {
+        eval = "TruePositive";
+        evalType.addTruePositive();
+      } else {
+        eval = "FalsePositive";
+        evalType.addFalsePositive();
+      }
+      eval += evalTotalSemanticFilters.containsAsDecision(candidate) ? "-DUPLICATE" : "-FIRST";
+      evalTotalSemanticFilters.addDecision(candidate);
+    }
+    logCandidate(candidate, eval, status, filterName);
+
+  }
+
+  private void logCandidate(final SpatialExpression candidate, final String eval, final String status, final Optional<String> filterName) {
+    final String concepts = recognizer.getSemanticFilter().match(candidate).stream()
+        .map(p -> new StringBuilder(p.getName())
+            .append(" (TR subclass of: ")
+            .append(subconceptsOfToString(p.getTrajectorConcepts(), candidate.getTrajectorConcepts(), sumo))
+            .append("; LM subclass of: ")
+            .append(subconceptsOfToString(p.getLandmarkConcepts(), candidate.getLandmarkConcepts(), sumo))
+            .append(")").toString())
+        .collect(Collectors.joining(" & "));
+
+    String info = String.format(" %-20s %-60s\t%s %-10s Key=%s; schema=%s",
+        eval, candidate.toString(), status, filterName.orElse(""), keyGenerator.generateKey(candidate), concepts);
+    if (regions.contains(candidate.getLandmark().getSpatialObject().getHeadToken().getDisambTag().getBase())) {
+      info += " REGION_AS_LANDMARK";
+    }
+    System.out.println(info);
+    System.out.println(String.format(" %25s   SI: %s", "", io.vavr.control.Option.of(candidate.getSpatialIndicator()).map(Annotation::getText).getOrElse("")));
+    System.out.println(String.format(" %25s   TR: %s", "", candidate.getTrajector() + " => " + String.join(", ", candidate.getTrajectorConcepts())));
+    System.out.println(String.format(" %25s   LM: %s", "", candidate.getLandmark() + " => " + String.join(", ", candidate.getLandmarkConcepts())));
+    System.out.println();
+  }
+
+  private String formatEvalLine(final String type, final FscoreEvaluator eval) {
+    return String.format("%-30s %6.2f %6d %6d", type, eval.precision() * 100, eval.getTruePositiveCount(), eval.getFalsePositiveCount());
+  }
 
   private String subconceptsOfToString(final Collection<String> concepts, final Set<String> superConcepts, final Sumo sumo) {
     return concepts.stream()
@@ -227,60 +269,4 @@ public class ActionEval extends Action {
         .collect(Collectors.joining(" "));
   }
 
-  /**
-   * @param document
-   * @return
-   */
-  private List<SpatialExpression> getSpatialRelations(final Document document) {
-
-    final List<SpatialExpression> srs = new ArrayList<>();
-    final Map<Annotation, Annotation> landmarks = new HashMap<>();
-    final Map<Annotation, List<Annotation>> trajectors = new HashMap<>();
-    final Map<Annotation, Annotation> regions = new HashMap<>();
-    for (final Relation r : document.getRelations().getRelations()) {
-      if (r.getType().equals("landmark")) {
-        landmarks.put(r.getAnnotationFrom(), r.getAnnotationTo());
-      } else if (r.getType().equals("trajector")) {
-        List<Annotation> annotations = trajectors.get(r.getAnnotationFrom());
-        if (annotations == null) {
-          annotations = new ArrayList<>();
-          trajectors.put(r.getAnnotationFrom(), annotations);
-        }
-        annotations.add(r.getAnnotationTo());
-      } else if (r.getType().equals("other") && r.getAnnotationTo().getType().equals("region")) {
-        regions.put(r.getAnnotationFrom(), r.getAnnotationTo());
-      }
-    }
-    final Set<Annotation> allIndicators = new HashSet<>();
-    allIndicators.addAll(landmarks.keySet());
-    allIndicators.addAll(trajectors.keySet());
-
-    for (final Annotation indicator : allIndicators) {
-      final Annotation landmark = landmarks.get(indicator);
-      final List<Annotation> trajector = trajectors.get(indicator);
-      final Annotation region = regions.get(indicator);
-      //if ( (landmark != null || region != null) && trajector != null ){
-      if (landmark != null && trajector != null) {
-//				if ( landmark == null || (landmark != null && region != null && region.getBegin() < landmark.getBegin() ) ){
-//					landmark = region;
-//				}
-        for (final Annotation tr : trajector) {
-          // Zignoruje relacje, w któryj trajector lub landmark nie są substem lub ignem
-          if (objectPos.contains(tr.getHeadToken().getDisambTag().getPos())
-              && objectPos.contains(landmark.getHeadToken().getDisambTag().getPos())) {
-            srs.add(new SpatialExpression("Gold", tr, indicator, landmark));
-          }
-        }
-      } else {
-        if (landmark == null) {
-          getLogger().warn(String.format("Missing landmark for spatial indicator %s", indicator.toString()));
-        }
-        if (trajector == null) {
-          getLogger().warn(String.format("Missing trajector for spatial indicator %s", indicator.toString()));
-        }
-
-      }
-    }
-    return srs;
-  }
 }
