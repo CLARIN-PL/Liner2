@@ -22,7 +22,9 @@ class SpatialExpressionToFrameTest extends Specification {
             def frame = SpatialExpressionToFrame.convert(se)
 
         then:
-            frame.getSlot(KpwrSpatial.SPATIAL_TRAJECTOR).getText() == "Książkas"
+            frame.getSlot(KpwrSpatial.SPATIAL_TRAJECTOR).getText() == "Książka"
+            frame.getSlot(KpwrSpatial.SPATIAL_INDICATOR).getText() == "na"
+            frame.getSlot(KpwrSpatial.SPATIAL_LANDMARK).getText() == "stole"
     }
 
     def getSampleSentence() {
