@@ -2,42 +2,35 @@ package g419.corpus.structure;
 
 import java.util.*;
 
-/**
- * Reprezentuje token, z których składa się zdanie (Sentence)
- *
- * @author czuk
- */
 public class Token extends IdentifiableElement {
 
-  /* Indeks atrybutów */
   public TokenAttributeIndex attrIdx;
 
-  /* Uporządkowana lista atrybutów */
   ArrayList<String> attributes = new ArrayList<>();
 
-  /* Lista analiz morfologicznych, jeżeli dostępna. */
   ArrayList<Tag> tags = new ArrayList<>();
 
-  /* Opcjonalne cechy nazwanych atrybutów */
   Map<String, String> props = new HashMap<>();
 
-  /* Oznaczenie, czy między bieżącym a następnym tokenem był biały znak. */
   boolean noSpaceAfter = false;
 
-  public Token(final TokenAttributeIndex attrIdx) {
-    this.attrIdx = attrIdx;
-    packAtributes(attrIdx.getLength());
-  }
-
-  public Token(final String orth, final Tag firstTag, final TokenAttributeIndex attrIdx) {
-    this.attrIdx = attrIdx;
-    packAtributes(attrIdx.getLength());
+  public Token(final String orth, final TokenAttributeIndex attrIdx) {
+    this(attrIdx);
     final int index = attrIdx.getIndex("orth");
     if (index == -1) {
       throw new Error("TokenAttribute Index does not contain the 'orth' attribute");
     }
     setAttributeValue(index, orth);
+  }
+
+  public Token(final String orth, final Tag firstTag, final TokenAttributeIndex attrIdx) {
+    this(orth, attrIdx);
     addTag(firstTag);
+  }
+
+  public Token(final TokenAttributeIndex attrIdx) {
+    this.attrIdx = attrIdx;
+    packAtributes(attrIdx.getLength());
   }
 
   public void clearAttributes() {
@@ -48,13 +41,6 @@ public class Token extends IdentifiableElement {
     attributes.remove(attrIdx);
   }
 
-  /**
-   * TODO
-   * Zwraca wartość atrybutu o podany indeksie.
-   *
-   * @param index
-   * @return
-   */
   public String getAttributeValue(final int index) {
     return attributes.get(index);
   }
@@ -76,12 +62,6 @@ public class Token extends IdentifiableElement {
     props.put(name, value);
   }
 
-  /**
-   * TODO
-   * Funkcja pomocnicza zwraca wartość orth.
-   *
-   * @return
-   */
   public String getOrth() {
     return attributes.get(attrIdx.getIndex("orth"));
   }
@@ -90,12 +70,6 @@ public class Token extends IdentifiableElement {
     attributes.set(attrIdx.getIndex("orth"), orth);
   }
 
-  /**
-   * Gets the element.
-   *
-   * @param key the key
-   * @return the element
-   */
   public String getElement(final String key) {
     return attributes.get(attrIdx.getIndex(key));
   }
@@ -220,13 +194,6 @@ public class Token extends IdentifiableElement {
     return attrIdx;
   }
 
-  /**
-   * Sprawdza, czy jakakolwiek interpretacja ma jako base wskazany lemat.
-   *
-   * @param base       Szukany lemat
-   * @param disambOnly Czy mają być sprawdzane same disamby.
-   * @return true, if successful
-   */
   public boolean hasBase(final String base, final boolean disambOnly) {
     for (final Tag tag : tags) {
       if (tag.getBase().equals(base) && (disambOnly == false || tag.getDisamb() == true)) {

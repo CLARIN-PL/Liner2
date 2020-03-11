@@ -22,8 +22,7 @@ public class ActionPrintSpatialObjects extends Action {
   private String inputFormat = null;
   private String outputFilename = null;
   RelationFilterSemanticPattern semanticPatterns = null;
-
-
+  
   public ActionPrintSpatialObjects() {
     super("print-spatial-objects");
     setDescription("prints list of gold-standard spatial objects with their attributes");

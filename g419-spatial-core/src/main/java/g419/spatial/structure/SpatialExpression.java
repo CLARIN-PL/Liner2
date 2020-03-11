@@ -3,18 +3,12 @@ package g419.spatial.structure;
 import com.google.common.collect.Sets;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Sentence;
-
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
-/**
- * Represents spatial expression, which consists of: trajector, landmark, spatial indicator, motion indicator, path
- *
- * @author czuk
- */
 public class SpatialExpression {
 
   public static String LANDMARK = "landmark";
@@ -40,7 +34,8 @@ public class SpatialExpression {
   public SpatialExpression() {
   }
 
-  public SpatialExpression(final String type, final Annotation trajector, final Annotation spatialIndicator, final Annotation landmark) {
+  public SpatialExpression(final String type, final Annotation trajector,
+                           final Annotation spatialIndicator, final Annotation landmark) {
     this.type = type;
     this.trajector.setSpatialObject(trajector);
     this.spatialIndicator = spatialIndicator;
@@ -136,7 +131,8 @@ public class SpatialExpression {
   }
 
   public int getWidth() {
-    final Set<Integer> tokens = getAnnotations().stream().map(Annotation::getTokens).flatMap(Collection::stream)
+    final Set<Integer> tokens = getAnnotations().stream().map(Annotation::getTokens)
+        .flatMap(Collection::stream)
         .collect(Collectors.toSet());
     final int max = tokens.stream().mapToInt(d -> d).max().getAsInt();
     final int min = tokens.stream().mapToInt(d -> d).min().getAsInt();
@@ -159,7 +155,8 @@ public class SpatialExpression {
     return sb.toString();
   }
 
-  private Annotation appendNext(final StringBuilder sb, final Annotation lastAn, final Annotation currentAn, final String role) {
+  private Annotation appendNext(final StringBuilder sb, final Annotation lastAn,
+                                final Annotation currentAn, final String role) {
     if (lastAn != null && currentAn != null && lastAn.getEnd() + 1 != currentAn.getBegin()) {
       sb.append(" ...");
     }

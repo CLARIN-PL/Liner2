@@ -8,12 +8,11 @@ import g419.spatial.filter.IRelationFilter;
 import g419.spatial.filter.RelationFilterSemanticPattern;
 import g419.spatial.structure.SpatialExpression;
 import io.vavr.control.Option;
-import org.maltparser.core.exception.MaltChainedException;
-
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import org.maltparser.core.exception.MaltChainedException;
 
 public abstract class ISpatialRelationRecognizer implements HasLogger {
 
@@ -71,7 +70,7 @@ public abstract class ISpatialRelationRecognizer implements HasLogger {
       for (final Paragraph paragraph : document.getParagraphs()) {
         for (final Sentence sentence : paragraph.getSentences()) {
           for (final SpatialExpression rel : recognize(sentence)) {
-            final Frame<Annotation> f = SpatialRelationRecognizer.convertSpatialToFrame(rel);
+            final Frame<Annotation> f = SpatialExpressionToFrame.convert(rel);
             document.getFrames().add(f);
           }
         }
