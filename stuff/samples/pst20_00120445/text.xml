@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<teiCorpus xmlns="http://www.tei-c.org/ns/1.0" xmlns:nkjp="http://www.nkjp.pl/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <xi:include href="PCC_header.xml"/>
+  <TEI>
+    <xi:include href="header.xml"/>
+    <text>
+      <body>
+        <p xml:id="ch1">Wczesnośredniowieczny Gród Piastów w Kaliszu-Zawodziu</p>
+        <p xml:id="ch2">Ten niezwykły rezerwat archeologiczny, w dzielnicy Kalisza - Zawodzie, powstał w 2007 roku.</p>
+        <p xml:id="ch3">Do grodu prowadzi most drewniany nad fosą, gdzie są też ukryte łodzie w trzcinie, następnie jest brama wejściowa z palisadą i ostrokołem, tuż za nimi po prawej stronie zrekonstruowano przyziemną część (fundamenty) romańskiej kolegiaty z XII wieku.</p>
+        <p xml:id="ch4">W jej wnętrzu zaznaczono również zarys pierwszej, drewnianej świątyni z XI wieku.</p>
+        <p xml:id="ch5">Po lewej stronie, za bramą, jest grób kurhanowy oraz makieta grodu.</p>
+        <p xml:id="ch6">Dalej jest druga drewniana wieża z palisadą, na którą można wejść.</p>
+        <p xml:id="ch7">Na lewo od niej zrekonstruowano kilkanaście wczesnośredniowiecznych chat z wyposażeniem wewnątrz, oraz obok fragment dawnych umocnień ziemno-drewnianych.</p>
+        <p xml:id="ch8">Do skansenu należy również chata z XIX wieku, którą można obejrzeć też wewnątrz i kościółek drewniany, będący obok.</p>
+        <p xml:id="ch9">Pierwotnie istniał tu cmentarz ciałopalny z grobami kurhanowymi i prawdopodobnie ośrodek kultu pogańskiego z VII-VIII wieku.</p>
+        <p xml:id="ch10">Kalisz przeżywał świetność w czasach wczesnego średniowiecza, odgrywał ważną rolę w procesie tworzenia się państwa wczesnopiastowskiego.</p>
+        <p xml:id="ch11">To tu powstał pierwszy ufortyfikowany, niewielki gród, w IX wieku i od razu wszedł jako jeden z najważniejszych grodów, w skład państwa gnieźnieńskiego.</p>
+        <p xml:id="ch12">Jednak pierwsza pisemna wzmianka o grodzie pochodzi z kroniki Galla Anonima z 1106 roku.</p>
+        <p xml:id="ch13">W X i XI wieku gród został podzielony na dwie części: rezydencjonalną i sakralną.</p>
+        <p xml:id="ch14">Na pocz.</p>
+        <p xml:id="ch15">XI wieku powstał tu kościółek drewniany i budynek mieszkalny należący najprawdopodobniej do miejscowego komesa.</p>
+        <p xml:id="ch16">Swój rozkwit gród przeżywał za czasów Mieszka III Starego, gdy kazał on zbudować w XII wieku, kamienną świątynię pw. św. Pawła.</p>
+        <p xml:id="ch17">Ta romańska kolegiata miała wysoką wieżę i półkoliste prezbiterium.</p>
+        <p xml:id="ch18">Tu, w podziemnej krypcie został pochowany Mieszko III Stary (1202 rok).</p>
+        <p xml:id="ch19">W czasie najazdu wojsk śląskiego księcia Henryka Brodatego, w 1233 roku, gród został zniszczony.</p>
+        <p xml:id="ch20">Wtedy gród został odbudowany 1,5 km dalej, a ten, zaczął zanikać i stał się nieważny, a ostateczną klęskę zadał mu w 1331 roku najazd wojsk krzyżackich.</p>
+        <p xml:id="ch21">Warto dodać, że w sezonie wakacyjnym, w grodzie, odbywają się imprezy:.</p>
+        <p xml:id="ch22">w czerwcu jest „Noc Kupały’ i „Jarmark Archeologiczny”, w sierpniu „Biesiada Piastowska”, zaś we wrześniu „Książęce Miodobranie”.</p>
+        <p xml:id="ch23">Ania</p>
+      </body>
+    </text>
+  </TEI>
+</teiCorpus>

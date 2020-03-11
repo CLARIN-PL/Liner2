@@ -1,14 +1,3 @@
-# Actions
-
-## print-spatial-objects
-
-Sample run:
-```bash
-./spatial-cli print-spatial-objects -i tei:gz -f stuff/samples/pst20_00120445
-```
-
-Expected output:
-```bash
 Document,Annotation id,Spatial object,POS,Ctag,Named entity type,Named entity text,Orth and NE concepts,Mention,Mention text,Cluster size,Cluster concepts,Cluster bases
 stuff/samples/pst20_00120445/,ann_annotations.xml#756592,Kaliszu,subst,subst:sg:loc:m3,nam_loc_gpe_city,Kaliszu,city,mention,Wczesnośredniowieczny Gród Piastów w Kaliszu-Zawodziu,,,
 stuff/samples/pst20_00120445/,ann_annotations.xml#756590,Gród,subst,subst:sg:nom:m3,nam_fac_goe,Wczesnośredniowieczny Gród Piastów,"City, building",mention,Wczesnośredniowieczny Gród Piastów w Kaliszu-Zawodziu,,,
@@ -30,4 +19,3 @@ stuff/samples/pst20_00120445/,ann_annotations.xml#756620,chat,subst,subst:pl:gen
 stuff/samples/pst20_00120445/,ann_annotations.xml#756619,niej,ppron3,ppron3:sg:gen:f:ter:akc:praep,,,,,,,,
 stuff/samples/pst20_00120445/,ann_annotations.xml#756624,Mieszko,subst,subst:sg:nom:m1,nam_liv_person,Mieszko III Stary,human,mention,pochowany Mieszko III,,,
 stuff/samples/pst20_00120445/,ann_annotations.xml#756622,krypcie,subst,subst:sg:loc:f,,,Room,mention,podziemnej krypcie,,,
-```

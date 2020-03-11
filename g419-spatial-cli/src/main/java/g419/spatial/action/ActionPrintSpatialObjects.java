@@ -22,7 +22,7 @@ public class ActionPrintSpatialObjects extends Action {
   private String inputFormat = null;
   private String outputFilename = null;
   RelationFilterSemanticPattern semanticPatterns = null;
-  
+
   public ActionPrintSpatialObjects() {
     super("print-spatial-objects");
     setDescription("prints list of gold-standard spatial objects with their attributes");
@@ -41,7 +41,8 @@ public class ActionPrintSpatialObjects extends Action {
   @Override
   public void run() throws Exception {
     semanticPatterns = new RelationFilterSemanticPattern();
-    final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
+    final AbstractDocumentReader reader =
+        ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
     final List<List<String>> records = StreamSupport.stream(
         Spliterators.spliteratorUnknownSize(reader, Spliterator.ORDERED), false)
         .map(this::process)
