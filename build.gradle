@@ -11,6 +11,7 @@ buildscript {
 plugins {
     id 'jacoco'
     id 'com.github.kt3k.coveralls' version '2.8.4'
+    id 'com.adarshr.test-logger' version '2.0.0'
 }
 
 description = "g419 - Top-level project"
@@ -26,6 +27,7 @@ allprojects {
     apply plugin: 'eclipse'
     apply plugin: 'groovy'
     apply plugin: 'jacoco'
+    apply plugin: "com.adarshr.test-logger"
 
     compileJava {
         options.compilerArgs << "-Xlint:all"
@@ -73,9 +75,10 @@ allprojects {
 
     test {
         useJUnit()
-        testLogging.showStandardStreams = true
+        testlogger {
+            showPassed false
+        }
     }
-
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -204,4 +207,8 @@ tasks.coveralls {
 
 tasks.test {
     dependsOn jacocoRootReport
+}
+
+tasks.jar {
+    dependsOn test
 }
