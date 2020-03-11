@@ -1,7 +1,6 @@
 package g419.liner2.core.chunker;
 
 import g419.corpus.structure.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,32 +18,32 @@ public class AduChunker extends Chunker {
   private HashMap<String, String> dictionary = null;
 
   public AduChunker() {
-    this.dictionary = new HashMap<String, String>();
+    dictionary = new HashMap<>();
   }
 
-  public void setSettings(Chunker baseChunker, boolean one) {
+  public void setSettings(final Chunker baseChunker, final boolean one) {
     this.baseChunker = baseChunker;
     this.one = one;
   }
 
-  private AnnotationSet chunkSentence(Sentence sentence) {
-    List<Token> tokens = sentence.getTokens();
-    TokenAttributeIndex ai = sentence.getAttributeIndex();
-    int sentenceLength = sentence.getTokenNumber();
+  private AnnotationSet chunkSentence(final Sentence sentence) {
+    final List<Token> tokens = sentence.getTokens();
+    final TokenAttributeIndex ai = sentence.getAttributeIndex();
+    final int sentenceLength = sentence.getTokenNumber();
 
-    ArrayList<HashMap<Integer, String>> nGrams =
-        new ArrayList<HashMap<Integer, String>>();
+    final ArrayList<HashMap<Integer, String>> nGrams =
+        new ArrayList<>();
 
     // wygeneruj unigramy
-    nGrams.add(new HashMap<Integer, String>());
+    nGrams.add(new HashMap<>());
     for (int i = 0; i < sentenceLength; i++) {
-      nGrams.get(0).put(new Integer(i), tokens.get(i).getOrth());
+      nGrams.get(0).put(i, tokens.get(i).getOrth());
     }
     // wygeneruj n-gramy
     for (int n = 1; n < sentenceLength; n++) {
-      nGrams.add(new HashMap<Integer, String>());
+      nGrams.add(new HashMap<>());
       for (int j = 0; j < sentenceLength - n; j++) {
-        nGrams.get(n).put(new Integer(j),
+        nGrams.get(n).put(j,
             nGrams.get(n - 1).get(j) + " " + tokens.get(j + n).getOrth());
       }
     }
@@ -52,7 +51,7 @@ public class AduChunker extends Chunker {
     // aktualizuj cechy słownikowe (poczynając od najdłuższych n-gramów)
     for (int n = sentenceLength - 1; n >= 0; n--) {
       for (int i = 0; i < sentenceLength - n; i++) {
-        int idx = new Integer(i);
+        final int idx = i;
 
         // jeśli danego n-gramu nie ma w tablicy, to kontynuuj
         if (nGrams.get(n).get(idx) == null) {
@@ -60,10 +59,10 @@ public class AduChunker extends Chunker {
         }
 
         // jeśli znaleziono w słowniku
-        if (this.dictionary.containsKey(nGrams.get(n).get(idx))) {
-          String featureName = this.dictionary.get(nGrams.get(n).get(idx))
+        if (dictionary.containsKey(nGrams.get(n).get(idx))) {
+          final String featureName = dictionary.get(nGrams.get(n).get(idx))
               .toLowerCase();
-          int featureIdx = ai.getIndex(featureName);
+          final int featureIdx = ai.getIndex(featureName);
           boolean updateFeature = true;
           for (int j = i; j < i + n; j++) {
             if (!tokens.get(j).getAttributeValue(featureIdx).equals("O")) {
@@ -119,11 +118,11 @@ public class AduChunker extends Chunker {
 //	}
 
   @Override
-  public HashMap<Sentence, AnnotationSet> chunk(Document ps) {
-    HashMap<Sentence, AnnotationSet> chunkings = new HashMap<Sentence, AnnotationSet>();
-    for (Paragraph paragraph : ps.getParagraphs()) {
-      for (Sentence sentence : paragraph.getSentences()) {
-        chunkings.put(sentence, this.chunkSentence(sentence));
+  public HashMap<Sentence, AnnotationSet> chunk(final Document ps) {
+    final HashMap<Sentence, AnnotationSet> chunkings = new HashMap<>();
+    for (final Paragraph paragraph : ps.getParagraphs()) {
+      for (final Sentence sentence : paragraph.getSentences()) {
+        chunkings.put(sentence, chunkSentence(sentence));
       }
     }
     return chunkings;

@@ -199,7 +199,7 @@ coveralls {
 
 tasks.coveralls {
     dependsOn jacocoRootReport
-    //onlyIf { System.env.'CI' }
+    onlyIf { System.env.'CI' }
 }
 
 tasks.test {

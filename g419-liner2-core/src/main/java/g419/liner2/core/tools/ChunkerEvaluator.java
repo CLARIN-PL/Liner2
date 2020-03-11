@@ -1,27 +1,11 @@
 package g419.liner2.core.tools;
 
-
 import g419.corpus.ConsolePrinter;
 import g419.corpus.structure.*;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.*;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 
-
-/**
- * Klasa służąca do oceny skuteczności chunkera.
- * <p>
- * Skuteczność chunkera wyrażana jest przy pomocy trzech parametrów: precyzja,
- * kompletność i średnia harmoniczna (F-measure) dla wszystkich anotacji
- * łącznie i każdego typu z osobna.
- * <p>
- * Dodatkowowymi parametrami są statystyki true positives,
- * true negatives i false negatives.
- *
- * @author Maciej Janicki
- * @author Michał Marcińczuk
- */
 public class ChunkerEvaluator {
 
   /* typ chunku => lista chunków danego typu */
@@ -203,7 +187,7 @@ public class ChunkerEvaluator {
         if (testedChunk.getTokens().equals(trueChunk.getTokens())) {
           // wpisz klucz do tablicy, jeśli jeszcze nie ma
           if (!falsePositivesExistingRangeOnly.containsKey(testedChunk.getType())) {
-            falsePositivesExistingRangeOnly.put(testedChunk.getType(), new Integer(0));
+            falsePositivesExistingRangeOnly.put(testedChunk.getType(), 0);
           }
           // dodaj do istniejącego klucza
           falsePositivesExistingRangeOnly.put(testedChunk.getType(),

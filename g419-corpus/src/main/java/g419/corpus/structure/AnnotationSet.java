@@ -3,10 +3,8 @@ package g419.corpus.structure;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 
-/**
- * Opakowanie na zbiór chunków przypisanych do jednego zdania.
- */
 public class AnnotationSet {
 
   LinkedHashSet<Annotation> chunks = new LinkedHashSet<>();
@@ -92,15 +90,22 @@ public class AnnotationSet {
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o)
+  public int hashCode() {
+    return Objects.hash(chunks, sentence);
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
       return true;
+    }
 
-    if (getClass() != o.getClass())
+    if (getClass() != o.getClass()) {
       return false;
+    }
 
-    AnnotationSet otherAnnSet = (AnnotationSet) o;
+    final AnnotationSet otherAnnSet = (AnnotationSet) o;
 
-    return this.sentence.toString().equals(otherAnnSet.getSentence().toString()) && this.chunks.equals(otherAnnSet.chunkSet());
+    return sentence.toString().equals(otherAnnSet.getSentence().toString()) && chunks.equals(otherAnnSet.chunkSet());
   }
 }
