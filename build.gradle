@@ -193,11 +193,13 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
 coveralls {
     sourceDirs = subprojects.sourceSets.main.allSource.srcDirs.flatten()
     jacocoReportPath = "build/reports/jacoco/test/jacocoTestReport.xml"
+    saveAsFile = true
+    sendToCoveralls = false
 }
 
 tasks.coveralls {
     dependsOn jacocoRootReport
-    onlyIf { System.env.'CI' }
+    //onlyIf { System.env.'CI' }
 }
 
 tasks.test {
