@@ -3,14 +3,6 @@ package g419.corpus.io.reader.parser;
 import g419.corpus.ConsolePrinter;
 import g419.corpus.io.DataFormatException;
 import g419.corpus.structure.*;
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -18,6 +10,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Created with IntelliJ IDEA.
@@ -168,7 +167,7 @@ public class CclSaxParser extends DefaultHandler {
           break;
         }
       }
-      if (!foundDisamb) {
+      if (!foundDisamb && tags.size() > 0) {
         currentToken.setAttributeValue(attributeIndex.getIndex("base"), tags.get(0).getBase());
         currentToken.setAttributeValue(attributeIndex.getIndex("ctag"), tags.get(0).getCtag());
       }

@@ -113,6 +113,10 @@ public class Token extends IdentifiableElement {
         '}';
   }
 
+  public boolean hasDisambTag() {
+    return getDisambTag() != null;
+  }
+
   public Tag getDisambTag() {
     for (final Tag tag : tags) {
       if (tag.getDisamb()) {
