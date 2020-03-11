@@ -1,85 +1,78 @@
 package g419.toolbox.sumo;
 
-import java.util.HashMap;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Klasa reprezentuje graph. Elementami grafu są napisy.
- */
 public class Graph {
 
-  private Set<String> nodes = null;
-  private Map<String, Set<String>> childrens = null;
+  private final Set<String> nodes;
+  private final Map<String, Set<String>> childrens;
 
   public Graph() {
-    this.childrens = new HashMap<String, Set<String>>();
-    this.nodes = new HashSet<String>();
+    childrens = Maps.newHashMap();
+    nodes = Sets.newHashSet();
   }
 
-  public boolean containsClass(String label) {
-    return this.nodes.contains(label);
+  public Set<String> getNodes() {
+    return nodes;
   }
 
-  /**
-   * Sprawdza, czy child jest podklasą parent, tj. czy istnieje ścieżka
-   * od child do parent w grafie.
-   *
-   * @param child
-   * @param parent
-   * @return
-   */
-  public boolean isSubclassOf(String child, String parent) {
-    Set<String> directSubclasses = this.childrens.get(parent);
+  public boolean containsClass(final String label) {
+    return nodes.contains(label);
+  }
+
+  public boolean isSubclassOf(final String child, final String parent) {
+    final Set<String> directSubclasses = childrens.get(parent);
     if (directSubclasses == null) {
-      // Nie ma podklas, więc zwracam false
       return false;
     } else if (directSubclasses.contains(child)) {
       return true;
     }
-    for (String directSubclass : directSubclasses) {
-      if (this.isSubclassOf(child, directSubclass)) {
+    for (final String directSubclass : directSubclasses) {
+      if (isSubclassOf(child, directSubclass)) {
         return true;
       }
     }
     return false;
   }
 
-  public void addConnection(String child, String parent) {
-    this.nodes.add(child);
-    this.nodes.add(parent);
-    Set<String> directSubclasses = this.childrens.get(parent);
+  public void addConnection(final String child, final String parent) {
+    nodes.add(child);
+    nodes.add(parent);
+    Set<String> directSubclasses = childrens.get(parent);
     if (directSubclasses == null) {
-      directSubclasses = new HashSet<String>();
-      this.childrens.put(parent, directSubclasses);
+      directSubclasses = new HashSet<>();
+      childrens.put(parent, directSubclasses);
     }
     directSubclasses.add(child);
   }
 
-  public Set<String> getSuperclasses(String currentClass) {
-    Set<String> classes = new HashSet<String>();
-    for (String superclass : this.childrens.keySet()) {
-      if (this.childrens.get(superclass).contains(currentClass)) {
+  public Set<String> getSuperclasses(final String currentClass) {
+    final Set<String> classes = new HashSet<>();
+    for (final String superclass : childrens.keySet()) {
+      if (childrens.get(superclass).contains(currentClass)) {
         classes.add(superclass);
-        classes.addAll(this.getSuperclasses(superclass));
+        classes.addAll(getSuperclasses(superclass));
       }
     }
     return classes;
   }
 
-  public Set<String> getSubclasses(String currentClass) {
-    Set<String> classes = new HashSet<String>();
-    this.getSubclasses(currentClass, classes);
+  public Set<String> getSubclasses(final String currentClass) {
+    final Set<String> classes = new HashSet<>();
+    getSubclasses(currentClass, classes);
     return classes;
   }
 
-  public void getSubclasses(String currentClass, Set<String> classes) {
-    Set<String> directSubclasses = this.childrens.get(currentClass);
+  public void getSubclasses(final String currentClass, final Set<String> classes) {
+    final Set<String> directSubclasses = childrens.get(currentClass);
     if (directSubclasses != null) {
-      for (String cl : directSubclasses) {
+      for (final String cl : directSubclasses) {
         classes.add(cl);
-        this.getSubclasses(cl, classes);
+        getSubclasses(cl, classes);
       }
     }
   }

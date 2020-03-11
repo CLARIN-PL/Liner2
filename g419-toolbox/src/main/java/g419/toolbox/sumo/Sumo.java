@@ -7,17 +7,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
 
-/**
- * Created by michal on 5/29/15.
- */
 public class Sumo {
 
   private final Pattern subclassRelPattern = Pattern.compile("^\\p{Z}*\\(subclass (\\p{L}+) (\\p{L}+)\\)\\p{Z}*$");
-  private Graph graph = new Graph();
+  private final Graph graph = new Graph();
   private boolean caseSensitive = false;
 
-  public Sumo(String mapping) throws IOException, DataFormatException {
-    File mappingFile = new File(mapping);
+  public Sumo(final String mapping) throws IOException, DataFormatException {
+    final File mappingFile = new File(mapping);
     if (mappingFile.exists()) {
       parseMapping(new FileInputStream(mappingFile));
     } else {
@@ -26,94 +23,87 @@ public class Sumo {
   }
 
   public Sumo() throws IOException {
-    this.loadDeafultKifs();
+    loadDeafultKifs();
   }
 
-  public Sumo(boolean caseSensitive) throws IOException {
+  public Sumo(final boolean caseSensitive) throws IOException {
     this.caseSensitive = caseSensitive;
-    this.loadDeafultKifs();
+    loadDeafultKifs();
+  }
+
+  public Set<String> getConcepts() {
+    return graph.getNodes();
   }
 
   public boolean containsClass(String label) {
-    if (this.caseSensitive == false) {
+    if (caseSensitive == false) {
       label = label.toLowerCase();
     }
     return graph.containsClass(label);
   }
 
-  /**
-   * Wczytuje domyślny zestaw kifów znajdujący się w jar.
-   *
-   * @throws IOException
-   */
   private void loadDeafultKifs() throws IOException {
-    this.parseMapping(getClass().getResourceAsStream("/Merge.kif"));
-    this.parseMapping(getClass().getResourceAsStream("/Geography.kif"));
-    this.parseMapping(getClass().getResourceAsStream("/Mid-level-ontology.kif"));
-    this.parseMapping(getClass().getResourceAsStream("/Transportation.kif"));
-    this.parseMapping(getClass().getResourceAsStream("/Economy.kif"));
-    this.parseMapping(getClass().getResourceAsStream("/Cars.kif"));
-    this.parseMapping(getClass().getResourceAsStream("/naics.kif"));
-    this.parseMapping(getClass().getResourceAsStream("/Food.kif"));
-    this.parseMapping(getClass().getResourceAsStream("/Media.kif"));
-    this.parseMapping(getClass().getResourceAsStream("/TransportDetail.kif"));
-    this.parseMapping(getClass().getResourceAsStream("/Dining.kif"));
-    this.parseMapping(getClass().getResourceAsStream("/QoSontology.kif"));
-    this.parseMapping(getClass().getResourceAsStream("/MilitaryDevices.kif"));
-
+    parseMapping(getClass().getResourceAsStream("/Merge.kif"));
+    parseMapping(getClass().getResourceAsStream("/Geography.kif"));
+    parseMapping(getClass().getResourceAsStream("/Mid-level-ontology.kif"));
+    parseMapping(getClass().getResourceAsStream("/Transportation.kif"));
+    parseMapping(getClass().getResourceAsStream("/Economy.kif"));
+    parseMapping(getClass().getResourceAsStream("/Cars.kif"));
+    parseMapping(getClass().getResourceAsStream("/naics.kif"));
+    parseMapping(getClass().getResourceAsStream("/Food.kif"));
+    parseMapping(getClass().getResourceAsStream("/Media.kif"));
+    parseMapping(getClass().getResourceAsStream("/TransportDetail.kif"));
+    parseMapping(getClass().getResourceAsStream("/Dining.kif"));
+    parseMapping(getClass().getResourceAsStream("/QoSontology.kif"));
+    parseMapping(getClass().getResourceAsStream("/MilitaryDevices.kif"));
   }
 
-  private void parseMapping(InputStream mapping) throws IOException {
-    BufferedReader reader = new BufferedReader(new InputStreamReader(mapping));
+  private void parseMapping(final InputStream mapping) throws IOException {
+    final BufferedReader reader = new BufferedReader(new InputStreamReader(mapping));
     String line = reader.readLine();
     while (line != null) {
-      Matcher m = subclassRelPattern.matcher(line);
+      final Matcher m = subclassRelPattern.matcher(line);
       if (m.find()) {
-        String c1 = this.caseSensitive ? m.group(1) : m.group(1).toLowerCase();
-        String c2 = this.caseSensitive ? m.group(2) : m.group(2).toLowerCase();
-        this.graph.addConnection(c1, c2);
+        final String c1 = caseSensitive ? m.group(1) : m.group(1).toLowerCase();
+        final String c2 = caseSensitive ? m.group(2) : m.group(2).toLowerCase();
+        graph.addConnection(c1, c2);
       }
       line = reader.readLine();
     }
   }
 
-  /**
-   * Zwraca zbiór wszystkich (bezpośrednich i pośrednich) klas nadrzędnych dla wskazanej klasy.
-   *
-   * @return
-   */
-  public Set<String> getSuperclasses(String currentClass) {
-    return this.graph.getSuperclasses(currentClass);
+  public Set<String> getSuperclasses(final String currentClass) {
+    return graph.getSuperclasses(currentClass);
   }
 
-  public Set<String> getSubclasses(String upperClass) {
-    Set<String> subclasses = new HashSet<String>();
-    this.graph.getSubclasses(upperClass, subclasses);
+  public Set<String> getSubclasses(final String upperClass) {
+    final Set<String> subclasses = new HashSet<>();
+    graph.getSubclasses(upperClass, subclasses);
     return subclasses;
   }
 
-  public Set<String> getSubclasses(Set<String> classes) {
-    Set<String> subclasses = new HashSet<String>();
-    for (String cl : classes) {
-      this.graph.getSubclasses(cl, subclasses);
+  public Set<String> getSubclasses(final Set<String> classes) {
+    final Set<String> subclasses = new HashSet<>();
+    for (final String cl : classes) {
+      graph.getSubclasses(cl, subclasses);
     }
     return subclasses;
   }
 
   public boolean isSubclassOf(String subClass, String upperClass) {
-    if (this.caseSensitive == false) {
+    if (caseSensitive == false) {
       subClass = subClass.toLowerCase();
       upperClass = upperClass.toLowerCase();
     }
-    return this.graph.isSubclassOf(subClass, upperClass);
+    return graph.isSubclassOf(subClass, upperClass);
   }
 
-  public boolean isSubclassOf(Set<String> subclasses, String upperClass) {
-    if (this.caseSensitive == false) {
+  public boolean isSubclassOf(final Set<String> subclasses, String upperClass) {
+    if (caseSensitive == false) {
       upperClass = upperClass.toLowerCase();
     }
     for (String subClass : subclasses) {
-      if (this.caseSensitive == false) {
+      if (caseSensitive == false) {
         subClass = subClass.toLowerCase();
       }
       if (graph.isSubclassOf(subClass, upperClass)) {
@@ -124,7 +114,7 @@ public class Sumo {
   }
 
   public boolean isClassOrSubclassOf(String subClass, String upperClass) {
-    if (this.caseSensitive == false) {
+    if (caseSensitive == false) {
       subClass = subClass.toLowerCase();
       upperClass = upperClass.toLowerCase();
     }
@@ -133,14 +123,13 @@ public class Sumo {
     } else {
       return isSubclassOf(subClass, upperClass);
     }
-
   }
 
   public boolean isClassOrSubclassOf(Set<String> subclasses, String upperClass) {
-    if (this.caseSensitive == false) {
+    if (caseSensitive == false) {
       upperClass = upperClass.toLowerCase();
-      Set<String> subclassesLower = new HashSet<String>();
-      for (String cl : subclasses) {
+      final Set<String> subclassesLower = new HashSet<>();
+      for (final String cl : subclasses) {
         subclassesLower.add(cl.toLowerCase());
       }
       subclasses = subclassesLower;
@@ -150,7 +139,6 @@ public class Sumo {
     } else {
       return isSubclassOf(subclasses, upperClass);
     }
-
   }
 
 }

@@ -31,3 +31,17 @@ stuff/samples/pst20_00120445/,ann_annotations.xml#756619,niej,ppron3,ppron3:sg:g
 stuff/samples/pst20_00120445/,ann_annotations.xml#756624,Mieszko,subst,subst:sg:nom:m1,nam_liv_person,Mieszko III Stary,human,mention,pochowany Mieszko III,,,
 stuff/samples/pst20_00120445/,ann_annotations.xml#756622,krypcie,subst,subst:sg:loc:f,,,Room,mention,podziemnej krypcie,,,
 ```
+
+## sumo-superclasses
+
+Sample run:
+```bash
+./spatial-cli sumo-superclasses
+
+Concept: vehicle
+```
+
+Expected output:
+```bash
+Superclasses: artifact, transportationdevice, physical, device, entity, object
+```
