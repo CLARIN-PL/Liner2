@@ -43,19 +43,19 @@ public class Sumo {
   }
 
   private void loadDeafultKifs() throws IOException {
-    parseMapping(getClass().getResourceAsStream("/Merge.kif"));
-    parseMapping(getClass().getResourceAsStream("/Geography.kif"));
-    parseMapping(getClass().getResourceAsStream("/Mid-level-ontology.kif"));
-    parseMapping(getClass().getResourceAsStream("/Transportation.kif"));
-    parseMapping(getClass().getResourceAsStream("/Economy.kif"));
-    parseMapping(getClass().getResourceAsStream("/Cars.kif"));
-    parseMapping(getClass().getResourceAsStream("/naics.kif"));
-    parseMapping(getClass().getResourceAsStream("/Food.kif"));
-    parseMapping(getClass().getResourceAsStream("/Media.kif"));
-    parseMapping(getClass().getResourceAsStream("/TransportDetail.kif"));
-    parseMapping(getClass().getResourceAsStream("/Dining.kif"));
-    parseMapping(getClass().getResourceAsStream("/QoSontology.kif"));
-    parseMapping(getClass().getResourceAsStream("/MilitaryDevices.kif"));
+    parseMapping(getClass().getResourceAsStream("/sumo/Merge.kif"));
+    parseMapping(getClass().getResourceAsStream("/sumo/Geography.kif"));
+    parseMapping(getClass().getResourceAsStream("/sumo/Mid-level-ontology.kif"));
+    parseMapping(getClass().getResourceAsStream("/sumo/Transportation.kif"));
+    parseMapping(getClass().getResourceAsStream("/sumo/Economy.kif"));
+    parseMapping(getClass().getResourceAsStream("/sumo/Cars.kif"));
+    parseMapping(getClass().getResourceAsStream("/sumo/naics.kif"));
+    parseMapping(getClass().getResourceAsStream("/sumo/Food.kif"));
+    parseMapping(getClass().getResourceAsStream("/sumo/Media.kif"));
+    parseMapping(getClass().getResourceAsStream("/sumo/TransportDetail.kif"));
+    parseMapping(getClass().getResourceAsStream("/sumo/Dining.kif"));
+    parseMapping(getClass().getResourceAsStream("/sumo/QoSontology.kif"));
+    parseMapping(getClass().getResourceAsStream("/sumo/MilitaryDevices.kif"));
   }
 
   private void parseMapping(final InputStream mapping) throws IOException {

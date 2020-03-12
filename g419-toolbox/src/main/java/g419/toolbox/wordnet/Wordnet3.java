@@ -1,11 +1,14 @@
 package g419.toolbox.wordnet;
 
 import com.google.common.collect.Maps;
-import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.*;
-
+import com.google.common.io.Files;
+import g419.toolbox.files.Unzip;
 import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
+import org.apache.commons.io.FileUtils;
+import pl.wroc.pwr.ci.plwordnet.plugins.princetonadapter.da.*;
 
 /**
  * Następca Wordnet i Wordnet2.
@@ -26,78 +29,78 @@ public class Wordnet3 {
 
   String wordnet_path;
 
-  /**
-   * Tworzy obiekt na podstawie plików w formacie Princeton.
-   *
-   * @param path Ścieżka do katalogu z plikami w formacie Princeton.
-   */
-  public Wordnet3(String path) {
+  public Wordnet3() throws IOException {
+    final String zipFilename = "plwordnet_2_3_pwn_format.zip";
+    final File tmpFolder = Files.createTempDir();
+    try {
+      final File tmpZipFilename = new File(tmpFolder, zipFilename);
+      final InputStream zip = getClass().getResourceAsStream("/plwordnet23pwn.zip");
+      FileUtils.copyInputStreamToFile(zip, tmpZipFilename);
+      Unzip.unzip(tmpZipFilename.toString(), tmpFolder.toString());
+      load(new File(tmpFolder, "plwordnet_2_3_pwn_format").toString());
+    } catch (final IOException ex) {
+      throw ex;
+    } finally {
+      FileUtils.deleteDirectory(tmpFolder);
+    }
+  }
+
+  public Wordnet3(final String path) {
+    load(path);
+  }
+
+  private void load(final String path) {
     wordnet_path = path;
     try {
       if (!new File(path).exists()) {
         throw new FileNotFoundException("Invalid database directory: " + path);
       }
-      for (String pos[] : poses) {
-        String filename = path + File.separator + "index." + pos[0];
+      for (final String[] pos : poses) {
+        final String filename = path + File.separator + "index." + pos[0];
         if ((new File(filename)).exists()) {
           index.put(pos[1], readIndexFile(filename));
         }
       }
-      for (String pos[] : poses) {
-        String filename = path + File.separator + "data." + pos[0];
+      for (final String[] pos : poses) {
+        final String filename = path + File.separator + "data." + pos[0];
         if ((new File(filename)).exists()) {
           data.put(pos[1], readDataFile(filename, pos[1]));
         }
       }
-    } catch (Exception e) {
+    } catch (final Exception e) {
       e.printStackTrace();
     }
   }
 
-  /**
-   * @return
-   */
+
   public List<PrincetonDataRaw> getSynsets() {
-    List<PrincetonDataRaw> synsets = new ArrayList<PrincetonDataRaw>();
-    for (Map<String, PrincetonDataRaw> map : this.data.values()) {
-      synsets.addAll(map.values());
-    }
-    return synsets;
+    return data.values().stream()
+        .map(HashMap::values)
+        .flatMap(Collection::stream)
+        .collect(Collectors.toList());
   }
 
-  /**
-   * @param filename
-   * @return
-   * @throws IOException
-   */
-  public HashMap<String, PrincetonIndexRaw> readIndexFile(String filename) throws IOException {
-    HashMap<String, PrincetonIndexRaw> units = new HashMap<String, PrincetonIndexRaw>();
+  public HashMap<String, PrincetonIndexRaw> readIndexFile(final String filename) throws IOException {
+    final HashMap<String, PrincetonIndexRaw> units = new HashMap<>();
 
-    BufferedReader r = new BufferedReader(new FileReader(filename));
+    final BufferedReader r = new BufferedReader(new FileReader(filename));
 
     String line = null;
     while ((line = r.readLine()) != null) {
-      // Skip lines with comments. Lines with comments starts with two spaces.
       if (line.startsWith("  ")) {
         continue;
       }
-      // Parse line
-      PrincetonIndexRaw raw = PrincetonParser.parseIndexLine(line);
+      final PrincetonIndexRaw raw = PrincetonParser.parseIndexLine(line);
       units.put(raw.lemma, raw);
     }
     r.close();
     return units;
   }
 
-  /**
-   * @param filename
-   * @param pos
-   * @return
-   * @throws IOException
-   */
-  public HashMap<String, PrincetonDataRaw> readDataFile(String filename, String pos) throws IOException {
-    BufferedReader r = new BufferedReader(new FileReader(filename));
-    HashMap<String, PrincetonDataRaw> data = new HashMap<String, PrincetonDataRaw>();
+  public HashMap<String, PrincetonDataRaw> readDataFile(final String filename,
+                                                        final String pos) throws IOException {
+    final BufferedReader r = new BufferedReader(new FileReader(filename));
+    final HashMap<String, PrincetonDataRaw> data = new HashMap<>();
 
     String line = null;
     while ((line = r.readLine()) != null) {
@@ -106,7 +109,7 @@ public class Wordnet3 {
         continue;
       }
       // Parse line
-      PrincetonDataRaw d = PrincetonParser.parseDataLine(line);
+      final PrincetonDataRaw d = PrincetonParser.parseDataLine(line);
       d.pos = pos;
       data.put(d.offset, d);
     }
@@ -116,32 +119,20 @@ public class Wordnet3 {
     return data;
   }
 
-  /**
-   * Zwraca listę jednostek leksykalnych przypisanych do danego synsetu.
-   *
-   * @param synset
-   * @return
-   */
-  public List<String> getLexicalUnits(PrincetonDataRaw synset) {
-    List<String> lemmas = new ArrayList<String>();
-    for (PrincetonDataLemmaRaw lemma : synset.lemmas) {
+  public List<String> getLexicalUnits(final PrincetonDataRaw synset) {
+    final List<String> lemmas = new ArrayList<>();
+    for (final PrincetonDataLemmaRaw lemma : synset.lemmas) {
       lemmas.add(lemma.lemma);
     }
     return lemmas;
   }
 
-  /**
-   * Zwraca zbiór systenów bezpośrednio połączonych relacją typu relation z synstem synset.
-   *
-   * @param synset   Obiekt reprezentujący synset
-   * @param relation Typ relacji
-   * @return
-   */
-  public Set<PrincetonDataRaw> getDirectSynsets(PrincetonDataRaw synset, String relation) {
-    Set<PrincetonDataRaw> synstens = new HashSet<PrincetonDataRaw>();
-    for (PrincetonDataRelationRaw rel : synset.relations) {
+  public Set<PrincetonDataRaw> getDirectSynsets(final PrincetonDataRaw synset,
+                                                final String relation) {
+    final Set<PrincetonDataRaw> synstens = new HashSet<>();
+    for (final PrincetonDataRelationRaw rel : synset.relations) {
       if (rel.type.startsWith(relation)) {
-        PrincetonDataRaw direct = data.get(rel.pos).get(rel.offset);
+        final PrincetonDataRaw direct = data.get(rel.pos).get(rel.offset);
         if (direct != null) {
           synstens.add(direct);
         }
@@ -151,46 +142,30 @@ public class Wordnet3 {
 
   }
 
-  /**
-   * Zwraca zbiór wszystkich systenów połączonych (bezpośrednio lub pośrednio) relacją
-   * typu relation z synstem synset.
-   *
-   * @param synset   Obiekt reprezentujący synset
-   * @param relation Typ relacji
-   * @return
-   */
-  public Set<PrincetonDataRaw> getAllSynsets(PrincetonDataRaw synset, String relation) {
-    Set<PrincetonDataRaw> synsets = new HashSet<PrincetonDataRaw>();
-    this.getAllSynsets(synset, relation, synsets);
+  public Set<PrincetonDataRaw> getAllSynsets(final PrincetonDataRaw synset,
+                                             final String relation) {
+    final Set<PrincetonDataRaw> synsets = new HashSet<>();
+    getAllSynsets(synset, relation, synsets);
     return synsets;
 
   }
 
-  /**
-   * Zwraca zbiór wszystkich systenów połączonych (bezpośrednio lub pośrednio) relacją
-   * typu relation z synstem synset.
-   *
-   * @param synset   Obiekt reprezentujący synset
-   * @param relation Typ relacji
-   */
-  public void getAllSynsets(PrincetonDataRaw synset, String relation, Set<PrincetonDataRaw> synsets) {
-    for (PrincetonDataRaw synsetByRel : this.getDirectSynsets(synset, relation)) {
+  public void getAllSynsets(final PrincetonDataRaw synset,
+                            final String relation,
+                            final Set<PrincetonDataRaw> synsets) {
+    for (final PrincetonDataRaw synsetByRel : getDirectSynsets(synset, relation)) {
       if (!synsets.contains(synsetByRel)) {
         synsets.add(synsetByRel);
-        this.getAllSynsets(synsetByRel, relation, synsets);
+        getAllSynsets(synsetByRel, relation, synsets);
       }
     }
   }
 
-  /**
-   * @param word
-   * @return
-   */
-  public List<PrincetonDataRaw> getSynsets(String word) {
-    ArrayList<PrincetonDataRaw> synsets = new ArrayList<PrincetonDataRaw>();
-    for (Entry<String, HashMap<String, PrincetonIndexRaw>> units : index.entrySet()) {
+  public List<PrincetonDataRaw> getSynsets(final String word) {
+    final ArrayList<PrincetonDataRaw> synsets = new ArrayList<>();
+    for (final Entry<String, HashMap<String, PrincetonIndexRaw>> units : index.entrySet()) {
       if (units.getValue().containsKey(word)) {
-        for (String offset : units.getValue().get(word).synset_offsets) {
+        for (final String offset : units.getValue().get(word).synset_offsets) {
           synsets.add(data.get(units.getKey()).get(offset));
         }
       }
@@ -198,19 +173,12 @@ public class Wordnet3 {
     return synsets;
   }
 
-  /**
-   * Zwraca synsety zawierające jednostkę leksykalną o lemacie word i sensie sense.
-   *
-   * @param word
-   * @param sense
-   * @return
-   */
-  public List<PrincetonDataRaw> getSynsets(String word, int sense) {
-    ArrayList<PrincetonDataRaw> synsets = new ArrayList<PrincetonDataRaw>();
-    for (Entry<String, HashMap<String, PrincetonIndexRaw>> units : index.entrySet()) {
+  public List<PrincetonDataRaw> getSynsets(final String word, final int sense) {
+    final ArrayList<PrincetonDataRaw> synsets = new ArrayList<>();
+    for (final Entry<String, HashMap<String, PrincetonIndexRaw>> units : index.entrySet()) {
       if (units.getValue().containsKey(word)) {
         if (units.getValue().get(word).synset_offsets.size() >= sense) {
-          String offset = units.getValue().get(word).synset_offsets.get(sense - 1);
+          final String offset = units.getValue().get(word).synset_offsets.get(sense - 1);
           synsets.add(data.get(units.getKey()).get(offset));
         }
       }
@@ -218,44 +186,24 @@ public class Wordnet3 {
     return synsets;
   }
 
-  /**
-   * @param synset
-   * @return
-   */
-  public Set<PrincetonDataRaw> getDirectHypernyms(PrincetonDataRaw synset) {
-    return this.getDirectSynsets(synset, Wordnet3.REL_HYPERNYM);
+  public Set<PrincetonDataRaw> getDirectHypernyms(final PrincetonDataRaw synset) {
+    return getDirectSynsets(synset, Wordnet3.REL_HYPERNYM);
   }
 
-  /**
-   * @param synset
-   * @return
-   */
-  public Set<PrincetonDataRaw> getDirectHyponyms(PrincetonDataRaw synset) {
-    return this.getDirectSynsets(synset, Wordnet3.REL_HYPONYM);
+  public Set<PrincetonDataRaw> getDirectHyponyms(final PrincetonDataRaw synset) {
+    return getDirectSynsets(synset, Wordnet3.REL_HYPONYM);
   }
 
-  /**
-   * @param synset
-   * @return
-   */
-  public Set<PrincetonDataRaw> getDirectHolonyms(PrincetonDataRaw synset) {
-    return this.getDirectSynsets(synset, Wordnet3.REL_HOLONYM);
+  public Set<PrincetonDataRaw> getDirectHolonyms(final PrincetonDataRaw synset) {
+    return getDirectSynsets(synset, Wordnet3.REL_HOLONYM);
   }
 
-  /**
-   * @param synset
-   * @return
-   */
-  public Set<PrincetonDataRaw> getDirectMeronyms(PrincetonDataRaw synset) {
-    return this.getDirectSynsets(synset, Wordnet3.REL_MERONYM);
+  public Set<PrincetonDataRaw> getDirectMeronyms(final PrincetonDataRaw synset) {
+    return getDirectSynsets(synset, Wordnet3.REL_MERONYM);
   }
 
-  /**
-   * @param synset
-   * @return
-   */
-  public Set<PrincetonDataRaw> getAllHolonyms(PrincetonDataRaw synset) {
-    return this.getAllSynsets(synset, Wordnet3.REL_HOLONYM);
+  public Set<PrincetonDataRaw> getAllHolonyms(final PrincetonDataRaw synset) {
+    return getAllSynsets(synset, Wordnet3.REL_HOLONYM);
   }
 
   /**
@@ -268,20 +216,23 @@ public class Wordnet3 {
    *
    * @param synset
    */
-  public void getHolonyms(PrincetonDataRaw synset, Set<PrincetonDataRaw> holonyms, boolean takeHypernyms, boolean takeHyponyms) {
-    Set<PrincetonDataRaw> directHypernyms = this.getDirectHypernyms(synset);
-    Set<PrincetonDataRaw> directHolonyms = this.getDirectHolonyms(synset);
+  public void getHolonyms(final PrincetonDataRaw synset,
+                          final Set<PrincetonDataRaw> holonyms,
+                          final boolean takeHypernyms,
+                          final boolean takeHyponyms) {
+    final Set<PrincetonDataRaw> directHypernyms = getDirectHypernyms(synset);
+    final Set<PrincetonDataRaw> directHolonyms = getDirectHolonyms(synset);
 
-    for (PrincetonDataRaw synsetLinked : directHolonyms) {
+    for (final PrincetonDataRaw synsetLinked : directHolonyms) {
       if (!holonyms.contains(synsetLinked) && synsetLinked.domain.equals(synset.domain)) {
         holonyms.add(synsetLinked);
         //for ( PrincetonDataRaw)
-        this.getHolonyms(synsetLinked, holonyms, true, true);
+        getHolonyms(synsetLinked, holonyms, true, true);
         if (takeHyponyms) {
-          for (PrincetonDataRaw hyponym : this.getDirectHyponyms(synsetLinked)) {
+          for (final PrincetonDataRaw hyponym : getDirectHyponyms(synsetLinked)) {
             if (!(holonyms.contains(hyponym)) && hyponym.domain.equals(synset.domain)) {
               holonyms.add(hyponym);
-              this.getHolonyms(hyponym, holonyms, false, true);
+              getHolonyms(hyponym, holonyms, false, true);
             }
           }
         }
@@ -289,20 +240,19 @@ public class Wordnet3 {
     }
 
     if (takeHypernyms) {
-      for (PrincetonDataRaw synsetLinked : directHypernyms) {
+      for (final PrincetonDataRaw synsetLinked : directHypernyms) {
         if (!holonyms.contains(synsetLinked) && synsetLinked.domain.equals(synset.domain)) {
           holonyms.add(synsetLinked);
-          //for ( PrincetonDataRaw)
-          this.getHolonyms(synsetLinked, holonyms, true, false);
+          getHolonyms(synsetLinked, holonyms, true, false);
         }
       }
     }
   }
 
 
-  public Set<PrincetonDataRaw> getHolonyms(PrincetonDataRaw synset) {
-    Set<PrincetonDataRaw> holonyms = new HashSet<PrincetonDataRaw>();
-    this.getHolonyms(synset, holonyms, true, true);
+  public Set<PrincetonDataRaw> getHolonyms(final PrincetonDataRaw synset) {
+    final Set<PrincetonDataRaw> holonyms = new HashSet<>();
+    getHolonyms(synset, holonyms, true, true);
     return holonyms;
   }
 

@@ -1,13 +1,12 @@
 package g419.spatial.action;
 
+import com.google.common.collect.Lists;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import g419.corpus.structure.*;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.liner2.core.Liner2;
-import g419.liner2.core.chunker.IobberChunker;
 import g419.liner2.core.features.tokens.ClassFeature;
 import g419.liner2.core.tools.parser.MaltParser;
 import g419.liner2.core.tools.parser.MaltSentence;
@@ -18,12 +17,12 @@ import g419.spatial.structure.SpatialRelationSchema;
 import g419.toolbox.sumo.Sumo;
 import g419.toolbox.wordnet.NamToWordnet;
 import g419.toolbox.wordnet.Wordnet3;
+import java.util.*;
+import java.util.regex.Pattern;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.log4j.Logger;
-
-import java.util.*;
-import java.util.regex.Pattern;
+import org.maltparser.core.exception.MaltChainedException;
 
 public class ActionDiscoverSchema extends Action {
 
@@ -41,11 +40,18 @@ public class ActionDiscoverSchema extends Action {
   private final Logger logger = Logger.getLogger("ActionSpatial");
   private final Set<String> objectPos = new HashSet<>();
 
+  Sumo sumo;
+  Wordnet3 wordnet;
+  NamToWordnet nam2wordnet;
+  List<IRelationFilter> filters;
+  MaltParser malt;
+  RelationFilterSemanticPattern semanticFilter;
+
   /* Parametry, które będzie trzeba wyciągnąć do pliku ini. */
-  private final String config_liner2_model = "/home/czuk/nlp/eclipse/workspace_liner2/models-released/liner2.5/liner25-model-pack-ibl/config-n82.ini";
+  private final String config_liner2_model = "liner25-model-pack-ibl/config-n82.ini";
   private final String config_iobber_model = "model-kpwr11-H";
   private final String config_iobber_config = "kpwr.ini";
-  private final String wordnet = "/nlp/resources/plwordnet/plwordnet_2_3_mod/plwordnet_2_3_pwn_format/";
+  private final String wordnetPath = "/nlp/resources/plwordnet/plwordnet_2_3_mod/plwordnet_2_3_pwn_format/";
 
   public ActionDiscoverSchema() {
     super("discover-schema");
@@ -71,11 +77,6 @@ public class ActionDiscoverSchema extends Action {
         .desc("path to the input file").longOpt(OPTION_FILENAME_LONG).build();
   }
 
-  /**
-   * Parse action options
-   *
-   * @param args The array with command line parameters
-   */
   @Override
   public void parseOptions(final CommandLine line) throws Exception {
     filename = line.getOptionValue(ActionDiscoverSchema.OPTION_FILENAME);
@@ -84,16 +85,12 @@ public class ActionDiscoverSchema extends Action {
 
   @Override
   public void run() throws Exception {
-    final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(filename, inputFormat);
-    Document document = null;
+    sumo = new Sumo();
+    wordnet = new Wordnet3(wordnetPath);
+    nam2wordnet = new NamToWordnet(wordnet);
+    semanticFilter = new RelationFilterSemanticPattern();
 
-    final Sumo sumo = new Sumo();
-    final Wordnet3 wordnet = new Wordnet3(this.wordnet);
-    final NamToWordnet nam2wordnet = new NamToWordnet(wordnet);
-
-    final RelationFilterSemanticPattern semanticFilter = new RelationFilterSemanticPattern();
-
-    final List<IRelationFilter> filters = new LinkedList<>();
+    filters = Lists.newArrayList();
     filters.add(new RelationFilterSpatialIndicator());
     filters.add(new RelationFilterPronoun());
     filters.add(semanticFilter);
@@ -101,139 +98,139 @@ public class ActionDiscoverSchema extends Action {
     filters.add(new RelationFilterLandmarkTrajectorException());
     filters.add(new RelationFilterHolonyms(wordnet, nam2wordnet));
 
-    final IobberChunker iobber = new IobberChunker("", config_iobber_model, config_iobber_config);
-    final Liner2 liner2 = new Liner2(config_liner2_model);
+//    final IobberChunker iobber = new IobberChunker("", config_iobber_model, config_iobber_config);
+//    final Liner2 liner2 = new Liner2(config_liner2_model);
+//    liner2.chunkInPlace(document);
+//    iobber.chunkInPlace(document);
 
-    final MaltParser malt = new MaltParser("/nlp/resources/maltparser/skladnica_liblinear_stackeager_final.mco");
+    malt = new MaltParser("/nlp/resources/maltparser/skladnica_liblinear_stackeager_final.mco");
 
-    while ((document = reader.nextDocument()) != null) {
-      System.out.println("=======================================");
-      //Logger.getLogger(this.getClass()).info("\nDocument: " + document.getName());
-      System.out.println("Document: " + document.getName());
-      System.out.println("=======================================");
+    try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(filename, inputFormat)) {
+      Document document = null;
+      while ((document = reader.nextDocument()) != null) {
+        getLogger().info("Document: {}", document.getName());
+        processDocument(document);
+      }
+    }
+  }
 
-      //liner2.chunkInPlace(document);
-      //iobber.chunkInPlace(document);
+  private void processDocument(final Document document) throws MaltChainedException {
+    for (final Paragraph paragraph : document.getParagraphs()) {
+      for (final Sentence sentence : paragraph.getSentences()) {
 
-      for (final Paragraph paragraph : document.getParagraphs()) {
-        for (final Sentence sentence : paragraph.getSentences()) {
+        splitPrepNg(sentence);
 
-          splitPrepNg(sentence);
+        final MaltSentence maltSentence = new MaltSentence(sentence, MappingNkjpToConllPos.get());
+        malt.parse(maltSentence);
 
-          final MaltSentence maltSentence = new MaltSentence(sentence, MappingNkjpToConllPos.get());
-          malt.parse(maltSentence);
-
-          /* Zaindeksuj frazy np */
-          final Map<Integer, Annotation> chunkNpTokens = new HashMap<>();
-          final Map<Integer, Annotation> chunkVerbfinTokens = new HashMap<>();
-          final Map<Integer, Annotation> chunkPrepTokens = new HashMap<>();
-          final Map<Integer, Annotation> chunkPpasTokens = new HashMap<>();
-          final Map<Integer, Annotation> chunkPactTokens = new HashMap<>();
-          for (final Annotation an : sentence.getChunks()) {
-            if (an.getType().equals("chunk_np")) {
-              for (Integer n = an.getBegin(); n <= an.getEnd(); n++) {
-                chunkNpTokens.put(n, an);
-              }
-            } else if (an.getType().equals("Prep")) {
-              for (Integer n = an.getBegin(); n <= an.getEnd(); n++) {
-                chunkPrepTokens.put(n, an);
-              }
-            } else if (an.getType().equals("Pact")) {
-              for (Integer n = an.getBegin(); n <= an.getEnd(); n++) {
-                chunkPactTokens.put(n, an);
-              }
-            } else if (an.getType().equals("Ppas")) {
-              for (Integer n = an.getBegin(); n <= an.getEnd(); n++) {
-                chunkPpasTokens.put(n, an);
-              }
-            } else if (an.getType().equals("Verbfin")) {
-              for (Integer n = an.getBegin(); n <= an.getEnd(); n++) {
-                chunkVerbfinTokens.put(n, an);
-              }
-            }
-          }
-
-          /* Zaindeksuj pierwsze tokeny anotacji NG* */
-          final Map<Integer, List<Annotation>> mapTokenIdToAnnotations = new HashMap<>();
-          for (final Annotation an : sentence.getAnnotations(annotationsNg)) {
+        /* Zaindeksuj frazy np */
+        final Map<Integer, Annotation> chunkNpTokens = new HashMap<>();
+        final Map<Integer, Annotation> chunkVerbfinTokens = new HashMap<>();
+        final Map<Integer, Annotation> chunkPrepTokens = new HashMap<>();
+        final Map<Integer, Annotation> chunkPpasTokens = new HashMap<>();
+        final Map<Integer, Annotation> chunkPactTokens = new HashMap<>();
+        for (final Annotation an : sentence.getChunks()) {
+          if (an.getType().equals("chunk_np")) {
             for (Integer n = an.getBegin(); n <= an.getEnd(); n++) {
-              if (!mapTokenIdToAnnotations.containsKey(n)) {
-                mapTokenIdToAnnotations.put(n, new LinkedList<>());
+              chunkNpTokens.put(n, an);
+            }
+          } else if (an.getType().equals("Prep")) {
+            for (Integer n = an.getBegin(); n <= an.getEnd(); n++) {
+              chunkPrepTokens.put(n, an);
+            }
+          } else if (an.getType().equals("Pact")) {
+            for (Integer n = an.getBegin(); n <= an.getEnd(); n++) {
+              chunkPactTokens.put(n, an);
+            }
+          } else if (an.getType().equals("Ppas")) {
+            for (Integer n = an.getBegin(); n <= an.getEnd(); n++) {
+              chunkPpasTokens.put(n, an);
+            }
+          } else if (an.getType().equals("Verbfin")) {
+            for (Integer n = an.getBegin(); n <= an.getEnd(); n++) {
+              chunkVerbfinTokens.put(n, an);
+            }
+          }
+        }
+
+        /* Zaindeksuj pierwsze tokeny anotacji NG* */
+        final Map<Integer, List<Annotation>> mapTokenIdToAnnotations = new HashMap<>();
+        for (final Annotation an : sentence.getAnnotations(annotationsNg)) {
+          for (Integer n = an.getBegin(); n <= an.getEnd(); n++) {
+            if (!mapTokenIdToAnnotations.containsKey(n)) {
+              mapTokenIdToAnnotations.put(n, new LinkedList<>());
+            }
+            mapTokenIdToAnnotations.get(n).add(an);
+          }
+        }
+
+
+        final List<SpatialExpression> relations = new LinkedList<>();
+
+        // Second Iteration only
+
+        relations.addAll(findCandidatesFirstNgAnyPrepNg(sentence, mapTokenIdToAnnotations, chunkNpTokens, chunkPrepTokens));
+        relations.addAll(findCandidatesByMalt(sentence, maltSentence));
+
+
+        relations.addAll(findCandidatesNgPpasPrepNg(
+            sentence, mapTokenIdToAnnotations, chunkNpTokens, chunkPpasTokens, chunkPrepTokens));
+        relations.addAll(findCandidatesNgPactPrepNg(
+            sentence, mapTokenIdToAnnotations, chunkNpTokens, chunkPactTokens, chunkPrepTokens));
+
+        replaceNgWithNames(sentence, relations);
+
+        if (relations.size() > 0) {
+          for (final SpatialExpression rel : relations) {
+
+            boolean pass = true;
+
+            for (final IRelationFilter filter : filters) {
+              if (!filter.pass(rel)) {
+                System.out.println("- " + rel.toString() + "\t" + filter.getClass().getSimpleName());
+                if (filter.getClass() == RelationFilterSemanticPattern.class) {
+                  final Set<String> trajectorConcepts = rel.getTrajectorConcepts();
+                  final Set<String> landmarkConcepts = rel.getLandmarkConcepts();
+                  System.out.println("\t\t\tTrajector = " + rel.getTrajector() + " => " + String.join(", ", trajectorConcepts));
+                  System.out.println("\t\t\tLandmark  = " + rel.getLandmark() + " => " + String.join(", ", landmarkConcepts));
+
+                  final Set<String> trajectorConceptsSuper = new HashSet<>();
+                  final Set<String> landmarkConceptsSuper = new HashSet<>();
+
+                  for (final String concept : trajectorConcepts) {
+                    trajectorConceptsSuper.addAll(sumo.getSuperclasses(concept));
+                  }
+
+                  for (final String concept : landmarkConcepts) {
+                    landmarkConceptsSuper.addAll(sumo.getSuperclasses(concept));
+                  }
+
+                  if ((trajectorConceptsSuper.contains("physical")
+                      || trajectorConceptsSuper.contains("object")) && landmarkConceptsSuper.contains("physical")) {
+                    System.out.println("PHYSICAL/OBJECT");
+                  }
+                }
+                pass = false;
+                break;
               }
-              mapTokenIdToAnnotations.get(n).add(an);
+            }
+
+            if (pass) {
+              final StringBuilder sb = new StringBuilder();
+              for (final SpatialRelationSchema p : semanticFilter.match(rel)) {
+                if (sb.length() > 0) {
+                  sb.append(" & ");
+                }
+                sb.append(p.getName());
+              }
+
+              System.out.println("+ " + rel.toString());
             }
           }
 
-
-          final List<SpatialExpression> relations = new LinkedList<>();
-
-          // Second Iteration only
-
-          relations.addAll(findCandidatesFirstNgAnyPrepNg(sentence, mapTokenIdToAnnotations, chunkNpTokens, chunkPrepTokens));
-          relations.addAll(findCandidatesByMalt(sentence, maltSentence));
-
-
-          relations.addAll(findCandidatesNgPpasPrepNg(
-              sentence, mapTokenIdToAnnotations, chunkNpTokens, chunkPpasTokens, chunkPrepTokens));
-          relations.addAll(findCandidatesNgPactPrepNg(
-              sentence, mapTokenIdToAnnotations, chunkNpTokens, chunkPactTokens, chunkPrepTokens));
-
-          replaceNgWithNames(sentence, relations);
-
-          if (relations.size() > 0) {
-            for (final SpatialExpression rel : relations) {
-
-              boolean pass = true;
-
-              for (final IRelationFilter filter : filters) {
-                if (!filter.pass(rel)) {
-                  System.out.println("- " + rel.toString() + "\t" + filter.getClass().getSimpleName());
-                  if (filter.getClass() == RelationFilterSemanticPattern.class) {
-                    final Set<String> trajectorConcepts = rel.getTrajectorConcepts();
-                    final Set<String> landmarkConcepts = rel.getLandmarkConcepts();
-                    System.out.println("\t\t\tTrajector = " + rel.getTrajector() + " => " + String.join(", ", trajectorConcepts));
-                    System.out.println("\t\t\tLandmark  = " + rel.getLandmark() + " => " + String.join(", ", landmarkConcepts));
-
-                    final Set<String> trajectorConceptsSuper = new HashSet<>();
-                    final Set<String> landmarkConceptsSuper = new HashSet<>();
-
-                    for (final String concept : trajectorConcepts) {
-                      trajectorConceptsSuper.addAll(sumo.getSuperclasses(concept));
-                    }
-
-                    for (final String concept : landmarkConcepts) {
-                      landmarkConceptsSuper.addAll(sumo.getSuperclasses(concept));
-                    }
-
-                    if ((trajectorConceptsSuper.contains("physical")
-                        || trajectorConceptsSuper.contains("object")) && landmarkConceptsSuper.contains("physical")) {
-                      System.out.println("PHYSICAL/OBJECT");
-                    }
-                  }
-                  pass = false;
-                  break;
-                }
-              }
-
-              if (pass) {
-                final StringBuilder sb = new StringBuilder();
-                for (final SpatialRelationSchema p : semanticFilter.match(rel)) {
-                  if (sb.length() > 0) {
-                    sb.append(" & ");
-                  }
-                  sb.append(p.getName());
-                }
-
-                System.out.println("+ " + rel.toString());
-              }
-            }
-
-          }
         }
       }
     }
-
-    reader.close();
   }
 
   /**
@@ -782,10 +779,11 @@ public class ActionDiscoverSchema extends Action {
    *
    * @param sentence
    */
-  public List<SpatialExpression> findCandidatesPrepNgVerbfinNg(final Sentence sentence,
-                                                               final Map<Integer, List<Annotation>> mapTokenIdToAnnotations,
-                                                               final Map<Integer, Annotation> chunkVerbfinTokens,
-                                                               final Map<Integer, Annotation> chunkPrepTokens) {
+  public List<SpatialExpression> findCandidatesPrepNgVerbfinNg(
+      final Sentence sentence,
+      final Map<Integer, List<Annotation>> mapTokenIdToAnnotations,
+      final Map<Integer, Annotation> chunkVerbfinTokens,
+      final Map<Integer, Annotation> chunkPrepTokens) {
     final List<SpatialExpression> relations = new LinkedList<>();
     /* Szukaj wzorców prep NG* NG* */
     for (final Annotation an : sentence.getAnnotations(annotationsPrep)) {
@@ -994,7 +992,9 @@ public class ActionDiscoverSchema extends Action {
    * @param preposition
    * @return
    */
-  private List<SpatialExpression> generateAllCombinations(final String type, final List<Annotation> trajectors, final List<Annotation> landmarks, final Annotation preposition) {
+  private List<SpatialExpression> generateAllCombinations(
+      final String type, final List<Annotation> trajectors,
+      final List<Annotation> landmarks, final Annotation preposition) {
     final List<SpatialExpression> relations = new ArrayList<>();
     if (trajectors != null && landmarks != null) {
       for (final Annotation trajector : trajectors) {
