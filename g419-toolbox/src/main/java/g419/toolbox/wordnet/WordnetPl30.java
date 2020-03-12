@@ -18,6 +18,8 @@ public class WordnetPl30 extends WordnetPl {
         final InputStream streamGz = new GZIPInputStream(stream)
     ) {
       wordnet = WordnetXmlReader.load(streamGz);
+      wordnet.updateLemmaToSynsetIndex();
+      wordnet.updateSynsetDepth();
     }
     return wordnet;
   }

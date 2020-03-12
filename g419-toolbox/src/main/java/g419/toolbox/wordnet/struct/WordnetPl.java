@@ -1,8 +1,10 @@
 package g419.toolbox.wordnet.struct;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Queues;
 import com.google.common.collect.Sets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class WordnetPl {
 
@@ -11,6 +13,7 @@ public class WordnetPl {
   Map<String, List<LexicalRelation>> unitRelations = Maps.newHashMap();
 
   Map<Integer, Map<Synset, Set<Synset>>> synsetRelations = Maps.newHashMap();
+  Map<String, Set<Synset>> lemmaToSynset = Maps.newHashMap();
 
   public void addLexicalUnit(final LexicalUnit unit) {
     units.put(unit.getId(), unit);
@@ -52,6 +55,37 @@ public class WordnetPl {
         .add(parent);
   }
 
+  public void updateLemmaToSynsetIndex() {
+    lemmaToSynset.clear();
+    synsets.values().forEach(synset ->
+        synset.getLexicalUnits()
+            .forEach(lu -> lemmaToSynset
+                .computeIfAbsent(lu.getName(), n -> Sets.newHashSet())
+                .add(synset)));
+  }
+
+  public void updateSynsetDepth() {
+    synsets.values().forEach(s -> s.setDepth(0));
+    final Queue<Synset> queue = Queues.newConcurrentLinkedQueue();
+    getRoots().stream()
+        .peek(s -> s.setDepth(1))
+        .map(this::getDirectHiponyms)
+        .forEach(queue::addAll);
+    while (!queue.isEmpty()) {
+      final Synset synset = queue.poll();
+      if (synset.getDepth() == 0) {
+        final int depth = getDirectHypernyms(synset).stream()
+            .mapToInt(Synset::getDepth)
+            .filter(d -> d > 0)
+            .min().getAsInt();
+        synset.setDepth(depth + 1);
+      }
+      queue.addAll(getDirectHiponyms(synset).stream()
+          .filter(s -> s.getDepth() == 0)
+          .collect(Collectors.toSet()));
+    }
+  }
+
   public int getSynsetRelationCount() {
     return synsetRelations.values().stream().mapToInt(Map::size).sum();
   }
@@ -62,5 +96,71 @@ public class WordnetPl {
 
   public Set<Integer> getSynsetRelationTypes() {
     return synsetRelations.keySet();
+  }
+
+  public Set<Synset> getSynsetsWithLemma(final String lemma) {
+    return lemmaToSynset.getOrDefault(lemma, Collections.emptySet());
+  }
+
+  public Set<Synset> getAllHypernyms(final Synset synset) {
+    final Queue<Synset> queue = Queues.newConcurrentLinkedQueue(getDirectHypernyms(synset));
+    final Set<Synset> hypernyms = Sets.newHashSet(queue);
+    while (!queue.isEmpty()) {
+      final Synset next = queue.poll();
+      getDirectHypernyms(next)
+          .stream()
+          .filter(s -> !hypernyms.contains(s))
+          .peek(hypernyms::add)
+          .forEach(queue::add);
+    }
+    return hypernyms;
+  }
+
+  public Set<Synset> getDirectHypernyms(final Synset synset) {
+    return synsetRelations
+        .getOrDefault(11, Collections.emptyMap())
+        .getOrDefault(synset, Collections.emptySet());
+  }
+
+  public Set<Synset> getDirectHiponyms(final Synset synset) {
+    return synsetRelations
+        .getOrDefault(10, Collections.emptyMap())
+        .getOrDefault(synset, Collections.emptySet());
+  }
+
+  public Set<Synset> getCommonHypernyms(final Synset synset1, final Synset synset2) {
+    final Set<Synset> synset1Hypernyms = getAllHypernyms(synset1);
+    final Set<Synset> synset2Hypernyms = getAllHypernyms(synset2);
+    return synset1Hypernyms.stream().filter(synset2Hypernyms::contains).collect(Collectors.toSet());
+  }
+
+  public int getShortestDistanceFromSynsetToHypernym(final Synset synset, final Synset hypernym) {
+    int distance = 1;
+    Set<Synset> synsets = Sets.newHashSet(synset);
+    while (!synsets.isEmpty()) {
+      final Set<Synset> hypernyms = synsets.stream()
+          .map(this::getDirectHypernyms).flatMap(Collection::stream).collect(Collectors.toSet());
+      if (hypernyms.contains(hypernym)) {
+        return distance;
+      } else {
+        distance += 1;
+        synsets = hypernyms;
+      }
+    }
+    return -1;
+  }
+
+  public OptionalInt getShortestPathDistance(final Synset synset1, final Synset synset2) {
+    final Set<Synset> commonHypernyms = getCommonHypernyms(synset1, synset2);
+    return commonHypernyms.stream()
+        .mapToInt(hypernym -> getShortestDistanceFromSynsetToHypernym(synset1, hypernym)
+            + getShortestDistanceFromSynsetToHypernym(synset2, hypernym))
+        .min();
+  }
+
+  public Set<Synset> getRoots() {
+    return synsets.values().stream()
+        .filter(s -> getDirectHypernyms(s).size() == 0)
+        .collect(Collectors.toSet());
   }
 }
