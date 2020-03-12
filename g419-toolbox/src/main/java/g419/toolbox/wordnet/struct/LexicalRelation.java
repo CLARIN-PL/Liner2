@@ -2,26 +2,26 @@ package g419.toolbox.wordnet.struct;
 
 public class LexicalRelation {
 
-  private LexicalUnit parent = null;
-  private LexicalUnit child = null;
-  private String relation = null;
+  private final LexicalUnit parent;
+  private final LexicalUnit child;
+  private final String relation;
 
-  public LexicalRelation(LexicalUnit parent, LexicalUnit child, String relation) {
+  public LexicalRelation(final LexicalUnit parent, final LexicalUnit child, final String relation) {
     this.parent = parent;
     this.child = child;
     this.relation = relation;
   }
 
   public LexicalUnit getParent() {
-    return this.parent;
+    return parent;
   }
 
   public LexicalUnit getChild() {
-    return this.child;
+    return child;
   }
 
   public String getRelation() {
-    return this.relation;
+    return relation;
   }
 
 }

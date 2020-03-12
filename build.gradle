@@ -75,6 +75,10 @@ allprojects {
 
     test {
         useJUnit()
+
+        minHeapSize = "128m"
+        maxHeapSize = "1024m"
+
         testlogger {
             showPassed false
         }
