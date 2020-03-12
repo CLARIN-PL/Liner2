@@ -3,6 +3,7 @@ package g419.toolbox.wordnet.struct;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.Data;
 
 @Data
@@ -41,5 +42,9 @@ public class Synset {
   @Override
   public int hashCode() {
     return Objects.hash(id);
+  }
+
+  public String getLexicalUnitsStr() {
+    return lexicalUnits.stream().map(LexicalUnit::getName).collect(Collectors.joining(", "));
   }
 }
