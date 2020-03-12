@@ -163,4 +163,20 @@ public class WordnetPl {
         .filter(s -> getDirectHypernyms(s).size() == 0)
         .collect(Collectors.toSet());
   }
+
+  public Optional<Synset> getLeastCommonSubsummer(final Synset s1, final Synset s2) {
+    return getCommonHypernyms(s1, s2).stream()
+        .sorted(Comparator.comparing(Synset::getDepth).reversed())
+        .findFirst();
+  }
+
+  public double simWuPalmer(final Synset s1, final Synset s2) {
+    final Optional<Synset> lcs = getLeastCommonSubsummer(s1, s2);
+    // INFO: 1 is added to depth to simulare the common root node
+    final double lcsDepth = lcs.isPresent() ? lcs.get().getDepth() + 1 : 1;
+    final double s1Depth = s1.getDepth() + 1;
+    final double s2Depth = s2.getDepth() + 1;
+    final double s12len = getShortestPathDistance(s1, s2).orElse((int) (s1Depth + s2Depth));
+    return s1Depth + s2Depth == 0 ? 0 : ((2.0 * lcsDepth) / (s12len + 2.0 * lcsDepth));
+  }
 }

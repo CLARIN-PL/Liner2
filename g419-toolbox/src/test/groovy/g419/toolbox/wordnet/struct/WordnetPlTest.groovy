@@ -137,4 +137,22 @@ class WordnetPlTest extends Specification {
             hypernyms.size() == 21
     }
 
+
+    @Unroll
+    def "simWuPalmer(#s1, #s2) should return #sim"() {
+        given:
+            def synset1 = wordnetPl.getSynset(s1)
+            def synset2 = wordnetPl.getSynset(s2)
+
+        when:
+            def result = wordnetPl.simWuPalmer(synset1, synset2)
+
+        then:
+            Math.abs(result - sim) < 0.01
+
+        where:
+            s1    | s2    || sim
+            12880 | 12842 || 0.888   // królik | mysz (gryzoń)
+            12880 | 7250  || 0.142   // królik | mysz (urządzenie)
+    }
 }
