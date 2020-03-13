@@ -15,7 +15,6 @@ plugins {
 }
 
 description = "g419 - Top-level project"
-version = "2.6-SNAPSHOT"
 group = "pl.pwr.nlp"
 
 apply plugin: 'wrapper'
@@ -37,7 +36,7 @@ allprojects {
     group = "pl.pwr.nlp"
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
-    version = '2.5-SNAPSHOT'
+    version = '2.6.1-SNAPSHOT'
 
     repositories {
         mavenCentral()

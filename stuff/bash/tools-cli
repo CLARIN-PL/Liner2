@@ -1,0 +1,12 @@
+# Get bash script location location
+DIR="$( cd "$( dirname "$0" )" && pwd )"
+
+name=g419-tools-cli
+jar=`find $DIR -name "$name*.jar" -type f`
+
+if [ -f "$jar" ] 
+then
+  java -Xss4m -Xmx4024M -jar $jar $@
+else
+  echo "Jar file not found."
+fi
