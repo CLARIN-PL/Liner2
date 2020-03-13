@@ -130,11 +130,16 @@ public class WordnetPl {
 
   public Set<Synset> getCommonHypernyms(final Synset synset1, final Synset synset2) {
     final Set<Synset> synset1Hypernyms = getAllHypernyms(synset1);
+    synset1Hypernyms.add(synset1);
     final Set<Synset> synset2Hypernyms = getAllHypernyms(synset2);
+    synset2Hypernyms.add(synset2);
     return synset1Hypernyms.stream().filter(synset2Hypernyms::contains).collect(Collectors.toSet());
   }
 
   public int getShortestDistanceFromSynsetToHypernym(final Synset synset, final Synset hypernym) {
+    if (synset == hypernym) {
+      return 0;
+    }
     int distance = 1;
     Set<Synset> synsets = Sets.newHashSet(synset);
     while (!synsets.isEmpty()) {

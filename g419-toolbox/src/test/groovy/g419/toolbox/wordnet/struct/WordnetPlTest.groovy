@@ -74,6 +74,7 @@ class WordnetPlTest extends Specification {
 
         where:
             synset1 | synset2 || distance
+            12880   | 12880   || 0
             12880   | 39497   || 1           // królik | ssak łożyskowy
             12880   | 39520   || 3           // królik | organizm wielokomórkowy
             7250    | 12880   || -1          // ssak łożyskowy | królik
@@ -95,6 +96,26 @@ class WordnetPlTest extends Specification {
             12842   | 5168    || 4         // mysz (gryzoń)     | kot
             12842   | 4609    || 7         // mysz (gryzoń)     | drzewo (roślina)
             7250    | 12880   || -1        // mysz (urządzenie) | królik
+    }
+
+    @Unroll
+    def "getLeastCommonSubsummer(#synset1, #synset2) should return #lcs"() {
+        when:
+            def result = wordnetPl.getLeastCommonSubsummer(
+                    wordnetPl.getSynset(synset1), wordnetPl.getSynset(synset2)
+            )
+
+        then:
+            result.map { it.getId() }.orElse(0) == lcs
+
+        where:
+            synset1 | synset2 || lcs
+            12842   | 12880   || 39497         // mysz (gryzoń)     | królik
+            12842   | 5168    || 39497         // mysz (gryzoń)     | kot
+            12842   | 4609    || 39520         // mysz (gryzoń)     | drzewo (roślina)
+            7250    | 12880   || 0             // mysz (urządzenie) | królik
+            7250    | 7250    || 7250
+            18403   | 39497   || 39497
     }
 
     @Unroll
@@ -152,6 +173,7 @@ class WordnetPlTest extends Specification {
 
         where:
             s1    | s2    || sim
+            12880 | 12880 || 1.000
             12880 | 12842 || 0.888   // królik | mysz (gryzoń)
             12880 | 7250  || 0.142   // królik | mysz (urządzenie)
     }
