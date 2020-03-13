@@ -12,12 +12,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import org.apache.commons.cli.CommandLine;
 
-public class WordnetWuPalmerTest extends Action {
+public class WordnetWuPalmerBenchmark extends Action {
 
   WordnetPl wordnet;
   ProcessingTimer timer = new ProcessingTimer();
 
-  public WordnetWuPalmerTest() {
+  public WordnetWuPalmerBenchmark() {
     super("wordnet-wupalmer-benchmark");
     setDescription("benchmark Wu-Palmer similarity measure");
   }
@@ -94,14 +94,15 @@ public class WordnetWuPalmerTest extends Action {
                                        final List<Synset> bs,
                                        final int threads) {
     final ThreadPoolExecutor pool = (ThreadPoolExecutor) Executors.newFixedThreadPool(threads);
-    final List<CompletableFuture> futures = Lists.newArrayList();
+    final List<CompletableFuture<?>> futures = Lists.newArrayList();
 
     for (int i = 0; i < documentNumber; i++) {
       for (int j = 0; j < documentNumber; j++) {
         futures.add(CompletableFuture.runAsync(() -> compareAll(as, bs, false), pool));
       }
     }
-    final CompletableFuture[] futuresArray = futures.toArray(new CompletableFuture[futures.size()]);
+    final CompletableFuture<?>[] futuresArray
+        = futures.toArray(new CompletableFuture<?>[futures.size()]);
     CompletableFuture.allOf(futuresArray).join();
     pool.shutdown();
   }

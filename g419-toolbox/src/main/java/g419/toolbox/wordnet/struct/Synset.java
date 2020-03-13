@@ -45,6 +45,8 @@ public class Synset {
   }
 
   public String getLexicalUnitsStr() {
-    return lexicalUnits.stream().map(LexicalUnit::getName).collect(Collectors.joining(", "));
+    return lexicalUnits.stream()
+        .map(lu -> String.format("%s.%d", lu.getName(), lu.getVariant()))
+        .collect(Collectors.joining(", "));
   }
 }
