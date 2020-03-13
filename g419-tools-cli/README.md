@@ -2,7 +2,7 @@
 
 ## wordnet-wupalmer-cli
 
-Calculate Wu-Palmer similarity for given two lemmas.
+Calculate Wu-Palmer similarity for given two lemmas on plWordNet 3.0 (https://clarin-pl.eu/dspace/handle/11321/273).
 
 ```bash
 ./tools-cli wordnet-wupalmer-cli
