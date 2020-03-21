@@ -26,7 +26,7 @@ class Liner2Rmq:
     def receive(self, route):
         channel = self.connection.channel()
         channel.exchange_declare(exchange=self.output_queue, exchange_type='direct')
-        result = channel.queue_declare(exclusive=True)
+        result = channel.queue_declare(self.output_queue, exclusive=True)
         queue_name = result.method.queue
         channel.queue_bind(exchange=self.output_queue, queue=queue_name, routing_key=route)
         response = next(channel.consume(queue_name))
