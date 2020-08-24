@@ -25,7 +25,7 @@ public class Main {
     final StringBuilder info = new StringBuilder();
 
     info.append("*-----------------------------------------------------------------------------------------------*\n");
-    info.append("* Tools for spatial expression processing and automatic recognition                             *\n");
+    info.append("* Tools for serel expression processing and automatic recognition                             *\n");
     info.append("*                                                                                               *\n");
     info.append("* Authors: Michał Marcińczuk (2015–2019)                                                        *\n");
     info.append("* Contact: michal.marcinczuk@pwr.edu.pl                                                         *\n");
@@ -33,9 +33,9 @@ public class Main {
     info.append("*          G4.19 Research Group, Wrocław University of Technology                               *\n");
     info.append("*-----------------------------------------------------------------------------------------------*\n");
 
-    final ActionSelector main = new ActionSelector("./spatial-cli");
+    final ActionSelector main = new ActionSelector("./serel-cli");
     main.setCredits(info.toString());
-    main.addActions("g419.spatial.action");
+    main.addActions("g419.serel.action");
     main.run(args);
   }
 

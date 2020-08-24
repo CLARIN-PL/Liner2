@@ -1,4 +1,4 @@
-package g419.spatial.action;
+package g419.serel.action;
 
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
