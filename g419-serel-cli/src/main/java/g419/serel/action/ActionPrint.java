@@ -4,6 +4,8 @@ import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
+import g419.corpus.structure.Document;
+import g419.corpus.structure.Relation;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.spatial.io.SpatialOutputFormat;
@@ -24,7 +26,7 @@ public class ActionPrint extends Action {
 
   public ActionPrint() {
     super("print");
-    setDescription("Reads spatial expressions from the documents and print them on the screen");
+    setDescription("Reads relations from the documents and print them on the screen");
     options.addOption(CommonOptions.getInputFileNameOption());
     options.addOption(CommonOptions.getInputFileFormatOption());
     options.addOption(Option.builder(CommonOptions.OPTION_OUTPUT_FORMAT)
@@ -45,7 +47,15 @@ public class ActionPrint extends Action {
     final OutputStream os = WriterFactory.get().getOutputStreamFileOrOut(outputFilename);
     try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
          final AbstractDocumentWriter writer = SpatialWriterFactory.create(SpatialOutputFormat.valueOf(output.toUpperCase()), os)) {
-      reader.forEach(writer::writeDocument);
+      //reader.forEach(writer::writeDocument);
+      reader.forEach(d -> printInfo(d));
+    }
+  }
+
+  private void printInfo(Document d) {
+    getLogger().error(" Relacji jest :"+d.getRelationsSet().size());
+    for( Relation rel : d.getRelationsSet()) {
+         getLogger().error(" REL from= "+rel.getAnnotationFrom().getBaseText() +"  to = "+rel.getAnnotationTo().getBaseText());
     }
   }
 
