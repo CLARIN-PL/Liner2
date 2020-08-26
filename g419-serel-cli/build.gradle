@@ -1,8 +1,8 @@
-description = "g419-spatial-cli"
+description = "g419-serel-cli"
 
 apply plugin: 'application'
 
-def main = "g419.spatial.Main"
+def main = "g419.serel.Main"
 
 mainClassName = main
 
@@ -29,6 +29,6 @@ dependencies {
     compile 'commons-cli:commons-cli:1.2'
     compile 'commons-io:commons-io:2.4'
     compile project(":g419-corpus")
-    compile project(":g419-spatial-core")
+    compile project(":g419-serel-core")
     compile project(":g419-lib-cli")
 }

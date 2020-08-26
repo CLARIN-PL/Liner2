@@ -8,8 +8,6 @@ import g419.corpus.structure.Document;
 import g419.corpus.structure.Relation;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.spatial.io.SpatialOutputFormat;
-import g419.spatial.io.writer.SpatialWriterFactory;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
@@ -46,7 +44,7 @@ public class ActionPrint extends Action {
   public void run() throws Exception {
     final OutputStream os = WriterFactory.get().getOutputStreamFileOrOut(outputFilename);
     try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
-         final AbstractDocumentWriter writer = SpatialWriterFactory.create(SpatialOutputFormat.valueOf(output.toUpperCase()), os)) {
+         ) {
       //reader.forEach(writer::writeDocument);
       reader.forEach(d -> printInfo(d));
     }
