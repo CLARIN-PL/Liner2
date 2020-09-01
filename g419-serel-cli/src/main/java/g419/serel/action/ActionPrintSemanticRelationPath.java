@@ -27,6 +27,7 @@ public class ActionPrintSemanticRelationPath extends Action {
   private String inputFormat;
   private String output;
   private String outputFilename;
+  private String maltParserModelFilename;
 
   private MaltParser malt;
 
@@ -38,6 +39,7 @@ public class ActionPrintSemanticRelationPath extends Action {
     options.addOption(Option.builder(CommonOptions.OPTION_OUTPUT_FORMAT)
         .longOpt(CommonOptions.OPTION_OUTPUT_FORMAT_LONG).hasArg().argName(OPTION_OUTPUT_ARG).required().build());
     options.addOption(CommonOptions.getOutputFileNameOption());
+    options.addOption(CommonOptions.getMaltparserModelFileOption());
   }
 
   @Override
@@ -46,12 +48,15 @@ public class ActionPrintSemanticRelationPath extends Action {
     inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
     output = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT);
     outputFilename = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
+    maltParserModelFilename = line.getOptionValue(CommonOptions.OPTION_MALT_ARG);
   }
 
   @Override
   public void run() throws Exception {
 
-    malt = new MaltParser("/home/michalolek/NLPWR/projects/Liner2/190125_MALT_PDB");
+    //malt = new MaltParser("/home/michalolek/NLPWR/projects/Liner2/190125_MALT_PDB");
+    System.out.println("MALT filename = "+maltParserModelFilename);
+    malt = new MaltParser(maltParserModelFilename);
 
     try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
          ) {
