@@ -44,11 +44,16 @@ public class ActionPrintSemanticRelationPath extends Action {
 
   @Override
   public void parseOptions(final CommandLine line) throws Exception {
+
+    System.out.println("line ="+line.getArgList());
+
     inputFilename = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
+    System.out.println("ifn = "+inputFilename);
+
     inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
     output = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT);
     outputFilename = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
-    maltParserModelFilename = line.getOptionValue(CommonOptions.OPTION_MALT_ARG);
+    maltParserModelFilename = line.getOptionValue(CommonOptions.OPTION_MALT);
   }
 
   @Override
