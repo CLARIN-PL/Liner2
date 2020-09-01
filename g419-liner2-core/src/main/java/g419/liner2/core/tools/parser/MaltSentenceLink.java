@@ -45,5 +45,16 @@ public class MaltSentenceLink {
         '}';
   }
 
+  // deliberately not using equals()
+  public boolean isTheSameAs(MaltSentenceLink target) {
+
+    return
+    this.sourceIndex==target.sourceIndex
+    &&
+    this.targetIndex==target.targetIndex
+    &&
+    this.relationType==target.relationType;
+  }
+
 }
 

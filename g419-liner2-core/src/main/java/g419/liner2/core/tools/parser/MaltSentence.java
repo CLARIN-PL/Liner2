@@ -5,16 +5,16 @@ import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.corpus.structure.TokenAttributeIndex;
+import lombok.Data;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+@Data
 public class MaltSentence {
   List<MaltSentenceLink> links = Lists.newArrayList();
   private final Map<String, String> posMapping;
@@ -149,5 +149,50 @@ public class MaltSentence {
         .mapToObj(nodes::get)
         .forEach(TreeNode::print);
   }
+
+
+  public Pair<List<MaltSentenceLink>,List<MaltSentenceLink>>
+  getPathBetween(int index1, int index2) {
+    List<MaltSentenceLink> parents1 = getParentsAscending(index1);
+    List<MaltSentenceLink> parents2 = getParentsAscending(index2);
+    Pair<Integer,Integer> indexes = findIndexesToLowestCommonLink(parents1,parents2);
+
+    return Pair.of(
+                parents1.subList(0,indexes.getLeft()+1),
+        parents2.subList(0,indexes.getRight()+1)
+    );
+  }
+
+  public List<MaltSentenceLink> getParentsAscending(final int index) {
+    return getParentsAscending(index,new LinkedList<>());
+  }
+
+  private List<MaltSentenceLink> getParentsAscending(final int index, List<MaltSentenceLink> accumulated) {
+    Optional<MaltSentenceLink> optOutLink =  links.stream()
+        .filter(link -> link.getSourceIndex() == index)
+        .findFirst();
+
+    if(!optOutLink.isPresent()) {
+      return accumulated;
+    }
+    MaltSentenceLink outLink = optOutLink.get();
+    accumulated.add(outLink);
+    return getParentsAscending(outLink.getTargetIndex(),accumulated);
+  }
+
+  public Pair<Integer,Integer> findIndexesToLowestCommonLink(List<MaltSentenceLink> list1,
+                                                             List<MaltSentenceLink> list2) {
+    for(int i=0;i<list1.size();i++)
+      for(int j=0;j<list2.size();j++)
+      {
+        if(list1.get(i).isTheSameAs(list2.get(j)))
+          return Pair.of(i,j);
+      }
+
+    // it should never come here !
+    return null;
+  }
+
+
 
 }
