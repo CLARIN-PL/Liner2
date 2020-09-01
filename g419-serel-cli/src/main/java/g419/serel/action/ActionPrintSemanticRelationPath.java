@@ -73,10 +73,12 @@ public class ActionPrintSemanticRelationPath extends Action {
 
         Sentence sentence = rel.getAnnotationFrom().getSentence();
         final MaltSentence maltSentence = new MaltSentence(sentence, MappingNkjpToConllPos.get());
-        //malt.parse(maltSentence);
-        maltSentence.printAsTree();
+        malt.parse(maltSentence);
+        //maltSentence.printAsTree();
         Pair<List<MaltSentenceLink>, List<MaltSentenceLink>> path = maltSentence.getPathBetween(index1, index2);
         System.out.println(path);
+        System.out.println("------------");
+
       }
     }
     catch(Exception e ) {
