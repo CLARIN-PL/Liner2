@@ -44,12 +44,7 @@ public class ActionPrintSemanticRelationPath extends Action {
 
   @Override
   public void parseOptions(final CommandLine line) throws Exception {
-
-    System.out.println("line ="+line.getArgList());
-
     inputFilename = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
-    System.out.println("ifn = "+inputFilename);
-
     inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
     output = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT);
     outputFilename = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
@@ -58,24 +53,16 @@ public class ActionPrintSemanticRelationPath extends Action {
 
   @Override
   public void run() throws Exception {
-
-    //malt = new MaltParser("/home/michalolek/NLPWR/projects/Liner2/190125_MALT_PDB");
-    System.out.println("MALT filename = "+maltParserModelFilename);
     malt = new MaltParser(maltParserModelFilename);
 
     try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
          ) {
-      getLogger().info(" reading ...");
-
       reader.forEach(d -> printInfo(d));
     }
   }
 
   private void printInfo(Document document)  {
     try {
-      getLogger().info(" Relacji jest :"+document.getRelationsSet().size());
-
-
       for (Relation rel : document.getRelations("Semantic relations")) {
         System.out.println(" Rel = " + rel);
         System.out.println(" Rel from= " + rel.getAnnotationFrom().getBaseText() + "  to = " + rel.getAnnotationTo().getBaseText());
@@ -86,12 +73,11 @@ public class ActionPrintSemanticRelationPath extends Action {
 
         Sentence sentence = rel.getAnnotationFrom().getSentence();
         final MaltSentence maltSentence = new MaltSentence(sentence, MappingNkjpToConllPos.get());
-        malt.parse(maltSentence);
+        //malt.parse(maltSentence);
         maltSentence.printAsTree();
         Pair<List<MaltSentenceLink>, List<MaltSentenceLink>> path = maltSentence.getPathBetween(index1, index2);
         System.out.println(path);
       }
-
     }
     catch(Exception e ) {
       e.printStackTrace();
