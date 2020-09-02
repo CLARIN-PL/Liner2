@@ -1,13 +1,12 @@
 package g419.liner2.core.tools.parser;
 
 import com.google.common.collect.Lists;
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-import g419.corpus.structure.TokenAttributeIndex;
+import g419.corpus.schema.tagset.MappingNkjpToConllPos;
+import g419.corpus.structure.*;
 import lombok.Data;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.maltparser.core.exception.MaltChainedException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -150,6 +149,14 @@ public class MaltSentence {
         .forEach(TreeNode::print);
   }
 
+  public String getRelPathAsString(Relation rel)  {
+    int index1 = rel.getAnnotationFrom().getHead();
+    int index2 = rel.getAnnotationTo().getHead();
+
+    Pair<List<MaltSentenceLink>, List<MaltSentenceLink>> path = this.getPathBetween(index1, index2);
+
+    return this.getPathBetweenAsString(rel,path.getLeft(),path.getRight());
+  }
 
   public Pair<List<MaltSentenceLink>,List<MaltSentenceLink>>
   getPathBetween(int index1, int index2) {
@@ -192,6 +199,30 @@ public class MaltSentence {
     // it should never come here !
     return null;
   }
+
+  public String getPathBetweenAsString(Relation rel,
+                                       List<MaltSentenceLink> path1,
+                                       List<MaltSentenceLink> path2) {
+    List<Token> tokens = rel.getAnnotationFrom().getSentence().getTokens();
+    StringBuilder s = new StringBuilder();
+    s.append(rel.getType()).append(": ");
+
+    s.append(rel.getAnnotationFrom().getType()).append(" -> ");
+    s.append (path1.stream()
+        .map(msl -> tokens.get(msl.getSourceIndex()).getDisambTag().getBase())
+        .collect(Collectors.joining(" -> ")) );
+
+    Collections.reverse(path2);
+    s.append(" <- ");
+    s.append (path2.stream()
+        .skip(1)
+        .map(msl -> tokens.get(msl.getSourceIndex()).getDisambTag().getBase())
+        .collect(Collectors.joining(" <- ")) );
+    s.append(" <- ").append(rel.getAnnotationTo().getType());
+
+    return s.toString();
+  }
+
 
 
 

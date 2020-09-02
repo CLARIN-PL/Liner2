@@ -5,27 +5,22 @@ import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import g419.corpus.structure.Document;
-import g419.corpus.structure.Paragraph;
 import g419.corpus.structure.Relation;
 import g419.corpus.structure.Sentence;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.core.tools.parser.MaltParser;
 import g419.liner2.core.tools.parser.MaltSentence;
-import g419.liner2.core.tools.parser.MaltSentenceLink;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Option;
-import org.apache.commons.lang3.tuple.Pair;
+import java.io.BufferedWriter;
 import java.io.OutputStream;
-import java.util.List;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 
 public class ActionPrintSemanticRelationPath extends Action {
 
-  public static final String OPTION_OUTPUT_ARG = "tree|tsv";
-
   private String inputFilename;
   private String inputFormat;
-  private String output;
   private String outputFilename;
   private String maltParserModelFilename;
 
@@ -36,8 +31,6 @@ public class ActionPrintSemanticRelationPath extends Action {
     setDescription("Reads relations from the documents and print them on the screen");
     options.addOption(CommonOptions.getInputFileNameOption());
     options.addOption(CommonOptions.getInputFileFormatOption());
-    options.addOption(Option.builder(CommonOptions.OPTION_OUTPUT_FORMAT)
-        .longOpt(CommonOptions.OPTION_OUTPUT_FORMAT_LONG).hasArg().argName(OPTION_OUTPUT_ARG).required().build());
     options.addOption(CommonOptions.getOutputFileNameOption());
     options.addOption(CommonOptions.getMaltparserModelFileOption());
   }
@@ -46,7 +39,6 @@ public class ActionPrintSemanticRelationPath extends Action {
   public void parseOptions(final CommandLine line) throws Exception {
     inputFilename = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
     inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
-    output = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT);
     outputFilename = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
     maltParserModelFilename = line.getOptionValue(CommonOptions.OPTION_MALT);
   }
@@ -54,38 +46,26 @@ public class ActionPrintSemanticRelationPath extends Action {
   @Override
   public void run() throws Exception {
     malt = new MaltParser(maltParserModelFilename);
+    final OutputStream os = WriterFactory.get().getOutputStreamFileOrOut(outputFilename);
 
     try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
-         ) {
-      reader.forEach(d -> printInfo(d));
+         final PrintWriter pw =    new PrintWriter( new BufferedWriter(new OutputStreamWriter(os))) ) {
+      reader.forEach(d ->  printInfo(d,pw));
     }
   }
 
-  private void printInfo(Document document)  {
+  private void printInfo(Document document, PrintWriter pw)  {
     try {
       for (Relation rel : document.getRelations("Semantic relations")) {
-        System.out.println(" Rel = " + rel);
-        System.out.println(" Rel from= " + rel.getAnnotationFrom().getBaseText() + "  to = " + rel.getAnnotationTo().getBaseText());
-        System.out.println(" Rel from head = " + rel.getAnnotationFrom().getHead() + "  to = " + rel.getAnnotationTo().getHead());
-
-        int index1 = rel.getAnnotationFrom().getHead();
-        int index2 = rel.getAnnotationTo().getHead();
-
         Sentence sentence = rel.getAnnotationFrom().getSentence();
         final MaltSentence maltSentence = new MaltSentence(sentence, MappingNkjpToConllPos.get());
         malt.parse(maltSentence);
-        //maltSentence.printAsTree();
-        Pair<List<MaltSentenceLink>, List<MaltSentenceLink>> path = maltSentence.getPathBetween(index1, index2);
-        System.out.println(path);
-        System.out.println("------------");
-
+        pw.println(maltSentence.getRelPathAsString(rel));
       }
     }
     catch(Exception e ) {
       e.printStackTrace();
     }
-
   }
-
 
 }
