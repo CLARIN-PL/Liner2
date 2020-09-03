@@ -2,6 +2,7 @@ package g419.serel.action;
 
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
+import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import g419.corpus.structure.Document;
@@ -11,6 +12,8 @@ import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.core.tools.parser.MaltParser;
 import g419.liner2.core.tools.parser.MaltSentence;
+import g419.serel.io.SerelOutputFormat;
+import g419.serel.io.writer.SerelWriterFactory;
 import org.apache.commons.cli.CommandLine;
 import java.io.BufferedWriter;
 import java.io.OutputStream;
@@ -22,6 +25,7 @@ public class ActionPrintSemanticRelationPath extends Action {
   private String inputFilename;
   private String inputFormat;
   private String outputFilename;
+  private String outputFormat;
   private String maltParserModelFilename;
 
   private MaltParser malt;
@@ -32,6 +36,7 @@ public class ActionPrintSemanticRelationPath extends Action {
     options.addOption(CommonOptions.getInputFileNameOption());
     options.addOption(CommonOptions.getInputFileFormatOption());
     options.addOption(CommonOptions.getOutputFileNameOption());
+    options.addOption(CommonOptions.getOutputFileFormatOption());
     options.addOption(CommonOptions.getMaltparserModelFileOption());
   }
 
@@ -40,6 +45,7 @@ public class ActionPrintSemanticRelationPath extends Action {
     inputFilename = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
     inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
     outputFilename = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
+    outputFormat = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT);
     maltParserModelFilename = line.getOptionValue(CommonOptions.OPTION_MALT);
   }
 
@@ -49,12 +55,14 @@ public class ActionPrintSemanticRelationPath extends Action {
     final OutputStream os = WriterFactory.get().getOutputStreamFileOrOut(outputFilename);
 
     try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
-         final PrintWriter pw =    new PrintWriter( new BufferedWriter(new OutputStreamWriter(os))) ) {
-      reader.forEach(d ->  printInfo(d,pw));
+         final AbstractDocumentWriter writer = SerelWriterFactory.create(SerelOutputFormat.valueOf(outputFormat.toUpperCase()), os, malt)) {
+      //reader.forEach(doc -> printInfo(doc,writer));
+      reader.forEach(writer::writeDocument);
     }
   }
 
-  private void printInfo(Document document, PrintWriter pw)  {
+  /*
+  private void printInfo(Document document, AbstractDocumentWriter pw)  {
     try {
       for (Relation rel : document.getRelations("Semantic relations")) {
         Sentence sentence = rel.getAnnotationFrom().getSentence();
@@ -67,5 +75,7 @@ public class ActionPrintSemanticRelationPath extends Action {
       e.printStackTrace();
     }
   }
+
+  */
 
 }

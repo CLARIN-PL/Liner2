@@ -149,20 +149,14 @@ public class MaltSentence {
         .forEach(TreeNode::print);
   }
 
-  public String getRelPathAsString(Relation rel)  {
-    int index1 = rel.getAnnotationFrom().getHead();
-    int index2 = rel.getAnnotationTo().getHead();
-
-    Pair<List<MaltSentenceLink>, List<MaltSentenceLink>> path = this.getPathBetween(index1, index2);
-
-    return this.getPathBetweenAsString(rel,path.getLeft(),path.getRight());
-  }
-
   public Pair<List<MaltSentenceLink>,List<MaltSentenceLink>>
   getPathBetween(int index1, int index2) {
     List<MaltSentenceLink> parents1 = getParentsAscending(index1);
     List<MaltSentenceLink> parents2 = getParentsAscending(index2);
     Pair<Integer,Integer> indexes = findIndexesToLowestCommonLink(parents1,parents2);
+
+    if (indexes == null)
+      return null;
 
     return Pair.of(
                 parents1.subList(0,indexes.getLeft()+1),
@@ -200,28 +194,6 @@ public class MaltSentence {
     return null;
   }
 
-  public String getPathBetweenAsString(Relation rel,
-                                       List<MaltSentenceLink> path1,
-                                       List<MaltSentenceLink> path2) {
-    List<Token> tokens = rel.getAnnotationFrom().getSentence().getTokens();
-    StringBuilder s = new StringBuilder();
-    s.append(rel.getType()).append(": ");
-
-    s.append(rel.getAnnotationFrom().getType()).append(" -> ");
-    s.append (path1.stream()
-        .map(msl -> tokens.get(msl.getSourceIndex()).getDisambTag().getBase())
-        .collect(Collectors.joining(" -> ")) );
-
-    Collections.reverse(path2);
-    s.append(" <- ");
-    s.append (path2.stream()
-        .skip(1)
-        .map(msl -> tokens.get(msl.getSourceIndex()).getDisambTag().getBase())
-        .collect(Collectors.joining(" <- ")) );
-    s.append(" <- ").append(rel.getAnnotationTo().getType());
-
-    return s.toString();
-  }
 
 
 
