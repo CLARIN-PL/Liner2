@@ -7,10 +7,7 @@ import g419.serel.converter.DocumentToSerelExpressionConverter;
 import g419.serel.formatter.ISerelExpressionFormatter;
 import g419.serel.formatter.SerelExpressionFormatterTsv;
 import g419.serel.structure.SerelExpression;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.util.List;
 
 
@@ -18,11 +15,13 @@ public class SerelTsvWriter extends AbstractDocumentWriter {
   private final BufferedWriter ow;
   DocumentToSerelExpressionConverter converter;
   final ISerelExpressionFormatter formatter = new SerelExpressionFormatterTsv();
+  private PrintWriter reportFile;
 
-  public SerelTsvWriter(final OutputStream os, MaltParser malt) {
+  public SerelTsvWriter(final OutputStream os, MaltParser malt,PrintWriter report) {
     ow = new BufferedWriter(new OutputStreamWriter(os));
     formatter.getHeader().forEach(this::writeLine);
-     converter = new DocumentToSerelExpressionConverter(malt);
+    converter = new DocumentToSerelExpressionConverter(malt, report);
+    reportFile = report;
   }
 
   @Override

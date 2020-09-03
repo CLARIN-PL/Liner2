@@ -8,10 +8,7 @@ import g419.serel.formatter.ISerelExpressionFormatter;
 import g419.serel.formatter.SerelExpressionFormatterPlain;
 import g419.serel.structure.SerelExpression;
 import lombok.extern.slf4j.Slf4j;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.util.List;
 
 
@@ -21,11 +18,13 @@ public class SerelPlainWriter extends AbstractDocumentWriter {
   final ISerelExpressionFormatter formatter = new SerelExpressionFormatterPlain();
 
   DocumentToSerelExpressionConverter converter;
+  PrintWriter reportFile;
 
-  public SerelPlainWriter(final OutputStream os, MaltParser maltParser) {
+  public SerelPlainWriter(final OutputStream os, MaltParser maltParser, PrintWriter report) {
     ow = new BufferedWriter(new OutputStreamWriter(os));
     formatter.getHeader().forEach(this::writeLine);
-    converter = new DocumentToSerelExpressionConverter(maltParser);
+    converter = new DocumentToSerelExpressionConverter(maltParser,report);
+    reportFile = report;
   }
 
   @Override

@@ -17,7 +17,6 @@ public class SerelExpressionFormatterTsv implements ISerelExpressionFormatter {
     joiner.add("Path");
     joiner.add("Sentence");
     joiner.add("Filename");
-    joiner.add("Expression id");
     return Lists.newArrayList(joiner.toString());
   }
 
@@ -33,11 +32,8 @@ public class SerelExpressionFormatterTsv implements ISerelExpressionFormatter {
       fields.add(se.getPathAsString());
       fields.add(se.getSentence().toString());
       fields.add(document.getName());
-      fields.add(se.getRelation().getId());
       lines.add(fields.toString());
     }
     return lines;
   }
-
-
 }

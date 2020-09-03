@@ -8,6 +8,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.maltparser.core.exception.MaltChainedException;
 
+import java.io.PrintWriter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -114,25 +115,31 @@ public class MaltSentence {
       return children;
     }
 
-    public void print() {
-      System.out.println("ROOT");
-      print("", true);
-      System.out.println();
+
+
+    public void print(PrintWriter pw) {
+      pw.println("ROOT");
+      print(pw,"", true);
+      pw.println();
     }
 
-    private void print(final String prefix, final boolean isTail) {
-      System.out.println(String.format("%s%s──(%s)── %s", prefix, isTail ? "└" : "├", relationWithParent, name));
+    private void print(final PrintWriter pw,final String prefix, final boolean isTail) {
+      pw.println(String.format("%s%s──(%s)── %s", prefix, isTail ? "└" : "├", relationWithParent, name));
       for (int i = 0; i < children.size() - 1; i++) {
-        children.get(i).print(prefix + (isTail ? "    " : "│   "), false);
+        children.get(i).print(pw,prefix + (isTail ? "    " : "│   "), false);
       }
       if (children.size() > 0) {
         children.get(children.size() - 1)
-            .print(prefix + (isTail ? "    " : "│   "), true);
+            .print(pw,prefix + (isTail ? "    " : "│   "), true);
       }
     }
   }
 
   public void printAsTree() {
+    printAsTree(new PrintWriter(System.out));
+  }
+
+  public void printAsTree(PrintWriter pw) {
     final List<TreeNode> nodes = sentence.getTokens().stream()
         .map(t -> String.format("%s                    [%s]", t.getOrth(), t.getDisambTag().toString()))
         .map(TreeNode::new)
@@ -146,7 +153,7 @@ public class MaltSentence {
     IntStream.range(0, nodes.size())
         .filter(n -> links.get(n).targetIndex == -1)
         .mapToObj(nodes::get)
-        .forEach(TreeNode::print);
+        .forEach(node -> node.print(pw));
   }
 
   public Pair<List<MaltSentenceLink>,List<MaltSentenceLink>>

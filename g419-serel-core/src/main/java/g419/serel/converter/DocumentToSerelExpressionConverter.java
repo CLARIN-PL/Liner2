@@ -11,6 +11,7 @@ import g419.liner2.core.tools.parser.MaltSentenceLink;
 import g419.serel.structure.SerelExpression;
 import org.apache.commons.lang3.tuple.Pair;
 import org.maltparser.core.exception.MaltChainedException;
+import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,9 +21,11 @@ import java.util.List;
 public class DocumentToSerelExpressionConverter {
 
   MaltParser malt;
+  PrintWriter report;
 
-  public DocumentToSerelExpressionConverter(MaltParser maltParser) {
+  public DocumentToSerelExpressionConverter(MaltParser maltParser, PrintWriter reportFile) {
     malt = maltParser;
+    report = reportFile;
   }
 
   public List<SerelExpression> convert(final Document document) {
@@ -36,6 +39,9 @@ public class DocumentToSerelExpressionConverter {
     for (Relation rel : document.getRelations("Semantic relations")) {
       try {
         SerelExpression serel = extractSerelFromRel(rel);
+        if(report!=null) {
+          this.reportSerel(serel);
+        }
         result.add(serel);
       } catch (Exception e) {
         e.printStackTrace();
@@ -60,14 +66,20 @@ public class DocumentToSerelExpressionConverter {
 
     SerelExpression se;
     if(path!=null) {
-      se = new SerelExpression(rel,path.getLeft(), path.getRight());
+      se = new SerelExpression(rel,path.getLeft(), path.getRight(),maltSentence);
     } else {
-      se = new SerelExpression(rel,null, null);
+      se = new SerelExpression(rel,null, null, maltSentence);
     }
 
     return se;
   }
 
+  private void reportSerel(SerelExpression se) {
+    report.println(se.getRelation().getDocument().getName());
+    report.println(se.getSentence());
+    report.println(se.getPathAsString());
+    se.getMaltSentence().printAsTree(report);
+  }
 
 
 

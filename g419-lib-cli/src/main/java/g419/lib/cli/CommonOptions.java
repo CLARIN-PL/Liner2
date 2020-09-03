@@ -49,11 +49,22 @@ public class CommonOptions {
   public static final String OPTION_ANNOTATION_PATTERN_LONG = "annotation-type-pattern";
   public static final String OPTION_ANNOTATION_PATTERN_DESC = "pattern of annotation type";
 
+  public static final String OPTION_REPORT_FILE = "r";
+  public static final String OPTION_REPORT_FILE_LONG = "report";
+
+
   public static Option getOutputFileNameOption() {
     return Option.builder(CommonOptions.OPTION_OUTPUT_FILE)
         .longOpt(CommonOptions.OPTION_OUTPUT_FILE_LONG)
         .hasArg().argName("filename").desc("path to an output file").build();
   }
+
+  public static Option getReportFileNameOption() {
+    return Option.builder(CommonOptions.OPTION_REPORT_FILE)
+        .longOpt(CommonOptions.OPTION_REPORT_FILE_LONG)
+        .hasArg().argName("filename").desc("path to a report file").build();
+  }
+
 
   public static Option getOutputFileFormatOption() {
     return Option.builder(CommonOptions.OPTION_OUTPUT_FORMAT)
