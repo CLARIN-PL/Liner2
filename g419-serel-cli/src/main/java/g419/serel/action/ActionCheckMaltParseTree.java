@@ -2,7 +2,6 @@ package g419.serel.action;
 
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
-import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Document;
@@ -11,16 +10,11 @@ import g419.lib.cli.CommonOptions;
 import g419.liner2.core.tools.parser.MaltParser;
 import g419.liner2.core.tools.parser.MaltSentenceLink;
 import g419.serel.converter.DocumentToSerelExpressionConverter;
-import g419.serel.io.SerelOutputFormat;
-import g419.serel.io.writer.SerelWriterFactory;
 import g419.serel.structure.SerelExpression;
 import org.apache.commons.cli.CommandLine;
-import java.io.File;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ActionCheckMaltParseTree extends Action {

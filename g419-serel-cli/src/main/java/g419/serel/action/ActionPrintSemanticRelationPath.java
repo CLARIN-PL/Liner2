@@ -7,7 +7,6 @@ import g419.corpus.io.writer.WriterFactory;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.core.tools.parser.MaltParser;
-import g419.serel.converter.DocumentToSerelExpressionConverter;
 import g419.serel.io.SerelOutputFormat;
 import g419.serel.io.writer.SerelWriterFactory;
 import org.apache.commons.cli.CommandLine;
@@ -58,7 +57,6 @@ public class ActionPrintSemanticRelationPath extends Action {
       reader.forEach(writer::writeDocument);
     }
   }
-
 
 
 }
