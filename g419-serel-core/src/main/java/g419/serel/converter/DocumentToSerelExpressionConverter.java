@@ -80,9 +80,7 @@ public class DocumentToSerelExpressionConverter {
     report.println(se.getPathAsString());
     se.getMaltSentence().printAsTree(report);
     report.println("------------------------------------------------------");
-
   }
-
 
 
 }

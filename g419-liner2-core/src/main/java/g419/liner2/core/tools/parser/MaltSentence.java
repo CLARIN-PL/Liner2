@@ -63,6 +63,13 @@ public class MaltSentence {
         .collect(Collectors.toList());
   }
 
+  public Optional<MaltSentenceLink> getLinksBySourceIndex(final int index) {
+    return links.stream()
+        .filter(link -> link.getSourceIndex() == index)
+        .findFirst();
+  }
+
+
   public Set<Annotation> getAnnotations() {
     return annotations;
   }
@@ -176,9 +183,7 @@ public class MaltSentence {
   }
 
   private List<MaltSentenceLink> getParentsAscending(final int index, List<MaltSentenceLink> accumulated) {
-    Optional<MaltSentenceLink> optOutLink =  links.stream()
-        .filter(link -> link.getSourceIndex() == index)
-        .findFirst();
+    Optional<MaltSentenceLink> optOutLink = getLinksBySourceIndex(index);
 
     if(!optOutLink.isPresent()) {
       return accumulated;
