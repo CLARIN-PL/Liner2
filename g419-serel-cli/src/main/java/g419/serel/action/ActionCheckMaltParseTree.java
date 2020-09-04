@@ -31,7 +31,7 @@ public class ActionCheckMaltParseTree extends Action {
 
   public ActionCheckMaltParseTree() {
     super("check-malt-tree");
-    setDescription("Reads relations from the documents and print them on the screen");
+    setDescription("Checks validity of Malt parse tree and print results on the screen");
     options.addOption(CommonOptions.getInputFileNameOption());
     options.addOption(CommonOptions.getInputFileFormatOption());
     options.addOption(CommonOptions.getOutputFileNameOption());
@@ -58,11 +58,7 @@ public class ActionCheckMaltParseTree extends Action {
 
     try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat))
          //final AbstractDocumentWriter writer = SerelWriterFactory.create(SerelOutputFormat.valueOf(outputFormat.toUpperCase()), os, malt,pw))
-
     {
-
-
-
       reader.forEach(doc->checkMaltParseTree(doc));
     }
   }
@@ -125,7 +121,7 @@ public class ActionCheckMaltParseTree extends Action {
         .stream()
         .map(index -> se.getMaltSentence().getLinksBySourceIndex(index))
         .filter(optLink -> optLink.isPresent())
-        .filter(optLink -> ann.isTokenIndexWithin(optLink.get().getTargetIndex()))
+        .filter(optLink -> ! ann.isTokenIndexWithin(optLink.get().getTargetIndex()))
         .map(optLink -> optLink.get())
         .collect(Collectors.toList());
 
