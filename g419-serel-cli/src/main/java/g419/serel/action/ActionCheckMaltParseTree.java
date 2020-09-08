@@ -41,7 +41,7 @@ public class ActionCheckMaltParseTree extends Action {
     options.addOption(CommonOptions.getInputFileFormatOption());
     options.addOption(CommonOptions.getOutputFileNameOption());
     options.addOption(CommonOptions.getOutputFileFormatOption());
-    options.addOption(CommonOptions.getMaltparserModelFileOption());
+    options.addOption(CommonOptions.getMaltparserModelFileOption(true));
     options.addOption(CommonOptions.getReportFileNameOption());
   }
 
@@ -51,6 +51,9 @@ public class ActionCheckMaltParseTree extends Action {
     inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
     outputFilename = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
     outputFormat = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT);
+    if ((outputFormat == null) || (outputFormat.isEmpty())) {
+      outputFormat = "TSV";
+    }
     maltParserModelFilename = line.getOptionValue(CommonOptions.OPTION_MALT);
     reportFilename = line.getOptionValue(CommonOptions.OPTION_REPORT_FILE);
   }

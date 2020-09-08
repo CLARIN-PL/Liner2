@@ -27,12 +27,12 @@ public class ActionPrintSemanticRelationPath extends Action {
 
   public ActionPrintSemanticRelationPath() {
     super("print-serel");
-    setDescription("Reads relations from the documents and print them on the screen");
+    setDescription("Reads semantic relations from the documents and print on the screen path between terminal nodes of relation");
     options.addOption(CommonOptions.getInputFileNameOption());
     options.addOption(CommonOptions.getInputFileFormatOption());
     options.addOption(CommonOptions.getOutputFileNameOption());
     options.addOption(CommonOptions.getOutputFileFormatOption());
-    options.addOption(CommonOptions.getMaltparserModelFileOption());
+    options.addOption(CommonOptions.getMaltparserModelFileOption(true));
     options.addOption(CommonOptions.getReportFileNameOption());
   }
 
@@ -42,6 +42,9 @@ public class ActionPrintSemanticRelationPath extends Action {
     inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
     outputFilename = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
     outputFormat = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FORMAT);
+    if ((outputFormat == null) || (outputFormat.isEmpty())) {
+      outputFormat = "TSV";
+    }
     maltParserModelFilename = line.getOptionValue(CommonOptions.OPTION_MALT);
     reportFilename = line.getOptionValue(CommonOptions.OPTION_REPORT_FILE);
   }

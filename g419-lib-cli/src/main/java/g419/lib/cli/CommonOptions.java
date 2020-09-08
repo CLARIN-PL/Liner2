@@ -151,8 +151,12 @@ public class CommonOptions {
   }
 
   public static Option getMaltparserModelFileOption() {
+    return getMaltparserModelFileOption(false);
+  }
+
+  public static Option getMaltparserModelFileOption(boolean required) {
     return Option.builder(OPTION_MALT).longOpt(OPTION_MALT_LONG).hasArg().argName(OPTION_MALT_ARG)
-        .desc(OPTION_MALT_DESC).build();
+        .desc(OPTION_MALT_DESC).required(required).build();
   }
 
   public static Option getAnnotationTypePatterns() {

@@ -36,8 +36,8 @@ public class SerelTsvWriter extends AbstractDocumentWriter {
 
   @Override
   public void writeDocument(final Document document) {
-    final List<SerelExpression> spatialExpressions = converter.convert(document);
-    formatter.format(document, spatialExpressions)
+    final List<SerelExpression> serelExpressions = converter.convert(document);
+    formatter.format(document, serelExpressions)
         .forEach(this::writeLine);
   }
 
