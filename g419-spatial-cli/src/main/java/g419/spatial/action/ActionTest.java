@@ -6,7 +6,7 @@ import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.lib.cli.Action;
 import g419.spatial.io.ConllDocumentReader;
-import g419.spatial.structure.NodeToken;
+import g419.corpus.structure.NodeToken;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 

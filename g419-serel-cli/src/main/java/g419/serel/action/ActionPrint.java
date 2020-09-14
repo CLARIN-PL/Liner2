@@ -28,13 +28,18 @@ public class ActionPrint extends Action {
 
   @Override
   public void run() throws Exception {
+    System.out.println("Starting reading ...");
     try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
          ) {
+      System.out.println("Isnide try");
       reader.forEach(d -> printInfo(d));
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 
   private void printInfo(Document d) {
+    System.out.println(" Sentence si9ze  = "+d.getParagraphs().get(0).getSentences().get(0).getTokens());
     getLogger().error(" Relations set size :"+d.getRelationsSet().size());
     for( Relation rel : d.getRelationsSet()) {
          getLogger().error(" Rel from= "+rel.getAnnotationFrom().getBaseText() +"  to = "+rel.getAnnotationTo().getBaseText());

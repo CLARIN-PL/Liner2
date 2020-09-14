@@ -53,7 +53,9 @@ public class ReaderFactory {
     if (gz) {
       in = new GZIPInputStream(in);
     }
-    if (inputFormat.equals("ccl")) {
+    if (inputFormat.equals("conllu")) {
+      return new ConlluStreamReader(in);
+    } else if (inputFormat.equals("ccl")) {
       InputStream desc = null;
       String cclPath = Paths.get(uri).getFileName().toString();
       if (cclPath.endsWith(".xml")) {

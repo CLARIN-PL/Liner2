@@ -1,12 +1,10 @@
 package g419.serel.structure;
 
-import com.google.common.collect.Sets;
-import g419.corpus.structure.Annotation;
 import g419.corpus.structure.Relation;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
-import g419.liner2.core.tools.parser.MaltSentence;
-import g419.liner2.core.tools.parser.MaltSentenceLink;
+import g419.liner2.core.tools.parser.ParseTree;
+import g419.liner2.core.tools.parser.SentenceLink;
 import lombok.Data;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,18 +19,18 @@ public class SerelExpression {
 
 
   private Relation relation;
-  private List<MaltSentenceLink> parents1;
-  private List<MaltSentenceLink> parents2;
-  private MaltSentence maltSentence;
+  private List<SentenceLink> parents1;
+  private List<SentenceLink> parents2;
+  private ParseTree maltSentence;
 
 
   public SerelExpression() {
   }
 
   public SerelExpression(final Relation rel,
-                         List<MaltSentenceLink> p1,
-                         List<MaltSentenceLink> p2,
-                         MaltSentence ms) {
+                         List<SentenceLink> p1,
+                         List<SentenceLink> p2,
+                         ParseTree ms) {
     this.relation = rel;
     this.parents1 = p1;
     this.parents2 = p2;
@@ -62,7 +60,7 @@ public class SerelExpression {
           .collect(Collectors.joining(" -> ")));
     }
 
-    List<MaltSentenceLink> tmpList = parents2.stream().skip(1).collect(Collectors.toList());
+    List<SentenceLink> tmpList = parents2.stream().skip(1).collect(Collectors.toList());
     Collections.reverse(tmpList);
     if(tmpList.size()>1) {
       s.append(" <- ");

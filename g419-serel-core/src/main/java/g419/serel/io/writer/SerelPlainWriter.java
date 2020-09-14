@@ -3,6 +3,7 @@ package g419.serel.io.writer;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.structure.Document;
 import g419.liner2.core.tools.parser.MaltParser;
+import g419.liner2.core.tools.parser.ParseTreeGenerator;
 import g419.serel.converter.DocumentToSerelExpressionConverter;
 import g419.serel.formatter.ISerelExpressionFormatter;
 import g419.serel.formatter.SerelExpressionFormatterPlain;
@@ -17,13 +18,15 @@ public class SerelPlainWriter extends AbstractDocumentWriter {
   private final BufferedWriter ow;
   final ISerelExpressionFormatter formatter = new SerelExpressionFormatterPlain();
 
+
   DocumentToSerelExpressionConverter converter;
   PrintWriter reportFile;
 
-  public SerelPlainWriter(final OutputStream os, MaltParser maltParser, PrintWriter report) {
+
+  public SerelPlainWriter(final OutputStream os, ParseTreeGenerator ptg, PrintWriter report) {
     ow = new BufferedWriter(new OutputStreamWriter(os));
     formatter.getHeader().forEach(this::writeLine);
-    converter = new DocumentToSerelExpressionConverter(maltParser,report);
+    converter = new DocumentToSerelExpressionConverter(ptg,report);
     reportFile = report;
   }
 

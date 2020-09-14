@@ -1,12 +1,12 @@
 package g419.liner2.core.tools.parser;
 
-public class MaltSentenceLink {
+public class SentenceLink {
 
   int sourceIndex;
   int targetIndex;
   String relationType;
 
-  public MaltSentenceLink(final int sourceIndex, final int targetIndex, final String relationType) {
+  public SentenceLink(final int sourceIndex, final int targetIndex, final String relationType) {
     this.sourceIndex = sourceIndex;
     this.targetIndex = targetIndex;
     this.relationType = relationType;
@@ -38,7 +38,7 @@ public class MaltSentenceLink {
 
   @Override
   public String toString() {
-    return "MaltSentenceLink{" +
+    return "SentenceLink{" +
         "sourceIndex=" + sourceIndex +
         ", targetIndex=" + targetIndex +
         ", relationType='" + relationType + '\'' +
@@ -46,7 +46,7 @@ public class MaltSentenceLink {
   }
 
   // deliberately not using equals()
-  public boolean isTheSameAs(MaltSentenceLink target) {
+  public boolean isTheSameAs(SentenceLink target) {
 
     return
     this.sourceIndex==target.sourceIndex

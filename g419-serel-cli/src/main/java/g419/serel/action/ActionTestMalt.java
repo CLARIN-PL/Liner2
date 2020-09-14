@@ -6,16 +6,13 @@ import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import g419.corpus.structure.*;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.liner2.core.features.tokens.ClassFeature;
 import g419.liner2.core.tools.parser.MaltParser;
 import g419.liner2.core.tools.parser.MaltSentence;
-import g419.liner2.core.tools.parser.MaltSentenceLink;
+import g419.liner2.core.tools.parser.SentenceLink;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.log4j.Logger;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class ActionTestMalt extends Action {
 
@@ -69,7 +66,7 @@ public class ActionTestMalt extends Action {
           malt.parse(maltSentence);
           maltSentence.printAsTree();
 
-          List<MaltSentenceLink> result  =  maltSentence.getParentsAscending(sentence.getTokens().size()-1);
+          List<SentenceLink> result  =  maltSentence.getParentsAscending(sentence.getTokens().size()-1);
           System.out.println("Result size = "+result.size() );
           result.stream().forEach(System.out::println);
 
@@ -79,7 +76,7 @@ public class ActionTestMalt extends Action {
           }
 
           for (int i = 0; i < maltSentence.getLinks().size(); i++) {
-            final MaltSentenceLink msl = maltSentence.getLinks().get(i);
+            final SentenceLink msl = maltSentence.getLinks().get(i);
             System.out.println(msl);
           }
 

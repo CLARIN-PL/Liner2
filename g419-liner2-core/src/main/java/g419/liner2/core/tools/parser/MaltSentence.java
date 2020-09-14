@@ -1,12 +1,9 @@
 package g419.liner2.core.tools.parser;
 
 import com.google.common.collect.Lists;
-import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import g419.corpus.structure.*;
 import lombok.Data;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-import org.maltparser.core.exception.MaltChainedException;
 
 import java.io.PrintWriter;
 import java.util.*;
@@ -15,8 +12,8 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 @Data
-public class MaltSentence {
-  List<MaltSentenceLink> links = Lists.newArrayList();
+public class MaltSentence extends ParseTree {
+  //List<SentenceLink> links = Lists.newArrayList();
   private final Map<String, String> posMapping;
   private String[] maltData;
   private final Set<Annotation> annotations;
@@ -35,7 +32,7 @@ public class MaltSentence {
     maltData = output;
     links = IntStream.range(0, output.length)
         .mapToObj(i -> new ImmutablePair<>(i, output[i].split("\t")))
-        .map(p -> new MaltSentenceLink(p.getKey(), Integer.valueOf(p.getRight()[8]) - 1, p.getRight()[9]))
+        .map(p -> new SentenceLink(p.getKey(), Integer.valueOf(p.getRight()[8]) - 1, p.getRight()[9]))
         .collect(Collectors.toList());
   }
 
@@ -47,26 +44,8 @@ public class MaltSentence {
     return this.sentence;
   }
 
-  public MaltSentenceLink getLink(final int index) {
+  public SentenceLink getLink(final int index) {
     return index >= this.links.size() ? null : this.links.get(index);
-  }
-
-  /**
-   * Zwraca listę linków wskazujących na token o wskazanym indeksie.
-   *
-   * @param index
-   * @return
-   */
-  public List<MaltSentenceLink> getLinksByTargetIndex(final int index) {
-    return links.stream()
-        .filter(link -> link.getTargetIndex() == index)
-        .collect(Collectors.toList());
-  }
-
-  public Optional<MaltSentenceLink> getLinksBySourceIndex(final int index) {
-    return links.stream()
-        .filter(link -> link.getSourceIndex() == index)
-        .findFirst();
   }
 
 
@@ -163,48 +142,6 @@ public class MaltSentence {
         .forEach(node -> node.print(pw));
   }
 
-  public Pair<List<MaltSentenceLink>,List<MaltSentenceLink>>
-  getPathBetween(int index1, int index2) {
-    List<MaltSentenceLink> parents1 = getParentsAscending(index1);
-    List<MaltSentenceLink> parents2 = getParentsAscending(index2);
-    Pair<Integer,Integer> indexes = findIndexesToLowestCommonLink(parents1,parents2);
-
-    if (indexes == null)
-      return null;
-
-    return Pair.of(
-                parents1.subList(0,indexes.getLeft()+1),
-        parents2.subList(0,indexes.getRight()+1)
-    );
-  }
-
-  public List<MaltSentenceLink> getParentsAscending(final int index) {
-    return getParentsAscending(index,new LinkedList<>());
-  }
-
-  private List<MaltSentenceLink> getParentsAscending(final int index, List<MaltSentenceLink> accumulated) {
-    Optional<MaltSentenceLink> optOutLink = getLinksBySourceIndex(index);
-
-    if(!optOutLink.isPresent()) {
-      return accumulated;
-    }
-    MaltSentenceLink outLink = optOutLink.get();
-    accumulated.add(outLink);
-    return getParentsAscending(outLink.getTargetIndex(),accumulated);
-  }
-
-  public Pair<Integer,Integer> findIndexesToLowestCommonLink(List<MaltSentenceLink> list1,
-                                                             List<MaltSentenceLink> list2) {
-    for(int i=0;i<list1.size();i++)
-      for(int j=0;j<list2.size();j++)
-      {
-        if(list1.get(i).isTheSameAs(list2.get(j)))
-          return Pair.of(i,j);
-      }
-
-    // it should never come here !
-    return null;
-  }
 
 
 

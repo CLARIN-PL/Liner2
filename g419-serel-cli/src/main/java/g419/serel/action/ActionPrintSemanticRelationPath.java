@@ -7,8 +7,10 @@ import g419.corpus.io.writer.WriterFactory;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.core.tools.parser.MaltParser;
+import g419.liner2.core.tools.parser.ParseTreeGenerator;
 import g419.serel.io.SerelOutputFormat;
 import g419.serel.io.writer.SerelWriterFactory;
+import g419.serel.tools.MaltParseTreeGenerator;
 import org.apache.commons.cli.CommandLine;
 import java.io.File;
 import java.io.OutputStream;
@@ -24,6 +26,7 @@ public class ActionPrintSemanticRelationPath extends Action {
   private String reportFilename;
 
   private MaltParser malt;
+  private ParseTreeGenerator parseTreeGenerator;
 
   public ActionPrintSemanticRelationPath() {
     super("print-serel");
@@ -52,11 +55,13 @@ public class ActionPrintSemanticRelationPath extends Action {
   @Override
   public void run() throws Exception {
     malt = new MaltParser(maltParserModelFilename);
+    parseTreeGenerator = new MaltParseTreeGenerator(malt);
+
     final OutputStream os = WriterFactory.get().getOutputStreamFileOrOut(outputFilename);
 
     try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
          final PrintWriter pw = (reportFilename!=null)?new PrintWriter( new File(reportFilename) ): null;
-         final AbstractDocumentWriter writer = SerelWriterFactory.create(SerelOutputFormat.valueOf(outputFormat.toUpperCase()), os, malt,pw)) {
+         final AbstractDocumentWriter writer = SerelWriterFactory.create(SerelOutputFormat.valueOf(outputFormat.toUpperCase()), os, parseTreeGenerator,pw)) {
       reader.forEach(writer::writeDocument);
     }
   }

@@ -12,7 +12,7 @@ import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.core.tools.parser.MaltParser;
 import g419.liner2.core.tools.parser.MaltSentence;
-import g419.liner2.core.tools.parser.MaltSentenceLink;
+import g419.liner2.core.tools.parser.SentenceLink;
 import g419.tools.maltfeature.MaltFeatureGenerator;
 import g419.tools.maltfeature.MaltPattern;
 import g419.tools.utils.Counter;
@@ -113,7 +113,7 @@ public class FeatureExtractor extends Action {
 //            			counters.addItem(annId, feature);
 //            		}
           String parentBase = null;
-          MaltSentenceLink parentLink = maltSent.getLink(ann.getHead());
+          SentenceLink parentLink = maltSent.getLink(ann.getHead());
           if (parentLink != null) {
             int parentIndex = parentLink.getTargetIndex();
             if (parentIndex > -1) {
