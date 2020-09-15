@@ -55,6 +55,10 @@ public class CommonOptions {
   public static final String OPTION_COMBO_FILE = "p";
   public static final String OPTION_COMBO_FILE_LONG = "parsed_combo";
 
+  public static final String OPTION_COMBO_FORMAT = "q";
+  public static final String OPTION_COMBO_FORMAT_LONG = "parsed_combo_format";
+
+
   public static Option getOutputFileNameOption() {
     return Option.builder(CommonOptions.OPTION_OUTPUT_FILE)
         .longOpt(CommonOptions.OPTION_OUTPUT_FILE_LONG)
@@ -86,6 +90,11 @@ public class CommonOptions {
         .hasArg().argName("filename").desc("path to a conllu file made with COMBO parser to read").build();
   }
 
+  public static Option getComboFileFormatOption() {
+    return Option.builder(CommonOptions.OPTION_COMBO_FORMAT)
+        .longOpt(CommonOptions.OPTION_COMBO_FORMAT_LONG)
+        .hasArg().argName("format").desc("input format [conllu, batch:conllu]").build();
+  }
 
   public static Option getInputFileNamesOption() {
     return Option.builder(CommonOptions.OPTION_INPUT_FILE)

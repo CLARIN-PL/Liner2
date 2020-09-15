@@ -3,6 +3,7 @@ package g419.serel.action;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.WriterFactory;
+import g419.corpus.structure.Document;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.core.tools.parser.ParseTreeGenerator;
@@ -24,6 +25,7 @@ public class ActionCheckComboParseTree extends Action {
   private String outputFilename;
   private String outputFormat;
   private String comboFilename;
+  private String comboFormat;
   private String reportFilename;
 
 
@@ -39,6 +41,7 @@ public class ActionCheckComboParseTree extends Action {
     options.addOption(CommonOptions.getOutputFileNameOption());
     options.addOption(CommonOptions.getOutputFileFormatOption());
     options.addOption(CommonOptions.getComboFileNameOption());
+    options.addOption(CommonOptions.getComboFileFormatOption());
 
     options.addOption(CommonOptions.getReportFileNameOption());
   }
@@ -53,6 +56,7 @@ public class ActionCheckComboParseTree extends Action {
       outputFormat = "TSV";
     }
     comboFilename = line.getOptionValue(CommonOptions.OPTION_COMBO_FILE);
+    comboFormat = line.getOptionValue(CommonOptions.OPTION_COMBO_FORMAT);
 
     reportFilename = line.getOptionValue(CommonOptions.OPTION_REPORT_FILE);
   }
@@ -61,17 +65,28 @@ public class ActionCheckComboParseTree extends Action {
   public void run() throws Exception {
 
     final OutputStream os = WriterFactory.get().getOutputStreamFileOrOut(outputFilename);
-    parseTreeGenerator = new ComboParseTreeGenerator(comboFilename);
-    converter = new DocumentToSerelExpressionConverter(parseTreeGenerator,null);
+
+
 
     parseTreeChecker = new CheckParserParseTree();
 
     try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
+         final AbstractDocumentReader comboReader = ReaderFactory.get().getStreamReader(comboFilename, comboFormat);
          final PrintWriter writer = new PrintWriter( os) )
     {
       List<ParseTreeMalfunction> result = new LinkedList<>();
 
-      reader.forEach(doc->result.addAll(parseTreeChecker.checkParseTree(converter.convert(doc))));
+      reader.forEach(doc-> {
+                              try {
+                                Document comboedDoc = comboReader.nextDocument();
+                                ParseTreeGenerator parseTreeGenerator = new ComboParseTreeGenerator(comboedDoc);
+                                DocumentToSerelExpressionConverter converter = new DocumentToSerelExpressionConverter(parseTreeGenerator,null);
+                                result.addAll(parseTreeChecker.checkParseTree(converter.convert(doc)));
+                              } catch (Exception e) {
+                                e.printStackTrace();
+                              }
+                           }
+                    );
 
       System.out.println("REsult size = "+result.size());
 
@@ -84,7 +99,10 @@ public class ActionCheckComboParseTree extends Action {
                                                      line.getAnnStartRange()+"\t"+
                                                      line.getAnnEndRange()
       ));
+    } catch (Exception e) {
+      throw e;
     }
   }
+
 
 }

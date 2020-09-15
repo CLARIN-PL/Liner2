@@ -14,20 +14,25 @@ public class ComboParseTreeGenerator implements ParseTreeGenerator {
 
   Document document;
 
-  public ComboParseTreeGenerator(String fileName) throws Exception{
-    try ( final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(fileName, "conllu") )
-    {
-      document = reader.nextDocument();
-    }
-
-//    for (Sentence s : document.getParagraphs().get(0).getSentences() ) {
-//      for(Token t: s.getTokens()) {
-//        System.out.println("T= "+t);
-//        System.out.println("T = ["+t.getAttributeValue("id")+":"+t.getAttributeValue("head")+ "]");
-//      }
-//    }
-
+  public ComboParseTreeGenerator(Document doc) {
+    this.document = doc;
   }
+
+//
+//  public ComboParseTreeGenerator(String fileName) throws Exception{
+//    try ( final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(fileName, "conllu") )
+//    {
+//      document = reader.nextDocument();
+//    }
+//
+////    for (Sentence s : document.getParagraphs().get(0).getSentences() ) {
+////      for(Token t: s.getTokens()) {
+////        System.out.println("T= "+t);
+////        System.out.println("T = ["+t.getAttributeValue("id")+":"+t.getAttributeValue("head")+ "]");
+////      }
+////    }
+//
+//  }
 
  public ParseTree generate(Sentence sourceSentence) throws Exception {
 
