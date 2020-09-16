@@ -96,7 +96,6 @@ public class ConlluStreamReader extends AbstractDocumentReader {
     paragraph.setAttributeIndex(index);
     this.nextParagraphId = null;
     Sentence currentSentence = new Sentence();
-    HashMap<String, Annotation> annsByType = new HashMap<String, Annotation>();
 
     try {
       while ((line = this.stream.readLine()) != null) {
@@ -106,7 +105,6 @@ public class ConlluStreamReader extends AbstractDocumentReader {
             currentSentence.setId("sent" + paragraph.numSentences() + 1);
             paragraph.addSentence(currentSentence);
             currentSentence = new Sentence();
-            annsByType = Maps.newHashMap();
           }
         } else {
           String[] columns = line.split("\t");
@@ -121,28 +119,8 @@ public class ConlluStreamReader extends AbstractDocumentReader {
             token.setAttributeValue(i, columns[i]);
           }
           currentSentence.addToken(token);
-
-/*
-          String label = columns[7]; //DEPREL
-          if (label.equals("O")) {
-            annsByType = Maps.newHashMap();
-          } else {
-            Matcher m = annotationPattern.matcher(label);
-            int idx = currentSentence.getTokenNumber() - 1;
-            while (m.find()) {
-              String annType = m.group(2);
-              if (m.group(1).equals("B")) {
-                Annotation newAnn = new Annotation(idx, annType, currentSentence);
-                currentSentence.addChunk(newAnn);
-                annsByType.put(annType, newAnn);
-              } else if (m.group(1).equals("I") && annsByType.containsKey(annType)) {
-                annsByType.get(annType).addToken(idx);
-              }
-            }
-          }
-*/
-          }
         }
+      }
     } catch (IOException e) {
       // ToDo: Use logger to log the exception
       e.printStackTrace();
@@ -150,7 +128,6 @@ public class ConlluStreamReader extends AbstractDocumentReader {
     }
 
     if (currentSentence.getTokenNumber() > 0) {
-//      System.out.println("Current sentence = "+currentSentence);
       currentSentence.setId("sent" + paragraph.numSentences() + 1);
       paragraph.addSentence(currentSentence);
     }
@@ -159,7 +136,6 @@ public class ConlluStreamReader extends AbstractDocumentReader {
     int parentAttribute = 6;  //HEAD
     for (Sentence s : paragraph.getSentences()) {
       for (Token token : s.getTokens()) {
-//        System.out.println("Ch: "+token);
         int parentIndex = Integer.parseInt(token.getAttributeValue(parentAttribute)) - 1;
         if (parentIndex >= 0) {
           ((NodeToken) token).setParent((NodeToken) s.getTokens().get(parentIndex));

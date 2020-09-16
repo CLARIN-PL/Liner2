@@ -13,6 +13,8 @@ import g419.serel.structure.ParseTreeMalfunction;
 import g419.serel.tools.ComboParseTreeGenerator;
 import g419.serel.tools.MaltParseTreeGenerator;
 import org.apache.commons.cli.CommandLine;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.LinkedList;
@@ -72,7 +74,8 @@ public class ActionCheckComboParseTree extends Action {
 
     try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
          final AbstractDocumentReader comboReader = ReaderFactory.get().getStreamReader(comboFilename, comboFormat);
-         final PrintWriter writer = new PrintWriter( os) )
+         final PrintWriter writer = new PrintWriter( os) ;
+         final PrintWriter reportWriter = reportFilename==null? null :new PrintWriter( new FileWriter( new File(reportFilename))))
     {
       List<ParseTreeMalfunction> result = new LinkedList<>();
 
@@ -80,7 +83,7 @@ public class ActionCheckComboParseTree extends Action {
                               try {
                                 Document comboedDoc = comboReader.nextDocument();
                                 ParseTreeGenerator parseTreeGenerator = new ComboParseTreeGenerator(comboedDoc);
-                                DocumentToSerelExpressionConverter converter = new DocumentToSerelExpressionConverter(parseTreeGenerator,null);
+                                DocumentToSerelExpressionConverter converter = new DocumentToSerelExpressionConverter(parseTreeGenerator,reportWriter);
                                 result.addAll(parseTreeChecker.checkParseTree(converter.convert(doc)));
                               } catch (Exception e) {
                                 e.printStackTrace();

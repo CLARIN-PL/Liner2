@@ -1,18 +1,22 @@
 package g419.liner2.core.tools.parser;
 
+import com.google.common.collect.Lists;
 import g419.corpus.structure.Sentence;
 import org.apache.commons.lang3.tuple.Pair;
+import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-public class ParseTree {
-
+public abstract class ParseTree {
 
   List<SentenceLink> links = new LinkedList<>();
 
   public List<SentenceLink> getLinks() { return links; }
+
+  abstract public Sentence getSentence() ;
 
   /**
    * Zwraca listę linków wskazujących na token o wskazanym indeksie.
@@ -76,4 +80,80 @@ public class ParseTree {
     return null;
   }
 
+
+
+  private class TreeNode {
+
+    final String name;
+    final List<ParseTree.TreeNode> children = Lists.newArrayList();
+    String relationWithParent = "";
+
+    public TreeNode(final String name) {
+      this.name = name;
+    }
+
+    public void addChild(final ParseTree.TreeNode node) {
+      children.add(node);
+    }
+
+    public void setRelationWithParent(final String relation) {
+      relationWithParent = relation;
+    }
+
+    public List<ParseTree.TreeNode> getChildren() {
+      return children;
+    }
+
+
+
+    public void print(PrintWriter pw) {
+      pw.println("ROOT");
+      print(pw,"", true);
+      pw.println();
+    }
+
+    private void print(final PrintWriter pw,final String prefix, final boolean isTail) {
+      pw.println(String.format("%s%s──(%s)── %s", prefix, isTail ? "└" : "├", relationWithParent, name));
+      for (int i = 0; i < children.size() - 1; i++) {
+        children.get(i).print(pw,prefix + (isTail ? "    " : "│   "), false);
+      }
+      if (children.size() > 0) {
+        children.get(children.size() - 1)
+            .print(pw,prefix + (isTail ? "    " : "│   "), true);
+      }
+    }
+  }
+
+  public void printAsTree() {
+    printAsTree(new PrintWriter(System.out));
+  }
+
+  public void printAsTree(PrintWriter pw ) {
+    final List<ParseTree.TreeNode> nodes = getSentence().getTokens().stream()
+
+        //.map(t -> String.format("%s                    [%s]", t.getOrth(), t.getDisambTag().toString()))
+        .map(t -> String.format("%s                    [%s]", t.getOrth()," "))
+        .map(TreeNode::new)
+        .collect(Collectors.toList());
+
+    links.stream()
+        .filter(l -> l.sourceIndex > -1 && l.targetIndex > -1)
+        .forEach(l -> {
+          nodes
+              .get(l.targetIndex)
+              .addChild(nodes
+                  .get(l.sourceIndex));
+          nodes.get(l.sourceIndex).setRelationWithParent(l.relationType);
+        });
+
+    IntStream.range(0, nodes.size())
+        .filter(n -> links.get(n).targetIndex == -1)
+        .mapToObj(nodes::get)
+        .forEach(node -> node.print(pw));
+  }
+
 }
+
+
+
+

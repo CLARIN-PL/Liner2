@@ -37,7 +37,7 @@ public class CheckParserParseTree {
     List<ParseTreeMalfunction> result = new LinkedList<>();
 
     int headForOut = a.getHead();
-    Optional<SentenceLink> linkForOut = se.getMaltSentence().getLinksBySourceIndex(headForOut);
+    Optional<SentenceLink> linkForOut = se.getParseTree().getLinksBySourceIndex(headForOut);
     if(linkForOut.isPresent()) {
       int targetOutIndex = linkForOut.get().getTargetIndex();
       if (a.isTokenIndexWithin(targetOutIndex)) {
@@ -69,7 +69,7 @@ public class CheckParserParseTree {
 
     List<SentenceLink> links = ann.getTokens()
         .stream()
-        .map(index -> se.getMaltSentence().getLinksBySourceIndex(index))
+        .map(index -> se.getParseTree().getLinksBySourceIndex(index))
         .filter(optLink -> optLink.isPresent())
         .filter(optLink -> ! ann.isTokenIndexWithin(optLink.get().getTargetIndex()))
         .map(optLink -> optLink.get())

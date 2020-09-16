@@ -12,6 +12,8 @@ import g419.serel.converter.DocumentToSerelExpressionConverter;
 import g419.serel.structure.ParseTreeMalfunction;
 import g419.serel.tools.MaltParseTreeGenerator;
 import org.apache.commons.cli.CommandLine;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.LinkedList;
@@ -57,15 +59,17 @@ public class ActionCheckMaltParseTree extends Action {
 
   @Override
   public void run() throws Exception {
-    malt = new MaltParser(maltParserModelFilename);
-    parseTreeGenerator = new MaltParseTreeGenerator(malt);
-    converter = new DocumentToSerelExpressionConverter(parseTreeGenerator,null);
-    parseTreeChecker = new CheckParserParseTree();
 
     final OutputStream os = WriterFactory.get().getOutputStreamFileOrOut(outputFilename);
     try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
-         final PrintWriter writer = new PrintWriter( os) )
+         final PrintWriter writer = new PrintWriter( os) ;
+         final PrintWriter reportWriter = reportFilename==null? null : new PrintWriter( new FileWriter( new File(reportFilename))) )
     {
+      malt = new MaltParser(maltParserModelFilename);
+      parseTreeGenerator = new MaltParseTreeGenerator(malt);
+      converter = new DocumentToSerelExpressionConverter(parseTreeGenerator,reportWriter);
+      parseTreeChecker = new CheckParserParseTree();
+
       List<ParseTreeMalfunction> result = new LinkedList<>();
       reader.forEach(doc->result.addAll(parseTreeChecker.checkParseTree(converter.convert(doc))));
       writer.println("Code\tdocument\tann_id\tsourceIndex\ttargetIndex\tstartAnnIndex\tendAnnIndex");

@@ -18,27 +18,24 @@ import java.util.List;
 public class DocumentToSerelExpressionConverter {
 
   ParseTreeGenerator parseTreeGenerator;
-  PrintWriter report;
+  PrintWriter reportWriter;
 
-  public DocumentToSerelExpressionConverter(ParseTreeGenerator ptg, PrintWriter reportFile) {
+  public DocumentToSerelExpressionConverter(ParseTreeGenerator ptg, PrintWriter report) {
     parseTreeGenerator = ptg;
-    report = reportFile;
+    reportWriter = report;
   }
 
   public List<SerelExpression> convert(final Document document) {
-
-    System.out.println("convert::DocumentToSerelExpressionConverter");
 
     if (document.getRelationsSet().size() == 0) {
       return Lists.newArrayList();
     }
 
     List<SerelExpression> result = new LinkedList<>();
-
     for (Relation rel : document.getRelations("Semantic relations")) {
       try {
         SerelExpression serel = extractSerelFromRel(rel);
-        if(report!=null) {
+        if(reportWriter !=null) {
           this.reportSerel(serel);
         }
         result.add(serel);
@@ -52,11 +49,11 @@ public class DocumentToSerelExpressionConverter {
   public SerelExpression extractSerelFromRel(Relation rel) throws Exception {
     Sentence sentence = rel.getAnnotationFrom().getSentence();
     ParseTree parseTree = parseTreeGenerator.generate(sentence);
-    SerelExpression serel = this.extractSerelFromMaltSentence(rel,parseTree);
+    SerelExpression serel = this.extractSerelFromParseTree(rel,parseTree);
     return serel;
   }
 
-  public SerelExpression extractSerelFromMaltSentence(Relation rel, ParseTree parseTree) {
+  public SerelExpression extractSerelFromParseTree(Relation rel, ParseTree parseTree) {
     int index1 = rel.getAnnotationFrom().getHead();
     int index2 = rel.getAnnotationTo().getHead();
 
@@ -73,11 +70,11 @@ public class DocumentToSerelExpressionConverter {
   }
 
   private void reportSerel(SerelExpression se) {
-    report.println(se.getRelation().getDocument().getName());
-    report.println(se.getSentence());
-    report.println(se.getPathAsString());
-    //TODO se.getMaltSentence().printAsTree(report);
-    report.println("------------------------------------------------------");
+    reportWriter.println(se.getRelation().getDocument().getName());
+    reportWriter.println(se.getSentence());
+    reportWriter.println(se.getPathAsString());
+    se.getParseTree().printAsTree(reportWriter);
+    reportWriter.println("------------------------------------------------------");
 
   }
 

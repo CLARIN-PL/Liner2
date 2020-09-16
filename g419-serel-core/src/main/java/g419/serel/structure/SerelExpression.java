@@ -21,7 +21,7 @@ public class SerelExpression {
   private Relation relation;
   private List<SentenceLink> parents1;
   private List<SentenceLink> parents2;
-  private ParseTree maltSentence;
+  private ParseTree parseTree;
 
 
   public SerelExpression() {
@@ -30,11 +30,11 @@ public class SerelExpression {
   public SerelExpression(final Relation rel,
                          List<SentenceLink> p1,
                          List<SentenceLink> p2,
-                         ParseTree ms) {
+                         ParseTree pt) {
     this.relation = rel;
     this.parents1 = p1;
     this.parents2 = p2;
-    this.maltSentence = ms;
+    this.parseTree = pt;
   }
 
 
@@ -73,7 +73,5 @@ public class SerelExpression {
 
     return s.toString();
   }
-
-
 
 }
