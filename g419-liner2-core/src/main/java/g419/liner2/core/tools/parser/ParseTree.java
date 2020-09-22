@@ -2,6 +2,7 @@ package g419.liner2.core.tools.parser;
 
 import com.google.common.collect.Lists;
 import g419.corpus.structure.Sentence;
+import g419.corpus.structure.Token;
 import org.apache.commons.lang3.tuple.Pair;
 import java.io.PrintWriter;
 import java.util.LinkedList;
@@ -67,6 +68,12 @@ public abstract class ParseTree {
     return getParentsAscending(outLink.getTargetIndex(),accumulated);
   }
 
+  /**
+   * @param list1  - ordered list of all parents for first element, from element to ROOT
+   * @param list2  - ordered list of all parents for second element, from element to ROOT
+   * @return - indexes in above lists to first element that is _exactly_ the same ( source
+   * and target and type are the same ) on both lists when travelling from element(s) to ROOT
+   */
    public Pair<Integer,Integer> findIndexesToLowestCommonLink(List<SentenceLink> list1,
                                                              List<SentenceLink> list2) {
     for(int i=0;i<list1.size();i++)
@@ -87,10 +94,16 @@ public abstract class ParseTree {
     final String name;
     final List<ParseTree.TreeNode> children = Lists.newArrayList();
     String relationWithParent = "";
+    int index;
 
     public TreeNode(final String name) {
       this.name = name;
     }
+    public TreeNode(final String name,int i) {
+      this(name);
+      this.index =i;
+    }
+
 
     public void addChild(final ParseTree.TreeNode node) {
       children.add(node);
@@ -125,16 +138,17 @@ public abstract class ParseTree {
   }
 
   public void printAsTree() {
-    printAsTree(new PrintWriter(System.out));
+    printAsTreeWithIndex(new PrintWriter(System.out));
   }
 
-  public void printAsTree(PrintWriter pw ) {
-    final List<ParseTree.TreeNode> nodes = getSentence().getTokens().stream()
+  public void printAsTreeWithIndex(PrintWriter pw ) {
+    final List<ParseTree.TreeNode> nodes = new LinkedList<>();
 
-        //.map(t -> String.format("%s                    [%s]", t.getOrth(), t.getDisambTag().toString()))
-        .map(t -> String.format("%s                    [%s]", t.getOrth()," "))
-        .map(TreeNode::new)
-        .collect(Collectors.toList());
+    for (int i =0;i<getSentence().getTokens().size();i++) {
+      Token t = getSentence().getTokens().get(i);
+      TreeNode tn = new TreeNode(String.format("%s                    [%s] [%s]", t.getOrth(), " "," "+i),i);
+      nodes.add(tn);
+    }
 
     links.stream()
         .filter(l -> l.sourceIndex > -1 && l.targetIndex > -1)

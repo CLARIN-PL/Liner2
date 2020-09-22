@@ -51,12 +51,13 @@ public class SerelExpression {
     StringBuilder s = new StringBuilder();
     s.append(relation.getType()).append(": ");
 
+    s.append("["+parents1.get(0).getSourceIndex()+"]");
     s.append(relation.getAnnotationFrom().getType()); //.append(" -> ");
     if(parents1.size()>1) {
       s.append(" -> ");
       s.append(parents1.stream()
           .skip(1)
-          .map(msl -> tokens.get(msl.getSourceIndex()).getDisambTag().getBase())
+          .map(msl -> "["+msl.getSourceIndex()+"]"+tokens.get(msl.getSourceIndex()).getDisambTag().getBase())
           .collect(Collectors.joining(" -> ")));
     }
 
@@ -64,12 +65,14 @@ public class SerelExpression {
     Collections.reverse(tmpList);
     if(tmpList.size()>1) {
       s.append(" <- ");
-      s.append(parents2.stream()
+      s.append(tmpList.stream()
           .skip(1)
-          .map(msl -> tokens.get(msl.getSourceIndex()).getDisambTag().getBase())
+          .map(msl ->"["+msl.getSourceIndex()+"]"+ tokens.get(msl.getSourceIndex()).getDisambTag().getBase())
           .collect(Collectors.joining(" <- ")));
     }
-    s.append(" <- ").append(relation.getAnnotationTo().getType());
+    s.append(" <- ")
+        .append("["+parents2.get(0).getSourceIndex()+"]")
+        .append(relation.getAnnotationTo().getType());
 
     return s.toString();
   }

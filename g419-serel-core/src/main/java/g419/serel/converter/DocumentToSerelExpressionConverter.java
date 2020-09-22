@@ -34,6 +34,7 @@ public class DocumentToSerelExpressionConverter {
     List<SerelExpression> result = new LinkedList<>();
     for (Relation rel : document.getRelations("Semantic relations")) {
       try {
+        System.out.println("Rel = "+rel);
         SerelExpression serel = extractSerelFromRel(rel);
         if(reportWriter !=null) {
           this.reportSerel(serel);
@@ -53,11 +54,15 @@ public class DocumentToSerelExpressionConverter {
     return serel;
   }
 
+
   public SerelExpression extractSerelFromParseTree(Relation rel, ParseTree parseTree) {
     int index1 = rel.getAnnotationFrom().getHead();
     int index2 = rel.getAnnotationTo().getHead();
 
     Pair<List<SentenceLink>, List<SentenceLink>> path = parseTree.getPathBetween( index1, index2);
+
+    System.out.println("LS1 = "+path.getLeft());
+    System.out.println("LS2 = "+path.getRight());
 
     SerelExpression se;
     if(path!=null) {
@@ -73,7 +78,7 @@ public class DocumentToSerelExpressionConverter {
     reportWriter.println(se.getRelation().getDocument().getName());
     reportWriter.println(se.getSentence());
     reportWriter.println(se.getPathAsString());
-    se.getParseTree().printAsTree(reportWriter);
+    se.getParseTree().printAsTreeWithIndex(reportWriter);
     reportWriter.println("------------------------------------------------------");
 
   }
