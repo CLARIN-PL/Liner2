@@ -51,6 +51,41 @@ public class SerelExpression {
     StringBuilder s = new StringBuilder();
     s.append(relation.getType()).append(": ");
 
+    s.append(relation.getAnnotationFrom().getType()); //.append(" -> ");
+    if(parents1.size()>1) {
+      s.append(" -> ");
+      s.append(parents1.stream()
+          .skip(1)
+          .map(msl -> tokens.get(msl.getSourceIndex()).getDisambTag().getBase())
+          .collect(Collectors.joining(" -> ")));
+    }
+
+    List<SentenceLink> tmpList = parents2.stream().skip(1).collect(Collectors.toList());
+    Collections.reverse(tmpList);
+    if(tmpList.size()>1) {
+      s.append(" <- ");
+      s.append(tmpList.stream()
+          .skip(1)
+          .map(msl ->tokens.get(msl.getSourceIndex()).getDisambTag().getBase())
+          .collect(Collectors.joining(" <- ")));
+    }
+    s.append(" <- ")
+        .append(relation.getAnnotationTo().getType());
+
+    return s.toString();
+  }
+
+
+
+  public String getPathAsStringWithIndexes() {
+    if ((parents1 == null) || (parents2 == null) ) {
+      return " ";
+    }
+
+    List<Token> tokens = relation.getAnnotationFrom().getSentence().getTokens();
+    StringBuilder s = new StringBuilder();
+    s.append(relation.getType()).append(": ");
+
     s.append("["+parents1.get(0).getSourceIndex()+"]");
     s.append(relation.getAnnotationFrom().getType()); //.append(" -> ");
     if(parents1.size()>1) {
