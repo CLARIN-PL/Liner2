@@ -87,8 +87,11 @@ public abstract class ParseTree {
     return null;
   }
 
-
-
+  /**
+   * Used to display structure of ParseTree on screen
+   *
+   *
+   */
   private class TreeNode {
 
     final String name;

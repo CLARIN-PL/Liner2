@@ -43,6 +43,10 @@ public class SerelExpression {
   }
 
   public String getPathAsString() {
+    return getPathAsString(false);
+  }
+
+  public String getPathAsString(boolean withIndexes) {
     if ((parents1 == null) || (parents2 == null) ) {
       return " ";
     }
@@ -51,12 +55,15 @@ public class SerelExpression {
     StringBuilder s = new StringBuilder();
     s.append(relation.getType()).append(": ");
 
+    if(withIndexes) {
+      s.append("[" + parents1.get(0).getSourceIndex() + "]");
+    }
     s.append(relation.getAnnotationFrom().getType()); //.append(" -> ");
     if(parents1.size()>1) {
       s.append(" -> ");
       s.append(parents1.stream()
           .skip(1)
-          .map(msl -> tokens.get(msl.getSourceIndex()).getDisambTag().getBase())
+          .map(msl -> sentenceLink2String(msl,withIndexes))
           .collect(Collectors.joining(" -> ")));
     }
 
@@ -66,50 +73,44 @@ public class SerelExpression {
       s.append(" <- ");
       s.append(tmpList.stream()
           .skip(1)
-          .map(msl ->tokens.get(msl.getSourceIndex()).getDisambTag().getBase())
+          .map(msl ->sentenceLink2String(msl,withIndexes))
           .collect(Collectors.joining(" <- ")));
     }
-    s.append(" <- ")
-        .append(relation.getAnnotationTo().getType());
+    s.append(" <- ");
+    if(withIndexes) {
+        s.append("[" + parents2.get(0).getSourceIndex() + "]");
+    }
+    s.append(relation.getAnnotationTo().getType());
 
     return s.toString();
   }
 
-
-
-  public String getPathAsStringWithIndexes() {
-    if ((parents1 == null) || (parents2 == null) ) {
-      return " ";
-    }
-
-    List<Token> tokens = relation.getAnnotationFrom().getSentence().getTokens();
-    StringBuilder s = new StringBuilder();
-    s.append(relation.getType()).append(": ");
-
-    s.append("["+parents1.get(0).getSourceIndex()+"]");
-    s.append(relation.getAnnotationFrom().getType()); //.append(" -> ");
-    if(parents1.size()>1) {
-      s.append(" -> ");
-      s.append(parents1.stream()
-          .skip(1)
-          .map(msl -> "["+msl.getSourceIndex()+"]"+tokens.get(msl.getSourceIndex()).getDisambTag().getBase())
-          .collect(Collectors.joining(" -> ")));
-    }
-
-    List<SentenceLink> tmpList = parents2.stream().skip(1).collect(Collectors.toList());
-    Collections.reverse(tmpList);
-    if(tmpList.size()>1) {
-      s.append(" <- ");
-      s.append(tmpList.stream()
-          .skip(1)
-          .map(msl ->"["+msl.getSourceIndex()+"]"+ tokens.get(msl.getSourceIndex()).getDisambTag().getBase())
-          .collect(Collectors.joining(" <- ")));
-    }
-    s.append(" <- ")
-        .append("["+parents2.get(0).getSourceIndex()+"]")
-        .append(relation.getAnnotationTo().getType());
-
-    return s.toString();
+  private String sentenceLink2String(SentenceLink sl, boolean withIndexes) {
+        return
+            (withIndexes? "["+sl.getSourceIndex()+"]": "" ) +
+            getCaseClause(sl) +
+            getSentence().getTokens().get(sl.getSourceIndex()).getDisambTag().getBase();
   }
+
+  private boolean isWithCaseClause(SentenceLink sl) {
+    List<SentenceLink> peerLinks = this.parseTree.getLinksByTargetIndex(sl.getSourceIndex());
+    for(SentenceLink peerLink : peerLinks) {
+      if(peerLink.getRelationType().equals("case")) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private String getCaseClause(SentenceLink sl ) {
+    List<SentenceLink> peerLinks = this.parseTree.getLinksByTargetIndex(sl.getSourceIndex());
+    for(SentenceLink peerLink : peerLinks) {
+      if(peerLink.getRelationType().equals("case")) {
+          return "("+getSentence().getTokens().get(peerLink.getSourceIndex()).getDisambTag().getBase()+") ";
+      }
+    }
+    return "";
+  }
+
 
 }

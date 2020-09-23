@@ -7,6 +7,7 @@ import g419.corpus.structure.Sentence;
 import g419.liner2.core.tools.parser.SentenceLink;
 import g419.liner2.core.tools.parser.*;
 import g419.serel.structure.SerelExpression;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import java.io.PrintWriter;
 import java.util.LinkedList;
@@ -15,6 +16,7 @@ import java.util.List;
 /**
  * Converts set of annotations and relations between annotations into a set of serel expressions.
  */
+@Slf4j
 public class DocumentToSerelExpressionConverter {
 
   ParseTreeGenerator parseTreeGenerator;
@@ -34,7 +36,7 @@ public class DocumentToSerelExpressionConverter {
     List<SerelExpression> result = new LinkedList<>();
     for (Relation rel : document.getRelations("Semantic relations")) {
       try {
-        System.out.println("Rel = "+rel);
+        log.trace("Rel = "+rel);
         SerelExpression serel = extractSerelFromRel(rel);
         if(reportWriter !=null) {
           this.reportSerel(serel);
@@ -61,8 +63,8 @@ public class DocumentToSerelExpressionConverter {
 
     Pair<List<SentenceLink>, List<SentenceLink>> path = parseTree.getPathBetween( index1, index2);
 
-    System.out.println("LS1 = "+path.getLeft());
-    System.out.println("LS2 = "+path.getRight());
+    log.trace("LS1 = "+path.getLeft());
+    log.trace("LS2 = "+path.getRight());
 
     SerelExpression se;
     if(path!=null) {
@@ -77,6 +79,7 @@ public class DocumentToSerelExpressionConverter {
   private void reportSerel(SerelExpression se) {
     reportWriter.println(se.getRelation().getDocument().getName());
     reportWriter.println(se.getSentence());
+    //reportWriter.println(se.getPathAsString(true));
     reportWriter.println(se.getPathAsString());
     se.getParseTree().printAsTreeWithIndex(reportWriter);
     reportWriter.println("------------------------------------------------------");
