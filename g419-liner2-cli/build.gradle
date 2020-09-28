@@ -46,4 +46,5 @@ dependencies {
     compile 'commons-io:commons-io:2.4'
     compile files('../lib/PolemJava.jar')
     compile files('../lib/fasttext.jar')
+    compile 'log4j:log4j:1.2.17'
 }
