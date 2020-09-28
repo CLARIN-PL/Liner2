@@ -56,7 +56,11 @@ public class Token extends IdentifiableElement {
    * @return
    */
   public String getAttributeValue(final int index) {
-    return attributes.get(index);
+    //System.out.println("Checking attrbute for token:"+this.getOrth());
+    if(index<attributes.size())
+      return attributes.get(index);
+    else
+      return "";
   }
 
   public String getAttributeValue(final String attr) {
@@ -176,6 +180,8 @@ public class Token extends IdentifiableElement {
       attributes.set(index, value);
     } else if (index == attributes.size()) {
       attributes.add(value);
+    } else {
+      System.out.println(" Index "+index+" too big. MAx allowed ="+attributes.size());
     }
   }
 
@@ -244,8 +250,6 @@ public class Token extends IdentifiableElement {
     this.noSpaceAfter = noSpaceAfter;
     return this;
   }
-
-
 
 
 

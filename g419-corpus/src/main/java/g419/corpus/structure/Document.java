@@ -160,6 +160,15 @@ public class Document {
     return sentences;
   }
 
+  public Optional<Sentence> getSentenceById(String id) {
+    for( Sentence s : getSentences()) {
+      if (s.getId().equals(id))
+        return Optional.of(s);
+    }
+    return Optional.empty();
+  }
+
+
   public void removeAnnotations(final List<Annotation> annotations) {
     for (final Annotation annotation : annotations) {
       annotation.getSentence().getChunks().remove(annotation);

@@ -54,6 +54,10 @@ public class Paragraph extends IdentifiableElement {
     return chunkMetaData.get(key);
   }
 
+  public HashMap<String, String> gCM() {
+    return chunkMetaData;
+  }
+
   @Override
   public Paragraph clone() {
     final Paragraph copy = new Paragraph(id);
