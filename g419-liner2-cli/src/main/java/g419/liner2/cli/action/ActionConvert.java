@@ -86,7 +86,7 @@ public class ActionConvert extends Action {
     while (reader.hasNext()) {
       final Document ps = reader.next();
 
-      Logger.getLogger(getClass()).info("Processing " + ps.getName() + " ...");
+      //Logger.getLogger(getClass()).info("Processing " + ps.getName() + " ...");
       if (gen != null) {
         if (gen != null) {
           Logger.getLogger(getClass()).info(" - generating features ...");

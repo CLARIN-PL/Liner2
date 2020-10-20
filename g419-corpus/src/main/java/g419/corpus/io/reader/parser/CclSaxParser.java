@@ -41,6 +41,7 @@ public class CclSaxParser extends DefaultHandler {
   private final String TAG_TAG = "lex";
   private final String TAG_TOKEN = "tok";
   private final String TAG_HEAD = "head";
+  private final String TAG_DEPREL = "deprel";
   private final String TAG_PROP = "prop";
   private final String ATTR_KEY = "key";
 
@@ -52,6 +53,9 @@ public class CclSaxParser extends DefaultHandler {
   Token currentToken = null;
   String tmpBase = null;
   String tmpCtag = null;
+  String tmpHead = null;
+  String tmpDeprel = null;
+
   InputStream is;
   String tmpValue;
   Boolean tmpDisamb = false;
@@ -194,6 +198,10 @@ public class CclSaxParser extends DefaultHandler {
       tmpBase = tmpValue;
     } else if (element.equalsIgnoreCase(TAG_CTAG)) {
       tmpCtag = tmpValue;
+    } else if (element.equalsIgnoreCase(TAG_HEAD)) {
+      tmpHead = tmpValue;
+    } else if (element.equalsIgnoreCase(TAG_DEPREL)) {
+      tmpDeprel = tmpValue;
     } else if (element.equalsIgnoreCase(TAG_ANN)) {
       final String chanNumber = tmpValue.trim();
       Annotation annotation = null;
