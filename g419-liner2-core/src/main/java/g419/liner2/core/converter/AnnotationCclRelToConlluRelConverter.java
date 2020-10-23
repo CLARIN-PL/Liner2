@@ -30,7 +30,7 @@ public class AnnotationCclRelToConlluRelConverter extends Converter {
     String sidFrom = r.getAnnotationFrom().getSentence().getId();
     String sidTo = r.getAnnotationTo().getSentence().getId();
 
-    System.out.println("sid1 =" + sidFrom + " sidTo =" + sidTo);
+    //System.out.println("sid1 =" + sidFrom + " sidTo =" + sidTo);
 
     if (!sidFrom.equals(sidTo)) {
       log.error("DOC ID: "+r.getDocument().getName()+" "+r.getType()+   ":[ <"+r.getAnnotationFrom().getSentence().getId()+">"+ r.getAnnotationFrom().getText()+" ->  <"+ r.getAnnotationTo().getSentence().getId()+">"+   r.getAnnotationTo().getText()+" ] " );
@@ -42,7 +42,7 @@ public class AnnotationCclRelToConlluRelConverter extends Converter {
       relString.append(r.getAnnotationTo().getType() + REL_STRING_SEPARATOR);
       relString.append(REL_STRING_ENTRY_END);
 
-     System.out.println("RELSTRING = " + relString);
+     //System.out.println("RELSTRING = " + relString);
       Sentence s = r.getAnnotationFrom().getSentence();
 
       Token t = s.getTokens().get(r.getAnnotationFrom().getTokens().first());
@@ -54,7 +54,7 @@ public class AnnotationCclRelToConlluRelConverter extends Converter {
         t.getAttributeIndex().addAttribute("nam_rel");
       }
       String newValue=oldValue+ relString.toString();
-      System.out.println("newValue = "+newValue);
+      //System.out.println("newValue = "+newValue);
       t.setAttributeValue("nam_rel",newValue);
     }
   }
