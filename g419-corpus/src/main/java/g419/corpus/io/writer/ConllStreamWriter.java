@@ -57,14 +57,23 @@ public class ConllStreamWriter extends AbstractDocumentWriter {
       deprel = ai.getAttributeValue(t, "deprel");
     }
 
+    /*
     String boiAnnotations = "_";
     if(ai.getIndex("boi")!=-1) {
       boiAnnotations = ai.getAttributeValue(t, "boi");
     }
+    */
+    /*
     String relations = "_";
     if(ai.getIndex("nam_rel")!=-1) {
       relations = ai.getAttributeValue(t, "nam_rel");
     }
+    */
+    String misc = "_";
+    if(ai.getIndex("misc")!=-1) {
+      misc = ai.getAttributeValue(t, "misc");
+    }
+
 
     Tag disambTag = t.getTags().get(0);
     for (Tag iterTag : t.getTags()) {
@@ -99,7 +108,7 @@ public class ConllStreamWriter extends AbstractDocumentWriter {
 //		}
     //TODO: ctag dla interp conj, etc.
     //TODO: iż -> dlaczego nie ma pos?
-    return String.format("%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", tokenIndex, orth, base, pos, posext, ctag, head,deprel, boiAnnotations, relations);
+    return String.format("%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t_\t%s\n", tokenIndex, orth, base, pos, posext, ctag, head,deprel,  misc);
   }
 
   ;

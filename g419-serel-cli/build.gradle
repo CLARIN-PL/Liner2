@@ -31,4 +31,8 @@ dependencies {
     compile project(":g419-corpus")
     compile project(":g419-serel-core")
     compile project(":g419-lib-cli")
+
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.0.1'
+
 }

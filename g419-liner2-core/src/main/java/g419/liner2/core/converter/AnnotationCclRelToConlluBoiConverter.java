@@ -1,6 +1,8 @@
 package g419.liner2.core.converter;
 
 
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import g419.corpus.structure.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,46 +26,87 @@ public class AnnotationCclRelToConlluBoiConverter extends Converter {
 
     // find rels that are in this sentence
 
-    Map<Integer,List<String>> boiStrings = new HashMap<>();
+    Map<Integer,List<String>> boiDescs = new HashMap<>();
     List<Annotation> anns = s.getChunks().stream().filter(a -> a.getType().startsWith(annotationsTypeStartsWith)).collect(Collectors.toList());
-    anns.stream().forEach(ann->produceBOIStrings(s,ann, boiStrings));
-    s.getTokens().stream().forEach(t->enhanceTokensWithBOI(s, boiStrings));
+    anns.stream().forEach(ann->produceboiDescs(s,ann, boiDescs));
+    s.getTokens().stream().forEach(t->enhanceTokensWithBOI(s, boiDescs));
   }
 
 
-  private void produceBOIStrings(Sentence s, Annotation ann, Map<Integer,List<String>> boiStrings) {
+  private void produceboiDescs(Sentence s, Annotation ann, Map<Integer,List<String>> boiDescs) {
 //    System.out.println("Producing start for ann= "+ann);
 //    System.out.println("begin= "+ann.getBegin()+ "   end = "+ann.getEnd());
 //    System.out.println("tbegin= "+s.getTokens().get(ann.getBegin())+ "   end = "+s.getTokens().get(ann.getEnd()));
 
-    List<String> boiStringList = boiStrings.get(ann.getBegin());
-    if(boiStringList == null ) {
-      boiStringList =  new LinkedList<>();
-      boiStrings.put(ann.getBegin(),boiStringList);
+    List<String> boiDescList = boiDescs.get(ann.getBegin());
+    if(boiDescList == null ) {
+      boiDescList =  new LinkedList<>();
+      boiDescs.put(ann.getBegin(),boiDescList);
     }
-    boiStringList.add("B-" + ann.getType());
+    boiDescList.add("B-"+ann.getType());
 
     for (int i = ann.getBegin() + 1; i <= ann.getEnd(); i++) {
-      boiStringList = boiStrings.get(i);
-      if(boiStringList == null ) {
-        boiStringList =  new LinkedList<>();
-        boiStrings.put(i,boiStringList);
+      boiDescList = boiDescs.get(i);
+      if(boiDescList == null ) {
+        boiDescList =  new LinkedList<>();
+        boiDescs.put(i,boiDescList);
       }
-      boiStringList.add("I-" + ann.getType());
+      boiDescList.add("I-" + ann.getType());
     }
   }
 
-  private void enhanceTokensWithBOI(Sentence s, Map<Integer,List<String>> boiStrings ) {
-    s.getAttributeIndex().addAttribute("boi");
+  private void enhanceTokensWithBOI(Sentence s, Map<Integer,List<String>> boiDescs ) {
+    //System.out.println("Enhancing ....");
+    //s.getAttributeIndex().addAttribute("boi");
     for(int i=0;i<s.getTokens().size() ; i++ ) {
-      String value;
-      List<String> list = boiStrings.get(i);
-      if( (list == null) || (list.size()==0) )
-        value = "O";
-      else
-        value = list.stream().collect(Collectors.joining("#"));
+      List<String> value;
+      List<String> list = boiDescs.get(i);
+      if( (list == null) || (list.size()==0) ) {
+        List<String> l = new ArrayList<>();
+        l.add("0");
+        value = l;
+      } else {
+        value = list;
+      }
+        //value = list.stream().collect(Collectors.joining("#"));
 
-      s.getTokens().get(i).setAttributeValue("boi",value);
+
+      //s.getTokens().get(i).setAttributeValue("boi",value);
+
+      Token t = s.getTokens().get(i);
+
+      if(t.getAttributeIndex().getIndex("misc")==-1) {
+        t.getAttributeIndex().addAttribute("misc");
+        t.setAttributeValue("misc","{}");
+      }
+      String misc = t.getAttributeValue("misc");
+
+      //System.out.println("boimisc = "+misc);
+      Map<String, Object> miscMap = null;
+      try {
+        try {
+          miscMap =
+                  new ObjectMapper().readValue(misc, HashMap.class);
+        } catch( JsonMappingException jme) {
+          miscMap = new HashMap();
+        }
+        miscMap.put("bois", value);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
+      try {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(miscMap);
+
+        //System.out.println("boisjsonOut = "+json);
+
+        t.setAttributeValue("misc",json);
+      } catch( Exception e) {
+        e.printStackTrace();
+      }
+
+
     }
   }
 
