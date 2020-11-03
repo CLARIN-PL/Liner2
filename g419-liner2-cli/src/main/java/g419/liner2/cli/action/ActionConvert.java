@@ -103,6 +103,7 @@ public class ActionConvert extends Action {
       Converter cclrel2connluBoiConverter = new AnnotationCclRelToConlluBoiConverter();
       cclrel2connluBoiConverter.apply(ps);
 
+
       Converter cclrel2connluRelConverter = new AnnotationCclRelToConlluRelConverter();
       cclrel2connluRelConverter.apply(ps);
 

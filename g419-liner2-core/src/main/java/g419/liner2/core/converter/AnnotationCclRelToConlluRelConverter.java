@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class AnnotationCclRelToConlluRelConverter extends Converter {
 
   public static final String REL_STRING_SEPARATOR = ":";
-  public static final String REL_STRING_ENTRY_END = "#";
+  public static final String REL_STRING_ENTRY_END = ",";
 
 
   public void apply(final Sentence s) { throw new RuntimeException("Not implemented"); }
@@ -23,6 +23,7 @@ public class AnnotationCclRelToConlluRelConverter extends Converter {
     RelationSet relations = doc.getRelations("Semantic relations");
 //    System.out.println(" Retrieved "+relations.size());
     relations.forEach( this::assignRelationToToken);
+    relations.forEach( this::assignTokenRelationsToMisc);
   }
 
   private void assignRelationToToken(Relation r) {
@@ -39,17 +40,19 @@ public class AnnotationCclRelToConlluRelConverter extends Converter {
       relString.append((r.getAnnotationFrom().getTokens().first()+1) + REL_STRING_SEPARATOR);
       relString.append(r.getAnnotationFrom().getType() + REL_STRING_SEPARATOR);
       relString.append((r.getAnnotationTo().getTokens().first()+1) + REL_STRING_SEPARATOR);
-      relString.append(r.getAnnotationTo().getType() + REL_STRING_SEPARATOR);
-      relString.append(REL_STRING_ENTRY_END);
+      relString.append(r.getAnnotationTo().getType() );
+      //relString.append(REL_STRING_ENTRY_END);
 
      //System.out.println("RELSTRING = " + relString);
       Sentence s = r.getAnnotationFrom().getSentence();
-
       Token t = s.getTokens().get(r.getAnnotationFrom().getTokens().first());
 
       String oldValue="";
       if ( t.getAttributeIndex().getIndex("nam_rel") !=-1) {
         oldValue = t.getAttributeValue("nam_rel");
+        if(!oldValue.isEmpty()) {
+          oldValue += ",";
+        }
       } else {
         t.getAttributeIndex().addAttribute("nam_rel");
       }
@@ -58,5 +61,32 @@ public class AnnotationCclRelToConlluRelConverter extends Converter {
       t.setAttributeValue("nam_rel",newValue);
     }
   }
+
+  private void assignTokenRelationsToMisc(Relation r) {
+
+    Sentence s = r.getAnnotationFrom().getSentence();
+    Token t = s.getTokens().get(r.getAnnotationFrom().getTokens().first());
+
+    String value = t.getAttributeValue("nam_rel");
+    if(value!=null) {  // jeśli jest null to znaczy już to dla tego tokenu robiliśmy
+      value = "nam_rels=["+value+"]";
+      if(t.getAttributeIndex().getIndex("misc")==-1) {
+        t.getAttributeIndex().addAttribute("misc");
+      } else {
+        String misc = t.getAttributeValue("misc");
+        if(!misc.isEmpty()) {
+          value = misc +"|" + value;
+        }
+      }
+      t.setAttributeValue("misc",value);
+      t.setAttributeValue("nam_rel", null);
+    }
+  }
+
+
+
+
+
+
 
 }

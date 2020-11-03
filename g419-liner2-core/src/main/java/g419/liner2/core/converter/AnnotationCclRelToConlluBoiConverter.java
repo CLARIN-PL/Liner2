@@ -27,7 +27,7 @@ public class AnnotationCclRelToConlluBoiConverter extends Converter {
     Map<Integer,List<String>> boiStrings = new HashMap<>();
     List<Annotation> anns = s.getChunks().stream().filter(a -> a.getType().startsWith(annotationsTypeStartsWith)).collect(Collectors.toList());
     anns.stream().forEach(ann->produceBOIStrings(s,ann, boiStrings));
-    s.getTokens().stream().forEach(t->enhanceTokensWithBOI(s, boiStrings));
+    enhanceTokensWithBOI( s, boiStrings);
   }
 
 
@@ -54,16 +54,28 @@ public class AnnotationCclRelToConlluBoiConverter extends Converter {
   }
 
   private void enhanceTokensWithBOI(Sentence s, Map<Integer,List<String>> boiStrings ) {
-    s.getAttributeIndex().addAttribute("boi");
+    //s.getAttributeIndex().addAttribute("boi");
     for(int i=0;i<s.getTokens().size() ; i++ ) {
       String value;
       List<String> list = boiStrings.get(i);
       if( (list == null) || (list.size()==0) )
         value = "O";
       else
-        value = list.stream().collect(Collectors.joining("#"));
+        value = list.stream().collect(Collectors.joining(","));
 
-      s.getTokens().get(i).setAttributeValue("boi",value);
+      value = "bois=["+value+"]";
+
+      Token t = s.getTokens().get(i);
+      if(t.getAttributeIndex().getIndex("misc")==-1) {
+        t.getAttributeIndex().addAttribute("misc");
+      } else {
+        String misc = t.getAttributeValue("misc");
+        if(!misc.isEmpty()) {
+          value = misc +"|"+value;
+        }
+      }
+
+      t.setAttributeValue("misc",value);
     }
   }
 
