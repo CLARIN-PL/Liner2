@@ -58,6 +58,11 @@ public class CommonOptions {
   public static final String OPTION_COMBO_FORMAT = "q";
   public static final String OPTION_COMBO_FORMAT_LONG = "parsed_combo_format";
 
+  public static final String OPTION_RULE = "r";
+  public static final String OPTION_RULE_LONG = "rule";
+
+  public static final String OPTION_RULE_FILENAME = "rf";
+  public static final String OPTION_RULE_FILENAME_LONG = "rule_filename";
 
   public static Option getOutputFileNameOption() {
     return Option.builder(CommonOptions.OPTION_OUTPUT_FILE)
@@ -89,6 +94,21 @@ public class CommonOptions {
         .longOpt(CommonOptions.OPTION_COMBO_FILE_LONG)
         .hasArg().argName("filename").desc("path to a conllu file made with COMBO parser to read").build();
   }
+
+  public static Option getRuleOption() {
+    return Option.builder(CommonOptions.OPTION_RULE)
+            .longOpt(CommonOptions.OPTION_RULE_LONG)
+            .hasArg().argName("filename").desc("rule saying what relations to look for").build();
+  }
+
+  public static Option getRuleFilenameOption() {
+    return Option.builder(CommonOptions.OPTION_RULE_FILENAME)
+            .longOpt(CommonOptions.OPTION_RULE_FILENAME_LONG)
+            .hasArg().argName("filename").desc("path to a file with rule saying what relations to look for").build();
+  }
+
+
+
 
   public static Option getComboFileFormatOption() {
     return Option.builder(CommonOptions.OPTION_COMBO_FORMAT)

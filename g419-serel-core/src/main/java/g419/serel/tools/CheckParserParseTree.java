@@ -12,18 +12,21 @@ import java.util.stream.Collectors;
 public class CheckParserParseTree {
 
   public  List<ParseTreeMalfunction> checkParseTree(final List<SerelExpression> serelExpressions  ) {
-    List<ParseTreeMalfunction> result = new LinkedList<>();
 
+
+    List<ParseTreeMalfunction> result = new LinkedList<>();
+    /*
     for(SerelExpression se : serelExpressions ) {
 
-      Annotation aFrom = se.getRelation().getAnnotationFrom();
+      Annotation aFrom = se.getRelationDesc().getAnnotationFrom();
       result.addAll(isAnnotationHeadPointingOut(se, aFrom));
       result.addAll(isHavingMoreElementsPointingOut(se, aFrom));
 
-      Annotation aTo = se.getRelation().getAnnotationTo();
+      Annotation aTo = se.getRelationDesc().getAnnotationTo();
       result.addAll(isAnnotationHeadPointingOut(se, aTo));
       result.addAll(isHavingMoreElementsPointingOut(se, aFrom));
     }
+    */
     return result;
   }
 

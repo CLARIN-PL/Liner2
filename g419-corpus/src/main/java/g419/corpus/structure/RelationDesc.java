@@ -10,6 +10,8 @@ public class RelationDesc {
     public static final String REL_STRING_DESC_SEPARATOR = ":";
     public static final String REL_STRING_DESC_ENTRY_END = "#";
 
+    Sentence sentence;
+
     String type;
     int fromTokenIndex;
     String fromType;
@@ -35,6 +37,8 @@ public class RelationDesc {
                 .fromType(r.getAnnotationFrom().getType())
                 .toTokenIndex(r.getAnnotationTo().getTokens().first() + 1)
                 .toType(r.getAnnotationTo().getType()).build();
+
+        relationDesc.setSentence(r.getAnnotationFrom().getSentence());
 
         return relationDesc;
     }

@@ -106,6 +106,7 @@ public class SentenceMiscValues {
                     System.out.println("relDesc.type = '"+relDesc.getType()+"'");
                     if (relDesc.getType().equals(rmr.getRelationType())) {
                         tokenIndexes.add(i);
+                        relDesc.setSentence(this.sentence);
                         resultRelDesc.add(relDesc);
                     } else {
                         System.out.println("Rel " + relDesc + " skipped because is of type");
@@ -118,42 +119,79 @@ public class SentenceMiscValues {
     }
 
 
-    public Set<RelationDesc> getRelationsMatchingRule(RuleMatchingRelations rmr, Set<RelationDesc> useOnlyRels) {
-        Set<RelationDesc> resultRelDesc = new HashSet<>();
-        for(RelationDesc rd : useOnlyRels) {
-            if(isRelationMatchingRule(rmr, rd)) {
-                resultRelDesc.add(rd);
+    public Set<SerelExpression>  getRelationsMatchingRule(RuleMatchingRelations rmr, List<SerelExpression> sentenceLinksList) {
+        Set<SerelExpression> result = new HashSet<>();
+        for(SerelExpression se : sentenceLinksList) {
+            if(isRuleMatchingSerel(rmr,se )) {
+                result.add(se);
             }
         }
-        return resultRelDesc;
+        return result;
     }
 
-    private boolean isRelationMatchingRule(RuleMatchingRelations rmr, RelationDesc rd) {
-        for(int tokenIndex=0;tokenIndex<sentence.getTokens().size();tokenIndex++) {
-            if (isRelationMatchingRuleFromTokenIndex(rmr, rd, tokenIndex)) {
+    private boolean isRuleMatchingSerel(RuleMatchingRelations rmr, SerelExpression se) {
+
+        String serelPath = se.getDetailedPathAsString(false);
+        System.out.println("sePAth = "+serelPath);
+
+        StringTokenizer tokenizer = new StringTokenizer(serelPath,">|<",true);
+        List<String> serelPathElements = new ArrayList<>();
+        while (tokenizer.hasMoreElements()) {
+            serelPathElements.add(tokenizer.nextToken().trim());
+        }
+
+        System.out.println("seTokens size = "+serelPathElements.size());
+        System.out.print("seTokens= "); serelPathElements.forEach(System.out::print);
+        System.out.println("");
+
+
+        for(int serelPathElementIndex=0;serelPathElementIndex<serelPathElements.size();serelPathElementIndex++) {
+            if (isRuleMatchingSerelPathFromTokenIndex(rmr, se, serelPathElements, serelPathElementIndex)) {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean isRelationMatchingRuleFromTokenIndex(RuleMatchingRelations rmr, RelationDesc rd, int tokenIndex) {
+    private boolean isRuleMatchingSerelPathFromTokenIndex(RuleMatchingRelations rmr, SerelExpression se, List<String> serelPathElements, int serelPathElementIndex) {
+
+        System.out.println("Rule :"+ rmr.rule);
+
+        for(int ruleElementIndex=0;ruleElementIndex<rmr.getRuleElements().size();ruleElementIndex++,serelPathElementIndex++) {
 
 
-        for(int ruleElementIndex=0;ruleElementIndex<rmr.getRuleElements().size();ruleElementIndex++,tokenIndex++) {
-            Token token = sentence.getTokens().get(tokenIndex);
-            if(ruleElementIndex%2==1) {    // opuszczamy znaki '<' i '>'
+
+            if(ruleElementIndex%2==1) {
+
+//                // opuszczamy znaki '<' i '>'
+//                ruleElementIndex++;
+//                serelPathElementIndex++;
+
+                String rElement= rmr.getRuleElements().get(ruleElementIndex).trim();
+                String sElement= serelPathElements.get(serelPathElementIndex).trim();
+
+                if(!rElement.equals(sElement))
+                    return false;
+
                 ruleElementIndex++;
+                serelPathElementIndex++;
+
             }
 
-            if( (ruleElementIndex==rmr.sourceRuleElementIndex ) && (tokenIndex==rd.getFromTokenIndex()) ) continue;
-            if( (ruleElementIndex==rmr.targetRuleElementIndex) && (tokenIndex==rd.getToTokenIndex()) ) continue;
+            if( (ruleElementIndex==rmr.sourceRuleElementIndex ) && (serelPathElementIndex==se.getParents1().get(0).getSourceIndex()) ) {
+                System.out.println("("+serelPathElementIndex+":"+ruleElementIndex+") Match! Source. ");
+                continue;
+            }
+            if( (ruleElementIndex==rmr.targetRuleElementIndex) && (serelPathElementIndex==se.getParents2().get(0).getSourceIndex()) ) {
+                System.out.println("("+serelPathElementIndex+":"+ruleElementIndex+") Match! Target. ");
+                continue;
+            }
 
-            if(!rmr.isRuleElementMatchingToken(ruleElementIndex,sentence, tokenIndex)) {
-                System.out.println("("+tokenIndex+":"+ruleElementIndex+") No match! Token= "+ sentence.getTokens().get(tokenIndex)+" ruleElement="+rmr.getRuleElements().get(ruleElementIndex));
+            if(!rmr.isRuleElementMatchingSerelPathElement(ruleElementIndex,serelPathElements, serelPathElementIndex, se)) {
+                System.out.println("("+serelPathElementIndex+":"+ruleElementIndex+") No match! RuleElement= "+rmr.getRuleElements().get(ruleElementIndex)+ " PathElement = "+serelPathElements.get(serelPathElementIndex));
                 return false;
             }
-            System.out.println("("+tokenIndex+":"+ruleElementIndex+") Match! Token= "+ sentence.getTokens().get(tokenIndex)+" ruleElement="+rmr.getRuleElements().get(ruleElementIndex));
+            System.out.println("("+serelPathElementIndex+":"+ruleElementIndex+") Match! Token= "+ sentence.getTokens().get(serelPathElementIndex)+" ruleElement="+rmr.getRuleElements().get(ruleElementIndex));
         }
         return true;
     }
@@ -206,6 +244,7 @@ public class SentenceMiscValues {
                         }
 
                         tokenIndexes.add(i);
+                        relDesc.setSentence(this.sentence);
                         resultRelDesc.add(relDesc);
                     } else {
                         System.out.println("Rel " + relDesc + " skipped because of NETypes");

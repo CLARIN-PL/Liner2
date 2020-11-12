@@ -11,6 +11,8 @@ import java.util.*;
 @ToString
 public class RuleMatchingRelations {
 
+    String rule;
+
     String relationType;
     List<String> ruleElements;
 
@@ -24,15 +26,34 @@ public class RuleMatchingRelations {
     Map<Integer,String> ruleElementsDeprel;
 
 
-    public boolean isRuleElementMatchingToken(int ruleElementIndex, Sentence s, int tokenIndex) {
+    public boolean isRuleElementMatchingSerelPathElement(int ruleElementIndex, List<String> serelPathElements, int serelPathElementIndex, SerelExpression se) {
+        String serelPathElement = serelPathElements.get(serelPathElementIndex).trim();
+        return isRuleElementMatchingSerelPathElement(ruleElementIndex,serelPathElement);
+    }
 
-        String text = ruleElements.get(ruleElementIndex);
-        String depRel  = ruleElementsDeprel.get(ruleElementIndex);
 
-        Token token = s.getTokens().get(tokenIndex);
+    public boolean isRuleElementMatchingSerelPathElement(int ruleElementIndex, String serelPathElement) {
+
+        serelPathElement = serelPathElement.trim();
+
+        String text = ruleElements.get(ruleElementIndex).trim();
+        String depRel  = ruleElementsDeprel.get(ruleElementIndex).trim();
+
+        String speText = "";
+        String speDepRel = "";
+
+        if (serelPathElement.length() > 0)
+            if (serelPathElement.charAt(serelPathElement.length() - 1) == ')') {
+                int indexStart = serelPathElement.lastIndexOf("(");
+                if (indexStart != -1) {
+                    speDepRel = serelPathElement.substring(indexStart + 1, serelPathElement.length() - 1).trim();
+                    speText = serelPathElement.substring(0, indexStart).trim();
+                }
+            }
 
         if( (text!=null) && (!text.isEmpty()) && (!text.equals("*")) ) {
-            if(!text.equals(token.getOrth())) {
+            if(!text.equals(speText)) {
+                System.out.println(" no match for texts: "+text+" vs "+speText);
                 return false;
             }
         }
@@ -40,8 +61,8 @@ public class RuleMatchingRelations {
         //TODO : *
 
         if( (depRel!=null) && (!depRel.isEmpty())  ) {
-            String tokenDepRel = token.getAttributeValue("deprel");
-            if(!depRel.equals(tokenDepRel)) {
+            if(!depRel.equals(speDepRel)) {
+                System.out.println(" no match for depRels:"+depRel+" vs "+speDepRel);
                 return false;
             }
         }
@@ -52,7 +73,11 @@ public class RuleMatchingRelations {
 
     public static RuleMatchingRelations understandRule(String rule) {
 
+        System.out.println("Checking rule "+rule);
+
         RuleMatchingRelations rmr = new RuleMatchingRelations();
+
+        rmr.rule = rule;
 
         String relType = rule.substring(0, rule.indexOf(':'));
         //System.out.println("relRole = "+relType);

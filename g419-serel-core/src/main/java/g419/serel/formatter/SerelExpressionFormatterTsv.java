@@ -26,9 +26,11 @@ public class SerelExpressionFormatterTsv implements ISerelExpressionFormatter {
 
     for (final SerelExpression se : serelExpressions) {
       final StringJoiner fields = new StringJoiner("\t");
-      fields.add(se.getRelation().getType());
-      fields.add(se.getRelation().getAnnotationFrom().getText());
-      fields.add(se.getRelation().getAnnotationTo().getText());
+      fields.add(se.getRelationDesc().getType());
+      fields.add(se.getRelationDesc().getSentence().getTokens().get(se.getRelationDesc().getFromTokenIndex()).getOrth());
+      fields.add(se.getRelationDesc().getSentence().getTokens().get(se.getRelationDesc().getToTokenIndex()).getOrth());
+//      fields.add(se.getRelationDesc().getAnnotationFrom().getText());
+//      fields.add(se.getRelationDesc().getAnnotationTo().getText());
       fields.add(se.getPathAsString());
       fields.add(se.getSentence().toString());
       fields.add(document.getName());
