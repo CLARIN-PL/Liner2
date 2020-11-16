@@ -155,9 +155,13 @@ public class ActionMatchRelations extends Action {
             if(rels3.isEmpty())
                 continue;
 
+            System.out.println("");
             System.out.println("Doc = "+d.getName());
             System.out.println("Sentence = "+sentence);
             System.out.println("Serels = "+rels3);
+
+            rels3.forEach( r -> System.out.println(" "+sentence.getTokens().get(r.getParents1().get(0).getSourceIndex()).getOrth() + ","
+                                                            +sentence.getTokens().get(r.getParents2().get(0).getSourceIndex()).getOrth() ));
 
 
 
