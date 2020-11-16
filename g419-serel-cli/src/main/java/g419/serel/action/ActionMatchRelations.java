@@ -12,6 +12,7 @@ import g419.serel.structure.RuleMatchingRelations;
 import g419.serel.structure.SentenceMiscValues;
 import g419.serel.structure.SerelExpression;
 import g419.serel.tools.ComboParseTreeGenerator;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.lang3.tuple.Pair;
 import sun.awt.X11.XSelectionRequestEvent;
@@ -21,6 +22,7 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.*;
 
+@Slf4j
 public class ActionMatchRelations extends Action {
 
   private String inputFilename;
@@ -56,7 +58,7 @@ public class ActionMatchRelations extends Action {
   public void run() throws Exception {
 
 
-      System.out.println("Searching rule = "+rule);
+      log.debug("Searching rule = "+rule);
       String searchingRule= rule;
 
 //      // z opisu
@@ -73,11 +75,11 @@ public class ActionMatchRelations extends Action {
 
 
     RuleMatchingRelations rmr = RuleMatchingRelations.understandRule(searchingRule);
-    System.out.println(searchingRule);
-    System.out.println("Understood rule ="+rmr);
+    log.debug(searchingRule);
+    log.debug("Understood rule ="+rmr);
 
 
-    //System.out.println("Starting reading ...");
+    //log.debug("Starting reading ...");
     try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
          final PrintWriter reportWriter = reportFilename==null? null :new PrintWriter( new FileWriter( new File(reportFilename)))
          ) {
@@ -87,6 +89,7 @@ public class ActionMatchRelations extends Action {
                     try {
                         //Document comboedDoc = reader.nextDocument();
                         Document comboedDoc = doc;
+                        //System.out.println("START Doc = "+doc.getName());
                         ParseTreeGenerator parseTreeGenerator = new ComboParseTreeGenerator(comboedDoc);
                         DocumentToSerelExpressionConverter converter = new DocumentToSerelExpressionConverter(parseTreeGenerator,reportWriter);
 
@@ -97,6 +100,9 @@ public class ActionMatchRelations extends Action {
                         //result.forEach(System.out::println);
 
                     } catch (Exception e) {
+                        System.out.println("Problem z dokuementem "+doc.getName());
+
+
                         e.printStackTrace();
                     }
                 }
@@ -117,20 +123,20 @@ public class ActionMatchRelations extends Action {
 
         int sentenceIndex =1;
         for (Sentence sentence : d.getParagraphs().get(0).getSentences()) {
-            System.out.println("");
-            System.out.println(" Sentence nr "+sentenceIndex);
-            System.out.println(" Sentence = " + sentence);
+            log.debug("");
+            log.debug(" Sentence nr "+sentenceIndex);
+            log.debug(" Sentence = " + sentence);
             sentenceIndex++;
 
             SentenceMiscValues smv  = SentenceMiscValues.from(sentence);
 
             Set<RelationDesc> rels1 = smv.getTokenIndexesForMatchingRelType(rmr,null);
-            System.out.println("rels1="+rels1);
+            log.debug("rels1="+rels1);
             if(rels1.isEmpty())
                 continue;
 
             Set<RelationDesc> rels2 = smv.getTokenIndexesForMatchingRelNE(rmr,rels1);
-            System.out.println("rels2="+rels2);
+            log.debug("rels2="+rels2);
             if(rels2.isEmpty())
                 continue;
 
@@ -139,15 +145,22 @@ public class ActionMatchRelations extends Action {
             List<SerelExpression> serels = converter.convertAlreadyComboedFromRelDesc(rels2);
 
             for (SerelExpression serel : serels) {
-                //System.out.println("serel="+serel.getPathAsString());
-                System.out.println("serel="+serel.getDetailedPathAsString(true));
+                log.debug("serel="+serel.getPathAsString());
+                log.debug("serel="+serel.getDetailedPathAsString(true));
             }
 
 
             Set<SerelExpression> rels3 = smv.getRelationsMatchingRule(rmr,serels);
-            System.out.println("rels3="+rels3);
+            log.debug("rels3="+rels3);
             if(rels3.isEmpty())
                 continue;
+
+            System.out.println("Doc = "+d.getName());
+            System.out.println("Sentence = "+sentence);
+            System.out.println("Serels = "+rels3);
+
+
+
 
         }
         return result;

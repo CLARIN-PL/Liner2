@@ -58,10 +58,10 @@ public class CommonOptions {
   public static final String OPTION_COMBO_FORMAT = "q";
   public static final String OPTION_COMBO_FORMAT_LONG = "parsed_combo_format";
 
-  public static final String OPTION_RULE = "r";
+  public static final String OPTION_RULE = "u";
   public static final String OPTION_RULE_LONG = "rule";
 
-  public static final String OPTION_RULE_FILENAME = "rf";
+  public static final String OPTION_RULE_FILENAME = "uf";
   public static final String OPTION_RULE_FILENAME_LONG = "rule_filename";
 
   public static Option getOutputFileNameOption() {

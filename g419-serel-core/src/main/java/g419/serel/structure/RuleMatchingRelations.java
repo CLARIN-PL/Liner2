@@ -28,11 +28,17 @@ public class RuleMatchingRelations {
 
     public boolean isRuleElementMatchingSerelPathElement(int ruleElementIndex, List<String> serelPathElements, int serelPathElementIndex, SerelExpression se) {
         String serelPathElement = serelPathElements.get(serelPathElementIndex).trim();
+        //System.out.println("serelPathElement = "+serelPathElement);
         return isRuleElementMatchingSerelPathElement(ruleElementIndex,serelPathElement);
     }
 
-
     public boolean isRuleElementMatchingSerelPathElement(int ruleElementIndex, String serelPathElement) {
+        return isRuleElementMatchingSerelPathElement(ruleElementIndex, serelPathElement, false);
+    }
+
+    public boolean isRuleElementMatchingSerelPathElement(int ruleElementIndex, String serelPathElement, boolean starMode ) {
+
+        //System.out.println("isREMSPE: ruleElementIndex = "+ruleElementIndex);
 
         serelPathElement = serelPathElement.trim();
 
@@ -53,7 +59,7 @@ public class RuleMatchingRelations {
 
         if( (text!=null) && (!text.isEmpty()) && (!text.equals("*")) ) {
             if(!text.equals(speText)) {
-                System.out.println(" no match for texts: "+text+" vs "+speText);
+                //System.out.println(" no match for texts: "+text+" vs "+speText);
                 return false;
             }
         }
@@ -62,7 +68,7 @@ public class RuleMatchingRelations {
 
         if( (depRel!=null) && (!depRel.isEmpty())  ) {
             if(!depRel.equals(speDepRel)) {
-                System.out.println(" no match for depRels:"+depRel+" vs "+speDepRel);
+                //System.out.println(" no match for depRels:"+depRel+" vs "+speDepRel);
                 return false;
             }
         }
@@ -73,7 +79,7 @@ public class RuleMatchingRelations {
 
     public static RuleMatchingRelations understandRule(String rule) {
 
-        System.out.println("Checking rule "+rule);
+        //System.out.println("Checking rule "+rule);
 
         RuleMatchingRelations rmr = new RuleMatchingRelations();
 
@@ -149,13 +155,13 @@ public class RuleMatchingRelations {
         // dump ruleElements
         for (int i=0;i<ruleElements.size();i++) {
             String ruleElement = ruleElements.get(i);
-            System.out.println(i+ "\t'" +ruleElement+"'");
+            //System.out.println(i+ "\t'" +ruleElement+"'");
         }
 
         Map<Integer,String> ruleElementsDeprel = new HashMap<>();
         for (int i=0;i<ruleElements.size();i++) {
             String ruleElement = ruleElements.get(i);
-            System.out.println("RE = '" + ruleElement + "'");
+            //System.out.println("RE = '" + ruleElement + "'");
 
 
             if (ruleElement.length() > 0)

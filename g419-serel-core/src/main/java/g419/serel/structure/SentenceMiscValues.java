@@ -4,10 +4,12 @@ import g419.corpus.structure.RelationDesc;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Data
 public class SentenceMiscValues {
 
@@ -27,15 +29,16 @@ public class SentenceMiscValues {
 
         for (int index = 0;index<sentence.getTokens().size();index++ )  {
             Token token = sentence.getTokens().get(index);
+            log.debug(" ---- token index = "+index+ "  ------" );
 
             if(token.getAttributeIndex().getIndex("misc")!=-1) {
                 String misc = token.getAttributeValue("misc");
-                ////System.out.println("misc = "+misc);
+                log.debug("misc = "+misc);
                 if (!misc.equals("_")) {
                     ////System.out.println("HAve misc!");
                     // misc = misc.replaceAll("'","\"");
                     Map<String, Object> result = getMapFromMiscColumn(misc);
-                    System.out.println("result ="+result);
+                    //System.out.println("result ="+result);
                     miscValuesList.add(result);
 
                 }
@@ -47,25 +50,32 @@ public class SentenceMiscValues {
     private Map<String,Object> getMapFromMiscColumn( String misc) {
         Map result = new HashMap<String,Object>();
 
-        //System.out.println("misc = "+misc);
+        log.debug("misc = "+misc);
 
         String key=null;
         for(int i=0;i<misc.length();i++) {
-            //System.out.println("chk i = "+i);
+            log.debug("chk i = "+i);
             if(misc.charAt(i)=='\'') {
                 String textValue = getTextValue(i+1,misc);
+                log.debug("textValue ="+textValue);
                 if(key==null) {
                     key=textValue;
                 } else {
                     switch (key) {
                         case "bois" : result.put(key,getBoisValue(textValue)); break;
-                        case "nam_rels" : result.put(key,getNamRelsValue(textValue)); break;
+                        case "nam_rels" :
+                            if(textValue.length()>2) {  // są puste artefakty [] powstające z relacji między róznymi zdaniami
+                                result.put(key, getNamRelsValue(textValue));
+                            }
+                            break;
+
                     }
                     key=null;
                 }
                 i+=(textValue.length()+1);
             }
         }
+        log.debug("koniec preprocessingu misc");
         return result;
     }
 
@@ -82,13 +92,14 @@ public class SentenceMiscValues {
 
     private List<RelationDesc> getNamRelsValue(String s) {
         s = s.substring(1,s.length()-1);
+        log.debug("getNamRelsVAlue: "+s);
         String[] splits = s.split(",");
         return Arrays.stream(splits).map( RelationDesc::from).collect(Collectors.toList());
     }
 
 
     public Set<RelationDesc> getTokenIndexesForMatchingRelType(RuleMatchingRelations rmr, Set<RelationDesc> useOnlyRels) {
-        System.out.println("Searching for type '"+rmr.getRelationType()+"'");
+        //System.out.println("Searching for type '"+rmr.getRelationType()+"'");
         Set<Integer> tokenIndexes = new HashSet<>();
         Set<RelationDesc> resultRelDesc = new HashSet<>();
         for(int i=0;i<miscValuesList.size();i++) {
@@ -103,13 +114,13 @@ public class SentenceMiscValues {
                     }
 
 
-                    System.out.println("relDesc.type = '"+relDesc.getType()+"'");
+                    //System.out.println("relDesc.type = '"+relDesc.getType()+"'");
                     if (relDesc.getType().equals(rmr.getRelationType())) {
                         tokenIndexes.add(i);
                         relDesc.setSentence(this.sentence);
                         resultRelDesc.add(relDesc);
                     } else {
-                        System.out.println("Rel " + relDesc + " skipped because is of type");
+                        //System.out.println("Rel " + relDesc + " skipped because is of type");
                     }
                 }
             }
@@ -132,7 +143,7 @@ public class SentenceMiscValues {
     private boolean isRuleMatchingSerel(RuleMatchingRelations rmr, SerelExpression se) {
 
         String serelPath = se.getDetailedPathAsString(false);
-        System.out.println("sePAth = "+serelPath);
+        //System.out.println("sePAth = "+serelPath);
 
         StringTokenizer tokenizer = new StringTokenizer(serelPath,">|<",true);
         List<String> serelPathElements = new ArrayList<>();
@@ -140,9 +151,9 @@ public class SentenceMiscValues {
             serelPathElements.add(tokenizer.nextToken().trim());
         }
 
-        System.out.println("seTokens size = "+serelPathElements.size());
-        System.out.print("seTokens= "); serelPathElements.forEach(System.out::print);
-        System.out.println("");
+        //System.out.println("seTokens size = "+serelPathElements.size());
+        //System.out.print("seTokens= "); serelPathElements.forEach(p->System.out.print(p+" , "));
+        //System.out.println("");
 
 
         for(int serelPathElementIndex=0;serelPathElementIndex<serelPathElements.size();serelPathElementIndex++) {
@@ -155,53 +166,88 @@ public class SentenceMiscValues {
 
     private boolean isRuleMatchingSerelPathFromTokenIndex(RuleMatchingRelations rmr, SerelExpression se, List<String> serelPathElements, int serelPathElementIndex) {
 
-        System.out.println("Rule :"+ rmr.rule);
-
+        //System.out.println("Rule :"+ rmr.rule);
         for(int ruleElementIndex=0;ruleElementIndex<rmr.getRuleElements().size();ruleElementIndex++,serelPathElementIndex++) {
-
-
-
-            if(ruleElementIndex%2==1) {
-
-//                // opuszczamy znaki '<' i '>'
-//                ruleElementIndex++;
-//                serelPathElementIndex++;
-
-                String rElement= rmr.getRuleElements().get(ruleElementIndex).trim();
-                String sElement= serelPathElements.get(serelPathElementIndex).trim();
-
-                if(!rElement.equals(sElement))
+                                                    //System.out.println("Checking ruleElementIndex="+ruleElementIndex+ " serelPathElementIndex ="+serelPathElementIndex);
+            String rElement= rmr.getRuleElements().get(ruleElementIndex).trim();
+                                                    //System.out.println("rElement ="+rElement);
+            if(rElement.equals("*")) {
+                                                    //System.out.println("* found");
+                int resIndex = matchStarToSerelPath(rmr,se, serelPathElements,serelPathElementIndex, ruleElementIndex);
+                                                    //System.out.println("matched * returned resIndex = "+resIndex);
+                                                    //System.out.println("");
+                                                    //System.out.println("");
+                if(resIndex==-1)
                     return false;
-
-                ruleElementIndex++;
-                serelPathElementIndex++;
-
+                serelPathElementIndex = resIndex;
+                ruleElementIndex = ruleElementIndex+2;
+                continue;
             }
-
+            if(ruleElementIndex%2==1) {
+                                                    //System.out.println(" START : %2==1 skip");
+                String sElement = serelPathElements.get(serelPathElementIndex).trim();
+                if (!rElement.equals(sElement))
+                        return false;
+                                                    //System.out.println(" END : %2==1 skip. ruleElementIndex="+ruleElementIndex+ " serelPathElementIndex="+serelPathElementIndex);
+                continue;
+            }
+            // może to przenieść do samej góry ?
             if( (ruleElementIndex==rmr.sourceRuleElementIndex ) && (serelPathElementIndex==se.getParents1().get(0).getSourceIndex()) ) {
-                System.out.println("("+serelPathElementIndex+":"+ruleElementIndex+") Match! Source. ");
+                //System.out.println("("+serelPathElementIndex+":"+ruleElementIndex+") Match! Source. ");
                 continue;
             }
             if( (ruleElementIndex==rmr.targetRuleElementIndex) && (serelPathElementIndex==se.getParents2().get(0).getSourceIndex()) ) {
-                System.out.println("("+serelPathElementIndex+":"+ruleElementIndex+") Match! Target. ");
+                //System.out.println("("+serelPathElementIndex+":"+ruleElementIndex+") Match! Target. ");
                 continue;
             }
 
-            if(!rmr.isRuleElementMatchingSerelPathElement(ruleElementIndex,serelPathElements, serelPathElementIndex, se)) {
-                System.out.println("("+serelPathElementIndex+":"+ruleElementIndex+") No match! RuleElement= "+rmr.getRuleElements().get(ruleElementIndex)+ " PathElement = "+serelPathElements.get(serelPathElementIndex));
+            boolean areTheSame = rmr.isRuleElementMatchingSerelPathElement(ruleElementIndex,serelPathElements, serelPathElementIndex, se);
+            if (!areTheSame) {
+                //System.out.println("(" + serelPathElementIndex + ":" + ruleElementIndex + ") No match! RuleElement= " + rmr.getRuleElements().get(ruleElementIndex) + " PathElement = " + serelPathElements.get(serelPathElementIndex));
                 return false;
             }
-            System.out.println("("+serelPathElementIndex+":"+ruleElementIndex+") Match! Token= "+ sentence.getTokens().get(serelPathElementIndex)+" ruleElement="+rmr.getRuleElements().get(ruleElementIndex));
+            //System.out.println("("+serelPathElementIndex+":"+ruleElementIndex+") Match! Token= "+ sentence.getTokens().get(serelPathElementIndex)+" ruleElement="+rmr.getRuleElements().get(ruleElementIndex));
         }
         return true;
     }
 
 
 
+    private int matchStarToSerelPath(RuleMatchingRelations rmr, SerelExpression se, List<String> serelPathElements, int serelPathElementIndex , int ruleElementIndexParam) {
+
+        //System.out.println("");
+        //System.out.println("");
+        //System.out.println("matchStarToSerelPath. ruleElementIndex = "+ruleElementIndexParam);
+
+        int ruleElementIndex= ruleElementIndexParam+2;
+        String rElementText= rmr.getRuleElements().get(ruleElementIndex).trim();
+        String rElementDepRel= rmr.getRuleElementsDeprel().get(ruleElementIndex).trim();
+
+        //System.out.println(" STARMODE: retext ="+ruleElementIndex+ " reDeprel ="+ rmr.ruleElementsDeprel);
+        //System.out.println("");
+        //System.out.println("");
+
+        for(int i=serelPathElementIndex;serelPathElementIndex < serelPathElements.size();serelPathElementIndex++) {
+
+            //System.out.println("*: serelPathElementIndex ="+serelPathElementIndex);
+
+            if(i%2==1) continue;
+
+            boolean areTheSame = rmr.isRuleElementMatchingSerelPathElement(ruleElementIndex,serelPathElements, serelPathElementIndex, se);
+
+            if(areTheSame) {
+                return serelPathElementIndex;
+            }
+        }
+
+        return -1;
+
+    }
+
 
 
     public Set<RelationDesc> getTokenIndexesForMatchingRelNE(RuleMatchingRelations rmr, Set<RelationDesc> useOnlyRels) {
-        System.out.println("Searching for NE types (and deprel if given): "+rmr);
+        //System.out.println("Searching for NE types (and deprel if given): "+rmr);
         Set<Integer> tokenIndexes = new HashSet<>();
         Set<RelationDesc> resultRelDesc = new HashSet<>();
 
@@ -225,9 +271,9 @@ public class SentenceMiscValues {
                         String ruleSourceDeprel = rmr.getRuleElementsDeprel().get(rmr.getSourceRuleElementIndex());
                         if ((ruleSourceDeprel != null) && (!ruleSourceDeprel.isEmpty())) {
                             String tokenSourceDeprel = sentence.getTokens().get(relDesc.getFromTokenIndex() - 1).getAttributeValue("deprel");
-                            System.out.println("rSource='" + ruleSourceDeprel + "'  tSource='" + tokenSourceDeprel + "'");
+                            //System.out.println("rSource='" + ruleSourceDeprel + "'  tSource='" + tokenSourceDeprel + "'");
                             if (!ruleSourceDeprel.equals(tokenSourceDeprel)) {
-                                System.out.println("Rel " + relDesc + " skipped because of source deprel");
+                                //System.out.println("Rel " + relDesc + " skipped because of source deprel");
                                 continue;
                             }
                         }
@@ -235,10 +281,10 @@ public class SentenceMiscValues {
                         String ruleTargetDeprel = rmr.getRuleElementsDeprel().get(rmr.getTargetRuleElementIndex());
                         if ((ruleTargetDeprel != null) && (!ruleTargetDeprel.isEmpty())) {
                             String tokenTargetDeprel = sentence.getTokens().get(relDesc.getToTokenIndex() - 1).getAttributeValue("deprel");
-                            System.out.println("rTarget='" + ruleTargetDeprel + "'  tTarget='" + tokenTargetDeprel + "'");
+                            //System.out.println("rTarget='" + ruleTargetDeprel + "'  tTarget='" + tokenTargetDeprel + "'");
 
                             if (!ruleTargetDeprel.equals(tokenTargetDeprel)) {
-                                System.out.println("Rel " + relDesc + " skipped because of target deprel");
+                                //System.out.println("Rel " + relDesc + " skipped because of target deprel");
                                 continue;
                             }
                         }
@@ -247,7 +293,7 @@ public class SentenceMiscValues {
                         relDesc.setSentence(this.sentence);
                         resultRelDesc.add(relDesc);
                     } else {
-                        System.out.println("Rel " + relDesc + " skipped because of NETypes");
+                        //System.out.println("Rel " + relDesc + " skipped because of NETypes");
                     }
                 }
             }

@@ -142,8 +142,8 @@ public class SerelExpression {
   private String sentenceLink2String(SentenceLink sl, boolean withIndexes) {
 
     List<Token> tokens = getSentence().getTokens();
-    System.out.println("TOKENS = "+tokens);
-    System.out.println("SL SOURCE INDEX = "+sl.getSourceIndex());
+//    System.out.println("TOKENS = "+tokens);
+//    System.out.println("SL SOURCE INDEX = "+sl.getSourceIndex());
     Token t = tokens.get(sl.getSourceIndex());
     //String tail = t.getDisambTag().getBase();
     String tail = t.getAttributeValue("lemma");
@@ -192,8 +192,8 @@ public class SerelExpression {
   private String sentenceLink2DetailedString(SentenceLink sl, boolean withIndexes) {
 
     List<Token> tokens = getSentence().getTokens();
-    System.out.println("TOKENS = "+tokens);
-    System.out.println("SL SOURCE INDEX = "+sl.getSourceIndex());
+    //System.out.println("TOKENS = "+tokens);
+    //System.out.println("SL SOURCE INDEX = "+sl.getSourceIndex());
     Token t = tokens.get(sl.getSourceIndex());
     //String tail = t.getDisambTag().getBase();
     String tail = t.getAttributeValue("lemma");

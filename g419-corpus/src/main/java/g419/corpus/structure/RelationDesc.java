@@ -2,9 +2,11 @@ package g419.corpus.structure;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @Builder
 @Data
+@Slf4j
 public class RelationDesc {
 
     public static final String REL_STRING_DESC_SEPARATOR = ":";
@@ -44,6 +46,9 @@ public class RelationDesc {
     }
 
     static public RelationDesc from(String s) {
+
+        log.debug("RElationDesc from "+s);
+
         String[] parts = s.split(":");
         RelationDesc relationDesc = RelationDesc.builder()
                 .type(parts[0])
