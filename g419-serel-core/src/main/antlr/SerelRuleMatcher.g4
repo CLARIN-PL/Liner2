@@ -48,7 +48,7 @@ id : STAR | (LEMMA)? IDENTIFIER ;
 
 STAR : '*' ;
 LEMMA :'^' ;
-IDENTIFIER : [a-zA-Z0-9]+;
+IDENTIFIER : [a-zA-Z0-9_]+;
 
 WS : [ \t\r\n]+ -> skip;
 //NewLine : ('\r'?'\n'|'\r') -> skip;
