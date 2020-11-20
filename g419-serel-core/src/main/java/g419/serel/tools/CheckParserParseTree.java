@@ -4,6 +4,7 @@ import g419.corpus.structure.Annotation;
 import g419.liner2.core.tools.parser.SentenceLink;
 import g419.serel.structure.ParseTreeMalfunction;
 import g419.serel.structure.SerelExpression;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -12,10 +13,10 @@ import java.util.stream.Collectors;
 public class CheckParserParseTree {
 
   public  List<ParseTreeMalfunction> checkParseTree(final List<SerelExpression> serelExpressions  ) {
-    List<ParseTreeMalfunction> result = new LinkedList<>();
+    final List<ParseTreeMalfunction> result = new LinkedList<>();
 
-    for(SerelExpression se : serelExpressions ) {
-
+    for(final SerelExpression se : serelExpressions ) {
+    /*
       Annotation aFrom = se.getRelation().getAnnotationFrom();
       result.addAll(isAnnotationHeadPointingOut(se, aFrom));
       result.addAll(isHavingMoreElementsPointingOut(se, aFrom));
@@ -23,6 +24,8 @@ public class CheckParserParseTree {
       Annotation aTo = se.getRelation().getAnnotationTo();
       result.addAll(isAnnotationHeadPointingOut(se, aTo));
       result.addAll(isHavingMoreElementsPointingOut(se, aFrom));
+
+     */
     }
     return result;
   }
@@ -32,17 +35,17 @@ public class CheckParserParseTree {
   "location: nam_org_organization -> wielki -> finał -> z -> problem <- w <- Wrocław <- nam_loc_gpe_city" :
   bierzemy node i sprawdzamy czy link z "głowy" wychodzi ma zewnątrz
   */
-  private List<ParseTreeMalfunction> isAnnotationHeadPointingOut(SerelExpression se, Annotation a) {
+  private List<ParseTreeMalfunction> isAnnotationHeadPointingOut(final SerelExpression se, final Annotation a) {
 
-    List<ParseTreeMalfunction> result = new LinkedList<>();
+    final List<ParseTreeMalfunction> result = new LinkedList<>();
 
-    int headForOut = a.getHead();
-    Optional<SentenceLink> linkForOut = se.getParseTree().getLinksBySourceIndex(headForOut);
+    final int headForOut = a.getHead();
+    final Optional<SentenceLink> linkForOut = se.getParseTree().getLinksBySourceIndex(headForOut);
     if(linkForOut.isPresent()) {
-      int targetOutIndex = linkForOut.get().getTargetIndex();
+      final int targetOutIndex = linkForOut.get().getTargetIndex();
       if (a.isTokenIndexWithin(targetOutIndex)) {
 
-        ParseTreeMalfunction ptm = ParseTreeMalfunction.builder()
+        final ParseTreeMalfunction ptm = ParseTreeMalfunction.builder()
             .malfunctionCode(ParseTreeMalfunction.MalfunctionCode.AHPI)
             .documentPath(se.getSentence().getDocument().getName())
             .annotationId(a.getId())
@@ -64,10 +67,10 @@ public class CheckParserParseTree {
    bierzemy node, jeśli nazwa jest wielowyrazowa to sprawdzamy czy nie jest czasem
    tak, że więcej niż jeden wyraz wskazuje na zewnątrz "poza" nazwą
   */
-  private List<ParseTreeMalfunction> isHavingMoreElementsPointingOut(SerelExpression se, Annotation ann) {
-    List<ParseTreeMalfunction> result = new LinkedList<>();
+  private List<ParseTreeMalfunction> isHavingMoreElementsPointingOut(final SerelExpression se, final Annotation ann) {
+    final List<ParseTreeMalfunction> result = new LinkedList<>();
 
-    List<SentenceLink> links = ann.getTokens()
+    final List<SentenceLink> links = ann.getTokens()
         .stream()
         .map(index -> se.getParseTree().getLinksBySourceIndex(index))
         .filter(optLink -> optLink.isPresent())
@@ -76,8 +79,8 @@ public class CheckParserParseTree {
         .collect(Collectors.toList());
 
     if (links.size() > 1) {
-      for (SentenceLink maltSentenceLink : links) {
-        ParseTreeMalfunction ptm = ParseTreeMalfunction.builder()
+      for (final SentenceLink maltSentenceLink : links) {
+        final ParseTreeMalfunction ptm = ParseTreeMalfunction.builder()
             .malfunctionCode(ParseTreeMalfunction.MalfunctionCode.MEPO)
             .documentPath(se.getSentence().getDocument().getName())
             .annotationId(ann.getId())

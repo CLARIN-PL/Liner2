@@ -7,7 +7,13 @@ repositories {
     }
 }
 
+apply plugin: 'antlr'
+apply plugin: 'idea'
+
+
 dependencies {
+    antlr "org.antlr:antlr4:4.8"
+    compile "org.antlr:antlr4-runtime:4.7.2"
     compile 'commons-cli:commons-cli:1.2'
     compile 'log4j:log4j:1.2.17'
     compile 'org.apache.commons:commons-csv:1.2'
@@ -18,3 +24,34 @@ dependencies {
     compile project(":g419-liner2-core")
     compile project(":g419-external-dependencies")
 }
+
+/*
+generateGrammarSource {
+    maxHeapSize = "64m"
+    arguments += ['-package', 'grammars']
+    outputDirectory = new File("generated-src/antlr/main/java/g419/serel/ruleMatcherParser".toString())
+}
+*/
+
+
+
+compileJava.dependsOn generateGrammarSource
+sourceSets {
+    generated {
+        java.srcDir 'generated-src/antlr/main/'
+    }
+}
+
+
+compileJava.source sourceSets.generated.java, sourceSets.main.java
+clean{
+    delete "generated-src"
+}
+
+
+idea {
+    module {
+        sourceDirs += file("generated-src/antlr/main")
+    }
+}
+

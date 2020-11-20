@@ -3,6 +3,7 @@ package g419.serel.formatter;
 import com.google.common.collect.Lists;
 import g419.corpus.structure.Document;
 import g419.serel.structure.SerelExpression;
+
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -26,9 +27,11 @@ public class SerelExpressionFormatterTsv implements ISerelExpressionFormatter {
 
     for (final SerelExpression se : serelExpressions) {
       final StringJoiner fields = new StringJoiner("\t");
+    /*
       fields.add(se.getRelation().getType());
       fields.add(se.getRelation().getAnnotationFrom().getText());
       fields.add(se.getRelation().getAnnotationTo().getText());
+    */
       fields.add(se.getPathAsString());
       fields.add(se.getSentence().toString());
       fields.add(document.getName());
