@@ -1,20 +1,10 @@
 package g419.serel.action;
 
-import g419.corpus.structure.Document;
-import g419.corpus.structure.RelationDesc;
-import g419.corpus.structure.Sentence;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.serel.converter.DocumentToSerelExpressionConverter;
-import g419.serel.structure.RuleMatchingRelations;
-import g419.serel.structure.SentenceMiscValues;
-import g419.serel.structure.SerelExpression;
+import g419.serel.structure.ParsedRule;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 @Slf4j
 public class ActionMatchRelations extends Action {
@@ -69,9 +59,12 @@ public class ActionMatchRelations extends Action {
 
      //searchingRule=  "zxcv >[*] asdf > * > erw <(*) asdf /asdf : wer < [asdf] sdaf ";
 
-      final RuleMatchingRelations rmr = RuleMatchingRelations.understandRule(searchingRule);
+
+    final ParsedRule parsedRule = ParsedRule.parseRule(searchingRule);
     log.debug(searchingRule);
-    log.debug("Understood rule ="+rmr);
+    log.debug("Rule tree:");
+    parsedRule.getRootNodeMatch().dumpString();
+
 
 /*
     //log.debug("Starting reading ...");
@@ -111,8 +104,8 @@ public class ActionMatchRelations extends Action {
   }
 
 
-
-    private List<RelationDesc> matchRelationsAgainstRule(final Document d, final RuleMatchingRelations rmr, final DocumentToSerelExpressionConverter converter) {
+    /*
+    private List<RelationDesc> matchRelationsAgainstRule(final Document d, final ParsedRule rmr, final DocumentToSerelExpressionConverter converter) {
 
         final List<RelationDesc> result = new ArrayList<>();
 
@@ -167,6 +160,8 @@ public class ActionMatchRelations extends Action {
         }
         return result;
     }
+    
+     */
 
 
 

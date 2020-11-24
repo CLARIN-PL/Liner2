@@ -6,7 +6,7 @@ class RuleMatchingRelationsTest extends Specification {
 
     def "should accept single segment as a rule"(){
         given:
-        RuleMatchingRelations rmr = RuleMatchingRelations.understandRule(" *")
+        ParsedRule rmr = ParsedRule.parseRule(" *")
 
         expect:
         rmr != null
@@ -14,7 +14,7 @@ class RuleMatchingRelationsTest extends Specification {
 
     def "should accept single segment with XPOS as a rule"(){
         given:
-        RuleMatchingRelations rmr = RuleMatchingRelations.understandRule("[subst] *")
+        ParsedRule rmr = ParsedRule.parseRule("[subst] *")
 
         expect:
         rmr != null
@@ -22,7 +22,7 @@ class RuleMatchingRelationsTest extends Specification {
 
     def "should not accept single not valid segment with XPOS as a rule"(){
         given:
-        RuleMatchingRelations rmr = RuleMatchingRelations.understandRule("[subst *")
+        ParsedRule rmr = ParsedRule.parseRule("[subst *")
 
         expect:
         rmr != null

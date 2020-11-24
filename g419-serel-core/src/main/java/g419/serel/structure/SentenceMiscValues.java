@@ -98,7 +98,7 @@ public class SentenceMiscValues {
     }
 
 
-    public Set<RelationDesc> getTokenIndexesForMatchingRelType(final RuleMatchingRelations rmr, final Set<RelationDesc> useOnlyRels) {
+    public Set<RelationDesc> getTokenIndexesForMatchingRelType(final ParsedRule rmr, final Set<RelationDesc> useOnlyRels) {
         //System.out.println("Searching for type '"+rmr.getRelationType()+"'");
         final Set<Integer> tokenIndexes = new HashSet<>();
         final Set<RelationDesc> resultRelDesc = new HashSet<>();
@@ -129,8 +129,8 @@ public class SentenceMiscValues {
         return resultRelDesc;
     }
 
-
-    public Set<SerelExpression>  getRelationsMatchingRule(final RuleMatchingRelations rmr, final List<SerelExpression> sentenceLinksList) {
+    /*
+    public Set<SerelExpression>  getRelationsMatchingRule(final ParsedRule rmr, final List<SerelExpression> sentenceLinksList) {
         final Set<SerelExpression> result = new HashSet<>();
         for(final SerelExpression se : sentenceLinksList) {
             if(isRuleMatchingSerel(rmr,se )) {
@@ -140,7 +140,8 @@ public class SentenceMiscValues {
         return result;
     }
 
-    private boolean isRuleMatchingSerel(final RuleMatchingRelations rmr, final SerelExpression se) {
+
+    private boolean isRuleMatchingSerel(final ParsedRule rmr, final SerelExpression se) {
 
         final String serelPath = se.getDetailedPathAsString(false);
         //System.out.println("sePAth = "+serelPath);
@@ -164,7 +165,8 @@ public class SentenceMiscValues {
         return false;
     }
 
-    private boolean isRuleMatchingSerelPathFromTokenIndex(final RuleMatchingRelations rmr, final SerelExpression se, final List<String> serelPathElements, int serelPathElementIndex) {
+
+    private boolean isRuleMatchingSerelPathFromTokenIndex(final ParsedRule rmr, final SerelExpression se, final List<String> serelPathElements, int serelPathElementIndex) {
 
         //System.out.println("Rule :"+ rmr.rule);
         for(int ruleElementIndex=0;ruleElementIndex<rmr.getRuleElements().size();ruleElementIndex++,serelPathElementIndex++) {
@@ -215,7 +217,7 @@ public class SentenceMiscValues {
 
 
 
-    private int matchStarToSerelPath(final RuleMatchingRelations rmr, final SerelExpression se, final List<String> serelPathElements, int serelPathElementIndex , final int ruleElementIndexParam) {
+    private int matchStarToSerelPath(final ParsedRule rmr, final SerelExpression se, final List<String> serelPathElements, int serelPathElementIndex , final int ruleElementIndexParam) {
 
         //System.out.println("");
         //System.out.println("");
@@ -250,7 +252,7 @@ public class SentenceMiscValues {
 
 
 
-    public Set<RelationDesc> getTokenIndexesForMatchingRelNE(final RuleMatchingRelations rmr, final Set<RelationDesc> useOnlyRels) {
+    public Set<RelationDesc> getTokenIndexesForMatchingRelNE(final ParsedRule rmr, final Set<RelationDesc> useOnlyRels) {
         //System.out.println("Searching for NE types (and deprel if given): "+rmr);
         final Set<Integer> tokenIndexes = new HashSet<>();
         final Set<RelationDesc> resultRelDesc = new HashSet<>();
@@ -305,7 +307,7 @@ public class SentenceMiscValues {
         //return tokenIndexes;
         return resultRelDesc;
     }
-
+*/
 
 
 
