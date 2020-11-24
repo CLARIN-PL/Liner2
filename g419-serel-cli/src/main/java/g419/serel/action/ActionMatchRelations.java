@@ -9,61 +9,44 @@ import org.apache.commons.cli.CommandLine;
 @Slf4j
 public class ActionMatchRelations extends Action {
 
-  private String inputFilename;
-  private String inputFormat;
+    private String inputFilename;
+    private String inputFormat;
 
-  private String rule;
-  private String ruleFilename;
+    private String rule;
+    private String ruleFilename;
 
-  private String reportFilename;
+    private String reportFilename;
 
-  public ActionMatchRelations() {
-    super("match-relations");
-    setDescription("Reads node annotations for semantic relations from the documents and print them on the screen");
-    options.addOption(CommonOptions.getInputFileNameOption());
-    options.addOption(CommonOptions.getInputFileFormatOption());
-    options.addOption(CommonOptions.getRuleOption());
-    options.addOption(CommonOptions.getRuleFilenameOption());
+    public ActionMatchRelations() {
+        super("match-relations");
+        setDescription("Reads node annotations for semantic relations from the documents and print them on the screen");
+        options.addOption(CommonOptions.getInputFileNameOption());
+        options.addOption(CommonOptions.getInputFileFormatOption());
+        options.addOption(CommonOptions.getRuleOption());
+        options.addOption(CommonOptions.getRuleFilenameOption());
 
-    options.addOption(CommonOptions.getReportFileNameOption());
-  }
+        options.addOption(CommonOptions.getReportFileNameOption());
+    }
 
-  @Override
-  public void parseOptions(final CommandLine line) throws Exception {
-    inputFilename = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
-    inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
-    rule = line.getOptionValue(CommonOptions.OPTION_RULE);
-    ruleFilename = line.getOptionValue(CommonOptions.OPTION_RULE_FILENAME);
+    @Override
+    public void parseOptions(final CommandLine line) throws Exception {
+        inputFilename = line.getOptionValue(CommonOptions.OPTION_INPUT_FILE);
+        inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
+        rule = line.getOptionValue(CommonOptions.OPTION_RULE);
+        ruleFilename = line.getOptionValue(CommonOptions.OPTION_RULE_FILENAME);
 
-    reportFilename = line.getOptionValue(CommonOptions.OPTION_REPORT_FILE);
-  }
+        reportFilename = line.getOptionValue(CommonOptions.OPTION_REPORT_FILE);
+    }
 
-  @Override
-  public void run() throws Exception {
+    @Override
+    public void run() throws Exception {
+        log.debug("Searching rule = " + rule);
+        final String searchingRule = rule;
 
-
-      log.debug("Searching rule = "+rule);
-      final String searchingRule= rule;
-
-//      // z opisu
-//    //String searchingRule = "location:: w (case)> [nam_loc_gpe_country] (nmod) :target > * < [nam_loc_gpe_city] (nmod) :source";
-//
-//      // 1 bez deprel
-//    //String searchingRule =" location:: [nam_fac_goe] :source > * > [nam_loc_gpe_city] :target ";
-//
-//        // 2 z deprel dobrym
-//      String searchingRule =" location:: [nam_fac_goe] (root) :source > * > [nam_loc_gpe_city] (nmod) :target ";
-//
-//      // 3 z deprel złym
-//     // String searchingRule =" location:: [nam_fac_goe] (root) :source > * > [nam_loc_gpe_city] (case) :target ";
-
-     //searchingRule=  "zxcv >[*] asdf > * > erw <(*) asdf /asdf : wer < [asdf] sdaf ";
-
-
-    final ParsedRule parsedRule = ParsedRule.parseRule(searchingRule);
-    log.debug(searchingRule);
-    log.debug("Rule tree:");
-    parsedRule.getRootNodeMatch().dumpString();
+        final ParsedRule parsedRule = ParsedRule.parseRule(searchingRule);
+        log.debug(searchingRule);
+        log.debug("Rule tree:");
+        parsedRule.getRootNodeMatch().dumpString();
 
 
 /*
@@ -101,7 +84,7 @@ public class ActionMatchRelations extends Action {
     }
 */
 
-  }
+    }
 
 
     /*
@@ -162,12 +145,6 @@ public class ActionMatchRelations extends Action {
     }
     
      */
-
-
-
-
-
-
 
 
 }
