@@ -1,7 +1,9 @@
-package g419.serel.ruleTree;
+package g419.serel.ruleTree.listeners;
 
 import g419.serel.parseRule.ParseRuleListener;
 import g419.serel.parseRule.ParseRuleParser;
+import g419.serel.ruleTree.EdgeMatch;
+import g419.serel.ruleTree.NodeMatch;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -14,6 +16,7 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
   public NodeMatch rootNodeMatch;
   public String relationType;
 
+  private int nodeMatchIdSequence;
 
   private EdgeMatch leftExpression;
   private EdgeMatch rightExpression;
@@ -21,6 +24,7 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
   @Override
   public void enterStart(final ParseRuleParser.StartContext ctx) {
     //log.debug(" entering Start");
+    nodeMatchIdSequence = 1;
   }
 
 
@@ -28,10 +32,12 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
   public void exitStart(final StartContext ctx) {
     //log.debug(" exiting Start");
     if (leftExpression != null) {
-      rootNodeMatch.edgeMatchList.add(leftExpression);
+      rootNodeMatch.getEdgeMatchList().add(leftExpression);
+      leftExpression.setParentNodeMatch(rootNodeMatch);
     }
     if (rightExpression != null) {
-      rootNodeMatch.edgeMatchList.add(rightExpression);
+      rootNodeMatch.getEdgeMatchList().add(rightExpression);
+      rightExpression.setParentNodeMatch(rootNodeMatch);
     }
 
 
@@ -43,6 +49,7 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
     //log.debug(" exiting RootNode");
 
     rootNodeMatch = rootNodeContext2NodeMatch(ctx);
+    rootNodeMatch.setParentEdgeMatch(null);
 
   }
 
@@ -70,10 +77,13 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
 
     final EdgeMatch edgeMatch = leftEdgeContext2EdgeMatch(ctx.leftEdge());
     final NodeMatch nodeMatch = nodeContext2NodeMatch(ctx.node());
-    edgeMatch.nodeMatch = nodeMatch;
+    edgeMatch.setNodeMatch(nodeMatch);
+    nodeMatch.setParentEdgeMatch(edgeMatch);
 
     if (ctx.leftExpression() != null) {
-      nodeMatch.edgeMatchList.add(leftExpression2EdgeMatch(ctx.leftExpression()));
+      final EdgeMatch subLeftExpression = leftExpression2EdgeMatch(ctx.leftExpression());
+      subLeftExpression.setParentNodeMatch(nodeMatch);
+      nodeMatch.getEdgeMatchList().add(subLeftExpression);
     }
     return edgeMatch;
   }
@@ -84,7 +94,14 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
     final EdgeMatch edgeMatch = new EdgeMatch();
     edgeMatch.setSide("left");
     if (ctx.depRel() != null) {
-      edgeMatch.setDepRel(ctx.depRel().depRelValue().getText());
+      final String text = ctx.depRel().depRelValue().getText();
+      if (text.equals("*")) {
+        edgeMatch.setMatchAnyDepRel(true);
+      } else {
+        edgeMatch.setDepRel(text);
+      }
+    } else {
+      edgeMatch.setMatchAnyDepRel(true);
     }
 
     return edgeMatch;
@@ -92,12 +109,13 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
 
   private NodeMatch nodeContext2NodeMatch(final NodeContext ctx) {
     final NodeMatch nodeMatch = new NodeMatch();
+    nodeMatch.setId(nodeMatchIdSequence++);
     if (ctx != null) {
       if (ctx.element() != null) {
 
         final String text = ctx.element().text().getText();
         if (text.equals("*")) {
-          nodeMatch.setMatchAny(true);
+          nodeMatch.setMatchAnyText(true);
         } else if (text.charAt(0) == '^') {
           nodeMatch.setMatchLemma(true);
           nodeMatch.setText(text.substring(1));
@@ -131,10 +149,13 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
 
     final EdgeMatch edgeMatch = rightEdgeContext2EdgeMatch(ctx.rightEdge());
     final NodeMatch nodeMatch = nodeContext2NodeMatch(ctx.node());
-    edgeMatch.nodeMatch = nodeMatch;
+    edgeMatch.setNodeMatch(nodeMatch);
+    nodeMatch.setParentEdgeMatch(edgeMatch);
 
     if (ctx.rightExpression() != null) {
-      nodeMatch.edgeMatchList.add(rightExpression2EdgeMatch(ctx.rightExpression()));
+      final EdgeMatch subRightExpression = rightExpression2EdgeMatch(ctx.rightExpression());
+      nodeMatch.getEdgeMatchList().add(subRightExpression);
+      subRightExpression.setParentNodeMatch(nodeMatch);
     }
     return edgeMatch;
   }
@@ -145,7 +166,14 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
     edgeMatch.setSide("right");
     if (ctx != null) {
       if (ctx.depRel() != null) {
-        edgeMatch.setDepRel(ctx.depRel().depRelValue().getText());
+        final String text = ctx.depRel().depRelValue().getText();
+        if (text.equals("*")) {
+          edgeMatch.setMatchAnyDepRel(true);
+        } else {
+          edgeMatch.setDepRel(text);
+        }
+      } else {
+        edgeMatch.setMatchAnyDepRel(true);
       }
     }
 

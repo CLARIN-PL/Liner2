@@ -24,6 +24,9 @@ public class Token extends IdentifiableElement {
   /* Oznaczenie, czy między bieżącym a następnym tokenem był biały znak. */
   boolean noSpaceAfter = false;
 
+  /* Dodatkowe, bardziej skomplikowane artybuty nie będące stringami. */
+  public Map<String, Object> extAttr;
+
   public Token(final TokenAttributeIndex attrIdx) {
     this.attrIdx = attrIdx;
     packAtributes(attrIdx.getLength());
@@ -57,10 +60,11 @@ public class Token extends IdentifiableElement {
    */
   public String getAttributeValue(final int index) {
     //System.out.println("Checking attrbute for token:"+this.getOrth());
-    if(index<attributes.size())
+    if (index < attributes.size()) {
       return attributes.get(index);
-    else
+    } else {
       return "";
+    }
   }
 
   public String getAttributeValue(final String attr) {
@@ -181,7 +185,7 @@ public class Token extends IdentifiableElement {
     } else if (index == attributes.size()) {
       attributes.add(value);
     } else {
-      System.out.println(" Index "+index+" too big. MAx allowed ="+attributes.size());
+      System.out.println(" Index " + index + " too big. MAx allowed =" + attributes.size());
     }
   }
 
@@ -251,8 +255,14 @@ public class Token extends IdentifiableElement {
     return this;
   }
 
+  public List<String> getBois() {
+    final Object result = extAttr.getOrDefault("bois", Collections.EMPTY_LIST);
+    return (List<String>) result;
+  }
 
-
-
+  public List<RelationDesc> getNamRels() {
+    final Object result = extAttr.getOrDefault("nam_rels", Collections.EMPTY_LIST);
+    return (List<RelationDesc>) result;
+  }
 
 }

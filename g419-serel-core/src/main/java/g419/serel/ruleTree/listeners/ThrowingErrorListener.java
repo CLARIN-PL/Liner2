@@ -1,4 +1,4 @@
-package g419.serel.ruleTree;
+package g419.serel.ruleTree.listeners;
 
 
 import org.antlr.v4.runtime.BaseErrorListener;
