@@ -3,8 +3,10 @@ package g419.serel.ruleTree;
 
 import g419.corpus.structure.Token;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString(exclude = "parentNodeMatch")
 public class EdgeMatch {
 
   private String side;

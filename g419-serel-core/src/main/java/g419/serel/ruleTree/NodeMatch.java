@@ -2,10 +2,12 @@ package g419.serel.ruleTree;
 
 import g419.corpus.structure.Token;
 import lombok.Data;
+import lombok.ToString;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@ToString(exclude = "parentEdgeMatch")
 public class NodeMatch {
 
   private int id;
@@ -24,6 +26,14 @@ public class NodeMatch {
   private List<EdgeMatch> edgeMatchList = new ArrayList<>();
 
   public NodeMatch() {
+    System.out.println("!!!!! creating NodeMatch");
+    /*
+    try {
+      throw new RuntimeException();
+    } catch (final RuntimeException rt) {
+      rt.printStackTrace();
+    }
+    */
   }
 
   public void dumpString() {

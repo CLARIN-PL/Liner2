@@ -59,6 +59,7 @@ class PatternMatchTest extends Specification {
             result != null
         and:
             result.rootNodeMatch.text.equals("miasto")
+            result.rootNodeMatch.id == 1;
     }
 
     def "ParseRule should not parse single invalid segment"() {
@@ -73,6 +74,8 @@ class PatternMatchTest extends Specification {
             PatternMatch result = PatternMatch.parseRule(" * ")
         expect:
             result.rootNodeMatch != null
+            result.rootNodeMatch.id == 1;
+            result.rootNodeMatch.isMatchAnyText() == true
     }
 
     def "ParseRule should not accept *  mixed with text as a text pattern"() {
@@ -88,6 +91,7 @@ class PatternMatchTest extends Specification {
         expect:
             result.rootNodeMatch.text.equals("miasto")
             result.rootNodeMatch.getXPos().equals("subst")
+            result.rootNodeMatch.id == 1;
 
     }
 
@@ -98,6 +102,7 @@ class PatternMatchTest extends Specification {
             result.rootNodeMatch.text.equals("miasto")
             result.rootNodeMatch.namedEntity.equals("nam_geo_loc")
             result.rootNodeMatch.role.equals("source")
+            result.rootNodeMatch.id == 1;
     }
 
     def "ParseRule should recognize xPos with namedEntity name with role"() {
@@ -109,6 +114,7 @@ class PatternMatchTest extends Specification {
             result.rootNodeMatch.getXPos().equals("subst")
             result.rootNodeMatch.namedEntity.equals("nam_geo_loc")
             result.rootNodeMatch.role.equals("source")
+            result.rootNodeMatch.id == 1;
     }
 
 
@@ -122,8 +128,28 @@ class PatternMatchTest extends Specification {
             result.rootNodeMatch.edgeMatchList.get(0).parentNodeMatch == result.rootNodeMatch
             result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.text.equals("jest")
             result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.parentEdgeMatch == result.rootNodeMatch.edgeMatchList.get(0)
+            result.rootNodeMatch.id == 2;
+            result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.id == 1
+
 
     }
+
+    def "ParseRule should recognize two segments linked from right to left"() {
+        given:
+            PatternMatch result = PatternMatch.parseRule("stolicą < jest ")
+        expect:
+            result.rootNodeMatch.text.equals("stolicą")
+            result.rootNodeMatch.edgeMatchList.size() == 1;
+            result.rootNodeMatch.edgeMatchList.get(0).side.equals("right")
+            result.rootNodeMatch.edgeMatchList.get(0).parentNodeMatch == result.rootNodeMatch
+            result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.text.equals("jest")
+            result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.parentEdgeMatch == result.rootNodeMatch.edgeMatchList.get(0)
+            result.rootNodeMatch.id == 1;
+            result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.id == 2
+
+
+    }
+
 
     def "ParseRule should recognize depRel of link of two segments"() {
         given:
@@ -166,7 +192,13 @@ class PatternMatchTest extends Specification {
             result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.edgeMatchList.get(0).nodeMatch.role.equals("target")
             result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.edgeMatchList.get(0).nodeMatch.parentEdgeMatch == result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.edgeMatchList.get(0)
 
+            result.rootNodeMatch.id == 1
+            result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.id == 2
+            result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.edgeMatchList.get(0).nodeMatch.id == 3
+
+
             nm.edgeMatchList.size() == 0
+
 
     }
 
@@ -207,6 +239,22 @@ class PatternMatchTest extends Specification {
         then:
             result.size() == 2;
     }
+
+    def "getSentenceBranchMatchingUpPatternBranchFromNode zwraca podgałęzie większe niż 2 elementy od prawej do lewej"() {
+        when:
+            PatternMatch result = PatternMatch.parseRule("odbywają < koncerty < jazzowe")
+        then:
+            result.rootNodeMatch.id == 1
+            result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.id == 2
+            result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.edgeMatchList.get(0).nodeMatch.id == 3
+
+    }
+
+
+/**
+ * Rozpoznawanie wzorca
+ */
+
 
     def "getSentenceBranchMatchingUpPatternBranchFromNode nie zwraca podgałęzi tokenów zdania gdy zaczynamy od złego punktu"() {
         when:
