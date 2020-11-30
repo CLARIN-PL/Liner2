@@ -3,8 +3,6 @@ package g419.serel.structure;
 import g419.corpus.structure.RelationDesc;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
-import g419.serel.ruleTree.NodeMatch;
-import g419.serel.ruleTree.PatternMatch;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import java.util.*;
@@ -106,44 +104,16 @@ public class SentenceMiscValues {
   }
 
 
-  public List<Integer> getSentencesTreesMatchingRule(final PatternMatch patternMatch) {
-
-    final List<Integer> result = new ArrayList<>();
-
-
-    // weź jedną  gałąź z wzorca od liścia po korzeń
-    // weż jest ostatni node - liść
-    final NodeMatch leafNodeMatch = patternMatch.getALeaf();
-
-    for (int i = 0; i < sentence.getTokens().size(); i++) {
-      final Token token = sentence.getTokens().get(i);
-
-      if (leafNodeMatch.matches(token)) {
-        result.add(i);
-        final NodeMatch nodeMatch = leafNodeMatch;
-        while (nodeMatch.getParentEdgeMatch() != null) {
-          if (nodeMatch.getParentEdgeMatch().matches(token)) {
-
-          }
-
-        }
+  // przejdź po tokenach zdania i sprawdzaj czy pasuje
+  //// jest token dla którego pasuje :
+  ////// idź w górę i rozpoznawaj aż dojdziesz do korzenia wzorca
+  //////// jak dojdziesz do końca gałęzi i jest ok to masz korzeń:
+  ////////// teraz możesz sprawdzić czy druga (następna) gałąź pasuje w coś od korzenia w dół
+  ////// gdzieś po drodze się nie zgadza -> null
+  ////// zabrakło tokenów dla wzorca -> null
+  //// nie ma takiego tokena - null;
 
 
-      }
-
-    }
-
-    // przejdź po tokenach zdania i sprawdzaj czy pasuje
-    //// jest token dla którego pasuje :
-    ////// idź w górę i rozpoznawaj aż dojdziesz do korzenia wzorca
-    //////// jak dojdziesz do końca gałęzi i jest ok to masz korzeń:
-    ////////// teraz możesz sprawdzić czy druga (następna) gałąź pasuje w coś od korzenia w dół
-    ////// gdzieś po drodze się nie zgadza -> null
-    ////// zabrakło tokenów dla wzorca -> null
-    //// nie ma takiego tokena - null;
-
-    return result;
-  }
 
 /*
   public Set<RelationDesc> getTokenIndexesForMatchingRelType(final PatternMatch rmr, final Set<RelationDesc> useOnlyRels) {

@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import java.util.LinkedList;
+import java.util.List;
 
 import static g419.serel.parseRule.ParseRuleParser.*;
 
@@ -20,6 +22,8 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
   public NodeMatch rootNodeMatch;
   private EdgeMatch rootLeftExpression;
   private EdgeMatch rootRightExpression;
+
+  public List<NodeMatch> nodeMatchList = new LinkedList<>();
 
   @Override
   public void enterStart(final ParseRuleParser.StartContext ctx) {
@@ -45,7 +49,6 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
   @Override
   public void exitRootNode(final ParseRuleParser.RootNodeContext ctx) {
     System.out.println(" exiting RootNode");
-
     rootNodeMatch = rootNodeContext2NodeMatch(ctx);
     System.out.println("created rootNodeatch >>> " + rootNodeMatch);
     rootNodeMatch.setParentEdgeMatch(null);
@@ -114,6 +117,7 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
   private NodeMatch nodeContext2NodeMatch(final NodeContext ctx) {
     final NodeMatch nodeMatch = new NodeMatch();
     nodeMatch.setId(nodeMatchIdSequence++);
+    nodeMatchList.add(nodeMatch);
     if (ctx != null) {
       if (ctx.element() != null) {
 

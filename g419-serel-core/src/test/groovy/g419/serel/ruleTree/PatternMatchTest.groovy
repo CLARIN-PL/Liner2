@@ -1,6 +1,5 @@
 package g419.serel.ruleTree
 
-
 import g419.corpus.structure.Token
 import g419.corpus.structure.TokenAttributeIndex
 import org.antlr.v4.runtime.misc.ParseCancellationException
@@ -60,6 +59,7 @@ class PatternMatchTest extends Specification {
         and:
             result.rootNodeMatch.text.equals("miasto")
             result.rootNodeMatch.id == 1;
+            result.nodeMatchList.size() == 1;
     }
 
     def "ParseRule should not parse single invalid segment"() {
@@ -76,6 +76,7 @@ class PatternMatchTest extends Specification {
             result.rootNodeMatch != null
             result.rootNodeMatch.id == 1;
             result.rootNodeMatch.isMatchAnyText() == true
+            result.nodeMatchList.size() == 1;
     }
 
     def "ParseRule should not accept *  mixed with text as a text pattern"() {
@@ -92,6 +93,7 @@ class PatternMatchTest extends Specification {
             result.rootNodeMatch.text.equals("miasto")
             result.rootNodeMatch.getXPos().equals("subst")
             result.rootNodeMatch.id == 1;
+            result.nodeMatchList.size() == 1;
 
     }
 
@@ -103,6 +105,7 @@ class PatternMatchTest extends Specification {
             result.rootNodeMatch.namedEntity.equals("nam_geo_loc")
             result.rootNodeMatch.role.equals("source")
             result.rootNodeMatch.id == 1;
+            result.nodeMatchList.size() == 1;
     }
 
     def "ParseRule should recognize xPos with namedEntity name with role"() {
@@ -115,6 +118,7 @@ class PatternMatchTest extends Specification {
             result.rootNodeMatch.namedEntity.equals("nam_geo_loc")
             result.rootNodeMatch.role.equals("source")
             result.rootNodeMatch.id == 1;
+            result.nodeMatchList.size() == 1;
     }
 
 
@@ -130,6 +134,7 @@ class PatternMatchTest extends Specification {
             result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.parentEdgeMatch == result.rootNodeMatch.edgeMatchList.get(0)
             result.rootNodeMatch.id == 2;
             result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.id == 1
+            result.nodeMatchList.size() == 2;
 
 
     }
@@ -146,6 +151,7 @@ class PatternMatchTest extends Specification {
             result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.parentEdgeMatch == result.rootNodeMatch.edgeMatchList.get(0)
             result.rootNodeMatch.id == 1;
             result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.id == 2
+            result.nodeMatchList.size() == 2;
 
 
     }
@@ -154,7 +160,7 @@ class PatternMatchTest extends Specification {
     def "ParseRule should recognize depRel of link of two segments"() {
         given:
             PatternMatch result = PatternMatch.parseRule("jest (nmod) > stolicą ")
-            NodeMatch nm = result.getALeaf()
+            NodeMatch nm = result.getALeaf().get()
         expect:
             result.rootNodeMatch.text.equals("stolicą")
             result.rootNodeMatch.edgeMatchList.size() == 1;
@@ -163,15 +169,17 @@ class PatternMatchTest extends Specification {
             result.rootNodeMatch.edgeMatchList.get(0).depRel.equals("nmod")
             result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.text.equals("jest")
             result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.parentEdgeMatch == result.rootNodeMatch.edgeMatchList.get(0)
+            result.nodeMatchList.size() == 2;
 
             nm.edgeMatchList.size() == 0
+
     }
 
 
     def "ParseRule should recognize relation type"() {
         given:
             PatternMatch result = PatternMatch.parseRule(" location ::  */ nam_fac_goe: source <(root) * <( nmod ) * / nam_loc_gpe_city:target ")
-            NodeMatch nm = result.getALeaf()
+            NodeMatch nm = result.getALeaf().get()
         expect:
             result.relationType.equals("location")
             result.rootNodeMatch.isMatchAnyText() == true
@@ -195,6 +203,7 @@ class PatternMatchTest extends Specification {
             result.rootNodeMatch.id == 1
             result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.id == 2
             result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.edgeMatchList.get(0).nodeMatch.id == 3
+            result.nodeMatchList.size() == 3;
 
 
             nm.edgeMatchList.size() == 0
@@ -233,20 +242,22 @@ class PatternMatchTest extends Specification {
     def "getSentenceBranchMatchingUpPatternBranchFromNode zwraca podgałąź tokenów zdania "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("W > południe")
-            NodeMatch startNodeMatch = pattern.getALeaf();
+            NodeMatch startNodeMatch = pattern.getALeaf().get();
             int startTokenIndex = 0;
-            List<Integer> result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex)
+            def result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex)
         then:
+            pattern.nodeMatchList.size() == 2;
             result.size() == 2;
     }
 
     def "getSentenceBranchMatchingUpPatternBranchFromNode zwraca podgałęzie większe niż 2 elementy od prawej do lewej"() {
         when:
-            PatternMatch result = PatternMatch.parseRule("odbywają < koncerty < jazzowe")
+            PatternMatch pattern = PatternMatch.parseRule("odbywają < koncerty < jazzowe")
         then:
-            result.rootNodeMatch.id == 1
-            result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.id == 2
-            result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.edgeMatchList.get(0).nodeMatch.id == 3
+            pattern.nodeMatchList.size() == 3;
+            pattern.rootNodeMatch.id == 1
+            pattern.rootNodeMatch.edgeMatchList.get(0).nodeMatch.id == 2
+            pattern.rootNodeMatch.edgeMatchList.get(0).nodeMatch.edgeMatchList.get(0).nodeMatch.id == 3
 
     }
 
@@ -259,10 +270,11 @@ class PatternMatchTest extends Specification {
     def "getSentenceBranchMatchingUpPatternBranchFromNode nie zwraca podgałęzi tokenów zdania gdy zaczynamy od złego punktu"() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("W > południe")
-            NodeMatch startNodeMatch = pattern.getALeaf();
+            NodeMatch startNodeMatch = pattern.getALeaf().get();
             int startTokenIndex = 1;
-            List<Integer> result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex)
+            def result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex)
         then:
+            pattern.nodeMatchList.size() == 2;
             result.size() == 0;
     }
 
@@ -270,20 +282,22 @@ class PatternMatchTest extends Specification {
     def "getSentenceBranchMatchingUpPatternBranchFromNode nie zwraca odwrotnej podgałęzi tokenów zdania "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("W < południe")
-            NodeMatch startNodeMatch = pattern.getALeaf();
+            NodeMatch startNodeMatch = pattern.getALeaf().get();
             int startTokenIndex = 0;
-            List<Integer> result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex)
+            def result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex)
         then:
+            pattern.nodeMatchList.size() == 2;
             result.size() == 0;
     }
 
     def "getSentenceBranchMatchingUpPatternBranchFromNode zwraca podgałęź tokenów zdania gdy wyszukiwanie tylko po xpos"() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("[subst] * > [fin] *")
-            NodeMatch startNodeMatch = pattern.getALeaf();
+            NodeMatch startNodeMatch = pattern.getALeaf().get();
             int startTokenIndex = sTI;
-            List<Integer> result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex)
+            def result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex)
         then:
+            pattern.nodeMatchList.size() == 2;
             result.size() == rSize;
         where:
             sTI || rSize
@@ -300,10 +314,11 @@ class PatternMatchTest extends Specification {
     def "getSentenceBranchMatchingUpPatternBranchFromNode zwraca podgałęzie większe niż 2 elementy "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty > odbywają")
-            NodeMatch startNodeMatch = pattern.getALeaf();
+            NodeMatch startNodeMatch = pattern.getALeaf().get();
             int startTokenIndex = 5;
-            List<Integer> result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex)
+            def result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex)
         then:
+            pattern.nodeMatchList.size() == 3;
             result.size() == 3;
     }
 
@@ -311,23 +326,103 @@ class PatternMatchTest extends Specification {
     def "getSentenceBranchMatchingUpPatternBranchFromNode zwraca podgałęzie większe niż 2 elementy i wyszukiwane po lemma"() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("^jazzowy > ^koncert > ^odbywać")
-            NodeMatch startNodeMatch = pattern.getALeaf();
+            NodeMatch startNodeMatch = pattern.getALeaf().get();
             int startTokenIndex = 5;
-            List<Integer> result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex)
+            def result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex)
         then:
+            pattern.nodeMatchList.size() == 3;
             result.size() == 3;
     }
 
     def "getSentenceBranchMatchingUpPatternBranchFromNode nie zwraca nic gdy pattern wychodzi poza zdanie"() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("^jazzowy > ^koncert > ^odbywać > się")
-            NodeMatch startNodeMatch = pattern.getALeaf();
+            NodeMatch startNodeMatch = pattern.getALeaf().get();
             int startTokenIndex = 5;
-            List<Integer> result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex)
+            def result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex)
         then:
+            pattern.nodeMatchList.size() == 4;
             result.size() == 0;
+    }
+
+    def "getALeaf cares about which ids to exclude "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("W < południe")
+
+        then:
+            NodeMatch startNodeMatch = pattern.getALeaf().get();
+            Optional<NodeMatch> optSecondNodeLeaf = pattern.getALeaf(Set.of(startNodeMatch.getId()))
+            pattern.nodeMatchList.size() == 2;
+            startNodeMatch.text.equals("południe")
+            optSecondNodeLeaf.isEmpty()
+    }
+
+    def "getALeaf gets two different leaves "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("W > południe > odbywają < koncerty < jazzowe ")
+
+        then:
+            pattern.nodeMatchList.size() == 5;
+
+            NodeMatch startNodeMatch = pattern.getALeaf().get();
+            startNodeMatch.text.equals("W")
+
+            Optional<NodeMatch> optSecondNodeLeaf = pattern.getALeaf(Set.of(startNodeMatch.getId()))
+            optSecondNodeLeaf.get().text.equals("jazzowe")
+
+            Optional<NodeMatch> optThirdNodeLeaf = pattern.getALeaf(Set.of(startNodeMatch.getId(), optSecondNodeLeaf.get().getId()))
+            optThirdNodeLeaf.isEmpty()
+
+            pattern.nodeMatchList.size() == 5;
+    }
+
+    def "finding sentence subtrees matching pattern "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty > odbywają")
+            //PatternMatch pattern = PatternMatch.parseRule("W > południe > odbywają")
+            def result = pattern.getSentenceTreesMatchingRule(tokens)
+        then:
+            result.size() > 0
+    }
+
+    def "finding sentence subtrees matching pattern 2 "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty > odbywają < się")
+            def result = pattern.getSentenceTreesMatchingRule(tokens)
+        then:
+            result.size() == 1
+            result.get(0).size() == 4
+
+    }
+
+    def "finding sentence subtrees matching pattern 3 "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty > odbywają < południe < W ")
+            def result = pattern.getSentenceTreesMatchingRule(tokens)
+        then:
+            result.size() > 0
+            result.get(0).size() == 5
+
+    }
+
+    def "finding sentence subtrees matching pattern v.4 "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("się > odbywają < południe < W ")
+            def result = pattern.getSentenceTreesMatchingRule(tokens)
+        then:
+            result.size() > 0
+
+    }
+
+
+    def "finding sentence subtrees matching pattern v.5 - disjoint branches "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty  < południe < W ")
+            def result = pattern.getSentenceTreesMatchingRule(tokens)
+        then:
+            result.size() == 0
+
     }
 
 
 }
-

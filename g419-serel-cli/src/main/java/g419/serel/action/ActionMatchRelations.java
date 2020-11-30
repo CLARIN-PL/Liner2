@@ -98,7 +98,7 @@ public class ActionMatchRelations extends Action {
 
       final SentenceMiscValues smv = SentenceMiscValues.from(sentence);
 
-      smv.getSentencesTreesMatchingRule(patternMatch);
+      patternMatch.getSentenceTreesMatchingRule(sentence.getTokens());
 
     }
 

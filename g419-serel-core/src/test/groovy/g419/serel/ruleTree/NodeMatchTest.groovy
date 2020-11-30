@@ -123,6 +123,7 @@ class NodeMatchTest extends Specification {
             EdgeMatch em = new EdgeMatch();
             nm.getEdgeMatchList().add(em)
             em.setParentNodeMatch(nm)
+            // it is enough to have edge - we assume each edge has following it node
         then:
             nm.isLeaf() == false
     }

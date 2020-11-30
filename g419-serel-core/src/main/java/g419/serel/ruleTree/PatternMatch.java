@@ -9,8 +9,7 @@ import lombok.Data;
 import lombok.ToString;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Data
 @ToString
@@ -19,6 +18,7 @@ public class PatternMatch {
   String rule;
   String relationType;
   NodeMatch rootNodeMatch;
+  List<NodeMatch> nodeMatchList;
 
 
   // method using Antlr4
@@ -38,27 +38,32 @@ public class PatternMatch {
 
     patternMatch.setRelationType(listener.relationType);
     patternMatch.setRootNodeMatch(listener.rootNodeMatch);
+    patternMatch.setNodeMatchList(listener.nodeMatchList);
 
     return patternMatch;
   }
 
-  public NodeMatch getALeaf() {
+  public Optional<NodeMatch> getALeaf() {
     return this.getALeaf(this.rootNodeMatch);
   }
 
+  public Optional<NodeMatch> getALeaf(final NodeMatch nodeMatch) {
+    return this.getALeaf(nodeMatch, Collections.emptySet());
+  }
 
-  public NodeMatch getALeaf(final NodeMatch nodeMatch) {
-    if (nodeMatch == null) {
-      return null;
-    }
-    if (nodeMatch.isLeaf()) {
-      return nodeMatch;
-    } else {
-      return getALeaf(nodeMatch.getEdgeMatchList().get(0).getNodeMatch());
-    }
+  public Optional<NodeMatch> getALeaf(final Set<Integer> excludedNodesIds) {
+    return this.getALeaf(this.rootNodeMatch, excludedNodesIds);
+  }
+
+  public Optional<NodeMatch> getALeaf(final NodeMatch nodeMatch, final Set<Integer> excludedNodesIds) {
+    return nodeMatchList.stream().filter(node -> node.isLeaf() && !excludedNodesIds.contains(node.getId())).findAny();
   }
 
   public List<Integer> getSentenceBranchMatchingUpPatternBranchFromNode(final NodeMatch startNodeMatch, final List<Token> tokens, final int startTokenIndex) {
+    return getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex, Collections.emptySet());
+  }
+
+  public List<Integer> getSentenceBranchMatchingUpPatternBranchFromNode(final NodeMatch startNodeMatch, final List<Token> tokens, final int startTokenIndex, final Set<Integer> excludedNodesIds) {
 
     final List<Integer> result = new ArrayList<>();
 
@@ -78,7 +83,8 @@ public class PatternMatch {
         if (tokenIndex == 0) {
           break;  // no more tokens but pattern still needs more
         }
-        token = tokens.get(tokenIndex - 1);  // IDs are numbered from 1 in CoNLLu
+        tokenIndex--; // IDs are numbered from 1 in CoNLLu, indexes in list  - from 0
+        token = tokens.get(tokenIndex);
 
       } else { // there is no up-links in pattern any more
         found = true;
@@ -92,6 +98,68 @@ public class PatternMatch {
 
     return new ArrayList<>();
   }
+
+
+  public List<Set<Integer>> getSentenceTreesMatchingRule(final List<Token> tokens) {
+
+    final List<Set<Integer>> result = new ArrayList<>();
+    //final List<Token> tokens = sentence.getTokens();
+
+
+    // take first branch from pattern tree
+    // just get its last leaf
+    final Optional<NodeMatch> optFirstLeafNodeMatch = this.getALeaf();
+    final NodeMatch firstLeafNodeMatch = optFirstLeafNodeMatch.get();
+
+    // is there another branch in pattern to search match for ?
+    final Set<Integer> excludedIds = new HashSet<>();
+    excludedIds.add(firstLeafNodeMatch.getId());
+    final Optional<NodeMatch> optSecondLeafNodeMatch = this.getALeaf(excludedIds);
+
+
+    // znajdź w zdaniu coś co do tego pasuje
+    for (int i = 0; i < tokens.size(); i++) {
+      final Token token = tokens.get(i);
+      if (firstLeafNodeMatch.matches(token)) {
+        // can we find match for the whole pattern-branch ?
+        final List<Integer> foundFirstBranch = this.getSentenceBranchMatchingUpPatternBranchFromNode(firstLeafNodeMatch, tokens, i);
+        if (foundFirstBranch.size() == 0) {
+          continue;
+        }
+
+        if (!optSecondLeafNodeMatch.isPresent()) {
+          result.add(new HashSet<>(foundFirstBranch));
+          continue;
+        }
+
+        // we have second branch of pattern
+
+        final NodeMatch secondLeafNodeMatch = optSecondLeafNodeMatch.get();
+
+        for (int j = 0; j < tokens.size(); j++) {
+          if (j == i) { // from this point we already have the first branch found
+            continue;
+          }
+          final Token secToken = tokens.get(j);
+          if (secondLeafNodeMatch.matches(secToken)) {
+            final List<Integer> foundSecondBranch = this.getSentenceBranchMatchingUpPatternBranchFromNode(secondLeafNodeMatch, tokens, j, new HashSet(foundFirstBranch));
+            //
+            if (foundSecondBranch.size() != 0) {
+              final Set<Integer> onePossibleResult = new HashSet<>();
+              onePossibleResult.addAll(foundFirstBranch);
+              onePossibleResult.addAll(foundSecondBranch);
+              result.add(onePossibleResult);
+            }
+            continue;
+          }
+        }
+
+
+      }
+    }
+    return result;
+  }
+
 
 
 
