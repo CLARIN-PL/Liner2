@@ -8,6 +8,7 @@ import spock.lang.Specification
 class PatternMatchTest extends Specification {
 
     List<Token> tokens;
+    List<Token> tokens2;
 
     def setup() {
 
@@ -32,7 +33,31 @@ class PatternMatchTest extends Specification {
         )
 
 
-        tokens = new ArrayList<>();
+        tokens = fillTokens(tokensValues, tai)
+
+
+        // artifcially created - may contain errors
+        List<List<String>> tokensValues2 = List.of(
+                List.of("1", "Tam", "tam", "ADP", "adj", "3", "case"),
+                List.of("2", "gdzie", "gdzie", "NOUN", "adj", "3", "obl"),
+                List.of("3", "odbywały", "odbywać", "VERB", "tprep:loc:nwok", "7", "case"),
+                List.of("4", "się", "się", "PRON", "part", "3", "expl:pv"),
+                List.of("5", "zawody", "zawody", "NOUN", "subst:pl:nom:m3", "3", "nsubj"),
+                List.of("6", "szachowe", "szachowy", "ADJ", "adj:pl:nom:m3:pos", "5", "amod"),
+                List.of("7", "odbywają", "odbywać", "VERB", "fin:pl:ter:imperf", "0", "root"),
+                List.of("8", "się", "się", "PRON", "part", "7", "expl:pv"),
+                List.of("9", "koncerty", "koncert", "NOUN", "subst:pl:nom:m3", "7", "nsubj"),
+                List.of("10", "jazzowe", "jazzowy", "ADJ", "adj:pl:nom:m3:pos", "9", "amod"),
+                List.of("11", ".", ".", "PUNCT", "interp", "7", "punct")
+        )
+
+        tokens2 = fillTokens(tokensValues2, tai)
+
+
+    }
+
+    private List<Token> fillTokens(List<List<String>> tokensValues, TokenAttributeIndex tai) {
+        def tmpTokens = new ArrayList<>();
 
         for (int i = 0; i < tokensValues.size(); i++) {
             List<String> tokenValues = tokensValues.get(i);
@@ -46,8 +71,10 @@ class PatternMatchTest extends Specification {
             token.setAttributeValue("head", tokenValues.get(5))
             token.setAttributeValue("deprel", tokenValues.get(6))
 
-            tokens.add(token)
+            tmpTokens.add(token)
         }
+
+        return tmpTokens;
     }
 
     def "ParseRule should parse single segment"() {
@@ -410,7 +437,7 @@ class PatternMatchTest extends Specification {
             PatternMatch pattern = PatternMatch.parseRule("się > odbywają < południe < W ")
             def result = pattern.getSentenceTreesMatchingRule(tokens)
         then:
-            result.size() > 0
+            result.size() == 1
 
     }
 
@@ -423,6 +450,47 @@ class PatternMatchTest extends Specification {
             result.size() == 0
 
     }
+
+
+    def "finding sentence subtrees matching pattern using * char"() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("* < południe < W ")
+            def result = pattern.getSentenceTreesMatchingRule(tokens)
+        then:
+            result.size() == 1
+            result.get(0).size() == 3
+    }
+
+    // tokens2 !!!
+    def "finding sentence subtrees matching pattern using but branches really disjont happen to have the same text at the end "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("szachowe  >  zawody > ^odbywać <  koncerty < jazzowe ")
+            def result = pattern.getSentenceTreesMatchingRule(tokens2)
+        then:
+            result.size() == 0
+    }
+
+
+    def "finding sentence subtrees matching pattern using * char on direct joint with two branches "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty > *  < południe < W ")
+            def result = pattern.getSentenceTreesMatchingRule(tokens)
+        then:
+            result.size() == 1
+
+    }
+
+
+    /*
+    def "finding sentence subtrees matching pattern using * char on indirect joint with two branches "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("jazzowe >  *  < południe < W ")
+            def result = pattern.getSentenceTreesMatchingRule(tokens)
+        then:
+            result.size() == 0
+    }
+
+     */
 
 
 }

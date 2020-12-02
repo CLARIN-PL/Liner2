@@ -117,16 +117,17 @@ public class PatternMatch {
     final Optional<NodeMatch> optSecondLeafNodeMatch = this.getALeaf(excludedIds);
 
 
-    // znajdź w zdaniu coś co do tego pasuje
+    // try to match a subtree in sentence
     for (int i = 0; i < tokens.size(); i++) {
       final Token token = tokens.get(i);
       if (firstLeafNodeMatch.matches(token)) {
-        // can we find match for the whole pattern-branch ?
+        // can we find match for the whole first pattern-branch ?
         final List<Integer> foundFirstBranch = this.getSentenceBranchMatchingUpPatternBranchFromNode(firstLeafNodeMatch, tokens, i);
         if (foundFirstBranch.size() == 0) {
           continue;
         }
 
+        // if we found and  there is no second branch in pattern this is our whole result
         if (!optSecondLeafNodeMatch.isPresent()) {
           result.add(new HashSet<>(foundFirstBranch));
           continue;
@@ -145,10 +146,17 @@ public class PatternMatch {
             final List<Integer> foundSecondBranch = this.getSentenceBranchMatchingUpPatternBranchFromNode(secondLeafNodeMatch, tokens, j, new HashSet(foundFirstBranch));
             //
             if (foundSecondBranch.size() != 0) {
-              final Set<Integer> onePossibleResult = new HashSet<>();
-              onePossibleResult.addAll(foundFirstBranch);
-              onePossibleResult.addAll(foundSecondBranch);
-              result.add(onePossibleResult);
+              // do both branches have really the same root, or just the same text in different roots ?
+              final int firstBranchRootId = foundFirstBranch.get(foundFirstBranch.size() - 1);
+              final int secondBranchRootId = foundSecondBranch.get(foundSecondBranch.size() - 1);
+
+              if (firstBranchRootId == secondBranchRootId) {
+                final Set<Integer> onePossibleResult = new HashSet<>();
+                onePossibleResult.addAll(foundFirstBranch);
+                onePossibleResult.addAll(foundSecondBranch);
+                result.add(onePossibleResult);
+                System.out.println("OPR:" + onePossibleResult);
+              }
             }
             continue;
           }
