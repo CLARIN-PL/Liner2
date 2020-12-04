@@ -180,6 +180,15 @@ public class ParseRuleBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
    * {@link #visitChildren} on {@code ctx}.</p>
    */
   @Override
+  public T visitToRole(final ParseRuleParser.ToRoleContext ctx) { return visitChildren(ctx); }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation returns the result of calling
+   * {@link #visitChildren} on {@code ctx}.</p>
+   */
+  @Override
   public T visitNamedEntity(final ParseRuleParser.NamedEntityContext ctx) { return visitChildren(ctx); }
 
   /**

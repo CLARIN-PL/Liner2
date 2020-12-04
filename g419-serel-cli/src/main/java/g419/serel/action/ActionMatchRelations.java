@@ -3,33 +3,38 @@ package g419.serel.action;
 import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.structure.Document;
-import g419.corpus.structure.RelationDesc;
 import g419.corpus.structure.Sentence;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
-import g419.liner2.core.tools.parser.ParseTreeGenerator;
-import g419.serel.converter.DocumentToSerelExpressionConverter;
 import g419.serel.ruleTree.PatternMatch;
 import g419.serel.structure.SentenceMiscValues;
-import g419.serel.tools.ComboParseTreeGenerator;
+import g419.serel.structure.patternMatch.PatternMatchSingleResult;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Slf4j
 public class ActionMatchRelations extends Action {
 
+  @Setter
   private String inputFilename;
+  @Setter
   private String inputFormat;
 
+  @Setter
   private String rule;
   private String ruleFilename;
 
   private String reportFilename;
+
+  @Getter
+  private List<PatternMatchSingleResult> result;
+
 
   public ActionMatchRelations() {
     super("match-relations");
@@ -54,110 +59,69 @@ public class ActionMatchRelations extends Action {
 
   @Override
   public void run() throws Exception {
-    log.debug("Searching rule = " + rule);
-    final String searchingRule = rule;
 
+    String searchingRule = rule;
+    if ((ruleFilename != null) && (!ruleFilename.isEmpty())) {
+      System.out.println(" Pattern filename = " + ruleFilename);
+      final File file = new File(ruleFilename);
+      final BufferedReader br = new BufferedReader(new FileReader(file));
+      searchingRule = br.readLine();
+    }
+
+    System.out.println("Searching rule = " + searchingRule);
     final PatternMatch patternMatch = PatternMatch.parseRule(searchingRule);
-    log.debug(searchingRule);
-    log.debug("Rule tree:");
-    patternMatch.getRootNodeMatch().dumpString();
 
-    //log.debug("Starting reading ...");
-    try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
-         final PrintWriter reportWriter = reportFilename == null ? null : new PrintWriter(new FileWriter(new File(reportFilename)))
+
+    try (
+        final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
+        final PrintWriter reportWriter = reportFilename == null ? null : new PrintWriter(new FileWriter(new File(reportFilename)))
     ) {
       reader.forEach(comboedDoc -> {
             try {
-              //System.out.println("START Doc = "+doc.getName());
-              final ParseTreeGenerator parseTreeGenerator = new ComboParseTreeGenerator(comboedDoc);
-              final DocumentToSerelExpressionConverter converter = new DocumentToSerelExpressionConverter(parseTreeGenerator, reportWriter);
-              final List<RelationDesc> result = matchDocTreeAgainstRuleTree(comboedDoc, patternMatch, converter);
-              result.forEach(System.out::println);
+              result = matchDocTreeAgainstPatternTree(comboedDoc, patternMatch);
+              result.forEach(r -> System.out.println(r.description()));
             } catch (final Exception e) {
-              System.out.println("Problem z dokuementem " + comboedDoc.getName());
+              System.out.println("Problem z dokumentem " + comboedDoc.getName());
               e.printStackTrace();
             }
           }
       );
-    } catch (final Exception e) {
+    } catch (
+        final Exception e) {
       e.printStackTrace();
     }
 
-
   }
 
-  private List<RelationDesc> matchDocTreeAgainstRuleTree(final Document d, final PatternMatch patternMatch, final DocumentToSerelExpressionConverter converter) {
-    final List<RelationDesc> result = new ArrayList<>();
+  private List<PatternMatchSingleResult> matchDocTreeAgainstPatternTree(final Document d, final PatternMatch patternMatch) {
+    final List<PatternMatchSingleResult> result = new ArrayList<>();
 
-    int sentenceIndex = 1;
+    int sentenceIndex = 0;
     for (final Sentence sentence : d.getParagraphs().get(0).getSentences()) {
-      log.debug("");
-      log.debug(" Sentence nr " + sentenceIndex);
-      log.debug(" Sentence = " + sentence);
       sentenceIndex++;
+      try {
+//        log.debug("");
+//        log.debug(" Sentence nr " + sentenceIndex);
+//        log.debug(" Sentence = " + sentence);
 
-      final SentenceMiscValues smv = SentenceMiscValues.from(sentence);
+        final SentenceMiscValues smv = SentenceMiscValues.from(sentence);
+        final List<PatternMatchSingleResult> results = patternMatch.getSentenceTreesMatchingRule(sentence);
 
-      patternMatch.getSentenceTreesMatchingRule(sentence.getTokens());
+        for (final PatternMatchSingleResult patternMatchSingleResult : results) {
+          patternMatchSingleResult.sentenceNumber = sentenceIndex;
+          patternMatchSingleResult.docName = d.getName();
+        }
+
+        result.addAll(results);
+      } catch (final Throwable th) {
+        th.printStackTrace();
+        System.out.println("Problem : " + th);
+      }
 
     }
 
     return result;
   }
-/*
-  private List<RelationDesc> matchDocTreeAgainstRuleTreeOld(final Document d, final PatternMatch rmr, final DocumentToSerelExpressionConverter converter) {
 
-    final List<RelationDesc> result = new ArrayList<>();
-
-    int sentenceIndex = 1;
-    for (final Sentence sentence : d.getParagraphs().get(0).getSentences()) {
-      log.debug("");
-      log.debug(" Sentence nr " + sentenceIndex);
-      log.debug(" Sentence = " + sentence);
-      sentenceIndex++;
-
-      final SentenceMiscValues smv = SentenceMiscValues.from(sentence);
-
-      final Set<RelationDesc> rels1 = smv.getTokenIndexesForMatchingRelType(rmr, null);
-      log.debug("rels1=" + rels1);
-      if (rels1.isEmpty()) {
-        continue;
-      }
-
-      final Set<RelationDesc> rels2 = smv.getTokenIndexesForMatchingRelNE(rmr, rels1);
-      log.debug("rels2=" + rels2);
-      if (rels2.isEmpty()) {
-        continue;
-      }
-
-      // tutaj wiemy że typ i kotwice tych relacji są na pewno dobre
-
-      final List<SerelExpression> serels = converter.convertAlreadyComboedFromRelDesc(rels2);
-
-      for (final SerelExpression serel : serels) {
-        log.debug("serel=" + serel.getPathAsString());
-        log.debug("serel=" + serel.getDetailedPathAsString(true));
-      }
-
-
-      final Set<SerelExpression> rels3 = smv.getRelationsMatchingRule(rmr, serels);
-      log.debug("rels3=" + rels3);
-      if (rels3.isEmpty()) {
-        continue;
-      }
-
-      System.out.println("");
-      System.out.println("Doc = " + d.getName());
-      System.out.println("Sentence = " + sentence);
-      System.out.println("Serels = " + rels3);
-
-      rels3.forEach(r -> System.out.println(" " + sentence.getTokens().get(r.getParents1().get(0).getSourceIndex()).getOrth() + ","
-          + sentence.getTokens().get(r.getParents2().get(0).getSourceIndex()).getOrth()));
-
-
-    }
-    return result;
-  }
-*/
 
 }

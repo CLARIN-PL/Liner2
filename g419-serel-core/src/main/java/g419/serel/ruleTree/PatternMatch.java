@@ -1,10 +1,14 @@
 package g419.serel.ruleTree;
 
+import com.google.common.collect.Lists;
+import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.serel.parseRule.ParseRuleLexer;
 import g419.serel.parseRule.ParseRuleParser;
 import g419.serel.ruleTree.listeners.ParseRuleListenerImpl;
 import g419.serel.ruleTree.listeners.ThrowingErrorListener;
+import g419.serel.structure.patternMatch.PatternMatchExtraInfo;
+import g419.serel.structure.patternMatch.PatternMatchSingleResult;
 import lombok.Data;
 import lombok.ToString;
 import org.antlr.v4.runtime.CharStreams;
@@ -59,37 +63,59 @@ public class PatternMatch {
     return nodeMatchList.stream().filter(node -> node.isLeaf() && !excludedNodesIds.contains(node.getId())).findAny();
   }
 
-  public List<Integer> getSentenceBranchMatchingUpPatternBranchFromNode(final NodeMatch startNodeMatch, final List<Token> tokens, final int startTokenIndex) {
-    return getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex, Collections.emptySet());
+  public List<Integer>
+  getSentenceBranchMatchingUpPatternBranchFromNode(
+      final NodeMatch startNodeMatch,
+      //final List<Token> tokens,
+      final Sentence sentence,
+      final int startTokenIndex,
+      final PatternMatchExtraInfo extraInfo
+  ) {
+    return getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, sentence, startTokenIndex, Collections.emptySet(), extraInfo);
   }
 
-  public List<Integer> getSentenceBranchMatchingUpPatternBranchFromNode(final NodeMatch startNodeMatch, final List<Token> tokens, final int startTokenIndex, final Set<Integer> excludedNodesIds) {
-
+  public List<Integer>
+  getSentenceBranchMatchingUpPatternBranchFromNode(
+      final NodeMatch startNodeMatch,
+      //final List<Token> tokens,
+      final Sentence sentence,
+      final int startTokenIndex,
+      final Set<Integer> excludedNodesIds,
+      final PatternMatchExtraInfo extraInfo) {
     final List<Integer> result = new ArrayList<>();
 
     int tokenIndex = startTokenIndex;
-    Token token = tokens.get(tokenIndex);
+    Token token = sentence.getTokens().get(tokenIndex);
     NodeMatch nodeMatch = startNodeMatch;
 
     boolean found = false;
-    while (nodeMatch.matches(token)) {
+    while (nodeMatch.matches(token, extraInfo)) {
       result.add(tokenIndex);
+
+//   multi-node star:
+//      if (nodeMatch.isMatchAnyTotal() && (nodeMatch.getParentEdgeMatch() != null) && nodeMatch.getParentEdgeMatch().isMatchAnyDepRel()) {
+//        matchTotalStarToPattern(tokens, tokenIndex, nodeMatch);
+//      } else {
+
       if (nodeMatch.getParentEdgeMatch() != null) {
         if (!nodeMatch.getParentEdgeMatch().matches(token)) {
           break;
         }
         nodeMatch = nodeMatch.getParentEdgeMatch().getParentNodeMatch();
-        tokenIndex = Integer.valueOf(token.getAttributeValue("head"));
-        if (tokenIndex == 0) {
+        final int parentTokenId = token.getParentTokenId();
+        if (parentTokenId == 0) {
           break;  // no more tokens but pattern still needs more
         }
-        tokenIndex--; // IDs are numbered from 1 in CoNLLu, indexes in list  - from 0
-        token = tokens.get(tokenIndex);
+        tokenIndex = parentTokenId - 1; // IDs are numbered from 1 in CoNLLu, indexes in list  - from 0
+        token = sentence.getTokens().get(tokenIndex);
 
       } else { // there is no up-links in pattern any more
         found = true;
         break;
       }
+
+//      }
+
     }
 
     if (found) {
@@ -99,11 +125,61 @@ public class PatternMatch {
     return new ArrayList<>();
   }
 
+/*
+  List<Integer> matchTotalStarToPattern(final List<Token> tokens, final int tokenIndex, final NodeMatch nodeMatch) {
+    final List<Integer> result = new ArrayList<>();
+    result.add(tokenIndex);     // since its total star we know that any starting token matches
 
-  public List<Set<Integer>> getSentenceTreesMatchingRule(final List<Token> tokens) {
+    // if there is no more parts of patterns we just return this token. If there are more parts of patterns ...
+    if (nodeMatch.getParentEdgeMatch() != null) {
 
-    final List<Set<Integer>> result = new ArrayList<>();
-    //final List<Token> tokens = sentence.getTokens();
+      // what is our boundary ?
+      final NodeMatch nextNodeMatch = nodeMatch.getParentEdgeMatch().getNodeMatch();
+      assert (!nextNodeMatch.isMatchAnyTotalWithDepRel()); // we assume no consequtive 'total' stars, it means no patterns like: text > * > * > text
+
+      boolean checkingEdge = false;
+      if (nextNodeMatch.isMatchAnyTotal()) {
+        assert (!nextNodeMatch.getParentEdgeMatch().isMatchAnyDepRel());
+        // we seek depRel
+        checkingEdge = true;
+      } else {
+        // we seek token with text, xPos or namedEntity
+        checkingEdge = false;
+      }
+
+      Token token = tokens.get(tokenIndex);
+      // ok - now we know what to search for ...
+      boolean nextMatchPresent = false;
+      do {
+        final int parentTokenId = token.getParentTokenId();
+
+        if (parentTokenId == 0) {
+          //  there is no more sentence to match against pattern
+          // we give back what we had gathered so far
+          break;
+        }
+
+        final Token parentToken = tokens.get(parentTokenId - 1);
+        if (!checkingEdge) {
+          nextMatchPresent = nextNodeMatch.matches(parentToken);
+        } else {
+          nextMatchPresent = nextNodeMatch.getParentEdgeMatch().matches(parentToken);
+        }
+        result.add(parentTokenId - 1);
+
+        token = parentToken;
+      } while (nextMatchPresent);
+
+    }
+
+    return result;
+  }
+*/
+
+  public List<PatternMatchSingleResult> getSentenceTreesMatchingRule(final Sentence sentence) {
+
+
+    final List<PatternMatchSingleResult> result = new ArrayList<>();
 
 
     // take first branch from pattern tree
@@ -117,19 +193,23 @@ public class PatternMatch {
     final Optional<NodeMatch> optSecondLeafNodeMatch = this.getALeaf(excludedIds);
 
 
+    //final List<Token> tokens = sentence.getTokens();
     // try to match a subtree in sentence
-    for (int i = 0; i < tokens.size(); i++) {
-      final Token token = tokens.get(i);
-      if (firstLeafNodeMatch.matches(token)) {
+    for (int i = 0; i < sentence.getTokens().size(); i++) {
+      final PatternMatchExtraInfo pmei = new PatternMatchExtraInfo();
+      pmei.setSentence(sentence);
+
+      final Token token = sentence.getTokens().get(i);
+      if (firstLeafNodeMatch.matches(token, pmei)) {
         // can we find match for the whole first pattern-branch ?
-        final List<Integer> foundFirstBranch = this.getSentenceBranchMatchingUpPatternBranchFromNode(firstLeafNodeMatch, tokens, i);
+        final List<Integer> foundFirstBranch = this.getSentenceBranchMatchingUpPatternBranchFromNode(firstLeafNodeMatch, sentence, i, pmei);
         if (foundFirstBranch.size() == 0) {
           continue;
         }
 
-        // if we found and  there is no second branch in pattern this is our whole result
+        // if we found and there is no second branch in pattern this is our whole result
         if (!optSecondLeafNodeMatch.isPresent()) {
-          result.add(new HashSet<>(foundFirstBranch));
+          result.add(new PatternMatchSingleResult(foundFirstBranch, pmei));
           continue;
         }
 
@@ -137,82 +217,35 @@ public class PatternMatch {
 
         final NodeMatch secondLeafNodeMatch = optSecondLeafNodeMatch.get();
 
-        for (int j = 0; j < tokens.size(); j++) {
+        for (int j = 0; j < sentence.getTokens().size(); j++) {
           if (j == i) { // from this point we already have the first branch found
             continue;
           }
-          final Token secToken = tokens.get(j);
-          if (secondLeafNodeMatch.matches(secToken)) {
-            final List<Integer> foundSecondBranch = this.getSentenceBranchMatchingUpPatternBranchFromNode(secondLeafNodeMatch, tokens, j, new HashSet(foundFirstBranch));
+          final Token secToken = sentence.getTokens().get(j);
+          if (secondLeafNodeMatch.matches(secToken, pmei)) {
+            final List<Integer> foundSecondBranch = this.getSentenceBranchMatchingUpPatternBranchFromNode(secondLeafNodeMatch, sentence, j, new HashSet(foundFirstBranch), pmei);
             //
             if (foundSecondBranch.size() != 0) {
-              // do both branches have really the same root, or just the same text in different roots ?
+              // do both branches have really the same root, or just the same text (orth,namedEntity) in different roots ?
               final int firstBranchRootId = foundFirstBranch.get(foundFirstBranch.size() - 1);
               final int secondBranchRootId = foundSecondBranch.get(foundSecondBranch.size() - 1);
 
               if (firstBranchRootId == secondBranchRootId) {
-                final Set<Integer> onePossibleResult = new HashSet<>();
-                onePossibleResult.addAll(foundFirstBranch);
-                onePossibleResult.addAll(foundSecondBranch);
-                result.add(onePossibleResult);
-                System.out.println("OPR:" + onePossibleResult);
+                foundSecondBranch.remove(foundSecondBranch.size() - 1);
+                final List<Integer> reversedSecondBraachWithoutRoot = Lists.reverse(foundSecondBranch);
+                foundFirstBranch.addAll(reversedSecondBraachWithoutRoot);
+                result.add(new PatternMatchSingleResult(foundFirstBranch, pmei));
+                //System.out.println("OPR:" + foundFirstBranch);
               }
             }
             continue;
           }
         }
 
-
       }
     }
     return result;
   }
-
-
-
-
-/*
-    public boolean isRuleElementMatchingSerelPathElement(final int ruleElementIndex, String serelPathElement, final boolean starMode ) {
-
-        //System.out.println("isREMSPE: ruleElementIndex = "+ruleElementIndex);
-
-        serelPathElement = serelPathElement.trim();
-
-        final String text = ruleElements.get(ruleElementIndex).trim();
-        final String depRel  = ruleElementsDeprel.get(ruleElementIndex).trim();
-
-        String speText = "";
-        String speDepRel = "";
-
-        if (serelPathElement.length() > 0) {
-            if (serelPathElement.charAt(serelPathElement.length() - 1) == ')') {
-                final int indexStart = serelPathElement.lastIndexOf("(");
-                if (indexStart != -1) {
-                    speDepRel = serelPathElement.substring(indexStart + 1, serelPathElement.length() - 1).trim();
-                    speText = serelPathElement.substring(0, indexStart).trim();
-                }
-            }
-        }
-
-        if( (text!=null) && (!text.isEmpty()) && (!text.equals("*")) ) {
-            if(!text.equals(speText)) {
-                //System.out.println(" no match for texts: "+text+" vs "+speText);
-                return false;
-            }
-        }
-
-        //TODO : *
-
-        if( (depRel!=null) && (!depRel.isEmpty())  ) {
-            if(!depRel.equals(speDepRel)) {
-                //System.out.println(" no match for depRels:"+depRel+" vs "+speDepRel);
-                return false;
-            }
-        }
-
-        return true;
-    }
-*/
 
 
 }

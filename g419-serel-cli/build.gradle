@@ -1,6 +1,7 @@
 description = "g419-serel-cli"
 
 apply plugin: 'application'
+apply plugin: 'groovy'
 
 def main = "g419.serel.Main"
 

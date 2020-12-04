@@ -27,14 +27,14 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
 
   @Override
   public void enterStart(final ParseRuleParser.StartContext ctx) {
-    System.out.println(" entering Start");
+    log.debug(" entering Start");
     nodeMatchIdSequence = 1;
   }
 
 
   @Override
   public void exitStart(final StartContext ctx) {
-    System.out.println(" exiting Start");
+    log.debug(" exiting Start");
     if (rootLeftExpression != null) {
       rootNodeMatch.getEdgeMatchList().add(rootLeftExpression);
       rootLeftExpression.setParentNodeMatch(rootNodeMatch);
@@ -48,9 +48,9 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
 
   @Override
   public void exitRootNode(final ParseRuleParser.RootNodeContext ctx) {
-    System.out.println(" exiting RootNode");
+    log.debug(" exiting RootNode");
     rootNodeMatch = rootNodeContext2NodeMatch(ctx);
-    System.out.println("created rootNodeatch >>> " + rootNodeMatch);
+    log.debug("created rootNodeatch >>> " + rootNodeMatch);
     rootNodeMatch.setParentEdgeMatch(null);
   }
 
@@ -63,7 +63,7 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
 
   @Override
   public void exitSemRelName(final ParseRuleParser.SemRelNameContext ctx) {
-    System.out.println(" exiting SemRelName");
+    log.debug(" exiting SemRelName");
     relationType = ctx.getText();
   }
 
@@ -80,7 +80,7 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
 
 
   private EdgeMatch leftExpression2EdgeMatch(final LeftExpressionContext ctx) {
-    System.out.println("leftExpression2EdgeMatch invoked ctx = " + ctx);
+    log.debug("leftExpression2EdgeMatch invoked ctx = " + ctx);
 
     final EdgeMatch edgeMatch = leftEdgeContext2EdgeMatch(ctx.leftEdge());
     final NodeMatch nodeMatch = nodeContext2NodeMatch(ctx.node());
@@ -133,7 +133,10 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
 
         if (ctx.element().namedEntityToRole() != null) {
           nodeMatch.setNamedEntity(ctx.element().namedEntityToRole().namedEntity().getText());
-          nodeMatch.setRole(ctx.element().namedEntityToRole().role().getText());
+
+          if (ctx.element().namedEntityToRole().toRole() != null) {
+            nodeMatch.setRole(ctx.element().namedEntityToRole().toRole().role().getText());
+          }
         }
       }
       if (ctx.xPos() != null) {
@@ -146,12 +149,12 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
 
 
   private EdgeMatch rightExpression2EdgeMatch(final RightExpressionContext ctx) {
-    System.out.println("rightExpression2EdgeMatch invoked ctx = " + ctx);
+    log.debug("rightExpression2EdgeMatch invoked ctx = " + ctx);
 
     final EdgeMatch edgeMatch = rightEdgeContext2EdgeMatch(ctx.rightEdge());
-    System.out.println("created >>> " + edgeMatch);
+    log.debug("created >>> " + edgeMatch);
     final NodeMatch nodeMatch = nodeContext2NodeMatch(ctx.node());
-    System.out.println("created >>> " + nodeMatch);
+    log.debug("created >>> " + nodeMatch);
     edgeMatch.setNodeMatch(nodeMatch);
     nodeMatch.setParentEdgeMatch(edgeMatch);
 
@@ -207,201 +210,211 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
 
   @Override
   public void enterExpression(final ParseRuleParser.ExpressionContext ctx) {
-    System.out.println(" entering Expression");
+    log.debug(" entering Expression");
 
   }
 
   @Override
   public void exitExpression(final ParseRuleParser.ExpressionContext ctx) {
-    System.out.println(" exiting Expression");
+    log.debug(" exiting Expression");
 
   }
 
   @Override
   public void enterRootNode(final ParseRuleParser.RootNodeContext ctx) {
-    System.out.println(" entering RootNode");
+    log.debug(" entering RootNode");
   }
 
 
   @Override
   public void enterSemRelName(final ParseRuleParser.SemRelNameContext ctx) {
-    System.out.println(" entering SemRelName");
+    log.debug(" entering SemRelName");
 
   }
 
 
   @Override
   public void enterRightExpression(final ParseRuleParser.RightExpressionContext ctx) {
-    System.out.println(" entering RightExpression invoked ctx = " + ctx);
+    log.debug(" entering RightExpression invoked ctx = " + ctx);
 
   }
 
 
   @Override
   public void enterDepRelValue(final ParseRuleParser.DepRelValueContext ctx) {
-    System.out.println(" entering DepRelValue");
+    log.debug(" entering DepRelValue");
 
   }
 
   @Override
   public void exitDepRelValue(final ParseRuleParser.DepRelValueContext ctx) {
-    System.out.println(" exiting DepRelValue");
+    log.debug(" exiting DepRelValue");
 
   }
 
   @Override
   public void enterDepRel(final ParseRuleParser.DepRelContext ctx) {
-    System.out.println(" entering DepRel");
+    log.debug(" entering DepRel");
 
   }
 
   @Override
   public void exitDepRel(final ParseRuleParser.DepRelContext ctx) {
-    System.out.println(" exiting DepRel");
+    log.debug(" exiting DepRel");
 
   }
 
   @Override
   public void enterLeftEdge(final ParseRuleParser.LeftEdgeContext ctx) {
-    System.out.println(" entering LeftEdge");
+    log.debug(" entering LeftEdge");
 
   }
 
   @Override
   public void exitLeftEdge(final ParseRuleParser.LeftEdgeContext ctx) {
-    System.out.println(" exiting LeftEdge");
+    log.debug(" exiting LeftEdge");
 
   }
 
   @Override
   public void enterRightEdge(final ParseRuleParser.RightEdgeContext ctx) {
-    System.out.println(" entering RightEdge");
+    log.debug(" entering RightEdge");
 
   }
 
   @Override
   public void exitRightEdge(final ParseRuleParser.RightEdgeContext ctx) {
-    System.out.println(" exiting RightEdge");
+    log.debug(" exiting RightEdge");
 
   }
 
   @Override
   public void enterNamedEntity(final ParseRuleParser.NamedEntityContext ctx) {
-    System.out.println(" entering NamedEntity");
+    log.debug(" entering NamedEntity");
 
   }
 
   @Override
   public void exitNamedEntity(final ParseRuleParser.NamedEntityContext ctx) {
-    System.out.println(" exiting NamedEntity");
+    log.debug(" exiting NamedEntity");
 
   }
 
   @Override
   public void enterRole(final ParseRuleParser.RoleContext ctx) {
-    System.out.println(" entering Role");
+    log.debug(" entering Role");
 
   }
 
   @Override
   public void exitRole(final ParseRuleParser.RoleContext ctx) {
-    System.out.println(" exiting Role");
+    log.debug(" exiting Role");
 
   }
 
   @Override
   public void enterText(final ParseRuleParser.TextContext ctx) {
-    System.out.println(" entering Text");
+    log.debug(" entering Text");
 
   }
 
   @Override
   public void exitText(final ParseRuleParser.TextContext ctx) {
-    System.out.println(" exiting Text");
+    log.debug(" exiting Text");
 
   }
 
   @Override
   public void enterNamedEntityToRole(final ParseRuleParser.NamedEntityToRoleContext ctx) {
-    System.out.println(" entering NamedEntityToRole");
+    log.debug(" entering NamedEntityToRole");
 
   }
 
   @Override
   public void exitNamedEntityToRole(final ParseRuleParser.NamedEntityToRoleContext ctx) {
-    System.out.println(" exiting NamedEntityToRole");
+    log.debug(" exiting NamedEntityToRole");
+
+  }
+
+  @Override
+  public void enterToRole(final ToRoleContext ctx) {
+
+  }
+
+  @Override
+  public void exitToRole(final ToRoleContext ctx) {
 
   }
 
   @Override
   public void enterElement(final ParseRuleParser.ElementContext ctx) {
-    System.out.println(" entering Element");
+    log.debug(" entering Element");
 
   }
 
   @Override
   public void exitElement(final ParseRuleParser.ElementContext ctx) {
-    System.out.println(" exiting Element");
+    log.debug(" exiting Element");
 
   }
 
   @Override
   public void enterXPosValue(final ParseRuleParser.XPosValueContext ctx) {
-    System.out.println(" entering XPosValue");
+    log.debug(" entering XPosValue");
 
   }
 
   @Override
   public void exitXPosValue(final ParseRuleParser.XPosValueContext ctx) {
-    System.out.println(" exiting XPosValue");
+    log.debug(" exiting XPosValue");
 
   }
 
   @Override
   public void enterXPos(final ParseRuleParser.XPosContext ctx) {
-    System.out.println(" entering XPos");
+    log.debug(" entering XPos");
 
   }
 
   @Override
   public void exitXPos(final ParseRuleParser.XPosContext ctx) {
-    System.out.println(" exiting XPos");
+    log.debug(" exiting XPos");
 
   }
 
   @Override
   public void enterNode(final ParseRuleParser.NodeContext ctx) {
-    System.out.println(" entering Node");
+    log.debug(" entering Node");
   }
 
   @Override
   public void exitNode(final ParseRuleParser.NodeContext ctx) {
-    System.out.println(" exiting Node");
+    log.debug(" exiting Node");
 
   }
 
 
   @Override
   public void enterLeftExpression(final ParseRuleParser.LeftExpressionContext ctx) {
-    System.out.println(" entering LeftExpression");
+    log.debug(" entering LeftExpression");
   }
 
 
   @Override
   public void enterId(final ParseRuleParser.IdContext ctx) {
-    //System.out.println(" entering Id");
+    //log.debug(" entering Id");
 
   }
 
   @Override
   public void exitId(final ParseRuleParser.IdContext ctx) {
-    //System.out.println(" exiting Id");
+    //log.debug(" exiting Id");
 
   }
 
   @Override
   public void visitTerminal(final TerminalNode terminalNode) {
-    //System.out.println(" visiting  Terminal");
+    //log.debug(" visiting  Terminal");
   }
 
   @Override
@@ -411,24 +424,24 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
 
   @Override
   public void enterEveryRule(final ParserRuleContext parserRuleContext) {
-    //System.out.println(" entering EveryRule");
+    //log.debug(" entering EveryRule");
 
   }
 
   @Override
   public void exitEveryRule(final ParserRuleContext parserRuleContext) {
-    //System.out.println(" exiting EveryRule");
+    //log.debug(" exiting EveryRule");
 
   }
 
   @Override
   public void exitLeftExpression(final ParseRuleParser.LeftExpressionContext ctx) {
-    System.out.println(" exiting LeftExpression");
+    log.debug(" exiting LeftExpression");
   }
 
   @Override
   public void exitRightExpression(final ParseRuleParser.RightExpressionContext ctx) {
-    System.out.println(" exiting RightExpression");
+    log.debug(" exiting RightExpression");
   }
 
   @Override

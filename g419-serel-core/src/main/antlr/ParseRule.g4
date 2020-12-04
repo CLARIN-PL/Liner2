@@ -1,15 +1,11 @@
 grammar ParseRule;
 
-
-
-
 start  :
    semRel?   expression  EOF
   ;
 semRel : semRelName '::' ;
 
 semRelName : id ;
-
 
 expression
   :
@@ -44,7 +40,8 @@ node:  xPos? element;
 xPos : '[' xPosValue ']' ;
 xPosValue : id ;
 element : text ('/' namedEntityToRole)? ;
-namedEntityToRole: namedEntity ':' role ;
+namedEntityToRole: namedEntity toRole? ;
+toRole : ':' role ;
 namedEntity : id;
 role : id ;
 text : id;

@@ -155,6 +155,14 @@ public interface ParseRuleVisitor<T> extends ParseTreeVisitor<T> {
   T visitNamedEntityToRole(ParseRuleParser.NamedEntityToRoleContext ctx);
 
   /**
+   * Visit a parse tree produced by {@link ParseRuleParser#toRole}.
+   *
+   * @param ctx the parse tree
+   * @return the visitor result
+   */
+  T visitToRole(ParseRuleParser.ToRoleContext ctx);
+
+  /**
    * Visit a parse tree produced by {@link ParseRuleParser#namedEntity}.
    *
    * @param ctx the parse tree

@@ -1,5 +1,6 @@
 package g419.serel.ruleTree
 
+import g419.corpus.structure.Sentence
 import g419.corpus.structure.Token
 import g419.corpus.structure.TokenAttributeIndex
 import org.antlr.v4.runtime.misc.ParseCancellationException
@@ -8,7 +9,10 @@ import spock.lang.Specification
 class PatternMatchTest extends Specification {
 
     List<Token> tokens;
+    Sentence sentence = new Sentence();
+
     List<Token> tokens2;
+    Sentence sentence2 = new Sentence()
 
     def setup() {
 
@@ -22,7 +26,7 @@ class PatternMatchTest extends Specification {
         tai.addAttribute("head")
         tai.addAttribute("deprel")
 
-        List<List<String>> tokensValues = List.of(
+        List<List<String>> sentenceValues = List.of(
                 List.of("1", "W", "w", "ADP", "tprep:loc:nwok", "2", "case"),
                 List.of("2", "południe", "południ", "NOUN", "subst:sg:loc:m3", "3", "obl"),
                 List.of("3", "odbywają", "odbywać", "VERB", "fin:pl:ter:imperf", "0", "root"),
@@ -33,11 +37,12 @@ class PatternMatchTest extends Specification {
         )
 
 
-        tokens = fillTokens(tokensValues, tai)
+        tokens = fillsentence(sentenceValues, tai)
+        sentence.setTokens(tokens)
 
 
         // artifcially created - may contain errors
-        List<List<String>> tokensValues2 = List.of(
+        List<List<String>> sentenceValues2 = List.of(
                 List.of("1", "Tam", "tam", "ADP", "adj", "3", "case"),
                 List.of("2", "gdzie", "gdzie", "NOUN", "adj", "3", "obl"),
                 List.of("3", "odbywały", "odbywać", "VERB", "tprep:loc:nwok", "7", "case"),
@@ -51,16 +56,17 @@ class PatternMatchTest extends Specification {
                 List.of("11", ".", ".", "PUNCT", "interp", "7", "punct")
         )
 
-        tokens2 = fillTokens(tokensValues2, tai)
+        tokens2 = fillsentence(sentenceValues2, tai)
+        sentence2.setTokens(tokens2)
 
 
     }
 
-    private List<Token> fillTokens(List<List<String>> tokensValues, TokenAttributeIndex tai) {
-        def tmpTokens = new ArrayList<>();
+    private List<Token> fillsentence(List<List<String>> sentenceValues, TokenAttributeIndex tai) {
+        def tmpsentence = new ArrayList<>();
 
-        for (int i = 0; i < tokensValues.size(); i++) {
-            List<String> tokenValues = tokensValues.get(i);
+        for (int i = 0; i < sentenceValues.size(); i++) {
+            List<String> tokenValues = sentenceValues.get(i);
 
             Token token = new Token(tai);
             token.setAttributeValue("id", tokenValues.get(0));
@@ -71,10 +77,10 @@ class PatternMatchTest extends Specification {
             token.setAttributeValue("head", tokenValues.get(5))
             token.setAttributeValue("deprel", tokenValues.get(6))
 
-            tmpTokens.add(token)
+            tmpsentence.add(token)
         }
 
-        return tmpTokens;
+        return tmpsentence;
     }
 
     def "ParseRule should parse single segment"() {
@@ -252,11 +258,11 @@ class PatternMatchTest extends Specification {
             thrown ParseCancellationException
     }
 
-    def "ParseRule entityName should always have a role  "() {
+    def "ParseRule entityName can be withot a role  "() {
         when:
             PatternMatch result = PatternMatch.parseRule("Stolica / nam_log_geo < * < kraju")
         then:
-            thrown ParseCancellationException
+            result.rootNodeMatch != null
     }
 
     def "ParseRule - there should be always root node   "() {
@@ -271,7 +277,7 @@ class PatternMatchTest extends Specification {
             PatternMatch pattern = PatternMatch.parseRule("W > południe")
             NodeMatch startNodeMatch = pattern.getALeaf().get();
             int startTokenIndex = 0;
-            def result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex)
+            def result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, sentence, startTokenIndex, null)
         then:
             pattern.nodeMatchList.size() == 2;
             result.size() == 2;
@@ -299,7 +305,7 @@ class PatternMatchTest extends Specification {
             PatternMatch pattern = PatternMatch.parseRule("W > południe")
             NodeMatch startNodeMatch = pattern.getALeaf().get();
             int startTokenIndex = 1;
-            def result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex)
+            def result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, sentence, startTokenIndex, null)
         then:
             pattern.nodeMatchList.size() == 2;
             result.size() == 0;
@@ -311,7 +317,7 @@ class PatternMatchTest extends Specification {
             PatternMatch pattern = PatternMatch.parseRule("W < południe")
             NodeMatch startNodeMatch = pattern.getALeaf().get();
             int startTokenIndex = 0;
-            def result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex)
+            def result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, sentence, startTokenIndex, null)
         then:
             pattern.nodeMatchList.size() == 2;
             result.size() == 0;
@@ -322,7 +328,7 @@ class PatternMatchTest extends Specification {
             PatternMatch pattern = PatternMatch.parseRule("[subst] * > [fin] *")
             NodeMatch startNodeMatch = pattern.getALeaf().get();
             int startTokenIndex = sTI;
-            def result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex)
+            def result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, sentence, startTokenIndex, null)
         then:
             pattern.nodeMatchList.size() == 2;
             result.size() == rSize;
@@ -343,7 +349,7 @@ class PatternMatchTest extends Specification {
             PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty > odbywają")
             NodeMatch startNodeMatch = pattern.getALeaf().get();
             int startTokenIndex = 5;
-            def result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex)
+            def result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, sentence, startTokenIndex, null)
         then:
             pattern.nodeMatchList.size() == 3;
             result.size() == 3;
@@ -355,7 +361,7 @@ class PatternMatchTest extends Specification {
             PatternMatch pattern = PatternMatch.parseRule("^jazzowy > ^koncert > ^odbywać")
             NodeMatch startNodeMatch = pattern.getALeaf().get();
             int startTokenIndex = 5;
-            def result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex)
+            def result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, sentence, startTokenIndex, null)
         then:
             pattern.nodeMatchList.size() == 3;
             result.size() == 3;
@@ -366,7 +372,7 @@ class PatternMatchTest extends Specification {
             PatternMatch pattern = PatternMatch.parseRule("^jazzowy > ^koncert > ^odbywać > się")
             NodeMatch startNodeMatch = pattern.getALeaf().get();
             int startTokenIndex = 5;
-            def result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, tokens, startTokenIndex)
+            def result = pattern.getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, sentence, startTokenIndex, null)
         then:
             pattern.nodeMatchList.size() == 4;
             result.size() == 0;
@@ -407,7 +413,7 @@ class PatternMatchTest extends Specification {
         when:
             PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty > odbywają")
             //PatternMatch pattern = PatternMatch.parseRule("W > południe > odbywają")
-            def result = pattern.getSentenceTreesMatchingRule(tokens)
+            def result = pattern.getSentenceTreesMatchingRule(sentence)
         then:
             result.size() > 0
     }
@@ -415,7 +421,7 @@ class PatternMatchTest extends Specification {
     def "finding sentence subtrees matching pattern 2 "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty > odbywają < się")
-            def result = pattern.getSentenceTreesMatchingRule(tokens)
+            def result = pattern.getSentenceTreesMatchingRule(sentence)
         then:
             result.size() == 1
             result.get(0).size() == 4
@@ -425,7 +431,7 @@ class PatternMatchTest extends Specification {
     def "finding sentence subtrees matching pattern 3 "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty > odbywają < południe < W ")
-            def result = pattern.getSentenceTreesMatchingRule(tokens)
+            def result = pattern.getSentenceTreesMatchingRule(sentence)
         then:
             result.size() > 0
             result.get(0).size() == 5
@@ -435,7 +441,7 @@ class PatternMatchTest extends Specification {
     def "finding sentence subtrees matching pattern v.4 "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("się > odbywają < południe < W ")
-            def result = pattern.getSentenceTreesMatchingRule(tokens)
+            def result = pattern.getSentenceTreesMatchingRule(sentence)
         then:
             result.size() == 1
 
@@ -445,7 +451,7 @@ class PatternMatchTest extends Specification {
     def "finding sentence subtrees matching pattern v.5 - disjoint branches "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty  < południe < W ")
-            def result = pattern.getSentenceTreesMatchingRule(tokens)
+            def result = pattern.getSentenceTreesMatchingRule(sentence)
         then:
             result.size() == 0
 
@@ -455,42 +461,92 @@ class PatternMatchTest extends Specification {
     def "finding sentence subtrees matching pattern using * char"() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("* < południe < W ")
-            def result = pattern.getSentenceTreesMatchingRule(tokens)
+            def result = pattern.getSentenceTreesMatchingRule(sentence)
         then:
             result.size() == 1
             result.get(0).size() == 3
     }
 
-    // tokens2 !!!
+    // sentence2 !!!
     def "finding sentence subtrees matching pattern using but branches really disjont happen to have the same text at the end "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("szachowe  >  zawody > ^odbywać <  koncerty < jazzowe ")
-            def result = pattern.getSentenceTreesMatchingRule(tokens2)
+            def result = pattern.getSentenceTreesMatchingRule(sentence2)
         then:
             result.size() == 0
+    }
+
+
+    // sentence2 !!!
+    def "finding many matching sentence subtrees "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("się  >  ^odbywać ")
+            def result = pattern.getSentenceTreesMatchingRule(sentence2)
+        then:
+            result.size() == 2
     }
 
 
     def "finding sentence subtrees matching pattern using * char on direct joint with two branches "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty > *  < południe < W ")
-            def result = pattern.getSentenceTreesMatchingRule(tokens)
+            def result = pattern.getSentenceTreesMatchingRule(sentence)
+        then:
+            result.size() == 1
+
+    }
+
+    def "finding sentence subtrees matching pattern using many * char "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("jazzowe > * > * < * < W ")
+            def result = pattern.getSentenceTreesMatchingRule(sentence)
         then:
             result.size() == 1
 
     }
 
 
-    /*
     def "finding sentence subtrees matching pattern using * char on indirect joint with two branches "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("jazzowe >  *  < południe < W ")
-            def result = pattern.getSentenceTreesMatchingRule(tokens)
+            def result = pattern.getSentenceTreesMatchingRule(sentence)
         then:
-            result.size() == 0
+            result.size() == 0 // because * should denote just one node - and here, to recognize pattern it should be treated as 2 nodes
     }
 
-     */
+
+    /*
+    def "finding branch extension using single star "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("  *  ")
+            def result = pattern.matchTotalStarToPattern(sentence, sTI, pattern.rootNodeMatch)
+        then:
+            result.get(0) == index
+        where:
+            sTI || index
+            0   || 0
+            1   || 1
+            2   || 2
+            4   || 4
+            5   || 5
+
+    }
+
+
+    def "finding branch extension using star "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("  * > odbywały ")
+            def result = pattern.matchTotalStarToPattern(sentence, sTI, pattern.rootNodeMatch)
+        then:
+            result.size() == size
+            result.get(0) == index
+        where:
+            sTI || index | size
+            4   || 4     | 1
+            //    5   || 5     | 2
+
+    }
+    */
 
 
 }

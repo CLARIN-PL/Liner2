@@ -1,9 +1,9 @@
 package g419.corpus.structure;
 
 import org.apache.commons.lang3.StringUtils;
-
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 /**
@@ -379,6 +379,90 @@ public class Sentence extends IdentifiableElement {
 
   public Paragraph getParagraph() {
     return paragraph;
+  }
+
+
+  // searching for parent token of ...
+
+  public Token getParentTokenFromToken(final Token token) {
+    final int parentTokenId = token.getParentTokenId();
+    if (parentTokenId == 0) {
+      return null;
+    }
+    return tokens.get(parentTokenId - 1);
+  }
+
+  public Token getParentTokenFromTokenIndex(final int tokenIndex) {
+    final Token token = tokens.get(tokenIndex);
+    return getParentTokenFromToken(token);
+  }
+
+  public Token getParentTokenFromTokenId(final int tokenId) {
+    return getParentTokenFromTokenIndex(tokenId - 1);
+  }
+
+  // searching for child tokens of ...
+  public List<Token> getChildrenTokensFromToken(final Token token) {
+    return tokens.stream().filter(t -> t.getParentTokenId() == token.getNumberId()).collect(Collectors.toList());
+  }
+
+  public List<Token> getChildrenTokensFromTokenIndex(final int tokenIndex) {
+    final Token token = tokens.get(tokenIndex);
+    return getChildrenTokensFromToken(token);
+  }
+
+  public List<Token> getChildrenTokensFromTokenId(final int tokenId) {
+    return getChildrenTokensFromTokenIndex(tokenId - 1);
+  }
+
+  public List<Token> selectTokensWithBoiInsideTag(final List<Token> tokensToCheck, final String name) {
+    return tokensToCheck.stream().filter(t -> t.hasBoiInsideTag(name)).collect(Collectors.toList());
+  }
+
+
+  public List<Integer> getBoiIndexesForTokenAndName(final Token tokenToCheck, final String boiName) {
+    final List<Integer> resultIds = new LinkedList<>();
+
+    if (!tokenToCheck.hasBoi(boiName)) {
+      return resultIds;
+    }
+
+    // check upwards - to 'B-' ...
+    Token currentToken = tokenToCheck;
+    do {
+      resultIds.add(0, currentToken.getNumberId());
+      if (currentToken.hasBoiBeginTag(boiName)) {
+        break;
+      }
+      currentToken = this.getParentTokenFromToken(currentToken);
+    } while (currentToken != null);
+
+    if (currentToken == null) {
+      // error in boi tagging - no start for this one ...
+    }
+
+    // check downwards - to 'O' ...
+    currentToken = tokenToCheck; // reset
+    fillBoiIndexesDescending(currentToken, boiName, resultIds);
+
+    resultIds.sort(Comparator.naturalOrder());
+
+
+    return resultIds;
+  }
+
+
+  private void fillBoiIndexesDescending(final Token tokenToCheck, final String boiName, final List<Integer> result) {
+    // check downwards - to 'B-' ...
+    final Token currentToken = tokenToCheck; // reset
+
+    final List<Token> children = this.getChildrenTokensFromToken(currentToken);
+    final List<Token> childrenWithBoi = this.selectTokensWithBoiInsideTag(children, boiName);
+
+    for (final Token t : childrenWithBoi) {
+      result.add(t.getNumberId());
+      fillBoiIndexesDescending(t, boiName, result);
+    }
   }
 
 }

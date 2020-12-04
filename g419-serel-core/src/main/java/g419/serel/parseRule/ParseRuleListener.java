@@ -260,6 +260,20 @@ public interface ParseRuleListener extends ParseTreeListener {
   void exitNamedEntityToRole(ParseRuleParser.NamedEntityToRoleContext ctx);
 
   /**
+   * Enter a parse tree produced by {@link ParseRuleParser#toRole}.
+   *
+   * @param ctx the parse tree
+   */
+  void enterToRole(ParseRuleParser.ToRoleContext ctx);
+
+  /**
+   * Exit a parse tree produced by {@link ParseRuleParser#toRole}.
+   *
+   * @param ctx the parse tree
+   */
+  void exitToRole(ParseRuleParser.ToRoleContext ctx);
+
+  /**
    * Enter a parse tree produced by {@link ParseRuleParser#namedEntity}.
    *
    * @param ctx the parse tree

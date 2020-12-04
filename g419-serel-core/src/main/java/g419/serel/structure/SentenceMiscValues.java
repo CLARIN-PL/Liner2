@@ -33,11 +33,11 @@ public class SentenceMiscValues {
 
     for (int index = 0; index < sentence.getTokens().size(); index++) {
       final Token token = sentence.getTokens().get(index);
-      log.debug(" ---- token index = " + index + "  ------");
+      //log.debug(" ---- token index = " + index + "  ------");
 
       if (token.getAttributeIndex().getIndex("misc") != -1) {
         final String misc = token.getAttributeValue("misc");
-        log.debug("misc = " + misc);
+        //log.debug("misc = " + misc);
         if (!misc.equals("_")) {
           ////System.out.println("HAve misc!");
           // misc = misc.replaceAll("'","\"");
@@ -54,14 +54,14 @@ public class SentenceMiscValues {
   private Map<String, Object> getMapFromMiscColumn(final String misc) {
     final Map result = new HashMap<String, Object>();
 
-    log.debug("misc = " + misc);
+    //log.debug("misc = " + misc);
 
     String key = null;
     for (int i = 0; i < misc.length(); i++) {
-      log.debug("chk i = " + i);
+      //log.debug("chk i = " + i);
       if (misc.charAt(i) == '\'') {
         final String textValue = getTextValue(i + 1, misc);
-        log.debug("textValue =" + textValue);
+        //log.debug("textValue =" + textValue);
         if (key == null) {
           key = textValue;
         } else {
@@ -81,7 +81,7 @@ public class SentenceMiscValues {
         i += (textValue.length() + 1);
       }
     }
-    log.debug("koniec preprocessingu misc");
+    //log.debug("koniec preprocessingu misc");
     return result;
   }
 
@@ -98,7 +98,7 @@ public class SentenceMiscValues {
 
   private List<RelationDesc> getNamRelsValue(String s) {
     s = s.substring(1, s.length() - 1);
-    log.debug("getNamRelsVAlue: " + s);
+    //log.debug("getNamRelsVAlue: " + s);
     final String[] splits = s.split(",");
     return Arrays.stream(splits).map(RelationDesc::from).collect(Collectors.toList());
   }

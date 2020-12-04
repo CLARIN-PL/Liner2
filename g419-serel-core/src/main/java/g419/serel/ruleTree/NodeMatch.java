@@ -1,11 +1,14 @@
 package g419.serel.ruleTree;
 
 import g419.corpus.structure.Token;
+import g419.serel.structure.patternMatch.PatternMatchExtraInfo;
 import lombok.Data;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Data
 @ToString(exclude = "parentEdgeMatch")
 public class NodeMatch {
@@ -26,18 +29,10 @@ public class NodeMatch {
   private List<EdgeMatch> edgeMatchList = new ArrayList<>();
 
   public NodeMatch() {
-    System.out.println("!!!!! creating NodeMatch");
-    /*
-    try {
-      throw new RuntimeException();
-    } catch (final RuntimeException rt) {
-      rt.printStackTrace();
-    }
-    */
   }
 
   public void dumpString() {
-    System.out.println("NodeMatch: text = " + text + " xPos=" + xPos + " namedEntity=" + namedEntity + " role=" + role);
+    log.debug("NodeMatch: text = " + text + " xPos=" + xPos + " namedEntity=" + namedEntity + " role=" + role);
     for (final EdgeMatch em : getEdgeMatchList()) {
       em.dumpString();
     }
@@ -47,8 +42,23 @@ public class NodeMatch {
     return edgeMatchList.size() == 0;
   }
 
+  public boolean isMatchAnyTotal() {
+    return isMatchAnyText
+        && ((xPos == null) || (xPos.isEmpty()))
+        && ((namedEntity == null) || (namedEntity.isEmpty()));
+  }
+
+  public boolean isMatchAnyTotalWithDepRel() {
+    return isMatchAnyTotal()
+        && ((parentEdgeMatch == null) || parentEdgeMatch.isMatchAnyDepRel());
+  }
+
 
   public boolean matches(final Token token) {
+    return this.matches(token, null);
+  }
+
+  public boolean matches(final Token token, final PatternMatchExtraInfo extraInfo) {
 
     //text
     if (!isMatchAnyText) {
@@ -79,6 +89,11 @@ public class NodeMatch {
       for (final String boi : boiList) {
         if (boi.equals("B-" + namedEntity)) {  // "B-"  -> start token of entity
           found = true;
+
+          if ((role != null) && (!role.isEmpty())) {
+            extraInfo.putRole(role, namedEntity, token);
+          }
+
         }
       }
 

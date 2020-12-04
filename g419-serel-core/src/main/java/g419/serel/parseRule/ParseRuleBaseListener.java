@@ -304,6 +304,22 @@ public class ParseRuleBaseListener implements ParseRuleListener {
    * <p>The default implementation does nothing.</p>
    */
   @Override
+  public void enterToRole(final ParseRuleParser.ToRoleContext ctx) { }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation does nothing.</p>
+   */
+  @Override
+  public void exitToRole(final ParseRuleParser.ToRoleContext ctx) { }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation does nothing.</p>
+   */
+  @Override
   public void enterNamedEntity(final ParseRuleParser.NamedEntityContext ctx) { }
 
   /**

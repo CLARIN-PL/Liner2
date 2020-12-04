@@ -260,9 +260,38 @@ public class Token extends IdentifiableElement {
     return (List<String>) result;
   }
 
+  public Set<String> getBoisAsSet() {
+    return new HashSet<>(getBois());
+  }
+
+  public boolean hasBoi(final String name) {
+    return getBois().stream()
+        .anyMatch(boi -> boi.equals("B-" + name) || boi.equals("I-" + name));
+  }
+
+  public boolean hasBoiBeginTag(final String name) {
+    return getBois().stream()
+        .anyMatch(boi -> boi.equals("B-" + name));
+  }
+
+  public boolean hasBoiInsideTag(final String name) {
+    return getBois().stream()
+        .anyMatch(boi -> boi.equals("I-" + name));
+  }
+
   public List<RelationDesc> getNamRels() {
     final Object result = extAttr.getOrDefault("nam_rels", Collections.EMPTY_LIST);
     return (List<RelationDesc>) result;
   }
+
+  public int getParentTokenId() {
+    return Integer.valueOf(this.getAttributeValue("head"));
+  }
+
+
+  public int getNumberId() {
+    return Integer.valueOf(this.getAttributeValue("id"));
+  }
+
 
 }
