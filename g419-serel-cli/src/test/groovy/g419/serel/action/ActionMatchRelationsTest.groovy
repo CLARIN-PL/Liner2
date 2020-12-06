@@ -14,6 +14,7 @@ class ActionMatchRelationsTest extends Specification {
     }
 
 
+    /*
     def "basic processing of file "() {
         when:
             ActionMatchRelations amr = new ActionMatchRelations();
@@ -73,6 +74,8 @@ class ActionMatchRelationsTest extends Specification {
         then:
             amr.result.size() != null;
     }
+    
+     */
 
 
 }
