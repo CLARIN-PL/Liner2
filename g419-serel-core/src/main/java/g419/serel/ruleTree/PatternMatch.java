@@ -9,6 +9,7 @@ import g419.serel.ruleTree.listeners.ParseRuleListenerImpl;
 import g419.serel.ruleTree.listeners.ThrowingErrorListener;
 import g419.serel.structure.patternMatch.PatternMatchExtraInfo;
 import g419.serel.structure.patternMatch.PatternMatchSingleResult;
+import g419.serel.tools.Permutations;
 import lombok.Data;
 import lombok.ToString;
 import org.antlr.v4.runtime.CharStreams;
@@ -63,7 +64,7 @@ public class PatternMatch {
     return nodeMatchList.stream().filter(node -> node.isLeaf() && !excludedNodesIds.contains(node.getId())).findAny();
   }
 
-  public List<Integer>
+  public ArrayList<Integer>
   getSentenceBranchMatchingUpPatternBranchFromNode(
       final NodeMatch startNodeMatch,
       //final List<Token> tokens,
@@ -74,7 +75,7 @@ public class PatternMatch {
     return getSentenceBranchMatchingUpPatternBranchFromNode(startNodeMatch, sentence, startTokenIndex, Collections.emptySet(), extraInfo);
   }
 
-  public List<Integer>
+  public ArrayList<Integer>
   getSentenceBranchMatchingUpPatternBranchFromNode(
       final NodeMatch startNodeMatch,
       //final List<Token> tokens,
@@ -82,7 +83,7 @@ public class PatternMatch {
       final int startTokenIndex,
       final Set<Integer> excludedNodesIds,
       final PatternMatchExtraInfo extraInfo) {
-    final List<Integer> result = new ArrayList<>();
+    final ArrayList<Integer> result = new ArrayList<>();
 
     int tokenIndex = startTokenIndex;
     Token token = sentence.getTokens().get(tokenIndex);
@@ -92,7 +93,7 @@ public class PatternMatch {
     while (nodeMatch.matches(token, extraInfo)) {
       result.add(tokenIndex);
 
-//   multi-node star:
+//   multi-node star: (not 100% finished)
 //      if (nodeMatch.isMatchAnyTotal() && (nodeMatch.getParentEdgeMatch() != null) && nodeMatch.getParentEdgeMatch().isMatchAnyDepRel()) {
 //        matchTotalStarToPattern(tokens, tokenIndex, nodeMatch);
 //      } else {
@@ -176,11 +177,151 @@ public class PatternMatch {
   }
 */
 
-  public List<PatternMatchSingleResult> getSentenceTreesMatchingRule(final Sentence sentence) {
+  public List<PatternMatchSingleResult> getSentenceTreesMatchingGenericPattern(final Sentence sentence) {
+    List<PatternMatchSingleResult> result = new ArrayList<>();
 
+    for (final Token token : sentence.getTokens()) {
+      final List<PatternMatchSingleResult> resultForOneToken = getSentenceTreesMatchingGenericPatternFromToken(sentence, token);
+      result.addAll(resultForOneToken);
+    }
+
+    result = makeDistinct(result);
+    shiftIdsToIndexes(result);
+
+    return result;
+  }
+
+
+  public void shiftIdsToIndexes(final List<PatternMatchSingleResult> input) {
+    for (final PatternMatchSingleResult pmsr : input) {
+      for (int i = 0; i < pmsr.tree.size(); i++) {
+        pmsr.tree.set(i, pmsr.tree.get(i) - 1);
+      }
+    }
+  }
+
+  public List<PatternMatchSingleResult> makeDistinct(final List<PatternMatchSingleResult> input) {
+
+    if (input.isEmpty()) {
+      return input;
+    }
 
     final List<PatternMatchSingleResult> result = new ArrayList<>();
+    final PatternMatchSingleResult firstPmsr = input.get(0);
+    firstPmsr.tree.sort(Comparator.naturalOrder());
+    result.add(firstPmsr);
 
+    outer:
+    for (int i = 1; i < input.size(); i++) {
+      final PatternMatchSingleResult currentPmsr = input.get(i);
+      currentPmsr.tree.sort(Comparator.naturalOrder());
+
+      for (final PatternMatchSingleResult resultPmsr : result) {
+        if (resultPmsr.tree.equals(currentPmsr.tree)) {
+          continue outer;
+        }
+      }
+      result.add(currentPmsr);
+    }
+
+    return result;
+  }
+
+
+  public List<PatternMatchSingleResult> getSentenceTreesMatchingGenericPatternFromToken(final Sentence sentence, final Token token) {
+    final List<PatternMatchSingleResult> result = getSentenceTreesMatchingGenericPatternFromTokenAndEdge(sentence, token, null, rootNodeMatch);
+    return result;
+  }
+
+  public List<PatternMatchSingleResult>
+  getSentenceTreesMatchingGenericPatternFromTokenAndEdge(final Sentence sentence,
+                                                         final Token token,
+                                                         final EdgeMatch edgeMatch,
+                                                         final NodeMatch nodeMatch) {
+    if (edgeMatch != null) { // used for matching rootNodeMatch
+      if (!edgeMatch.matches(token)) {
+        return Collections.emptyList(); // no match
+      }
+    }
+
+    final PatternMatchExtraInfo pmei = new PatternMatchExtraInfo();
+    pmei.setSentence(sentence);
+    if (!nodeMatch.matches(token, pmei)) {
+      return Collections.emptyList(); // no match
+    }
+
+    final List<PatternMatchSingleResult> result = new LinkedList<>();
+
+    final PatternMatchSingleResult oneResult;
+    final ArrayList<Integer> _idsList = new ArrayList<>();
+    _idsList.add(token.getNumberId());
+    oneResult = new PatternMatchSingleResult(_idsList, pmei);
+
+    if (nodeMatch.isLeaf()) {
+      result.add(oneResult);
+      // final match!
+      return result;
+    }
+    // we here know at this level there is a match. But there are further levels ...
+
+    final List<Token> childrenToken = sentence.getChildrenTokensFromToken(token);
+    // if there is more branches in pattern then we have in actual sentence node we know there is no way to match it
+    if (nodeMatch.getEdgeMatchList().size() > childrenToken.size()) {
+      return Collections.emptyList();
+    }
+
+    final List<List<Token>> childrenTokenPermutations = Permutations.getAllPermutations(childrenToken);
+    for (final List<Token> childrenTokenPermutation : childrenTokenPermutations) {
+      final List<PatternMatchSingleResult> resultsForOnePermutation = getResultsForOnePermutation(sentence, childrenTokenPermutation, nodeMatch.getEdgeMatchList());
+      result.addAll(resultsForOnePermutation);
+    }
+
+    result.forEach(r -> r.concatenateWith(oneResult));
+    return result;
+  }
+
+  private final List<PatternMatchSingleResult>
+  getResultsForOnePermutation(final Sentence sentence,
+                              final List<Token> childrenTokenPermutation,
+                              final List<EdgeMatch> patternEdges) {
+    List<PatternMatchSingleResult> onePermutationResults = new ArrayList<>();
+
+    for (int i = 0; i < patternEdges.size(); i++) {
+
+      final EdgeMatch nextEdgeMatch = patternEdges.get(i);
+      final Token nextToken = childrenTokenPermutation.get(i);
+
+      final List<PatternMatchSingleResult> resultsForOnePatternEdge =
+          getSentenceTreesMatchingGenericPatternFromTokenAndEdge(sentence, nextToken, nextEdgeMatch, nextEdgeMatch.getNodeMatch());
+
+      // each edge must match!
+      if (resultsForOnePatternEdge.isEmpty()) {
+        //check next permutation
+        return Collections.emptyList();
+      }
+
+      if (onePermutationResults.isEmpty()) {
+        onePermutationResults.addAll(resultsForOnePatternEdge);
+      } else {
+        final List<PatternMatchSingleResult> newOnePermutationResults = new ArrayList<>();
+
+        for (final PatternMatchSingleResult oldPmsr : onePermutationResults) {
+          for (final PatternMatchSingleResult pmsr : resultsForOnePatternEdge) {
+            final PatternMatchSingleResult newPmsr = new PatternMatchSingleResult(oldPmsr);
+            newPmsr.concatenateWith(pmsr);
+            newOnePermutationResults.add(newPmsr);
+          }
+        }
+
+        onePermutationResults = newOnePermutationResults;
+      }
+    }
+    return onePermutationResults;
+  }
+
+
+  public List<PatternMatchSingleResult> getSentenceTreesMatchingSerelPattern(final Sentence sentence) {
+    final List<PatternMatchSingleResult> result = new ArrayList<>();
 
     // take first branch from pattern tree
     // just get its last leaf
@@ -202,7 +343,7 @@ public class PatternMatch {
       final Token token = sentence.getTokens().get(i);
       if (firstLeafNodeMatch.matches(token, pmei)) {
         // can we find match for the whole first pattern-branch ?
-        final List<Integer> foundFirstBranch = this.getSentenceBranchMatchingUpPatternBranchFromNode(firstLeafNodeMatch, sentence, i, pmei);
+        final ArrayList<Integer> foundFirstBranch = this.getSentenceBranchMatchingUpPatternBranchFromNode(firstLeafNodeMatch, sentence, i, pmei);
         if (foundFirstBranch.size() == 0) {
           continue;
         }
@@ -232,8 +373,8 @@ public class PatternMatch {
 
               if (firstBranchRootId == secondBranchRootId) {
                 foundSecondBranch.remove(foundSecondBranch.size() - 1);
-                final List<Integer> reversedSecondBraachWithoutRoot = Lists.reverse(foundSecondBranch);
-                foundFirstBranch.addAll(reversedSecondBraachWithoutRoot);
+                final List<Integer> reversedSecondBranchWithoutRoot = Lists.reverse(foundSecondBranch);
+                foundFirstBranch.addAll(reversedSecondBranchWithoutRoot);
                 result.add(new PatternMatchSingleResult(foundFirstBranch, pmei));
                 //System.out.println("OPR:" + foundFirstBranch);
               }

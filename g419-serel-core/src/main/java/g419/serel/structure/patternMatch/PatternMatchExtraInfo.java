@@ -12,8 +12,16 @@ import java.util.stream.Collectors;
 public class PatternMatchExtraInfo {
 
   Sentence sentence;
-
   private Map<String, NamedEntityWithToken> roleMap = new HashMap<>();
+
+  public PatternMatchExtraInfo() {}
+
+  public PatternMatchExtraInfo(final PatternMatchExtraInfo pmei) {
+    this.sentence = pmei.sentence;
+    this.roleMap = new HashMap<>();
+    this.roleMap.putAll(pmei.getRoleMap());
+  }
+
 
   public void putRole(final String role, final String _namedEntity, final Token _token) {
     final NamedEntityWithToken newt = new NamedEntityWithToken();

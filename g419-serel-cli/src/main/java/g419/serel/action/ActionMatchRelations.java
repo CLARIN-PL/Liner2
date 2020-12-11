@@ -105,7 +105,8 @@ public class ActionMatchRelations extends Action {
 //        log.debug(" Sentence = " + sentence);
 
         final SentenceMiscValues smv = SentenceMiscValues.from(sentence);
-        final List<PatternMatchSingleResult> results = patternMatch.getSentenceTreesMatchingRule(sentence);
+        final List<PatternMatchSingleResult> results = patternMatch.getSentenceTreesMatchingSerelPattern(sentence);
+        //final List<PatternMatchSingleResult> results = patternMatch.getSentenceTreesMatchingGenericPattern(sentence);
 
         for (final PatternMatchSingleResult patternMatchSingleResult : results) {
           patternMatchSingleResult.sentenceNumber = sentenceIndex;

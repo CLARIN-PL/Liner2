@@ -258,7 +258,7 @@ class PatternMatchTest extends Specification {
             thrown ParseCancellationException
     }
 
-    def "ParseRule entityName can be withot a role  "() {
+    def "ParseRule entityName can be without a role  "() {
         when:
             PatternMatch result = PatternMatch.parseRule("Stolica / nam_log_geo < * < kraju")
         then:
@@ -296,7 +296,7 @@ class PatternMatchTest extends Specification {
 
 
 /**
- * Rozpoznawanie wzorca
+ * Rozpoznawanie wzorca typu serel
  */
 
 
@@ -413,7 +413,7 @@ class PatternMatchTest extends Specification {
         when:
             PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty > odbywają")
             //PatternMatch pattern = PatternMatch.parseRule("W > południe > odbywają")
-            def result = pattern.getSentenceTreesMatchingRule(sentence)
+            def result = pattern.getSentenceTreesMatchingSerelPattern(sentence)
         then:
             result.size() > 0
     }
@@ -421,47 +421,43 @@ class PatternMatchTest extends Specification {
     def "finding sentence subtrees matching pattern 2 "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty > odbywają < się")
-            def result = pattern.getSentenceTreesMatchingRule(sentence)
+            def result = pattern.getSentenceTreesMatchingSerelPattern(sentence)
         then:
             result.size() == 1
             result.get(0).size() == 4
-
     }
 
     def "finding sentence subtrees matching pattern 3 "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty > odbywają < południe < W ")
-            def result = pattern.getSentenceTreesMatchingRule(sentence)
+            def result = pattern.getSentenceTreesMatchingSerelPattern(sentence)
         then:
             result.size() > 0
             result.get(0).size() == 5
-
     }
 
     def "finding sentence subtrees matching pattern v.4 "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("się > odbywają < południe < W ")
-            def result = pattern.getSentenceTreesMatchingRule(sentence)
+            def result = pattern.getSentenceTreesMatchingSerelPattern(sentence)
         then:
             result.size() == 1
-
     }
 
 
     def "finding sentence subtrees matching pattern v.5 - disjoint branches "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty  < południe < W ")
-            def result = pattern.getSentenceTreesMatchingRule(sentence)
+            def result = pattern.getSentenceTreesMatchingSerelPattern(sentence)
         then:
             result.size() == 0
-
     }
 
 
     def "finding sentence subtrees matching pattern using * char"() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("* < południe < W ")
-            def result = pattern.getSentenceTreesMatchingRule(sentence)
+            def result = pattern.getSentenceTreesMatchingSerelPattern(sentence)
         then:
             result.size() == 1
             result.get(0).size() == 3
@@ -471,7 +467,7 @@ class PatternMatchTest extends Specification {
     def "finding sentence subtrees matching pattern using but branches really disjont happen to have the same text at the end "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("szachowe  >  zawody > ^odbywać <  koncerty < jazzowe ")
-            def result = pattern.getSentenceTreesMatchingRule(sentence2)
+            def result = pattern.getSentenceTreesMatchingSerelPattern(sentence2)
         then:
             result.size() == 0
     }
@@ -481,7 +477,7 @@ class PatternMatchTest extends Specification {
     def "finding many matching sentence subtrees "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("się  >  ^odbywać ")
-            def result = pattern.getSentenceTreesMatchingRule(sentence2)
+            def result = pattern.getSentenceTreesMatchingSerelPattern(sentence2)
         then:
             result.size() == 2
     }
@@ -490,26 +486,24 @@ class PatternMatchTest extends Specification {
     def "finding sentence subtrees matching pattern using * char on direct joint with two branches "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty > *  < południe < W ")
-            def result = pattern.getSentenceTreesMatchingRule(sentence)
+            def result = pattern.getSentenceTreesMatchingSerelPattern(sentence)
         then:
             result.size() == 1
-
     }
 
     def "finding sentence subtrees matching pattern using many * char "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("jazzowe > * > * < * < W ")
-            def result = pattern.getSentenceTreesMatchingRule(sentence)
+            def result = pattern.getSentenceTreesMatchingSerelPattern(sentence)
         then:
             result.size() == 1
-
     }
 
 
     def "finding sentence subtrees matching pattern using * char on indirect joint with two branches "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("jazzowe >  *  < południe < W ")
-            def result = pattern.getSentenceTreesMatchingRule(sentence)
+            def result = pattern.getSentenceTreesMatchingSerelPattern(sentence)
         then:
             result.size() == 0 // because * should denote just one node - and here, to recognize pattern it should be treated as 2 nodes
     }
@@ -529,7 +523,6 @@ class PatternMatchTest extends Specification {
             2   || 2
             4   || 4
             5   || 5
-
     }
 
 
@@ -544,9 +537,113 @@ class PatternMatchTest extends Specification {
             sTI || index | size
             4   || 4     | 1
             //    5   || 5     | 2
-
     }
     */
+
+/**
+ * Rozpoznawanie wzorca generycznego
+ */
+
+    def "getSentenceTreeMatchingGenericPattern with just star"() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("*")
+            //NodeMatch startNodeMatch = pattern.rootNodeMatch
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
+        then:
+            pattern.nodeMatchList.size() == 1;
+            result.size() == 7;
+    }
+
+    def "getSentenceTreeMatchingGenericPattern with just text for lemma"() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("^odbywać")
+            //NodeMatch startNodeMatch = pattern.rootNodeMatch
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence2)
+        then:
+            pattern.nodeMatchList.size() == 1;
+            result.size() == 2;
+    }
+
+    def "getSentenceTreeMatchingGenericPattern with two-levels pattern"() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("W > południe")
+            //NodeMatch startNodeMatch = pattern.rootNodeMatch
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
+        then:
+            pattern.nodeMatchList.size() == 2;
+            result.size() == 1;
+    }
+
+
+    def "getSentenceTreeMatchingGenericPattern with three-levels pattern"() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("W > południe > odbywają")
+            //NodeMatch startNodeMatch = pattern.rootNodeMatch
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
+        then:
+            pattern.nodeMatchList.size() == 3;
+            result.size() == 1;
+    }
+
+    def "getSentenceTreeMatchingGenericPattern with pattern v.1.5"() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("koncerty < jazzowe")
+            //NodeMatch startNodeMatch = pattern.rootNodeMatch
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
+        then:
+            pattern.nodeMatchList.size() == 2;
+            result.size() == 1;
+    }
+
+
+    def "getSentenceTreeMatchingGenericPattern with pattern v.2"() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("się > odbywają")
+            //NodeMatch startNodeMatch = pattern.rootNodeMatch
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
+        then:
+            pattern.nodeMatchList.size() == 2;
+            result.size() == 1;
+    }
+
+    def "getSentenceTreeMatchingGenericPattern - double occurence "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("się > ^odbywać")
+            //NodeMatch startNodeMatch = pattern.rootNodeMatch
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence2)
+        then:
+            pattern.nodeMatchList.size() == 2;
+            result.size() == 2;
+    }
+
+
+    def "finding sentence subtrees matching generic pattern using * char on direct joint with two branches "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty > *  < południe < W ")
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
+        then:
+            result.size() == 1
+
+    }
+
+
+    def "finding sentence subtrees matching generic pattern using many * char "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("jazzowe > * > * < * < W ")
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
+        then:
+            result.size() == 1
+
+    }
+
+
+    def "finding sentence subtrees matching generic pattern using * char on indirect joint with two branches "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("jazzowe >  *  < południe < W ")
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
+        then:
+            result.size() == 0 // because * should denote just one node - and here, to recognize pattern it should be treated as 2 nodes
+    }
 
 
 }
