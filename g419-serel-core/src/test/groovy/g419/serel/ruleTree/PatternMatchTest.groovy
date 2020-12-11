@@ -664,6 +664,43 @@ class PatternMatchTest extends Specification {
     }
 
 
+    def "finding sentence subtrees with pattern with subbranches "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("Tam > ^odbywać  > *  < koncerty < jazzowe ")
+
+            EdgeMatch em = new EdgeMatch();
+            em.matchAnyDepRel = true;
+            NodeMatch nm = new NodeMatch();
+            nm.text = "zawody";
+            em.setNodeMatch(nm);
+            nm.setParentEdgeMatch(em);
+            pattern.getNodeMatchList().get(0).getEdgeMatchList().add(em);
+            em.setParentNodeMatch(pattern.getNodeMatchList().get(0))
+
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence2)
+        then:
+            result.size() == 1
+    }
+
+    def "finding sentence subtrees with pattern with subbranches but wrong text "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("Tam > ^odbywać  > *  < koncerty < jazzowe ")
+
+            EdgeMatch em = new EdgeMatch();
+            em.matchAnyDepRel = true;
+            NodeMatch nm = new NodeMatch();
+            nm.text = "olimpiady";
+            em.setNodeMatch(nm);
+            nm.setParentEdgeMatch(em);
+            pattern.getNodeMatchList().get(0).getEdgeMatchList().add(em);
+            em.setParentNodeMatch(pattern.getNodeMatchList().get(0))
+
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence2)
+        then:
+            result.size() == 0
+    }
+
+
     def "finding sentence subtrees matching generic pattern using many * char "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("jazzowe > * > * < * < W ")
