@@ -626,6 +626,43 @@ class PatternMatchTest extends Specification {
 
     }
 
+    def "finding sentence subtrees matching generic pattern with three nodes matching the actual sentence tree "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty > *  < południe < W ")
+
+            EdgeMatch em = new EdgeMatch();
+            em.matchAnyDepRel = true;
+            NodeMatch nm = new NodeMatch();
+            nm.text = "się";
+            em.setNodeMatch(nm);
+            nm.setParentEdgeMatch(em);
+            pattern.rootNodeMatch.getEdgeMatchList().add(em);
+            em.setParentNodeMatch(pattern.rootNodeMatch)
+
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
+        then:
+            result.size() == 1
+    }
+
+
+    def "finding sentence subtrees matching generic pattern with three nodes not matching the actual sentence tree "() {
+        when:
+            PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty > *  < południe < W ")
+
+            EdgeMatch em = new EdgeMatch();
+            em.matchAnyDepRel = true;
+            NodeMatch nm = new NodeMatch();
+            nm.text = "często";
+            em.setNodeMatch(nm);
+            nm.setParentEdgeMatch(em);
+            pattern.rootNodeMatch.getEdgeMatchList().add(em);
+            em.setParentNodeMatch(pattern.rootNodeMatch)
+
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
+        then:
+            result.size() == 0
+    }
+
 
     def "finding sentence subtrees matching generic pattern using many * char "() {
         when:
