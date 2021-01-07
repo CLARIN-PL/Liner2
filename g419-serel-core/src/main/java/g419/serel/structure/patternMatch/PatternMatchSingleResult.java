@@ -29,12 +29,12 @@ public class PatternMatchSingleResult {
 
   @Override
   public String toString() {
-    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + ",\tindexTree=" + tree + ",\tpmei:" + patternMatchExtraInfo;
+    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + ",\tindexTree=" + tree + ",\trole:" + patternMatchExtraInfo;
     return result;
   }
 
   public String description() {
-    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + ",\tindexTree=" + tree + ",\tpmei:" + patternMatchExtraInfo.description();
+    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + ",\tindexTree=" + tree + ",\t\trole:" + patternMatchExtraInfo.description();
     return result;
   }
 
