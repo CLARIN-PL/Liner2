@@ -1,11 +1,15 @@
 package g419.serel.structure.patternMatch;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class PatternMatchSingleResult {
 
   public String docName;
   public int sentenceNumber;
+
+  public PatternMatchSingleResult() {}
+
 
   public PatternMatchSingleResult(final ArrayList<Integer> _idsList, final PatternMatchExtraInfo _pmei) {
     this.tree = _idsList;
@@ -27,20 +31,43 @@ public class PatternMatchSingleResult {
   }
 
 
-  @Override
-  public String toString() {
-    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + ",\tindexTree=" + tree + ",\trole:" + patternMatchExtraInfo;
+//  @Override
+//  public String toString() {
+//    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + ",\tindexTree=" + tree + ",\trole:[" + patternMatchExtraInfo+"]";
+//    return result;
+//  }
+
+  public String description() {
+    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + ",\tindexTree=" + tree + ",\t\trole:[" + patternMatchExtraInfo.description() + "]";
     return result;
   }
 
-  public String description() {
-    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + ",\tindexTree=" + tree + ",\t\trole:" + patternMatchExtraInfo.description();
+
+  public String descriptionLong() {
+    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + ",\tindexTree=" + tree + ",\t\trole:[" + patternMatchExtraInfo.description() + "]" +
+        "\t\t\t" + patternMatchExtraInfo.getSentence().toString();
     return result;
   }
 
   public void concatenateWith(final PatternMatchSingleResult pmsr) {
     tree.addAll(pmsr.tree);
     patternMatchExtraInfo.getRoleMap().putAll(pmsr.patternMatchExtraInfo.getRoleMap());
+  }
+
+  public boolean isTheSameAs(final PatternMatchSingleResult pmsr) {
+
+    if (!this.docName.equals(pmsr.docName) || this.sentenceNumber != pmsr.sentenceNumber
+    ) {
+      return false;
+    }
+
+    if (
+        new HashSet(this.tree).equals(new HashSet(pmsr.tree))
+    ) {
+      return true;
+    }
+
+    return false;
   }
 
 

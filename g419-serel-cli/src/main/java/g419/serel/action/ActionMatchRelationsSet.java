@@ -35,12 +35,12 @@ public class ActionMatchRelationsSet extends Action {
 
   private String reportFilename;
 
-
   private final List<String> patterns = new LinkedList<>();
-  private final List<List<PatternMatchSingleResult>> results = new LinkedList<>();
+  private final List<List<PatternMatchSingleResult>> patternsResults = new LinkedList<>();
 
   @Getter
-  private List<PatternMatchSingleResult> result;
+  //private List<PatternMatchSingleResult> result;
+  private final List<PatternMatchSingleResult> resultTotal = new LinkedList<>();
 
 
   public ActionMatchRelationsSet() {
@@ -85,7 +85,7 @@ public class ActionMatchRelationsSet extends Action {
 
   private void processOnePattern(final String pattern) {
     System.out.println("Processing pattern: " + pattern);
-    final List<PatternMatchSingleResult> patternResults = new LinkedList<>();
+    final List<PatternMatchSingleResult> thisPatternResults = new LinkedList<>();
 
 
     final PatternMatch patternMatch = PatternMatch.parseRule(pattern);
@@ -96,8 +96,8 @@ public class ActionMatchRelationsSet extends Action {
     ) {
       reader.forEach(comboedDoc -> {
             try {
-              result = matchDocTreeAgainstPatternTree(comboedDoc, patternMatch);
-              patternResults.addAll(result);
+              final List<PatternMatchSingleResult> result = matchDocTreeAgainstPatternTree(comboedDoc, patternMatch);
+              thisPatternResults.addAll(result);
             } catch (final Exception e) {
               System.out.println("Problem z dokumentem " + comboedDoc.getName());
               e.printStackTrace();
@@ -109,7 +109,8 @@ public class ActionMatchRelationsSet extends Action {
       e.printStackTrace();
     }
 
-    results.add(patternResults);
+    System.out.println("Adding one entry with elements:" + thisPatternResults.size());
+    patternsResults.add(thisPatternResults);
 
   }
 
@@ -118,7 +119,13 @@ public class ActionMatchRelationsSet extends Action {
 
     int sentenceIndex = 0;
     for (final Sentence sentence : d.getParagraphs().get(0).getSentences()) {
+
       sentenceIndex++;
+      // blokuje się na dokumencie 00100518 - zdanie 6 - ma węzeł który ma 10 podwęzłów bezpośrednich i wszystkich możliwośći
+      // jest 10! = 3,628,800.
+//      if (sentenceIndex != 6) {
+//        continue;
+//      }
       try {
 
         final SentenceMiscValues smv = SentenceMiscValues.from(sentence);
@@ -145,19 +152,36 @@ public class ActionMatchRelationsSet extends Action {
     final OutputStream os = WriterFactory.get().getOutputStreamFileOrOut(outputFilename);
     final BufferedWriter ow = new BufferedWriter(new OutputStreamWriter(os));
 
-    for (int i = 0; i < results.size(); i++) {
+    for (int i = 0; i < patternsResults.size(); i++) {
       final String pattern = patterns.get(i);
-      final List<PatternMatchSingleResult> result = results.get(i);
+      final List<PatternMatchSingleResult> result = patternsResults.get(i);
+      ow.write("Dla wzorca ='" + pattern + "'" + "\tznaleziono " + result.size() + " wyników\n");
+
       for (final PatternMatchSingleResult pmsr : result) {
-        ow.write("pattern='" + pattern + "'" + "\t" + pmsr.description() + "\n");
+
+        ow.write("pattern='" + pattern + "'" + "\t" + pmsr.descriptionLong() + "\n");
+
+        if (isAlreadyPresentInTotalResult(pmsr)) {
+          continue;
+        }
+        resultTotal.add(pmsr);
       }
     }
+    ow.write("Ogółem znaleziono " + resultTotal.size() + " wyników\n");
 
     ow.flush();
     ow.close();
 
   }
 
+  private boolean isAlreadyPresentInTotalResult(final PatternMatchSingleResult pmsr) {
+    for (final PatternMatchSingleResult p : resultTotal) {
+      if (pmsr.isTheSameAs(p)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
 }
 

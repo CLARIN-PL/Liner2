@@ -48,7 +48,7 @@ public class PatternMatchExtraInfo {
   }
 
   public String description() {
-    return roleMap.entrySet().stream().map(elem -> elem.getKey() + " : " + getRoleValue(elem.getKey())).collect(Collectors.joining(" "));
+    return roleMap.entrySet().stream().map(elem -> elem.getKey() + ":" + getRoleValue(elem.getKey())).collect(Collectors.joining(", "));
   }
 
 }
