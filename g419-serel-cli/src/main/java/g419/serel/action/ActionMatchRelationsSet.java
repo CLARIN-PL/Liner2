@@ -121,7 +121,7 @@ public class ActionMatchRelationsSet extends Action {
     for (final Sentence sentence : d.getParagraphs().get(0).getSentences()) {
 
       sentenceIndex++;
-      // blokuje się na dokumencie 00100518 - zdanie 6 - ma węzeł który ma 10 podwęzłów bezpośrednich i wszystkich możliwośći
+      // blokowało się na dokumencie 00100518 - zdanie 6 - ma węzeł który ma 10 podwęzłów bezpośrednich i wszystkich możliwośći
       // jest 10! = 3,628,800.
 //      if (sentenceIndex != 6) {
 //        continue;
@@ -129,8 +129,8 @@ public class ActionMatchRelationsSet extends Action {
       try {
 
         final SentenceMiscValues smv = SentenceMiscValues.from(sentence);
-        final List<PatternMatchSingleResult> docResults = patternMatch.getSentenceTreesMatchingSerelPattern(sentence);
-        //final List<PatternMatchSingleResult> docResults = patternMatch.getSentenceTreesMatchingGenericPattern(sentence);
+        //final List<PatternMatchSingleResult> docResults = patternMatch.getSentenceTreesMatchingSerelPattern(sentence);
+        final List<PatternMatchSingleResult> docResults = patternMatch.getSentenceTreesMatchingGenericPattern(sentence);
 
         for (final PatternMatchSingleResult patternMatchSingleResult : docResults) {
           patternMatchSingleResult.sentenceNumber = sentenceIndex;

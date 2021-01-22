@@ -270,11 +270,27 @@ public class PatternMatch {
       return Collections.emptyList();
     }
 
+
+    final List<List<Token>> childrenTokenSubCombinations = Permutations.getAllCombinations(childrenToken, nodeMatch.getEdgeMatchList().size());
+    for (final List<Token> childrenTokenCombination : childrenTokenSubCombinations) {
+      // for each subcombinations generate all possible permutations and check each one
+
+      final List<List<Token>> childrenTokenPermutations = Permutations.getAllPermutations(childrenTokenCombination);
+      for (final List<Token> childrenTokenPermutation : childrenTokenPermutations) {
+
+        final List<PatternMatchSingleResult> resultsForOnePermutation = getResultsForOnePermutation(sentence, childrenTokenPermutation, nodeMatch.getEdgeMatchList());
+        result.addAll(resultsForOnePermutation);
+      }
+    }
+
+/*
     final List<List<Token>> childrenTokenPermutations = Permutations.getAllPermutations(childrenToken);
     for (final List<Token> childrenTokenPermutation : childrenTokenPermutations) {
       final List<PatternMatchSingleResult> resultsForOnePermutation = getResultsForOnePermutation(sentence, childrenTokenPermutation, nodeMatch.getEdgeMatchList());
       result.addAll(resultsForOnePermutation);
     }
+
+*/
 
     result.forEach(r -> r.concatenateWith(oneResult));
     return result;
