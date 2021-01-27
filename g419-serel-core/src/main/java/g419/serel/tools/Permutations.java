@@ -50,11 +50,6 @@ public class Permutations {
     input.set(b, tmp);
   }
 
-//
-//  int[] input = {10, 20, 30, 40, 50};    // input array
-//  int k = 3;                             // sequence length
-//
-
   public static <T>
   List<List<T>>
   getAllCombinations(final List<T> input, final int k) {
@@ -93,59 +88,12 @@ public class Permutations {
   List<T> getSubset(final List<T> input, final int[] subset) {
     final List<T> result = new LinkedList<>();
     for (int i = 0; i < subset.length; i++) {
-      // result.set(i, input.get(subset[i]));
       result.add(input.get(subset[i]));
     }
     return result;
   }
 
 
-//**************************************************************************************
-
-
-  /* arr[]  ---> Input Array
-    data[] ---> Temporary array to store current combination
-    start & end ---> Staring and Ending indexes in arr[]
-    index  ---> Current index in data[]
-    r ---> Size of a combination to be printed */
-  static void combinationUtil(final int[] arr, final int[] data, final int start,
-                              final int end, final int index, final int r) {
-    // Current combination is ready to be printed, print it
-    if (index == r) {
-      for (int j = 0; j < r; j++) {
-        System.out.print(data[j] + " ");
-      }
-      System.out.println("");
-      return;
-    }
-
-    // replace index with all possible elements. The condition
-    // "end-i+1 >= r-index" makes sure that including one element
-    // at index will make a combination with remaining elements
-    // at remaining positions
-    for (int i = start; i <= end && end - i + 1 >= r - index; i++) {
-      data[index] = arr[i];
-      combinationUtil(arr, data, i + 1, end, index + 1, r);
-    }
-  }
-
-  // The main function that prints all combinations of size r
-  // in arr[] of size n. This function mainly uses combinationUtil()
-  static void printCombination(final int[] arr, final int n, final int r) {
-    // A temporary array to store all combination one by one
-    final int[] data = new int[r];
-
-    // Print all combination using temprary array 'data[]'
-    combinationUtil(arr, data, 0, n - 1, 0, r);
-  }
-
-  /*Driver function to check for above function*/
-  public static void main(final String[] args) {
-    final int[] arr = {1, 2, 3, 4, 5};
-    final int r = 3;
-    final int n = arr.length;
-    printCombination(arr, n, r);
-  }
 }
 
 

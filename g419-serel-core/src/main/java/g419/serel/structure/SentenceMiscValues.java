@@ -3,6 +3,7 @@ package g419.serel.structure;
 import g419.corpus.structure.RelationDesc;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
+import g419.serel.ruleTree.PatternMatch;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import java.util.*;
@@ -325,5 +326,35 @@ public class SentenceMiscValues {
   }
 */
 
+  public List<RelationDesc> getNamRelsMatchingRelation(final PatternMatch patternMatch) {
+
+    final List<RelationDesc> matchingRels = new LinkedList<>();
+
+    final List<RelationDesc> allRels = getAllNamRels();
+
+    for (final RelationDesc relDesc : allRels) {
+      if (relDesc.getType().equals(patternMatch.getRelationType())) {
+
+//        final String fromNEType = patternMatch.getSourceEntityName();
+//        final String toNEType = rmr.getTargetEntityName();
+
+        matchingRels.add(relDesc);
+      }
+    }
+
+    return matchingRels;
+  }
+
+  public List<RelationDesc> getAllNamRels() {
+    final List<RelationDesc> rels = new LinkedList<>();
+
+    for (final Map map : this.getMiscValuesList()) {
+      if (map.containsKey("nam_rels")) {
+        final List<RelationDesc> rs = (List<RelationDesc>) map.get("nam_rels");
+        rels.addAll(rs);
+      }
+    }
+    return rels;
+  }
 
 }

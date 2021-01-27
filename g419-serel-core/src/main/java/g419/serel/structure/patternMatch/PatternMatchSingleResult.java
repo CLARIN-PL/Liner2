@@ -1,5 +1,6 @@
 package g419.serel.structure.patternMatch;
 
+import g419.corpus.structure.RelationDesc;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -63,6 +64,18 @@ public class PatternMatchSingleResult {
 
     if (
         new HashSet(this.tree).equals(new HashSet(pmsr.tree))
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  public boolean isTheSameAs(final RelationDesc rd) {
+    if (
+        (this.tree.contains(rd.getFromTokenIndex() - 1))
+            &&
+            (this.tree.contains(rd.getToTokenIndex() - 1))
     ) {
       return true;
     }

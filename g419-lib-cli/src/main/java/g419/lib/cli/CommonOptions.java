@@ -3,6 +3,7 @@ package g419.lib.cli;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Option.Builder;
 
+
 /**
  * This class contains methods to generate Option objects for common options.
  *
@@ -64,72 +65,77 @@ public class CommonOptions {
     public static final String OPTION_RULE_FILENAME = "uf";
     public static final String OPTION_RULE_FILENAME_LONG = "rule_filename";
 
+    public static final String OPTION_VERIFY_RELATIONS = "vr";
+    public static final String OPTION_VERIFY_RELATIONS_LONG = "verify_relations";
+
+
     public static Option getOutputFileNameOption() {
         return Option.builder(CommonOptions.OPTION_OUTPUT_FILE)
-                .longOpt(CommonOptions.OPTION_OUTPUT_FILE_LONG)
-                .hasArg().argName("filename").desc("path to an output file").build();
+            .longOpt(CommonOptions.OPTION_OUTPUT_FILE_LONG)
+            .hasArg().argName("filename").desc("path to an output file").build();
     }
+    
 
     public static Option getReportFileNameOption() {
         return Option.builder(CommonOptions.OPTION_REPORT_FILE)
-                .longOpt(CommonOptions.OPTION_REPORT_FILE_LONG)
-                .hasArg().argName("filename").desc("path to a report file").build();
+            .longOpt(CommonOptions.OPTION_REPORT_FILE_LONG)
+            .hasArg().argName("filename").desc("path to a report file").build();
     }
 
 
     public static Option getOutputFileFormatOption() {
         return Option.builder(CommonOptions.OPTION_OUTPUT_FORMAT)
-                .longOpt(CommonOptions.OPTION_OUTPUT_FORMAT_LONG)
-                .hasArg().argName("filename").desc("output format [iob, ccl, arff, tokens, tuples, tei, batch:{format}]").build();
+            .longOpt(CommonOptions.OPTION_OUTPUT_FORMAT_LONG)
+            .hasArg().argName("filename").desc("output format [iob, ccl, arff, tokens, tuples, tei, batch:{format}]").build();
     }
 
     public static Option getInputFileNameOption() {
         return Option.builder(CommonOptions.OPTION_INPUT_FILE)
-                .longOpt(CommonOptions.OPTION_INPUT_FILE_LONG)
-                .hasArg().argName("filename").desc("path to a file to read").build();
+            .longOpt(CommonOptions.OPTION_INPUT_FILE_LONG)
+            .hasArg().argName("filename").desc("path to a file to read").build();
     }
 
     public static Option getComboFileNameOption() {
         return Option.builder(CommonOptions.OPTION_COMBO_FILE)
-                .longOpt(CommonOptions.OPTION_COMBO_FILE_LONG)
-                .hasArg().argName("filename").desc("path to a conllu file made with COMBO parser to read").build();
+            .longOpt(CommonOptions.OPTION_COMBO_FILE_LONG)
+            .hasArg().argName("filename").desc("path to a conllu file made with COMBO parser to read").build();
     }
 
     public static Option getRuleOption() {
         return Option.builder(CommonOptions.OPTION_RULE)
-                .longOpt(CommonOptions.OPTION_RULE_LONG)
-                .hasArg().argName("filename").desc("rule saying what relations to look for").build();
+            .longOpt(CommonOptions.OPTION_RULE_LONG)
+            .hasArg().argName("filename").desc("rule saying what relations to look for").build();
     }
 
     public static Option getRuleFilenameOption() {
         return Option.builder(CommonOptions.OPTION_RULE_FILENAME)
-                .longOpt(CommonOptions.OPTION_RULE_FILENAME_LONG)
-                .hasArg().argName("filename").desc("path to a file with rule saying what relations to look for").build();
+            .longOpt(CommonOptions.OPTION_RULE_FILENAME_LONG)
+            .hasArg().argName("filename").desc("path to a file with rule saying what relations to look for").build();
     }
 
 
     public static Option getComboFileFormatOption() {
         return Option.builder(CommonOptions.OPTION_COMBO_FORMAT)
-                .longOpt(CommonOptions.OPTION_COMBO_FORMAT_LONG)
-                .hasArg().argName("format").desc("input format [conllu, batch:conllu]").build();
+            .longOpt(CommonOptions.OPTION_COMBO_FORMAT_LONG)
+            .hasArg().argName("format").desc("input format [conllu, batch:conllu]").build();
     }
 
     public static Option getInputFileNamesOption() {
         return Option.builder(CommonOptions.OPTION_INPUT_FILE)
-                .longOpt(CommonOptions.OPTION_INPUT_FILE_LONG)
-                .hasArgs().argName("filenames").desc("list of paths, i.e. 'path1 path2 path3 ...'").build();
+            .longOpt(CommonOptions.OPTION_INPUT_FILE_LONG)
+            .hasArgs().argName("filenames").desc("list of paths, i.e. 'path1 path2 path3 ...'").build();
     }
 
     public static Option getInputFileFormatOption() {
         return Option.builder(CommonOptions.OPTION_INPUT_FORMAT)
-                .longOpt(CommonOptions.OPTION_INPUT_FORMAT_LONG)
-                .hasArg().argName("format").desc("input format [iob, ccl, plain, plain:maca, plain:wcrft, tei, batch:{format}]").build();
+            .longOpt(CommonOptions.OPTION_INPUT_FORMAT_LONG)
+            .hasArg().argName("format").desc("input format [iob, ccl, plain, plain:maca, plain:wcrft, tei, batch:{format}]").build();
     }
 
     public static Option getInputFileFormatsOption() {
         return Option.builder(CommonOptions.OPTION_INPUT_FORMAT)
-                .longOpt(CommonOptions.OPTION_INPUT_FORMAT_LONG)
-                .hasArgs().argName("format").desc("input format [iob, ccl, plain, plain:maca, plain:wcrft, tei, batch:{format}]").build();
+            .longOpt(CommonOptions.OPTION_INPUT_FORMAT_LONG)
+            .hasArgs().argName("format").desc("input format [iob, ccl, plain, plain:maca, plain:wcrft, tei, batch:{format}]").build();
     }
 
     public static Option getFeaturesOption() {
@@ -138,8 +144,8 @@ public class CommonOptions {
 
     public static Option getFeaturesOption(final boolean required) {
         Option.Builder op = Option.builder(CommonOptions.OPTION_FEATURES)
-                .longOpt(CommonOptions.OPTION_FEATURES_LONG)
-                .hasArg().argName("features").desc("a file with a list of features");
+            .longOpt(CommonOptions.OPTION_FEATURES_LONG)
+            .hasArg().argName("features").desc("a file with a list of features");
         if (required) {
             op = op.required();
         }
@@ -148,20 +154,20 @@ public class CommonOptions {
 
     public static Option getClassifierModelFile() {
         return Option.builder(CommonOptions.OPTION_CLASSIFIER_MODEL)
-                .longOpt(CommonOptions.OPTION_CLASSIFIER_MODEL_LONG)
-                .hasArg().argName("classifier model").desc("file with classifier model").build();
+            .longOpt(CommonOptions.OPTION_CLASSIFIER_MODEL_LONG)
+            .hasArg().argName("classifier model").desc("file with classifier model").build();
     }
 
     public static Option getModelFileOption() {
         return Option.builder(CommonOptions.OPTION_MODEL)
-                .longOpt(CommonOptions.OPTION_MODEL_LONG)
-                .required()
-                .hasArg().argName("model").desc("file with model configuration").build();
+            .longOpt(CommonOptions.OPTION_MODEL_LONG)
+            .required()
+            .hasArg().argName("model").desc("file with model configuration").build();
     }
 
     public static Option getWordnetOption(final boolean required) {
         Builder b = Option.builder(OPTION_WORDNET).longOpt(OPTION_WORDNET_LONG)
-                .hasArg().argName("path").desc("path to a folder with a wordnet in Princeton format");
+            .hasArg().argName("path").desc("path to a folder with a wordnet in Princeton format");
         if (required) {
             b = b.required();
         }
@@ -170,20 +176,27 @@ public class CommonOptions {
 
     public static Option getVerboseOption() {
         return Option.builder(CommonOptions.OPTION_VERBOSE)
-                .longOpt(CommonOptions.OPTION_VERBOSE_LONG)
-                .desc("print help").build();
+            .longOpt(CommonOptions.OPTION_VERBOSE_LONG)
+            .desc("print help").build();
     }
 
     public static Option getVerboseDeatilsOption() {
         return Option.builder(CommonOptions.OPTION_VERBOSE_DETAILS)
-                .longOpt(CommonOptions.OPTION_VERBOSE_DETAILS_LONG)
-                .desc("verbose processed sentences data").build();
+            .longOpt(CommonOptions.OPTION_VERBOSE_DETAILS_LONG)
+            .desc("verbose processed sentences data").build();
     }
+
+    public static Option getVerifyRelationsOption() {
+        return Option.builder(CommonOptions.OPTION_VERIFY_RELATIONS)
+            .longOpt(CommonOptions.OPTION_VERIFY_RELATIONS_LONG)
+            .desc("verify relations mode").build();
+    }
+
 
     public static Option getInputFileFormatOptionWithAnnotations() {
         return Option.builder(CommonOptions.OPTION_INPUT_FORMAT)
-                .longOpt(CommonOptions.OPTION_INPUT_FORMAT_LONG)
-                .hasArg().argName("format").desc("input format [iob, ccl, tei, batch:{format}]").build();
+            .longOpt(CommonOptions.OPTION_INPUT_FORMAT_LONG)
+            .hasArg().argName("format").desc("input format [iob, ccl, tei, batch:{format}]").build();
     }
 
     public static Option getMaltparserModelFileOption() {
@@ -192,15 +205,15 @@ public class CommonOptions {
 
     public static Option getMaltparserModelFileOption(final boolean required) {
         return Option.builder(OPTION_MALT).longOpt(OPTION_MALT_LONG).hasArg().argName(OPTION_MALT_ARG)
-                .desc(OPTION_MALT_DESC).required(required).build();
+            .desc(OPTION_MALT_DESC).required(required).build();
     }
 
     public static Option getAnnotationTypePatterns() {
         return Option.builder(OPTION_ANNOTATION_PATTERN)
-                .longOpt(OPTION_ANNOTATION_PATTERN_LONG)
-                .desc(OPTION_ANNOTATION_PATTERN_DESC)
-                .hasArgs()
-                .build();
+            .longOpt(OPTION_ANNOTATION_PATTERN_LONG)
+            .desc(OPTION_ANNOTATION_PATTERN_DESC)
+            .hasArgs()
+            .build();
     }
 
 }
