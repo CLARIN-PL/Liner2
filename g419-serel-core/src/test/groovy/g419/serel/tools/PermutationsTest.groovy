@@ -69,7 +69,7 @@ class PermutationsTest extends Specification {
         when:
             final List<Integer> list = List.of(3, 4, 5, 6)
             def result = getAllCombinations(list, 1)
-            result.stream().forEach { r -> System.out.println(r) }
+            //result.stream().forEach { r -> System.out.println(r) }
         then:
             result.size() == 4
     }
@@ -78,7 +78,7 @@ class PermutationsTest extends Specification {
         when:
             final List<Integer> list = List.of(1, 2, 3, 4, 5, 6, 7, 8)
             def result = getAllCombinations(list, 3)
-            result.stream().forEach { r -> System.out.println(r) }
+            //result.stream().forEach { r -> System.out.println(r) }
         then:
             result.size() == 56
     }
