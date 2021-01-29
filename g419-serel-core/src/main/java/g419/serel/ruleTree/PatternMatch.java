@@ -15,6 +15,7 @@ import lombok.ToString;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 @ToString
@@ -62,6 +63,14 @@ public class PatternMatch {
 
   public Optional<NodeMatch> getALeaf(final NodeMatch nodeMatch, final Set<Integer> excludedNodesIds) {
     return nodeMatchList.stream().filter(node -> node.isLeaf() && !excludedNodesIds.contains(node.getId())).findAny();
+  }
+
+  public List<NodeMatch> getAllLeaves() {
+    return nodeMatchList.stream().filter(node -> node.isLeaf()).collect(Collectors.toList());
+  }
+
+  public List<String> getAllAnnotations() {
+    return nodeMatchList.stream().filter(node -> node.hasAnnotation()).map(n -> n.getNamedEntity()).collect(Collectors.toList());
   }
 
   public ArrayList<Integer>

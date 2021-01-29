@@ -33,6 +33,27 @@ public class RelationDesc {
 
   }
 
+  public String toStringFull() {
+    final StringBuffer relString = new StringBuffer();
+
+    relString.append("docName= " + this.sentence.getDocument().name + "\t\t");
+
+    relString.append(this.getType() + REL_STRING_DESC_SEPARATOR);
+
+
+    relString.append((this.getFromTokenIndex()) + REL_STRING_DESC_SEPARATOR);
+    relString.append(this.getFromType() + REL_STRING_DESC_SEPARATOR);
+    relString.append((this.getToTokenIndex()) + REL_STRING_DESC_SEPARATOR);
+    relString.append(this.getToType());
+
+    relString.append("\t\t" + sentence.toString());
+    //relString.append(REL_STRING_DESC_ENTRY_END);
+
+    return relString.toString();
+
+  }
+
+
   static public RelationDesc from(final Relation r) {
     final RelationDesc relationDesc = RelationDesc.builder()
         .type(r.getType())
@@ -55,7 +76,24 @@ public class RelationDesc {
         .toTokenIndex(Integer.valueOf(parts[3]))
         .toType(parts[4]).build();
 
+
     return relationDesc;
+  }
+
+  public boolean isTheSameAs(final RelationDesc rd) {
+
+    return (
+        this.getType().equals(rd.getType())
+            &&
+            (this.getFromTokenIndex() == rd.getFromTokenIndex())
+            &&
+            (this.getToTokenIndex() == rd.getToTokenIndex())
+            &&
+            (this.getFromType().equals(rd.getFromType()))
+            &&
+            (this.getToType().equals(rd.getToType()))
+    );
+
   }
 
 

@@ -44,13 +44,17 @@ public class NodeMatch {
 
   public boolean isMatchAnyTotal() {
     return isMatchAnyText
-        && ((xPos == null) || (xPos.isEmpty()))
-        && ((namedEntity == null) || (namedEntity.isEmpty()));
+      && ((xPos == null) || (xPos.isEmpty()))
+      && ((namedEntity == null) || (namedEntity.isEmpty()));
+  }
+
+  public boolean hasAnnotation() {
+    return (namedEntity != null) && (!namedEntity.trim().isEmpty());
   }
 
   public boolean isMatchAnyTotalWithDepRel() {
     return isMatchAnyTotal()
-        && ((parentEdgeMatch == null) || parentEdgeMatch.isMatchAnyDepRel());
+      && ((parentEdgeMatch == null) || parentEdgeMatch.isMatchAnyDepRel());
   }
 
 

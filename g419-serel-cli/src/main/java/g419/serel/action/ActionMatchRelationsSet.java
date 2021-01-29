@@ -236,7 +236,7 @@ public class ActionMatchRelationsSet extends Action {
     sentenceResultsFalseHit = new LinkedList<>();
 
     //final List<RelationDesc> allSentenceNamRels = smv.getAllNamRels();
-    final List<RelationDesc> allSentenceNamRels = smv.getNamRelsMatchingRelation(patternMatch);
+    final List<RelationDesc> allSentenceNamRels = smv.getRelationsMatchingPatternTypeAndAnnotations(patternMatch);
 
     outer:
     for (final PatternMatchSingleResult pmsr : sentenceResults) {
@@ -306,6 +306,11 @@ public class ActionMatchRelationsSet extends Action {
         for (final PatternMatchSingleResult pmsr : resultFalseHit) {
           accumulateInTotalResultFalseHit(pmsr);
         }
+
+        for (final RelationDesc rd : resultNotHit) {
+          accumulateInTotalResultNotHit(rd);
+        }
+
       }
 
     }
@@ -348,7 +353,7 @@ public class ActionMatchRelationsSet extends Action {
         ow.write("\tNieznalezione dopasowania to:\n");
 
         for (final RelationDesc relDesc : resultNotHitTotal) {
-          ow.write("\t\t" + relDesc.toString() + "\n");
+          ow.write("\t\t" + relDesc.toStringFull() + "\n");
         }
       }
 
@@ -405,6 +410,23 @@ public class ActionMatchRelationsSet extends Action {
     }
     return false;
   }
+
+
+  private void accumulateInTotalResultNotHit(final RelationDesc rd) {
+    if (!isAlreadyPresentInTotalResultNotHit(rd)) {
+      resultNotHitTotal.add(rd);
+    }
+  }
+
+  private boolean isAlreadyPresentInTotalResultNotHit(final RelationDesc relDesc) {
+    for (final RelationDesc rd : resultNotHitTotal) {
+      if (relDesc.isTheSameAs(rd)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 
 }
 

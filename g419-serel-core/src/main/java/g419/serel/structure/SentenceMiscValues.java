@@ -101,7 +101,10 @@ public class SentenceMiscValues {
     s = s.substring(1, s.length() - 1);
     //log.debug("getNamRelsVAlue: " + s);
     final String[] splits = s.split(",");
-    return Arrays.stream(splits).map(RelationDesc::from).collect(Collectors.toList());
+
+    final List<RelationDesc> results = Arrays.stream(splits).map(RelationDesc::from).collect(Collectors.toList());
+    results.stream().forEach(rd -> rd.setSentence(sentence));
+    return results;
   }
 
 
@@ -326,19 +329,27 @@ public class SentenceMiscValues {
   }
 */
 
-  public List<RelationDesc> getNamRelsMatchingRelation(final PatternMatch patternMatch) {
+  public List<RelationDesc> getRelationsMatchingPatternTypeAndAnnotations(final PatternMatch patternMatch) {
 
     final List<RelationDesc> matchingRels = new LinkedList<>();
-
+    final List<String> leavesAnnotationType = patternMatch.getAllAnnotations();
     final List<RelationDesc> allRels = getAllNamRels();
 
     for (final RelationDesc relDesc : allRels) {
       if (relDesc.getType().equals(patternMatch.getRelationType())) {
 
-//        final String fromNEType = patternMatch.getSourceEntityName();
-//        final String toNEType = rmr.getTargetEntityName();
+        // TODO : here - when relation will be more than binary - one needs to handle it additionally (all combinations)
+        final String fromAnnotationType = relDesc.getFromType();
+        final String toAnnotationType = relDesc.getToType();
 
-        matchingRels.add(relDesc);
+        if (
+            (fromAnnotationType.equals(leavesAnnotationType.get(0)) && toAnnotationType.equals(leavesAnnotationType.get(1)))
+                ||
+                (toAnnotationType.equals(leavesAnnotationType.get(0)) && fromAnnotationType.equals(leavesAnnotationType.get(1)))
+        ) {
+//          System.out.println("adding relDesc = " + relDesc);
+          matchingRels.add(relDesc);
+        }
       }
     }
 
