@@ -98,17 +98,23 @@ public class PlainTextStreamReader extends AbstractDocumentReader {
       tager_writer.write(cSeq, 0, cSeq.length());
       tager_writer.close();
 
-      String cmd = "";
+      ProcessBuilder tagerBuilder = null;
+      File tagFile = null;
       if (analyzer.equals("wcrft")) {
-        cmd = String.format("wcrft-app nkjp_e2.ini -i text -o ccl %s -O %s.tag", tager_input.getAbsolutePath(), tager_input.getAbsolutePath());
+        tagerBuilder = new ProcessBuilder("wcrft-app", "nkjp_e2.ini", "-i", "text", "-o", "ccl", tager_input.getAbsolutePath(), "-O", tager_input.getAbsolutePath() + ".tag");
       } else if (analyzer.equals("maca")) {
-        cmd = String.format("maca-analyse -qs morfeusz-nkjp-official -o ccl < %s > %s.tag", tager_input.getAbsolutePath(), tager_input.getAbsolutePath());
+        tagFile = new File(tager_input.getAbsolutePath() + ".tag");
+        tagerBuilder = new ProcessBuilder("maca-analyse", "-qs", "morfeusz-nkjp-official", "-o", "ccl");
+        tagerBuilder.redirectInput(tager_input);
+        tagerBuilder.redirectOutput(tagFile);
       } else {
         throw new Exception("Unrecognized analyzer: " + analyzer);
       }
-      Process tager = Runtime.getRuntime().exec(cmd);
+      Process tager = tagerBuilder.start();
       tager.waitFor();
-      File tagFile = new File(tager_input.getAbsolutePath() + ".tag");
+      if (tagFile == null) {
+        tagFile = new File(tager_input.getAbsolutePath() + ".tag");
+      }
       FileInputStream tagFileStream = new FileInputStream(tagFile);
       byte[] data = new byte[(int) tagFile.length()];
       tagFileStream.read(data);
