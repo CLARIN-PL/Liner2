@@ -336,6 +336,29 @@ public class Sentence extends IdentifiableElement {
     return sb.toString().trim();
   }
 
+
+  public String toStringDecorated(final ArrayList<Integer> indexes) {
+
+    System.out.println("toStringDecorated, indexs = " + indexes);
+
+    final StringBuilder sb = new StringBuilder();
+    for (final Token t : tokens) {
+      System.out.println("checking t.getNumberId=" + t.getNumberId());
+
+      if (indexes.contains(t.getNumberId())) {
+        sb.append(">");
+      }
+      sb.append(t.getOrth());
+      if (indexes.contains(t.getNumberId())) {
+        sb.append("<");
+      }
+
+      sb.append(t.getNoSpaceAfter() ? "" : " ");
+    }
+    return sb.toString().trim();
+  }
+
+
   public String toBaseString() {
     final StringBuilder sb = new StringBuilder();
     for (final Token t : tokens) {

@@ -3,6 +3,8 @@ package g419.corpus.structure;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @Builder
 @Data
@@ -46,7 +48,9 @@ public class RelationDesc {
     relString.append((this.getToTokenIndex()) + REL_STRING_DESC_SEPARATOR);
     relString.append(this.getToType());
 
-    relString.append("\t\t" + sentence.toString());
+    //relString.append("\t\t" + sentence.toString());
+    relString.append("\t\t" + sentence.toStringDecorated(new ArrayList<>
+        (Arrays.asList(this.getFromTokenIndex(), this.getToTokenIndex()))));
     //relString.append(REL_STRING_DESC_ENTRY_END);
 
     return relString.toString();

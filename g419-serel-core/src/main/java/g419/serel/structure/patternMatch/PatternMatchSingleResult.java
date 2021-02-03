@@ -46,7 +46,7 @@ public class PatternMatchSingleResult {
 
   public String descriptionLong() {
     final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + ",\tindexTree=" + tree + ",\t\trole:[" + patternMatchExtraInfo.description() + "]" +
-        "\t\t\t" + patternMatchExtraInfo.getSentence().toString();
+        "\t\t\t" + patternMatchExtraInfo.getSentence().toStringDecorated(tree);
     return result;
   }
 
