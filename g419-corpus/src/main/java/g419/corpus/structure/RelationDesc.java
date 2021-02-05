@@ -15,6 +15,7 @@ public class RelationDesc {
   public static final String REL_STRING_DESC_ENTRY_END = "#";
 
   Sentence sentence;
+  int sentenceIndex;
 
   String type;
   int fromTokenIndex;
@@ -96,6 +97,10 @@ public class RelationDesc {
             (this.getFromType().equals(rd.getFromType()))
             &&
             (this.getToType().equals(rd.getToType()))
+            &&
+            (this.getSentenceIndex() == rd.getSentenceIndex())
+            &&
+            (this.getSentence().getDocument().getName().equals(rd.getSentence().getDocument().getName()))
     );
 
   }

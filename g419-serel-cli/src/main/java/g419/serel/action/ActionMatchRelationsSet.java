@@ -18,6 +18,7 @@ import org.apache.commons.cli.CommandLine;
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -44,31 +45,39 @@ public class ActionMatchRelationsSet extends Action {
   boolean verbose;
 
   private final List<String> patterns = new LinkedList<>();
+
   private final List<List<PatternMatchSingleResult>> patternsResults = new LinkedList<>();
+  private final List<List<PatternMatchSingleResult>> patternsResultsTruePositive = new LinkedList<>();
+  private final List<List<PatternMatchSingleResult>> patternsResultsFalsePositive = new LinkedList<>();
+  private final List<List<RelationDesc>> patternsResultsFalseNegative = new LinkedList<>();
 
-  private final List<List<PatternMatchSingleResult>> patternsResultsOK = new LinkedList<>();
-  private List<PatternMatchSingleResult> sentenceResultsOK;
+  List<PatternMatchSingleResult> documentResult = new ArrayList<>();
+  List<PatternMatchSingleResult> documentResultTruePositive = new ArrayList<>();
+  List<PatternMatchSingleResult> documentResultFalsePositive = new ArrayList<>();
+  List<RelationDesc> documentResultFalseNegative = new ArrayList<>();
 
-  private final List<List<PatternMatchSingleResult>> patternsResultsFalseHit = new LinkedList<>();
-  private List<PatternMatchSingleResult> sentenceResultsFalseHit;
 
-  private final List<List<RelationDesc>> patternsResultsNotHit = new LinkedList<>();
-  private List<RelationDesc> sentenceResultsNotHit;
+  private List<PatternMatchSingleResult> sentenceResultsTruePositive;
+  private List<PatternMatchSingleResult> sentenceResultsFalsePositive;
+  private List<RelationDesc> sentenceResultsFalseNegative;
+
 
   List<PatternMatchSingleResult> resultOK = new ArrayList<>();
   List<PatternMatchSingleResult> resultFalseHit = new ArrayList<>();
-  List<RelationDesc> resultNotHit = new ArrayList<>();
+  List<RelationDesc> resultFalseNegative = new ArrayList<>();
 
-  List<PatternMatchSingleResult> documentResultOK = new ArrayList<>();
-  List<PatternMatchSingleResult> documentResultFalseHit = new ArrayList<>();
-  List<RelationDesc> documentResultNotHit = new ArrayList<>();
 
   @Getter
   //private List<PatternMatchSingleResult> result;
   private final List<PatternMatchSingleResult> resultTotal = new LinkedList<>();
-  private final List<PatternMatchSingleResult> resultOKTotal = new LinkedList<>();
-  private final List<PatternMatchSingleResult> resultFalseHitTotal = new LinkedList<>();
-  private final List<RelationDesc> resultNotHitTotal = new LinkedList<>();
+  private final List<PatternMatchSingleResult> resultTruePositiveTotal = new LinkedList<>();
+  private final List<PatternMatchSingleResult> resultFalsePositiveTotal = new LinkedList<>();
+  private final List<RelationDesc> resultFalseNegativeTotal = new LinkedList<>();
+
+  private final HashMap<String, List<PatternMatchSingleResult>> resultType = new HashMap<>();
+  private final HashMap<String, List<PatternMatchSingleResult>> resultTruePositiveType = new HashMap<>();
+  private final HashMap<String, List<PatternMatchSingleResult>> resultFalsePositiveType = new HashMap<>();
+  private final HashMap<String, List<RelationDesc>> resultFalseNegativeType = new HashMap<>();
 
 
   public ActionMatchRelationsSet() {
@@ -117,6 +126,8 @@ public class ActionMatchRelationsSet extends Action {
     System.out.println("verify_relations mode  = " + verifyRelationsMode);
     System.out.println("Number of patterns found  = " + patterns.size());
     patterns.forEach(pattern -> processOnePattern(pattern));
+
+
     writeResultsToFile();
   }
 
@@ -134,9 +145,9 @@ public class ActionMatchRelationsSet extends Action {
     System.out.println("Processing pattern: " + pattern);
 
     final List<PatternMatchSingleResult> thisPatternResults = new LinkedList<>();
-    final List<PatternMatchSingleResult> thisPatternResultsOK = new LinkedList<>();
-    final List<PatternMatchSingleResult> thisPatternResultsFalseHit = new LinkedList<>();
-    final List<RelationDesc> thisPatternResultsNotHit = new LinkedList<>();
+    final List<PatternMatchSingleResult> thisPatternResultsTruePositive = new LinkedList<>();
+    final List<PatternMatchSingleResult> thisPatternResultsFalsePositive = new LinkedList<>();
+    final List<RelationDesc> thisPatternResultsFalseNegative = new LinkedList<>();
 
     final PatternMatch patternMatch = PatternMatch.parseRule(pattern);
 
@@ -151,12 +162,15 @@ public class ActionMatchRelationsSet extends Action {
     ) {
       reader.forEach(comboedDoc -> {
             try {
-              final List<PatternMatchSingleResult> documentResult = matchDocTreeAgainstPatternTree(comboedDoc, patternMatch);
-              thisPatternResults.addAll(documentResult);
 
-              thisPatternResultsOK.addAll(documentResultOK);
-              thisPatternResultsFalseHit.addAll(documentResultFalseHit);
-              thisPatternResultsNotHit.addAll(documentResultNotHit);
+              matchDocTreeAgainstPatternTree(comboedDoc, patternMatch);
+
+              documentResult.stream().forEach(r -> r.patternMatch = patternMatch);
+
+              thisPatternResults.addAll(documentResult);
+              thisPatternResultsTruePositive.addAll(documentResultTruePositive);
+              thisPatternResultsFalsePositive.addAll(documentResultFalsePositive);
+              thisPatternResultsFalseNegative.addAll(documentResultFalseNegative);
 
             } catch (final Exception e) {
               System.out.println("Problem z dokumentem " + comboedDoc.getName());
@@ -169,30 +183,28 @@ public class ActionMatchRelationsSet extends Action {
       e.printStackTrace();
     }
 
-    //System.out.println("Adding one entry with elements:" + thisPatternResults.size());
     patternsResults.add(thisPatternResults);
-    patternsResultsOK.add(thisPatternResultsOK);
-    patternsResultsFalseHit.add(thisPatternResultsFalseHit);
-    patternsResultsNotHit.add(thisPatternResultsNotHit);
+    patternsResultsTruePositive.add(thisPatternResultsTruePositive);
+    patternsResultsFalsePositive.add(thisPatternResultsFalsePositive);
+    patternsResultsFalseNegative.add(thisPatternResultsFalseNegative);
+
 
   }
 
-  private List<PatternMatchSingleResult> matchDocTreeAgainstPatternTree(final Document d, final PatternMatch patternMatch) {
+  private void /* List<PatternMatchSingleResult>*/ matchDocTreeAgainstPatternTree(final Document d, final PatternMatch patternMatch) {
 
-    final List<PatternMatchSingleResult> documentResult = new ArrayList<>();
-
-    documentResultOK = new ArrayList<>();
-    documentResultFalseHit = new ArrayList<>();
-    documentResultNotHit = new ArrayList<>();
+    //final List<PatternMatchSingleResult> documentResult = new ArrayList<>();
+    documentResult = new ArrayList<>();
+    documentResultTruePositive = new ArrayList<>();
+    documentResultFalsePositive = new ArrayList<>();
+    documentResultFalseNegative = new ArrayList<>();
 
     int sentenceIndex = 0;
     for (final Sentence sentence : d.getParagraphs().get(0).getSentences()) {
-
       sentenceIndex++;
-
       try {
 
-        final SentenceMiscValues smv = SentenceMiscValues.from(sentence);
+        final SentenceMiscValues smv = SentenceMiscValues.from(sentence, sentenceIndex);
         //final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingSerelPattern(sentence);
         final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingGenericPattern(sentence);
 
@@ -201,12 +213,10 @@ public class ActionMatchRelationsSet extends Action {
           patternMatchSingleResult.docName = d.getName();
         }
 
-
         documentResult.addAll(sentenceResults);
 
         if (verifyRelationsMode) {
           classifyResult(sentenceResults, smv, patternMatch);
-
 
 //        if ((this.sentenceResultsOK.size() > 0) || (this.sentenceResultsNotHit.size() > 0) || (this.sentenceResultsFalseHit.size() > 0)) {
 //          System.out.println("PROK=" + sentenceResultsOK);
@@ -214,30 +224,24 @@ public class ActionMatchRelationsSet extends Action {
 //          System.out.println("PRNH=" + sentenceResultsNotHit);
 //        }
 
-
-          documentResultOK.addAll(sentenceResultsOK);
-          documentResultFalseHit.addAll(sentenceResultsFalseHit);
-          documentResultNotHit.addAll(sentenceResultsNotHit);
+          documentResultTruePositive.addAll(sentenceResultsTruePositive);
+          documentResultFalsePositive.addAll(sentenceResultsFalsePositive);
+          documentResultFalseNegative.addAll(sentenceResultsFalseNegative);
         }
-
       } catch (final Throwable th) {
         th.printStackTrace();
         System.out.println("Problem : " + th);
       }
-
     }
-
-    return documentResult;
+    //return documentResult;
   }
 
   private void classifyResult(final List<PatternMatchSingleResult> sentenceResults, final SentenceMiscValues smv, final PatternMatch patternMatch) {
 
-    sentenceResultsOK = new LinkedList<>();
-    sentenceResultsFalseHit = new LinkedList<>();
+    sentenceResultsTruePositive = new LinkedList<>();
+    sentenceResultsFalsePositive = new LinkedList<>();
 
-    //final List<RelationDesc> allSentenceNamRels = smv.getAllNamRels();
-    final List<RelationDesc> allSentenceNamRels = smv.getRelationsMatchingPatternTypeAndAnnotations(patternMatch);
-
+    final List<RelationDesc> allSentenceNamRels = smv.getRelationsMatchingPatternType(patternMatch);
     outer:
     for (final PatternMatchSingleResult pmsr : sentenceResults) {
 
@@ -245,13 +249,13 @@ public class ActionMatchRelationsSet extends Action {
         final RelationDesc rd = allSentenceNamRels.get(i);
         if (pmsr.isTheSameAs(rd)) {
           allSentenceNamRels.remove(i);
-          sentenceResultsOK.add(pmsr);
+          sentenceResultsTruePositive.add(pmsr);
           continue outer;
         }
       }
-      sentenceResultsFalseHit.add(pmsr);
+      sentenceResultsFalsePositive.add(pmsr);
     }
-    sentenceResultsNotHit = allSentenceNamRels;
+    sentenceResultsFalseNegative = allSentenceNamRels;
   }
 
 
@@ -269,28 +273,28 @@ public class ActionMatchRelationsSet extends Action {
       final String pattern = patterns.get(i);
       final List<PatternMatchSingleResult> result = patternsResults.get(i);
 
-      final List<PatternMatchSingleResult> resultOK = patternsResultsOK.get(i);
-      final List<PatternMatchSingleResult> resultFalseHit = patternsResultsFalseHit.get(i);
-      final List<RelationDesc> resultNotHit = patternsResultsNotHit.get(i);
-
+      final List<PatternMatchSingleResult> resultTruePositive = patternsResultsTruePositive.get(i);
+      final List<PatternMatchSingleResult> resultFalsePositive = patternsResultsFalsePositive.get(i);
+      final List<RelationDesc> resultFalseNegative = patternsResultsFalseNegative.get(i);
 
       ow.write("Dla wzorca ='" + pattern + "'\n");
       ow.write("\t" + result.size() + "\t- znalezionych wyników \n");
 
       for (final PatternMatchSingleResult pmsr : result) {
         accumulateInTotalResult(pmsr);
+        accumulateInTypeResult(pmsr);
       }
 
 
       if (verifyRelationsMode) {
-        final double precision = (double) resultOK.size() / (double) result.size();
-        ow.write("\t" + resultOK.size() + "\t- poprawne dopasowania\n");
-        ow.write("\t" + resultFalseHit.size() + "\t-  niepoprawne dopasowania\n");
+        final double precision = (double) resultTruePositive.size() / (double) result.size();
+        ow.write("\t" + resultTruePositive.size() + "\t- poprawne dopasowania\n");
+        ow.write("\t" + resultFalsePositive.size() + "\t-  niepoprawne dopasowania\n");
         ow.write("\t" + df.format(precision) + "\t- precyzja\n");
-        if (resultFalseHit.size() > 0) {
+        if (resultFalsePositive.size() > 0) {
           ow.write("\tNiepoprawne dopasowania to:\n");
 
-          for (final PatternMatchSingleResult pmsr : resultFalseHit) {
+          for (final PatternMatchSingleResult pmsr : resultFalsePositive) {
             ow.write("\t\t" + pmsr.descriptionLong() + "\n");
           }
         }
@@ -299,21 +303,78 @@ public class ActionMatchRelationsSet extends Action {
 //          ow.write("pattern='" + pattern + "'" + "\t" + pmsr.descriptionLong() + "\n");
 //        }
 
-        for (final PatternMatchSingleResult pmsr : resultOK) {
-          accumulateInTotalResultOK(pmsr);
+        for (final PatternMatchSingleResult pmsr : resultTruePositive) {
+          accumulateInTotalResultTruePositive(pmsr);
+          accumulateInTypeResultTruePositive(pmsr);
         }
 
-        for (final PatternMatchSingleResult pmsr : resultFalseHit) {
-          accumulateInTotalResultFalseHit(pmsr);
+        for (final PatternMatchSingleResult pmsr : resultFalsePositive) {
+          accumulateInTotalResultFalsePositive(pmsr);
+          accumulateInTypeResultFalsePositive(pmsr);
         }
 
-        for (final RelationDesc rd : resultNotHit) {
-          accumulateInTotalResultNotHit(rd);
+        for (final RelationDesc rd : resultFalseNegative) {
+          accumulateInTotalResultFalseNegative(rd);
+          accumulateInTypeResultFalseNegative(rd);
         }
-
       }
-
     }
+
+
+    ow.write("\n\n");
+    ow.write("Sumarycznie zagregowane dla typów relacji: \n");
+
+    resultType.keySet().stream().forEach(type -> {
+
+      try {
+        ow.write("\n\n");
+        ow.write("Sumarycznie dla typu: " + type + "\n");
+        ow.write("\t" + resultType.get(type).size() + "\t- znalezionych wyników ogółem\n");
+
+        if (verifyRelationsMode) {
+          resultType.computeIfAbsent(type, k -> new LinkedList<>());
+          resultFalseNegativeType.computeIfAbsent(type, k -> new LinkedList<>());
+          resultFalsePositiveType.computeIfAbsent(type, k -> new LinkedList<>());
+          resultTruePositiveType.computeIfAbsent(type, k -> new LinkedList<>());
+
+          for (final PatternMatchSingleResult pmsr : resultType.get(type)) {
+            for (int i = 0; i < resultFalseNegativeType.get(type).size(); i++) {
+              final RelationDesc relDesc = resultFalseNegativeType.get(type).get(i);
+              if (pmsr.isTheSameAs(relDesc)) {
+                resultFalseNegativeType.get(type).remove(i); // actually was hit
+              }
+            }
+          }
+
+          ow.write("\t" + resultTruePositiveType.get(type).size() + "\t- poprawne dopasowania\n");
+          ow.write("\t" + resultFalsePositiveType.get(type).size() + "\t- niepoprawne dopasowania\n");
+          ow.write("\t" + resultFalseNegativeType.get(type).size() + "\t- nieznalezione dopasowania\n");
+          final double precision = (double) resultTruePositiveType.get(type).size() / (double) resultType.get(type).size();
+          ow.write("\t" + df.format(precision) + "\t- precyzja\n");
+          final double recall = (double) resultTruePositiveType.get(type).size() / (double) (resultTruePositiveType.get(type).size() + resultFalseNegativeType.get(type).size());
+          ow.write("\t" + df.format(recall) + "\t- kompletność\n");
+
+          if (resultFalsePositiveType.get(type).size() > 0) {
+            ow.write("\tNiepoprawne dopasowania to:\n");
+
+            for (final PatternMatchSingleResult pmsr : resultFalsePositiveType.get(type)) {
+              ow.write("\t\t" + pmsr.descriptionLong() + "\n");
+            }
+          }
+
+          if (resultFalsePositiveType.get(type).size() > 0) {
+            ow.write("\tNieznalezione dopasowania to:\n");
+
+            for (final RelationDesc relDesc : resultFalseNegativeType.get(type)) {
+              ow.write("\t\t" + relDesc.toStringFull() + "\n");
+            }
+          }
+        }
+
+      } catch (final Exception e) {
+        e.printStackTrace();
+      }
+    });
 
 
     ow.write("\n\n");
@@ -322,41 +383,38 @@ public class ActionMatchRelationsSet extends Action {
 
     if (verifyRelationsMode) {
 
-
-      for (int i = 0; i < resultNotHit.size(); i++) {
-        final RelationDesc relDesc = resultNotHit.get(i);
-        for (final PatternMatchSingleResult pmsr : resultTotal) {
+      for (final PatternMatchSingleResult pmsr : resultTotal) {
+        for (int i = 0; i < resultFalseNegativeTotal.size(); i++) {
+          final RelationDesc relDesc = resultFalseNegativeTotal.get(i);
           if (pmsr.isTheSameAs(relDesc)) {
-            resultNotHit.remove(i); // actually was hit
+            resultFalseNegativeTotal.remove(i); // actually was hit
           }
         }
       }
 
-
-      ow.write("\t" + resultOKTotal.size() + "\t- poprawne dopasowania\n");
-      ow.write("\t" + resultFalseHitTotal.size() + "\t- niepoprawne dopasowania\n");
-      ow.write("\t" + resultNotHitTotal.size() + "\t- nieznalezione dopasowania\n");
-      final double precision = (double) resultOKTotal.size() / (double) resultTotal.size();
+      ow.write("\t" + resultTruePositiveTotal.size() + "\t- poprawne dopasowania\n");
+      ow.write("\t" + resultFalsePositiveTotal.size() + "\t- niepoprawne dopasowania\n");
+      ow.write("\t" + resultFalseNegativeTotal.size() + "\t- nieznalezione dopasowania\n");
+      final double precision = (double) resultTruePositiveTotal.size() / (double) resultTotal.size();
       ow.write("\t" + df.format(precision) + "\t- precyzja\n");
-      final double recall = (double) resultOKTotal.size() / (double) (resultOKTotal.size() + resultNotHitTotal.size());
+      final double recall = (double) resultTruePositiveTotal.size() / (double) (resultTruePositiveTotal.size() + resultFalseNegativeTotal.size());
       ow.write("\t" + df.format(recall) + "\t- kompletność\n");
 
-      if (resultFalseHitTotal.size() > 0) {
+      if (resultFalsePositiveTotal.size() > 0) {
         ow.write("\tNiepoprawne dopasowania to:\n");
 
-        for (final PatternMatchSingleResult pmsr : resultFalseHitTotal) {
+        for (final PatternMatchSingleResult pmsr : resultFalsePositiveTotal) {
           ow.write("\t\t" + pmsr.descriptionLong() + "\n");
         }
       }
 
-      if (resultFalseHitTotal.size() > 0) {
+      if (resultFalsePositiveTotal.size() > 0) {
         ow.write("\tNieznalezione dopasowania to:\n");
 
-        for (final RelationDesc relDesc : resultNotHitTotal) {
+        for (final RelationDesc relDesc : resultFalseNegativeTotal) {
           ow.write("\t\t" + relDesc.toStringFull() + "\n");
         }
       }
-
 
     }
 
@@ -367,13 +425,45 @@ public class ActionMatchRelationsSet extends Action {
 
 
   private void accumulateInTotalResult(final PatternMatchSingleResult pmsr) {
-    if (!isAlreadyPresentInTotalResult(pmsr)) {
+    if (!isAlreadyPresentInList(pmsr, resultTotal)) {
       resultTotal.add(pmsr);
     }
   }
 
-  private boolean isAlreadyPresentInTotalResult(final PatternMatchSingleResult pmsr) {
-    for (final PatternMatchSingleResult p : resultTotal) {
+  private void accumulateInTypeResult(final PatternMatchSingleResult pmsr) {
+    if (!isAlreadyPresentInList(pmsr, resultType.computeIfAbsent(pmsr.getType(), k -> new LinkedList<>()))) {
+      resultType.get(pmsr.getType()).add(pmsr);
+    }
+  }
+
+
+  private void accumulateInTotalResultTruePositive(final PatternMatchSingleResult pmsr) {
+    if (!isAlreadyPresentInList(pmsr, resultTruePositiveTotal)) {
+      resultTruePositiveTotal.add(pmsr);
+    }
+  }
+
+  private void accumulateInTypeResultTruePositive(final PatternMatchSingleResult pmsr) {
+    if (!isAlreadyPresentInList(pmsr, resultTruePositiveType.computeIfAbsent(pmsr.getType(), k -> new LinkedList<>()))) {
+      resultTruePositiveType.get(pmsr.getType()).add(pmsr);
+    }
+  }
+
+  private void accumulateInTotalResultFalsePositive(final PatternMatchSingleResult pmsr) {
+    if (!isAlreadyPresentInList(pmsr, resultFalsePositiveTotal)) {
+      resultFalsePositiveTotal.add(pmsr);
+    }
+  }
+
+  private void accumulateInTypeResultFalsePositive(final PatternMatchSingleResult pmsr) {
+    if (!isAlreadyPresentInList(pmsr, resultFalsePositiveType.computeIfAbsent(pmsr.getType(), k -> new LinkedList<>()))) {
+      resultFalsePositiveType.get(pmsr.getType()).add(pmsr);
+    }
+  }
+
+  private boolean isAlreadyPresentInList(final PatternMatchSingleResult pmsr,
+                                         final List<PatternMatchSingleResult> list) {
+    for (final PatternMatchSingleResult p : list) {
       if (pmsr.isTheSameAs(p)) {
         return true;
       }
@@ -381,45 +471,20 @@ public class ActionMatchRelationsSet extends Action {
     return false;
   }
 
-  private void accumulateInTotalResultOK(final PatternMatchSingleResult pmsr) {
-    if (!isAlreadyPresentInTotalResultOK(pmsr)) {
-      resultOKTotal.add(pmsr);
+  private void accumulateInTotalResultFalseNegative(final RelationDesc rd) {
+    if (!isAlreadyPresentInList(rd, resultFalseNegativeTotal)) {
+      resultFalseNegativeTotal.add(rd);
     }
   }
 
-  private boolean isAlreadyPresentInTotalResultOK(final PatternMatchSingleResult pmsr) {
-    for (final PatternMatchSingleResult p : resultOKTotal) {
-      if (pmsr.isTheSameAs(p)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private void accumulateInTotalResultFalseHit(final PatternMatchSingleResult pmsr) {
-    if (!isAlreadyPresentInTotalResultFalseHit(pmsr)) {
-      resultFalseHitTotal.add(pmsr);
+  private void accumulateInTypeResultFalseNegative(final RelationDesc rd) {
+    if (!isAlreadyPresentInList(rd, resultFalseNegativeType.computeIfAbsent(rd.getType(), k -> new LinkedList<>()))) {
+      resultFalseNegativeType.get(rd.getType()).add(rd);
     }
   }
 
-  private boolean isAlreadyPresentInTotalResultFalseHit(final PatternMatchSingleResult pmsr) {
-    for (final PatternMatchSingleResult p : resultFalseHitTotal) {
-      if (pmsr.isTheSameAs(p)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-
-  private void accumulateInTotalResultNotHit(final RelationDesc rd) {
-    if (!isAlreadyPresentInTotalResultNotHit(rd)) {
-      resultNotHitTotal.add(rd);
-    }
-  }
-
-  private boolean isAlreadyPresentInTotalResultNotHit(final RelationDesc relDesc) {
-    for (final RelationDesc rd : resultNotHitTotal) {
+  private boolean isAlreadyPresentInList(final RelationDesc relDesc, final List<RelationDesc> list) {
+    for (final RelationDesc rd : list) {
       if (relDesc.isTheSameAs(rd)) {
         return true;
       }

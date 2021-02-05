@@ -1,6 +1,7 @@
 package g419.serel.structure.patternMatch;
 
 import g419.corpus.structure.RelationDesc;
+import g419.serel.ruleTree.PatternMatch;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -8,8 +9,13 @@ public class PatternMatchSingleResult {
 
   public String docName;
   public int sentenceNumber;
+  public PatternMatch patternMatch;
 
   public PatternMatchSingleResult() {}
+
+  public String getType() {
+    return patternMatch.getRelationType();
+  }
 
 
   public PatternMatchSingleResult(final ArrayList<Integer> _idsList, final PatternMatchExtraInfo _pmei) {
@@ -73,9 +79,13 @@ public class PatternMatchSingleResult {
 
   public boolean isTheSameAs(final RelationDesc rd) {
     if (
-        (this.tree.contains(rd.getFromTokenIndex() - 1))
+        this.docName.equals(rd.getSentence().getDocument().getName())
             &&
-            (this.tree.contains(rd.getToTokenIndex() - 1))
+            (this.sentenceNumber == rd.getSentenceIndex())
+            &&
+            this.tree.contains(rd.getFromTokenIndex() - 1)
+            &&
+            this.tree.contains(rd.getToTokenIndex() - 1)
     ) {
       return true;
     }

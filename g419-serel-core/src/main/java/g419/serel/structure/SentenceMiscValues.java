@@ -13,7 +13,9 @@ import java.util.stream.Collectors;
 @Data
 public class SentenceMiscValues {
 
+
   Sentence sentence;
+  int sentenceIndex;
   List<Map<String, Object>> miscValuesList = new ArrayList<>();
 
 
@@ -22,10 +24,11 @@ public class SentenceMiscValues {
   }
 
 
-  public static SentenceMiscValues from(final Sentence s) {
+  public static SentenceMiscValues from(final Sentence s, final int _sentenceIndex) {
 
     final SentenceMiscValues smv = new SentenceMiscValues();
     smv.setSentence(s);
+    smv.setSentenceIndex(_sentenceIndex);
     smv.readMiscValues(s);
     return smv;
   }
@@ -103,7 +106,10 @@ public class SentenceMiscValues {
     final String[] splits = s.split(",");
 
     final List<RelationDesc> results = Arrays.stream(splits).map(RelationDesc::from).collect(Collectors.toList());
-    results.stream().forEach(rd -> rd.setSentence(sentence));
+    results.stream().forEach(rd -> {
+      rd.setSentence(sentence);
+      rd.setSentenceIndex(this.sentenceIndex);
+    });
     return results;
   }
 
@@ -329,6 +335,7 @@ public class SentenceMiscValues {
   }
 */
 
+
   public List<RelationDesc> getRelationsMatchingPatternTypeAndAnnotations(final PatternMatch patternMatch) {
 
     final List<RelationDesc> matchingRels = new LinkedList<>();
@@ -355,6 +362,22 @@ public class SentenceMiscValues {
 
     return matchingRels;
   }
+
+
+  public List<RelationDesc> getRelationsMatchingPatternType(final PatternMatch patternMatch) {
+
+    final List<RelationDesc> matchingRels = new LinkedList<>();
+    //final List<String> leavesAnnotationType = patternMatch.getAllAnnotations();
+    final List<RelationDesc> allRels = getAllNamRels();
+
+    for (final RelationDesc relDesc : allRels) {
+      if (relDesc.getType().equals(patternMatch.getRelationType())) {
+        matchingRels.add(relDesc);
+      }
+    }
+    return matchingRels;
+  }
+
 
   public List<RelationDesc> getAllNamRels() {
     final List<RelationDesc> rels = new LinkedList<>();
