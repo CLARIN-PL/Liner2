@@ -1,0 +1,638 @@
+10:21:50: Executing task 'Main.main()'...
+
+> Task :g419-corpus:compileJava UP-TO-DATE
+> Task :g419-corpus:compileGroovy NO-SOURCE
+> Task :g419-corpus:processResources NO-SOURCE
+> Task :g419-corpus:classes UP-TO-DATE
+> Task :g419-corpus:jar UP-TO-DATE
+
+> Task :g419-external-dependencies:compileCRFPP
+############################################################
+# CRFPP already compiled (on 10/28/20, 6:03 PM)            #
+############################################################
+
+> Task :g419-external-dependencies:compileJava UP-TO-DATE
+> Task :g419-external-dependencies:compileGroovy NO-SOURCE
+> Task :g419-external-dependencies:processResources UP-TO-DATE
+> Task :g419-external-dependencies:classes UP-TO-DATE
+> Task :g419-external-dependencies:jar UP-TO-DATE
+> Task :g419-lib-cli:compileJava UP-TO-DATE
+> Task :g419-lib-cli:compileGroovy NO-SOURCE
+> Task :g419-lib-cli:processResources NO-SOURCE
+> Task :g419-lib-cli:classes UP-TO-DATE
+> Task :g419-lib-cli:jar UP-TO-DATE
+> Task :g419-toolbox:compileJava UP-TO-DATE
+> Task :g419-toolbox:compileGroovy NO-SOURCE
+> Task :g419-toolbox:processResources UP-TO-DATE
+> Task :g419-toolbox:classes UP-TO-DATE
+> Task :g419-toolbox:jar UP-TO-DATE
+> Task :g419-liner2-core:compileJava UP-TO-DATE
+> Task :g419-liner2-core:compileGroovy NO-SOURCE
+> Task :g419-liner2-core:processResources UP-TO-DATE
+> Task :g419-liner2-core:classes UP-TO-DATE
+> Task :g419-liner2-core:jar UP-TO-DATE
+> Task :g419-serel-core:generateGrammarSource UP-TO-DATE
+> Task :g419-serel-core:compileJava UP-TO-DATE
+> Task :g419-serel-core:compileGroovy NO-SOURCE
+> Task :g419-serel-core:processResources NO-SOURCE
+> Task :g419-serel-core:classes UP-TO-DATE
+> Task :g419-serel-core:jar UP-TO-DATE
+> Task :g419-serel-cli:compileJava UP-TO-DATE
+> Task :g419-serel-cli:compileGroovy NO-SOURCE
+> Task :g419-serel-cli:processResources UP-TO-DATE
+> Task :g419-serel-cli:classes UP-TO-DATE
+
+> Task :g419-serel-cli:Main.main()
+ Patterns filename = pattern_relations_TRAIN.txt
+Commented out pattern: #affiliation::* / nam_liv_person:osoba > ^absolwentka <  * / nam_org_political_party:partia_polityczna
+Commented out pattern: #affiliation::* / nam_liv_person:osoba > ^absolwent <  * / nam_org_political_party:partia_polityczna
+Commented out pattern: #affiliation::* / nam_liv_person:osoba > ^ukończyć <  * / nam_org_political_party:partia_polityczna
+Commented out pattern: ### te trochę za dużo false positive'ów wprowadzają
+Commented out pattern: #affiliation::* / nam_org_institution:instytucja1 <  * / nam_org_institution:instytucja2
+Commented out pattern: #	52	- poprawne dopasowania
+Commented out pattern: #	10	- niepoprawne dopasowania
+Commented out pattern: # tutaj niby 6 niepoprawnych dopasowań ale w sumie 4 z nich wyglądają na całkiem poprawne
+verify_relations mode  = true
+Number of patterns found  = 63
+Processing pattern: affiliation::* / nam_liv_person:osoba < * / nam_org_company:firma
+Processing pattern: affiliation::* / nam_liv_person:osoba < prezes < * / nam_org_company:firma
+Processing pattern: affiliation::* / nam_liv_person:osoba > przedstawiciel < * / nam_org_company:firma
+Processing pattern: affiliation::* / nam_liv_person:osoba > odszedł < * / nam_org_group_team:druzyna
+Processing pattern: affiliation::* / nam_liv_person:osoba > przeszedł < * / nam_org_group_team:druzyna
+Processing pattern: affiliation::* / nam_liv_person:osoba > piłkarze < * / nam_org_group_team:druzyna
+Processing pattern: affiliation::* / nam_liv_person:osoba > trenerem < * / nam_org_group_team:druzyna
+Processing pattern: affiliation::* / nam_liv_person:osoba < * / nam_org_institution:instytucja
+Processing pattern: affiliation::* / nam_liv_person:osoba < pracownik < * / nam_org_institution:instytucja
+Processing pattern: affiliation::* / nam_liv_person:osoba < pracowniczka < * / nam_org_institution:instytucja
+Processing pattern: affiliation::* / nam_liv_person:osoba > podsekretarz <  * / nam_org_institution:instytucja
+Processing pattern: affiliation::* / nam_liv_person:osoba > przewodniczący <  * / nam_org_institution:instytucja
+Processing pattern: affiliation::* / nam_liv_person:osoba > protokolant <  * / nam_org_institution:instytucja
+Processing pattern: affiliation::* / nam_liv_person:osoba > szef <  * / nam_org_institution:instytucja
+Processing pattern: affiliation::* / nam_liv_person:osoba < szef <  * / nam_org_institution:instytucja
+Processing pattern: affiliation::* / nam_liv_person:osoba > szefowa <  * / nam_org_institution:instytucja
+Processing pattern: affiliation::* / nam_liv_person:osoba > prezes <  * / nam_org_institution:instytucja
+Processing pattern: affiliation::* / nam_liv_person:osoba < prezes <  * / nam_org_institution:instytucja
+Processing pattern: affiliation::* / nam_liv_person:osoba > wypowiedź <  * / nam_org_institution:instytucja
+Processing pattern: affiliation::* / nam_liv_person:osoba < ^reprezentować <  * / nam_org_institution:instytucja
+Processing pattern: affiliation::* / nam_liv_person:osoba > ^absolwentka <  * / nam_org_institution:instytucja
+Processing pattern: affiliation::* / nam_liv_person:osoba > ^absolwent <  * / nam_org_institution:instytucja
+Processing pattern: affiliation::* / nam_liv_person:osoba > ^ukończyć <  * / nam_org_institution:instytucja
+Processing pattern: affiliation::* / nam_liv_person:osoba <  * / nam_org_organization:organizacja
+Processing pattern: affiliation::* / nam_liv_person:osoba < pracownik < * /nam_org_organization:organizacja
+Processing pattern: affiliation::* / nam_liv_person:osoba < pracowniczka < * /nam_org_organization:organizacja
+Processing pattern: affiliation::* / nam_liv_person:osoba > podsekretarz <  * / nam_org_organization:organizacja
+Processing pattern: affiliation::* / nam_liv_person:osoba > przewodniczący <  * / nam_org_organization:organizacja
+Processing pattern: affiliation::* / nam_liv_person:osoba > protokolant <  * / nam_org_organization:organizacja
+Processing pattern: affiliation::* / nam_liv_person:osoba > szef <  * / nam_org_organization:organizacja
+Processing pattern: affiliation::* / nam_liv_person:osoba < szef <  * / nam_org_organization:organizacja
+Processing pattern: affiliation::* / nam_liv_person:osoba > szefowa <  * / nam_org_organization:organizacja
+Processing pattern: affiliation::* / nam_liv_person:osoba > prezes <  * / nam_org_organization:organizacja
+Processing pattern: affiliation::* / nam_liv_person:osoba < prezes <  * / nam_org_organization:organizacja
+Processing pattern: affiliation::* / nam_liv_person:osoba > wypowiedź <  * / nam_org_organization:organizacja
+Processing pattern: affiliation::* / nam_liv_person:osoba < ^reprezentować <  * / nam_org_organization:organizacja
+Processing pattern: affiliation::* / nam_liv_person:osoba > ^absolwentka <  * / nam_org_organization:organizacja
+Processing pattern: affiliation::* / nam_liv_person:osoba > ^absolwent <  * / nam_org_organization:organizacja
+Processing pattern: affiliation::* / nam_liv_person:osoba > ^ukończyć <  * / nam_org_organization:organizacja
+Processing pattern: affiliation::* / nam_liv_person:osoba < * / nam_org_political_party:partia_polityczna
+Processing pattern: affiliation::* / nam_liv_person:osoba < pracownik < * / nam_org_political_party:partia_polityczna
+Processing pattern: affiliation::* / nam_liv_person:osoba < pracowniczka < * / nam_org_political_party:partia_polityczna
+Processing pattern: affiliation::* / nam_liv_person:osoba > podsekretarz <  * / nam_org_political_party:partia_polityczna
+Processing pattern: affiliation::* / nam_liv_person:osoba > przewodniczący <  * / nam_org_political_party:partia_polityczna
+Processing pattern: affiliation::* / nam_liv_person:osoba > protokolant <  * / nam_org_political_party:partia_polityczna
+Processing pattern: affiliation::* / nam_liv_person:osoba > szef <  * / nam_org_political_party:partia_polityczna
+Processing pattern: affiliation::* / nam_liv_person:osoba < szef <  * / nam_org_political_party:partia_polityczna
+Processing pattern: affiliation::* / nam_liv_person:osoba > szefowa <  * / nam_org_political_party:partia_polityczna
+Processing pattern: affiliation::* / nam_liv_person:osoba > prezes <  * / nam_org_political_party:partia_polityczna
+Processing pattern: affiliation::* / nam_liv_person:osoba < prezes <  * / nam_org_political_party:partia_polityczna
+Processing pattern: affiliation::* / nam_liv_person:osoba > wypowiedź <  * / nam_org_political_party:partia_polityczna
+Processing pattern: affiliation::* / nam_liv_person:osoba < ^reprezentować <  * / nam_org_political_party:partia_polityczna
+Processing pattern: affiliation::* / nam_liv_person:osoba > ^poseł <  * / nam_org_political_party:partia_polityczna
+Processing pattern: affiliation::* / nam_liv_person:osoba > ^posłanka <  * / nam_org_political_party:partia_polityczna
+Processing pattern: affiliation::* / nam_liv_person:osoba > ^posłanka > pani <  * / nam_org_political_party:partia_polityczna
+Processing pattern: affiliation::* / nam_liv_person:osoba > ^poseł > ^pan <  * / nam_org_political_party:partia_polityczna
+Processing pattern: affiliation::* / nam_liv_person:osoba > ^poseł > ^pani <  * / nam_org_political_party:partia_polityczna
+Processing pattern: affiliation::* / nam_liv_person:osoba >poprowadzi <  * / nam_pro_media_tv:program_tv
+Processing pattern: affiliation::* / nam_liv_person:osoba <  * / nam_pro_media_web:media
+Processing pattern: affiliation::* / nam_liv_person:osoba >poprowadzi <  * / nam_pro_media_tv:media_tv
+Processing pattern: affiliation::* / nam_liv_person:osoba >poprowadzi > noc <  * / nam_pro_title_tv:program_tv
+Processing pattern: affiliation::* / nam_org_institution:instytucja1 <  * / nam_org_political_party:partia_polityczna
+Processing pattern: affiliation::* / nam_org_institution:instytucja <  * / nam_adj_country:kraj
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba < * / nam_org_company:firma'
+	11	- znalezionych wyników
+	7	- poprawne dopasowania
+	4	-  niepoprawne dopasowania
+	0.64	- precyzja
+	Niepoprawne dopasowania to:
+		docName= documents/00102121,		sentnId=2,	indexTree=[11, 12],		role:[osoba:Jarek, firma:Losi]			Andy jeździł Lazerem ZX - 5 , Adam Cyclonem D4 , >Jarek< >Losi< XXX - CR , Hubert Rustlerem .
+		docName= documents/00102126,		sentnId=6,	indexTree=[11, 13],		role:[osoba:Bazyl, firma:Ofnę]			Spaliowe bagusy reprezentowane były przez LRP S8 BX , którym jeździł >Bazyl< , >Ofnę< Hyper 7 prowadzoną przez Dorotę oraz Lightninga Adama .
+		docName= documents/00102509,		sentnId=2,	indexTree=[14, 16],		role:[osoba:Jarek, firma:Losi]			Krótkie , ale sympatyczne spotkanie , na którym Andy jeździł Xrayem XB8 , a >Jarek< elektrycznym >Losi< XXX - CR .
+		docName= documents/00103935,		sentnId=12,	indexTree=[0, 3],		role:[osoba:Kamil Przełęcki, firma:Agory]			>Kamil< Przełęcki z >Agory< mówił na spotkaniu ( słusznie ) o konieczności edukacji użytkowników , by lepiej rozumieli kwestie prawne , funkcjonowanie biznesu , itd .
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba < prezes < * / nam_org_company:firma'
+	1	- znalezionych wyników
+	1	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > przedstawiciel < * / nam_org_company:firma'
+	1	- znalezionych wyników
+	1	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > odszedł < * / nam_org_group_team:druzyna'
+	1	- znalezionych wyników
+	1	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > przeszedł < * / nam_org_group_team:druzyna'
+	2	- znalezionych wyników
+	2	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > piłkarze < * / nam_org_group_team:druzyna'
+	2	- znalezionych wyników
+	1	- poprawne dopasowania
+	1	-  niepoprawne dopasowania
+	0.50	- precyzja
+	Niepoprawne dopasowania to:
+		docName= documents/00102045,		sentnId=2,	indexTree=[11, 13, 37],		role:[osoba:Marcin Gawęda, druzyna:LKS Rosanów]			W przerwie zimowej nas zespół wzmocnili ( jak narazie ) dwaj >piłkarze< piątoligowego >LKS< Rosanów - Dawid Boratyński oraz Jarek Pietrzak , a także piłkarze Orła Parzęczew - Krzysztof Szabela , Tomasz Jagielski ( Kręty ) , >Marcin< Gawęda i Maciek Gawęda .
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > trenerem < * / nam_org_group_team:druzyna'
+	1	- znalezionych wyników
+	1	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba < * / nam_org_institution:instytucja'
+	2	- znalezionych wyników
+	1	- poprawne dopasowania
+	1	-  niepoprawne dopasowania
+	0.50	- precyzja
+	Niepoprawne dopasowania to:
+		docName= documents/00102224,		sentnId=15,	indexTree=[5, 8],		role:[instytucja:Minister Gospodarki i Pracy, osoba:J . Piechota]			Minister Gospodarki i Pracy : >J< . Piechota >Minister< Gospodarki i Pracy kieruje działem administracji rządowej - rozwój regionalny , na podstawie § 1 ust . 2 pkt 3 rozporządzenia Prezesa Rady Ministrów z dnia 11 czerwca 2004 r . w sprawie szczegółowego zakresu działania Ministra Gospodarki i Pracy ( Dz . U . Nr 134 , poz . 1428 ) .
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba < pracownik < * / nam_org_institution:instytucja'
+	1	- znalezionych wyników
+	1	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba < pracowniczka < * / nam_org_institution:instytucja'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > podsekretarz <  * / nam_org_institution:instytucja'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > przewodniczący <  * / nam_org_institution:instytucja'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > protokolant <  * / nam_org_institution:instytucja'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > szef <  * / nam_org_institution:instytucja'
+	2	- znalezionych wyników
+	1	- poprawne dopasowania
+	1	-  niepoprawne dopasowania
+	0.50	- precyzja
+	Niepoprawne dopasowania to:
+		docName= documents/00107325,		sentnId=24,	indexTree=[2, 4, 5],		role:[osoba:Bernard Kouchner, instytucja:MSZ]			Z kolei >szef< francuskiego >MSZ< >Bernard< Kouchner zwrócił się do Ehuda Olmerta z prośbą zaakceptowania wczorajszego planu Francji , gdyż te zawieszenie broni pozwoliło by na dostarczenie do Strefy Gazy pomocy humanitarnej .
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba < szef <  * / nam_org_institution:instytucja'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > szefowa <  * / nam_org_institution:instytucja'
+	1	- znalezionych wyników
+	1	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > prezes <  * / nam_org_institution:instytucja'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba < prezes <  * / nam_org_institution:instytucja'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > wypowiedź <  * / nam_org_institution:instytucja'
+	1	- znalezionych wyników
+	1	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba < ^reprezentować <  * / nam_org_institution:instytucja'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > ^absolwentka <  * / nam_org_institution:instytucja'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > ^absolwent <  * / nam_org_institution:instytucja'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > ^ukończyć <  * / nam_org_institution:instytucja'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba <  * / nam_org_organization:organizacja'
+	2	- znalezionych wyników
+	2	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba < pracownik < * /nam_org_organization:organizacja'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba < pracowniczka < * /nam_org_organization:organizacja'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > podsekretarz <  * / nam_org_organization:organizacja'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > przewodniczący <  * / nam_org_organization:organizacja'
+	1	- znalezionych wyników
+	1	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > protokolant <  * / nam_org_organization:organizacja'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > szef <  * / nam_org_organization:organizacja'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba < szef <  * / nam_org_organization:organizacja'
+	1	- znalezionych wyników
+	1	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > szefowa <  * / nam_org_organization:organizacja'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > prezes <  * / nam_org_organization:organizacja'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba < prezes <  * / nam_org_organization:organizacja'
+	1	- znalezionych wyników
+	1	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > wypowiedź <  * / nam_org_organization:organizacja'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba < ^reprezentować <  * / nam_org_organization:organizacja'
+	1	- znalezionych wyników
+	1	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > ^absolwentka <  * / nam_org_organization:organizacja'
+	1	- znalezionych wyników
+	1	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > ^absolwent <  * / nam_org_organization:organizacja'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > ^ukończyć <  * / nam_org_organization:organizacja'
+	1	- znalezionych wyników
+	1	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba < * / nam_org_political_party:partia_polityczna'
+	6	- znalezionych wyników
+	6	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba < pracownik < * / nam_org_political_party:partia_polityczna'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba < pracowniczka < * / nam_org_political_party:partia_polityczna'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > podsekretarz <  * / nam_org_political_party:partia_polityczna'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > przewodniczący <  * / nam_org_political_party:partia_polityczna'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > protokolant <  * / nam_org_political_party:partia_polityczna'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > szef <  * / nam_org_political_party:partia_polityczna'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba < szef <  * / nam_org_political_party:partia_polityczna'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > szefowa <  * / nam_org_political_party:partia_polityczna'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > prezes <  * / nam_org_political_party:partia_polityczna'
+	1	- znalezionych wyników
+	1	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba < prezes <  * / nam_org_political_party:partia_polityczna'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > wypowiedź <  * / nam_org_political_party:partia_polityczna'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba < ^reprezentować <  * / nam_org_political_party:partia_polityczna'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > ^poseł <  * / nam_org_political_party:partia_polityczna'
+	3	- znalezionych wyników
+	3	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > ^posłanka <  * / nam_org_political_party:partia_polityczna'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > ^posłanka > pani <  * / nam_org_political_party:partia_polityczna'
+	1	- znalezionych wyników
+	1	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > ^poseł > ^pan <  * / nam_org_political_party:partia_polityczna'
+	6	- znalezionych wyników
+	6	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba > ^poseł > ^pani <  * / nam_org_political_party:partia_polityczna'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba >poprowadzi <  * / nam_pro_media_tv:program_tv'
+	3	- znalezionych wyników
+	3	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba <  * / nam_pro_media_web:media'
+	3	- znalezionych wyników
+	2	- poprawne dopasowania
+	1	-  niepoprawne dopasowania
+	0.67	- precyzja
+	Niepoprawne dopasowania to:
+		docName= documents/00102449,		sentnId=3,	indexTree=[68, 71],		role:[osoba:Dominik Wartecki, media:mniammniam.pl]			Myślę , że udało nam się zebrać ciekawą grupę praktyków , którzy opowiedzą , jak prowadzić projekty typu “ web 2 . 0 ″ - wśród prelegentów są Rafał Agnieszczak ( fotka.pl oraz inne ) , Kamil Dmowski ( Heureka ) , Jan Górski ( Plum Web Solutions ) , Artur Gortych ( Artegence ) , Maciej Kołodziejczak ( Bebo ) , Grzegorz Ostrowski i Marek Zakrzewski ( >mniammniam.pl< ) oraz >Dominik< Wartecki ( Janmedia Interactive ) .
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba >poprowadzi <  * / nam_pro_media_tv:media_tv'
+	3	- znalezionych wyników
+	3	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	1.00	- precyzja
+
+Dla wzorca ='affiliation::* / nam_liv_person:osoba >poprowadzi > noc <  * / nam_pro_title_tv:program_tv'
+	0	- znalezionych wyników
+	0	- poprawne dopasowania
+	0	-  niepoprawne dopasowania
+	NaN	- precyzja
+
+Dla wzorca ='affiliation::* / nam_org_institution:instytucja1 <  * / nam_org_political_party:partia_polityczna'
+	5	- znalezionych wyników
+	3	- poprawne dopasowania
+	2	-  niepoprawne dopasowania
+	0.60	- precyzja
+	Niepoprawne dopasowania to:
+		docName= documents/00107255,		sentnId=8,	indexTree=[0, 2],		role:[partia_polityczna:PiS, instytucja1:Rada Polityczna]			>Rada< Polityczna >PiS< przyjęła dziś uchwałę , w której podkreślono , że zdecydowanie lepszym dla Polskim rozwiązaniem niż wcześniejsze wybory , będzie powstanie Bloku Naprawy Państwa stabilizującego zaplecze rządu w Sejmie " .
+		docName= documents/00107256,		sentnId=4,	indexTree=[7, 9],		role:[partia_polityczna:PiS, instytucja1:Rady Politycznej]			Rozmowy zapowiedział wczoraj publicznie Kaczyński po obradach >Rady< Politycznej >PiS< , która zaproponowała wszystkim klubom parlamentarnym zawarcie Bloku Naprawy Państwa , czyli formy koalicji popierającej rząd Marcinkiewicza , która z czasem mogła by być przekształcona w koalicję rządową .
+
+Dla wzorca ='affiliation::* / nam_org_institution:instytucja <  * / nam_adj_country:kraj'
+	8	- znalezionych wyników
+	2	- poprawne dopasowania
+	6	-  niepoprawne dopasowania
+	0.25	- precyzja
+	Niepoprawne dopasowania to:
+		docName= documents/00101288,		sentnId=2,	indexTree=[11, 12],		role:[kraj:Polskiego, instytucja:Wojska Polskiego]			XV Brygada Kawalerii ( XV BK ) – wielka jednostka kawalerii >Wojska< >Polskiego< II RP .
+		docName= documents/00101318,		sentnId=3,	indexTree=[5, 6],		role:[kraj:Włoskiej, instytucja:Armii Włoskiej]			W 1914 szef Sztabu Generalnego >Armii< >Włoskiej< .
+		docName= documents/00101531,		sentnId=5,	indexTree=[2, 3],		role:[kraj:polski, instytucja:Sejm]			Uchwalona przez >polski< >Sejm< ustawa z 11 marca 2004 r . o współpracy Rady Ministrów z Sejmem i Senatem w sprawach związanych z członkostwem zmieniła w sposób jaskrawie sprzeczny z konstytucją rolę polskiego parlamentu narodowego , czyniąc go w 80 % spraw przekazanych do Unii jedynie organem opiniodawczym dla Rady Ministrów i organów Unii Europejskiej .
+		docName= documents/00101531,		sentnId=9,	indexTree=[0, 1],		role:[kraj:polski, instytucja:Sejm]			>Sejm< >polski< ograniczył się – Sejm polski w sprawach dotyczących Unii jest de facto niemy .
+		docName= documents/00101531,		sentnId=9,	indexTree=[5, 6],		role:[kraj:polski, instytucja:Sejm]			Sejm polski ograniczył się – >Sejm< >polski< w sprawach dotyczących Unii jest de facto niemy .
+		docName= documents/00107325,		sentnId=24,	indexTree=[3, 4],		role:[kraj:francuskiego, instytucja:MSZ]			Z kolei szef >francuskiego< >MSZ< Bernard Kouchner zwrócił się do Ehuda Olmerta z prośbą zaakceptowania wczorajszego planu Francji , gdyż te zawieszenie broni pozwoliło by na dostarczenie do Strefy Gazy pomocy humanitarnej .
+
+
+Sumarycznie zagregowane dla typów relacji:
+
+
+Sumarycznie dla typu: affiliation
+	70	- znalezionych wyników ogółem
+	54	- poprawne dopasowania
+	16	- niepoprawne dopasowania
+	212	- nieznalezione dopasowania
+	0.77	- precyzja
+	0.20	- kompletność
+	Poprawne dopasowania to:
+		docName= documents/00101186,		sentnId=2,	indexTree=[0, 35],		role:[osoba:Leszek Artur Pełszyk, firma:Zuza Pictures Sp . z o . o]			>Leszek< Artur Pełszyk ( ur . 12 lipca 1971 w Wołominie ) - polski niezależny producent programów telewizyjnych , właściciel i prezes firm medialnych Miracle in 5 Sp . z o . o . i >Zuza< Pictures Sp . z o . o .
+		docName= documents/00101813,		sentnId=8,	indexTree=[0, 3],		role:[osoba:Elżbieta Jóźwiakowska, firma:PKO BP]			>Elżbieta< Jóźwiakowska z >PKO< BP informuje , że godziny pracy przeniesionej placówki zostały zmienione po analizie natężenia ruchu dokonanej w poprzedniej siedzibie .
+		docName= documents/00102449,		sentnId=3,	indexTree=[36, 39],		role:[osoba:Kamil Dmowski, firma:Heureka]			Myślę , że udało nam się zebrać ciekawą grupę praktyków , którzy opowiedzą , jak prowadzić projekty typu “ web 2 . 0 ″ - wśród prelegentów są Rafał Agnieszczak ( fotka.pl oraz inne ) , >Kamil< Dmowski ( >Heureka< ) , Jan Górski ( Plum Web Solutions ) , Artur Gortych ( Artegence ) , Maciej Kołodziejczak ( Bebo ) , Grzegorz Ostrowski i Marek Zakrzewski ( mniammniam.pl ) oraz Dominik Wartecki ( Janmedia Interactive ) .
+		docName= documents/00102449,		sentnId=3,	indexTree=[42, 45],		role:[osoba:Jan Górski, firma:Plum Web Solutions]			Myślę , że udało nam się zebrać ciekawą grupę praktyków , którzy opowiedzą , jak prowadzić projekty typu “ web 2 . 0 ″ - wśród prelegentów są Rafał Agnieszczak ( fotka.pl oraz inne ) , Kamil Dmowski ( Heureka ) , >Jan< Górski ( >Plum< Web Solutions ) , Artur Gortych ( Artegence ) , Maciej Kołodziejczak ( Bebo ) , Grzegorz Ostrowski i Marek Zakrzewski ( mniammniam.pl ) oraz Dominik Wartecki ( Janmedia Interactive ) .
+		docName= documents/00102449,		sentnId=3,	indexTree=[50, 53],		role:[osoba:Artur Gortych, firma:Artegence]			Myślę , że udało nam się zebrać ciekawą grupę praktyków , którzy opowiedzą , jak prowadzić projekty typu “ web 2 . 0 ″ - wśród prelegentów są Rafał Agnieszczak ( fotka.pl oraz inne ) , Kamil Dmowski ( Heureka ) , Jan Górski ( Plum Web Solutions ) , >Artur< Gortych ( >Artegence< ) , Maciej Kołodziejczak ( Bebo ) , Grzegorz Ostrowski i Marek Zakrzewski ( mniammniam.pl ) oraz Dominik Wartecki ( Janmedia Interactive ) .
+		docName= documents/00102449,		sentnId=3,	indexTree=[56, 59],		role:[osoba:Maciej Kołodziejczak, firma:Bebo]			Myślę , że udało nam się zebrać ciekawą grupę praktyków , którzy opowiedzą , jak prowadzić projekty typu “ web 2 . 0 ″ - wśród prelegentów są Rafał Agnieszczak ( fotka.pl oraz inne ) , Kamil Dmowski ( Heureka ) , Jan Górski ( Plum Web Solutions ) , Artur Gortych ( Artegence ) , >Maciej< Kołodziejczak ( >Bebo< ) , Grzegorz Ostrowski i Marek Zakrzewski ( mniammniam.pl ) oraz Dominik Wartecki ( Janmedia Interactive ) .
+		docName= documents/00102449,		sentnId=3,	indexTree=[71, 74],		role:[osoba:Dominik Wartecki, firma:Janmedia Interactive]			Myślę , że udało nam się zebrać ciekawą grupę praktyków , którzy opowiedzą , jak prowadzić projekty typu “ web 2 . 0 ″ - wśród prelegentów są Rafał Agnieszczak ( fotka.pl oraz inne ) , Kamil Dmowski ( Heureka ) , Jan Górski ( Plum Web Solutions ) , Artur Gortych ( Artegence ) , Maciej Kołodziejczak ( Bebo ) , Grzegorz Ostrowski i Marek Zakrzewski ( mniammniam.pl ) oraz >Dominik< Wartecki ( >Janmedia< Interactive ) .
+		docName= documents/00102023,		sentnId=2,	indexTree=[0, 3, 4],		role:[osoba:Ryszard Krajewski, firma:Superstacji]			>Ryszard< Krajewski , >prezes< >Superstacji< , powiedział portalowi Wirtualnemedia.pl , iż rozwiązanie umowy nastąpiło na skutek niemożności dalszej współpracy z CP .
+		docName= documents/00107253,		sentnId=9,	indexTree=[33, 34, 35],		role:[osoba:Siergiej Kuprijanow, firma:Gazpromu]			" Ukraina odrzuciła tę opcję , co pokazuje , że ukraińskie władze wcześniej zaplanowały konflikt : to jest mieli zamiar wykorzystywać albo po prostu ukraść gaz przeznaczony dla europejskich klientów " - powiedział >przedstawiciel< >Gazpromu< >Siergiej< Kuprijanow .
+		docName= documents/00101189,		sentnId=11,	indexTree=[3, 4, 7],		role:[osoba:Skoubo, druzyna:Borussii Mönchengladbach]			Latem 2002 roku >Skoubo< >odszedł< do niemieckiej >Borussii< Mönchengladbach , a 24 sierpnia rozegrał swoje pierwsze spotkanie w Bundeslidze , wygrane 3 : 0 z 1 . FC Kaiserslautern .
+		docName= documents/00101189,		sentnId=23,	indexTree=[2, 3, 5],		role:[osoba:Skoubo, druzyna:FC Utrecht]			Latem 2008 >Skoubo< >przeszedł< do >FC< Utrecht , występującego w Eredivisie .
+		docName= documents/00101307,		sentnId=8,	indexTree=[3, 4, 6],		role:[osoba:Jerolimov, druzyna:Hajduka Split]			Latem 1982 roku >Jerolimov< >przeszedł< do >Hajduka< Split .
+		docName= documents/00102045,		sentnId=2,	indexTree=[11, 13, 16],		role:[osoba:Dawid Boratyński, druzyna:LKS Rosanów]			W przerwie zimowej nas zespół wzmocnili ( jak narazie ) dwaj >piłkarze< piątoligowego >LKS< Rosanów - >Dawid< Boratyński oraz Jarek Pietrzak , a także piłkarze Orła Parzęczew - Krzysztof Szabela , Tomasz Jagielski ( Kręty ) , Marcin Gawęda i Maciek Gawęda .
+		docName= documents/00101265,		sentnId=13,	indexTree=[1, 3, 6],		role:[osoba:Snelders, druzyna:Twente Enschede]			Obecnie >Snelders< jest >trenerem< bramkarzy w >Twente< Enschede .
+		docName= documents/00102066,		sentnId=1,	indexTree=[7, 10],		role:[instytucja:ISNS, osoba:Albertem Hupą]			Mam przyjemność prowadzić co tydzień razem z >Albertem< Hupą z >ISNS< klub dyskusyjny technologie @ społeczeństwo . pl .
+		docName= documents/00102477,		sentnId=4,	indexTree=[0, 5, 6],		role:[instytucja:Teatru Nowego, osoba:Paweł Jaszczak]			>Paweł< Jaszczak - ozorkowianin , >pracownik< >Teatru< Nowego w Łodzi .
+		docName= documents/00107291,		sentnId=6,	indexTree=[3, 4, 6],		role:[osoba:Jarosław Marzec, instytucja:CBŚ]			Wtedy właśnie były >szef< >CBŚ< , >Jarosław< Marzec , zdradził b . szefowi policji Konradowi Kornatowskiemu , że agenci CBA planują wejść do domu Ryszarda Krauzego .
+		docName= documents/00102018,		sentnId=9,	indexTree=[5, 6, 9],		role:[osoba:Magdalena Bajer, instytucja:Rady Etyki Mediów]			Zdziwiona decyzją rady nadzorczej jest >szefowa< >Rady< Etyki Mediów >Magdalena< Bajer .
+		docName= documents/00102272,		sentnId=2,	indexTree=[2, 3, 6],		role:[osoba:Anny Pękali, instytucja:Teatru Narodowego]			Gazeta.pl cytuje >wypowiedź< >Anny< Pękali z >Teatru< Narodowego , która mówi , dlaczego nie wolno robić zdjęć podczas uroczystości z okazji 40 . rocznicy zdjęcia ( he , he ) " Dziadów " : Powody są dwa .
+		docName= documents/00101819,		sentnId=14,	indexTree=[6, 8],		role:[osoba:Adama, organizacja:RC Smoków]			Udali śmy się po pomoc do >Adama< z >RC< Smoków , który jest specjalistą od obróbki metalu .
+		docName= documents/00102256,		sentnId=3,	indexTree=[2, 5],		role:[osoba:Erika Baptista, organizacja:CISAC]			Bendyk cytuje >Erika< Baptista z >CISAC< , a moją uwagę zwróciło następujące zdanie : Gdy autor zdecyduje się raz ogłosić utwór w ramach licencji Creative Commons , nie może już później zmienić jego statusu , nawet choćby chciał , gdy np . stanie się sławny i chciał by lepiej pilnować integralności swojej twórczości .
+		docName= documents/00101263,		sentnId=22,	indexTree=[13, 15, 17],		role:[osoba:Lech Wałęsa, organizacja:Solidarności]			Po wprowadzeniu stanu wojennego w Arłamowie internowany był na początku 1982 r . >przewodniczący< " >Solidarności< " >Lech< Wałęsa .
+		docName= documents/00107319,		sentnId=5,	indexTree=[12, 15, 16],		role:[osoba:Przemysław Gosiewski, organizacja:Klubu PiS]			Klasy będą zatłoczone , trzeba będzie wprowadzić zajęcia dodatkowe ” – ostrzega >Przemysław< Gosiewski , >szef< >Klubu< PiS .
+		docName= documents/00107250,		sentnId=6,	indexTree=[0, 3, 4],		role:[osoba:Des Clark, organizacja:OFLC]			>Des< Clark , >prezes< >OFLC< , powiedział , że Sklepy które sprzedają bądź wypożyczają gry komputerowe powinny szybko zdjąć ze sklepowych półek tę grę .
+		docName= documents/00102507,		sentnId=4,	indexTree=[4, 7, 8],		role:[osoba:Piotrek Chmielowski, organizacja:RC Smoki]			W Standardzie udanie zadebiutował >Piotrek< Chmielowski , >reprezentujący< >RC< Smoki , który jadąc modelem Xray M18 zakwalifikował sie do finału B i ostatecznie uplasował się na 16 miejscu , czyli w połowie stawki .
+		docName= documents/00100538,		sentnId=17,	indexTree=[5, 6, 7],		role:[osoba:Janiną Milejkowską, organizacja:UW]			Początkowo żonaty z lekarką – >absolwentką< >UW< >Janiną< Milejkowską ( ślub wzięli w listopadzie 1939 ) , następnie był drugim mężem Zofii Chądzyńskiej .
+		docName= documents/00101481,		sentnId=2,	indexTree=[0, 13, 14],		role:[osoba:Jacek Sobieszczański, organizacja:PWST]			>Jacek< Sobieszczański ( ur . 1966 ) - polski aktor i lektor , >ukończył< >PWST< w Warszawie w 1990 roku .
+		docName= documents/00101579,		sentnId=8,	indexTree=[5, 8],		role:[partia_polityczna:Platformy Obywatelskiej, osoba:Leszek Cieślik]			Posłowie Józef Piotr Klim i >Leszek< Cieślik z >Platformy< Obywatelskiej zadadzą pytanie w sprawie harmonogramu prac inwestycyjnych drogi ekspresowej S8 na odcinku Białystok – Warszawa do ministra infrastruktury .
+		docName= documents/00107244,		sentnId=2,	indexTree=[31, 35],		role:[partia_polityczna:Venstre, osoba:Lars Løkke Rasmussen]			Dania - planowane na 27 września 2005 duńskie referendum w sprawie konstytucji Unii Europejskiej będzie kosztowało 83 milionów koron ( ok . 46 mln PLN ) , ogłosił minister spraw wewnętrznych >Lars< Løkke Rasmussen ( >Venstre< ) .
+		docName= documents/00107284,		sentnId=9,	indexTree=[0, 3],		role:[partia_polityczna:LPR, osoba:Roman Giertych]			>Roman< Giertych ( >LPR< ) : Treścią , istotą tej ustawy jest zmiana polegająca na tym , że wybiera się z trzech kandydatów , ale spośród osób , które na walnym zgromadzeniu Trybunału otrzymają największa liczbę głosów .
+		docName= documents/00107284,		sentnId=11,	indexTree=[0, 3],		role:[partia_polityczna:Prawica RP, osoba:Marek Jurek]			>Marek< Jurek ( >Prawica< RP ) : To jest nerwowo napisana reakcja na wydarzenia bieżące , może wyraz aspiracji jednej konkretnej władzy , ale w żadnym wypadku takie propozycje TK nie budują silnego państwa .
+		docName= documents/00107284,		sentnId=12,	indexTree=[0, 3],		role:[partia_polityczna:PO, osoba:Jan Rokita]			>Jan< Rokita ( >PO< ) przypomina , że Trybunał Konstytucyjny jest tak skonstruowany aby sędziowie nie łasili się do nikogo , nie czekali na żadną nominację i byli całkowicie niezależni .
+		docName= documents/00107311,		sentnId=3,	indexTree=[13, 16],		role:[partia_polityczna:PSL, osoba:Eugeniuszem Kłopotkiem]			W czasie jednego z programów TVN24 doszło do ostrej wymiany zdań między między >Eugeniuszem< Kłopotkiem z >PSL< a minister ds . korupcji Julią Piterą .
+		docName= documents/00107320,		sentnId=9,	indexTree=[1, 2, 3],		role:[osoba:Waldemar Pawlak, partia_polityczna:PSL]			Obecny >prezes< >PSL< >Waldemar< Pawlak cieszy się w partii ogromnym zaufaniem i dlatego to zapewne on ponownie wygra wybory .
+		docName= documents/00101533,		sentnId=18,	indexTree=[3, 4, 7],		role:[osoba:Krzysztof Jurgiel, partia_polityczna:Prawo i Sprawiedliwość]			Głos ma pan >poseł< >Krzysztof< Jurgiel , >Prawo< i Sprawiedliwość .
+		docName= documents/00107283,		sentnId=8,	indexTree=[19, 20, 21],		role:[osoba:Ryszard Kalisz, partia_polityczna:SLD]			" Chcą trzymać prezesa na krótkiej smyczy , skoro tylko od prezydenta będzie zależało przedłużenie kadencji " - powiedział >poseł< >SLD< >Ryszard< Kalisz , szef Sejmowej Komisji Ustawodawczej .
+		docName= documents/00107283,		sentnId=12,	indexTree=[22, 23, 24],		role:[osoba:Karol Karski, partia_polityczna:PiS]			Oprócz tego ustawa zakłada konieczność rozpatrywania spraw w pełnym składzie ( tzn . minimum 11 spośród 15 sędziów ) " - powiedział >poseł< >PiS< >Karol< Karski .
+		docName= documents/00101661,		sentnId=12,	indexTree=[2, 3, 4, 7],		role:[osoba:Elżbieta Rafalska, partia_polityczna:Prawo]			Pytanie zadaje >pani< >posłanka< >Elżbieta< Rafalska , >Prawo< i Sprawiedliwość .
+		docName= documents/00101584,		sentnId=24,	indexTree=[7, 8, 9, 12],		role:[osoba:Zbysława Owczarskiego, partia_polityczna:Prawo i Sprawiedliwość]			O zabranie głosu i zadanie pytania proszę >pana< >posła< >Zbysława< Owczarskiego , >Prawo< i Sprawiedliwość .
+		docName= documents/00101590,		sentnId=3,	indexTree=[0, 1, 2, 5],		role:[osoba:Waldemar Andzel, partia_polityczna:Prawo i Sprawiedliwość]			>Pan< >poseł< >Waldemar< Andzel , >Prawo< i Sprawiedliwość .
+		docName= documents/00101592,		sentnId=3,	indexTree=[0, 1, 2, 5],		role:[osoba:Wojciech Kossakowski, partia_polityczna:Prawo i Sprawiedliwość]			>Pan< >poseł< >Wojciech< Kossakowski , >Prawo< i Sprawiedliwość .
+		docName= documents/00101592,		sentnId=16,	indexTree=[0, 1, 2, 5],		role:[osoba:Jarosław Matwiejuk, partia_polityczna:Lewica]			>Pan< >poseł< >Jarosław< Matwiejuk , >Lewica< .
+		docName= documents/00101661,		sentnId=33,	indexTree=[2, 3, 4, 7],		role:[osoba:Jarosław Pięta, partia_polityczna:Platforma Obywatelska]			Pytanie zadaje >pan< >poseł< >Jarosław< Pięta , >Platforma< Obywatelska .
+		docName= documents/00101663,		sentnId=16,	indexTree=[0, 1, 2, 5],		role:[osoba:Edward Siarka, partia_polityczna:Prawo i Sprawiedliwość]			>Pan< >poseł< >Edward< Siarka , >Prawo< i Sprawiedliwość .
+		docName= documents/00107292,		sentnId=14,	indexTree=[0, 2, 8],		role:[osoba:Jarosław Kret, program_tv:TVP 1]			>Jarosław< Kret >poprowadzi< „ Przebojową noc ” w >TVP< 1 , 14 września 2007
+		docName= documents/00107293,		sentnId=1,	indexTree=[2, 4, 10],		role:[osoba:Jarosław Kret, program_tv:TVP 1]			2007-09-14 : >Jarosław< Kret >poprowadzi< „ Przebojową noc ” w >TVP< 1
+		docName= documents/00107293,		sentnId=9,	indexTree=[1, 2, 8],		role:[osoba:Kammel, program_tv:TVP 1]			Czy >Kammel< >poprowadzi< „ Przebojową noc ” w >TVP< 1 ? , 13 września 2007
+		docName= documents/00101856,		sentnId=4,	indexTree=[0, 4],		role:[osoba:Ryan Paul, media:ArsTechnica]			>Ryan< Paul z “ >ArsTechnica< ” przytomnie zauważa , że zgodnie z amerykańską wykładnią konstytucji instytucja copyrightu ma być wynikiem równowagi między koniecznością ochrony praw twórcy a koniecznością zapewnienia warunków sprzyjających rozwojowi kreatywności .
+		docName= documents/00102449,		sentnId=3,	indexTree=[28, 31],		role:[osoba:Rafał Agnieszczak, media:fotka.pl]			Myślę , że udało nam się zebrać ciekawą grupę praktyków , którzy opowiedzą , jak prowadzić projekty typu “ web 2 . 0 ″ - wśród prelegentów są >Rafał< Agnieszczak ( >fotka.pl< oraz inne ) , Kamil Dmowski ( Heureka ) , Jan Górski ( Plum Web Solutions ) , Artur Gortych ( Artegence ) , Maciej Kołodziejczak ( Bebo ) , Grzegorz Ostrowski i Marek Zakrzewski ( mniammniam.pl ) oraz Dominik Wartecki ( Janmedia Interactive ) .
+		docName= documents/00101248,		sentnId=8,	indexTree=[11, 13],		role:[partia_polityczna:PPS, instytucja1:Rady Naczelnej]			Była działaczką polityczną i społeczną , ostatnim żyjącym członkiem przedwojennej krajowej >Rady< Naczelnej >PPS< .
+		docName= documents/00101248,		sentnId=10,	indexTree=[4, 6],		role:[partia_polityczna:PPS, instytucja1:Rady Naczelnej]			Od 1934 wybierana do >Rady< Naczelnej >PPS< .
+		docName= documents/00101248,		sentnId=11,	indexTree=[30, 32],		role:[partia_polityczna:PPS, instytucja1:Komitetu Zagranicznego]			W 1939 przez Litwę i Szwecję opuściła z rodziną Polskę i udała się przez Rumunię i Francję do Londynu , gdzie w okresie ( 1940 – 1948 ) była członkiem >Komitetu< Zagranicznego >PPS< .
+		docName= documents/00107312,		sentnId=2,	indexTree=[14, 15],		role:[kraj:białoruskiego, instytucja:MSZ]			Szef polskiej dyplomacji Radosław Sikorski uda się dzisiaj na Białoruś na spotkanie z szefem >białoruskiego< >MSZ< Siarhiejem Martynauem .
+		docName= documents/00107312,		sentnId=7,	indexTree=[2, 3],		role:[kraj:polskiego, instytucja:MSZ]			W komunikacie >polskiego< >MSZ< czytamy , że strona polska ma na celu " sprawy związane z bezpieczeństwem granic , zabezpieczeniem tranzytu surowców do Polski , współpracy przy projektach energetycznych oraz udziałem polskich firm w prywatyzacji firm sektora państwowego " .
+	Niepoprawne dopasowania to:
+		docName= documents/00102121,		sentnId=2,	indexTree=[11, 12],		role:[osoba:Jarek, firma:Losi]			Andy jeździł Lazerem ZX - 5 , Adam Cyclonem D4 , >Jarek< >Losi< XXX - CR , Hubert Rustlerem .
+		docName= documents/00102126,		sentnId=6,	indexTree=[11, 13],		role:[osoba:Bazyl, firma:Ofnę]			Spaliowe bagusy reprezentowane były przez LRP S8 BX , którym jeździł >Bazyl< , >Ofnę< Hyper 7 prowadzoną przez Dorotę oraz Lightninga Adama .
+		docName= documents/00102509,		sentnId=2,	indexTree=[14, 16],		role:[osoba:Jarek, firma:Losi]			Krótkie , ale sympatyczne spotkanie , na którym Andy jeździł Xrayem XB8 , a >Jarek< elektrycznym >Losi< XXX - CR .
+		docName= documents/00103935,		sentnId=12,	indexTree=[0, 3],		role:[osoba:Kamil Przełęcki, firma:Agory]			>Kamil< Przełęcki z >Agory< mówił na spotkaniu ( słusznie ) o konieczności edukacji użytkowników , by lepiej rozumieli kwestie prawne , funkcjonowanie biznesu , itd .
+		docName= documents/00102045,		sentnId=2,	indexTree=[11, 13, 37],		role:[osoba:Marcin Gawęda, druzyna:LKS Rosanów]			W przerwie zimowej nas zespół wzmocnili ( jak narazie ) dwaj >piłkarze< piątoligowego >LKS< Rosanów - Dawid Boratyński oraz Jarek Pietrzak , a także piłkarze Orła Parzęczew - Krzysztof Szabela , Tomasz Jagielski ( Kręty ) , >Marcin< Gawęda i Maciek Gawęda .
+		docName= documents/00102224,		sentnId=15,	indexTree=[5, 8],		role:[instytucja:Minister Gospodarki i Pracy, osoba:J . Piechota]			Minister Gospodarki i Pracy : >J< . Piechota >Minister< Gospodarki i Pracy kieruje działem administracji rządowej - rozwój regionalny , na podstawie § 1 ust . 2 pkt 3 rozporządzenia Prezesa Rady Ministrów z dnia 11 czerwca 2004 r . w sprawie szczegółowego zakresu działania Ministra Gospodarki i Pracy ( Dz . U . Nr 134 , poz . 1428 ) .
+		docName= documents/00107325,		sentnId=24,	indexTree=[2, 4, 5],		role:[osoba:Bernard Kouchner, instytucja:MSZ]			Z kolei >szef< francuskiego >MSZ< >Bernard< Kouchner zwrócił się do Ehuda Olmerta z prośbą zaakceptowania wczorajszego planu Francji , gdyż te zawieszenie broni pozwoliło by na dostarczenie do Strefy Gazy pomocy humanitarnej .
+		docName= documents/00102449,		sentnId=3,	indexTree=[68, 71],		role:[osoba:Dominik Wartecki, media:mniammniam.pl]			Myślę , że udało nam się zebrać ciekawą grupę praktyków , którzy opowiedzą , jak prowadzić projekty typu “ web 2 . 0 ″ - wśród prelegentów są Rafał Agnieszczak ( fotka.pl oraz inne ) , Kamil Dmowski ( Heureka ) , Jan Górski ( Plum Web Solutions ) , Artur Gortych ( Artegence ) , Maciej Kołodziejczak ( Bebo ) , Grzegorz Ostrowski i Marek Zakrzewski ( >mniammniam.pl< ) oraz >Dominik< Wartecki ( Janmedia Interactive ) .
+		docName= documents/00107255,		sentnId=8,	indexTree=[0, 2],		role:[partia_polityczna:PiS, instytucja1:Rada Polityczna]			>Rada< Polityczna >PiS< przyjęła dziś uchwałę , w której podkreślono , że zdecydowanie lepszym dla Polskim rozwiązaniem niż wcześniejsze wybory , będzie powstanie Bloku Naprawy Państwa stabilizującego zaplecze rządu w Sejmie " .
+		docName= documents/00107256,		sentnId=4,	indexTree=[7, 9],		role:[partia_polityczna:PiS, instytucja1:Rady Politycznej]			Rozmowy zapowiedział wczoraj publicznie Kaczyński po obradach >Rady< Politycznej >PiS< , która zaproponowała wszystkim klubom parlamentarnym zawarcie Bloku Naprawy Państwa , czyli formy koalicji popierającej rząd Marcinkiewicza , która z czasem mogła by być przekształcona w koalicję rządową .
+		docName= documents/00101288,		sentnId=2,	indexTree=[11, 12],		role:[kraj:Polskiego, instytucja:Wojska Polskiego]			XV Brygada Kawalerii ( XV BK ) – wielka jednostka kawalerii >Wojska< >Polskiego< II RP .
+		docName= documents/00101318,		sentnId=3,	indexTree=[5, 6],		role:[kraj:Włoskiej, instytucja:Armii Włoskiej]			W 1914 szef Sztabu Generalnego >Armii< >Włoskiej< .
+		docName= documents/00101531,		sentnId=5,	indexTree=[2, 3],		role:[kraj:polski, instytucja:Sejm]			Uchwalona przez >polski< >Sejm< ustawa z 11 marca 2004 r . o współpracy Rady Ministrów z Sejmem i Senatem w sprawach związanych z członkostwem zmieniła w sposób jaskrawie sprzeczny z konstytucją rolę polskiego parlamentu narodowego , czyniąc go w 80 % spraw przekazanych do Unii jedynie organem opiniodawczym dla Rady Ministrów i organów Unii Europejskiej .
+		docName= documents/00101531,		sentnId=9,	indexTree=[0, 1],		role:[kraj:polski, instytucja:Sejm]			>Sejm< >polski< ograniczył się – Sejm polski w sprawach dotyczących Unii jest de facto niemy .
+		docName= documents/00101531,		sentnId=9,	indexTree=[5, 6],		role:[kraj:polski, instytucja:Sejm]			Sejm polski ograniczył się – >Sejm< >polski< w sprawach dotyczących Unii jest de facto niemy .
+		docName= documents/00107325,		sentnId=24,	indexTree=[3, 4],		role:[kraj:francuskiego, instytucja:MSZ]			Z kolei szef >francuskiego< >MSZ< Bernard Kouchner zwrócił się do Ehuda Olmerta z prośbą zaakceptowania wczorajszego planu Francji , gdyż te zawieszenie broni pozwoliło by na dostarczenie do Strefy Gazy pomocy humanitarnej .
+
+
+Sumarycznie dla wszystkich wzorców:
+	70	- znalezionych wyników ogółem
+	54	- poprawne dopasowania
+	16	- niepoprawne dopasowania
+	212	- nieznalezione dopasowania
+	0.77	- precyzja
+	0.20	- kompletność
+	Niepoprawne dopasowania to:
+		docName= documents/00102121,		sentnId=2,	indexTree=[11, 12],		role:[osoba:Jarek, firma:Losi]			Andy jeździł Lazerem ZX - 5 , Adam Cyclonem D4 , >Jarek< >Losi< XXX - CR , Hubert Rustlerem .
+		docName= documents/00102126,		sentnId=6,	indexTree=[11, 13],		role:[osoba:Bazyl, firma:Ofnę]			Spaliowe bagusy reprezentowane były przez LRP S8 BX , którym jeździł >Bazyl< , >Ofnę< Hyper 7 prowadzoną przez Dorotę oraz Lightninga Adama .
+		docName= documents/00102509,		sentnId=2,	indexTree=[14, 16],		role:[osoba:Jarek, firma:Losi]			Krótkie , ale sympatyczne spotkanie , na którym Andy jeździł Xrayem XB8 , a >Jarek< elektrycznym >Losi< XXX - CR .
+		docName= documents/00103935,		sentnId=12,	indexTree=[0, 3],		role:[osoba:Kamil Przełęcki, firma:Agory]			>Kamil< Przełęcki z >Agory< mówił na spotkaniu ( słusznie ) o konieczności edukacji użytkowników , by lepiej rozumieli kwestie prawne , funkcjonowanie biznesu , itd .
+		docName= documents/00102045,		sentnId=2,	indexTree=[11, 13, 37],		role:[osoba:Marcin Gawęda, druzyna:LKS Rosanów]			W przerwie zimowej nas zespół wzmocnili ( jak narazie ) dwaj >piłkarze< piątoligowego >LKS< Rosanów - Dawid Boratyński oraz Jarek Pietrzak , a także piłkarze Orła Parzęczew - Krzysztof Szabela , Tomasz Jagielski ( Kręty ) , >Marcin< Gawęda i Maciek Gawęda .
+		docName= documents/00102224,		sentnId=15,	indexTree=[5, 8],		role:[instytucja:Minister Gospodarki i Pracy, osoba:J . Piechota]			Minister Gospodarki i Pracy : >J< . Piechota >Minister< Gospodarki i Pracy kieruje działem administracji rządowej - rozwój regionalny , na podstawie § 1 ust . 2 pkt 3 rozporządzenia Prezesa Rady Ministrów z dnia 11 czerwca 2004 r . w sprawie szczegółowego zakresu działania Ministra Gospodarki i Pracy ( Dz . U . Nr 134 , poz . 1428 ) .
+		docName= documents/00107325,		sentnId=24,	indexTree=[2, 4, 5],		role:[osoba:Bernard Kouchner, instytucja:MSZ]			Z kolei >szef< francuskiego >MSZ< >Bernard< Kouchner zwrócił się do Ehuda Olmerta z prośbą zaakceptowania wczorajszego planu Francji , gdyż te zawieszenie broni pozwoliło by na dostarczenie do Strefy Gazy pomocy humanitarnej .
+		docName= documents/00102449,		sentnId=3,	indexTree=[68, 71],		role:[osoba:Dominik Wartecki, media:mniammniam.pl]			Myślę , że udało nam się zebrać ciekawą grupę praktyków , którzy opowiedzą , jak prowadzić projekty typu “ web 2 . 0 ″ - wśród prelegentów są Rafał Agnieszczak ( fotka.pl oraz inne ) , Kamil Dmowski ( Heureka ) , Jan Górski ( Plum Web Solutions ) , Artur Gortych ( Artegence ) , Maciej Kołodziejczak ( Bebo ) , Grzegorz Ostrowski i Marek Zakrzewski ( >mniammniam.pl< ) oraz >Dominik< Wartecki ( Janmedia Interactive ) .
+		docName= documents/00107255,		sentnId=8,	indexTree=[0, 2],		role:[partia_polityczna:PiS, instytucja1:Rada Polityczna]			>Rada< Polityczna >PiS< przyjęła dziś uchwałę , w której podkreślono , że zdecydowanie lepszym dla Polskim rozwiązaniem niż wcześniejsze wybory , będzie powstanie Bloku Naprawy Państwa stabilizującego zaplecze rządu w Sejmie " .
+		docName= documents/00107256,		sentnId=4,	indexTree=[7, 9],		role:[partia_polityczna:PiS, instytucja1:Rady Politycznej]			Rozmowy zapowiedział wczoraj publicznie Kaczyński po obradach >Rady< Politycznej >PiS< , która zaproponowała wszystkim klubom parlamentarnym zawarcie Bloku Naprawy Państwa , czyli formy koalicji popierającej rząd Marcinkiewicza , która z czasem mogła by być przekształcona w koalicję rządową .
+		docName= documents/00101288,		sentnId=2,	indexTree=[11, 12],		role:[kraj:Polskiego, instytucja:Wojska Polskiego]			XV Brygada Kawalerii ( XV BK ) – wielka jednostka kawalerii >Wojska< >Polskiego< II RP .
+		docName= documents/00101318,		sentnId=3,	indexTree=[5, 6],		role:[kraj:Włoskiej, instytucja:Armii Włoskiej]			W 1914 szef Sztabu Generalnego >Armii< >Włoskiej< .
+		docName= documents/00101531,		sentnId=5,	indexTree=[2, 3],		role:[kraj:polski, instytucja:Sejm]			Uchwalona przez >polski< >Sejm< ustawa z 11 marca 2004 r . o współpracy Rady Ministrów z Sejmem i Senatem w sprawach związanych z członkostwem zmieniła w sposób jaskrawie sprzeczny z konstytucją rolę polskiego parlamentu narodowego , czyniąc go w 80 % spraw przekazanych do Unii jedynie organem opiniodawczym dla Rady Ministrów i organów Unii Europejskiej .
+		docName= documents/00101531,		sentnId=9,	indexTree=[0, 1],		role:[kraj:polski, instytucja:Sejm]			>Sejm< >polski< ograniczył się – Sejm polski w sprawach dotyczących Unii jest de facto niemy .
+		docName= documents/00101531,		sentnId=9,	indexTree=[5, 6],		role:[kraj:polski, instytucja:Sejm]			Sejm polski ograniczył się – >Sejm< >polski< w sprawach dotyczących Unii jest de facto niemy .
+		docName= documents/00107325,		sentnId=24,	indexTree=[3, 4],		role:[kraj:francuskiego, instytucja:MSZ]			Z kolei szef >francuskiego< >MSZ< Bernard Kouchner zwrócił się do Ehuda Olmerta z prośbą zaakceptowania wczorajszego planu Francji , gdyż te zawieszenie broni pozwoliło by na dostarczenie do Strefy Gazy pomocy humanitarnej .
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 6.0.
+Use '--warning-mode all' to show the individual deprecation warnings.
+See https://docs.gradle.org/5.4.1/userguide/command_line_interface.html#sec:command_line_warnings
+
+BUILD SUCCESSFUL in 29s
+20 actionable tasks: 2 executed, 18 up-to-date
+10:22:20: Task execution finished 'Main.main()'.
