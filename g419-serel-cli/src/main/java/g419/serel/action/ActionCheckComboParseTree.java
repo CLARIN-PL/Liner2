@@ -7,11 +7,11 @@ import g419.corpus.structure.Document;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.core.tools.parser.ParseTreeGenerator;
-import g419.serel.tools.CheckParserParseTree;
 import g419.serel.converter.DocumentToSerelExpressionConverter;
 import g419.serel.structure.ParseTreeMalfunction;
+import g419.serel.structure.SerelExpression;
+import g419.serel.tools.CheckParserParseTree;
 import g419.serel.tools.ComboParseTreeGenerator;
-import g419.serel.tools.MaltParseTreeGenerator;
 import org.apache.commons.cli.CommandLine;
 import java.io.File;
 import java.io.FileWriter;
@@ -32,8 +32,8 @@ public class ActionCheckComboParseTree extends Action {
 
 
   DocumentToSerelExpressionConverter converter;
-  private CheckParserParseTree  parseTreeChecker;
-  private ParseTreeGenerator  parseTreeGenerator;
+  private CheckParserParseTree parseTreeChecker;
+  private ParseTreeGenerator parseTreeGenerator;
 
   public ActionCheckComboParseTree() {
     super("check-combo-tree");
@@ -69,40 +69,50 @@ public class ActionCheckComboParseTree extends Action {
     final OutputStream os = WriterFactory.get().getOutputStreamFileOrOut(outputFilename);
 
 
-
     parseTreeChecker = new CheckParserParseTree();
 
     try (final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
          final AbstractDocumentReader comboReader = ReaderFactory.get().getStreamReader(comboFilename, comboFormat);
-         final PrintWriter writer = new PrintWriter( os) ;
-         final PrintWriter reportWriter = reportFilename==null? null :new PrintWriter( new FileWriter( new File(reportFilename))))
-    {
-      List<ParseTreeMalfunction> result = new LinkedList<>();
+         final PrintWriter writer = new PrintWriter(os);
+         final PrintWriter reportWriter = reportFilename == null ? null : new PrintWriter(new FileWriter(new File(reportFilename)))) {
+      final List<ParseTreeMalfunction> result = new LinkedList<>();
 
-      reader.forEach(doc-> {
-                              try {
-                                Document comboedDoc = comboReader.nextDocument();
-                                ParseTreeGenerator parseTreeGenerator = new ComboParseTreeGenerator(comboedDoc);
-                                DocumentToSerelExpressionConverter converter = new DocumentToSerelExpressionConverter(parseTreeGenerator,reportWriter);
-                                result.addAll(parseTreeChecker.checkParseTree(converter.convert(doc)));
-                              } catch (Exception e) {
-                                e.printStackTrace();
-                              }
-                           }
-                    );
+      reader.forEach(doc -> {
+            try {
 
-      System.out.println("REsult size = "+result.size());
+
+              final Document comboedDoc = comboReader.nextDocument();
+
+              System.out.println("processing comboedDoc =" + comboedDoc.getName() + " and doc =" + doc.getName());
+
+              final ParseTreeGenerator parseTreeGenerator = new ComboParseTreeGenerator(comboedDoc);
+              final DocumentToSerelExpressionConverter converter = new DocumentToSerelExpressionConverter(parseTreeGenerator, reportWriter);
+
+              final List<SerelExpression> converted = converter.convert(doc);
+              final List<ParseTreeMalfunction> malfunctions = parseTreeChecker.checkParseTree(converted);
+
+              result.addAll(malfunctions);
+
+              //log.debug("result size =" + result.size());
+
+            } catch (final Exception e) {
+              e.printStackTrace();
+            }
+          }
+      );
+
+      System.out.println("REsult size = " + result.size());
 
       writer.println("Code\tdocument\tann_id\tsourceIndex\ttargetIndex\tstartAnnIndex\tendAnnIndex");
-      result.stream().forEach(line -> writer.println(line.getMalfunctionCode()+"\t"+
-                                                     line.getDocumentPath()+"\t"+
-                                                     line.getAnnotationId()+"\t"+
-                                                     line.getSourceIndex()+"\t"+
-                                                     line.getTargetIndex()+"\t"+
-                                                     line.getAnnStartRange()+"\t"+
-                                                     line.getAnnEndRange()
+      result.stream().forEach(line -> writer.println(line.getMalfunctionCode() + "\t" +
+          line.getDocumentPath() + "\t" +
+          line.getAnnotationId() + "\t" +
+          line.getSourceIndex() + "\t" +
+          line.getTargetIndex() + "\t" +
+          line.getAnnStartRange() + "\t" +
+          line.getAnnEndRange()
       ));
-    } catch (Exception e) {
+    } catch (final Exception e) {
       throw e;
     }
   }

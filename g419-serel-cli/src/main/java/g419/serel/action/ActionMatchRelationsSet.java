@@ -117,9 +117,29 @@ public class ActionMatchRelationsSet extends Action {
       final BufferedReader br = new BufferedReader(new FileReader(file));
 
       String pattern;
+      boolean commentMode = false;
       while ((pattern = br.readLine()) != null) {
         if (!pattern.isEmpty()) {
-          patterns.add(pattern);
+
+          if (pattern.trim().startsWith("*/")) {
+            commentMode = false;
+            continue;
+          }
+
+          if (pattern.trim().startsWith("/*")) {
+            commentMode = true;
+            continue;
+          }
+
+          if (commentMode) {
+            continue;
+          }
+
+          if (!pattern.trim().startsWith("#") && !(pattern.trim().startsWith("//"))) {
+            patterns.add(pattern);
+          } else {
+            System.out.println("Commented out pattern: " + pattern);
+          }
         }
       }
     }
@@ -354,6 +374,15 @@ public class ActionMatchRelationsSet extends Action {
           final double recall = (double) resultTruePositiveType.get(type).size() / (double) (resultTruePositiveType.get(type).size() + resultFalseNegativeType.get(type).size());
           ow.write("\t" + df.format(recall) + "\t- kompletność\n");
 
+          if (resultTruePositiveType.get(type).size() > 0) {
+            ow.write("\tPoprawne dopasowania to:\n");
+
+            for (final PatternMatchSingleResult pmsr : resultTruePositiveType.get(type)) {
+              ow.write("\t\t" + pmsr.descriptionLong() + "\n");
+            }
+          }
+
+
           if (resultFalsePositiveType.get(type).size() > 0) {
             ow.write("\tNiepoprawne dopasowania to:\n");
 
@@ -362,6 +391,7 @@ public class ActionMatchRelationsSet extends Action {
             }
           }
 
+          /*
           if (resultFalsePositiveType.get(type).size() > 0) {
             ow.write("\tNieznalezione dopasowania to:\n");
 
@@ -369,6 +399,8 @@ public class ActionMatchRelationsSet extends Action {
               ow.write("\t\t" + relDesc.toStringFull() + "\n");
             }
           }
+
+           */
         }
 
       } catch (final Exception e) {
@@ -408,6 +440,7 @@ public class ActionMatchRelationsSet extends Action {
         }
       }
 
+      /*
       if (resultFalsePositiveTotal.size() > 0) {
         ow.write("\tNieznalezione dopasowania to:\n");
 
@@ -415,6 +448,7 @@ public class ActionMatchRelationsSet extends Action {
           ow.write("\t\t" + relDesc.toStringFull() + "\n");
         }
       }
+       */
 
     }
 

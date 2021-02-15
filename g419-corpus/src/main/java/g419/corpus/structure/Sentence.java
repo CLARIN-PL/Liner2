@@ -341,11 +341,11 @@ public class Sentence extends IdentifiableElement {
 
     final StringBuilder sb = new StringBuilder();
     for (final Token t : tokens) {
-      if (indexes.contains(t.getNumberId())) {
+      if (indexes.contains(t.getNumberId() - 1)) {
         sb.append(">");
       }
       sb.append(t.getOrth());
-      if (indexes.contains(t.getNumberId())) {
+      if (indexes.contains(t.getNumberId() - 1)) {
         sb.append("<");
       }
 
@@ -483,5 +483,33 @@ public class Sentence extends IdentifiableElement {
       fillBoiIndexesDescending(t, boiName, result);
     }
   }
+
+  /*
+  public void printAsTreeWithIndex(final PrintWriter pw) {
+    final List<ParseTree.TreeNode> nodes = new LinkedList<>();
+
+    for (int i = 0; i < getSentence().getTokens().size(); i++) {
+      final Token t = getSentence().getTokens().get(i);
+      final TreeNode tn = new TreeNode(String.format("%s                    [%s] [%s]", t.getOrth(), " ", " " + i), i);
+      nodes.add(tn);
+    }
+
+    links.stream()
+        .filter(l -> l.sourceIndex > -1 && l.targetIndex > -1)
+        .forEach(l -> {
+          nodes
+              .get(l.targetIndex)
+              .addChild(nodes
+                  .get(l.sourceIndex));
+          nodes.get(l.sourceIndex).setRelationWithParent(l.relationType);
+        });
+
+    IntStream.range(0, nodes.size())
+        .filter(n -> links.get(n).targetIndex == -1)
+        .mapToObj(nodes::get)
+        .forEach(node -> node.print(pw));
+  }
+   */
+
 
 }

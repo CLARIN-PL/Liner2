@@ -50,12 +50,16 @@ public class RelationDesc {
     relString.append(this.getToType());
 
     //relString.append("\t\t" + sentence.toString());
-    relString.append("\t\t" + sentence.toStringDecorated(new ArrayList<>
-        (Arrays.asList(this.getFromTokenIndex(), this.getToTokenIndex()))));
+    relString.append("\t\t" + this.getSentenceDecorated());
     //relString.append(REL_STRING_DESC_ENTRY_END);
 
     return relString.toString();
 
+  }
+
+  public String getSentenceDecorated() {
+    return sentence.toStringDecorated(new ArrayList<>
+        (Arrays.asList(this.getFromTokenIndex(), this.getToTokenIndex())));
   }
 
 

@@ -6,7 +6,6 @@ import g419.corpus.structure.Token;
 import g419.liner2.core.tools.parser.ParseTree;
 import g419.liner2.core.tools.parser.SentenceLink;
 import lombok.Data;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,46 +50,44 @@ public class SerelExpression {
 
   public String getDetailedPathAsString(final boolean withIndexes) {
     final List<Token> tokens = relationDesc.getSentence().getTokens();
-    if ((parents1 == null) || (parents2 == null) ) {
+    if ((parents1 == null) || (parents2 == null)) {
       return " ";
     }
 
     final StringBuilder s = new StringBuilder();
     //s.append(relationDesc.getType()).append(": ");
 
-    if(withIndexes) {
+    if (withIndexes) {
       s.append("|" + parents1.get(0).getSourceIndex() + "|");
     }
 
 
-
-
-    s.append("["+ relationDesc.getFromType()+"]");
-    s.append("(" +parents1.get(0).getRelationType()+ ")");
-    if(parents1.size()>1) {
+    s.append("[" + relationDesc.getFromType() + "]");
+    s.append("(" + parents1.get(0).getRelationType() + ")");
+    if (parents1.size() > 1) {
       s.append(" > ");
       s.append(parents1.stream()
-              .skip(1)
-              .map(msl -> sentenceLink2DetailedString(msl,withIndexes))
-              .collect(Collectors.joining(" > ")));
+          .skip(1)
+          .map(msl -> sentenceLink2DetailedString(msl, withIndexes))
+          .collect(Collectors.joining(" > ")));
     }
 
     final List<SentenceLink> tmpList = parents2.stream().skip(1).collect(Collectors.toList());
 
     Collections.reverse(tmpList);
-    if(tmpList.size()>1) {
+    if (tmpList.size() > 1) {
       s.append(" < ");
       s.append(tmpList.stream()
-              .skip(1)
-              .map(msl ->sentenceLink2DetailedString(msl,withIndexes))
-              .collect(Collectors.joining(" < ")));
+          .skip(1)
+          .map(msl -> sentenceLink2DetailedString(msl, withIndexes))
+          .collect(Collectors.joining(" < ")));
     }
     s.append(" < ");
-    if(withIndexes) {
+    if (withIndexes) {
       s.append("|" + parents2.get(0).getSourceIndex() + "|");
     }
-    s.append("["+relationDesc.getToType()+"]");
-    s.append("(" +parents2.get(0).getRelationType()+ ")");
+    s.append("[" + relationDesc.getToType() + "]");
+    s.append("(" + parents2.get(0).getRelationType() + ")");
 
     return s.toString();
 
@@ -103,41 +100,51 @@ public class SerelExpression {
 
 
   private String getPathAsStringCommon(final List<Token> tokens, final boolean withIndexes) {
-    if ((parents1 == null) || (parents2 == null) ) {
+    if ((parents1 == null) || (parents2 == null)) {
       return " ";
     }
 
 
     final StringBuilder s = new StringBuilder();
-    s.append(relationDesc.getType()).append(": ");
+    s.append(getSentence().getDocument().getName() + ";\t\t");
+    s.append(relationDesc.getType()).append(";\t\t");
 
-    if(withIndexes) {
+    s.append(relationDesc.getFromType()).append(";\t\t");
+
+    s.append(relationDesc.getToType()).append(";\t\t");
+
+    if (withIndexes) {
       s.append("[" + parents1.get(0).getSourceIndex() + "]");
     }
     s.append(relationDesc.getFromType());
-    if(parents1.size()>1) {
+    if (parents1.size() > 1) {
       s.append(" > ");
       s.append(parents1.stream()
           .skip(1)
-          .map(msl -> sentenceLink2String(msl,withIndexes))
+          .map(msl -> sentenceLink2String(msl, withIndexes))
           .collect(Collectors.joining(" > ")));
     }
 
     final List<SentenceLink> tmpList = parents2.stream().skip(1).collect(Collectors.toList());
     Collections.reverse(tmpList);
-    if(tmpList.size()>1) {
+    if (tmpList.size() > 1) {
       s.append(" < ");
       s.append(tmpList.stream()
           .skip(1)
-          .map(msl ->sentenceLink2String(msl,withIndexes))
+          .map(msl -> sentenceLink2String(msl, withIndexes))
           .collect(Collectors.joining(" < ")));
     }
     s.append(" < ");
-    if(withIndexes) {
-        s.append("[" + parents2.get(0).getSourceIndex() + "]");
+    if (withIndexes) {
+      s.append("[" + parents2.get(0).getSourceIndex() + "]");
     }
     s.append(relationDesc.getToType());
 
+    //final String sentExt = relationDesc.getSentenceDecorated();
+
+    final String sentExt = getSentence().toString();
+
+    s.append(";\t\t\t" + sentExt.substring(0, Math.min(300, sentExt.length())));
     return s.toString();
   }
 
@@ -148,43 +155,46 @@ public class SerelExpression {
 //    System.out.println("SL SOURCE INDEX = "+sl.getSourceIndex());
     final Token t = tokens.get(sl.getSourceIndex());
     //String tail = t.getDisambTag().getBase();
-    String tail = t.getAttributeValue("lemma");
+    //String tail = t.getAttributeValue("lemma");
+    //String tail = t.getOrth();
+    String tail = t.toString();
     tail = tail + "(" + sl.getRelationType() + ")";
 
     return
+/*
             (withIndexes? "["+sl.getSourceIndex()+"]": "" ) +
             getCaseClause(sl) + tail;
 
-/*
-            getSentence()
-                    .getTokens()
-
-
-
-                    .get(
-                            sl
-                                    .getSourceIndex())
-                    .getDisambTag()
-                    .getBase();
 */
+        getCaseClause(sl) +
+
+            getSentence()
+                .getTokens()
+
+
+                .get(
+                    sl
+                        .getSourceIndex()).getAttributeValue(0);
+    //.getDisambTag()
+    //.getBase();
   }
 
   private boolean isWithCaseClause(final SentenceLink sl) {
     final List<SentenceLink> peerLinks = this.parseTree.getLinksByTargetIndex(sl.getSourceIndex());
-    for(final SentenceLink peerLink : peerLinks) {
-      if(peerLink.getRelationType().equals("case")) {
+    for (final SentenceLink peerLink : peerLinks) {
+      if (peerLink.getRelationType().equals("case")) {
         return true;
       }
     }
     return false;
   }
 
-  private String getCaseClause(final SentenceLink sl ) {
+  private String getCaseClause(final SentenceLink sl) {
     final List<SentenceLink> peerLinks = this.parseTree.getLinksByTargetIndex(sl.getSourceIndex());
-    for(final SentenceLink peerLink : peerLinks) {
-      if(peerLink.getRelationType().equals("case")) {
-        //  return "("+getSentence().getTokens().get(peerLink.getSourceIndex()).getDisambTag().getBase()+") ";
-        return "("+getSentence().getTokens().get(peerLink.getSourceIndex()).getAttributeValue("lemma")+") ";
+    for (final SentenceLink peerLink : peerLinks) {
+      if (peerLink.getRelationType().equals("case")) {
+        return "(" + getSentence().getTokens().get(peerLink.getSourceIndex()).getDisambTag().getBase() + ") ";
+        //return "(" + getSentence().getTokens().get(peerLink.getSourceIndex()).getAttributeValue("lemma") + ") ";
       }
     }
     return "";
@@ -202,10 +212,9 @@ public class SerelExpression {
     tail = tail + "(" + sl.getRelationType() + ")";
 
     return
-            (withIndexes? "|"+sl.getSourceIndex()+"|": "" ) +
-                    /*getCaseClause(sl) +*/ tail;
+        (withIndexes ? "|" + sl.getSourceIndex() + "|" : "") +
+            /*getCaseClause(sl) +*/ tail;
   }
-
 
 
 }

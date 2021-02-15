@@ -11,7 +11,6 @@ import g419.liner2.core.tools.parser.SentenceLink;
 import g419.serel.structure.SerelExpression;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
-
 import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,15 +33,17 @@ public class DocumentToSerelExpressionConverter {
   public List<SerelExpression> convert(final Document document) {
 
     if (document.getRelationsSet().size() == 0) {
+      //log.debug("Relset is empty");
       return Lists.newArrayList();
     }
 
     final List<SerelExpression> result = new LinkedList<>();
     for (final Relation rel : document.getRelations("Semantic relations")) {
       try {
-        log.trace("Rel = "+rel);
+        //log.debug("Rel = " + rel);
         final SerelExpression serel = extractSerelFromRel(rel);
-        if(reportWriter !=null) {
+        //log.debug("Serel =" + serel);
+        if (reportWriter != null) {
           this.reportSerel(serel);
         }
         result.add(serel);
@@ -58,8 +59,8 @@ public class DocumentToSerelExpressionConverter {
     final List<SerelExpression> result = new LinkedList<>();
     for (final RelationDesc relDesc : relationDescList) {
       try {
-        log.trace("Rel = "+relDesc);
-        final SerelExpression se  = extractSerelFromRelDesc(relDesc);
+        log.trace("Rel = " + relDesc);
+        final SerelExpression se = extractSerelFromRelDesc(relDesc);
         result.add(se);
       } catch (final Exception e) {
         e.printStackTrace();
@@ -70,44 +71,35 @@ public class DocumentToSerelExpressionConverter {
   }
 
 
-
-
   public SerelExpression extractSerelFromRel(final Relation rel) throws Exception {
     final Sentence sentence = rel.getAnnotationFrom().getSentence();
     final ParseTree parseTree = parseTreeGenerator.generate(sentence);
-    final SerelExpression serel = this.extractSerelFromParseTree(rel,parseTree);
+    final SerelExpression serel = this.extractSerelFromParseTree(rel, parseTree);
     return serel;
   }
 
   public SerelExpression extractSerelFromRelDesc(final RelationDesc relDesc) throws Exception {
     final Sentence sentence = relDesc.getSentence();
     final ParseTree parseTree = parseTreeGenerator.generate(sentence);
-    final SerelExpression result = this.extractSerelFromParseTreeWithRelDesc(relDesc,parseTree);
+    final SerelExpression result = this.extractSerelFromParseTreeWithRelDesc(relDesc, parseTree);
     return result;
   }
-
-
-
-
-
-
-
 
 
   public SerelExpression extractSerelFromParseTree(final Relation rel, final ParseTree parseTree) {
     final int index1 = rel.getAnnotationFrom().getHead();
     final int index2 = rel.getAnnotationTo().getHead();
 
-    final Pair<List<SentenceLink>, List<SentenceLink>> path = parseTree.getPathBetween( index1, index2);
+    final Pair<List<SentenceLink>, List<SentenceLink>> path = parseTree.getPathBetween(index1, index2);
 
-    log.trace("LS1 = "+path.getLeft());
-    log.trace("LS2 = "+path.getRight());
+    log.trace("LS1 = " + path.getLeft());
+    log.trace("LS2 = " + path.getRight());
 
     final SerelExpression se;
-    if(path!=null) {
-      se = new SerelExpression(RelationDesc.from(rel),path.getLeft(), path.getRight(),parseTree);
+    if (path != null) {
+      se = new SerelExpression(RelationDesc.from(rel), path.getLeft(), path.getRight(), parseTree);
     } else {
-      se = new SerelExpression(RelationDesc.from(rel),null, null, parseTree);
+      se = new SerelExpression(RelationDesc.from(rel), null, null, parseTree);
     }
 
     return se;
@@ -118,39 +110,34 @@ public class DocumentToSerelExpressionConverter {
     final int index1 = relDesc.getFromTokenIndex();
     final int index2 = relDesc.getToTokenIndex();
 
-    final Pair<List<SentenceLink>, List<SentenceLink>> path = parseTree.getPathBetween( index1-1, index2-1);
+    final Pair<List<SentenceLink>, List<SentenceLink>> path = parseTree.getPathBetween(index1 - 1, index2 - 1);
 
 
     //System.out.println("LS1 = "+path.getLeft());
     //System.out.println("LS2 = "+path.getRight());
 
     final SerelExpression se;
-    if(path!=null) {
-      se = new SerelExpression(relDesc,path.getLeft(), path.getRight(),parseTree);
+    if (path != null) {
+      se = new SerelExpression(relDesc, path.getLeft(), path.getRight(), parseTree);
     } else {
-      se = new SerelExpression(relDesc,null, null, parseTree);
+      se = new SerelExpression(relDesc, null, null, parseTree);
     }
 
     return se;
   }
 
 
-
-
-
-
   private void reportSerel(final SerelExpression se) {
-    /*
+
     //reportWriter.println(se.getRelationDesc().getDocument().getName());
-    reportWriter.println(se.getSentence());
+    //reportWriter.println(se.getSentence());
     //reportWriter.println(se.getPathAsString(true));
     reportWriter.println(se.getPathAsString());
-    se.getParseTree().printAsTreeWithIndex(reportWriter);
-    reportWriter.println("------------------------------------------------------");
-    */
+    //se.getParseTree().printAsTreeWithIndex(reportWriter);
+    //reportWriter.println("------------------------------------------------------");
+
 
   }
-
 
 
 }
