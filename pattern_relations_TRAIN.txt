@@ -3,7 +3,7 @@
 
 
 
-/*
+
 affiliation::* / nam_liv_person:osoba < * / nam_org_company:firma
 affiliation::* / nam_liv_person:osoba < prezes < * / nam_org_company:firma
 affiliation::* / nam_liv_person:osoba > przedstawiciel < * / nam_org_company:firma
@@ -14,14 +14,15 @@ affiliation::* / nam_liv_person:osoba > piłkarze < * / nam_org_group_team:druzy
 affiliation::* / nam_liv_person:osoba > trenerem < * / nam_org_group_team:druzyna
 
 affiliation::* / nam_liv_person:osoba < * / nam_org_institution:instytucja
-affiliation::* / nam_liv_person:osoba < pracownik < * / nam_org_institution:instytucja
-affiliation::* / nam_liv_person:osoba < pracowniczka < * / nam_org_institution:instytucja
+
+affiliation::* / nam_liv_person:osoba < pracowniczka pracownik pracownica< * / nam_org_institution:instytucja
+
 affiliation::* / nam_liv_person:osoba > podsekretarz <  * / nam_org_institution:instytucja
 affiliation::* / nam_liv_person:osoba > przewodniczący <  * / nam_org_institution:instytucja
 affiliation::* / nam_liv_person:osoba > protokolant <  * / nam_org_institution:instytucja
-affiliation::* / nam_liv_person:osoba > szef <  * / nam_org_institution:instytucja
+
+affiliation::* / nam_liv_person:osoba > szef szefowa <  * / nam_org_institution:instytucja
 affiliation::* / nam_liv_person:osoba < szef <  * / nam_org_institution:instytucja
-affiliation::* / nam_liv_person:osoba > szefowa <  * / nam_org_institution:instytucja
 affiliation::* / nam_liv_person:osoba > prezes <  * / nam_org_institution:instytucja
 affiliation::* / nam_liv_person:osoba < prezes <  * / nam_org_institution:instytucja
 affiliation::* / nam_liv_person:osoba > wypowiedź <  * / nam_org_institution:instytucja
@@ -32,14 +33,12 @@ affiliation::* / nam_liv_person:osoba > ^ukończyć <  * / nam_org_institution:i
 
 
 affiliation::* / nam_liv_person:osoba <  * / nam_org_organization:organizacja
-affiliation::* / nam_liv_person:osoba < pracownik < * /nam_org_organization:organizacja
-affiliation::* / nam_liv_person:osoba < pracowniczka < * /nam_org_organization:organizacja
+affiliation::* / nam_liv_person:osoba < pracownik pracowniczka < * /nam_org_organization:organizacja
 affiliation::* / nam_liv_person:osoba > podsekretarz <  * / nam_org_organization:organizacja
 affiliation::* / nam_liv_person:osoba > przewodniczący <  * / nam_org_organization:organizacja
 affiliation::* / nam_liv_person:osoba > protokolant <  * / nam_org_organization:organizacja
-affiliation::* / nam_liv_person:osoba > szef <  * / nam_org_organization:organizacja
+affiliation::* / nam_liv_person:osoba > szef szefowa<  * / nam_org_organization:organizacja
 affiliation::* / nam_liv_person:osoba < szef <  * / nam_org_organization:organizacja
-affiliation::* / nam_liv_person:osoba > szefowa <  * / nam_org_organization:organizacja
 affiliation::* / nam_liv_person:osoba > prezes <  * / nam_org_organization:organizacja
 affiliation::* / nam_liv_person:osoba < prezes <  * / nam_org_organization:organizacja
 affiliation::* / nam_liv_person:osoba > wypowiedź <  * / nam_org_organization:organizacja
@@ -51,25 +50,24 @@ affiliation::* / nam_liv_person:osoba > ^ukończyć <  * / nam_org_organization:
 
 
 affiliation::* / nam_liv_person:osoba < * / nam_org_political_party:partia_polityczna
-affiliation::* / nam_liv_person:osoba < pracownik < * / nam_org_political_party:partia_polityczna
-affiliation::* / nam_liv_person:osoba < pracowniczka < * / nam_org_political_party:partia_polityczna
+affiliation::* / nam_liv_person:osoba < pracownik pracowniczka < * / nam_org_political_party:partia_polityczna
 affiliation::* / nam_liv_person:osoba > podsekretarz <  * / nam_org_political_party:partia_polityczna
 affiliation::* / nam_liv_person:osoba > przewodniczący <  * / nam_org_political_party:partia_polityczna
 affiliation::* / nam_liv_person:osoba > protokolant <  * / nam_org_political_party:partia_polityczna
-affiliation::* / nam_liv_person:osoba > szef <  * / nam_org_political_party:partia_polityczna
+affiliation::* / nam_liv_person:osoba > szef szefowa<  * / nam_org_political_party:partia_polityczna
 affiliation::* / nam_liv_person:osoba < szef <  * / nam_org_political_party:partia_polityczna
-affiliation::* / nam_liv_person:osoba > szefowa <  * / nam_org_political_party:partia_polityczna
 affiliation::* / nam_liv_person:osoba > prezes <  * / nam_org_political_party:partia_polityczna
 affiliation::* / nam_liv_person:osoba < prezes <  * / nam_org_political_party:partia_polityczna
 
 affiliation::* / nam_liv_person:osoba > wypowiedź <  * / nam_org_political_party:partia_polityczna
 affiliation::* / nam_liv_person:osoba < ^reprezentować <  * / nam_org_political_party:partia_polityczna
+
 #affiliation::* / nam_liv_person:osoba > ^absolwentka <  * / nam_org_political_party:partia_polityczna
 #affiliation::* / nam_liv_person:osoba > ^absolwent <  * / nam_org_political_party:partia_polityczna
 #affiliation::* / nam_liv_person:osoba > ^ukończyć <  * / nam_org_political_party:partia_polityczna
 
-affiliation::* / nam_liv_person:osoba > ^poseł <  * / nam_org_political_party:partia_polityczna
-affiliation::* / nam_liv_person:osoba > ^posłanka <  * / nam_org_political_party:partia_polityczna
+affiliation::* / nam_liv_person:osoba > ^poseł posłanka<  * / nam_org_political_party:partia_polityczna
+#affiliation::* / nam_liv_person:osoba > ^posłanka <  * / nam_org_political_party:partia_polityczna
 affiliation::* / nam_liv_person:osoba > ^posłanka > pani <  * / nam_org_political_party:partia_polityczna
 affiliation::* / nam_liv_person:osoba > ^poseł > ^pan <  * / nam_org_political_party:partia_polityczna
 affiliation::* / nam_liv_person:osoba > ^poseł > ^pani <  * / nam_org_political_party:partia_polityczna
@@ -90,7 +88,7 @@ affiliation::* / nam_org_institution:instytucja1 <  * / nam_org_political_party:
 
 # tutaj niby 6 niepoprawnych dopasowań ale w sumie 4 z nich wyglądają na całkiem poprawne
 affiliation::* / nam_org_institution:instytucja <  * / nam_adj_country:kraj
-*/
+
 
 
 
@@ -133,11 +131,20 @@ location:: */ nam_loc_gpe_city < powiat < * / nam_loc_gpe_admin2
 #location::  * / nam_fac_goe:m1 < * / nam_loc_gpe_city:m2 < (case) w
 #location::  * / nam_fac_goe:m1 < * / nam_loc_gpe_city:m2 < (case) we
 
+
 location::  * / nam_fac_goe:m1 < * / nam_loc_gpe_city:m2 < (case) *
 location::  * / nam_fac_goe:m1 < *  < * / nam_loc_gpe_city:m2 < (case) *
 
 
 
+
+
+
+/*
+
+#affiliation::* / nam_liv_person:osoba > ^deGender:szef <  * / nam_org_institution:instytucja
+affiliation::* / nam_liv_person:osoba > szef szefowa <  * / nam_org_institution:instytucja
+*/
 
 
 
