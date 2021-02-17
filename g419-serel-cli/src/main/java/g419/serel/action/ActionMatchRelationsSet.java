@@ -11,6 +11,7 @@ import g419.lib.cli.CommonOptions;
 import g419.serel.ruleTree.PatternMatch;
 import g419.serel.structure.SentenceMiscValues;
 import g419.serel.structure.patternMatch.PatternMatchSingleResult;
+import g419.serel.wordnet.WordnetPl32;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -110,6 +111,17 @@ public class ActionMatchRelationsSet extends Action {
 
   @Override
   public void run() throws Exception {
+
+
+    log.info("Wczytywanie Słowosieć 3.2 ...");
+
+    try {
+      WordnetPl32.load();
+      //final WordnetPl wordnetPl = WordnetPl32.load();
+    } catch (final Exception e) {
+      e.printStackTrace();
+    }
+
 
     if ((rulesFilename != null) && (!rulesFilename.isEmpty())) {
       System.out.println(" Patterns filename = " + rulesFilename);

@@ -142,6 +142,12 @@ public interface ParseRuleVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitText(ParseRuleParser.TextContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ParseRuleParser#functionName}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionName(ParseRuleParser.FunctionNameContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ParseRuleParser#id}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

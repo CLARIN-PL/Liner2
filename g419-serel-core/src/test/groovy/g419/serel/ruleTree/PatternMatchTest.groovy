@@ -90,7 +90,7 @@ class PatternMatchTest extends Specification {
         expect:
             result != null
         and:
-            result.rootNodeMatch.text.equals("miasto")
+            result.rootNodeMatch.texts.contains("miasto")
             result.rootNodeMatch.id == 1;
             result.nodeMatchList.size() == 1;
     }
@@ -123,7 +123,7 @@ class PatternMatchTest extends Specification {
         given:
             PatternMatch result = PatternMatch.parseRule("[subst] miasto ")
         expect:
-            result.rootNodeMatch.text.equals("miasto")
+            result.rootNodeMatch.texts.contains("miasto")
             result.rootNodeMatch.getXPos().equals("subst")
             result.rootNodeMatch.id == 1;
             result.nodeMatchList.size() == 1;
@@ -134,7 +134,7 @@ class PatternMatchTest extends Specification {
         given:
             PatternMatch result = PatternMatch.parseRule("miasto   / nam_geo_loc:source ")
         expect:
-            result.rootNodeMatch.text.equals("miasto")
+            result.rootNodeMatch.texts.contains("miasto")
             result.rootNodeMatch.namedEntity.equals("nam_geo_loc")
             result.rootNodeMatch.role.equals("source")
             result.rootNodeMatch.id == 1;
@@ -146,7 +146,7 @@ class PatternMatchTest extends Specification {
             PatternMatch result = PatternMatch.parseRule(" [subst] ^stolica / nam_geo_loc:source ")
         expect:
             result.rootNodeMatch.isMatchLemma() == true
-            result.rootNodeMatch.text.equals("stolica")
+            result.rootNodeMatch.texts.contains("stolica")
             result.rootNodeMatch.getXPos().equals("subst")
             result.rootNodeMatch.namedEntity.equals("nam_geo_loc")
             result.rootNodeMatch.role.equals("source")
@@ -159,11 +159,11 @@ class PatternMatchTest extends Specification {
         given:
             PatternMatch result = PatternMatch.parseRule("jest > stolicą ")
         expect:
-            result.rootNodeMatch.text.equals("stolicą")
+            result.rootNodeMatch.texts.contains("stolicą")
             result.rootNodeMatch.edgeMatchList.size() == 1;
             result.rootNodeMatch.edgeMatchList.get(0).side.equals("left")
             result.rootNodeMatch.edgeMatchList.get(0).parentNodeMatch == result.rootNodeMatch
-            result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.text.equals("jest")
+            result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.texts.contains("jest")
             result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.parentEdgeMatch == result.rootNodeMatch.edgeMatchList.get(0)
             result.rootNodeMatch.id == 2;
             result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.id == 1
@@ -176,11 +176,11 @@ class PatternMatchTest extends Specification {
         given:
             PatternMatch result = PatternMatch.parseRule("stolicą < jest ")
         expect:
-            result.rootNodeMatch.text.equals("stolicą")
+            result.rootNodeMatch.texts.contains("stolicą")
             result.rootNodeMatch.edgeMatchList.size() == 1;
             result.rootNodeMatch.edgeMatchList.get(0).side.equals("right")
             result.rootNodeMatch.edgeMatchList.get(0).parentNodeMatch == result.rootNodeMatch
-            result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.text.equals("jest")
+            result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.texts.contains("jest")
             result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.parentEdgeMatch == result.rootNodeMatch.edgeMatchList.get(0)
             result.rootNodeMatch.id == 1;
             result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.id == 2
@@ -195,12 +195,12 @@ class PatternMatchTest extends Specification {
             PatternMatch result = PatternMatch.parseRule("jest (nmod) > stolicą ")
             NodeMatch nm = result.getALeaf().get()
         expect:
-            result.rootNodeMatch.text.equals("stolicą")
+            result.rootNodeMatch.texts.contains("stolicą")
             result.rootNodeMatch.edgeMatchList.size() == 1;
             result.rootNodeMatch.edgeMatchList.get(0).side.equals("left")
             result.rootNodeMatch.edgeMatchList.get(0).parentNodeMatch == result.rootNodeMatch
             result.rootNodeMatch.edgeMatchList.get(0).depRel.equals("nmod")
-            result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.text.equals("jest")
+            result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.texts.contains("jest")
             result.rootNodeMatch.edgeMatchList.get(0).nodeMatch.parentEdgeMatch == result.rootNodeMatch.edgeMatchList.get(0)
             result.nodeMatchList.size() == 2;
 
@@ -386,7 +386,7 @@ class PatternMatchTest extends Specification {
             NodeMatch startNodeMatch = pattern.getALeaf().get();
             Optional<NodeMatch> optSecondNodeLeaf = pattern.getALeaf(Set.of(startNodeMatch.getId()))
             pattern.nodeMatchList.size() == 2;
-            startNodeMatch.text.equals("południe")
+            startNodeMatch.texts.contains("południe")
             optSecondNodeLeaf.isEmpty()
     }
 
@@ -398,10 +398,10 @@ class PatternMatchTest extends Specification {
             pattern.nodeMatchList.size() == 5;
 
             NodeMatch startNodeMatch = pattern.getALeaf().get();
-            startNodeMatch.text.equals("W")
+            startNodeMatch.texts.contains("W")
 
             Optional<NodeMatch> optSecondNodeLeaf = pattern.getALeaf(Set.of(startNodeMatch.getId()))
-            optSecondNodeLeaf.get().text.equals("jazzowe")
+            optSecondNodeLeaf.get().texts.contains("jazzowe")
 
             Optional<NodeMatch> optThirdNodeLeaf = pattern.getALeaf(Set.of(startNodeMatch.getId(), optSecondNodeLeaf.get().getId()))
             optThirdNodeLeaf.isEmpty()
@@ -633,7 +633,7 @@ class PatternMatchTest extends Specification {
             EdgeMatch em = new EdgeMatch();
             em.matchAnyDepRel = true;
             NodeMatch nm = new NodeMatch();
-            nm.text = "się";
+            nm.texts.add("się");
             em.setNodeMatch(nm);
             nm.setParentEdgeMatch(em);
             pattern.rootNodeMatch.getEdgeMatchList().add(em);
@@ -652,7 +652,7 @@ class PatternMatchTest extends Specification {
             EdgeMatch em = new EdgeMatch();
             em.matchAnyDepRel = true;
             NodeMatch nm = new NodeMatch();
-            nm.text = "często";
+            nm.texts.add("często");
             em.setNodeMatch(nm);
             nm.setParentEdgeMatch(em);
             pattern.rootNodeMatch.getEdgeMatchList().add(em);
@@ -671,7 +671,7 @@ class PatternMatchTest extends Specification {
             EdgeMatch em = new EdgeMatch();
             em.matchAnyDepRel = true;
             NodeMatch nm = new NodeMatch();
-            nm.text = "zawody";
+            nm.texts.add("zawody");
             em.setNodeMatch(nm);
             nm.setParentEdgeMatch(em);
             pattern.getNodeMatchList().get(0).getEdgeMatchList().add(em);
@@ -689,7 +689,7 @@ class PatternMatchTest extends Specification {
             EdgeMatch em = new EdgeMatch();
             em.matchAnyDepRel = true;
             NodeMatch nm = new NodeMatch();
-            nm.text = "olimpiady";
+            nm.texts.contains("olimpiady");
             em.setNodeMatch(nm);
             nm.setParentEdgeMatch(em);
             pattern.getNodeMatchList().get(0).getEdgeMatchList().add(em);

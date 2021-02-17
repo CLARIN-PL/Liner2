@@ -6,7 +6,9 @@ import lombok.Data;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Data
@@ -17,13 +19,15 @@ public class NodeMatch {
 
   private boolean isMatchAnyText;
   private boolean isMatchLemma;
-  private String text;
+  //private String text;
+  private Set<String> texts = new HashSet<>();
 
   private String xPos;
 
   private String namedEntity;
   private String role;
 
+  private String functionName;
 
   private EdgeMatch parentEdgeMatch;
   private List<EdgeMatch> edgeMatchList = new ArrayList<>();
@@ -32,7 +36,7 @@ public class NodeMatch {
   }
 
   public void dumpString() {
-    log.debug("NodeMatch: text = " + text + " xPos=" + xPos + " namedEntity=" + namedEntity + " role=" + role);
+    log.debug("NodeMatch: texts = " + texts + " xPos=" + xPos + " namedEntity=" + namedEntity + " role=" + role);
     for (final EdgeMatch em : getEdgeMatchList()) {
       em.dumpString();
     }
@@ -44,8 +48,8 @@ public class NodeMatch {
 
   public boolean isMatchAnyTotal() {
     return isMatchAnyText
-      && ((xPos == null) || (xPos.isEmpty()))
-      && ((namedEntity == null) || (namedEntity.isEmpty()));
+        && ((xPos == null) || (xPos.isEmpty()))
+        && ((namedEntity == null) || (namedEntity.isEmpty()));
   }
 
   public boolean hasAnnotation() {
@@ -54,7 +58,7 @@ public class NodeMatch {
 
   public boolean isMatchAnyTotalWithDepRel() {
     return isMatchAnyTotal()
-      && ((parentEdgeMatch == null) || parentEdgeMatch.isMatchAnyDepRel());
+        && ((parentEdgeMatch == null) || parentEdgeMatch.isMatchAnyDepRel());
   }
 
 
@@ -67,11 +71,21 @@ public class NodeMatch {
     //text
     if (!isMatchAnyText) {
       if (!isMatchLemma) {
-        if (!text.equals(token.getAttributeValue("orth"))) {  //form //word
-          return false;
+        if ((functionName == null) || (functionName.isEmpty())) {
+          if (!texts.contains(token.getAttributeValue("orth"))) {  //form //word
+            return false;
+          }
+        } else {
+
+          // aaaand here ....
+          if (functionName.equals("deGender")) {
+
+          }
+
+
         }
       } else {
-        if (!text.equals(token.getAttributeValue("lemma"))) {
+        if (!texts.contains(token.getAttributeValue("lemma"))) {
           return false;
         }
       }

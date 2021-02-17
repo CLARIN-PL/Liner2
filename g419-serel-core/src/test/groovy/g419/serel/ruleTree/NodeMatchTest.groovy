@@ -41,7 +41,7 @@ class NodeMatchTest extends Specification {
     def "matches recognizes orth"() {
         when:
             NodeMatch nm = new NodeMatch();
-            nm.text = "stolicą"
+            nm.texts.add("stolicą")
         then:
             nm.matches(token) == true
     }
@@ -50,7 +50,7 @@ class NodeMatchTest extends Specification {
         when:
             NodeMatch nm = new NodeMatch();
             nm.matchLemma = true;
-            nm.text = "stolica"
+            nm.texts.add("stolica")
         then:
             nm.matches(token) == true
     }

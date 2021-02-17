@@ -227,6 +227,16 @@ public interface ParseRuleListener extends ParseTreeListener {
 	 */
 	void exitText(ParseRuleParser.TextContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ParseRuleParser#functionName}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionName(ParseRuleParser.FunctionNameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ParseRuleParser#functionName}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionName(ParseRuleParser.FunctionNameContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ParseRuleParser#id}.
 	 * @param ctx the parse tree
 	 */

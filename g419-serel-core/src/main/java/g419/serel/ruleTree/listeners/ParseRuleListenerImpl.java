@@ -10,6 +10,8 @@ import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static g419.serel.parseRule.ParseRuleParser.*;
 
@@ -122,13 +124,39 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
       if (ctx.element() != null) {
 
         final String text = ctx.element().text().getText();
+
+/*
+        Ok.czyli wszsytko wiadomo:
+        w trakcie parsowania już gdy trafiamy na funckję to odpalamy słowosieć
+        i znajdujemy na podstawie naszego podanego wyrazu alternatywy dla męskie/żeński
+        i wstawiamy je do {
+          tablicy alternatyw
+        } -i w trakcie porównywania jak ta tablica nie
+        jest pusta to jest porównywanie LEMATÓW z tymi rzecami które są w tablicy.
+            W ten sposób nie są generowane nowe ilości wzorców a i jednocześnie nie jest
+        tak, że za każdym porównaniem trzeba wyszukiwać w słowosieci odpowiedników.
+        Włala !!!;)
+
+ */
+
+
         if (text.equals("*")) {
           nodeMatch.setMatchAnyText(true);
         } else if (text.charAt(0) == '^') {
-          nodeMatch.setMatchLemma(true);
-          nodeMatch.setText(text.substring(1));
+          if (ctx.element().text().id().functionName() != null) {
+            nodeMatch.setFunctionName(ctx.element().text().id().functionName().getText());
+            System.out.println("function name =" + nodeMatch.getFunctionName());
+//            nodeMatch.setText(text.substring(text.indexOf(":") + 1));
+//            System.out.println("retrieved text =" + nodeMatch.getText());
+            extractPatternTextsToNode(nodeMatch, ctx.element().text().id().IDENTIFIER());
+          } else {
+            nodeMatch.setMatchLemma(true);
+            //nodeMatch.setText(text.substring(1));
+            extractPatternTextsToNode(nodeMatch, ctx.element().text().id().IDENTIFIER());
+          }
         } else {
-          nodeMatch.setText(text);
+          //nodeMatch.setText(text);
+          extractPatternTextsToNode(nodeMatch, ctx.element().text().id().IDENTIFIER());
         }
 
         if (ctx.element().namedEntityToRole() != null) {
@@ -145,6 +173,12 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
     }
 
     return nodeMatch;
+  }
+
+
+  private void extractPatternTextsToNode(final NodeMatch nodeMatch, final List<TerminalNode> textsList) {
+    final Set<String> strings = textsList.stream().map(t -> t.getText()).collect(Collectors.toSet());
+    nodeMatch.setTexts(strings);
   }
 
 
@@ -451,6 +485,19 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
 
   @Override
   public void enterRootRightExpression(final RootRightExpressionContext ctx) {
+
+  }
+
+
+  @Override
+  public void exitFunctionName(final FunctionNameContext parserRuleContext) {
+    //log.debug(" exiting EveryRule");
+
+  }
+
+  @Override
+  public void enterFunctionName(final FunctionNameContext parserRuleContext) {
+    //log.debug(" exiting EveryRule");
 
   }
 
