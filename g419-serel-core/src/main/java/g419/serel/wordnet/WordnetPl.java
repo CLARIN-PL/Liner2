@@ -38,6 +38,7 @@ public class WordnetPl {
   }
 
   public void addLexicalRelation(final LexicalRelation relation) {
+    // System.out.println("Adding LR= " + relation.getRelation());
     List<LexicalRelation> relations = unitRelations.get(relation.getRelation());
     if (relations == null) {
       relations = new ArrayList<>();
@@ -209,4 +210,49 @@ public class WordnetPl {
     }
     return Optional.of(sim);
   }
+
+
+  //------------------------------------------------------------------------
+
+  private LexicalUnit getLexicalUnitByLemma(final String lemma) {
+    for (int i = 0; i < this.getLexicalUnits().size(); i++) {
+      final LexicalUnit lu = this.getLexicalUnit(i);
+      if (lu == null) {
+        continue;
+      }
+      if (lu.getName().equals(lemma)) {
+        return lu;
+      }
+    }
+    return null;
+  }
+
+  private List<LexicalUnit> getFemineLexicalUnit(final int masculineLexicalUnitId) {
+
+    final String FEMINE_VARIANT_RELATION_ID = "53";
+    final List<LexicalRelation> relations = this.unitRelations.get(FEMINE_VARIANT_RELATION_ID);
+
+    final List<LexicalUnit> result = new ArrayList<>();
+
+    for (int i = 0; i < relations.size(); i++) {
+      final LexicalRelation lr = relations.get(i);
+      if (lr.getChild().getId() == masculineLexicalUnitId) {
+        result.add(lr.getParent());
+      }
+    }
+
+    return result;
+  }
+
+  public List<String> getFemineLemmas(final String masculineLemma) {
+
+    final LexicalUnit masculineLexicalUnit = getLexicalUnitByLemma(masculineLemma);
+
+    return getFemineLexicalUnit(masculineLexicalUnit.getId())
+        .stream()
+        .map(lu -> lu.getName())
+        .collect(Collectors.toList());
+  }
+
+
 }

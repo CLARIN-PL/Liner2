@@ -4,12 +4,14 @@ import g419.serel.parseRule.ParseRuleListener;
 import g419.serel.parseRule.ParseRuleParser;
 import g419.serel.ruleTree.EdgeMatch;
 import g419.serel.ruleTree.NodeMatch;
+import g419.serel.wordnet.WordnetPl32;
 import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -122,40 +124,17 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
     nodeMatchList.add(nodeMatch);
     if (ctx != null) {
       if (ctx.element() != null) {
-
         final String text = ctx.element().text().getText();
-
-/*
-        Ok.czyli wszsytko wiadomo:
-        w trakcie parsowania już gdy trafiamy na funckję to odpalamy słowosieć
-        i znajdujemy na podstawie naszego podanego wyrazu alternatywy dla męskie/żeński
-        i wstawiamy je do {
-          tablicy alternatyw
-        } -i w trakcie porównywania jak ta tablica nie
-        jest pusta to jest porównywanie LEMATÓW z tymi rzecami które są w tablicy.
-            W ten sposób nie są generowane nowe ilości wzorców a i jednocześnie nie jest
-        tak, że za każdym porównaniem trzeba wyszukiwać w słowosieci odpowiedników.
-        Włala !!!;)
-
- */
-
 
         if (text.equals("*")) {
           nodeMatch.setMatchAnyText(true);
-        } else if (text.charAt(0) == '^') {
-          if (ctx.element().text().id().functionName() != null) {
-            nodeMatch.setFunctionName(ctx.element().text().id().functionName().getText());
-            System.out.println("function name =" + nodeMatch.getFunctionName());
-//            nodeMatch.setText(text.substring(text.indexOf(":") + 1));
-//            System.out.println("retrieved text =" + nodeMatch.getText());
-            extractPatternTextsToNode(nodeMatch, ctx.element().text().id().IDENTIFIER());
-          } else {
-            nodeMatch.setMatchLemma(true);
-            //nodeMatch.setText(text.substring(1));
-            extractPatternTextsToNode(nodeMatch, ctx.element().text().id().IDENTIFIER());
-          }
         } else {
-          //nodeMatch.setText(text);
+          if (text.charAt(0) == '^') {
+            nodeMatch.setMatchLemma(true);  // assume if we using function we use it on lemma !!!
+            if (ctx.element().text().id().functionName() != null) {
+              nodeMatch.setFunctionName(ctx.element().text().id().functionName().getText());
+            }
+          }
           extractPatternTextsToNode(nodeMatch, ctx.element().text().id().IDENTIFIER());
         }
 
@@ -178,7 +157,35 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
 
   private void extractPatternTextsToNode(final NodeMatch nodeMatch, final List<TerminalNode> textsList) {
     final Set<String> strings = textsList.stream().map(t -> t.getText()).collect(Collectors.toSet());
-    nodeMatch.setTexts(strings);
+
+    if ((nodeMatch.getFunctionName() == null) || (nodeMatch.getFunctionName().isEmpty())) {
+      nodeMatch.setTexts(strings);
+      return;
+    }
+
+    // there is a function to apply to each of given words
+    final Set<String> totalFunctionResult =
+        strings.stream()
+            .flatMap(str -> applyFunctionWithName(nodeMatch.getFunctionName(), str).stream())
+            .filter(Objects::nonNull)
+            .collect(Collectors.toSet());
+
+    nodeMatch.getTexts().addAll(totalFunctionResult);
+  }
+
+  private List<String> applyFunctionWithName(final String functionName, final String str) {
+    // get from WordPL all results for this function
+    if (functionName.equals("addFemineVariant")) {
+      final List<String> result = getFemineVariant(str);
+      result.add(str);
+      return result;
+    }
+
+    return null;
+  }
+
+  private List<String> getFemineVariant(final String str) {
+    return WordnetPl32.getInstance().getFemineLemmas(str);
   }
 
 

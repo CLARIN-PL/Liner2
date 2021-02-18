@@ -11,6 +11,9 @@ public class WordnetPl32 extends WordnetPl {
 
   static WordnetPl instance;
 
+  public static WordnetPl getInstance() { return instance;}
+
+
   static String resourcePath = "/plwordnet-3.2.xml.gz";
 
   public static WordnetPl load() throws IOException, ParserConfigurationException, SAXException {
