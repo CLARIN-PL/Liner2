@@ -105,7 +105,8 @@ public class NodeMatch {
 
       boolean found = false;
       for (final String boi : boiList) {
-        if (boi.equals("B-" + namedEntity)) {  // "B-"  -> start token of entity
+        //if (boi.equals("B-" + namedEntity)) {  // "B-"  -> start token of entity
+        if (boi.startsWith("B-" + namedEntity)) {  // "B-"  -> start token of entity
           found = true;
 
           if ((role != null) && (!role.isEmpty())) {

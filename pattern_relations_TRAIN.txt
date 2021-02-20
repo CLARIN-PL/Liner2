@@ -1,6 +1,9 @@
 
+
 affiliation::* / nam_liv_person:osoba < * / nam_org_company:firma
 affiliation::* / nam_liv_person:osoba < prezes < * / nam_org_company:firma
+
+
 affiliation::* / nam_liv_person:osoba > przedstawiciel < * / nam_org_company:firma
 
 affiliation::* / nam_liv_person:osoba > odszedł < * / nam_org_group_team:druzyna
@@ -10,54 +13,20 @@ affiliation::* / nam_liv_person:osoba > trenerem < * / nam_org_group_team:druzyn
 
 affiliation::* / nam_liv_person:osoba < * / nam_org_institution:instytucja
 
-affiliation::* / nam_liv_person:osoba < pracowniczka pracownik pracownica< * / nam_org_institution:instytucja
 
-affiliation::* / nam_liv_person:osoba > podsekretarz <  * / nam_org_institution:instytucja
-affiliation::* / nam_liv_person:osoba > przewodniczący <  * / nam_org_institution:instytucja
-affiliation::* / nam_liv_person:osoba > protokolant <  * / nam_org_institution:instytucja
-
-affiliation::* / nam_liv_person:osoba > szef szefowa <  * / nam_org_institution:instytucja
-affiliation::* / nam_liv_person:osoba < szef <  * / nam_org_institution:instytucja
-affiliation::* / nam_liv_person:osoba > prezes <  * / nam_org_institution:instytucja
-affiliation::* / nam_liv_person:osoba < prezes <  * / nam_org_institution:instytucja
-affiliation::* / nam_liv_person:osoba > wypowiedź <  * / nam_org_institution:instytucja
-affiliation::* / nam_liv_person:osoba < ^reprezentować <  * / nam_org_institution:instytucja
-affiliation::* / nam_liv_person:osoba > ^absolwent absolwentka <  * / nam_org_institution:instytucja
-affiliation::* / nam_liv_person:osoba > ^ukończyć <  * / nam_org_institution:instytucja
-
-
-affiliation::* / nam_liv_person:osoba <  * / nam_org_organization:organizacja
-affiliation::* / nam_liv_person:osoba < pracownik pracowniczka < * /nam_org_organization:organizacja
-affiliation::* / nam_liv_person:osoba > podsekretarz <  * / nam_org_organization:organizacja
-affiliation::* / nam_liv_person:osoba > przewodniczący <  * / nam_org_organization:organizacja
-affiliation::* / nam_liv_person:osoba > protokolant <  * / nam_org_organization:organizacja
-affiliation::* / nam_liv_person:osoba > szef szefowa<  * / nam_org_organization:organizacja
-affiliation::* / nam_liv_person:osoba < szef <  * / nam_org_organization:organizacja
-affiliation::* / nam_liv_person:osoba > prezes <  * / nam_org_organization:organizacja
-affiliation::* / nam_liv_person:osoba < prezes <  * / nam_org_organization:organizacja
-affiliation::* / nam_liv_person:osoba > wypowiedź <  * / nam_org_organization:organizacja
-affiliation::* / nam_liv_person:osoba < ^reprezentować <  * / nam_org_organization:organizacja
-affiliation::* / nam_liv_person:osoba > ^absolwent absolwentka <  * / nam_org_organization:organizacja
-affiliation::* / nam_liv_person:osoba > ^ukończyć <  * / nam_org_organization:organizacja
-
-
-
-affiliation::* / nam_liv_person:osoba < * / nam_org_political_party:partia_polityczna
-affiliation::* / nam_liv_person:osoba < pracownik pracowniczka < * / nam_org_political_party:partia_polityczna
-affiliation::* / nam_liv_person:osoba > podsekretarz <  * / nam_org_political_party:partia_polityczna
-affiliation::* / nam_liv_person:osoba > przewodniczący <  * / nam_org_political_party:partia_polityczna
-affiliation::* / nam_liv_person:osoba > protokolant <  * / nam_org_political_party:partia_polityczna
-affiliation::* / nam_liv_person:osoba > szef szefowa<  * / nam_org_political_party:partia_polityczna
-affiliation::* / nam_liv_person:osoba < szef <  * / nam_org_political_party:partia_polityczna
-affiliation::* / nam_liv_person:osoba > prezes <  * / nam_org_political_party:partia_polityczna
-affiliation::* / nam_liv_person:osoba < prezes <  * / nam_org_political_party:partia_polityczna
-
-affiliation::* / nam_liv_person:osoba > wypowiedź <  * / nam_org_political_party:partia_polityczna
-affiliation::* / nam_liv_person:osoba < ^reprezentować <  * / nam_org_political_party:partia_polityczna
-
-
-#affiliation::* / nam_liv_person:osoba > ^absolwent absolwentka <  * / nam_org_political_party:partia_polityczna
-#affiliation::* / nam_liv_person:osoba > ^ukończyć <  * / nam_org_political_party:partia_polityczna
+affiliation::* / nam_liv_person:osoba <  * / nam_org:organizacja
+affiliation::* / nam_liv_person:osoba < pracownik pracowniczka pracownica< * /nam_org:organizacja
+affiliation::* / nam_liv_person:osoba > podsekretarz <  * / nam_org:organizacja
+affiliation::* / nam_liv_person:osoba > przewodniczący <  * / nam_org:organizacja
+affiliation::* / nam_liv_person:osoba > protokolant <  * / nam_org:organizacja
+affiliation::* / nam_liv_person:osoba > szef szefowa<  * / nam_org:organizacja
+affiliation::* / nam_liv_person:osoba < szef <  * / nam_org:organizacja
+affiliation::* / nam_liv_person:osoba > prezes <  * / nam_org:organizacja
+affiliation::* / nam_liv_person:osoba < prezes <  * / nam_org:organizacja
+affiliation::* / nam_liv_person:osoba > wypowiedź <  * / nam_org:organizacja
+affiliation::* / nam_liv_person:osoba < ^reprezentować <  * / nam_org:organizacja
+affiliation::* / nam_liv_person:osoba > ^absolwent absolwentka <  * / nam_org:organizacja
+affiliation::* / nam_liv_person:osoba > ^ukończyć <  * / nam_org:organizacja
 
 affiliation::* / nam_liv_person:osoba > ^poseł posłanka<  * / nam_org_political_party:partia_polityczna
 affiliation::* / nam_liv_person:osoba > ^posłanka > pani <  * / nam_org_political_party:partia_polityczna
@@ -82,7 +51,7 @@ affiliation::* / nam_org_institution:instytucja <  * / nam_adj_country:kraj
 
 
 
-
+/*
 location::  * / nam_eve_human:zdarzenie > * < * / nam_loc_gpe_city:miasto
 location::  * / nam_eve_human_sport:zdarzenie < * / nam_loc_gpe_city:miasto
 #location::  * / nam_eve_human_sport:zdarzenie  > * < */ nam_loc_gpe_city:miasto
@@ -123,22 +92,8 @@ location:: */ nam_loc_gpe_city < powiat < * / nam_loc_gpe_admin2
 
 location::  * / nam_fac_goe:m1 < * / nam_loc_gpe_city:m2 < (case) *
 location::  * / nam_fac_goe:m1 < *  < * / nam_loc_gpe_city:m2 < (case) *
-
-
-
-
-# testowanie addFemineVariant
-#affiliation::* / nam_liv_person:osoba > ^addFemineVariant:szef <  * / nam_org_institution:instytucja
-#affiliation::* / nam_liv_person:osoba > ^szef szefowa <  * / nam_org_institution:instytucja
-
-
+*/
 
 /*
-# zapisywanie reguł z wieloma podrzędnymi węzłami ( location:: */ nam_loc_gpe_city < położona < województwie ( < W !) < * / nam_loc_gpe_admin1
-# zobojętnianie węzła na rodzaj (pracownik /pracowniczka)
-# dopasowywanie węzła do np. funkcji (prezes, sekretarz, skarbnik)
-# opcjonalne warianty : (case) w , (case) we
-# dla relacji location - wyłapania wszsytkich (case) koło miast i sprawdzanie czy dalej nie sięga to do miasta, fac_goe itp.
-
 # location::  * / nam_loc_gpe_city:m1 < * / nam_loc_gpe_city:m2 < (case) koło - zero TP i 4 FP mimo, że te FP są OK
 */
