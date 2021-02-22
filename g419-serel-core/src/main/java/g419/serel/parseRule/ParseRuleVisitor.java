@@ -195,6 +195,14 @@ public interface ParseRuleVisitor<T> extends ParseTreeVisitor<T> {
   T visitFunctionName(ParseRuleParser.FunctionNameContext ctx);
 
   /**
+   * Visit a parse tree produced by {@link ParseRuleParser#lemmas}.
+   *
+   * @param ctx the parse tree
+   * @return the visitor result
+   */
+  T visitLemmas(ParseRuleParser.LemmasContext ctx);
+
+  /**
    * Visit a parse tree produced by {@link ParseRuleParser#id}.
    *
    * @param ctx the parse tree

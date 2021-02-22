@@ -330,6 +330,20 @@ public interface ParseRuleListener extends ParseTreeListener {
   void exitFunctionName(ParseRuleParser.FunctionNameContext ctx);
 
   /**
+   * Enter a parse tree produced by {@link ParseRuleParser#lemmas}.
+   *
+   * @param ctx the parse tree
+   */
+  void enterLemmas(ParseRuleParser.LemmasContext ctx);
+
+  /**
+   * Exit a parse tree produced by {@link ParseRuleParser#lemmas}.
+   *
+   * @param ctx the parse tree
+   */
+  void exitLemmas(ParseRuleParser.LemmasContext ctx);
+
+  /**
    * Enter a parse tree produced by {@link ParseRuleParser#id}.
    *
    * @param ctx the parse tree

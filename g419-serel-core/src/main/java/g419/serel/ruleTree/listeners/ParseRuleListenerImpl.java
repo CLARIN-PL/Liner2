@@ -135,7 +135,10 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
               nodeMatch.setFunctionName(ctx.element().text().id().functionName().getText());
             }
           }
-          extractPatternTextsToNode(nodeMatch, ctx.element().text().id().IDENTIFIER());
+
+
+          //extractPatternTextsToNode(nodeMatch, ctx.element().text().id().IDENTIFIER())
+          extractPatternTextsToNode(nodeMatch, ctx.element().text().id().lemmas().IDENTIFIER());
         }
 
         if (ctx.element().namedEntityToRole() != null) {
@@ -153,7 +156,6 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
 
     return nodeMatch;
   }
-
 
   private void extractPatternTextsToNode(final NodeMatch nodeMatch, final List<TerminalNode> textsList) {
     final Set<String> strings = textsList.stream().map(t -> t.getText()).collect(Collectors.toSet());
@@ -179,6 +181,9 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
       final List<String> result = getFemineVariant(str);
       result.add(str);
       return result;
+    } else if (functionName.equals("addSynonims")) {
+      final List<String> result = getSynonims(str);
+      return result;
     }
 
     return null;
@@ -186,6 +191,10 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
 
   private List<String> getFemineVariant(final String str) {
     return WordnetPl32.getInstance().getFemineLemmas(str);
+  }
+
+  private List<String> getSynonims(final String str) {
+    return WordnetPl32.getInstance().getSynonimsForLemma(str);
   }
 
 
@@ -504,6 +513,19 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
 
   @Override
   public void enterFunctionName(final FunctionNameContext parserRuleContext) {
+    //log.debug(" exiting EveryRule");
+
+  }
+
+
+  @Override
+  public void exitLemmas(final LemmasContext parserRuleContext) {
+    //log.debug(" exiting EveryRule");
+
+  }
+
+  @Override
+  public void enterLemmas(final LemmasContext parserRuleContext) {
     //log.debug(" exiting EveryRule");
 
   }

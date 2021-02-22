@@ -213,6 +213,8 @@ public class WordnetPl {
 
 
   //------------------------------------------------------------------------
+  //                          SEREL additions
+  //------------------------------------------------------------------------
 
   private LexicalUnit getLexicalUnitByLemma(final String lemma) {
     for (int i = 0; i < this.getLexicalUnits().size(); i++) {
@@ -252,6 +254,20 @@ public class WordnetPl {
         .stream()
         .map(lu -> lu.getName())
         .collect(Collectors.toList());
+  }
+
+  public Set<String> getLemmasFromSynset(final Synset sst) {
+    return sst.getLexicalUnits().stream().map(lu -> lu.getName()).collect(Collectors.toSet());
+  }
+
+  public Set<String> getLemmasFromSynsetId(final int sstId) {
+    final Synset sst = synsets.get(sstId);
+    return sst.getLexicalUnits().stream().map(lu -> lu.getName()).collect(Collectors.toSet());
+  }
+
+  public List<String> getSynonimsForLemma(final String lemma) {
+    final Set<Synset> lemmaSynsets = getSynsetsWithLemma(lemma);
+    return lemmaSynsets.stream().flatMap(lst -> getLemmasFromSynset(lst).stream()).collect(Collectors.toList());
   }
 
 

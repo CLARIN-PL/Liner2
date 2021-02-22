@@ -384,6 +384,22 @@ public class ParseRuleBaseListener implements ParseRuleListener {
    * <p>The default implementation does nothing.</p>
    */
   @Override
+  public void enterLemmas(final ParseRuleParser.LemmasContext ctx) { }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation does nothing.</p>
+   */
+  @Override
+  public void exitLemmas(final ParseRuleParser.LemmasContext ctx) { }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation does nothing.</p>
+   */
+  @Override
   public void enterId(final ParseRuleParser.IdContext ctx) { }
 
   /**

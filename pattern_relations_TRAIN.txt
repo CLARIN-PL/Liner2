@@ -15,20 +15,20 @@ affiliation::* / nam_liv_person:osoba < * / nam_org_institution:instytucja
 
 
 affiliation::* / nam_liv_person:osoba <  * / nam_org:organizacja
-affiliation::* / nam_liv_person:osoba < pracownik pracowniczka pracownica< * /nam_org:organizacja
+affiliation::* / nam_liv_person:osoba < pracownik|pracowniczka|pracownica< * /nam_org:organizacja
 affiliation::* / nam_liv_person:osoba > podsekretarz <  * / nam_org:organizacja
 affiliation::* / nam_liv_person:osoba > przewodniczący <  * / nam_org:organizacja
 affiliation::* / nam_liv_person:osoba > protokolant <  * / nam_org:organizacja
-affiliation::* / nam_liv_person:osoba > szef szefowa<  * / nam_org:organizacja
+affiliation::* / nam_liv_person:osoba > szef|szefowa<  * / nam_org:organizacja
 affiliation::* / nam_liv_person:osoba < szef <  * / nam_org:organizacja
 affiliation::* / nam_liv_person:osoba > prezes <  * / nam_org:organizacja
 affiliation::* / nam_liv_person:osoba < prezes <  * / nam_org:organizacja
 affiliation::* / nam_liv_person:osoba > wypowiedź <  * / nam_org:organizacja
 affiliation::* / nam_liv_person:osoba < ^reprezentować <  * / nam_org:organizacja
-affiliation::* / nam_liv_person:osoba > ^absolwent absolwentka <  * / nam_org:organizacja
+affiliation::* / nam_liv_person:osoba > ^absolwent| absolwentka <  * / nam_org:organizacja
 affiliation::* / nam_liv_person:osoba > ^ukończyć <  * / nam_org:organizacja
 
-affiliation::* / nam_liv_person:osoba > ^poseł posłanka<  * / nam_org_political_party:partia_polityczna
+affiliation::* / nam_liv_person:osoba > ^poseł| posłanka<  * / nam_org_political_party:partia_polityczna
 affiliation::* / nam_liv_person:osoba > ^posłanka > pani <  * / nam_org_political_party:partia_polityczna
 affiliation::* / nam_liv_person:osoba > ^poseł > ^pan <  * / nam_org_political_party:partia_polityczna
 affiliation::* / nam_liv_person:osoba > ^poseł > ^pani <  * / nam_org_political_party:partia_polityczna
@@ -51,7 +51,7 @@ affiliation::* / nam_org_institution:instytucja <  * / nam_adj_country:kraj
 
 
 
-/*
+
 location::  * / nam_eve_human:zdarzenie > * < * / nam_loc_gpe_city:miasto
 location::  * / nam_eve_human_sport:zdarzenie < * / nam_loc_gpe_city:miasto
 #location::  * / nam_eve_human_sport:zdarzenie  > * < */ nam_loc_gpe_city:miasto
@@ -92,7 +92,21 @@ location:: */ nam_loc_gpe_city < powiat < * / nam_loc_gpe_admin2
 
 location::  * / nam_fac_goe:m1 < * / nam_loc_gpe_city:m2 < (case) *
 location::  * / nam_fac_goe:m1 < *  < * / nam_loc_gpe_city:m2 < (case) *
-*/
+
+
+
+
+
+
+
+affiliation::* / nam_liv_person:osoba < ^addSynonims:pracownik < * /nam_org:organizacja
+
+
+
+
+
+
+
 
 /*
 # location::  * / nam_loc_gpe_city:m1 < * / nam_loc_gpe_city:m2 < (case) koło - zero TP i 4 FP mimo, że te FP są OK

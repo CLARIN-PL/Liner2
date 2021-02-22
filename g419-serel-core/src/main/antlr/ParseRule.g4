@@ -44,8 +44,10 @@ namedEntityToRole: namedEntity toRole? ;
 toRole : ':' role ;
 namedEntity : id;
 role : id ;
+
 text : id;
 functionName: IDENTIFIER;
+lemmas : IDENTIFIER ('|' IDENTIFIER )*;
 
 
 
@@ -56,7 +58,7 @@ functionName: IDENTIFIER;
 
 
 
-id : STAR | (LEMMA | (LEMMA functionName ':'))? IDENTIFIER+ ;
+id : STAR | (LEMMA | (LEMMA functionName ':'))? lemmas ;
 
 
 STAR : '*' ;

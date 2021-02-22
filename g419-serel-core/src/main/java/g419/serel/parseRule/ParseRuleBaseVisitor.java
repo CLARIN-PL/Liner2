@@ -225,5 +225,14 @@ public class ParseRuleBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
    * {@link #visitChildren} on {@code ctx}.</p>
    */
   @Override
+  public T visitLemmas(final ParseRuleParser.LemmasContext ctx) { return visitChildren(ctx); }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation returns the result of calling
+   * {@link #visitChildren} on {@code ctx}.</p>
+   */
+  @Override
   public T visitId(final ParseRuleParser.IdContext ctx) { return visitChildren(ctx); }
 }
