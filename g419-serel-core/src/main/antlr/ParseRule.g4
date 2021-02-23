@@ -46,8 +46,12 @@ namedEntity : id;
 role : id ;
 
 text : id;
-functionName: IDENTIFIER;
+
+id : STAR | (LEMMA functions? )? lemmas ;
+
 lemmas : IDENTIFIER ('|' IDENTIFIER )*;
+functions : (functionName ':')+ ;
+functionName: IDENTIFIER;
 
 
 
@@ -55,10 +59,6 @@ lemmas : IDENTIFIER ('|' IDENTIFIER )*;
 
 
 
-
-
-
-id : STAR | (LEMMA | (LEMMA functionName ':'))? lemmas ;
 
 
 STAR : '*' ;

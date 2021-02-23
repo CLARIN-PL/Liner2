@@ -27,7 +27,7 @@ public class NodeMatch {
   private String namedEntity;
   private String role;
 
-  private String functionName;
+  private List<String> functionNames = new ArrayList<>();
 
   private EdgeMatch parentEdgeMatch;
   private List<EdgeMatch> edgeMatchList = new ArrayList<>();
@@ -71,18 +71,8 @@ public class NodeMatch {
     //text
     if (!isMatchAnyText) {
       if (!isMatchLemma) {
-        if ((functionName == null) || (functionName.isEmpty())) {
-          if (!texts.contains(token.getAttributeValue("orth"))) {  //form //word
-            return false;
-          }
-        } else {
-
-          // aaaand here ....
-          if (functionName.equals("deGender")) {
-
-          }
-
-
+        if (!texts.contains(token.getAttributeValue("orth"))) {  //form //word
+          return false;
         }
       } else {
         if (!texts.contains(token.getAttributeValue("lemma"))) {

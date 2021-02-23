@@ -227,16 +227,6 @@ public interface ParseRuleListener extends ParseTreeListener {
 	 */
 	void exitText(ParseRuleParser.TextContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ParseRuleParser#functionName}.
-	 * @param ctx the parse tree
-	 */
-	void enterFunctionName(ParseRuleParser.FunctionNameContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ParseRuleParser#functionName}.
-	 * @param ctx the parse tree
-	 */
-	void exitFunctionName(ParseRuleParser.FunctionNameContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link ParseRuleParser#lemmas}.
 	 * @param ctx the parse tree
 	 */
@@ -246,6 +236,26 @@ public interface ParseRuleListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLemmas(ParseRuleParser.LemmasContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ParseRuleParser#functions}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctions(ParseRuleParser.FunctionsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ParseRuleParser#functions}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctions(ParseRuleParser.FunctionsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ParseRuleParser#functionName}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionName(ParseRuleParser.FunctionNameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ParseRuleParser#functionName}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionName(ParseRuleParser.FunctionNameContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ParseRuleParser#id}.
 	 * @param ctx the parse tree

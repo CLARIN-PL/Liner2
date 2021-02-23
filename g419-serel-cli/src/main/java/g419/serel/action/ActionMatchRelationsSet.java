@@ -113,9 +113,8 @@ public class ActionMatchRelationsSet extends Action {
   public void run() throws Exception {
 
 
-    log.info("Wczytywanie Słowosieć 3.2 ...");
-
     try {
+      log.info("Wczytywanie Słowosieć 3.2 ...");
       WordnetPl32.load();
       //final WordnetPl wordnetPl = WordnetPl32.load();
     } catch (final Exception e) {

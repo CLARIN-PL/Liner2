@@ -97,17 +97,9 @@ location::  * / nam_fac_goe:m1 < *  < * / nam_loc_gpe_city:m2 < (case) *
 
 
 
+/* TESTY
+#affiliation::* / nam_liv_person:osoba < ^addFemineVariant:addSynonims:sekretarz < * /nam_org:organizacja
+#affiliation::* / nam_liv_person:osoba < ^addSynonims:addFemineVariant:sekretarz < * /nam_org:organizacja
 
-
-affiliation::* / nam_liv_person:osoba < ^addSynonims:pracownik < * /nam_org:organizacja
-
-
-
-
-
-
-
-
-/*
 # location::  * / nam_loc_gpe_city:m1 < * / nam_loc_gpe_city:m2 < (case) koło - zero TP i 4 FP mimo, że te FP są OK
 */

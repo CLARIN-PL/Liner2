@@ -1,5 +1,6 @@
 package g419.serel.ruleTree.listeners;
 
+import com.google.common.collect.Lists;
 import g419.serel.parseRule.ParseRuleListener;
 import g419.serel.parseRule.ParseRuleParser;
 import g419.serel.ruleTree.EdgeMatch;
@@ -131,8 +132,12 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
         } else {
           if (text.charAt(0) == '^') {
             nodeMatch.setMatchLemma(true);  // assume if we using function we use it on lemma !!!
-            if (ctx.element().text().id().functionName() != null) {
-              nodeMatch.setFunctionName(ctx.element().text().id().functionName().getText());
+            //if (ctx.element().text().id().functionName() != null) {
+            if (ctx.element().text().id().functions() != null) {
+              nodeMatch.setFunctionNames(ctx.element().text().id().functions().functionName()
+                  .stream()
+                  .map(fn -> fn.getText())
+                  .collect(Collectors.toList()));
             }
           }
 
@@ -158,21 +163,30 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
   }
 
   private void extractPatternTextsToNode(final NodeMatch nodeMatch, final List<TerminalNode> textsList) {
-    final Set<String> strings = textsList.stream().map(t -> t.getText()).collect(Collectors.toSet());
+    Set<String> strings = textsList.stream().map(t -> t.getText()).collect(Collectors.toSet());
 
-    if ((nodeMatch.getFunctionName() == null) || (nodeMatch.getFunctionName().isEmpty())) {
+    if ((nodeMatch.getFunctionNames().isEmpty())) {
       nodeMatch.setTexts(strings);
       return;
     }
 
-    // there is a function to apply to each of given words
-    final Set<String> totalFunctionResult =
-        strings.stream()
-            .flatMap(str -> applyFunctionWithName(nodeMatch.getFunctionName(), str).stream())
-            .filter(Objects::nonNull)
-            .collect(Collectors.toSet());
+    // there is at least one  function to apply to each of given words
 
-    nodeMatch.getTexts().addAll(totalFunctionResult);
+    final List<String> functionsQueue = Lists.reverse(nodeMatch.getFunctionNames());
+
+    for (int i = 0; i < functionsQueue.size(); i++) {
+      final String functionName = functionsQueue.get(i);
+      final Set<String> functionResult =
+          strings.stream()
+              .flatMap(str -> applyFunctionWithName(functionName, str).stream())
+              .filter(Objects::nonNull)
+              .collect(Collectors.toSet());
+
+      System.out.println("After function " + functionName + " functionResult is " + functionResult);
+
+      strings = functionResult;
+    }
+    nodeMatch.getTexts().addAll(strings);
   }
 
   private List<String> applyFunctionWithName(final String functionName, final String str) {
@@ -526,6 +540,18 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
 
   @Override
   public void enterLemmas(final LemmasContext parserRuleContext) {
+    //log.debug(" exiting EveryRule");
+
+  }
+
+  @Override
+  public void exitFunctions(final FunctionsContext parserRuleContext) {
+    //log.debug(" exiting EveryRule");
+
+  }
+
+  @Override
+  public void enterFunctions(final FunctionsContext parserRuleContext) {
     //log.debug(" exiting EveryRule");
 
   }

@@ -368,22 +368,6 @@ public class ParseRuleBaseListener implements ParseRuleListener {
    * <p>The default implementation does nothing.</p>
    */
   @Override
-  public void enterFunctionName(final ParseRuleParser.FunctionNameContext ctx) { }
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>The default implementation does nothing.</p>
-   */
-  @Override
-  public void exitFunctionName(final ParseRuleParser.FunctionNameContext ctx) { }
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>The default implementation does nothing.</p>
-   */
-  @Override
   public void enterLemmas(final ParseRuleParser.LemmasContext ctx) { }
 
   /**
@@ -393,6 +377,38 @@ public class ParseRuleBaseListener implements ParseRuleListener {
    */
   @Override
   public void exitLemmas(final ParseRuleParser.LemmasContext ctx) { }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation does nothing.</p>
+   */
+  @Override
+  public void enterFunctions(final ParseRuleParser.FunctionsContext ctx) { }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation does nothing.</p>
+   */
+  @Override
+  public void exitFunctions(final ParseRuleParser.FunctionsContext ctx) { }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation does nothing.</p>
+   */
+  @Override
+  public void enterFunctionName(final ParseRuleParser.FunctionNameContext ctx) { }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation does nothing.</p>
+   */
+  @Override
+  public void exitFunctionName(final ParseRuleParser.FunctionNameContext ctx) { }
 
   /**
    * {@inheritDoc}

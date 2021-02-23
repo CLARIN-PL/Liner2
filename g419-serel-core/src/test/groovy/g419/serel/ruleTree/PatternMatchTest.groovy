@@ -3,10 +3,12 @@ package g419.serel.ruleTree
 import g419.corpus.structure.Sentence
 import g419.corpus.structure.Token
 import g419.corpus.structure.TokenAttributeIndex
+import g419.serel.wordnet.WordnetPl32
 import org.antlr.v4.runtime.misc.ParseCancellationException
 import spock.lang.Specification
 
 class PatternMatchTest extends Specification {
+
 
     List<Token> tokens;
     Sentence sentence = new Sentence();
@@ -15,6 +17,14 @@ class PatternMatchTest extends Specification {
     Sentence sentence2 = new Sentence()
 
     def setup() {
+
+        try {
+            WordnetPl32.load();
+            //final WordnetPl wordnetPl = WordnetPl32.load();
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+
 
         TokenAttributeIndex tai = new TokenAttributeIndex();
         tai.addAttribute("id")
@@ -94,6 +104,37 @@ class PatternMatchTest extends Specification {
             result.rootNodeMatch.id == 1;
             result.nodeMatchList.size() == 1;
     }
+
+    def "ParseRule should parse many words separated with | char "() {
+        given:
+            PatternMatch result = PatternMatch.parseRule("miasto | wieś | stolica")
+            result.dump()
+        expect:
+            result != null
+        and:
+            result.rootNodeMatch.texts.contains("miasto")
+            result.rootNodeMatch.texts.contains("wieś")
+            result.rootNodeMatch.texts.contains("stolica")
+            result.rootNodeMatch.texts.size() == 3;
+            result.rootNodeMatch.id == 1;
+            result.nodeMatchList.size() == 1;
+    }
+
+    def "ParseRule should find femine counterparts for lemma "() {
+        given:
+            PatternMatch result = PatternMatch.parseRule("^addFemineVariant:pracownik")
+            result.dump()
+        expect:
+            result != null
+        and:
+            result.rootNodeMatch.texts.contains("pracownik")
+            result.rootNodeMatch.texts.contains("pracowniczka")
+            result.rootNodeMatch.texts.contains("pracownica")
+            result.rootNodeMatch.texts.size() == 3;
+            result.rootNodeMatch.id == 1;
+            result.nodeMatchList.size() == 1;
+    }
+
 
     def "ParseRule should not parse single invalid segment"() {
         when:
