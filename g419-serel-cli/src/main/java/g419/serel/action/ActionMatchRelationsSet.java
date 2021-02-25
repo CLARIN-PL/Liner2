@@ -402,16 +402,14 @@ public class ActionMatchRelationsSet extends Action {
             }
           }
 
-          /*
-          if (resultFalsePositiveType.get(type).size() > 0) {
+
+          if (resultFalseNegativeType.get(type).size() > 0) {
             ow.write("\tNieznalezione dopasowania to:\n");
 
             for (final RelationDesc relDesc : resultFalseNegativeType.get(type)) {
               ow.write("\t\t" + relDesc.toStringFull() + "\n");
             }
           }
-
-           */
         }
 
       } catch (final Exception e) {
@@ -451,16 +449,12 @@ public class ActionMatchRelationsSet extends Action {
         }
       }
 
-      /*
-      if (resultFalsePositiveTotal.size() > 0) {
+      if (resultFalseNegativeTotal.size() > 0) {
         ow.write("\tNieznalezione dopasowania to:\n");
-
         for (final RelationDesc relDesc : resultFalseNegativeTotal) {
           ow.write("\t\t" + relDesc.toStringFull() + "\n");
         }
       }
-       */
-
     }
 
     ow.flush();

@@ -182,7 +182,7 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
               .filter(Objects::nonNull)
               .collect(Collectors.toSet());
 
-      System.out.println("After function " + functionName + " functionResult is " + functionResult);
+      //System.out.println("After function " + functionName + " functionResult is " + functionResult);
 
       strings = functionResult;
     }
@@ -198,7 +198,14 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
     } else if (functionName.equals("addSynonims")) {
       final List<String> result = getSynonims(str);
       return result;
+    } else if (functionName.equals("addAllHyponims")) {
+      final List<String> result = getAllHiponymsForLexicalUnitName(str);
+      return result;
+    } else if (functionName.equals("addAllHyponimsById")) {
+      final List<String> result = getAllHiponymsForLexicalUnitId(Integer.valueOf(str));
+      return result;
     }
+
 
     return null;
   }
@@ -211,6 +218,14 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
     return WordnetPl32.getInstance().getSynonimsForLemma(str);
   }
 
+  private List<String> getAllHiponymsForLexicalUnitName(final String str) {
+    final String luName = str.replaceAll("_", " ");
+    return WordnetPl32.getInstance().getAllHiponymsForLexicalUnitName(luName);
+  }
+
+  private List<String> getAllHiponymsForLexicalUnitId(final int luId) {
+    return WordnetPl32.getInstance().getAllHiponymsForLexicalUnitId(luId);
+  }
 
   private EdgeMatch rightExpression2EdgeMatch(final RightExpressionContext ctx) {
     log.debug("rightExpression2EdgeMatch invoked ctx = " + ctx);

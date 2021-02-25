@@ -125,6 +125,22 @@ public class WordnetPl {
         .getOrDefault(synset, Collections.emptySet());
   }
 
+
+  public Set<Synset> getAllHiponyms(final Synset synset) {
+    final Queue<Synset> queue = Queues.newConcurrentLinkedQueue(getDirectHiponyms(synset));
+    final Set<Synset> hiponyms = Sets.newHashSet(queue);
+    while (!queue.isEmpty()) {
+      final Synset next = queue.poll();
+      getDirectHiponyms(next)
+          .stream()
+          .filter(s -> !hiponyms.contains(s))
+          .peek(hiponyms::add)
+          .forEach(queue::add);
+    }
+    return hiponyms;
+  }
+
+
   public Set<Synset> getDirectHiponyms(final Synset synset) {
     return synsetRelations
         .getOrDefault(10, Collections.emptyMap())
@@ -215,8 +231,28 @@ public class WordnetPl {
   //------------------------------------------------------------------------
   //                          SEREL additions
   //------------------------------------------------------------------------
+  public Set<String> getLemmasFromSynsetId(final int sstId) {
+    final Synset sst = synsets.get(sstId);
+    return sst.getLexicalUnits().stream().map(lu -> lu.getName()).collect(Collectors.toSet());
+  }
 
-  private LexicalUnit getLexicalUnitByLemma(final String lemma) {
+  public Set<String> getLemmasFromSynset(final Synset sst) {
+    return sst.getLexicalUnits().stream().map(lu -> lu.getName()).collect(Collectors.toSet());
+  }
+
+  public Set<String> getLemmasFromSynsets(final Set<Synset> ssts) {
+    return ssts.stream().flatMap(sst -> getLemmasFromSynset(sst).stream()).collect(Collectors.toSet());
+  }
+
+  public Set<Synset> getSynsetsWithLexicalUnit(final LexicalUnit lexicalUnit) {
+    return synsets.values().stream().filter(sst -> sst.lexicalUnits.contains(lexicalUnit)).collect(Collectors.toSet());
+  }
+
+
+  //public LexicalUnit getLexicalUnitByName(final String name) { return units.values().stream().filter(u -> u.getName().equals(name)).findAny().get();}
+
+  // TODO - many results for one lemma ?
+  private LexicalUnit getLexicalUnitByName(final String lemma) {
     for (int i = 0; i < this.getLexicalUnits().size(); i++) {
       final LexicalUnit lu = this.getLexicalUnit(i);
       if (lu == null) {
@@ -248,26 +284,42 @@ public class WordnetPl {
 
   public List<String> getFemineLemmas(final String masculineLemma) {
 
-    final LexicalUnit masculineLexicalUnit = getLexicalUnitByLemma(masculineLemma);
+    final LexicalUnit masculineLexicalUnit = getLexicalUnitByName(masculineLemma);
+    if (masculineLexicalUnit != null) {
 
-    return getFemineLexicalUnit(masculineLexicalUnit.getId())
-        .stream()
-        .map(lu -> lu.getName())
-        .collect(Collectors.toList());
+      return getFemineLexicalUnit(masculineLexicalUnit.getId())
+          .stream()
+          .map(lu -> lu.getName())
+          .collect(Collectors.toList());
+    }
+
+    return new ArrayList<>();
   }
 
-  public Set<String> getLemmasFromSynset(final Synset sst) {
-    return sst.getLexicalUnits().stream().map(lu -> lu.getName()).collect(Collectors.toSet());
-  }
-
-  public Set<String> getLemmasFromSynsetId(final int sstId) {
-    final Synset sst = synsets.get(sstId);
-    return sst.getLexicalUnits().stream().map(lu -> lu.getName()).collect(Collectors.toSet());
-  }
 
   public List<String> getSynonimsForLemma(final String lemma) {
     final Set<Synset> lemmaSynsets = getSynsetsWithLemma(lemma);
     return lemmaSynsets.stream().flatMap(lst -> getLemmasFromSynset(lst).stream()).collect(Collectors.toList());
+  }
+
+  public List<String> getAllHiponymsForLexicalUnitName(final String luName) {
+    System.out.println("Searching Lu by name ='" + luName + "'");
+    final LexicalUnit lu = this.getLexicalUnitByName(luName);
+    return getAllHiponymsForLexicalUnitId(lu.getId());
+  }
+
+  public List<String> getAllHiponymsForLexicalUnitId(final int luId) {
+
+    final LexicalUnit lu = this.getLexicalUnit(luId);
+    System.out.println("root LU =" + lu);
+
+    final Set<Synset> ssts = this.getSynsetsWithLexicalUnit(lu);
+
+    final Set<Synset> allHiponyms = ssts.stream().flatMap(sst -> this.getAllHiponyms(sst).stream()).collect(Collectors.toSet());
+
+    final Set<String> lemmas = this.getLemmasFromSynsets(allHiponyms);
+
+    return new ArrayList<>(lemmas);
   }
 
 

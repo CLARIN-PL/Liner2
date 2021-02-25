@@ -338,14 +338,19 @@ public class Sentence extends IdentifiableElement {
 
 
   public String toStringDecorated(final ArrayList<Integer> indexes) {
+    return toStringDecorated(indexes, 0);
+  }
+
+
+  public String toStringDecorated(final ArrayList<Integer> indexes, final int correction) {
 
     final StringBuilder sb = new StringBuilder();
     for (final Token t : tokens) {
-      if (indexes.contains(t.getNumberId() - 1)) {
+      if (indexes.contains(t.getNumberId() - correction)) {
         sb.append(">");
       }
       sb.append(t.getOrth());
-      if (indexes.contains(t.getNumberId() - 1)) {
+      if (indexes.contains(t.getNumberId() - correction)) {
         sb.append("<");
       }
 

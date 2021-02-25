@@ -1,10 +1,43 @@
 
+/*
+#affiliation::* / nam_liv_person:osoba < ^addFemineVariant:addAllHyponims:człowiek_ze_względu_na_pełnioną_funkcję < * /nam_org:organizacja
+#affiliation::* / nam_liv_person:osoba > ^addFemineVariant:addAllHyponims:człowiek_ze_względu_na_pełnioną_funkcję < * /nam_org:organizacja
+*/
 
-affiliation::* / nam_liv_person:osoba < * / nam_org_company:firma
-affiliation::* / nam_liv_person:osoba < prezes < * / nam_org_company:firma
+
+affiliation::* / nam_liv_person:osoba < ^addFemineVariant:addAllHyponims:człowiek < * /nam_org:organizacja
+affiliation::* / nam_liv_person:osoba > ^addFemineVariant:addAllHyponims:człowiek < * /nam_org:organizacja
 
 
-affiliation::* / nam_liv_person:osoba > przedstawiciel < * / nam_org_company:firma
+
+/*
+#### ta sekcja jest zastąpiona przez powyższe dwa wzorce ^^
+
+#affiliation::* / nam_liv_person:osoba < * / nam_org_company:firma
+#affiliation::* / nam_liv_person:osoba < prezes < * / nam_org_company:firma
+#affiliation::* / nam_liv_person:osoba > przedstawiciel < * / nam_org_company:firma
+
+#affiliation::* / nam_liv_person:osoba < pracownik|pracowniczka|pracownica< * /nam_org:organizacja
+#affiliation::* / nam_liv_person:osoba > podsekretarz <  * / nam_org:organizacja
+#affiliation::* / nam_liv_person:osoba > przewodniczący <  * / nam_org:organizacja
+#affiliation::* / nam_liv_person:osoba > protokolant <  * / nam_org:organizacja
+#affiliation::* / nam_liv_person:osoba > szef|szefowa<  * / nam_org:organizacja
+#affiliation::* / nam_liv_person:osoba < szef <  * / nam_org:organizacja
+#affiliation::* / nam_liv_person:osoba > prezes <  * / nam_org:organizacja
+#affiliation::* / nam_liv_person:osoba < prezes <  * / nam_org:organizacja
+
+#affiliation::* / nam_liv_person:osoba > ^poseł| posłanka<  * / nam_org_political_party:partia_polityczna
+*/
+
+
+
+####affiliation::* / nam_liv_person:osoba > * > [praet] * < * < * /nam_org:organizacja
+#ani jedno ani drugie nie jest dobre
+#affiliation::* / nam_org:instytucja1 <  * / nam_org:instytucja2
+#affiliation::* / nam_org:instytucja1 < * <  * / nam_org:instytucja2
+
+
+
 
 affiliation::* / nam_liv_person:osoba > odszedł < * / nam_org_group_team:druzyna
 affiliation::* / nam_liv_person:osoba > przeszedł < * / nam_org_group_team:druzyna
@@ -13,22 +46,13 @@ affiliation::* / nam_liv_person:osoba > trenerem < * / nam_org_group_team:druzyn
 
 affiliation::* / nam_liv_person:osoba < * / nam_org_institution:instytucja
 
-
 affiliation::* / nam_liv_person:osoba <  * / nam_org:organizacja
-affiliation::* / nam_liv_person:osoba < pracownik|pracowniczka|pracownica< * /nam_org:organizacja
-affiliation::* / nam_liv_person:osoba > podsekretarz <  * / nam_org:organizacja
-affiliation::* / nam_liv_person:osoba > przewodniczący <  * / nam_org:organizacja
-affiliation::* / nam_liv_person:osoba > protokolant <  * / nam_org:organizacja
-affiliation::* / nam_liv_person:osoba > szef|szefowa<  * / nam_org:organizacja
-affiliation::* / nam_liv_person:osoba < szef <  * / nam_org:organizacja
-affiliation::* / nam_liv_person:osoba > prezes <  * / nam_org:organizacja
-affiliation::* / nam_liv_person:osoba < prezes <  * / nam_org:organizacja
+
 affiliation::* / nam_liv_person:osoba > wypowiedź <  * / nam_org:organizacja
 affiliation::* / nam_liv_person:osoba < ^reprezentować <  * / nam_org:organizacja
 affiliation::* / nam_liv_person:osoba > ^absolwent| absolwentka <  * / nam_org:organizacja
 affiliation::* / nam_liv_person:osoba > ^ukończyć <  * / nam_org:organizacja
 
-affiliation::* / nam_liv_person:osoba > ^poseł| posłanka<  * / nam_org_political_party:partia_polityczna
 affiliation::* / nam_liv_person:osoba > ^posłanka > pani <  * / nam_org_political_party:partia_polityczna
 affiliation::* / nam_liv_person:osoba > ^poseł > ^pan <  * / nam_org_political_party:partia_polityczna
 affiliation::* / nam_liv_person:osoba > ^poseł > ^pani <  * / nam_org_political_party:partia_polityczna
@@ -95,6 +119,7 @@ location::  * / nam_fac_goe:m1 < *  < * / nam_loc_gpe_city:m2 < (case) *
 
 
 
+####affiliation::* / nam_org_institution:instytucja1 < addAllHyponims:czasownik_dynamiczny_(akcja) < * / nam_org_institution:instytucja2
 
 
 /* TESTY
