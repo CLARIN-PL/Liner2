@@ -34,7 +34,8 @@ rightExpression
 leftEdge : depRel?  '>'  ;
 rightEdge : '<' depRel? ;
 depRel : '(' depRelValue ')';
-depRelValue : id ;
+depRelValue : depRelValuePart ( ':' depRelValuePart)*;
+depRelValuePart : IDENTIFIER;
 
 node:  xPos? element;
 xPos : '[' xPosValue ']' ;
@@ -63,7 +64,7 @@ functionName: IDENTIFIER;
 
 STAR : '*' ;
 LEMMA :'^' ;
-IDENTIFIER : [a-zA-Z0-9_ĄąĆćĘęŁłŃńÓóŚśŻżŹź]+;
+IDENTIFIER : [a-zA-Z0-9_ĄąĆćĘęŁłŃńÓóŚśŻżŹź%'.\-\u00A0-\uFFFF]+;
 
 WS : [ \t\r\n]+ -> skip;
 //NewLine : ('\r'?'\n'|'\r') -> skip;

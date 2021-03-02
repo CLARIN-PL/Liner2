@@ -115,6 +115,14 @@ public interface ParseRuleVisitor<T> extends ParseTreeVisitor<T> {
   T visitDepRelValue(ParseRuleParser.DepRelValueContext ctx);
 
   /**
+   * Visit a parse tree produced by {@link ParseRuleParser#depRelValuePart}.
+   *
+   * @param ctx the parse tree
+   * @return the visitor result
+   */
+  T visitDepRelValuePart(ParseRuleParser.DepRelValuePartContext ctx);
+
+  /**
    * Visit a parse tree produced by {@link ParseRuleParser#node}.
    *
    * @param ctx the parse tree
@@ -187,6 +195,14 @@ public interface ParseRuleVisitor<T> extends ParseTreeVisitor<T> {
   T visitText(ParseRuleParser.TextContext ctx);
 
   /**
+   * Visit a parse tree produced by {@link ParseRuleParser#id}.
+   *
+   * @param ctx the parse tree
+   * @return the visitor result
+   */
+  T visitId(ParseRuleParser.IdContext ctx);
+
+  /**
    * Visit a parse tree produced by {@link ParseRuleParser#lemmas}.
    *
    * @param ctx the parse tree
@@ -209,12 +225,4 @@ public interface ParseRuleVisitor<T> extends ParseTreeVisitor<T> {
    * @return the visitor result
    */
   T visitFunctionName(ParseRuleParser.FunctionNameContext ctx);
-
-  /**
-   * Visit a parse tree produced by {@link ParseRuleParser#id}.
-   *
-   * @param ctx the parse tree
-   * @return the visitor result
-   */
-  T visitId(ParseRuleParser.IdContext ctx);
 }

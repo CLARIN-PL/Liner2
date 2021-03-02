@@ -106,79 +106,33 @@ public class ActionMatchRelationsSet extends Action {
     if (line.hasOption(CommonOptions.OPTION_VERBOSE)) {
       verbose = true;
     }
-
   }
+
 
   @Override
   public void run() throws Exception {
 
-
-    try {
-      log.info("Wczytywanie Słowosieć 3.2 ...");
-      WordnetPl32.load();
-      //final WordnetPl wordnetPl = WordnetPl32.load();
-    } catch (final Exception e) {
-      e.printStackTrace();
-    }
+    preprocessParameters();
 
 
-    if ((rulesFilename != null) && (!rulesFilename.isEmpty())) {
-      System.out.println(" Patterns filename = " + rulesFilename);
-      final File file = new File(rulesFilename);
-      final BufferedReader br = new BufferedReader(new FileReader(file));
-
-      String pattern;
-      boolean commentMode = false;
-      while ((pattern = br.readLine()) != null) {
-        if (!pattern.isEmpty()) {
-
-          if (pattern.trim().startsWith("*/")) {
-            commentMode = false;
-            continue;
-          }
-
-          if (pattern.trim().startsWith("/*")) {
-            commentMode = true;
-            continue;
-          }
-
-          if (commentMode) {
-            continue;
-          }
-
-          if (!pattern.trim().startsWith("#") && !(pattern.trim().startsWith("//"))) {
-            patterns.add(pattern);
-          } else {
-            System.out.println("Commented out pattern: " + pattern);
-          }
-        }
-      }
-    }
-    System.out.println("verify_relations mode  = " + verifyRelationsMode);
-    System.out.println("Number of patterns found  = " + patterns.size());
     patterns.forEach(pattern -> processOnePattern(pattern));
 
+    if (verifyRelationsMode) {
+      // preproceessFinalResults();
+    }
 
     writeResultsToFile();
   }
 
-  private boolean isPatternARelation(final PatternMatch pattern) {
-    if ((pattern.getRelationType() == null)
-        ||
-        (pattern.getRelationType().trim().isEmpty())) {
-      return false;
-    }
-
-    return true;
-  }
 
   private void processOnePattern(final String pattern) {
     System.out.println("Processing pattern: " + pattern);
+    //printHeapSize();
 
     final List<PatternMatchSingleResult> thisPatternResults = new LinkedList<>();
     final List<PatternMatchSingleResult> thisPatternResultsTruePositive = new LinkedList<>();
     final List<PatternMatchSingleResult> thisPatternResultsFalsePositive = new LinkedList<>();
-    final List<RelationDesc> thisPatternResultsFalseNegative = new LinkedList<>();
+    //final List<RelationDesc> thisPatternResultsFalseNegative = new LinkedList<>();
 
     final PatternMatch patternMatch = PatternMatch.parseRule(pattern);
 
@@ -201,7 +155,9 @@ public class ActionMatchRelationsSet extends Action {
               thisPatternResults.addAll(documentResult);
               thisPatternResultsTruePositive.addAll(documentResultTruePositive);
               thisPatternResultsFalsePositive.addAll(documentResultFalsePositive);
-              thisPatternResultsFalseNegative.addAll(documentResultFalseNegative);
+              //thisPatternResultsFalseNegative.addAll(documentResultFalseNegative);
+
+              //documentName2documentResultTruePositive.put(comboedDoc.getName(), documentResultTruePositive);
 
             } catch (final Exception e) {
               System.out.println("Problem z dokumentem " + comboedDoc.getName());
@@ -217,7 +173,7 @@ public class ActionMatchRelationsSet extends Action {
     patternsResults.add(thisPatternResults);
     patternsResultsTruePositive.add(thisPatternResultsTruePositive);
     patternsResultsFalsePositive.add(thisPatternResultsFalsePositive);
-    patternsResultsFalseNegative.add(thisPatternResultsFalseNegative);
+    //patternsResultsFalseNegative.add(thisPatternResultsFalseNegative);
 
 
   }
@@ -228,7 +184,7 @@ public class ActionMatchRelationsSet extends Action {
     documentResult = new ArrayList<>();
     documentResultTruePositive = new ArrayList<>();
     documentResultFalsePositive = new ArrayList<>();
-    documentResultFalseNegative = new ArrayList<>();
+    //documentResultFalseNegative = new ArrayList<>();
 
     int sentenceIndex = 0;
     for (final Sentence sentence : d.getParagraphs().get(0).getSentences()) {
@@ -257,7 +213,7 @@ public class ActionMatchRelationsSet extends Action {
 
           documentResultTruePositive.addAll(sentenceResultsTruePositive);
           documentResultFalsePositive.addAll(sentenceResultsFalsePositive);
-          documentResultFalseNegative.addAll(sentenceResultsFalseNegative);
+          //documentResultFalseNegative.addAll(sentenceResultsFalseNegative);
         }
       } catch (final Throwable th) {
         th.printStackTrace();
@@ -286,8 +242,60 @@ public class ActionMatchRelationsSet extends Action {
       }
       sentenceResultsFalsePositive.add(pmsr);
     }
-    sentenceResultsFalseNegative = allSentenceNamRels;
+    //sentenceResultsFalseNegative = allSentenceNamRels;
   }
+
+/*
+  private final void preproceessFinalResults() {
+
+    try (
+        final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
+        final PrintWriter reportWriter = reportFilename == null ? null : new PrintWriter(new FileWriter(new File(reportFilename)))
+    ) {
+      reader.forEach(comboedDoc -> {
+            try {
+              List<PatternMatchSingleResult> docTruePositives = documentName2documentResultTruePositive.get(comboedDoc.getName());
+
+              int sentenceIndex = 0;
+              for (final Sentence sentence : comboedDoc.getParagraphs().get(0).getSentences()) {
+
+                // dla każdego takieog zdania sprawdź dla każdej relacji jeśli żaden wzorzec
+                // jej nie wykrył to ląduje w FalseNegative'ach
+                sentenceIndex++;
+                try {
+
+                  final SentenceMiscValues smv = SentenceMiscValues.from(sentence, sentenceIndex);
+
+                  final List<RelationDesc> allSentenceNamRels = smv.getAllNamRels();
+
+                  for (RelationDesc rd : allSentenceNamRels) {
+
+
+                  }
+
+
+                  resultFalseNegativeTotal.
+
+
+                }
+              }
+
+
+            } catch (final Exception e) {
+              System.out.println("Problem z dokumentem " + comboedDoc.getName());
+              e.printStackTrace();
+            }
+          }
+      );
+    } catch (
+        final Exception e) {
+      e.printStackTrace();
+    }
+
+
+  }
+
+ */
 
 
   private void writeResultsToFile() throws Exception {
@@ -306,7 +314,7 @@ public class ActionMatchRelationsSet extends Action {
 
       final List<PatternMatchSingleResult> resultTruePositive = patternsResultsTruePositive.get(i);
       final List<PatternMatchSingleResult> resultFalsePositive = patternsResultsFalsePositive.get(i);
-      final List<RelationDesc> resultFalseNegative = patternsResultsFalseNegative.get(i);
+      //final List<RelationDesc> resultFalseNegative = patternsResultsFalseNegative.get(i);
 
       ow.write("Dla wzorca ='" + pattern + "'\n");
       ow.write("\t" + result.size() + "\t- znalezionych wyników \n");
@@ -344,10 +352,10 @@ public class ActionMatchRelationsSet extends Action {
           accumulateInTypeResultFalsePositive(pmsr);
         }
 
-        for (final RelationDesc rd : resultFalseNegative) {
-          accumulateInTotalResultFalseNegative(rd);
-          accumulateInTypeResultFalseNegative(rd);
-        }
+//        for (final RelationDesc rd : resultFalseNegative) {
+//          accumulateInTotalResultFalseNegative(rd);
+//          accumulateInTypeResultFalseNegative(rd);
+//        }
       }
     }
 
@@ -364,26 +372,26 @@ public class ActionMatchRelationsSet extends Action {
 
         if (verifyRelationsMode) {
           resultType.computeIfAbsent(type, k -> new LinkedList<>());
-          resultFalseNegativeType.computeIfAbsent(type, k -> new LinkedList<>());
+//          resultFalseNegativeType.computeIfAbsent(type, k -> new LinkedList<>());
           resultFalsePositiveType.computeIfAbsent(type, k -> new LinkedList<>());
           resultTruePositiveType.computeIfAbsent(type, k -> new LinkedList<>());
 
-          for (final PatternMatchSingleResult pmsr : resultType.get(type)) {
-            for (int i = 0; i < resultFalseNegativeType.get(type).size(); i++) {
-              final RelationDesc relDesc = resultFalseNegativeType.get(type).get(i);
-              if (pmsr.isTheSameAs(relDesc)) {
-                resultFalseNegativeType.get(type).remove(i); // actually was hit
-              }
-            }
-          }
+//          for (final PatternMatchSingleResult pmsr : resultType.get(type)) {
+//            for (int i = 0; i < resultFalseNegativeType.get(type).size(); i++) {
+//              final RelationDesc relDesc = resultFalseNegativeType.get(type).get(i);
+//              if (pmsr.isTheSameAs(relDesc)) {
+//                resultFalseNegativeType.get(type).remove(i); // actually was hit
+//              }
+//            }
+//          }
 
           ow.write("\t" + resultTruePositiveType.get(type).size() + "\t- poprawne dopasowania\n");
           ow.write("\t" + resultFalsePositiveType.get(type).size() + "\t- niepoprawne dopasowania\n");
-          ow.write("\t" + resultFalseNegativeType.get(type).size() + "\t- nieznalezione dopasowania\n");
+          //ow.write("\t" + resultFalseNegativeType.get(type).size() + "\t- nieznalezione dopasowania\n");
           final double precision = (double) resultTruePositiveType.get(type).size() / (double) resultType.get(type).size();
           ow.write("\t" + df.format(precision) + "\t- precyzja\n");
-          final double recall = (double) resultTruePositiveType.get(type).size() / (double) (resultTruePositiveType.get(type).size() + resultFalseNegativeType.get(type).size());
-          ow.write("\t" + df.format(recall) + "\t- kompletność\n");
+          //final double recall = (double) resultTruePositiveType.get(type).size() / (double) (resultTruePositiveType.get(type).size() + resultFalseNegativeType.get(type).size());
+          //ow.write("\t" + df.format(recall) + "\t- kompletność\n");
 
           if (resultTruePositiveType.get(type).size() > 0) {
             ow.write("\tPoprawne dopasowania to:\n");
@@ -403,13 +411,13 @@ public class ActionMatchRelationsSet extends Action {
           }
 
 
-          if (resultFalseNegativeType.get(type).size() > 0) {
-            ow.write("\tNieznalezione dopasowania to:\n");
-
-            for (final RelationDesc relDesc : resultFalseNegativeType.get(type)) {
-              ow.write("\t\t" + relDesc.toStringFull() + "\n");
-            }
-          }
+//          if (resultFalseNegativeType.get(type).size() > 0) {
+//            ow.write("\tNieznalezione dopasowania to:\n");
+//
+//            for (final RelationDesc relDesc : resultFalseNegativeType.get(type)) {
+//              ow.write("\t\t" + relDesc.toStringFull() + "\n");
+//            }
+//          }
         }
 
       } catch (final Exception e) {
@@ -456,6 +464,8 @@ public class ActionMatchRelationsSet extends Action {
         }
       }
     }
+
+    ow.write("Saved to file:" + outputFilename);
 
     ow.flush();
     ow.close();
@@ -529,6 +539,92 @@ public class ActionMatchRelationsSet extends Action {
       }
     }
     return false;
+  }
+
+
+  private static void printHeapSize() {
+
+    final long heapSize = Runtime.getRuntime().totalMemory();
+
+    // Get maximum size of heap in bytes. The heap cannot grow beyond this size.// Any attempt will result in an OutOfMemoryException.
+    final long heapMaxSize = Runtime.getRuntime().maxMemory();
+
+    // Get amount of free memory within the heap in bytes. This size will increase // after garbage collection and decrease as new objects are created.
+    final long heapFreeSize = Runtime.getRuntime().freeMemory();
+
+    System.out.println("\t\t======Heapsize" + formatSize(heapSize));
+    System.out.println("\t\theapssize\t\t" + formatSize(heapSize));
+    System.out.println("\t\theapmaxsize\t\t" + formatSize(heapMaxSize));
+    System.out.println("\t\theapFreesize\t\t" + formatSize(heapFreeSize));
+
+  }
+
+  private static String formatSize(final long v) {
+    if (v < 1024) {
+      return v + " B";
+    }
+    final int z = (63 - Long.numberOfLeadingZeros(v)) / 10;
+    return String.format("%.1f %sB", (double) v / (1L << (z * 10)), " KMGTPE".charAt(z));
+  }
+
+
+  public void preprocessParameters() throws Exception {
+
+
+    try {
+      log.info("Wczytywanie Słowosieć 3.2 ...");
+      WordnetPl32.load();
+      //final WordnetPl wordnetPl = WordnetPl32.load();
+    } catch (final Exception e) {
+      e.printStackTrace();
+    }
+
+    if ((rulesFilename != null) && (!rulesFilename.isEmpty())) {
+      System.out.println(" Patterns filename = " + rulesFilename);
+      final File file = new File(rulesFilename);
+      final BufferedReader br = new BufferedReader(new FileReader(file));
+
+      String pattern;
+      boolean commentMode = false;
+      while ((pattern = br.readLine()) != null) {
+        if (!pattern.isEmpty()) {
+
+          if (pattern.trim().startsWith("*/")) {
+            commentMode = false;
+            continue;
+          }
+
+          if (pattern.trim().startsWith("/*")) {
+            commentMode = true;
+            continue;
+          }
+
+          if (commentMode) {
+            continue;
+          }
+
+          if (!pattern.trim().startsWith("#") && !(pattern.trim().startsWith("//"))) {
+            patterns.add(pattern);
+          } else {
+            System.out.println("Commented out pattern: " + pattern);
+          }
+        }
+      }
+    }
+    System.out.println("verify_relations mode  = " + verifyRelationsMode);
+    System.out.println("Number of patterns found  = " + patterns.size());
+
+  }
+
+
+  private boolean isPatternARelation(final PatternMatch pattern) {
+    if ((pattern.getRelationType() == null)
+        ||
+        (pattern.getRelationType().trim().isEmpty())) {
+      return false;
+    }
+
+    return true;
   }
 
 

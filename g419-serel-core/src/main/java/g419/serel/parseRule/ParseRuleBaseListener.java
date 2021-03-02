@@ -224,6 +224,22 @@ public class ParseRuleBaseListener implements ParseRuleListener {
    * <p>The default implementation does nothing.</p>
    */
   @Override
+  public void enterDepRelValuePart(final ParseRuleParser.DepRelValuePartContext ctx) { }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation does nothing.</p>
+   */
+  @Override
+  public void exitDepRelValuePart(final ParseRuleParser.DepRelValuePartContext ctx) { }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation does nothing.</p>
+   */
+  @Override
   public void enterNode(final ParseRuleParser.NodeContext ctx) { }
 
   /**
@@ -368,6 +384,22 @@ public class ParseRuleBaseListener implements ParseRuleListener {
    * <p>The default implementation does nothing.</p>
    */
   @Override
+  public void enterId(final ParseRuleParser.IdContext ctx) { }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation does nothing.</p>
+   */
+  @Override
+  public void exitId(final ParseRuleParser.IdContext ctx) { }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation does nothing.</p>
+   */
+  @Override
   public void enterLemmas(final ParseRuleParser.LemmasContext ctx) { }
 
   /**
@@ -409,22 +441,6 @@ public class ParseRuleBaseListener implements ParseRuleListener {
    */
   @Override
   public void exitFunctionName(final ParseRuleParser.FunctionNameContext ctx) { }
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>The default implementation does nothing.</p>
-   */
-  @Override
-  public void enterId(final ParseRuleParser.IdContext ctx) { }
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>The default implementation does nothing.</p>
-   */
-  @Override
-  public void exitId(final ParseRuleParser.IdContext ctx) { }
 
   /**
    * {@inheritDoc}

@@ -190,6 +190,20 @@ public interface ParseRuleListener extends ParseTreeListener {
   void exitDepRelValue(ParseRuleParser.DepRelValueContext ctx);
 
   /**
+   * Enter a parse tree produced by {@link ParseRuleParser#depRelValuePart}.
+   *
+   * @param ctx the parse tree
+   */
+  void enterDepRelValuePart(ParseRuleParser.DepRelValuePartContext ctx);
+
+  /**
+   * Exit a parse tree produced by {@link ParseRuleParser#depRelValuePart}.
+   *
+   * @param ctx the parse tree
+   */
+  void exitDepRelValuePart(ParseRuleParser.DepRelValuePartContext ctx);
+
+  /**
    * Enter a parse tree produced by {@link ParseRuleParser#node}.
    *
    * @param ctx the parse tree
@@ -316,6 +330,20 @@ public interface ParseRuleListener extends ParseTreeListener {
   void exitText(ParseRuleParser.TextContext ctx);
 
   /**
+   * Enter a parse tree produced by {@link ParseRuleParser#id}.
+   *
+   * @param ctx the parse tree
+   */
+  void enterId(ParseRuleParser.IdContext ctx);
+
+  /**
+   * Exit a parse tree produced by {@link ParseRuleParser#id}.
+   *
+   * @param ctx the parse tree
+   */
+  void exitId(ParseRuleParser.IdContext ctx);
+
+  /**
    * Enter a parse tree produced by {@link ParseRuleParser#lemmas}.
    *
    * @param ctx the parse tree
@@ -356,18 +384,4 @@ public interface ParseRuleListener extends ParseTreeListener {
    * @param ctx the parse tree
    */
   void exitFunctionName(ParseRuleParser.FunctionNameContext ctx);
-
-  /**
-   * Enter a parse tree produced by {@link ParseRuleParser#id}.
-   *
-   * @param ctx the parse tree
-   */
-  void enterId(ParseRuleParser.IdContext ctx);
-
-  /**
-   * Exit a parse tree produced by {@link ParseRuleParser#id}.
-   *
-   * @param ctx the parse tree
-   */
-  void exitId(ParseRuleParser.IdContext ctx);
 }

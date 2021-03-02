@@ -135,6 +135,15 @@ public class ParseRuleBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
    * {@link #visitChildren} on {@code ctx}.</p>
    */
   @Override
+  public T visitDepRelValuePart(final ParseRuleParser.DepRelValuePartContext ctx) { return visitChildren(ctx); }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation returns the result of calling
+   * {@link #visitChildren} on {@code ctx}.</p>
+   */
+  @Override
   public T visitNode(final ParseRuleParser.NodeContext ctx) { return visitChildren(ctx); }
 
   /**
@@ -216,6 +225,15 @@ public class ParseRuleBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
    * {@link #visitChildren} on {@code ctx}.</p>
    */
   @Override
+  public T visitId(final ParseRuleParser.IdContext ctx) { return visitChildren(ctx); }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation returns the result of calling
+   * {@link #visitChildren} on {@code ctx}.</p>
+   */
+  @Override
   public T visitLemmas(final ParseRuleParser.LemmasContext ctx) { return visitChildren(ctx); }
 
   /**
@@ -235,13 +253,4 @@ public class ParseRuleBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
    */
   @Override
   public T visitFunctionName(final ParseRuleParser.FunctionNameContext ctx) { return visitChildren(ctx); }
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.</p>
-   */
-  @Override
-  public T visitId(final ParseRuleParser.IdContext ctx) { return visitChildren(ctx); }
 }

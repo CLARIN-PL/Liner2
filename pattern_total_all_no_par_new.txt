@@ -1,0 +1,1661 @@
+  location:: * / nam_fac_goe:e1 <  ( appos ) kompleks <  ( nmod ) mieście <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 <  ( appos ) kompleks <  ( nmod ) mieście <  (nmod) * / nam_loc_gpe_district:e2
+  composition:: * / nam_loc_gpe_district:e1 (nmod) > mieście <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > inż ( obl:agent )  > zaprojektowanego <  ( obl ) Zakładach <  (amod:flat) * / nam_org_organization:e2
+  location:: * / nam_org_organization:e1 (amod:flat) > Zakładach <  (nmod) * / nam_loc_gpe_city:e2
+  creator:: * / nam_liv_person:e1 (appos) > inż ( obl:agent )  > zaprojektowanego ( acl )  > samolotu ( nmod )  > projekt ( appos )  > PZL
+  alias:: * / nam_pro_model_plane:e1 <  (nmod) * / nam_pro_brand:e2
+  alias:: * / nam_loc_gpe_admin1:e1 (amod) > Jutlandii ( nmod )  > okręgu <  (nmod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_admin3:e1 (nmod) > Gmina <  ( acl ) istniejąca <  ( obl ) okręgu <  ( nmod ) Jutlandii <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (amod) > Jutlandii ( nmod )  > okręgu ( obl )  > istniejąca ( acl )  > Gmina <  ( nmod ) gmina <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_admin3:e1 (nmod) > Gmina <  ( nmod ) gmina <  (nmod) * / nam_loc_gpe_country:e2
+  alias:: * / nam_loc_gpe_district:e1 <  ( conj ) okręg <  ( parataxis:insert ) ros <  (amod) * / nam_loc_gpe_district:e2
+  composition:: * / nam_loc_gpe_district:e1 (advmod) > dzielnica <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_loc_gpe_district:e1 <  (conj) * / nam_loc_gpe_district:e2
+  location:: * / nam_loc_gpe_district:e1 (advmod) > dzielnica <  ( acl ) wchodząca <  ( case ) w <  ( obl:arg ) skład <  ( nmod:arg ) Okręgu <  (amod:flat) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) miasteczko <  (nmod) * / nam_loc_gpe_country:e2
+  alias:: * / nam_loc_gpe_city:e1 <  ( parataxis:insert ) luks <  (appos) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( nmod )  > miasteczko <  (nmod) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_liv_person:e1 <  ( appos ) koszykarz <  ( acl ) występujący <  ( obl ) barwach <  (nmod) * / nam_org_group_team:e2
+  nationality:: * / nam_liv_person:e1 <  ( appos ) reprezentant <  (nmod) * / nam_loc_gpe_country:e2
+  origin:: * / nam_liv_person:e1 <  ( parataxis:insert ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Borch ( obl:cmpr )  > zwanych ( acl )  > rodów <  ( nmod ) rycerstwa <  (nmod) * / nam_org_organization:e2
+  nationality:: * / nam_liv_person:e1 (obl:cmpr) > inni ( conj )  > Borch ( obl:cmpr )  > zwanych ( acl )  > rodów ( obl:arg )  > pochodzi <  ( conj ) należała <  ( conj ) osiadły <  (obl) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Borch ( obl:cmpr )  > zwanych ( acl )  > rodów <  ( nmod ) rycerstwa <  (nmod) * / nam_org_organization:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Borch ( obl:cmpr )  > zwanych ( acl )  > rodów <  ( nmod ) rycerstwa <  (nmod) * / nam_org_organization:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Borch ( obl:cmpr )  > zwanych ( acl )  > rodów <  ( nmod ) rycerstwa <  (nmod) * / nam_org_organization:e2
+  alias:: * / nam_loc_gpe_city:e1 (nmod) > obrońca <  (appos) * / nam_loc_gpe_city:e2
+  nationality:: * / nam_liv_person:e1 (conj) > Szadurscy ( obl:cmpr )  > inni ( conj )  > Borch ( obl:cmpr )  > zwanych ( acl )  > rodów ( obl:arg )  > pochodzi <  ( conj ) należała <  ( conj ) osiadły <  (obl) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_liv_person:e1 (obl:cmpr) > zwanych ( acl )  > rodów <  ( nmod ) rycerstwa <  (nmod) * / nam_org_organization:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Borch ( obl:cmpr )  > zwanych ( acl )  > rodów <  ( nmod ) rycerstwa <  (nmod) * / nam_org_organization:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Borch ( obl:cmpr )  > zwanych ( acl )  > rodów <  ( nmod ) rycerstwa <  (nmod) * / nam_org_organization:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Borch ( obl:cmpr )  > zwanych ( acl )  > rodów <  ( nmod ) rycerstwa <  (nmod) * / nam_org_organization:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Borch ( obl:cmpr )  > zwanych ( acl )  > rodów <  ( nmod ) rycerstwa <  (nmod) * / nam_org_organization:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Borch ( obl:cmpr )  > zwanych ( acl )  > rodów <  ( nmod ) rycerstwa <  (nmod) * / nam_org_organization:e2
+  nationality:: * / nam_liv_person:e1 (conj) > Szadurscy ( obl:cmpr )  > inni ( conj )  > Borch ( obl:cmpr )  > zwanych ( acl )  > rodów ( obl:arg )  > pochodzi <  ( conj ) należała <  ( conj ) osiadły <  (obl) * / nam_loc_gpe_country:e2
+  nationality:: * / nam_liv_person:e1 (conj) > Szadurscy ( obl:cmpr )  > inni ( conj )  > Borch ( obl:cmpr )  > zwanych ( acl )  > rodów ( obl:arg )  > pochodzi <  ( conj ) należała <  ( conj ) osiadły <  (obl) * / nam_loc_gpe_country:e2
+  alias:: * / nam_org_organization:e1 (nmod) > rycerstwa ( nmod )  > rodów <  ( acl ) zwanych <  (iobj) * / nam_org_organization:e2
+  nationality:: * / nam_liv_person:e1 (conj) > Szadurscy ( obl:cmpr )  > inni ( conj )  > Borch ( obl:cmpr )  > zwanych ( acl )  > rodów ( obl:arg )  > pochodzi <  ( conj ) należała <  ( conj ) osiadły <  (obl) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Borch ( obl:cmpr )  > zwanych ( acl )  > rodów <  ( nmod ) rycerstwa <  (nmod) * / nam_org_organization:e2
+  nationality:: * / nam_liv_person:e1 (conj) > Szadurscy ( obl:cmpr )  > inni ( conj )  > Borch ( obl:cmpr )  > zwanych ( acl )  > rodów ( obl:arg )  > pochodzi <  ( conj ) należała <  ( conj ) osiadły <  (obl) * / nam_loc_gpe_country:e2
+  neighbourhood:: * / nam_fac_goe:e1 <  ( nmod ) Dzieciątka <  ( appos ) Jezus <  ( acl:relcl ) miał <  ( obl ) rejonie <  (nmod:arg) * / nam_fac_square:e2
+  neighbourhood:: * / nam_fac_road:e1 <  (conj) * / nam_fac_road:e2
+  neighbourhood:: * / nam_fac_road:e1 (conj) > Lindleya
+  location:: * / nam_liv_character:e1 (conj) > Revanem ( nmod )  > pojedynek ( nsubj )  > następuje <  ( obl ) mostku <  ( nmod:arg ) Kuźni <  (amod:flat) * / nam_fac_goe:e2
+  location:: * / nam_liv_character:e1 (nmod) > pojedynek ( nsubj )  > następuje <  ( obl ) mostku <  ( nmod:arg ) Kuźni <  (amod:flat) * / nam_fac_goe:e2
+  affiliation:: * / nam_loc_gpe_country:e1 (obj) > zaatakowania <  ( conj ) rozpętania <  (obj) * / nam_eve_human:e2
+  location:: * / nam_fac_goe:e1 (conj) > zarazę ( obl:agent )  > spowodowanego ( acl )  > Imperium <  (amod:flat) * / nam_loc_gpe_country:e2
+  alias:: * / nam_fac_goe:e1 (conj) > zarazę ( obl:agent )  > spowodowanego ( acl )  > Imperium ( nmod:arg )  > rozpadu ( obl )  > wymazana <  ( nsubj:pass ) pamięć <  ( nmod ) Kuźni <  (amod:flat) * / nam_fac_goe:e2
+  creator:: * / nam_liv_animal:e1 (nmod) > rasę ( obl:agent )  > zbudowana <  ( nsubj:pass ) Kuźnia <  (amod:flat) * / nam_fac_goe:e2
+  origin:: * / nam_liv_animal:e1 <  (conj) * / nam_loc_astronomical:e2
+  affiliation:: * / nam_liv_character:e1 (nsubj) > poznał <  ( conj ) wykorzystał <  ( obl ) stworzenia <  ( obj ) floty <  ( nmod:arg ) okrętów <  ( acl:relcl ) posłużyły <  ( obl ) zaatakowania <  ( conj ) rozpętania <  (obj) * / nam_eve_human:e2
+  origin:: * / nam_liv_person:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 (conj) > Barwicha ( nmod:arg )  > km ( obl )  > odległe <  ( nsubj ) wioski <  (nmod) * / nam_loc_gpe_district:e2
+  composition:: * / nam_loc_gpe_district:e1 (nsubj) > nazwa <  ( nmod ) przedmieścia <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_fac_road:e1 (amod) > szosie <  ( acl ) zwanej <  (iobj) * / nam_fac_road:e2
+  location:: * / nam_fac_road:e1 (nmod:arg) > Dojazd <  (nmod) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 (nmod:arg) > km ( obl )  > odległe <  ( nsubj ) wioski <  (nmod) * / nam_loc_gpe_district:e2
+  location:: * / nam_fac_goe:e1 (iobj) > nazwany ( acl )  > dom ( nsubj:pass )  > rozbudowywany <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_subdivision:e1 (nsubj) > osiedlem <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_fac_goe:e1 <  (appos) * / nam_fac_goe:e2
+  composition:: * / nam_loc_land_island:e1 (conj) > Mary ( appos )  > wyspami ( nmod )  > sąsiednimy ( nmod )  > Felicite ( nsubj )  > tworzy <  ( obj ) łańcuch <  ( nmod ) wysp <  (appos) * / nam_loc_land_island:e2
+  alias:: * / nam_loc_land_island:e1 <  ( nmod ) fr <  (amod) * / nam_loc_land_island:e2
+  neighbourhood:: * / nam_loc_land_island:e1 <  ( conj ) wysepkami <  (appos) * / nam_loc_land_island:e2
+  neighbourhood:: * / nam_loc_land_island:e1 <  ( nmod ) sąsiednimy <  ( nmod ) wyspami <  ( appos ) Mary <  ( conj ) wysepkami <  (appos) * / nam_loc_land_island:e2
+  composition:: * / nam_loc_land_island:e1 (nsubj) > tworzy <  ( obj ) łańcuch <  ( nmod ) wysp <  (appos) * / nam_loc_land_island:e2
+  neighbourhood:: * / nam_loc_land_island:e1 (appos) > wysepkami ( conj )  > Mary
+  neighbourhood:: * / nam_loc_land_island:e1 (conj) > Mary
+  neighbourhood:: * / nam_loc_land_island:e1 <  ( nmod ) sąsiednimy <  ( nmod ) wyspami <  ( appos ) Mary <  (conj) * / nam_loc_land_island:e2
+  location:: * / nam_loc_land_island:e1 <  ( conj ) wyspa <  ( nmod ) archipelagu <  ( conj ) grupie <  (nmod) * / nam_loc_land_island:e2
+  neighbourhood:: * / nam_loc_land_island:e1 (appos) > wyspami ( nmod )  > sąsiednimy ( nmod )  > Felicite
+  neighbourhood:: * / nam_loc_land_island:e1 (conj) > Mary <  ( conj ) wysepkami <  (appos) * / nam_loc_land_island:e2
+  neighbourhood:: * / nam_loc_land_island:e1 <  ( conj ) wyspa <  ( nmod ) archipelagu <  ( conj ) grupie <  ( conj ) km <  ( nmod ) wschód <  (nmod) * / nam_loc_land_island:e2
+  neighbourhood:: * / nam_loc_land_island:e1 (appos) > wysepkami ( conj )  > Mary ( appos )  > wyspami ( nmod )  > sąsiednimy ( nmod )  > Felicite
+  neighbourhood:: * / nam_loc_land_island:e1 <  (conj) * / nam_loc_land_island:e2
+  composition:: * / nam_loc_land_island:e1 (appos) > wysepkami ( conj )  > Mary ( appos )  > wyspami ( nmod )  > sąsiednimy ( nmod )  > Felicite ( nsubj )  > tworzy <  ( obj ) łańcuch <  ( nmod ) wysp <  (appos) * / nam_loc_land_island:e2
+  origin:: * / nam_liv_person:e1 (appos) > sułtan <  (nmod) * / nam_loc_gpe_admin1:e2
+  neighbourhood:: * / nam_loc_land_island:e1 (conj) > Mary ( appos )  > wyspami ( nmod )  > sąsiednimy ( nmod )  > Felicite
+  composition:: * / nam_loc_land_island:e1 (appos) > wyspami ( nmod )  > sąsiednimy ( nmod )  > Felicite ( nsubj )  > tworzy <  ( obj ) łańcuch <  ( nmod ) wysp <  (appos) * / nam_loc_land_island:e2
+  neighbourhood:: * / nam_loc_land_island:e1 <  ( nmod ) sąsiednimy <  ( nmod ) wyspami <  (appos) * / nam_loc_land_island:e2
+  neighbourhood:: * / nam_loc_land_island:e1 (appos) > wysepkami ( conj )  > Mary <  (conj) * / nam_loc_land_island:e2
+  location:: * / nam_loc_gpe_city:e1 (nmod) > stacja <  ( nmod ) kraju <  ( nmod ) Badenia <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) stacja <  ( nmod ) kraju <  (nmod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_fac_goe:e1 <  ( appos ) stacja <  (nmod) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 <  (appos) * / nam_loc_hydronym_river:e2
+  composition:: * / nam_loc_gpe_admin1:e1 <  (nmod) * / nam_loc_gpe_country:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 <  (appos) * / nam_loc_hydronym_river:e2
+  location:: * / nam_loc_gpe_city:e1 (nmod) > stacja <  ( nmod ) kraju <  (nmod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) stacja <  ( nmod ) kraju <  ( nmod ) Badenia <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) stacja <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_eve_human_sport:e1 (amod:flat) > Festiwalu <  (appos) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  nationality:: * / nam_liv_person:e1 <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 (nmod) > ur <  (nmod) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > absolwentką <  (nmod) * / nam_org_organization:e2
+  nationality:: * / nam_liv_person:e1 <  ( appos ) dyplomata <  ( conj ) ambasador <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_org_institution:e1 <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_org_institution:e1 (nmod) > kierownikiem ( conj )  > rozpoczął <  (obl) * / nam_org_institution:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > brata <  ( conj ) członka <  (nmod) * / nam_org_organization:e2
+  alias:: * / nam_loc_gpe_country:e1 (nmod) > Ambasadzie <  (nmod) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_org_institution:e1 (nmod) > attaché ( conj )  > kierownikiem ( conj )  > rozpoczął <  (obl) * / nam_org_institution:e2
+  location:: * / nam_liv_person:e1 <  ( appos ) dyplomata <  ( conj ) ambasador <  ( nmod ) PRL <  (nmod) * / nam_loc_gpe_country:e2
+  alias:: * / nam_fac_bridge:e1 <  (appos) * / nam_fac_bridge:e2
+  location:: * / nam_loc_hydronym_river:e1 (nmod) > rzeką <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_fac_bridge:e1 <  (appos) * / nam_fac_bridge:e2
+  composition:: * / nam_fac_road:e1 (amod:flat) > Ulica ( conj )  > Ulica <  ( acl ) stanowiących <  ( xcomp:pred ) część <  (nmod:arg) * / nam_fac_road:e2
+  neighbourhood:: * / nam_fac_road:e1 (nmod) > Ulica <  ( conj ) Ulica <  (amod:flat) * / nam_fac_road:e2
+  neighbourhood:: * / nam_fac_bridge:e1 (nsubj) > zespół <  ( nmod ) mostów <  ( acl ) stanowiących <  ( xcomp:pred ) przeprawę <  ( nmod ) rzeką <  (nmod) * / nam_loc_hydronym_river:e2
+  location:: * / nam_fac_bridge:e1 (nsubj) > zespół <  ( nmod ) mostów <  ( acl ) stanowiących <  ( xcomp:pred ) przeprawę <  ( nmod ) rzeką <  (nmod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_fac_road:e1 (nmod) > Ulica <  ( acl ) stanowiących <  ( xcomp:pred ) część <  (nmod:arg) * / nam_fac_road:e2
+  neighbourhood:: * / nam_fac_bridge:e1 (nsubj) > zespół <  ( nmod ) mostów <  ( acl ) stanowiących <  ( xcomp:pred ) przeprawę <  ( nmod ) rzeką <  ( conj ) rejonie <  ( nmod:arg ) osiedla <  (appos) * / nam_loc_gpe_subdivision:e2
+  location:: * / nam_liv_person:e1 <  ( nmod ) blogu <  (nmod) * / nam_pro_title:e2
+  alias:: * / nam_pro_media_web:e1 <  (nmod) * / nam_pro_media_web:e2
+  origin:: * / nam_liv_person:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_pro_model_car:e1 (iobj) > jadąc <  ( obl ) miejscowości <  (appos) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 (amod:flat) > Kryta <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 (amod) > posąg <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_liv_god:e1 (advcl) > Może <  ( ccomp ) przywróci <  (nsubj) * / nam_liv_god:e2
+  alias:: * / nam_pro_title:e1 (amod) > oszukiwanie <  (nsubj) * / nam_pro_title:e2
+  alias:: * / nam_pro_title:e1 (amod) > oszukiwanie <  ( acl ) Znana <  (obl) * / nam_pro_title:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( nmod ) obwodzie <  (amod) * / nam_loc_gpe_admin1:e2
+  affiliation:: * / nam_liv_person:e1 <  ( appos ) biznesmen <  ( acl:relcl ) kandydował <  ( obl:arg ) posła <  ( nmod ) listy <  (nmod) * / nam_org_political_party:e2
+  location:: * / nam_org_political_party:e1 (amod:flat) > Partią <  ( acl ) działającą <  (obl) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) ukr <  ( nmod ) ur <  ( nmod ) Zoziwie <  ( nmod ) obwodzie <  (amod) * / nam_loc_gpe_admin1:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > Syn ( nsubj )  > posłem <  ( nmod ) listy <  ( nmod ) Ukrainy <  (det:poss) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > Syn ( nsubj )  > posłem <  (nmod) * / nam_org_institution:e2
+  location:: * / nam_liv_person:e1 <  ( appos ) polityk <  ( conj ) mer <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_liv_person:e1 (punct) > ukr ( nmod )  > Ołeksandr
+  origin:: * / nam_liv_person:e1 <  ( nmod ) ukr <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 (nsubj) > został <  ( xcomp:pred ) merem <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_liv_person:e1 <  ( nmod ) ukr <  (punct) * / nam_liv_person:e2
+  location:: * / nam_eve_human:e1 (nmod) > figura <  ( nmod ) obozie <  ( acl ) założonym <  (obl) * / nam_loc_gpe_country:e2
+  neighbourhood:: * / nam_fac_road:e1 (nmod) > ulica <  ( conj ) ulica <  (nmod) * / nam_fac_road:e2
+  location:: * / nam_fac_square:e1 <  ( nmod:flat ) Miasta <  (amod:flat) * / nam_loc_gpe_subdivision:e2
+  neighbourhood:: * / nam_fac_road:e1 (nmod) > ulica <  ( conj ) ulica <  (amod) * / nam_fac_road:e2
+  location:: * / nam_fac_square:e1 (nsubj) > pełnił <  ( obj ) rolę <  ( nmod:arg ) miejsca <  ( nmod:arg ) handlu <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_fac_road:e1 (amod) > ulica <  ( nmod ) ulica <  (amod) * / nam_fac_road:e2
+  location:: * / nam_fac_square:e1 <  ( nmod:flat ) Miasta <  (amod:flat) * / nam_loc_gpe_subdivision:e2
+  alias:: * / nam_fac_square:e1 <  (conj) * / nam_fac_square:e2
+  alias:: * / nam_fac_square:e1 (nmod:arg) > Nazwa ( nsubj )  > brzmiała <  (nsubj) * / nam_fac_square:e2
+  neighbourhood:: * / nam_fac_road:e1 (amod) > ulica <  ( acl ) prowadząca <  (obl:arg) * / nam_fac_goe:e2
+  location:: * / nam_org_institution:e1 (amod:flat) > Biblioteka ( nsubj )  > mieści ( acl:relcl )  > Ratusz ( appos )  > zabytek <  (amod:flat) * / nam_fac_goe:e2
+  location:: * / nam_fac_square:e1 <  ( nmod:arg ) Miasta <  (amod:flat) * / nam_loc_gpe_subdivision:e2
+  neighbourhood:: * / nam_fac_road:e1 (amod) > ulica <  ( acl:relcl ) prowadzi <  ( obl ) miejsca <  (nmod) * / nam_fac_goe:e2
+  neighbourhood:: * / nam_fac_square:e1 <  ( acl ) otaczającym <  ( obj ) Ratusz <  (amod:flat) * / nam_fac_goe:e2
+  location:: * / nam_fac_goe:e1 (amod:flat) > Ratusza ( obj )  > powiększenia ( obl )  > został ( acl:relcl )  > browar ( nsubj )  > znajdował <  ( obl ) terenie <  (nmod:arg) * / nam_fac_square:e2
+  neighbourhood:: * / nam_fac_goe:e1 (nmod) > ulicy ( nmod )  > uruchomiono <  ( obj ) linię <  ( acl ) łączącą <  ( obl:agent ) ulicę <  (amod:flat) * / nam_fac_road:e2
+  neighbourhood:: * / nam_fac_square:e1 (nmod:arg) > Pozycja ( nsubj )  > spełniała <  ( conj ) była <  ( obl ) osi <  ( nmod ) północ <  ( nmod ) Przedmieście <  ( conj ) ulica <  (amod) * / nam_fac_road:e2
+  neighbourhood:: * / nam_fac_road:e1 (nmod) > ulica <  ( conj ) ulica <  (amod) * / nam_fac_road:e2
+  neighbourhood:: * / nam_loc_gpe_subdivision:e1 (amod:flat) > Przedmieście <  ( conj ) ulica <  (amod) * / nam_fac_road:e2
+  alias:: * / nam_loc_gpe_subdivision:e1 (amod:flat) > Przedmieście <  (appos) * / nam_loc_gpe_subdivision:e2
+  location:: * / nam_fac_square:e1 <  ( conj ) większość <  ( nmod:arg ) miasta <  (nmod) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_loc_gpe_subdivision:e1 (amod:flat) > Przedmieście <  ( conj ) ulica <  (amod) * / nam_fac_road:e2
+  alias:: * / nam_fac_road:e1 (amod) > ulica <  ( nmod ) ulica <  (nmod) * / nam_fac_road:e2
+  neighbourhood:: * / nam_fac_road:e1 (amod) > ulica <  ( conj ) ulica <  (nmod) * / nam_fac_road:e2
+  alias:: * / nam_fac_road:e1 (amod) > ulica <  (appos) * / nam_fac_road:e2
+  alias:: * / nam_loc_gpe_subdivision:e1 (amod:flat) > Przedmieście <  (appos) * / nam_loc_gpe_subdivision:e2
+  neighbourhood:: * / nam_fac_square:e1 (nmod:arg) > Pozycja ( nsubj )  > spełniała <  ( conj ) była <  ( obl ) osi <  ( nmod ) północ <  ( nmod ) Przedmieście <  (amod:flat) * / nam_loc_gpe_subdivision:e2
+  alias:: * / nam_fac_goe:e1 (obl:arg) > prowadząca <  ( obl ) Brama <  (amod:flat) * / nam_fac_goe:e2
+  location:: * / nam_pro_media_periodic:e1 <  ( appos ) magazyn <  ( acl ) założony <  (obl) * / nam_loc_gpe_country:e2
+  alias:: * / nam_pro_media_periodic:e1 <  (nmod) * / nam_pro_media_periodic:e2
+  alias:: * / nam_pro_title:e1 <  ( parataxis:insert ) Trener <  (det:poss) * / nam_pro_title:e2
+  alias:: * / nam_pro_media_periodic:e1 <  (appos) * / nam_pro_media_periodic:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 (nmod) > wsi ( nmod )  > Tatarami ( nmod:arg )  > bitwę ( obj )  > stoczył <  ( obl ) brzegu <  (nmod) * / nam_loc_hydronym_river:e2
+  composition:: * / nam_loc_gpe_district:e1 (appos) > Lublina
+  nationality:: * / nam_liv_person:e1 (appos) > Przywódca ( nsubj )  > uznał <  ( advcl ) przyjmując <  ( obj ) tytuł <  ( nmod:arg ) namiestnika <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc:e1 (conj) > Północnoeuropejski ( obl:arg )  > dzieli <  ( nsubj ) Teatr <  (amod:flat) * / nam_loc:e2
+  composition:: * / nam_loc:e1 (obl:arg) > dzieli <  ( nsubj ) Teatr <  (amod:flat) * / nam_loc:e2
+  composition:: * / nam_loc:e1 (conj) > Północnoeuropejski ( obl:arg )  > dzieli <  ( nsubj ) Teatr <  (amod:flat) * / nam_loc:e2
+  alias:: * / nam_loc_gpe_conurbation:e1 (nmod) > nazwa <  ( nmod ) języku <  (nmod) * / nam_loc_gpe_conurbation:e2
+  alias:: * / nam_loc_gpe_conurbation:e1 (nmod) > nazwa <  ( nmod ) języku <  (nmod) * / nam_loc_gpe_conurbation:e2
+  alias:: * / nam_loc_gpe_conurbation:e1 (nmod) > języku <  (nmod) * / nam_loc_gpe_conurbation:e2
+  composition:: * / nam_loc_gpe_conurbation:e1 (nmod:arg) > zwrotem <  (iobj) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_conurbation:e1 (nsubj) > częścią <  ( nmod:arg ) Republiki <  (amod:flat) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( conj ) miasto <  (nmod) * / nam_loc_gpe_country:e2
+  alias:: * / nam_loc_gpe_city:e1 (amod) > arab ( nmod )  > Bani
+  composition:: * / nam_loc_gpe_admin1:e1 (nmod) > regionie ( conj )  > Omanie
+  location:: * / nam_loc_gpe_city:e1 <  ( conj ) miasto <  ( nmod ) Omanie <  ( conj ) regionie <  (nmod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_org_institution:e1 <  (nmod) * / nam_org_organization:e2
+  alias:: * / nam_org_company:e1 <  (nmod) * / nam_org_company:e2
+  creator:: * / nam_liv_person:e1 (conj) > Rooyens'em ( flat )  > Rinke ( obl )  > założył <  ( obj ) firmę <  (nmod) * / nam_org_company:e2
+  composition:: * / nam_org_institution:e1 <  ( nmod:flat ) Budowy <  ( nmod:flat ) Maszyn <  ( conj ) Lotnictwa <  (nmod:flat) * / nam_org_organization:e2
+  affiliation:: * / nam_liv_person:e1 <  (conj) * / nam_org_company:e2
+  creator:: * / nam_liv_person:e1 (obl) > założył <  ( obj ) firmę <  (nmod) * / nam_org_company:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_liv_person:e1 <  ( appos ) producent <  ( conj ) prezes <  ( nmod ) firm <  (appos) * / nam_org_company:e2
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_eve_human:e1 (amod:flat) > Konferencji <  (nmod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_fac_system:e1 (nmod) > System ( nsubj )  > podsystemem <  ( nmod ) Systemu <  (flat) * / nam_fac_system:e2
+  alias:: * / nam_fac_system:e1 (nmod) > System <  ( appos ) System <  (amod:flat) * / nam_fac_system:e2
+  nationality:: * / nam_liv_person:e1 (conj) > عبد ( nmod )  > Bouteflika ( conj )  > Abdelaziz <  ( appos ) polityk <  ( conj ) prezydent <  (nmod) * / nam_loc_gpe_country:e2
+  alias:: * / nam_liv_person:e1 <  ( conj ) Bouteflika <  ( nmod ) عبد <  (conj) * / nam_liv_person:e2
+  alias:: * / nam_liv_person:e1 <  ( conj ) Bouteflika <  (nmod) * / nam_liv_person:e2
+  alias:: * / nam_liv_person:e1 <  (conj) * / nam_liv_person:e2
+  nationality:: * / nam_liv_person:e1 (conj) > Abdelaziz <  ( appos ) polityk <  ( conj ) prezydent <  (nmod) * / nam_loc_gpe_country:e2
+  nationality:: * / nam_liv_person:e1 <  ( appos ) polityk <  ( conj ) prezydent <  (nmod) * / nam_loc_gpe_country:e2
+  nationality:: * / nam_liv_person:e1 (flat) > Szwedem
+  affiliation:: * / nam_org_group_team:e1 (nsubj) > spadł <  (obl) * / nam_eve_human_sport:e2
+  nationality:: * / nam_liv_person:e1 (appos) > Karierę ( obj )  > rozpoczął <  ( obl ) reprezentacji <  (nmod) * / nam_loc_gpe_country:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  nationality:: * / nam_liv_person:e1 <  ( appos ) piłkarz <  (amod) * / nam_adj_country:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > przeszedł <  (obl) * / nam_org_group_team:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > przeszedł <  ( obl ) FC <  ( acl ) występującego <  (obl) * / nam_eve_human_sport:e2
+  affiliation:: * / nam_loc_gpe_city:e1 (nsubj) > zdobyło <  (obj) * / nam_eve_human_sport:e2
+  location:: * / nam_liv_person:e1 (nsubj) > wrócił <  (obl) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_org_group_team:e1 <  ( acl ) grającego <  (obl) * / nam_eve_human_sport:e2
+  affiliation:: * / nam_liv_person:e1 (advmod) > wychował <  ( obl ) klubie <  (appos) * / nam_org_group_team:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > odszedł <  (obl) * / nam_org_group_team:e2
+  affiliation:: * / nam_liv_person:e1 (xcomp:pred) > został <  ( xcomp:pred ) zawodnikiem <  (nmod:arg) * / nam_org_group_team:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_oth_tech:e1 (appos) > jednostka ( nsubj )  > dominuje ( acl:relcl )  > Europie
+  origin:: * / nam_oth_tech:e1 <  ( conj ) metoda <  ( acl ) wywodząca <  (obl) * / nam_loc_gpe_country:e2
+  location:: * / nam_eve_human:e1 (nmod) > kasata <  (nmod) * / nam_loc_historical_region:e2
+  location:: * / nam_fac_goe:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  creator:: * / nam_org_organization:e1 (obl:agent) > organizowane ( acl )  > zawody ( conj )  > Puchar
+  affiliation:: * / nam_liv_person:e1 <  ( appos ) polityk <  ( appos ) poseł <  (nmod) * / nam_org_institution:e2
+  affiliation:: * / nam_org_institution:e1 <  (nmod:flat) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_org_institution:e1 <  (nmod:flat) * / nam_loc_gpe_country:e2
+  nationality:: * / nam_liv_person:e1 <  ( appos ) polityk <  ( appos ) poseł <  ( nmod ) Sejm <  (nmod:flat) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_district:e1 (obl) > mieszczące ( acl )  > koszary <  ( nmod ) dzielnica <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution:e1 (amod:flat) > Pułku ( conj )  > RP <  ( acl ) funkcjonującego <  ( obl ) terenie <  ( acl:relcl ) przeprowadzał <  ( obl ) tym <  ( acl:relcl ) zbombardowane <  ( nsubj:pass ) koszary <  ( acl ) mieszczące <  (obl) * / nam_loc_gpe_district:e2
+  location:: * / nam_org_institution:e1 (amod:flat) > Pułku ( conj )  > RP <  ( acl ) funkcjonującego <  ( obl ) terenie <  ( acl:relcl ) przeprowadzał <  ( obl ) wrześniu <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 (nmod) > zamku <  (nmod) * / nam_loc_gpe_country:e2
+  neighbourhood:: * / nam_fac_goe:e1 (nmod) > zamku <  (nmod) * / nam_loc_gpe_city:e2
+  creator:: * / nam_liv_person:e1 (appos) > papieża ( conj )  > cesarza ( obl:agent )  > założony ( acl )  > zakon ( appos )  > Zakon
+  creator:: * / nam_liv_person:e1 (appos) > cesarza ( obl:agent )  > założony ( acl )  > zakon ( appos )  > Zakon
+  location:: * / nam_loc_gpe_city:e1 (nmod) > zamku <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 (amod:flat) > Świętów <  ( appos ) wieś <  ( acl ) położona <  ( obl ) województwie <  ( conj ) gminie <  (appos) * / nam_loc_gpe_admin3:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (amod) > województwie ( obl )  > położona ( acl )  > wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie ( obl )  > położona ( acl )  > wieś <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 (amod:flat) > Świętów <  ( appos ) wieś <  ( acl ) położona <  ( obl ) województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  location:: * / nam_loc_gpe_city:e1 (amod:flat) > Świętów <  ( appos ) wieś <  ( acl ) położona <  ( obl ) województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  alias:: * / nam_loc_gpe_city:e1 (amod:flat) > Świętów <  ( parataxis:insert ) niem <  (appos) * / nam_loc_gpe_city:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie ( obl )  > położona ( acl )  > wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  location:: * / nam_loc_gpe_city:e1 (amod:flat) > Świętów <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_liv_person:e1 (nmod) > śmierci <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc:e1 (nmod) > przyrody ( nmod:arg )  > rezerwat ( nsubj )  > zaliczają <  ( obl:arg ) atrakcji <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 (appos) > króla ( nmod )  > pobytu ( iobj )  > dotyczy ( conj )  > pochodzi <  ( nsubj ) wzmianka <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_org_institution:e1 <  (nmod) * / nam_org_institution:e2
+  location:: * / nam_loc_gpe_city:e1 (nsubj) > gromadą <  ( conj ) pełnił <  ( obj ) funkcje <  ( nmod ) ośrodka <  ( nmod ) regionu <  ( nmod ) części <  ( nmod:arg ) gminy <  (nmod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_loc_land_mountain:e1 (amod:flat) > Stożkiem ( obl )  > położone ( acl )  > Stożek <  ( conj ) wzniesienie <  ( nmod ) grzbiecie <  (nmod) * / nam_loc_land_mountain:e2
+  neighbourhood:: * / nam_loc_land_mountain:e1 <  ( acl ) położone <  ( obl ) Stożkiem <  (amod:flat) * / nam_loc_land_mountain:e2
+  location:: * / nam_loc_gpe_subdivision:e1 (appos) > osiedla <  ( acl ) należącego <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_land_mountain:e1 (amod:flat) > Stożkiem ( obl )  > położone ( acl )  > Stożek <  ( conj ) wzniesienie <  (nmod) * / nam_loc_land_mountain:e2
+  neighbourhood:: * / nam_loc_land_mountain:e1 (obl) > odchodzi <  ( nsubj ) ramię <  (nmod) * / nam_loc_land_mountain:e2
+  composition:: * / nam_loc_land_mountain:e1 <  ( conj ) wzniesienie <  ( nmod ) grzbiecie <  (nmod) * / nam_loc_land_mountain:e2
+  location:: * / nam_loc_land_mountain:e1 <  ( conj ) wzniesienie <  (nmod) * / nam_loc_land_mountain:e2
+  location:: * / nam_loc_land_mountain:e1 (conj) > Stożkiem ( obl )  > położone ( acl )  > Stożek <  ( conj ) wzniesienie <  (nmod) * / nam_loc_land_mountain:e2
+  location:: * / nam_loc_gpe_subdivision:e1 (nmod) > przysiółka <  ( acl ) należącego <  (obl:arg) * / nam_loc_gpe_city:e2
+  composition:: * / nam_loc_land_mountain:e1 (conj) > Stożkiem ( obl )  > położone ( acl )  > Stożek <  ( conj ) wzniesienie <  ( nmod ) grzbiecie <  (nmod) * / nam_loc_land_mountain:e2
+  neighbourhood:: * / nam_loc_land_mountain:e1 <  ( acl ) położone <  ( obl ) Stożkiem <  (conj) * / nam_loc_land_mountain:e2
+  composition:: * / nam_org_institution:e1 (amod:flat) > Ośrodku <  ( conj ) Poczta <  (amod:flat) * / nam_org_organization:e2
+  composition:: * / nam_org_institution:e1 <  ( nmod:flat ) Ekonomii <  (nmod:flat) * / nam_org_organization:e2
+  origin:: * / nam_liv_person:e1 <  ( appos ) ekonomista <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_org_organization:e1 (amod:flat) > Zjednoczeniu <  ( acl ) związanym <  (obl:arg) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 <  ( appos ) przewodniczący <  (nmod) * / nam_org_political_party:e2
+  location:: * / nam_liv_person:e1 <  ( nmod ) ur <  ( nmod ) zm <  (nmod) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  origin:: * / nam_pro_brand:e1 (nmod) > karabin ( nmod )  > ZSRR ( conj )  > krajach <  (nmod) * / nam_loc_gpe_country:e2
+  origin:: * / nam_pro_brand:e1 (nmod) > karabin ( nmod )  > ZSRR
+  origin:: * / nam_liv_person:e1 (nmod) > poezji ( obl )  > pojawia <  ( nsubj ) tematyka <  ( conj ) refleksje <  ( nmod:arg ) związkami <  ( conj ) krajobrazem <  ( nmod ) drzewa <  (amod) * / nam_pro_title:e2
+  origin:: * / nam_liv_person:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 <  ( nmod ) ur <  ( conj ) zm <  (nmod) * / nam_loc_gpe_city:e2
+  creator:: * / nam_liv_person:e1 (nsubj) > autorem <  ( nmod:arg ) utworów <  ( nmod ) Przygody <  (conj) * / nam_pro_title:e2
+  creator:: * / nam_liv_person:e1 (nmod) > poezji ( obl )  > pojawia <  ( nsubj ) tematyka <  ( conj ) refleksje <  ( nmod:arg ) związkami <  ( nmod ) naturą <  (nmod) * / nam_pro_title:e2
+  creator:: * / nam_liv_person:e1 (nmod) > poezji ( obl )  > pojawia <  ( nsubj ) tematyka <  ( conj ) refleksje <  ( nmod ) narodem <  (case) * / nam_pro_title:e2
+  creator:: * / nam_liv_person:e1 (nsubj) > autorem <  ( nmod:arg ) utworów <  (nmod) * / nam_pro_title:e2
+  affiliation:: * / nam_org_institution:e1 (nmod) > członek ( conj )  > Jeden <  ( conj ) członek <  (conj) * / nam_org_political_party:e2
+  alias:: * / nam_fac_goe:e1 (punct) > Спасителя ( conj )  > ros ( parataxis:insert )  > cerkwi
+  location:: * / nam_liv_person:e1 <  ( nmod ) przysiółku <  ( nmod ) Chabna <  ( conj ) zm <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_loc_gpe_city:e1 (appos) > ur ( nmod )  > Łazar <  ( nmod ) przysiółku <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_liv_person:e1 (punct) > Łazar
+  location:: * / nam_fac_goe:e1 (appos) > klasztoru ( conj )  > cerkwi ( conj )  > przebudowy ( nmod:arg )  > inicjatorem <  ( nmod ) zniszczenia <  ( obj ) szeregu <  ( nmod:arg ) zabytków <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 (conj) > przebudowy ( nmod:arg )  > inicjatorem <  ( nmod ) zniszczenia <  ( obj ) szeregu <  ( nmod:arg ) zabytków <  (nmod) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 (nmod) > przysiółku <  (nmod) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) przysiółku <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_org_institution:e1 <  ( nmod ) Partii <  (amod:flat) * / nam_org_political_party:e2
+  origin:: * / nam_liv_person:e1 (nsubj) > pochodzi <  ( obl:arg ) stolicy <  (appos) * / nam_loc_gpe_city:e2
+  nationality:: * / nam_liv_person:e1 (appos) > zadebiutował <  ( obl ) reprezentacji <  (nmod) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_org_group_team:e1 (nsubj) > zakwalifikowało <  (obl) * / nam_eve_human_sport:e2
+  affiliation:: * / nam_org_group_team:e1 (obl) > zdobył <  (obj) * / nam_eve_human_sport:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > zagrał ( conj )  > doszła <  (obl) * / nam_eve_human_sport:e2
+  location:: * / nam_eve_human_sport:e1 (amod:flat) > Mistrzostwa <  ( acl ) odbywające <  (obl) * / nam_loc_gpe_country:e2
+  location:: * / nam_org_group_team:e1 (appos) > drużyny <  ( nmod ) miasta <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_liv_person:e1 (nmod) > imię ( parataxis:insert )  > nazywa <  ( iobj ) synem <  ( nmod ) Bolesława <  (conj) * / nam_liv_person:e2
+  location:: * / nam_liv_person:e1 (appos) > syna ( obj )  > zawezwał <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 (nmod:arg) > współpracy <  ( acl:relcl ) pilnował <  ( obl ) momentu <  ( nmod:arg ) objęcia <  ( obj ) władzy <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 (appos) > rządy ( obj )  > objął <  ( conj ) oparł <  ( obl:arg ) współpracy <  ( acl:relcl ) pilnował <  (obl) * / nam_loc_historical_region:e2
+  creator:: * / nam_liv_person:e1 (nmod) > Kronice
+  location:: * / nam_loc_gpe_city:e1 (obj) > przyłączył <  (obl) * / nam_loc_gpe_country:e2
+  composition:: * / nam_org_institution:e1 (amod:flat) > Batalionu ( obl )  > mobilizującą ( conj )  > administracyjną ( amod )  > Jednostką <  ( nsubj ) Pułk <  (amod:flat) * / nam_org_institution:e2
+  location:: * / nam_org_institution:e1 (amod:flat) > Pułk <  (nmod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_org_institution:e1 (amod:flat) > Batalion ( nsubj )  > pododdział <  ( nmod ) piechoty <  (nmod) * / nam_org_institution:e2
+  alias:: * / nam_org_institution:e1 (appos) > Batalion <  (amod:flat) * / nam_org_institution:e2
+  affiliation:: * / nam_org_institution:e1 <  ( nmod ) RP <  (amod:flat) * / nam_loc_gpe_country:e2
+  alias:: * / nam_eve_human:e1 (punct) > ros ( parataxis:insert )  > Polityka <  (amod:flat) * / nam_eve_human:e2
+  alias:: * / nam_eve_human:e1 (conj) > ros ( parataxis:insert )  > Polityka <  (amod:flat) * / nam_eve_human:e2
+  alias:: * / nam_eve_human:e1 (nmod) > Nowaja ( conj )  > ros ( parataxis:insert )  > Polityka <  (amod:flat) * / nam_eve_human:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > Powiat <  ( nmod ) województwo <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_admin2:e1 (amod) > Powiat <  ( appos ) powiat <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > Powiat <  ( nmod ) województwo <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (amod) > województwo ( nmod )  > Powiat <  ( appos ) powiat <  (nmod) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_org_institution:e1 (amod:flat) > Rady <  (flat) * / nam_org_political_party:e2
+  location:: * / nam_liv_person:e1 <  ( appos ) działaczka <  ( nmod ) zm <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_eve_human:e1 (amod) > Zjeździe <  (nmod) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_liv_person:e1 <  ( appos ) działaczka <  ( nmod:arg ) Komitetu <  (amod:flat) * / nam_org_institution:e2
+  affiliation:: * / nam_org_institution:e1 <  (flat) * / nam_org_political_party:e2
+  creator:: * / nam_eve_human:e1 (amod) > Zjeździe <  (nmod:arg) * / nam_org_political_party:e2
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_org_institution:e1 (amod:flat) > Komitetu <  (flat) * / nam_org_political_party:e2
+  creator:: * / nam_liv_person:e1 (nmod) > książki <  ( nmod ) wiek <  (det:poss) * / nam_pro_title_book:e2
+  creator:: * / nam_liv_person:e1 (appos) > mężem ( obl:arg )  > wspólnie ( conj )  > 1965 ( nmod )  > książkę ( nmod )  > książkę ( obj )  > opublikowała <  ( nsubj ) dzieło <  (appos) * / nam_pro_title_book:e2
+  alias:: * / nam_org_organization:e1 (appos) > Towarzystwa
+  location:: * / nam_eve_human:e1 (amod) > Zjeździe <  ( acl ) odbytym <  (obl) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_org_institution:e1 <  (flat) * / nam_org_political_party:e2
+  affiliation:: * / nam_org_institution:e1 (amod:flat) > Komitetu <  (flat) * / nam_org_political_party:e2
+  affiliation:: * / nam_org_institution:e1 <  (flat) * / nam_org_political_party:e2
+  alias:: * / nam_loc_gpe_admin1:e1 (amod) > Jutlandii ( nmod )  > okręgu <  (nmod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_admin3:e1 (nmod) > Gmina ( nsubj:pass )  > utworzona <  ( obl ) reformy <  ( nmod:arg ) podziału <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_admin3:e1 (nmod) > Gmina <  ( acl ) istniejąca <  ( obl ) okręgu <  (nmod) * / nam_loc_land_peninsula:e2
+  alias:: * / nam_loc_gpe_admin3:e1 (appos) > duń ( parataxis:insert )  > Gmina <  (nmod) * / nam_loc_gpe_admin3:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (amod) > Jutlandii ( nmod )  > okręgu ( obl )  > istniejąca ( acl )  > Gmina <  ( nmod ) gmina <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_admin3:e1 (nmod) > Gmina <  ( nmod ) gmina <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_district:e1 <  ( acl ) leżących <  ( obl ) terenie <  ( nmod:arg ) miasta <  (nmod) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_org_company:e1 (amod:flat) > Browary ( nmod )  > Kompania ( obl:cmpr )  > takie ( det )  > firmy ( nsubj:pass )  > położone <  ( obl ) Tychach <  (nmod) * / nam_fac_road:e2
+  location:: * / nam_fac_goe:e1 <  ( conj ) McDonald's <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_city:e1 (nmod) > Gliwice ( obj )  > łącząc ( advcl )  > Omija <  (obj) * / nam_loc_gpe_conurbation:e2
+  location:: * / nam_loc_gpe_city:e1 (obj) > łącząc ( advcl )  > Omija <  (obj) * / nam_loc_gpe_conurbation:e2
+  location:: * / nam_fac_road:e1 <  ( conj ) droga <  ( acl ) przebiegająca <  ( obl:agent ) województwo <  (amod) * / nam_loc_gpe_admin1:e2
+  neighbourhood:: * / nam_fac_goe:e1 (appos) > hipermarketów ( nmod )  > centrum ( conj )  > Kompania ( obl:cmpr )  > takie ( det )  > firmy ( nsubj:pass )  > położone <  ( obl ) Tychach <  (nmod) * / nam_fac_road:e2
+  location:: * / nam_fac_goe:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_company:e1 (obl:cmpr) > takie ( det )  > firmy ( nsubj:pass )  > położone <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_city:e1 (conj) > Mikołowem ( nmod )  > Gliwice ( obj )  > łącząc ( advcl )  > Omija <  (obj) * / nam_loc_gpe_conurbation:e2
+  location:: * / nam_loc_gpe_city:e1 (conj) > Mikołowem ( nmod )  > Gliwice ( obj )  > łącząc ( advcl )  > Omija <  (obj) * / nam_loc_gpe_conurbation:e2
+  location:: * / nam_fac_road:e1 (nmod) > odcinka <  (nmod) * / nam_loc_gpe_district:e2
+  neighbourhood:: * / nam_org_company:e1 (obl:cmpr) > takie ( det )  > firmy ( nsubj:pass )  > położone <  ( obl ) Tychach <  (nmod) * / nam_fac_road:e2
+  location:: * / nam_fac_goe:e1 <  ( nmod:flat ) Giełda <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_road:e1 <  ( conj ) droga <  ( acl ) przebiegająca <  ( obl:agent ) województwo <  ( amod ) śląskie <  (conj) * / nam_loc_gpe_admin1:e2
+  alias:: * / nam_org_company:e1 <  ( nmod ) Browary <  (amod:flat) * / nam_org_company:e2
+  alias:: * / nam_fac_road:e1 (conj) > autostrada <  ( conj ) autostrada <  (nmod) * / nam_fac_road:e2
+  alias:: * / nam_fac_road:e1 <  (nmod) * / nam_fac_road:e2
+  neighbourhood:: * / nam_fac_road:e1 (nsubj) > obwodnicą <  ( nmod ) miast <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_fac_road:e1 <  (nmod) * / nam_fac_road:e2
+  neighbourhood:: * / nam_fac_goe:e1 (nmod) > fabryka ( conj )  > Kompania ( obl:cmpr )  > takie ( det )  > firmy ( nsubj:pass )  > położone <  ( obl ) Tychach <  (nmod) * / nam_fac_road:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 (nmod:arg) > granicy <  (nmod:arg) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_road:e1 (nmod) > Tychach
+  location:: * / nam_fac_road:e1 (nmod) > TIR-ów ( nmod )  > ruchem ( obl )  > protestują <  ( nsubj ) Mieszkańcy <  (nmod:arg) * / nam_loc_gpe_district:e2
+  location:: * / nam_fac_goe:e1 <  ( nmod ) Mikołowie <  (conj) * / nam_loc_gpe_city:e2
+  alias:: * / nam_fac_road:e1 <  ( nmod ) nr <  (nmod) * / nam_fac_road:e2
+  location:: * / nam_loc_gpe_city:e1 (conj) > Mikołowem ( nmod )  > Gliwice ( obj )  > łącząc ( advcl )  > Omija <  (obj) * / nam_loc_gpe_conurbation:e2
+  location:: * / nam_loc_gpe_city:e1 (conj) > Mikołowem ( nmod )  > Gliwice ( obj )  > łącząc ( advcl )  > Omija <  (obj) * / nam_loc_gpe_conurbation:e2
+  location:: * / nam_fac_goe:e1 (appos) > hipermarketów ( nmod )  > centrum ( conj )  > Kompania ( obl:cmpr )  > takie ( det )  > firmy ( nsubj:pass )  > położone <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 (nmod) > fabryka ( conj )  > Kompania ( obl:cmpr )  > takie ( det )  > firmy ( nsubj:pass )  > położone <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_company:e1 (amod:flat) > Browary ( nmod )  > Kompania ( obl:cmpr )  > takie ( det )  > firmy ( nsubj:pass )  > położone <  (obl) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_fac_road:e1 (nsubj) > obwodnicą <  ( nmod ) miast <  ( nmod ) Mikołów <  (conj) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 (nsubj) > powstała <  (obl) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 (nsubj) > powstała <  ( obl ) wieku <  ( nmod ) brzegiem <  ( nmod ) rzeki <  (amod) * / nam_loc_hydronym_river:e2
+  location:: * / nam_loc_gpe_city:e1 (obl) > przyłączona <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) osada <  ( nmod ) terenie <  (nmod:arg) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_city:e1 (conj) > Podlesiem ( obl )  > przyłączona <  (obl) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 (nsubj) > nazwano <  ( advcl ) zlokalizowana <  ( obl ) rzece <  (amod) * / nam_loc_hydronym_river:e2
+  location:: * / nam_loc_land_mountain:e1 (nmod) > km ( conj )  > Great ( nmod )  > stanie ( nmod )  > miejscowość <  ( acl ) położona <  ( obl ) Alpach <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 (nsubj) > miejscowość <  ( nmod ) stanie <  (nmod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_land_mountain:e1 (nmod) > km ( conj )  > Great ( nmod )  > stanie <  (nmod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 (nsubj) > miejscowość <  ( acl ) położona <  ( obl ) Alpach <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 (nsubj) > miejscowość <  ( acl ) położona <  (obl) * / nam_loc_land_mountain:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (nmod) > stanie ( nmod )  > miejscowość <  ( acl ) położona <  ( obl ) Alpach <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_fac_road:e1 (nmod) > stanie ( nmod )  > miejscowość <  ( acl ) położona <  ( obl ) Alpach <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_land_mountain:e1 <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 (nmod) > km ( conj )  > Mount ( nmod )  > km ( conj )  > Great ( nmod )  > stanie ( nmod )  > miejscowość <  ( acl ) położona <  ( obl ) Alpach <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_land_mountain:e1 (obl) > położona ( acl )  > miejscowość <  ( nmod ) stanie <  (nmod) * / nam_loc_gpe_admin1:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 (nsubj) > miejscowość <  ( nmod ) stanie <  (nmod) * / nam_fac_road:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 (nmod) > ośrodek ( nsubj )  > obejmował <  ( obj ) tereny <  ( nmod ) Borysławka <  (conj) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_country_region:e1 (nmod) > terenie ( nmod )  > Arłamów <  ( appos ) wieś <  ( nmod ) województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 (nmod) > ośrodek ( nsubj )  > obejmował <  ( obj ) tereny <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) wieś <  ( nmod ) województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 (nmod) > ośrodek ( nsubj )  > obejmował <  ( obj ) tereny <  ( nmod ) Borysławka <  (conj) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_company:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 (nmod) > ośrodek ( nsubj )  > obejmował <  ( obj ) tereny <  ( nmod ) Borysławka <  (conj) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( nmod ) terenie <  (nmod) * / nam_loc_country_region:e2
+  location:: * / nam_liv_person:e1 <  ( appos ) poseł <  ( nmod ) województwa <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) wieś <  ( nmod ) województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 (nmod) > ośrodek ( nsubj )  > obejmował <  ( obj ) tereny <  ( nmod ) Borysławka <  (conj) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_fac_goe:e1 <  (nmod) * / nam_org_institution:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 (nmod) > ośrodek ( nsubj )  > obejmował <  ( obj ) tereny <  ( nmod ) Borysławka <  (conj) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 (nmod) > ośrodek ( nsubj )  > obejmował <  ( obj ) tereny <  ( nmod ) Borysławka <  (conj) * / nam_loc_gpe_city:e2
+  alias:: * / nam_fac_goe:e1 (nsubj) > powstał <  (obl) * / nam_fac_goe:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  location:: * / nam_fac_goe:e1 (nmod) > Łańsk
+  affiliation:: * / nam_liv_person:e1 (appos) > przewodniczący <  (nmod) * / nam_org_organization:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 (obl) > zbudowane <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 (appos) > przewodniczący ( nsubj:pass )  > internowany <  ( obl ) wprowadzeniu <  ( obj ) stanu <  (nmod) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 (nmod) > ośrodek ( nsubj )  > obejmował <  ( obj ) tereny <  ( nmod ) Borysławka <  (conj) * / nam_loc_gpe_city:e2
+  nationality:: * / nam_liv_person:e1 <  ( appos ) piłkarz <  (amod) * / nam_adj_country:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > zaczynał <  ( obj ) karierę <  ( nmod ) miejscowości <  ( nmod ) nazwie <  (nmod) * / nam_org_group_team:e2
+  affiliation:: * / nam_org_group_team:e1 <  ( acl:relcl ) zadebiutował <  (obl) * / nam_eve_human_sport:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > rozegrał <  ( obl:arg ) bawach <  (flat) * / nam_org_group_team:e2
+  nationality:: * / nam_liv_person:e1 (nmod) > mecz ( nsubj )  > zagrał <  ( obl ) reprezentacji <  (nmod) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_org_group_team:e1 (iobj) > pokonało <  ( obl ) finale <  (nmod) * / nam_eve_human_sport:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > trenerem <  (nmod) * / nam_org_group_team:e2
+  origin:: * / nam_liv_person:e1 <  ( appos ) Antonius <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_org_group_team:e1 (nsubj) > pokonało <  ( obl ) finale <  (nmod) * / nam_eve_human_sport:e2
+  affiliation:: * / nam_liv_person:e1 (nmod) > klubem <  ( nsubj ) Twente <  ( acl:relcl ) zadebiutował <  (obl) * / nam_eve_human_sport:e2
+  affiliation:: * / nam_liv_person:e1 (nmod) > klubem <  (nsubj) * / nam_org_group_team:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie ( obl )  > położona ( acl )  > Taraska <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (amod) > województwie ( obl )  > położona ( acl )  > Taraska <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  neighbourhood:: * / nam_loc_gpe_district:e1 <  (conj) * / nam_loc_gpe_district:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (nmod) > gminie ( conj )  > województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (nmod) > gminie ( conj )  > województwie ( obl )  > położona ( acl )  > Taraska <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  ( conj ) gminie <  (nmod) * / nam_loc_gpe_admin3:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (nmod) > gminie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  creator:: * / nam_org_organization:e1 (nmod) > oddziału ( nmod )  > kół ( obl )  > jedno ( obl:agent )  > organizowanej ( acl )  > imprezy ( appos )  > Rajdu <  (amod:flat) * / nam_eve_human:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (amod) > województwie ( obl )  > położona ( acl )  > Szóstka <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie ( obl )  > położona ( acl )  > Szóstka <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (nmod) > gminie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (nmod) > gminie ( conj )  > województwie ( obl )  > położona ( acl )  > Szóstka <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( nmod ) województwo <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (nmod) > gminie ( conj )  > województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  ( conj ) gminie <  (nmod) * / nam_loc_gpe_admin3:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (amod:flat) > Babice ( appos )  > gminie ( nmod )  > województwie ( obl )  > położona ( acl )  > Zielonki <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (amod) > województwie ( obl )  > położona ( acl )  > Zielonki <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (amod:flat) > Babice ( appos )  > gminie ( nmod )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (amod:flat) > Babice ( appos )  > gminie ( nmod )  > województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  ( nmod ) gminie <  ( appos ) Babice <  (amod:flat) * / nam_loc_gpe_admin3:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie ( obl )  > położona ( acl )  > Zielonki <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie ( obl )  > położona ( acl )  > wieś <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_liv_person:e1 <  ( flat ) von <  ( flat ) Knebel <  ( conj ) Doeberitz <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_city:e1 (nmod) > wieś <  ( acl ) położona <  ( obl ) województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  location:: * / nam_loc_gpe_city:e1 (nmod) > wieś <  ( acl ) położona <  ( obl ) województwie <  ( conj ) gminie <  (appos) * / nam_loc_gpe_admin3:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (amod) > województwie ( obl )  > położona ( acl )  > wieś <  (nmod) * / nam_loc_gpe_country:e2
+  alias:: * / nam_fac_goe:e1 <  (nmod) * / nam_fac_goe:e2
+  location:: * / nam_loc_gpe_city:e1 (nmod) > wieś <  ( acl ) położona <  ( obl ) województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  alias:: * / nam_fac_goe:e1 <  (nmod) * / nam_fac_goe:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie ( obl )  > położona ( acl )  > wieś <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 (nmod) > wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  origin:: * / nam_liv_person:e1 (appos) > rodziny <  (nmod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( nmod ) powiat <  (amod) * / nam_loc_gpe_admin2:e2
+  alias:: * / nam_loc_gpe_city:e1 <  ( parataxis:insert ) niem <  (appos) * / nam_loc_gpe_city:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (nmod) > gminie ( conj )  > województwie ( obl )  > położona ( acl )  > Sulejów <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (nmod) > gminie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie ( obl )  > położona ( acl )  > Sulejów <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (nmod) > gminie ( conj )  > województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (amod) > województwie ( obl )  > położona ( acl )  > Sulejów <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( nmod ) województwo <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  ( conj ) gminie <  (nmod) * / nam_loc_gpe_admin3:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (appos) > dystrykcie ( obl )  > leżąca ( acl )  > miejscowość <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 (nsubj) > miejscowość <  ( acl ) leżąca <  ( obl ) dystrykcie <  (appos) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 (nsubj) > miejscowość <  ( nmod ) podregionie <  (nmod:arg) * / nam_loc_country_region:e2
+  location:: * / nam_loc_gpe_city:e1 (nsubj) > miejscowość <  ( acl ) leżąca <  ( obl ) dystrykcie <  ( conj ) regionie <  (nmod) * / nam_loc_historical_region:e2
+  location:: * / nam_loc_country_region:e1 (nmod:arg) > podregionie ( nmod )  > miejscowość <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_country_region:e1 (nmod:arg) > podregionie ( nmod )  > miejscowość <  ( acl ) leżąca <  ( obl ) dystrykcie <  (appos) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_historical_region:e1 (nmod) > regionie ( conj )  > dystrykcie ( obl )  > leżąca ( acl )  > miejscowość <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_country_region:e1 (nmod:arg) > podregionie ( nmod )  > miejscowość <  ( acl ) leżąca <  ( obl ) dystrykcie <  ( conj ) regionie <  (nmod) * / nam_loc_historical_region:e2
+  location:: * / nam_loc_historical_region:e1 (nmod) > regionie ( conj )  > dystrykcie <  (appos) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 (nsubj) > miejscowość <  (nmod) * / nam_loc_gpe_country:e2
+  alias:: * / nam_eve_human_holiday:e1 (cc) > Niedzielą ( conj )  > Niedzielą ( iobj )  > nazywana ( acl )  > Niedziela
+  composition:: * / nam_eve_human_holiday:e1 <  ( appos ) dzień <  (nmod:arg) * / nam_eve_human_holiday:e2
+  alias:: * / nam_eve_human_holiday:e1 (conj) > Niedzielą ( iobj )  > nazywana ( acl )  > Niedziela
+  alias:: * / nam_eve_human_holiday:e1 (amod:flat) > Niedzielą ( iobj )  > nazywana ( acl )  > Niedziela
+  affiliation:: * / nam_org_institution:e1 (list) > Pułk <  ( nmod ) Piechoty <  (nmod:flat) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > gen ( nmod:arg )  > składzie <  ( nmod:arg ) DP <  (amod) * / nam_org_institution:e2
+  location:: * / nam_liv_person:e1 (nmod) > korpusu <  ( amod ) Dziekońskiego <  (obl) * / nam_loc_gpe_admin1:e2
+  affiliation:: * / nam_org_institution:e1 (list) > Pułk <  ( nmod:flat ) Piechoty <  (nmod:flat) * / nam_loc_gpe_country:e2
+  location:: * / nam_liv_person:e1 <  (obl) * / nam_loc_gpe_admin1:e2
+  origin:: * / nam_org_institution:e1 (amod) > Pułk <  ( nmod:flat ) Województwa <  (amod:flat) * / nam_loc_gpe_admin1:e2
+  creator:: * / nam_liv_person:e1 (appos) > gen ( appos )  > dyktatora ( nmod )  > rozkazem <  ( nmod ) nazwą <  ( conj ) Pułk <  (amod) * / nam_org_institution:e2
+  origin:: * / nam_org_institution:e1 <  ( nmod:flat ) Województwa <  (amod:flat) * / nam_loc_gpe_admin1:e2
+  nationality:: * / nam_liv_person:e1 <  ( appos ) siatkarz <  (amod) * / nam_adj_country:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_org_institution:e1 (flat) > kwietnia ( nmod:flat )  > 1 ( obl )  > przemianowana <  ( obl ) Brygadę <  (amod:flat) * / nam_org_institution:e2
+  location:: * / nam_org_institution:e1 (flat) > Dowództwo ( nsubj:pass )  > przeniesione <  (obl:arg) * / nam_fac_goe:e2
+  affiliation:: * / nam_org_institution:e1 <  ( nmod ) RP <  (amod:flat) * / nam_loc_gpe_country:e2
+  alias:: * / nam_org_institution:e1 (amod:flat) > Brygada <  ( nmod ) BK <  (amod:flat) * / nam_org_institution:e2
+  alias:: * / nam_org_institution:e1 (flat) > Dowództwo ( nsubj:pass )  > przeniesione <  ( obl:arg ) garnizonu <  ( appos ) Bydgoszcz <  ( acl:relcl ) przemianowana <  (obl) * / nam_org_institution:e2
+  composition:: * / nam_org_institution:e1 (nummod) > Pułk <  ( nmod ) Brygady <  (amod:flat) * / nam_org_institution:e2
+  composition:: * / nam_org_institution:e1 (nummod) > Pułk <  ( nmod ) Brygady <  (amod:flat) * / nam_org_institution:e2
+  composition:: * / nam_org_institution:e1 (amod:flat) > Brygady <  ( conj ) Pułk <  ( nmod ) Brygady <  (amod:flat) * / nam_org_institution:e2
+  composition:: * / nam_org_institution:e1 (amod:flat) > Brygada ( root )  > jednostka <  ( nmod ) kawalerii <  (nmod) * / nam_org_institution:e2
+  composition:: * / nam_org_institution:e1
+  affiliation:: * / nam_org_institution:e1 <  (nmod:flat) * / nam_loc_gpe_country:e2
+  composition:: * / nam_org_institution:e1 (nummod) > Brygada <  (punct) * / nam_org_institution:e2
+  composition:: * / nam_org_institution:e1
+  affiliation:: * / nam_org_institution:e1 <  (nmod:flat) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_org_institution:e1 <  ( appos ) formacja <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_org_institution:e1 (amod:flat) > Okręg <  ( appos ) Sankt <  (appos) * / nam_fac_road:e2
+  location:: * / nam_org_institution:e1 (amod) > Dywizja <  (appos) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution:e1 (amod) > Dywizja <  (appos) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution:e1 (amod) > Brygada <  (flat) * / nam_loc_gpe_city:e2
+  composition:: * / nam_org_institution:e1
+  composition:: * / nam_org_institution:e1
+  location:: * / nam_org_institution:e1 (list) > Korpus <  ( appos ) Okręg <  (amod:flat) * / nam_org_institution:e2
+  composition:: * / nam_org_institution:e1 (root) > * <  (fixed) * / nam_org_institution:e2
+  location:: * / nam_fac_road:e1 (appos) > Sankt
+  composition:: * / nam_org_institution:e1 <  (fixed) * / nam_org_institution:e2
+  composition:: * / nam_org_institution:e1
+  affiliation:: * / nam_org_institution:e1 <  (nmod:flat) * / nam_loc_gpe_country:e2
+  location:: * / nam_org_institution:e1 (list) > Dywizja <  (appos) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_hydronym_river:e1 (appos) > Sankt
+  composition:: * / nam_org_institution:e1 (fixed) > * <  (fixed) * / nam_org_institution:e2
+  composition:: * / nam_org_institution:e1
+  location:: * / nam_org_institution:e1 (amod:flat) > Okręg <  (appos) * / nam_loc_gpe_city:e2
+  composition:: * / nam_org_institution:e1 <  (punct) * / nam_org_institution:e2
+  location:: * / nam_loc_hydronym_river:e1 (appos) > Sankt
+  composition:: * / nam_org_institution:e1 (list) > Brygada <  (punct) * / nam_org_institution:e2
+  composition:: * / nam_org_institution:e1
+  composition:: * / nam_org_institution:e1 <  (punct) * / nam_org_institution:e2
+  composition:: * / nam_org_institution:e1 (fixed) > * <  (punct) * / nam_org_institution:e2
+  composition:: * / nam_org_institution:e1
+  composition:: * / nam_org_institution:e1 (root) > * <  (fixed) * / nam_org_institution:e2
+  composition:: * / nam_org_institution:e1
+  location:: * / nam_org_institution:e1 (list) > Dywizja <  (appos) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_org_institution:e1 (list) > Korpus <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_org_institution:e1
+  location:: * / nam_loc_hydronym_river:e1 (appos) > Petersburg ( flat )  > St
+  composition:: * / nam_org_institution:e1
+  location:: * / nam_loc_hydronym_river:e1 (appos) > Sankt
+  composition:: * / nam_org_institution:e1 <  (punct) * / nam_org_institution:e2
+  affiliation:: * / nam_org_institution:e1 <  ( conj ) straż <  ( nmod ) cesarza <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_org_institution:e1 (list) > Brygada <  (punct) * / nam_org_institution:e2
+  location:: * / nam_org_institution:e1 (list) > Dywizja <  ( nmod:flat ) Piechoty <  ( nmod:flat ) Gwardii <  (conj) * / nam_loc_gpe_city:e2
+  composition:: * / nam_org_institution:e1
+  origin:: * / nam_liv_person:e1 <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  nationality:: * / nam_liv_person:e1 <  ( appos ) wioślarz <  (amod) * / nam_adj_country:e2
+  nationality:: * / nam_liv_person:e1 <  ( appos ) pisarz <  (amod) * / nam_adj_country:e2
+  location:: * / nam_pro_title:e1 <  ( nmod ) Torze <  (amod:flat) * / nam_pro_media_periodic:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_liv_person:e1 (nmod) > Karierę ( obj )  > rozpoczął <  ( obl ) klubie <  (nmod) * / nam_org_group_team:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > wyjechał <  (obl) * / nam_org_group_team:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > przeszedł <  (obl) * / nam_org_group_team:e2
+  affiliation:: * / nam_liv_person:e1 (flat) > Jugosławii ( nmod )  > reprezentacji ( obl )  > zadebiutował <  ( obl ) meczu <  ( nmod:arg ) eliminacji <  (nmod) * / nam_eve_human_sport:e2
+  nationality:: * / nam_liv_person:e1 <  ( appos ) piłkarz <  (amod) * / nam_adj_country:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  nationality:: * / nam_liv_person:e1 (flat) > Jugosławii
+  origin:: * / nam_liv_person:e1 <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_org_institution:e1 (amod) > Batalionu <  ( nmod ) Pułku <  (amod:flat) * / nam_org_institution:e2
+  composition:: * / nam_org_institution:e1 (amod:flat) > Batalionu <  ( nmod ) Pułku <  (amod:flat) * / nam_org_institution:e2
+  composition:: * / nam_org_institution:e1 (amod:flat) > Pułku <  (amod:flat) * / nam_org_institution:e2
+  composition:: * / nam_org_institution:e1 (amod:flat) > Grupy ( conj )  > Batalionu ( nmod:arg )  > składzie ( obl )  > sformowana <  (nsubj:pass) * / nam_org_institution:e2
+  location:: * / nam_loc_gpe_city:e1 (obl) > rozpoczęło <  (obl) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_org_institution:e1 (amod) > Batalionu ( nmod:arg )  > składzie ( obl )  > sformowana <  (nsubj:pass) * / nam_org_institution:e2
+  composition:: * / nam_org_institution:e1 (amod:flat) > Grupy ( conj )  > dywizji <  ( appos ) Bergamo <  (amod) * / nam_org_institution:e2
+  location:: * / nam_org_institution:e1 (amod) > Dywizja ( nsubj )  > wycofała <  ( obl ) Przełęcz <  (flat) * / nam_loc:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > gen ( nmod )  > czele ( nmod )  > oficerów <  ( acl ) przeznaczonych <  ( obl ) Dywizji <  (nummod) * / nam_org_institution:e2
+  composition:: * / nam_org_institution:e1 (conj) > Batalionu ( nmod:arg )  > składzie ( obl )  > sformowana <  (nsubj:pass) * / nam_org_institution:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 <  ( nmod ) rzeką <  (appos) * / nam_loc_hydronym_river:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > gen ( nsubj )  > został <  ( xcomp:pred ) dowódcą <  ( nmod ) Dywizji <  (amod) * / nam_org_institution:e2
+  composition:: * / nam_org_institution:e1 (amod:flat) > Grupy <  ( nmod:flat ) Pułku <  (amod:flat) * / nam_org_institution:e2
+  composition:: * / nam_org_institution:e1 (amod:flat) > Grupy ( conj )  > dywizji ( obl:arg )  > przydzielonego ( acl )  > Batalionu ( conj )  > Batalionu ( nmod:arg )  > składzie ( obl )  > sformowana <  (nsubj:pass) * / nam_org_institution:e2
+  location:: * / nam_liv_person:e1 (obl:agent) > zestawiony <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 (conj) > Georga ( obl:agent )  > zestawiony <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 (conj) > Georga ( obl:agent )  > zestawiony <  (obl) * / nam_loc_gpe_city:e2
+  alias:: * / nam_pro_title:e1 <  (appos) * / nam_pro_title:e2
+  location:: * / nam_liv_person:e1 (obl:agent) > zestawione <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 (conj) > Georga ( obl:agent )  > zestawione <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 (conj) > Georga ( obl:agent )  > zestawione <  (obl) * / nam_loc_gpe_city:e2
+  creator:: * / nam_org_group_band:e1 (amod) > Małżeństwo ( obl:agent )  > wydany ( acl )  > album ( appos )  > strona <  (amod) * / nam_pro_title_album:e2
+  affiliation:: * / nam_org_institution:e1 <  (nmod) * / nam_org_institution:e2
+  nationality:: * / nam_liv_person:e1 (nsubj) > generał <  (amod) * / nam_adj_country:e2
+  location:: * / nam_pro_brand:e1 (obj) > oferowano <  (obl) * / nam_loc_gpe_country:e2
+  location:: * / nam_org_company:e1 (appos) > firmy ( nmod:arg )  > zakładzie ( conj )  > Finlandii
+  location:: * / nam_org_company:e1 (appos) > firmy ( nmod:arg )  > zakładzie ( conj )  > Finlandii ( obl )  > powstawał <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_city:e1 (obl) > powstawał <  (obl) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (nmod) > gminie ( conj )  > województwie ( obl )  > położona ( acl )  > Kisielówka <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie ( obl )  > położona ( acl )  > Kisielówka <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  ( conj ) gminie <  (nmod) * / nam_loc_gpe_admin3:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (nmod) > gminie ( conj )  > województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (nmod) > gminie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (amod) > województwie ( obl )  > położona ( acl )  > Kisielówka <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie ( obl )  > położona ( acl )  > Probostwo <  ( appos ) miejscowość <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie ( obl )  > położona ( acl )  > Probostwo <  ( appos ) miejscowość <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (amod) > województwie ( obl )  > położona ( acl )  > Probostwo <  ( appos ) miejscowość <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) miejscowość <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  ( conj ) gminie <  (appos) * / nam_loc_gpe_admin3:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  ( conj ) gminie <  (nmod) * / nam_loc_gpe_admin3:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie ( obl )  > położona ( acl )  > Wojnowiczki <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (amod) > województwie ( obl )  > położona ( acl )  > Wojnowiczki <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (nmod) > gminie ( conj )  > województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj:pass) > przeniesiony <  ( obl:arg ) stanowisko <  ( nmod ) przewodniczącego <  (nmod) * / nam_org_institution:e2
+  location:: * / nam_liv_person:e1 (obl) > rozegrał <  (obl) * / nam_fac_goe:e2
+  alias:: * / nam_org_institution:e1 <  (appos) * / nam_org_institution:e2
+  affiliation:: * / nam_org_political_party:e1 (amod:flat) > Partia <  ( conj ) partia <  (nmod) * / nam_loc_gpe_country:e2
+  nationality:: * / nam_liv_person:e1 (root) > była <  ( nsubj ) biathlonistka <  (amod) * / nam_adj_country:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  creator:: * / nam_liv_person:e1 (nsubj) > wydał <  (obj) * / nam_pro_title:e2
+  nationality:: * / nam_liv_person:e1 <  ( appos ) ekonomista <  (amod) * / nam_adj_country:e2
+  location:: * / nam_fac_road:e1 (amod) > ulicy ( nmod )  > kamienicę ( obj )  > wniosła ( ccomp )  > dlatego ( advmod )  > związane <  (obl:arg) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 (appos) > mieszczaninem <  (amod) * / nam_adj_city:e2
+  location:: * / nam_liv_person:e1 (nsubj) > prowadził <  (nsubj) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 (appos) > Grazu
+  affiliation:: * / nam_liv_person:e1 (appos) > profesorami <  (nmod:arg) * / nam_org_organization:e2
+  creator:: * / nam_liv_person:e1 (nsubj) > superintendentem <  ( conj ) pisarzem <  ( nmod ) Stanisława <  ( appos ) dworzanina <  (conj) * / nam_pro_title:e2
+  origin:: * / nam_liv_person:e1 (conj) > ławnika <  (amod) * / nam_adj_city:e2
+  origin:: * / nam_liv_person:e1 (appos) > rodziny <  (amod) * / nam_adj_city:e2
+  location:: * / nam_org_organization:e1 (obl) > odbywał <  ( obl ) uczelni <  ( amod ) wyższej <  (obl) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Marcinem ( appos )  > profesorami <  (nmod:arg) * / nam_org_organization:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (amod) > województwie ( obl )  > położona ( acl )  > wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie ( obl )  > położona ( acl )  > wieś <  (nmod) * / nam_loc_gpe_country:e2
+  creator:: * / nam_liv_person:e1 (nmod) > wykonawcy ( nmod )  > autoportretem ( obl:arg )  > uzdrawiający ( acl )  > Antoni ( conj )  > m ( nmod )  > obrazy <  (nmod) * / nam_pro_title_painting:e2
+  origin:: * / nam_liv_person:e1 (appos) > teolog ( nsubj )  > urodził <  (obl) * / nam_loc_gpe_city:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( conj ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  creator:: * / nam_liv_person:e1 (nmod) > obrazy <  ( nmod ) Koronacja <  (conj) * / nam_pro_title_painting:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( nmod ) powiat <  (amod) * / nam_loc_gpe_admin2:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  creator:: * / nam_liv_person:e1 (nmod) > obrazy <  ( nmod ) Koronacja <  ( conj ) Maria <  ( conj ) Józef <  (amod) * / nam_pro_title_painting:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( conj ) wieś <  ( acl ) położona <  ( obl ) województwie <  ( conj ) gminie <  (appos) * / nam_loc_gpe_admin3:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( conj ) wieś <  ( acl ) położona <  ( obl ) województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  creator:: * / nam_liv_person:e1 (nmod) > obrazy <  (nmod) * / nam_pro_title_painting:e2
+  alias:: * / nam_loc_gpe_city:e1 <  ( parataxis:insert ) niem <  (flat) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 (nsubj) > został <  ( xcomp:pred ) Sołtysem <  (appos) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( conj ) wieś <  ( acl ) położona <  ( obl ) województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie ( obl )  > położona ( acl )  > wieś <  (nmod) * / nam_loc_gpe_country:e2
+  creator:: * / nam_liv_person:e1 (nmod) > wykonawcy ( nmod )  > autoportretem ( obl:arg )  > uzdrawiający ( acl )  > Antoni <  (amod) * / nam_pro_title_painting:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) wieś <  ( acl ) położona <  ( obl ) województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie ( obl )  > położona ( acl )  > wieś <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) wieś <  ( acl ) położona <  ( obl ) województwie <  ( conj ) gminie <  (appos) * / nam_loc_gpe_admin3:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie ( obl )  > położona ( acl )  > wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (amod) > województwie ( obl )  > położona ( acl )  > wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) wieś <  ( acl ) położona <  ( obl ) województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  creator:: * / nam_liv_person:e1 (obl:agent) > stworzonej ( acl )  > SimCity
+  creator:: * / nam_org_company:e1 (appos) > firmę ( conj )  > Willa ( obl:agent )  > stworzonej ( acl )  > SimCity
+  origin:: * / nam_liv_person:e1 <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > spędził <  (obl) * / nam_org_group_team:e2
+  affiliation:: * / nam_liv_person:e1 <  ( appos ) koszykarz <  ( appos ) zawodnik <  (nmod) * / nam_org_group_team:e2
+  alias:: * / nam_liv_person_last:e1 (flat) > Augusta <  (nmod) * / nam_liv_person_last:e2
+  location:: * / nam_fac_goe:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  creator:: * / nam_org_institution:e1 (amod:flat) > Ośrodek ( obl:agent )  > organizowanym ( acl )  > konkursie <  (nmod) * / nam_eve_human:e2
+  location:: * / nam_fac_road:e1 (nmod) > Pałac <  (nmod) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_fac_goe:e1 <  (nmod) * / nam_fac_road:e2
+  creator:: * / nam_org_organization:e1 (nsubj) > doceniła <  ( advcl ) nadając <  ( obj ) Wnętrze <  (amod) * / nam_eve_human:e2
+  location:: * / nam_org_institution:e1 (nsubj) > jednostką <  ( acl ) działającą <  (obl) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_fac_goe:e1 (flat) > Laboratoria <  ( nmod ) ul <  (nmod) * / nam_fac_road:e2
+  location:: * / nam_org_organization:e1 (nmod) > jednostką <  ( acl ) działającą <  (obl) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_fac_goe:e1 <  ( nmod:arg ) ul <  (nmod) * / nam_fac_road:e2
+  alias:: * / nam_org_institution:e1 <  (appos) * / nam_org_institution:e2
+  neighbourhood:: * / nam_fac_goe:e1 <  ( conj ) ul <  (nmod) * / nam_fac_road:e2
+  location:: * / nam_org_institution:e1 (amod:flat) > Koło <  (nmod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_org_institution:e1 (nsubj) > jednostką <  (nmod) * / nam_org_organization:e2
+  location:: * / nam_org_company:e1 (nmod) > fabryce ( obl )  > Produkowany <  ( conj ) sprzedawany <  (obl) * / nam_loc_land_continent:e2
+  location:: * / nam_org_company:e1 (nmod) > fabryce <  (nmod) * / nam_loc_gpe_city:e2
+  creator:: * / nam_org_company:e1 (nmod) > firmę ( obl:agent )  > produkowany ( acl )  > samochód <  (nsubj) * / nam_pro_brand:e2
+  composition:: * / nam_loc_land_peak:e1 <  ( appos ) szczyt <  ( nmod ) części <  ( conj ) paśmie <  (amod) * / nam_loc_land_mountain:e2
+  location:: * / nam_loc_land_mountain:e1 (amod) > paśmie ( conj )  > części <  (nmod:arg) * / nam_loc_land_mountain:e2
+  composition:: * / nam_loc_land_peak:e1 <  ( appos ) szczyt <  ( nmod ) części <  (nmod:arg) * / nam_loc_land_mountain:e2
+  location:: * / nam_loc_land_peak:e1 <  (parataxis:insert) * / nam_loc_land_mountain:e2
+  composition:: * / nam_loc_gpe_district:e1 (flat) > Bielska
+  location:: * / nam_loc_gpe_city:e1 <  ( conj ) miejscowość <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (nmod) > gminie ( nmod )  > miejscowość <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( conj ) miejscowość <  ( nmod ) gminie <  (nmod) * / nam_loc_gpe_admin3:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (appos) > regionie ( conj )  > Norwegii
+  location:: * / nam_loc_gpe_city:e1 <  ( conj ) miejscowość <  ( nmod ) Norwegii <  ( conj ) regionie <  (appos) * / nam_loc_gpe_admin1:e2
+  creator:: * / nam_liv_person:e1 (conj) > Wesela
+  alias:: * / nam_liv_person:e1 <  (conj) * / nam_liv_person:e2
+  creator:: * / nam_liv_person:e1 (nmod) > Matador
+  nationality:: * / nam_liv_person:e1 <  ( appos ) aktor <  (amod) * / nam_adj_country:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  creator:: * / nam_liv_person:e1 (nmod) > Matador ( nsubj )  > wykonał <  ( obj ) piosenkę <  (nmod) * / nam_pro_title_song:e2
+  creator:: * / nam_liv_person:e1 (flat) > the ( flat )  > Over
+  alias:: * / nam_pro_title_document:e1 (nmod) > ustaleniami <  ( nmod ) prawie <  (appos) * / nam_pro_title_document:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > był ( cop )  > Ekspertem <  ( nmod:arg ) Komitetu <  (amod:flat) * / nam_org_institution:e2
+  creator:: * / nam_org_organization:e1 (obl:agent) > uchwaloną ( acl )  > konwencją <  (nsubj) * / nam_pro_title_document:e2
+  composition:: * / nam_loc_gpe_district:e1 (flat) > Londynu
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (amod) > województwie ( obl )  > położona ( acl )  > wieś <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) wieś <  ( acl ) położona <  ( obl ) województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) wieś <  ( acl ) położona <  ( obl ) województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie ( obl )  > położona ( acl )  > wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie ( obl )  > położona ( acl )  > wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) wieś <  ( acl ) położona <  ( obl ) województwie <  ( conj ) gminie <  (appos) * / nam_loc_gpe_admin3:e2
+  alias:: * / nam_loc_gpe_city:e1 <  ( parataxis:insert ) kaszb <  (appos) * / nam_loc_gpe_city:e2
+  composition:: * / nam_loc_gpe_district:e1 (appos) > dzielnicy ( nmod )  > Jorku <  (amod:flat) * / nam_loc_gpe_city:e2
+  origin:: * / nam_org_nation:e1 <  ( acl:relcl ) urodzili <  ( conj ) wychowali <  ( obl ) Rosji <  (conj) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 (conj) > Alasce <  (conj) * / nam_loc_gpe_admin1:e2
+  origin:: * / nam_org_nation:e1 (conj) > Żydów <  ( acl:relcl ) urodzili <  ( conj ) wychowali <  ( obl ) Rosji <  (conj) * / nam_loc_gpe_country:e2
+  origin:: * / nam_org_nation:e1 (conj) > Żydów <  ( acl:relcl ) urodzili <  ( conj ) wychowali <  (obl) * / nam_loc_gpe_country:e2
+  origin:: * / nam_org_nation:e1 <  ( nmod:arg ) pochodzenia <  (amod) * / nam_adj_country:e2
+  origin:: * / nam_org_nation:e1 (conj) > Żydów <  (amod) * / nam_adj_country:e2
+  origin:: * / nam_org_nation:e1 (conj) > Żydów <  ( acl:relcl ) urodzili <  ( conj ) wychowali <  ( obl ) Rosji <  (conj) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 (obl) > występują <  (obl) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_district:e1 (conj) > Bronx ( appos )  > dzielnicy ( nmod )  > Jorku <  (amod:flat) * / nam_loc_gpe_city:e2
+  origin:: * / nam_org_nation:e1 (conj) > Żydów <  (amod) * / nam_adj_country:e2
+  origin:: * / nam_org_nation:e1 <  (amod) * / nam_adj_country:e2
+  origin:: * / nam_org_nation:e1 (conj) > Żydów <  ( acl:relcl ) urodzili <  ( conj ) wychowali <  ( obl ) Rosji <  (conj) * / nam_loc_gpe_country:e2
+  origin:: * / nam_org_nation:e1 <  ( nmod:arg ) pochodzenia <  (amod) * / nam_adj_country:e2
+  origin:: * / nam_org_nation:e1 <  ( acl:relcl ) urodzili <  ( conj ) wychowali <  (obl) * / nam_loc_gpe_country:e2
+  origin:: * / nam_org_nation:e1 (conj) > Żydów <  ( acl:relcl ) urodzili <  ( conj ) wychowali <  (obl) * / nam_loc_gpe_country:e2
+  origin:: * / nam_org_nation:e1 (conj) > Żydów <  (amod) * / nam_adj_country:e2
+  origin:: * / nam_org_nation:e1 (conj) > Żydów <  ( acl:relcl ) urodzili <  ( conj ) wychowali <  (obl) * / nam_loc_gpe_country:e2
+  origin:: * / nam_org_nation:e1 <  ( nmod:arg ) pochodzenia <  (amod) * / nam_adj_country:e2
+  location:: * / nam_org_company:e1 <  ( appos ) producent <  ( nmod:arg ) kolumn <  ( nmod ) siedzibą <  ( nmod ) mieście <  (appos) * / nam_loc_gpe_city:e2
+  alias:: * / nam_liv_animal:e1 <  ( parataxis:insert ) arab <  (punct) * / nam_liv_animal:e2
+  composition:: * / nam_org_institution:e1 <  (nmod) * / nam_org_organization:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 <  ( nmod ) ur <  ( nmod ) zm <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_city:e1 (nmod) > USA
+  nationality:: * / nam_liv_person:e1 <  ( appos ) fizyk <  (amod) * / nam_adj_country:e2
+  location:: * / nam_loc_gpe_city:e1 (amod:flat) > Jork ( conj )  > Chicago ( nmod )  > USA
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (nmod) > gminie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) osada <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( nmod ) powiat <  (amod) * / nam_loc_gpe_admin2:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (nmod) > gminie ( conj )  > województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (amod) > województwie ( obl )  > położona ( acl )  > Laski <  ( appos ) osada <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (nmod) > gminie ( conj )  > województwie ( obl )  > położona ( acl )  > Laski <  ( appos ) osada <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  ( conj ) gminie <  (nmod) * / nam_loc_gpe_admin3:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie ( obl )  > położona ( acl )  > Laski <  ( appos ) osada <  (nmod) * / nam_loc_gpe_country:e2
+  creator:: * / nam_liv_person:e1 (obl:agent) > założone ( acl )  > konsorcjum ( appos )  > British
+  alias:: * / nam_org_company:e1 <  (appos) * / nam_org_company:e2
+  alias:: * / nam_org_company:e1 <  (nmod) * / nam_org_company:e2
+  alias:: * / nam_pro_brand:e1 <  (nmod) * / nam_pro_brand:e2
+  neighbourhood:: * / nam_fac_goe:e1 (nmod) > gmach ( obj )  > wzniesiono <  ( obl ) ul <  (nmod) * / nam_fac_road:e2
+  neighbourhood:: * / nam_fac_goe:e1 (appos) > hotel <  ( amod ) ekskluzywny <  ( obl ) ul <  (nmod) * / nam_fac_road:e2
+  neighbourhood:: * / nam_fac_park:e1 <  ( flat ) im <  (flat) * / nam_fac_road:e2
+  neighbourhood:: * / nam_fac_goe:e1 <  ( nmod ) pw <  (nmod:arg) * / nam_fac_road:e2
+  alias:: * / nam_fac_road:e1 (amod) > ulic <  (nmod) * / nam_fac_road:e2
+  neighbourhood:: * / nam_fac_park:e1 <  ( flat ) im <  (flat) * / nam_fac_road:e2
+  affiliation:: * / nam_fac_park:e1 <  ( nmod ) im <  (nmod:arg) * / nam_fac_road:e2
+  neighbourhood:: * / nam_fac_goe:e1 <  ( appos ) Immanuel <  (punct) * / nam_fac_road:e2
+  location:: * / nam_loc_gpe_subdivision:e1 <  (appos) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_loc_gpe_subdivision:e1 <  ( conj ) osiedle <  ( acl ) położone <  ( obl ) części <  ( nmod ) ul <  ( conj ) ul <  (amod) * / nam_fac_road:e2
+  neighbourhood:: * / nam_loc_gpe_subdivision:e1 <  ( conj ) osiedle <  ( acl ) położone <  ( obl ) części <  ( nmod ) ul <  (amod) * / nam_fac_road:e2
+  location:: * / nam_loc_gpe_subdivision:e1 <  ( conj ) osiedle <  ( acl ) położone <  ( obl ) części <  (nmod:arg) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_road:e1 (amod) > Ulica <  (nmod) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_fac_road:e1 <  ( nmod ) drogą <  ( nmod ) Hrubieszowa <  ( nmod ) ul <  (amod) * / nam_fac_road:e2
+  location:: * / nam_fac_road:e1 (amod) > Ulica <  ( amod ) jedna <  ( obl ) ulic <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_pro_media_periodic:e1 (obj) > wydawał <  (obl) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_fac_road:e1 (nsubj) > przebiega <  ( obl ) zachodu <  ( nmod ) wschód <  ( nmod ) miejscowości <  (appos) * / nam_loc_gpe_city:e2
+  alias:: * / nam_fac_road:e1 <  (nmod) * / nam_fac_road:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( nmod ) Saksonii <  (amod:flat) * / nam_loc_gpe_admin1:e2
+  alias:: * / nam_fac_road:e1 <  ( nmod ) Bundesstraße <  (conj) * / nam_fac_road:e2
+  location:: * / nam_fac_road:e1 <  (nmod) * / nam_loc_gpe_country:e2
+  neighbourhood:: * / nam_fac_road:e1 (nsubj) > przebiega <  ( obl ) zachodu <  ( nmod ) wschód <  ( nmod ) miejscowości <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_road:e1 (nsubj) > przebiega <  ( obl ) teren <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_land_island:e1 (nmod) > wyspie ( conj )  > Japonii
+  location:: * / nam_loc_gpe_city:e1 <  ( conj ) miasto <  ( nmod ) Japonii <  ( conj ) wyspie <  (nmod) * / nam_loc_land_island:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( conj ) miasto <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_fac_road:e1 (conj) > Las ( obl )  > starą ( amod )  > miasta ( nmod:arg )  > części ( obl )  > ślubów ( obj )  > udziela ( acl:relcl )  > kaplic ( nmod:arg )  > szereg ( nmod )  > widok <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 (nmod) > cechą <  ( nsubj ) wieża <  ( conj ) budowla <  ( nmod ) stanie <  (nmod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_fac_goe:e1 (conj) > Luxor ( appos )  > Freemont ( conj )  > Las ( obl )  > starą ( amod )  > miasta ( nmod:arg )  > części ( obl )  > ślubów ( obj )  > udziela ( acl:relcl )  > kaplic ( nmod:arg )  > szereg ( nmod )  > widok <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 (obl) > starą ( amod )  > miasta ( nmod:arg )  > części ( obl )  > ślubów ( obj )  > udziela ( acl:relcl )  > kaplic ( nmod:arg )  > szereg ( nmod )  > widok <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 (appos) > Freemont ( conj )  > Las ( obl )  > starą ( amod )  > miasta ( nmod:arg )  > części ( obl )  > ślubów ( obj )  > udziela ( acl:relcl )  > kaplic ( nmod:arg )  > szereg ( nmod )  > widok <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 (amod) > Las <  ( conj ) kasyno <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_city:e1 <  (appos) * / nam_loc_gpe_admin1:e2
+  nationality:: * / nam_liv_person:e1 (nsubj) > prawnik <  (amod) * / nam_adj_country:e2
+  affiliation:: * / nam_org_institution:e1 <  (nmod:flat) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_org_institution:e1 <  ( nmod:flat ) Reprezentantów <  (nmod:flat) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > prawnik <  ( conj ) polityk <  ( acl ) związany <  (obl:arg) * / nam_org_political_party:e2
+  nationality:: * / nam_liv_person:e1 (nsubj) > został <  ( xcomp:pred ) premierem <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_org_organization:e1 (amod:flat) > Uniwersytetu <  (nmod) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) chin <  ( conj ) ur <  (conj) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  nationality:: * / nam_liv_person:e1 (nsubj) > urodził <  ( obl ) prowincji <  (nmod) * / nam_loc_gpe_country:e2
+  alias:: * / nam_liv_person:e1 <  ( nmod ) chin <  ( nmod ) trad <  (amod) * / nam_liv_person:e2
+  nationality:: * / nam_liv_person:e1 (nsubj) > objął <  ( obj ) stanowisko <  ( nmod ) premiera <  (nmod) * / nam_loc_gpe_country:e2
+  alias:: * / nam_liv_person:e1 <  ( nmod ) chin <  ( conj ) pinyin <  (appos) * / nam_liv_person:e2
+  location:: * / nam_loc_gpe_city:e1 (conj) > ur <  ( nmod ) prowincji <  (appos) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_org_organization:e1 <  ( nmod ) Sherbooke <  (nmod) * / nam_loc_gpe_country:e2
+  origin:: * / nam_liv_person:e1 (nsubj) > urodził <  ( obl ) prowincji <  (nmod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_org_organization:e1 (amod:flat) > Uniwersytecie <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_liv_person:e1 <  ( nmod ) chin <  ( conj ) chin <  ( nmod ) upr <  (amod) * / nam_liv_person:e2
+  location:: * / nam_loc_gpe_city:e1 <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (nmod) > prowincji <  (nmod) * / nam_loc_gpe_country:e2
+  nationality:: * / nam_liv_person:e1 <  ( conj ) polityk <  ( conj ) premier <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (amod:flat) > Saksonia ( nmod )  > kraju <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_fac_goe_stop:e1 <  ( conj ) stacja <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe_stop:e1 <  ( conj ) stacja <  ( nmod ) kraju <  ( nmod ) Saksonia <  (amod:flat) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 (nmod) > stacja <  ( nmod ) kraju <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 (nmod) > stacja <  ( nmod ) kraju <  ( nmod ) Saksonia <  (amod:flat) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_fac_goe_stop:e1 <  ( conj ) stacja <  ( nmod ) kraju <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 (conj) > Lipica ( nmod )  > stronie ( obl )  > znalazła ( acl:relcl )  > granicą <  ( nmod:arg ) powiatu <  (amod) * / nam_loc_gpe_admin2:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > Gmina <  ( appos ) gmina <  ( acl ) istniejąca <  ( obl ) latach <  ( conj ) 1 <  ( obl ) woj <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > Gmina ( nsubj )  > powstała <  ( obl ) terenie <  (nmod:arg) * / nam_loc_country_region:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiatu ( nmod:arg )  > jednostka ( obl )  > weszła <  ( obl:arg ) skład <  ( nmod:arg ) woj <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 (nmod) > stronie ( obl )  > znalazła ( acl:relcl )  > granicą <  ( nmod:arg ) powiatu <  (amod) * / nam_loc_gpe_admin2:e2
+  location:: * / nam_fac_goe:e1 (amod:flat) > Madonny <  ( acl:relcl ) znajduje <  ( obl ) opactwie <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 (nmod) > Koronacja ( nsubj )  > miała <  ( obl ) kaplicy <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_pro_title:e1 (flat) > Singiel ( nsubj:pass )  > wydany <  (obl) * / nam_loc_gpe_country:e2
+  creator:: * / nam_org_group_band:e1 (appos) > zespołu ( conj )  > piosenki ( nmod )  > cover <  (nsubj) * / nam_pro_title_song:e2
+  alias:: * / nam_loc_gpe_country:e1 (amod:flat) > Republika <  (appos) * / nam_loc_gpe_country:e2
+  alias:: * / nam_loc_gpe_country:e1 <  (appos) * / nam_loc_gpe_country:e2
+  alias:: * / nam_loc_gpe_country:e1 <  (appos) * / nam_loc_gpe_country:e2
+  location:: * / nam_eve_human_sport:e1 (nsubj) > odbyły <  (obl) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_org_company:e1 (amod) > producent <  ( acl ) należący <  ( obl ) koncernu <  (nmod) * / nam_org_company:e2
+  alias:: * / nam_oth:e1 (amod) > modele ( nsubj )  > trafiły <  (obl) * / nam_pro_brand:e2
+  alias:: * / nam_oth:e1 (conj) > 550 ( amod )  > modele ( nsubj )  > trafiły <  ( obl ) MG <  (conj) * / nam_pro_brand:e2
+  location:: * / nam_pro_brand:e1 (conj) > MG ( obl )  > trafiły <  ( obl ) sprzedaży <  (nmod) * / nam_loc_gpe_country:e2
+  alias:: * / nam_pro_brand:e1 (conj) > MG ( obl )  > trafiły <  ( nsubj ) modele <  ( amod ) 550 <  (conj) * / nam_oth:e2
+  alias:: * / nam_org_company:e1 <  (nmod) * / nam_org_company:e2
+  location:: * / nam_pro_brand:e1 (obl) > trafiły <  ( obl ) sprzedaży <  (nmod) * / nam_loc_gpe_country:e2
+  alias:: * / nam_org_company:e1 (nmod) > Shanghai
+  alias:: * / nam_pro_brand:e1 (obl) > trafiły <  ( nsubj ) modele <  (amod) * / nam_oth:e2
+  location:: * / nam_liv_person:e1 <  ( nmod ) ur <  ( nmod ) zm <  (nmod) * / nam_loc_gpe_city:e2
+  nationality:: * / nam_liv_person:e1 <  ( appos ) lekarz <  (amod) * / nam_adj_country:e2
+  location:: * / nam_org_organization:e1 (nmod) > Warszawie
+  origin:: * / nam_liv_person:e1 <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_org_institution:e1 <  (flat) * / nam_org_organization:e2
+  location:: * / nam_fac_goe_stop:e1 (amod) > stacja <  ( nmod ) linii <  ( conj ) miejscowości <  ( nmod ) województwie <  ( conj ) powiecie <  ( conj ) gminie <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 (amod) > miejscowości <  ( nmod ) województwie <  ( conj ) powiecie <  ( conj ) gminie <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (amod) > województwie <  ( conj ) powiecie <  ( conj ) gminie <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie <  ( conj ) gminie <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_fac_goe_stop:e1 (amod) > stacja <  ( nmod ) linii <  ( conj ) miejscowości <  (amod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > powiecie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_fac_goe_stop:e1 (amod) > stacja <  ( nmod ) linii <  ( conj ) miejscowości <  ( nmod ) województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_fac_goe_stop:e1 (amod) > stacja <  ( nmod ) linii <  ( conj ) miejscowości <  ( nmod ) województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  location:: * / nam_loc_gpe_city:e1 (amod) > miejscowości <  ( nmod ) województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  location:: * / nam_loc_gpe_city:e1 (amod) > miejscowości <  ( nmod ) województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 (amod) > miejscowości <  ( nmod ) województwie <  ( conj ) powiecie <  ( conj ) gminie <  (appos) * / nam_loc_gpe_admin3:e2
+  neighbourhood:: * / nam_fac_goe_stop:e1 (amod) > stacja <  (nmod) * / nam_fac_road:e2
+  creator:: * / nam_org_institution:e1 (obl:agent) > przyjęta ( acl )  > ustawa ( conj )  > Ustawa
+  location:: * / nam_pro_title_document:e1 <  ( conj ) ustawa <  (nmod) * / nam_pro_media_periodic:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( nmod ) województwo <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_liv_person:e1 <  ( appos ) bokser <  (nmod) * / nam_loc_gpe_city:e2
+  nationality:: * / nam_liv_person:e1 <  ( appos ) bokser <  (amod) * / nam_adj_country:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) osadzie <  (appos) * / nam_loc_gpe_city:e2
+  location:: * / nam_eve_human_sport:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (nmod) > pow ( nmod )  > Kopanie <  ( nmod ) województwo <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( nmod ) pow <  (nmod) * / nam_loc_gpe_admin2:e2
+  location:: * / nam_eve_human_sport:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  creator:: * / nam_liv_person:e1 (appos) > reż ( conj )  > Ojciec
+  nationality:: * / nam_liv_person:e1 <  ( appos ) operator <  (amod) * / nam_adj_country:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) ur <  ( nmod ) Jorku <  (amod:flat) * / nam_loc_gpe_city:e2
+  creator:: * / nam_liv_person:e1 (appos) > reż ( conj )  > Zelig
+  affiliation:: * / nam_liv_person:e1 <  ( appos ) operator <  ( acl ) nagrodzony <  (obl) * / nam_pro_award:e2
+  alias:: * / nam_org_political_party:e1 (amod:flat) > Partii <  (appos) * / nam_org_political_party:e2
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  nationality:: * / nam_liv_person:e1 <  ( appos ) polityk <  (amod) * / nam_adj_country:e2
+  affiliation:: * / nam_liv_person:e1 <  ( appos ) polityk <  ( conj ) poseł <  (nmod) * / nam_org_institution:e2
+  affiliation:: * / nam_loc_gpe_country:e1 (nmod) > akcesie <  (nmod) * / nam_org_organization:e2
+  location:: * / nam_liv_person:e1 (nmod) > Pomnik <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_park:e1 <  (amod) * / nam_adj_city:e2
+  location:: * / nam_oth:e1 <  ( nmod ) Narodzenia <  ( nmod ) wsi <  (nmod) * / nam_oth:e2
+  location:: * / nam_oth:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_liv_person:e1 <  (conj) * / nam_liv_person:e2
+  origin:: * / nam_liv_person:e1 <  ( conj ) Lew <  ( appos ) arcybiskup <  (amod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 <  ( nmod ) Objawienia <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_liv_person_first:e1 <  (appos) * / nam_liv_person_last:e2
+  location:: * / nam_loc_gpe_city:e1 (appos) > wsi <  (nmod) * / nam_oth:e2
+  affiliation:: * / nam_liv_person:e1 <  ( conj ) Lew <  ( appos ) arcybiskup <  ( nmod:arg ) Kościoła <  (amod:flat) * / nam_org_organization:e2
+  location:: * / nam_oth:e1 <  ( nmod ) Narodzenia <  ( nmod ) wsi <  (appos) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 <  ( nmod:arg ) Zaśnięcia <  (nmod) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 <  ( appos ) arcybiskup <  (amod) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 (appos) > zielonogórzanin
+  location:: * / nam_liv_person:e1 (appos) > zielonogórzanin ( nsubj )  > wygrał ( ccomp )  > odbywał <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 <  ( conj ) duchowny <  ( conj ) arcybiskup <  (nmod) * / nam_loc_gpe_city:e2
+  nationality:: * / nam_liv_person:e1 <  ( conj ) duchowny <  (amod) * / nam_adj_country:e2
+  affiliation:: * / nam_org_institution:e1 (obl) > rozpoczął ( acl:relcl )  > Watykanu
+  location:: * / nam_org_organization:e1 (nmod) > teologię ( conj )  > Studiował <  ( obl ) seminarium <  ( nmod ) Acireale <  (conj) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_city:e1 (nmod) > ur ( nmod )  > Paolo <  (nmod) * / nam_loc_land_island:e2
+  location:: * / nam_org_organization:e1 (nmod) > prawo ( conj )  > teologię ( conj )  > Studiował <  ( obl ) seminarium <  ( nmod ) Acireale <  (conj) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) ur <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_city:e1 (nsubj) > miejscowość <  ( nmod ) prowincji <  (appos) * / nam_loc_gpe_admin2:e2
+  location:: * / nam_loc_gpe_city:e1 (nsubj) > miejscowość <  ( nmod ) Włoszech <  ( conj ) regionie <  (nmod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (appos) > prowincji ( nmod )  > miejscowość <  ( nmod ) Włoszech <  ( conj ) regionie <  (nmod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 (nsubj) > miejscowość <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (appos) > prowincji ( nmod )  > miejscowość <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (nmod) > regionie ( conj )  > Włoszech
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie ( obl )  > położona ( acl )  > Osówiec <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (amod) > województwie ( obl )  > położona ( acl )  > Osówiec <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( nmod ) województwo <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie ( obl )  > położona ( acl )  > Osówiec <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  ( conj ) gminie <  (appos) * / nam_loc_gpe_admin3:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (nmod) > ośrodek ( conj )  > Serowe <  ( nsubj ) miasto <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( nsubj ) miasto <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( conj ) ośrodek <  (nmod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (amod) > województwie ( obl )  > położona ( acl )  > Borek <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie ( obl )  > położona ( acl )  > Borek <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( acl ) położona <  ( obl ) województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie <  ( conj ) powiecie <  (amod) * / nam_loc_gpe_admin2:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  composition:: * / nam_loc_gpe_admin3:e1 (appos) > gminie ( conj )  > województwie <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_loc_gpe_city:e1 <  ( nmod ) powiat <  (amod) * / nam_loc_gpe_admin2:e2
+  composition:: * / nam_loc_gpe_admin2:e1 (amod) > powiecie ( conj )  > województwie ( obl )  > położona ( acl )  > Borek <  ( appos ) wieś <  (nmod) * / nam_loc_gpe_country:e2
+  nationality:: * / nam_liv_person:e1 <  ( conj ) bilardzista <  ( conj ) snookerzysta <  (appos) * / nam_adj_country:e2
+  location:: * / nam_liv_person:e1 (nsubj) > ukończył <  (obl) * / nam_loc_gpe_city:e2
+  nationality:: * / nam_liv_person:e1 <  ( appos ) aktor <  (amod) * / nam_adj_country:e2
+  location:: * / nam_org_organization:e1 (obj) > ukończył <  (obl) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > ukończył <  (obj) * / nam_org_organization:e2
+  alias:: * / nam_org_company:e1 <  ( appos ) Wympieł <  (punct) * / nam_org_company:e2
+  nationality:: * / nam_liv_person:e1 (appos) > astronom <  (amod) * / nam_adj_country:e2
+  alias:: * / nam_loc_astronomical:e1 (amod) > Johnson <  ( nmod ) CJ1 <  (amod) * / nam_loc_astronomical:e2
+  location:: * / nam_fac_road:e1 (nmod) > ulicy ( obl )  > zbudowana ( acl )  > synagoga ( appos )  > Synagoga <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_fac_road:e1 (amod) > ulicy ( obl )  > znajdująca ( acl )  > świątynia <  ( nmod ) ulica <  (nmod) * / nam_fac_road:e2
+  alias:: * / nam_fac_road:e1 (nmod) > ulicy <  ( nmod ) niem <  (flat) * / nam_fac_road:e2
+  location:: * / nam_loc_historical_region:e1 (nmod) > regionu <  (nmod) * / nam_loc_gpe_country:e2
+  alias:: * / nam_pro_title_song:e1 (case) > nocy ( obl )  > miałem ( parataxis:insert )  > nat ( conj )  > Drømte
+  alias:: * / nam_pro_title_document:e1 <  ( parataxis:insert ) duń <  (amod) * / nam_pro_title_document:e2
+  nationality:: * / nam_liv_person:e1 <  ( appos ) oficer <  (amod) * / nam_adj_country:e2
+  composition:: * / nam_org_institution:e1 <  ( nmod:flat ) Prawa <  (nmod) * / nam_org_organization:e2
+  location:: * / nam_org_institution:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution:e1 <  ( nmod:arg ) MO <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution_full:e1 (nmod) > naczelnika <  ( nmod ) Urzędu <  (nmod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_org_institution:e1 (nmod) > naczelnika <  ( nmod ) Urzędu <  (amod:flat) * / nam_org_institution:e2
+  location:: * / nam_org_organization:e1 (nmod) > Prawa ( nmod:flat )  > Wydziale <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_city:e1 <  (nmod) * / nam_loc_gpe_country:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 (appos) > miejscowości <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_city:e1 (appos) > miejscowości <  ( nmod ) Kaposvaru <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_org_group_team:e1 <  ( conj ) klub <  (nmod) * / nam_loc_gpe_district:e2
+  affiliation:: * / nam_org_group_team:e1 <  ( acl ) grający <  (obl) * / nam_eve_human_sport:e2
+  composition:: * / nam_loc_gpe_district:e1 <  ( conj ) dzielnicy <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_pro_title:e1 (appos) > Zamek
+  composition:: * / nam_pro_title:e1 (nmod) > Trylogii
+  composition:: * / nam_pro_title:e1 (conj) > Ameryka ( nmod )  > Trylogii
+  creator:: * / nam_liv_person:e1 (nmod) > utworów ( obl )  > jeden <  (nsubj) * / nam_pro_title:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) uniwersytetu <  (nmod) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 <  ( conj ) Samuel <  ( nmod ) uniwersytetu <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_city:e1 <  (nmod) * / nam_loc_gpe_admin1:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > papież ( nsubj )  > przypomina <  ( advmod ) podobnie <  ( advcl:cmpr ) czynił <  ( obl ) prefekt <  (nmod) * / nam_org_institution:e2
+  alias:: * / nam_liv_person:e1 (appos) > Ojcem
+  creator:: * / nam_liv_person:e1 (nmod) > rzece ( nmod:arg )  > wywiadzie ( obl )  > nakreślił <  (obj) * / nam_pro_title:e2
+  alias:: * / nam_liv_person:e1 (flat) > Ojca
+  creator:: * / nam_org_institution:e1 (obl:agent) > Uchwalona ( acl )  > ustawa
+  affiliation:: * / nam_loc_gpe_country:e1 (nmod) > sprawy <  (nmod) * / nam_org_organization:e2
+  location:: * / nam_org_institution:e1 (amod) > Dyrekcji <  ( nmod ) Lasów <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution:e1 (amod) > Dyrekcja <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > poseł <  (conj) * / nam_org_political_party:e2
+  location:: * / nam_org_institution:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  creator:: * / nam_liv_person:e1 (nsubj) > wskazał <  ( obl ) wpisie <  (nmod) * / nam_pro_title:e2
+  affiliation:: * / nam_oth_tech:e1 (parataxis:insert) > entuzjastów <  (nmod) * / nam_oth_tech:e2
+  location:: * / nam_liv_person:e1 (flat) > Radar ( flat )  > Reilly ( nmod )  > odpowiedział <  (obl:arg) * / nam_pro_media_web:e2
+  creator:: * / nam_liv_person:e1 (appos) > autorstwa ( nmod )  > libtorrent
+  alias:: * / nam_fac_goe:e1 (obl) > nazywające ( acl )  > miejsce ( nsubj )  > Zamą
+  composition:: * / nam_loc_gpe_country:e1 <  ( appos ) kraiku <  ( acl:relcl ) stanowił <  ( xcomp:pred ) część <  (nmod:arg) * / nam_loc:e2
+  origin:: * / nam_liv_person:e1 (nmod) > nazwiskiem ( conj )  > mieszkańca <  (nmod:arg) * / nam_loc_gpe_city:e2
+  origin:: * / nam_org_nation:e1 (nmod:arg) > ilość <  ( case ) rodem <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_org_nation:e1 (nmod:arg) > ilość ( obj )  > Znaleźli <  (obl) * / nam_loc_gpe_country:e2
+  location:: * / nam_liv_person:e1 (nmod) > lekcje ( obj )  > ukończywszy ( advcl )  > wzięła <  (obl) * / nam_fac_park:e2
+  affiliation:: * / nam_liv_person:e1 <  (nmod) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > Posłowie <  ( conj ) Leszek <  (nmod) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > posła ( appos )  > pana <  (conj) * / nam_org_political_party:e2
+  location:: * / nam_pro_title_document:e1 (nmod:arg) > ratyfikacji ( nmod )  > ustawy <  ( nmod:arg ) działań <  ( acl ) sporządzonej <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 (nsubj) > spędził <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 (nsubj) > postanowił <  ( xcomp ) zamieszkać <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 (nsubj) > założył <  (obl) * / nam_loc_gpe_city:e2
+  composition:: * / nam_org_institution:e1 (amod:flat) > Komitetu <  ( acl:relcl ) oddziałem <  ( nmod:arg ) Komitetu <  (amod:flat) * / nam_org_organization:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 (obl) > spędził <  ( obl ) stóp <  (nmod) * / nam_loc_land_mountain:e2
+  location:: * / nam_org_institution:e1 (obl) > pracował ( conj )  > mieszkał <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 (nsubj) > spędził <  ( obl ) stóp <  (nmod) * / nam_loc_land_mountain:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > poseł ( appos )  > Pan <  (conj) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > poseł ( appos )  > Pan <  (appos) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > poseł ( appos )  > Pan <  (conj) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > Podsekretarz <  (nmod) * / nam_org_institution:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > pan ( appos )  > Podsekretarz <  (nmod) * / nam_org_institution:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > poseł ( appos )  > panią ( appos )  > sprawozdawcę ( nmod )  > głosu ( obj )  > zabranie ( obl:arg )  > Proszę <  (punct) * / nam_org_institution:e2
+  affiliation:: * / nam_org_institution:e1 <  (nmod:flat) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_org_institution:e1 <  (nmod) * / nam_loc_gpe_country:e2
+  creator:: * / nam_liv_person:e1 (flat) > Assent ( flat )  > of ( flat )  > Grammar
+  creator:: * / nam_liv_person:e1 (flat) > Assent ( flat )  > of ( flat )  > Grammar <  (conj) * / nam_pro_title:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > posła ( appos )  > pana ( nmod )  > głosu ( obj )  > zabranie <  (conj) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > Podsekretarz <  (nmod) * / nam_org_institution:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > poseł ( appos )  > pan <  (appos) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > posłanka ( appos )  > pani <  (conj) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > minister ( appos )  > pani ( nsubj )  > pracuje ( parataxis:insert )  > Widzimy <  ( ccomp:obj ) jest <  (obl) * / nam_fac_goe:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > poseł ( appos )  > Pan <  (conj) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > Poseł <  ( appos ) Klub <  ( nmod:flat ) Poselski <  ( nmod:flat ) Stronnictwa <  (amod:flat) * / nam_org_political_party:e2
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 (amod:flat) > Gimnazjum <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 (conj) > Omnibus <  (nmod) * / nam_loc_gpe_city:e2
+  creator:: * / nam_liv_person:e1 (nsubj) > napisał ( conj )  > ma <  (nsubj) * / nam_pro_title:e2
+  neighbourhood:: * / nam_fac_road:e1 (nmod) > ulicy ( obl )  > zgłoszono <  ( obj ) róg <  (nmod:arg) * / nam_fac_road:e2
+  creator:: * / nam_liv_person:e1 (nmod) > Lód
+  location:: * / nam_org_organization:e1 (nmod) > naukowcy <  (amod) * / nam_adj_city:e2
+  location:: * / nam_pro_software:e1 <  ( acl ) wbudowanym <  (obl) * / nam_pro_software:e2
+  location:: * / nam_pro_software:e1 (nmod) > wszystkiego <  ( nmod ) Officem <  ( acl ) wbudowanym <  (obl) * / nam_pro_software:e2
+  creator:: * / nam_org_organization:e1 (nsubj) > wybrała <  ( advcl ) wydając <  (obj) * / nam_oth_license:e2
+  composition:: * / nam_pro_media_radio:e1 <  ( nmod ) radia <  (amod) * / nam_org_company:e2
+  location:: * / nam_org_institution:e1 (nmod) > projekcie <  (nmod) * / nam_loc_gpe_country:e2
+  alias:: * / nam_oth_tech:e1 <  (appos) * / nam_oth_tech:e2
+  alias:: * / nam_oth_tech:e1 (appos) > Broadband
+  affiliation:: * / nam_loc_gpe_country:e1 (nmod) > UE
+  affiliation:: * / nam_loc_gpe_country:e1 (nsubj) > wypada <  (obl) * / nam_org_organization:e2
+  affiliation:: * / nam_liv_person:e1 (flat) > Red
+  affiliation:: * / nam_loc_gpe_country:e1 (nsubj) > miała ( parataxis:obj )  > należała <  (obl:arg) * / nam_org_organization:e2
+  location:: * / nam_org_company:e1 (nmod) > inwestycje ( nsubj )  > płynęły ( conj )  > mówią ( acl:relcl )  > krajem ( conj )  > miała <  (nsubj) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_loc_gpe_country:e1 (conj) > Czechy ( nmod )  > krajów ( obj )  > konkuruje <  (obl) * / nam_org_organization:e2
+  affiliation:: * / nam_loc_gpe_country:e1 (conj) > Czechy ( nmod )  > krajów ( obj )  > konkuruje <  (obl) * / nam_org_organization:e2
+  location:: * / nam_org_company:e1 (conj) > Microsoft ( nmod )  > inwestycje ( nsubj )  > płynęły ( conj )  > mówią ( acl:relcl )  > krajem ( conj )  > miała <  (nsubj) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_loc_gpe_country:e1 (conj) > Czechy ( nmod )  > krajów ( obj )  > konkuruje <  (obl) * / nam_org_organization:e2
+  location:: * / nam_org_company:e1 (conj) > Microsoft ( nmod )  > inwestycje ( nsubj )  > płynęły ( conj )  > mówią ( acl:relcl )  > krajem ( conj )  > miała <  (nsubj) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_loc_gpe_country:e1 (conj) > Czechy ( nmod )  > krajów ( obj )  > konkuruje <  (obl) * / nam_org_organization:e2
+  affiliation:: * / nam_loc_gpe_country:e1 (nmod) > Unii
+  affiliation:: * / nam_loc_gpe_country:e1 (nmod) > krajów ( obj )  > konkuruje <  (obl) * / nam_org_organization:e2
+  affiliation:: * / nam_loc_gpe_country:e1 (conj) > Czechy ( nmod )  > krajów ( obj )  > konkuruje <  (obl) * / nam_org_organization:e2
+  affiliation:: * / nam_loc_gpe_country:e1 (conj) > Czechy ( nmod )  > krajów ( obj )  > konkuruje <  (obl) * / nam_org_organization:e2
+  location:: * / nam_org_company:e1 (nmod) > czasach ( conj )  > Microsoft ( nmod )  > inwestycje ( nsubj )  > płynęły ( conj )  > mówią ( acl:relcl )  > krajem ( conj )  > miała <  (nsubj) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_loc_gpe_country:e1 (conj) > Czechy ( nmod )  > krajów ( obj )  > konkuruje <  (obl) * / nam_org_organization:e2
+  alias:: * / nam_loc_gpe_country:e1 (nsubj) > wyszła <  ( obl ) okresu <  (nmod) * / nam_loc_gpe_country:e2
+  alias:: * / nam_org_organization:e1 <  ( nmod ) Związek <  (amod:flat) * / nam_org_organization:e2
+  alias:: * / nam_org_political_party:e1 <  (nmod) * / nam_org_political_party:e2
+  composition:: * / nam_org_company:e1 (nsubj) > wylał <  ( obl ) latach <  ( acl:relcl ) należy <  (obl:arg) * / nam_org_company:e2
+  location:: * / nam_liv_person:e1 (nsubj) > mówił <  ( obl ) łamach <  (nmod) * / nam_pro_media_periodic:e2
+  affiliation:: * / nam_liv_person:e1 <  (nmod) * / nam_org_company:e2
+  neighbourhood:: * / nam_org_company:e1 (nmod) > banku ( nmod )  > placówek <  ( nmod ) ul <  (nmod) * / nam_fac_road:e2
+  alias:: * / nam_liv_person_first:e1 (nmod) > śmierci ( obl )  > wyłoniła <  ( nsubj ) religia <  ( nmod ) sobowtóry <  (nmod) * / nam_liv_person_add:e2
+  alias:: * / nam_liv_person:e1 (appos) > Król
+  location:: * / nam_loc_gpe_city:e1 (nmod) > Hour <  ( nmod ) stanie <  (appos) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_org_organization:e1 <  ( conj ) Hour <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 <  ( conj ) Hour <  ( nmod ) stanie <  (appos) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_pro_title_article:e1 (conj) > Krzysztof <  (conj) * / nam_pro_media_periodic:e2
+  alias:: * / nam_liv_person_first:e1 (nmod) > fani ( nmod )  > teksty ( conj )  > religia <  ( conj ) kościoły <  ( nmod ) grób <  (nmod) * / nam_liv_person_add:e2
+  creator:: * / nam_liv_person:e1 <  (conj) * / nam_pro_title_article:e2
+  alias:: * / nam_liv_person:e1 <  ( acl ) obrzucany <  ( obl ) grą <  ( conj ) przezwiskami <  ( det ) takimi <  (obl:cmpr) * / nam_liv_person:e2
+  alias:: * / nam_liv_person:e1 <  ( acl ) obrzucany <  ( obl ) grą <  ( conj ) przezwiskami <  ( det ) takimi <  ( obl:cmpr ) Drewnialdinho <  ( conj ) noga <  (amod) * / nam_liv_person:e2
+  alias:: * / nam_liv_person:e1 <  ( acl ) obrzucany <  ( obl ) grą <  ( conj ) przezwiskami <  ( det ) takimi <  ( obl:cmpr ) Drewnialdinho <  (conj) * / nam_liv_person:e2
+  alias:: * / nam_pro_media_web:e1 (nummod) > % ( nmod )  > przewaga ( nsubj )  > zaznacza ( parataxis:insert )  > odpowiedziało <  ( nsubj ) respondentów <  ( acl ) używających <  (obj) * / nam_pro_media_web:e2
+  alias:: * / nam_pro_media_web:e1 (nmod) > respondentów ( nmod:arg )  > ogółu ( nmod )  > % ( parataxis:insert )  > klasy <  (det:poss) * / nam_pro_media_web:e2
+  affiliation:: * / nam_liv_person:e1 <  (nmod) * / nam_org_organization:e2
+  creator:: * / nam_org_company:e1 (nmod) > Firma ( nsubj )  > wypuściła <  ( obj ) model <  (nmod) * / nam_pro_brand:e2
+  creator:: * / nam_org_company:e1 (appos) > firma ( nsubj )  > zaprezentowała <  ( obj ) model <  ( nmod ) nazwie <  (nmod:arg) * / nam_pro_brand:e2
+  creator:: * / nam_org_company:e1 (appos) > Firma ( nsubj )  > wypuściła <  ( obj ) wersje <  (conj) * / nam_pro_brand:e2
+  creator:: * / nam_org_company:e1 (nmod) > firmy ( nmod:flat )  > Truck ( nmod:flat )  > Short ( appos )  > Hyper
+  creator:: * / nam_org_company:e1 (nmod) > oferty ( nmod )  > wymiany <  ( nmod:arg ) regulator <  (appos) * / nam_pro_brand:e2
+  creator:: * / nam_org_company:e1 (appos) > Firma ( nsubj )  > wypuściła <  ( obj ) wersje <  ( acl ) oznaczone <  (iobj) * / nam_pro_brand:e2
+  creator:: * / nam_org_company:e1 (appos) > firma ( nsubj )  > zaplanowała <  ( obj ) premierę <  ( nmod ) nazwie <  (nmod:arg) * / nam_pro_brand:e2
+  location:: * / nam_eve_human:e1
+  creator:: * / nam_org_company:e1 (appos) > Firma ( nsubj )  > opublikowała <  ( obj ) informacje <  ( nmod:arg ) modelu <  (nmod) * / nam_pro_brand:e2
+  location:: * / nam_liv_person:e1 (nsubj) > zadowala <  ( conj ) pokazuje <  ( ccomp:obj ) jest <  ( nsubj ) kino <  ( amod ) niezależne <  (obl) * / nam_loc_gpe_country:e2
+  location:: * / nam_pro_media_web:e1 <  ( nmod ) FBC <  (conj) * / nam_oth_www:e2
+  location:: * / nam_pro_media_web:e1 <  (conj) * / nam_oth_www:e2
+  alias:: * / nam_pro_media_web:e1 <  (nmod) * / nam_pro_media_web:e2
+  location:: * / nam_loc_gpe_city:e1 <  (nmod) * / nam_loc_gpe_admin1:e2
+  neighbourhood:: * / nam_fac_goe:e1 <  ( nmod ) Przedmieście <  (amod:flat) * / nam_fac_road:e2
+  location:: * / nam_fac_goe:e1 <  (nmod) * / nam_fac_goe:e2
+  creator:: * / nam_org_organization:e1 (nsubj) > organizują <  ( obj ) konferencję <  ( conj ) legalna <  (advmod) * / nam_eve_human:e2
+  creator:: * / nam_org_institution_full:e1 (conj) > Creative ( nsubj )  > organizują <  ( obj ) konferencję <  ( conj ) legalna <  (advmod) * / nam_eve_human:e2
+  composition:: * / nam_org_institution:e1 <  (nmod:flat) * / nam_org_organization:e2
+  location:: * / nam_org_organization:e1 (obl:cmpr) > takie ( det )  > podmioty ( obj )  > skupiająca ( acl )  > organizacja ( appos )  > Copyright <  ( nmod ) przedstawiciele <  ( nmod:arg ) przemysłów <  ( nmod ) kultury <  (nmod) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_liv_person:e1 <  (nmod) * / nam_pro_media_web:e2
+  location:: * / nam_org_organization:e1 (conj) > MPAA ( obl:cmpr )  > takie ( det )  > podmioty ( obj )  > skupiająca ( acl )  > organizacja ( appos )  > Copyright <  ( nmod ) przedstawiciele <  ( nmod:arg ) przemysłów <  ( nmod ) kultury <  (nmod) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_org_organization:e1 (obl:cmpr) > takie ( det )  > podmioty ( obj )  > skupiająca ( acl )  > organizacja ( appos )  > Copyright
+  affiliation:: * / nam_org_organization:e1 (conj) > MPAA ( obl:cmpr )  > takie ( det )  > podmioty ( obj )  > skupiająca ( acl )  > organizacja ( appos )  > Copyright
+  creator:: * / nam_liv_person:e1 (appos) > twórca <  (appos) * / nam_pro_media_web:e2
+  neighbourhood:: * / nam_org_institution:e1 (amod:flat) > Biblioteki <  ( nmod ) Ozorkowie <  ( nmod ) ul <  (amod) * / nam_fac_road:e2
+  location:: * / nam_org_institution:e1 (amod:flat) > Biblioteki <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_road:e1 (amod) > ul ( nmod )  > Ozorkowie
+  creator:: * / nam_org_company:e1 (appos) > stajni ( nmod )  > modelem <  (nmod) * / nam_pro_model_car:e2
+  nationality:: * / nam_liv_person:e1 (appos) > Mistrz <  (nmod) * / nam_loc_gpe_country:e2
+  origin:: * / nam_liv_person:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) Sącza <  (amod:flat) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_eve_human_sport:e1 (obj) > rozegrano <  ( obl ) torze <  ( nmod ) Sączu <  (amod:flat) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 <  ( nmod ) Sącza <  (amod:flat) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_liv_person:e1 <  ( acl:relcl ) staruje <  ( obl ) eliminacjach <  (nmod) * / nam_eve_human_sport:e2
+  origin:: * / nam_liv_person:e1 <  ( acl ) mieszkających <  (obl) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 <  ( acl ) mieszkających <  ( obl:arg ) tymi <  ( acl ) mieszkającymi <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_nation:e1 (nmod) > wojny ( nmod )  > bóg <  ( conj ) wyspa <  (appos) * / nam_loc_land_island:e2
+  alias:: * / nam_loc_gpe_city:e1 (obl) > świątyni ( obl )  > znajdował <  ( nsubj ) posąg <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_eve_human_holiday:e1 (iobj) > napełniany ( acl )  > posąg ( conj )  > czterogłowy ( nmod )  > rozmiarów ( nsubj )  > znajdował ( acl:relcl )  > Arkona
+  alias:: * / nam_loc_gpe_city:e1 <  (conj) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_fac_goe:e1 (nsubj) > istniało <  (obl:arg) * / nam_loc_gpe_city:e2
+  alias:: * / nam_liv_person_first:e1 (nsubj) > Imię ( nsubj )  > skót <  (nmod) * / nam_liv_person_first:e2
+  location:: * / nam_loc_land_island:e1 (appos) > wyspa ( conj )  > bóg <  ( nmod ) wojny <  ( conj ) urodzaju <  ( amod ) jednego <  ( obl ) plemion <  ( nmod ) terenie <  (nmod) * / nam_loc_gpe_country:e2
+  alias:: * / nam_org_nation:e1 <  ( acl ) zwanych <  (iobj) * / nam_org_nation:e2
+  alias:: * / nam_loc_gpe_city:e1 (obl) > świątyni ( obl )  > znajdował <  ( nsubj ) posąg <  ( nmod ) Gardziec <  (conj) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_country_region:e1 (conj) > Wieprzem ( nmod )  > Polsce
+  neighbourhood:: * / nam_loc_gpe_city:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_hydronym_river:e1 <  (conj) * / nam_loc_country_region:e2
+  location:: * / nam_fac_goe:e1 (nsubj) > największą <  (obl) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_hydronym_river:e1 (nmod) > Polsce
+  location:: * / nam_loc_gpe_city:e1 (conj) > Beskidy
+  location:: * / nam_loc_gpe_city:e1 (conj) > Beskidy
+  alias:: * / nam_loc_country_region:e1 (conj) > Górnośląskim <  (conj) * / nam_loc_country_region:e2
+  location:: * / nam_loc_hydronym_river:e1 (conj) > Wieprzem <  (conj) * / nam_loc_country_region:e2
+  neighbourhood:: * / nam_loc_hydronym_river:e1 <  (conj) * / nam_loc_hydronym_river:e2
+  location:: * / nam_loc_hydronym_river:e1 (conj) > Wieprzem ( nmod )  > Polsce
+  neighbourhood:: * / nam_loc_gpe_city:e1 (nmod) > północ ( conj )  > Beskidy <  ( conj ) szelfie <  (nmod) * / nam_loc_hydronym_sea:e2
+  location:: * / nam_loc_gpe_city:e1 (conj) > Beskidy
+  affiliation:: * / nam_liv_person:e1 (conj) > Gammy <  ( acl ) zwanych <  (iobj) * / nam_org_group:e2
+  alias:: * / nam_org_group:e1 <  (conj) * / nam_org_group:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Gammy <  ( acl ) zwanych <  (iobj) * / nam_org_group:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Gammy <  ( acl ) zwanych <  (iobj) * / nam_org_group:e2
+  creator:: * / nam_liv_person:e1 (conj) > C ( nsubj )  > podali <  (nmod) * / nam_pro_title:e2
+  creator:: * / nam_liv_person:e1 (conj) > Gammy ( nmod )  > autorstwa ( nmod:flat )  > Desing
+  creator:: * / nam_liv_person:e1 (conj) > C ( nsubj )  > podali <  (nmod) * / nam_pro_title:e2
+  creator:: * / nam_liv_person:e1 (nsubj) > podali <  (nmod) * / nam_pro_title:e2
+  creator:: * / nam_liv_person:e1 (conj) > Gammy ( nmod )  > autorstwa ( nmod:flat )  > Desing
+  creator:: * / nam_liv_person:e1 (nmod) > autorstwa ( nmod:flat )  > Desing
+  affiliation:: * / nam_liv_person:e1 <  ( acl ) zwanych <  (iobj) * / nam_org_group:e2
+  alias:: * / nam_org_group:e1 <  ( conj ) Bandą <  (nmod) * / nam_org_group:e2
+  creator:: * / nam_liv_person:e1 (conj) > Gammy ( nmod )  > autorstwa ( nmod:flat )  > Desing
+  alias:: * / nam_org_group:e1 <  (nmod) * / nam_org_group:e2
+  composition:: * / nam_org_institution:e1 <  ( nmod:flat ) Bezpieczeństwa <  (nmod:flat) * / nam_org_organization:e2
+  composition:: * / nam_org_institution:e1 <  ( nmod:flat ) Bezpieczeństwa <  (flat) * / nam_org_organization:e2
+  location:: * / nam_org_institution:e1 <  ( acl ) wprowadzonego <  ( obl:arg ) życie <  ( nmod ) konferencji <  ( nmod:arg ) zmian <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_eve_human:e1 (conj) > COP ( nmod )  > zmian <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_eve_human:e1 (nmod) > zmian <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_pro_title_document:e1 <  ( nmod:arg ) rybactwie <  (nmod) * / nam_pro_media_periodic:e2
+  alias:: * / nam_liv_person:e1 (conj) > Prezydent
+  nationality:: * / nam_liv_person:e1 (conj) > Prezydent <  (nmod) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_org_institution:e1 (conj) > Stanach
+  affiliation:: * / nam_org_institution:e1 (nmod:arg) > Szef ( conj )  > Szef ( conj )  > Rzeczypospolitej
+  affiliation:: * / nam_org_institution:e1 (nmod) > Szef ( conj )  > Rzeczypospolitej
+  affiliation:: * / nam_loc_gpe_country:e1 (nmod:arg) > Umowa
+  affiliation:: * / nam_loc_gpe_country:e1 (conj) > Rzecząpospolitą ( nmod:arg )  > Umowa
+  location:: * / nam_org_institution:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_org_institution:e1 <  (nmod:flat) * / nam_org_organization:e2
+  composition:: * / nam_org_institution:e1 (obl) > zatrudnieni ( acl )  > pracownicy <  (nmod) * / nam_org_organization:e2
+  composition:: * / nam_org_institution:e1 (obl) > studiujący ( acl )  > studenci <  (nmod) * / nam_org_organization:e2
+  location:: * / nam_org_institution:e1 <  ( nmod:flat ) Uniwersytetu <  (nmod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_org_institution:e1 <  (nmod:flat) * / nam_org_organization:e2
+  composition:: * / nam_org_institution:e1 <  (nmod:flat) * / nam_org_organization:e2
+  location:: * / nam_org_institution:e1 <  ( nmod:flat ) Uniwersytetu <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution:e1 <  ( nmod:flat ) Uniwersytetu <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution:e1 <  ( nmod:flat ) Uniwersytetu <  (nmod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_org_institution:e1 <  (nmod:flat) * / nam_org_organization:e2
+  composition:: * / nam_org_institution:e1 <  (nmod:flat) * / nam_org_organization:e2
+  composition:: * / nam_org_institution:e1 <  (nmod:flat) * / nam_org_organization:e2
+  location:: * / nam_org_institution:e1 <  ( nmod:flat ) Uniwersytetu <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution:e1 <  ( nmod:flat ) Uniwersytetu <  (nmod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_org_institution:e1 <  (nmod:flat) * / nam_org_organization:e2
+  location:: * / nam_pro_title_document:e1 (nmod) > art ( nmod )  > trybie ( nmod )  > rozpatrzeniu <  ( obl:arg ) ochronie <  (parataxis:insert) * / nam_pro_media_periodic:e2
+  location:: * / nam_pro_title_document:e1 <  ( nmod:arg ) ujawnieniu <  ( nmod ) organach <  ( nmod ) osób <  (nmod) * / nam_pro_media_periodic:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Marek ( appos )  > Trybunał
+  affiliation:: * / nam_liv_person:e1 (conj) > Marek ( appos )  > Trybunał
+  affiliation:: * / nam_liv_person:e1 (conj) > Marek ( appos )  > Trybunał
+  affiliation:: * / nam_liv_person:e1 (appos) > Trybunał
+  affiliation:: * / nam_liv_person:e1 (conj) > Marek ( appos )  > Trybunał
+  location:: * / nam_pro_title_document:e1 (nmod) > Art <  (nmod) * / nam_pro_media_periodic:e2
+  affiliation:: * / nam_liv_person:e1 (nmod) > protokolant ( conj )  > Marek ( appos )  > Trybunał
+  location:: * / nam_pro_title_document:e1 (nmod) > art <  (nmod) * / nam_pro_media_periodic:e2
+  location:: * / nam_pro_title_document:e1 <  (nmod) * / nam_pro_media_periodic:e2
+  creator:: * / nam_org_institution:e1 (nmod) > rozporządzenia
+  location:: * / nam_org_company:e1 (amod:flat) > Telefonii ( obj )  > odwołania ( nmod )  > naruszenie <  ( obl:arg ) siedzibą <  (nmod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_org_institution:e1 (appos) > Sąd
+  location:: * / nam_org_institution:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_oth_currency:e1 (nmod) > kwoty <  (nmod) * / nam_oth_currency:e2
+  location:: * / nam_org_company:e1 (amod:flat) > Telefonii ( obj )  > odwołania ( nmod:arg )  > sprawy <  ( nmod:arg ) siedzibą <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_company:e1 (amod:flat) > Telefonii <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution:e1 (appos) > Sąd <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_company:e1 (obj) > odwołania <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_company:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_company:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_pro_title_document:e1 <  (appos) * / nam_pro_media_periodic:e2
+  location:: * / nam_pro_title_document:e1 <  (nmod) * / nam_pro_media_periodic:e2
+  location:: * / nam_oth_tech:e1 (nmod) > formacie ( nmod )  > magazyn <  ( conj ) pliki <  ( nmod ) pobrania <  (nmod) * / nam_oth_tech:e2
+  affiliation:: * / nam_liv_person:e1 (amod) > Lajkonika ( nmod )  > sukcesem <  (nmod) * / nam_eve_human_sport:e2
+  origin:: * / nam_liv_person:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_org_nation:e1 (nsubj) > stał <  ( xcomp:pred ) bohaterem <  (nmod) * / nam_eve_human_sport:e2
+  location:: * / nam_liv_person:e1 (appos) > prezydent <  (nmod:arg) * / nam_loc_gpe_city:e2
+  nationality:: * / nam_liv_person:e1 (appos) > wrocławianin ( conj )  > Japończyk
+  location:: * / nam_org_organization:e1 (amod:flat) > Instytutu ( nmod:arg )  > członkowie ( nsubj )  > lobbują <  ( obl ) przyznaniem <  (iobj) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 (appos) > budynek <  (nmod) * / nam_loc_land_continent:e2
+  location:: * / nam_loc_gpe_city:e1 (nmod) > połączeń ( nsubj )  > mało <  ( conj ) odkłada <  ( nsubj ) rząd <  (nmod) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_liv_person:e1 <  ( appos ) Dyrektor <  (nmod) * / nam_org_institution:e2
+  origin:: * / nam_liv_person:e1 (appos) > wrocławianin
+  creator:: * / nam_liv_person:e1 (flat) > Fantastyki
+  location:: * / nam_fac_goe:e1 (nmod) > wizytą <  ( acl:relcl ) wypił <  ( conj ) zauważył <  ( ccomp:obj ) ma <  ( conj ) odżywa <  (obl) * / nam_loc_country_region:e2
+  location:: * / nam_fac_goe:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 (conj) > Galeria <  ( conj ) pomniki <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 (nsubj) > jest <  ( nmod ) knajp <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_pro_title:e1 (nmod) > premierą ( nmod:arg )  > Rozmowa <  (nmod) * / nam_fac_goe:e2
+  alias:: * / nam_pro_title:e1 <  ( nmod ) Creative <  ( nmod ) tłum <  ( nmod ) standardu <  (case) * / nam_pro_title:e2
+  affiliation:: * / nam_liv_person:e1 (nmod) > okazją <  ( nsubj ) Warsztaty <  (nmod) * / nam_eve_human:e2
+  creator:: * / nam_liv_person:e1 (nsubj) > autorem <  ( nmod:arg ) tekstu <  (nmod) * / nam_pro_title:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Larrego ( nmod )  > okazją <  ( nsubj ) Warsztaty <  (nmod) * / nam_eve_human:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > Komisji
+  affiliation:: * / nam_liv_person:e1 (obj) > przywróciła <  ( nsubj ) Rada <  ( nmod ) Radia <  (amod:flat) * / nam_org_company:e2
+  affiliation:: * / nam_liv_person:e1 (flat) > szefowa <  (nmod) * / nam_org_institution:e2
+  creator:: * / nam_liv_person:e1 (obl:agent) > prowadzonym ( acl )  > programie ( conj )  > Loży
+  affiliation:: * / nam_liv_person:e1 (obl:agent) > prowadzonym ( acl )  > programie <  (nmod) * / nam_pro_media_tv:e2
+  affiliation:: * / nam_liv_person:e1 <  ( appos ) jeden <  ( obl ) filarów <  (nmod) * / nam_pro_media_periodic:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > redaktor <  (nmod) * / nam_pro_media_periodic:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > szef <  ( nmod ) związku <  (nmod) * / nam_org_organization:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > ultraprawicowego ( obl:agent )  > prowadzonych ( acl )  > zwolnieniach <  (nmod) * / nam_pro_media_periodic:e2
+  affiliation:: * / nam_liv_person:e1 <  ( appos ) prezes <  (nmod) * / nam_org_company:e2
+  alias:: * / nam_org_company:e1 <  (nmod) * / nam_org_company:e2
+  location:: * / nam_liv_person:e1 (appos) > Wirtualnemedia.pl
+  alias:: * / nam_org_company:e1 (obl:agent) > odstąpienia ( nmod )  > złotych ( nmod )  > wypłata ( nsubj )  > opłacalna <  ( obl:arg ) kontynuowania <  ( obj ) współpracy <  (nmod:arg) * / nam_org_company:e2
+  alias:: * / nam_org_group:e1 <  ( nmod ) Koalicji <  (det:poss) * / nam_org_group:e2
+  alias:: * / nam_org_company:e1 (nmod) > współpracy ( obl:arg )  > wycofaniu ( nmod:arg )  > decyzji ( nmod:arg )  > Powodem <  ( nsubj ) niewywiązywanie <  (nsubj) * / nam_org_company:e2
+  affiliation:: * / nam_liv_person:e1 (nmod) > ust ( obl:arg )  > wypływająca ( acl )  > krytyka ( conj )  > stanowi <  ( obl ) elementy <  ( nmod:arg ) ideologii <  (nmod) * / nam_org_organization:e2
+  location:: * / nam_org_company:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution:e1 <  ( nmod ) Poczty <  (nmod) * / nam_loc_gpe_city:e2
+  creator:: * / nam_org_organization:e1 (conj) > dziesiąte ( amod )  > Liceum ( obl:agent )  > Piąte
+  location:: * / nam_org_organization:e1 (conj) > dziesiąte ( amod )  > Liceum <  (nmod) * / nam_loc_gpe_city:e2
+  creator:: * / nam_org_organization:e1 (conj) > Platernówka
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  creator:: * / nam_org_organization:e1 (conj) > Wingapo
+  creator:: * / nam_org_organization:e1 (conj) > Szkolnik
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_eve_human:e1 (amod:flat) > Akcji ( obl )  > przeprowadził <  ( obj ) warsztat <  (nmod) * / nam_loc_gpe_city:e2
+  creator:: * / nam_org_organization:e1 (nmod) > animator ( nsubj )  > przeprowadził <  ( obl ) Akcji <  (amod:flat) * / nam_eve_human:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > Media ( flat )  > Fundacji
+  affiliation:: * / nam_liv_person:e1 (appos) > Media ( flat )  > Fundacji ( nmod )  > animator ( nsubj )  > przeprowadził <  ( obl ) Akcji <  (amod:flat) * / nam_eve_human:e2
+  location:: * / nam_liv_person:e1 (appos) > Media ( flat )  > Fundacji ( nmod )  > animator ( nsubj )  > przeprowadził <  ( obj ) warsztat <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_pro_media_periodic:e1 (nsubj) > zajął <  ( obl ) konkursie <  (nmod) * / nam_eve_human:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > animatorka ( nsubj )  > przekaże <  ( obl ) zajęć <  (nmod) * / nam_org_organization:e2
+  creator:: * / nam_liv_person:e1 (nsubj) > postanowił <  ( conj ) stworzył <  ( obj ) grę <  (nmod) * / nam_pro_title_boardgame:e2
+  affiliation:: * / nam_liv_person:e1 <  ( conj ) Dyrektora <  (nmod) * / nam_org_institution:e2
+  location:: * / nam_org_organization:e1 (appos) > Ośrodka ( nmod )  > programu <  ( nmod ) Łodzi <  (conj) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 (appos) > Ośrodka ( nmod )  > programu <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_liv_person:e1 <  (conj) * / nam_oth_position:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Dawid ( appos )  > piłkarze <  ( conj ) piłkarze <  (nmod:arg) * / nam_org_group_team:e2
+  alias:: * / nam_liv_person:e1 <  (nmod) * / nam_liv_person:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Marcin ( conj )  > piłkarze <  ( conj ) piłkarze <  (nmod:arg) * / nam_org_group_team:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Dawid ( appos )  > piłkarze <  (nmod) * / nam_org_group_team:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > piłkarze <  (nmod) * / nam_org_group_team:e2
+  affiliation:: * / nam_liv_person:e1 (nmod) > Tomasz ( conj )  > Dawid ( appos )  > piłkarze <  ( conj ) piłkarze <  (nmod:arg) * / nam_org_group_team:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > piłkarze <  ( conj ) piłkarze <  (nmod:arg) * / nam_org_group_team:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Dawid ( appos )  > piłkarze <  ( conj ) piłkarze <  (nmod:arg) * / nam_org_group_team:e2
+  location:: * / nam_loc_gpe_city:e1 (nmod) > Policjanci <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 (conj) > Zszywka <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 (conj) > MIX ( flat )  > LO <  (nmod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_org_organization_sub:e1 (amod) > Szczepan <  (appos) * / nam_org_organization:e2
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 (cc) > Liceum <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 (conj) > School ( flat )  > Life <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_nation:e1 <  (flat) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_city:e1 <  (conj) * / nam_loc_gpe_country:e2
+  location:: * / nam_pro_media_radio:e1 (conj) > radiu <  (nmod) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_fac_goe:e1 <  ( nmod:flat ) Krytyki <  ( nmod ) ul <  (amod) * / nam_fac_road:e2
+  nationality:: * / nam_liv_person:e1 (nmod) > cybernetyki ( nmod )  > pioniera <  (amod) * / nam_adj_country:e2
+  location:: * / nam_fac_goe:e1 (conj) > godz <  (amod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_liv_person:e1 <  (nmod) * / nam_org_institution:e2
+  creator:: * / nam_liv_person:e1 <  ( appos ) autor <  ( nmod ) bloga <  (appos) * / nam_pro_media_web:e2
+  location:: * / nam_fac_goe:e1 (appos) > papieru <  (nmod) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_org_institution:e1 <  ( nmod ) Dzieci <  ( nmod ) ul <  (amod) * / nam_fac_road:e2
+  location:: * / nam_org_group_team:e1 <  (amod) * / nam_adj_city:e2
+  location:: * / nam_org_institution:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution:e1 (amod:flat) > Biblioteka <  (nmod) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_org_institution:e1 (obl) > przyjmujemy <  ( obl ) Ozorkowie <  ( flat ) ul <  (amod) * / nam_fac_road:e2
+  neighbourhood:: * / nam_org_institution:e1 <  ( nmod ) osiedlu <  ( nmod:arg ) ul <  (amod) * / nam_fac_road:e2
+  location:: * / nam_org_institution:e1 (obl) > przyjmujemy <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 (flat) > ozorkowianki
+  creator:: * / nam_liv_person:e1 (flat) > ozorkowianki ( nmod )  > malarstwa <  ( obj ) anioły <  (acl) * / nam_eve_human:e2
+  location:: * / nam_fac_goe:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 (nmod) > stóp ( obl )  > przygotowanym ( acl )  > torze ( obl )  > odbyły <  ( obl ) centrum <  (nmod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_pro_brand:e1 (nmod) > silnik <  ( acl ) zamontowany <  ( obl ) modelu <  (nmod) * / nam_pro_model_car:e2
+  alias:: * / nam_oth_tech:e1 (nmod) > konstrukcję <  (nmod) * / nam_oth_tech:e2
+  composition:: * / nam_pro_brand:e1 (flat) > Novak ( appos )  > regulator ( obj )  > spalił <  (obl:arg) * / nam_pro_model_car:e2
+  location:: * / nam_loc_historical_region:e1 <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_fac_goe:e1 (nmod) > czterotwarzowy <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_city:e1 <  (nmod) * / nam_loc_gpe_country:e2
+  neighbourhood:: * / nam_loc_hydronym_river:e1 (nmod) > tratwami <  (nmod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_loc_land_mountain:e1 (amod:flat) > Sądecki ( conj )  > Beskid ( conj )  > Żywiecki ( conj )  > pasma <  (nmod) * / nam_loc_land_mountain:e2
+  composition:: * / nam_loc_land_mountain:e1 (conj) > Makowski ( flat )  > pasma <  (nmod) * / nam_loc_land_mountain:e2
+  composition:: * / nam_loc_land_peak:e1 (amod) > Skałki ( nsubj )  > szczytem ( conj )  > Korony ( nsubj )  > szczytem <  (nmod) * / nam_loc_land_mountain:e2
+  neighbourhood:: * / nam_loc:e1 (nsubj) > dzieli <  (obj) * / nam_loc_land_mountain:e2
+  location:: * / nam_loc_country_region:e1 (conj) > Kotlina ( nsubj )  > rejony <  ( amod ) najstarsze <  (obl) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc:e1 (conj) > Mroźnej ( amod:flat )  > Jaskini ( nmod )  > korytarze ( conj )  > stalaktyty ( conj )  > form ( nsubj )  > występuje ( conj )  > niższe <  (nsubj) * / nam_loc_land_mountain:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_loc_land_mountain:e1 (nsubj) > pasmem <  (nmod) * / nam_loc_land_mountain:e2
+  location:: * / nam_loc_hydronym_river:e1 (nmod) > tratwami ( nmod:arg )  > spływ ( nsubj )  > należy <  ( obl:arg ) atrakcji <  (nmod) * / nam_loc_land_mountain:e2
+  location:: * / nam_loc_hydronym_lake:e1 (amod:flat) > Staw ( conj )  > Oko ( parataxis:obj )  > znane ( conj )  > znajduje <  (obl) * / nam_loc_land_mountain:e2
+  composition:: * / nam_loc_land_mountain:e1 (conj) > pasma <  (nmod) * / nam_loc_land_mountain:e2
+  location:: * / nam_loc_hydronym_lake:e1 (amod:flat) > Staw ( conj )  > Oko ( parataxis:obj )  > znane ( conj )  > znajduje <  (obl) * / nam_loc_land_mountain:e2
+  composition:: * / nam_loc_land_mountain:e1 (conj) > Żywiecki ( conj )  > pasma <  (nmod) * / nam_loc_land_mountain:e2
+  location:: * / nam_loc_hydronym_lake:e1 (amod:flat) > Staw ( conj )  > Oko ( parataxis:obj )  > znane ( conj )  > znajduje <  (obl) * / nam_loc_land_mountain:e2
+  location:: * / nam_loc_country_region:e1 (nsubj) > rejony <  ( amod ) najstarsze <  (obl) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_land_peak:e1 (nummod) > Korony ( nsubj )  > szczytem <  (nmod) * / nam_loc_land_mountain:e2
+  location:: * / nam_liv_person:e1 (nsubj) > zbudował <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc:e1 (nmod) > korytarze ( conj )  > stalaktyty ( conj )  > form ( nsubj )  > występuje ( conj )  > niższe <  (nsubj) * / nam_loc_land_mountain:e2
+  neighbourhood:: * / nam_loc_hydronym_river:e1 (nmod) > tratwami <  ( nmod ) Sromowiec <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_city:e1 (nmod) > Sromowiec ( nmod )  > tratwami ( nmod:arg )  > spływ ( nsubj )  > należy <  ( obl:arg ) atrakcji <  (nmod) * / nam_loc_land_mountain:e2
+  location:: * / nam_loc:e1 (conj) > Mroźnej ( amod:flat )  > Jaskini ( nmod )  > korytarze ( conj )  > stalaktyty ( conj )  > form ( nsubj )  > występuje ( conj )  > niższe <  (nsubj) * / nam_loc_land_mountain:e2
+  location:: * / nam_loc_gpe_city:e1 (nmod) > tratwami ( nmod:arg )  > spływ ( nsubj )  > należy <  ( obl:arg ) atrakcji <  (nmod) * / nam_loc_land_mountain:e2
+  location:: * / nam_loc_hydronym_lake:e1 (amod) > Oko ( parataxis:obj )  > znane ( conj )  > znajduje <  (obl) * / nam_loc_land_mountain:e2
+  neighbourhood:: * / nam_org_institution:e1 (conj) > Urzędzie <  ( nmod ) Białymstoku <  ( conj ) ul <  (amod) * / nam_fac_road:e2
+  neighbourhood:: * / nam_org_institution:e1 (nmod) > siedzibie <  ( nmod ) parterze <  ( nmod ) ul <  (amod) * / nam_fac_road:e2
+  composition:: * / nam_org_institution:e1 (conj) > Urzędzie
+  location:: * / nam_org_institution:e1 (amod:flat) > Kolegium <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution:e1 <  ( nmod ) Białymstoku <  (conj) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_road:e1 (amod) > ul ( conj )  > Białystok
+  location:: * / nam_org_company:e1 (amod:flat) > Przedsiębiorstwa ( nmod )  > wniosku ( obl:arg )  > prowadzone <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_road:e1 (amod) > ul <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_road:e1 (amod) > ul ( conj )  > Białymstoku <  (conj) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_org_institution:e1 (amod:flat) > Kolegium ( obl:arg )  > odwołanie <  ( nmod ) ul <  (nmod) * / nam_fac_road:e2
+  neighbourhood:: * / nam_fac_goe:e1 (nmod) > komory ( nmod )  > ustaleniu <  ( nmod ) budynku <  ( nmod ) ul <  (amod) * / nam_fac_road:e2
+  neighbourhood:: * / nam_fac_goe:e1 (nmod) > ul <  (amod) * / nam_fac_road:e2
+  location:: * / nam_fac_road:e1 (amod) > ul ( nmod )  > parterze ( nmod )  > siedzibie <  ( nmod ) Urzędu <  (nmod) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_org_institution:e1 <  ( nmod ) Białymstoku <  ( conj ) ul <  (amod) * / nam_fac_road:e2
+  location:: * / nam_fac_road:e1 (nmod) > ul ( nmod )  > odwołanie <  ( obl:arg ) Kolegium <  (nmod) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_org_company:e1 (amod:flat) > Przedsiębiorstwa ( nmod )  > wniosku ( obl:arg )  > prowadzone <  ( nmod ) Białystok <  ( conj ) ul <  (amod) * / nam_fac_road:e2
+  location:: * / nam_org_institution:e1 (conj) > Urzędzie <  ( nmod ) Białymstoku <  (conj) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_fac_road:e1 <  ( nmod ) Zwycięstwa <  (amod:flat) * / nam_fac_road:e2
+  composition:: * / nam_fac_road:e1 (nmod) > ulic ( nmod:arg )  > ciąg ( obl )  > narażony ( conj )  > stanowią <  ( xcomp:pred ) fragment <  (nmod:arg) * / nam_fac_road:e2
+  neighbourhood:: * / nam_fac_road:e1 <  (conj) * / nam_fac_road:e2
+  neighbourhood:: * / nam_fac_road:e1 (nmod) > ulic ( nmod:arg )  > ciąg ( obl )  > narażony <  (nsubj:pass) * / nam_fac_road:e2
+  composition:: * / nam_fac_road:e1 (nsubj:pass) > narażony ( conj )  > stanowią <  ( xcomp:pred ) fragment <  (nmod:arg) * / nam_fac_road:e2
+  location:: * / nam_fac_road:e1 (conj) > Podwale ( nmod )  > ulic ( nmod:arg )  > przebudowa ( nsubj )  > Projektem <  (nmod) * / nam_loc_gpe_district:e2
+  location:: * / nam_fac_road:e1 (nmod) > ulic ( nmod:arg )  > przebudowa ( nsubj )  > Projektem <  (nmod) * / nam_loc_gpe_district:e2
+  nationality:: * / nam_liv_person:e1 (appos) > kardynał ( flat )  > Stefan ( appos )  > arcybiskup ( conj )  > mąż <  ( appos ) prymas <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_org_organization:e1 <  (amod) * / nam_adj_city:e2
+  alias:: * / nam_liv_person:e1 (iobj) > nazwał ( acl:relcl )  > Ten ( det )  > mąż <  ( conj ) arcybiskup <  ( appos ) Stefan <  ( flat ) kardynał <  (appos) * / nam_liv_person:e2
+  alias:: * / nam_liv_person_add:e1 (nsubj:pass) > zwany ( acl:relcl )  > Ten <  ( acl:relcl ) nazwał <  (iobj) * / nam_liv_person_add:e2
+  alias:: * / nam_liv_person:e1 (nsubj:pass) > zwany ( acl:relcl )  > Ten <  ( acl:relcl ) nazwał <  (iobj) * / nam_liv_person:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > księdza <  ( nmod ) studenta <  ( conj ) Kanclerza <  (amod:flat) * / nam_org_organization:e2
+  alias:: * / nam_liv_person:e1 (nsubj:pass) > zwany ( acl:relcl )  > Ten ( det )  > mąż <  ( conj ) arcybiskup <  ( appos ) Stefan <  ( flat ) kardynał <  (appos) * / nam_liv_person:e2
+  nationality:: * / nam_liv_person:e1 (flat) > Kardynała ( flat )  > Stefana <  ( appos ) Prymasa <  (nmod:arg) * / nam_loc_gpe_country:e2
+  location:: * / nam_org_organization:e1 (amod:flat) > Kanclerza ( conj )  > studenta ( nmod )  > księdza ( nmod )  > związki <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_eve_human:e1 (nmod) > projektu ( nmod:arg )  > realizację ( nmod )  > zabezpieczenia <  ( nmod ) budżecie <  ( nmod ) Gminy <  (flat) * / nam_loc_gpe_admin3:e2
+  alias:: * / nam_oth_currency:e1 (flat) > dwieście ( nummod:gov )  > złotych ( nmod )  > kwocie <  ( nmod ) kwoty <  (nmod) * / nam_oth_currency:e2
+  alias:: * / nam_oth_currency:e1 (flat) > 120 ( nummod:gov )  > złotych ( nmod )  > kwoty ( nmod )  > kwocie ( nmod )  > środki <  ( nmod ) roku <  ( conj ) roku <  ( nmod ) kwoty <  (nmod) * / nam_oth_currency:e2
+  alias:: * / nam_oth_currency:e1 (flat) > 259 ( nummod )  > złotych
+  location:: * / nam_loc_gpe_admin3:e1 (flat) > Gminy ( nmod )  > budżecie ( obl )  > Zabezpiecza <  ( obj ) środki <  ( nmod ) realizację <  ( nmod:arg ) projektu <  (nmod) * / nam_eve_human:e2
+  composition:: * / nam_eve_human:e1 (nmod) > projekt <  ( acl ) współfinansowany <  ( obl:arg ) środków <  (nmod) * / nam_eve_human:e2
+  location:: * / nam_loc_country_region:e1 (nmod:arg) > częścią ( xcomp:pred )  > będącej ( acl )  > części ( obl )  > położone <  (obl) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 (appos) > Miasto ( nsubj:pass )  > położone <  ( obl ) części <  ( acl ) będącej <  ( xcomp:pred ) częścią <  (nmod:arg) * / nam_loc_country_region:e2
+  neighbourhood:: * / nam_fac_road:e1 <  (nmod) * / nam_oth:e2
+  neighbourhood:: * / nam_oth:e1 (nmod) > droga <  (nmod) * / nam_oth:e2
+  neighbourhood:: * / nam_oth:e1 (nmod) > droga <  (nmod) * / nam_oth:e2
+  neighbourhood:: * / nam_oth:e1 (nmod) > droga <  (nmod) * / nam_oth:e2
+  location:: * / nam_loc_gpe_city:e1 (appos) > miasta ( nmod )  > Warunki ( nsubj )  > typowe <  (obl) * / nam_loc_country_region:e2
+  location:: * / nam_loc_gpe_city:e1 (appos) > Miasto ( nsubj:pass )  > położone <  ( obl ) części <  ( nmod:arg ) województwa <  (nmod) * / nam_loc_country_region:e2
+  neighbourhood:: * / nam_fac_road:e1 <  (nmod) * / nam_oth:e2
+  location:: * / nam_loc_country_region:e1 (nmod) > województwa ( nmod:arg )  > części ( obl )  > położone <  (obl) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_gpe_admin1:e1 (amod) > województwa ( nmod:arg )  > części ( obl )  > położone <  (obl) * / nam_loc_gpe_country:e2
+  composition:: * / nam_loc_country_region:e1 (nmod) > województwa ( nmod:arg )  > części <  ( acl ) będącej <  ( xcomp:pred ) częścią <  (nmod:arg) * / nam_loc_country_region:e2
+  location:: * / nam_loc_gpe_city:e1 (appos) > Miasto ( nsubj:pass )  > położone <  (obl) * / nam_loc_gpe_country:e2
+  neighbourhood:: * / nam_fac_road:e1 <  (nmod) * / nam_oth:e2
+  composition:: * / nam_org_institution:e1 <  (nmod:flat) * / nam_org_institution:e2
+  location:: * / nam_org_institution:e1 (nmod) > ostrzeżenia <  (nmod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_org_institution:e1 <  (flat) * / nam_org_institution:e2
+  location:: * / nam_loc_gpe_city:e1 (nmod) > ostrzeżenia ( nmod:arg )  > podstawie ( obl )  > przewiduje <  ( obl ) obszarze <  ( nmod:arg ) miasta <  ( conj ) województwa <  (amod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_org_institution:e1 (flat) > BIURA ( nmod )  > ostrzeżenia <  (nmod) * / nam_loc_gpe_city:e2
+  creator:: * / nam_org_organization:e1 (nmod) > rozporządzenia
+  alias:: * / nam_org_organization:e1 (conj) > decyzją <  ( conj ) decyzją <  ( nmod ) Komisji <  (conj) * / nam_org_organization:e2
+  creator:: * / nam_org_organization:e1 (conj) > WE ( nmod )  > rozporządzenia
+  alias:: * / nam_org_organization:e1 (nmod) > Rozporządzenie <  ( acl ) zmienione <  ( iobj ) rozporządzeniem <  ( nmod ) Komisji <  (nmod) * / nam_org_organization:e2
+  alias:: * / nam_liv_person:e1 (conj) > Prezes
+  creator:: * / nam_org_institution:e1 (nmod) > rozporządzenie
+  location:: * / nam_pro_title_document:e1 <  ( nmod:arg ) uprawnień <  ( nmod ) żołnierzy <  ( conj ) osób <  ( acl ) spełniających <  ( obj ) obowiązek <  (parataxis:insert) * / nam_pro_media_periodic:e2
+  alias:: * / nam_liv_person:e1 (nsubj) > kieruje ( parataxis:obj )  > Minister
+  location:: * / nam_pro_title_document:e1 (nmod) > ust ( nmod:arg )  > podstawie ( obl )  > kieruje <  ( iobj ) działem <  ( nmod:arg ) zakresu <  (nmod) * / nam_pro_media_periodic:e2
+  creator:: * / nam_org_institution:e1 (nmod) > rozporządzenia
+  location:: * / nam_loc_gpe_country:e1 (nmod) > przemiany ( conj )  > zmiany <  (nmod) * / nam_loc_land_continent:e2
+  affiliation:: * / nam_loc_gpe_country:e1 (conj) > Rzecząpospolitą ( nmod )  > Traktatu
+  location:: * / nam_loc_gpe_country:e1 (nmod) > jedności ( obj )  > ustanowienie ( conj )  > zmiany <  (nmod) * / nam_loc_land_continent:e2
+  affiliation:: * / nam_loc_gpe_country:e1 (flat) > Rzecząpospolitą ( nmod )  > Traktatu
+  affiliation:: * / nam_loc_gpe_country:e1 (nmod) > Rządem ( nmod:arg )  > Umowa
+  affiliation:: * / nam_loc_gpe_country:e1 (nmod) > Rządem ( conj )  > Rządem ( nmod:arg )  > Umowa
+  affiliation:: * / nam_org_institution:e1 (conj) > Rzeczypospolitej
+  affiliation:: * / nam_org_institution:e1 (conj) > Republice
+  affiliation:: * / nam_loc_gpe_country:e1 (nsubj) > przystąpienia <  (obl:arg) * / nam_org_organization:e2
+  affiliation:: * / nam_liv_person:e1
+  affiliation:: * / nam_liv_person:e1
+  location:: * / nam_pro_title_document:e1 (nmod) > art ( nsubj )  > niezgodny <  (nmod) * / nam_pro_media_periodic:e2
+  affiliation:: * / nam_liv_person:e1
+  affiliation:: * / nam_liv_person:e1
+  affiliation:: * / nam_liv_person:e1
+  affiliation:: * / nam_liv_person:e1 (parataxis:obj) > protokolant
+  location:: * / nam_pro_title_document:e1 <  (nmod) * / nam_pro_media_periodic:e2
+  location:: * / nam_org_institution:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_eve_human:e1 (obj) > opisuje <  (obl) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_liv_person:e1 <  (nmod) * / nam_org_organization:e2
+  affiliation:: * / nam_liv_person:e1 (nmod) > wypowiedź <  (nmod) * / nam_org_institution:e2
+  creator:: * / nam_org_organization:e1 (amod:flat) > Komitet ( nsubj )  > zezwolił <  ( obl:arg ) prowadzenie <  (nmod) * / nam_eve_human_sport:e2
+  creator:: * / nam_liv_person:e1 (nsubj) > wyśpiewała ( acl:relcl )  > New
+  creator:: * / nam_org_group_band:e1 (appos) > fanem <  ( conj ) kupił <  ( obj ) płytę <  (nmod) * / nam_pro_title_album:e2
+  creator:: * / nam_org_group_band:e1 (nmod) > zespół ( obj )  > zainspirował <  ( obl ) nagrania <  (obj) * / nam_pro_title_song:e2
+  creator:: * / nam_org_group_band:e1 (nsubj) > wykonaniu ( nmod )  > instrument ( conj )  > pomysł ( nsubj )  > sprawdził <  ( conj ) smutna <  (nsubj) * / nam_pro_title_song:e2
+  creator:: * / nam_org_group_band:e1 (appos) > wspomnieniu ( iobj )  > sprostała <  ( advcl ) słuchał <  (obj) * / nam_pro_title_album:e2
+  location:: * / nam_org_institution:e1 (amod:flat) > Uniwersytetu <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > panem <  ( appos ) jednym <  ( obl ) organizatorów <  (appos) * / nam_eve_human:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > panem <  ( appos ) wykładowcą <  ( nmod:arg ) Uniwersytetu <  (amod:flat) * / nam_org_institution:e2
+  location:: * / nam_org_organization:e1 (amod:flat) > LO <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 (conj) > Chaosu ( nmod:flat )  > Szkoła <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 (conj) > Ladies <  ( conj ) LO <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_eve_human:e1 (amod:flat) > Festiwalu ( nmod:arg )  > finał ( nsubj )  > odbył <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_eve_human:e1 <  (nmod) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_liv_person:e1 (flat) > MAM
+  location:: * / nam_fac_goe:e1 <  (nmod) * / nam_fac_goe:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > dyr ( nmod )  > p ( nmod )  > Ministerstwa
+  creator:: * / nam_liv_person:e1 <  ( conj ) Robert <  (nmod) * / nam_pro_title_article:e2
+  creator:: * / nam_liv_person:e1 <  (nmod) * / nam_pro_title_article:e2
+  creator:: * / nam_liv_person:e1 <  ( flat ) Thackarą <  (flat) * / nam_eve_human:e2
+  alias:: * / nam_org_organization:e1 (conj) > performansowi ( iobj )  > poświęcony <  (obl) * / nam_org_organization:e2
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_eve_human:e1 (nmod) > tytułem ( obl )  > zredagował <  ( obl ) Johnem <  ( flat ) Thackarą <  (flat) * / nam_eve_human:e2
+  location:: * / nam_org_organization:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 (nmod:flat) > Edukacji ( nmod:flat )  > Wydziale <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 (nmod) > polityki ( conj )  > kultury ( nmod )  > centrum <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_liv_person:e1 <  ( appos ) CEO <  ( nmod ) firmy <  (appos) * / nam_org_company:e2
+  creator:: * / nam_liv_person:e1 <  (nmod) * / nam_pro_title_article:e2
+  affiliation:: * / nam_liv_person:e1 <  (nmod) * / nam_org_company:e2
+  affiliation:: * / nam_liv_person:e1 <  (nmod) * / nam_pro_media_web:e2
+  affiliation:: * / nam_liv_person:e1 <  (appos) * / nam_org_company:e2
+  affiliation:: * / nam_liv_person:e1 <  (appos) * / nam_org_company:e2
+  affiliation:: * / nam_liv_person:e1 (obl:arg) > poprowadzę <  ( obl ) Spotkań <  (amod) * / nam_eve_human:e2
+  affiliation:: * / nam_liv_person:e1 <  (appos) * / nam_org_company:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Rafał <  ( conj ) Dominik <  (appos) * / nam_pro_media_web:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Rafał <  ( conj ) Dominik <  (appos) * / nam_pro_media_web:e2
+  location:: * / nam_eve_human:e1 (amod) > Spotkań <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_liv_person:e1 <  (nmod) * / nam_org_company:e2
+  location:: * / nam_eve_human_cultural:e1 (nmod) > festiwalu <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_liv_person:e1 <  ( appos ) recenzent <  ( nmod ) gazety <  (appos) * / nam_pro_media_periodic:e2
+  location:: * / nam_loc_gpe_city:e1 <  (appos) * / nam_loc_gpe_admin1:e2
+  neighbourhood:: * / nam_org_institution:e1 (amod:flat) > Biblioteki ( nmod )  > czytelni <  ( nmod ) ul <  (amod) * / nam_fac_road:e2
+  location:: * / nam_org_institution:e1 (amod:flat) > Biblioteki <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_liv_person:e1 <  ( appos ) pracownik <  (nmod) * / nam_org_institution:e2
+  origin:: * / nam_liv_person:e1 <  ( flat ) Jaszczak <  (conj) * / nam_liv_habitant:e2
+  location:: * / nam_fac_goe:e1 (amod:flat) > Biblioteka <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_eve_human:e1 (nmod) > wystawy ( obj )  > otwarcie ( nsubj )  > odbędzie <  ( obl ) Bibliotece <  (amod:flat) * / nam_fac_goe:e2
+  location:: * / nam_org_organization:e1 (amod:flat) > Straży <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 (amod:flat) > Straży <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > brygadier <  ( appos ) komendant <  ( nmod ) Straży <  (amod:flat) * / nam_org_organization:e2
+  alias:: * / nam_oth_position:e1 <  (appos) * / nam_liv_person:e2
+  location:: * / nam_org_institution:e1 (amod:flat) > Zakładzie <  ( nmod:flat ) Opieki <  (nmod) * / nam_loc_gpe_city:e2
+  alias:: * / nam_oth_position:e1 <  (appos) * / nam_liv_person:e2
+  location:: * / nam_org_institution:e1 (amod:flat) > Zakładzie <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_eve_human:e1 (amod:flat) > FINAŁU <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_company:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_org_company:e1 <  ( nmod ) Poznań <  ( nmod ) ul <  (nmod) * / nam_fac_road:e2
+  location:: * / nam_fac_goe:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_eve_human_sport:e1 (obl) > dostrzeżemy <  ( obj ) zawodników <  ( nmod:arg ) reprezentowania <  (obj) * / nam_loc_gpe_country:e2
+  creator:: * / nam_liv_person:e1 (nmod) > Model ( nsubj )  > rozpoczął <  (obl) * / nam_pro_model_car:e2
+  nationality:: * / nam_liv_person:e1 (appos) > goście <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_eve_human_sport:e1 (nmod:arg) > nazwie ( nmod )  > imprez ( nmod:arg )  > cykl ( obj )  > rozpoczęły <  ( nsubj ) zawody <  ( acl ) Rozegrane <  (obl) * / nam_loc_gpe_city:e2
+  creator:: * / nam_org_company:e1 (appos) > firmy ( nmod )  > patronatem ( nmod )  > nazwie <  (nmod:arg) * / nam_eve_human_sport:e2
+  nationality:: * / nam_liv_person:e1 (conj) > Martin ( appos )  > goście <  (nmod) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_liv_person:e1 <  ( acl ) reprezentujący <  (obj) * / nam_org_organization:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > Drugi <  (obl) * / nam_org_organization:e2
+  nationality:: * / nam_liv_person:e1 <  (nmod) * / nam_loc_gpe_country:e2
+  nationality:: * / nam_liv_person:e1 (conj) > Martin ( appos )  > goście <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_org_institution:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution:e1 <  ( nmod ) Fundacji <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_institution:e1 <  ( conj ) Uniwersytet <  ( nmod ) Stanford <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_org_institution:e1 (amod:flat) > Biuro <  ( nmod ) Bad <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_org_institution:e1 (appos) > Instytut
+  location:: * / nam_org_institution:e1 <  (nmod) * / nam_org_institution:e2
+  location:: * / nam_org_institution:e1 (amod:flat) > Biuro <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_city:e1 <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_org_institution:e1 <  ( conj ) Uniwersytet <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_pro_title_document:e1 <  ( nmod:arg ) zmianie <  ( conj ) zmianie <  (nmod) * / nam_pro_media_periodic:e2
+  location:: * / nam_pro_title_document:e1 <  ( nmod:arg ) spółdzielniach <  (nmod) * / nam_pro_media_periodic:e2
+  location:: * / nam_pro_title_document:e1 <  (nmod) * / nam_pro_media_periodic:e2
+  location:: * / nam_pro_title_document:e1 <  (nmod) * / nam_pro_media_periodic:e2
+  origin:: * / nam_liv_person:e1 <  ( conj ) bogacza <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 (obl) > Wyszli <  ( obl ) Rynku <  (amod:flat) * / nam_fac_square:e2
+  origin:: * / nam_liv_person:e1 (nsubj) > znała ( acl:relcl )  > Ur
+  creator:: * / nam_liv_person:e1 <  ( acl:relcl ) skrzywdził <  (nsubj) * / nam_pro_title:e2
+  origin:: * / nam_liv_person:e1 (flat) > św ( nsubj )  > nazwano ( advcl )  > powiedziała <  (obl) * / nam_loc_gpe_city:e2
+  nationality:: * / nam_liv_person:e1 (nsubj) > powiedział <  ( obl ) dniu <  ( nmod:arg ) obejmowania <  ( obj ) funkcji <  (nmod) * / nam_loc_gpe_country:e2
+  origin:: * / nam_liv_person:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  nationality:: * / nam_liv_person:e1 (flat) > Św ( nsubj )  > żył <  (obl) * / nam_loc_gpe_country:e2
+  nationality:: * / nam_liv_person:e1 (conj) > Król <  (amod) * / nam_adj_country:e2
+  location:: * / nam_org_organization:e1 (conj) > Codzienna ( amod )  > Ośrodka <  (nmod) * / nam_loc_gpe_city:e2
+  creator:: * / nam_liv_person:e1 (flat) > Remix
+  origin:: * / nam_liv_person:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 (amod:flat) > Przychodni <  (nmod) * / nam_loc_gpe_city:e2
+  neighbourhood:: * / nam_fac_goe:e1 (amod:flat) > Przychodni <  ( nmod ) ul <  (nmod) * / nam_fac_road:e2
+  location:: * / nam_org_organization:e1 (amod:flat) > Grupie ( iobj )  > powstającej <  ( obl ) Bibliotece <  (amod:flat) * / nam_fac_goe:e2
+  affiliation:: * / nam_liv_person_first:e1 (appos) > mgr ( appos )  > absolwentka <  (nmod) * / nam_org_organization:e2
+  location:: * / nam_fac_road:e1 (conj) > Wiśniowej ( amod )  > zbiegu ( conj )  > rogu ( obl )  > znajduje <  ( advcl ) był <  (nsubj) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_road:e1 (amod) > zbiegu ( conj )  > rogu ( obl )  > znajduje <  ( advcl ) był <  (nsubj) * / nam_loc_gpe_city:e2
+  origin:: * / nam_liv_person:e1 (nsubj) > urodziła <  (obl) * / nam_loc_gpe_city:e2
+  alias:: * / nam_liv_person:e1 (nmod) > María
+  affiliation:: * / nam_org_institution:e1 <  ( nmod ) stolicy <  (nmod) * / nam_loc_gpe_country:e2
+  alias:: * / nam_pro_title:e1 (nsubj) > gracia <  ( parataxis:insert ) pełna <  (nsubj) * / nam_pro_title:e2
+  location:: * / nam_fac_goe:e1 (nsubj) > Jednym <  ( acl:relcl ) można <  ( xcomp ) opuścić <  (obj) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 (appos) > Klientelę ( nsubj )  > stanowią <  ( xcomp:pred ) kierowcy <  ( acl ) powracające <  ( obl ) moteli <  ( amod ) licznych <  (obl) * / nam_loc_gpe_city:e2
+  creator:: * / nam_liv_person:e1 <  ( flat ) a <  (conj) * / nam_pro_title:e2
+  location:: * / nam_fac_goe:e1 (nmod) > kopalniami ( iobj )  > zwane ( conj )  > znajdują <  ( obl ) północy <  ( conj ) wschodzie <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 (nmod) > plac ( conj )  > miejsce ( obj )  > Znam <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 (conj) > Chivor ( nmod )  > kopalniami ( iobj )  > zwane ( conj )  > znajdują <  ( obl ) północy <  ( conj ) wschodzie <  (nmod) * / nam_loc_gpe_city:e2
+  composition:: * / nam_loc_gpe_district:e1 <  ( acl:relcl ) obejmują <  (obj) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_gpe_city:e1 (nmod) > pobytu <  ( nmod ) stanie <  (nmod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_liv_person:e1 <  ( acl:relcl ) wrócił <  ( obl ) pobytu <  ( nmod ) stanie <  (nmod) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_liv_person:e1 <  ( acl:relcl ) wrócił <  ( obl ) pobytu <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 (appos) > Aparaturę ( obj )  > odłączono <  ( advmod ) zgodnie <  ( obl:arg ) wyrokiem <  ( nmod ) sądu <  (nmod) * / nam_loc_gpe_admin1:e2
+  affiliation:: * / nam_org_institution:e1 (obl:agent) > uchwaloną ( acl )  > ustawę <  ( acl:relcl ) skierowana <  ( obl ) sądu <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_loc_gpe_city:e1 <  (nmod) * / nam_loc_gpe_country:e2
+  nationality:: * / nam_liv_person:e1 (nsubj:pass) > podłączona ( parataxis:obj )  > USA
+  location:: * / nam_liv_person:e1 (conj) > Terri ( appos )  > rodzice ( nsubj )  > odwoływali <  (punct) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_liv_person:e1 (appos) > rodzice ( nsubj )  > odwoływali <  (punct) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_liv_person:e1 (nmod) > mąż ( appos )  > Michael ( nsubj )  > wnosił <  (iobj) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_liv_person:e1 (parataxis:obj) > 2005-03-31 <  ( parataxis:obj ) zmarła <  (obl) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_liv_person:e1 (conj) > Terri ( appos )  > rodzice ( nsubj )  > odwoływali <  (punct) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_liv_person:e1 (nsubj) > wnosił <  (iobj) * / nam_loc_gpe_admin1:e2
+  location:: * / nam_org_institution:e1 (nmod:arg) > zgody <  ( nmod:arg ) podłączenie <  ( obj ) Terri <  ( acl ) podpisanej <  ( obl:agent ) prezydenta <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_liv_person:e1 (obl:agent) > przekazana <  ( obl ) Jorku <  (amod:flat) * / nam_loc_gpe_city:e2
+  location:: * / nam_loc_country_region:e1 (nmod) > prześladowania <  (nmod) * / nam_loc_gpe_country:e2
+  composition:: * / nam_org_institution:e1 (amod:flat) > Trybunałowi ( iobj )  > przedstawiła <  (nsubj) * / nam_org_organization:e2
+  nationality:: * / nam_liv_person:e1 (appos) > Prezydent <  (nmod) * / nam_loc_gpe_country:e2
+  nationality:: * / nam_liv_person:e1 (appos) > Prezydent ( nsubj )  > przysiągł <  ( ccomp ) wyda <  ( obj ) obywatela <  (amod) * / nam_adj_country:e2
+  affiliation:: * / nam_liv_person:e1 <  (nmod) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > użytkownik <  (nmod) * / nam_pro_media_web:e2
+  location:: * / nam_org_company:e1 (nmod) > przedstawiciela <  ( appos ) dystrybutora <  ( nmod ) gry <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_org_organization:e1 (nmod:arg) > organizacja <  (amod) * / nam_adj_country:e2
+  affiliation:: * / nam_liv_person:e1 <  ( appos ) prezes <  (nmod) * / nam_org_organization:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > przedstawiciel <  (nmod) * / nam_org_company:e2
+  location:: * / nam_org_company:e1 <  (amod) * / nam_adj_country:e2
+  location:: * / nam_org_company:e1 <  (amod) * / nam_adj_country:e2
+  location:: * / nam_liv_person:e1 (appos) > premier ( nsubj )  > ogłosi <  (obl) * / nam_loc_gpe_city:e2
+  nationality:: * / nam_liv_person:e1 <  ( appos ) rzecznik <  ( nmod ) misji <  (amod) * / nam_adj_country:e2
+  nationality:: * / nam_liv_person:e1 (appos) > premier <  (amod) * / nam_adj_country:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > przewodniczącego ( nmod )  > usługi ( obl )  > dostała <  ( iobj ) pracę <  (nmod) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > posła ( conj )  > przewodniczącego ( nmod )  > usługi ( obl )  > dostała <  ( iobj ) pracę <  (nmod) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > pani ( nmod )  > Relacje ( obj )  > potwierdzają <  ( obj ) pracownice <  (nmod) * / nam_org_political_party:e2
+  location:: * / nam_liv_person:e1 (nsubj) > opowiedziała <  (iobj) * / nam_pro_media_periodic:e2
+  location:: * / nam_liv_person:e1 (nsubj) > zaprzeczył <  ( obl ) programie <  (nmod) * / nam_pro_title_tv:e2
+  affiliation:: * / nam_liv_person:e1 (nmod) > biura ( nmod )  > dyrektorka ( conj )  > radna <  (nmod) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > dyrektorka ( conj )  > radna <  (nmod) * / nam_org_political_party:e2
+  location:: * / nam_liv_person:e1 (appos) > poseł ( nsubj )  > mieli <  ( xcomp ) zabrać <  (obl) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > dyrektorka ( conj )  > radna ( nsubj )  > była ( acl:relcl )  > Gazeta ( nsubj )  > opublikowała <  ( acl:relcl ) przyznaje <  ( ccomp ) dostała <  ( iobj ) pracę <  (nmod) * / nam_org_political_party:e2
+  location:: * / nam_pro_title_article:e1 (nmod) > artykułu <  ( acl:relcl ) ukazał <  (obl) * / nam_pro_media_periodic:e2
+  location:: * / nam_liv_person:e1 (appos) > przewodniczący ( conj )  > poseł ( nsubj )  > mieli <  ( xcomp ) zabrać <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 (nsubj) > opowiedziała <  ( parataxis:obj ) mieli <  ( xcomp ) zabrać <  (obl) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 (appos) > wicepremiera ( obl )  > zwróci <  ( nsubj ) prokuratura <  (amod) * / nam_adj_city:e2
+  affiliation:: * / nam_loc_gpe_country:e1 <  ( acl:relcl ) powinny <  ( obl ) przewodnictwo <  (nmod) * / nam_org_organization:e2
+  alias:: * / nam_liv_person:e1 (appos) > Minister
+  affiliation:: * / nam_loc_gpe_country:e1 (iobj) > odpowiada ( acl:relcl )  > traktatem <  ( conj ) umożliwia <  ( obj ) wzrost <  ( conj ) wpływ <  ( nmod:arg ) podejmowanie <  (nmod) * / nam_org_organization:e2
+  affiliation:: * / nam_loc_gpe_country:e1 (nsubj) > przewodniczą <  (nmod) * / nam_org_organization:e2
+  affiliation:: * / nam_liv_person:e1 <  ( appos ) prezesa <  ( nmod ) Banku <  (amod:flat) * / nam_org_institution:e2
+  affiliation:: * / nam_liv_person:e1 <  ( appos ) szef <  ( nmod ) Komisji <  (amod:flat) * / nam_org_institution:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > poseł <  (nmod) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > poseł <  (nmod) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 <  (nmod) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 <  (appos) * / nam_org_political_party:e2
+  alias:: * / nam_liv_person:e1 (appos) > Prezes
+  affiliation:: * / nam_liv_person:e1 <  (nmod) * / nam_org_political_party:e2
+  location:: * / nam_loc_historical_region:e1 (amod:flat) > Karabachu ( nmod )  > uważa <  ( conj ) uznaje <  ( nmod ) terytorium <  (nmod) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > szef <  (nmod:arg) * / nam_org_institution:e2
+  creator:: * / nam_pro_media_tv:e1 (obl) > emitowany <  ( nsubj:pass ) Program <  ( nmod ) noc <  (amod) * / nam_pro_title_tv:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > poprowadzi <  (obl) * / nam_pro_media_tv:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > poprowadzi <  ( obj ) noc <  (amod) * / nam_pro_title_tv:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > poprowadzi <  ( obj ) noc <  (amod) * / nam_pro_title_tv:e2
+  affiliation:: * / nam_liv_person:e1 (nmod) > TVP
+  creator:: * / nam_pro_media_tv:e1 (nmod) > noc <  (amod) * / nam_pro_title_tv:e2
+  creator:: * / nam_pro_media_tv:e1 (obl) > poprowadzi <  ( obj ) noc <  (amod) * / nam_pro_title_tv:e2
+  affiliation:: * / nam_liv_person:e1 (obj) > zastąpił ( ccomp )  > chce <  (nsubj) * / nam_org_company:e2
+  affiliation:: * / nam_liv_person:e1 (nmod:arg) > negocjacje ( obj )  > prowadzi <  (nsubj) * / nam_org_company:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > poprowadzi <  ( obj ) noc <  (nmod) * / nam_pro_media_tv:e2
+  affiliation:: * / nam_liv_person:e1 (nmod:arg) > negocjacje <  ( nmod:arg ) prowadzenia <  ( obj ) show <  ( nmod ) noc <  (amod) * / nam_pro_title_tv:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > poprowadzi <  ( obj ) noc <  (amod) * / nam_pro_title_tv:e2
+  creator:: * / nam_pro_media_tv:e1 (obl) > emitowanym ( acl )  > Tańcu
+  affiliation:: * / nam_liv_person:e1 (nsubj) > poprowadzi <  ( obj ) noc <  (amod) * / nam_pro_title_tv:e2
+  alias:: * / nam_org_company:e1 (nmod) > kontraktu ( nmod:arg )  > warunki ( obj )  > naruszył <  ( advcl ) wziął <  ( obj ) udział <  ( nmod:arg ) Tańcu <  ( obl ) zgody <  (nmod) * / nam_org_company:e2
+  affiliation:: * / nam_liv_person:e1 (nmod) > TVP
+  affiliation:: * / nam_liv_person:e1 (nsubj) > poprowadzi <  (nmod) * / nam_pro_media_tv:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > został <  ( acl ) prowadzącym <  ( obj ) show <  ( nmod ) noc <  (amod) * / nam_pro_title_tv:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > poprowadzi <  (obl) * / nam_pro_media_tv:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > prowadził ( acl:relcl )  > odcinka ( nmod:arg )  > oglądalnością ( iobj )  > pokierowała <  (nsubj) * / nam_pro_media_tv:e2
+  location:: * / nam_org_group:e1 <  (amod) * / nam_adj_country:e2
+  composition:: * / nam_org_institution:e1 (nmod) > pozwanie ( obl:arg )  > zdecydowała <  (nsubj) * / nam_org_institution:e2
+  affiliation:: * / nam_org_group_team:e1 <  (nmod) * / nam_eve_human_sport:e2
+  affiliation:: * / nam_org_group_team:e1 (nsubj) > zagra <  ( obl ) fazie <  (nmod:arg) * / nam_eve_human_sport:e2
+  affiliation:: * / nam_org_group_team:e1 <  (nmod) * / nam_eve_human_sport:e2
+  affiliation:: * / nam_liv_person:e1 <  (nmod) * / nam_org_political_party:e2
+  neighbourhood:: * / nam_loc_gpe_city:e1 (nmod) > miejscowości <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_liv_person:e1 (nmod) > Wizyta <  (nmod) * / nam_loc_gpe_country:e2
+  nationality:: * / nam_liv_person:e1 (appos) > szefem <  ( nmod:arg ) MSZ <  (amod) * / nam_adj_country:e2
+  affiliation:: * / nam_org_institution:e1 (nmod) > komunikacie ( obl )  > czytamy <  ( ccomp:obj ) ma <  ( iobj ) sprawy <  ( acl ) związane <  ( obl:arg ) bezpieczeństwem <  ( conj ) zabezpieczeniem <  ( obj ) tranzytu <  ( nmod:arg ) surowców <  (nmod) * / nam_loc_gpe_country:e2
+  location:: * / nam_liv_person:e1 (appos) > Szef ( nsubj )  > uda <  (obl) * / nam_loc_gpe_country:e2
+  nationality:: * / nam_liv_person:e1 (appos) > Szef <  ( nmod:arg ) dyplomacji <  (amod) * / nam_adj_country:e2
+  affiliation:: * / nam_org_institution:e1 <  (amod) * / nam_adj_country:e2
+  affiliation:: * / nam_org_institution:e1 <  (amod) * / nam_adj_country:e2
+  location:: * / nam_liv_person:e1 (nsubj) > jedzie <  (obl:arg) * / nam_loc_gpe_country:e2
+  nationality:: * / nam_liv_person:e1 (nmod) > zaproszenie ( obl )  > odbędzie <  ( nsubj ) wizyta <  ( nmod ) ministra <  (nmod) * / nam_loc_gpe_country:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > przewodniczący <  ( nmod ) klubu <  (nmod) * / nam_org_political_party:e2
+  location:: * / nam_liv_person:e1 (nsubj) > tłumaczył <  ( obl:arg ) zarzutów <  ( acl ) kierowanych <  ( obl ) konferencji <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > sekretarz <  ( nmod ) Komisji <  (amod:flat) * / nam_org_institution:e2
+  affiliation:: * / nam_liv_person:e1 <  ( appos ) szef <  (nmod) * / nam_org_organization:e2
+  creator:: * / nam_org_company:e1 (nmod) > tygodniu ( obl )  > przeprowadzonego ( acl )  > sondażu ( obl:arg )  > wynika <  (obl) * / nam_pro_title_tv:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > rywalem <  ( nmod ) wyścigu <  ( nmod ) fotel <  ( nmod ) prezesa <  (nmod) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > minister ( nsubj )  > wystartowała ( ccomp )  > pomysł ( nsubj )  > pojawił <  (obl) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 (nsubj) > rywalem <  ( nmod ) wyścigu <  ( nmod ) fotel <  ( nmod ) prezesa <  (nmod) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 (appos) > prezes <  (nmod:arg) * / nam_org_political_party:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Marii <  ( conj ) Szymona <  ( acl ) wykonanych <  (obl) * / nam_eve_human:e2
+  affiliation:: * / nam_liv_person:e1 (flat) > Sanghę <  (amod:flat) * / nam_org_organization:e2
+  alias:: * / nam_liv_person:e1 (flat) > Sanghę <  (appos) * / nam_oth_position:e2
+  affiliation:: * / nam_liv_person:e1 <  ( conj ) Szymona <  ( acl ) wykonanych <  (obl) * / nam_eve_human:e2
+  location:: * / nam_fac_goe:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_fac_goe:e1 <  (nmod) * / nam_loc_gpe_city:e2
+  affiliation:: * / nam_liv_person:e1 <  ( acl ) wykonanych <  (obl) * / nam_eve_human:e2
+  affiliation:: * / nam_liv_person:e1 (conj) > Marii <  ( conj ) Szymona <  ( acl ) wykonanych <  (obl) * / nam_eve_human:e2
+  creator:: * / nam_liv_person:e1 (flat) > Sanghę <  ( appos ) Mistrza <  ( nmod:arg ) Dzogczen <  (appos) * / nam_org_organization:e2
+  alias:: * / nam_org_organization:e1 (obl) > odbija ( conj )  > 2008-12-22
+  location:: * / nam_liv_person:e1 <  ( appos ) koordynator <  ( nmod ) ds <  ( nmod:arg ) sponsoringu <  (nmod) * / nam_loc_gpe_city:e2
+  location:: * / nam_org_organization:e1 (nmod) > finału <  (nmod) * / nam_loc_gpe_city:e2

@@ -571,6 +571,18 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
 
   }
 
+  @Override
+  public void exitDepRelValuePart(final DepRelValuePartContext parserRuleContext) {
+    //log.debug(" exiting EveryRule");
+
+  }
+
+  @Override
+  public void enterDepRelValuePart(final DepRelValuePartContext parserRuleContext) {
+    //log.debug(" exiting EveryRule");
+
+  }
+
 
 }
 
