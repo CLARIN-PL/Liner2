@@ -11,7 +11,6 @@ import g419.lib.cli.CommonOptions;
 import g419.serel.ruleTree.PatternMatch;
 import g419.serel.structure.SentenceMiscValues;
 import g419.serel.structure.patternMatch.PatternMatchSingleResult;
-import g419.serel.wordnet.WordnetPl32;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -39,11 +38,17 @@ public class ActionMatchRelationsSet extends Action {
 
   private String reportFilename;
 
-  @Setter
-  boolean verifyRelationsMode;
+//  @Setter
+//  boolean verifyRelationsMode;
 
   @Setter
   boolean verbose;
+
+  boolean printSectionFound = false;
+  boolean printSectionTruePositive = false;
+  boolean printSectionFalsePositive = false;
+  boolean printSectionFalseNegative = false;
+
 
   private final List<String> patterns = new LinkedList<>();
 
@@ -80,6 +85,12 @@ public class ActionMatchRelationsSet extends Action {
   private final HashMap<String, List<PatternMatchSingleResult>> resultFalsePositiveType = new HashMap<>();
   private final HashMap<String, List<RelationDesc>> resultFalseNegativeType = new HashMap<>();
 
+  final DecimalFormat df = new DecimalFormat();
+
+  {
+    df.setMaximumFractionDigits(2);
+    df.setMinimumFractionDigits(2);
+  }
 
   public ActionMatchRelationsSet() {
     super("match-relations-set");
@@ -89,6 +100,7 @@ public class ActionMatchRelationsSet extends Action {
     options.addOption(CommonOptions.getRuleFilenameOption());
     options.addOption(CommonOptions.getOutputFileNameOption());
     options.addOption(CommonOptions.getReportFileNameOption());
+    options.addOption(CommonOptions.getPrintSectionsOption());
     options.addOption(CommonOptions.getVerifyRelationsOption());
   }
 
@@ -100,12 +112,22 @@ public class ActionMatchRelationsSet extends Action {
     outputFilename = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
 
     reportFilename = line.getOptionValue(CommonOptions.OPTION_REPORT_FILE);
-    if (line.hasOption(CommonOptions.OPTION_VERIFY_RELATIONS)) {
-      verifyRelationsMode = true;
-    }
+//    if (line.hasOption(CommonOptions.OPTION_VERIFY_RELATIONS)) {
+//      verifyRelationsMode = true;
+//    }
     if (line.hasOption(CommonOptions.OPTION_VERBOSE)) {
       verbose = true;
     }
+
+    String printSectionsMask = line.getOptionValue(CommonOptions.OPTION_PRINT_SECTION);
+    if (printSectionsMask == null) {
+      printSectionsMask = "0000";
+    }
+
+    printSectionFound = (printSectionsMask.charAt(0) == '1');
+    printSectionTruePositive = (printSectionsMask.charAt(1) == '1');
+    printSectionFalsePositive = (printSectionsMask.charAt(2) == '1');
+    printSectionFalseNegative = (printSectionsMask.charAt(3) == '1');
   }
 
 
@@ -117,9 +139,9 @@ public class ActionMatchRelationsSet extends Action {
 
     patterns.forEach(pattern -> processOnePattern(pattern));
 
-    if (verifyRelationsMode) {
-      // preproceessFinalResults();
-    }
+//    if (verifyRelationsMode) {
+    // preproceessFinalResults();
+//    }
 
     writeResultsToFile();
   }
@@ -202,8 +224,8 @@ public class ActionMatchRelationsSet extends Action {
 
         documentResult.addAll(sentenceResults);
 
-        if (verifyRelationsMode) {
-          classifyResult(sentenceResults, smv, patternMatch);
+//        if (verifyRelationsMode) {
+        classifyResult(sentenceResults, smv, patternMatch);
 
 //        if ((this.sentenceResultsOK.size() > 0) || (this.sentenceResultsNotHit.size() > 0) || (this.sentenceResultsFalseHit.size() > 0)) {
 //          System.out.println("PROK=" + sentenceResultsOK);
@@ -211,10 +233,10 @@ public class ActionMatchRelationsSet extends Action {
 //          System.out.println("PRNH=" + sentenceResultsNotHit);
 //        }
 
-          documentResultTruePositive.addAll(sentenceResultsTruePositive);
-          documentResultFalsePositive.addAll(sentenceResultsFalsePositive);
-          //documentResultFalseNegative.addAll(sentenceResultsFalseNegative);
-        }
+        documentResultTruePositive.addAll(sentenceResultsTruePositive);
+        documentResultFalsePositive.addAll(sentenceResultsFalsePositive);
+        //documentResultFalseNegative.addAll(sentenceResultsFalseNegative);
+//        }
       } catch (final Throwable th) {
         th.printStackTrace();
         System.out.println("Problem : " + th);
@@ -308,7 +330,7 @@ public class ActionMatchRelationsSet extends Action {
 
 
     for (int i = 0; i < patternsResults.size(); i++) {
-      ow.write("\n");
+      //ow.write("\n");
       final String pattern = patterns.get(i);
       final List<PatternMatchSingleResult> result = patternsResults.get(i);
 
@@ -316,20 +338,32 @@ public class ActionMatchRelationsSet extends Action {
       final List<PatternMatchSingleResult> resultFalsePositive = patternsResultsFalsePositive.get(i);
       //final List<RelationDesc> resultFalseNegative = patternsResultsFalseNegative.get(i);
 
-      ow.write("Dla wzorca ='" + pattern + "'\n");
-      ow.write("\t" + result.size() + "\t- znalezionych wyników \n");
-
       for (final PatternMatchSingleResult pmsr : result) {
         accumulateInTotalResult(pmsr);
         accumulateInTypeResult(pmsr);
       }
 
+      printResultLine(ow,
+          result.size(),
+          resultTruePositive.size(),
+          resultFalsePositive.size(),
+          /*resultFalseNegativeTotal.size(),*/ null,
+          pattern
+      );
 
-      if (verifyRelationsMode) {
-        final double precision = (double) resultTruePositive.size() / (double) result.size();
-        ow.write("\t" + resultTruePositive.size() + "\t- poprawne dopasowania\n");
-        ow.write("\t" + resultFalsePositive.size() + "\t-  niepoprawne dopasowania\n");
-        ow.write("\t" + df.format(precision) + "\t- precyzja\n");
+      printSections(ow,
+          false,
+          printSectionTruePositive,
+          printSectionFalsePositive,
+          false,
+          result,
+          resultTruePositive,
+          resultFalsePositive,
+          resultFalseNegative
+      );
+
+      /*
+      if (printSectionFalsePositive) {
         if (resultFalsePositive.size() > 0) {
           ow.write("\tNiepoprawne dopasowania to:\n");
 
@@ -337,44 +371,40 @@ public class ActionMatchRelationsSet extends Action {
             ow.write("\t\t" + pmsr.descriptionLong() + "\n");
           }
         }
+      }
+      */
 
-//        if (verbose) {
-//          ow.write("pattern='" + pattern + "'" + "\t" + pmsr.descriptionLong() + "\n");
-//        }
+      for (final PatternMatchSingleResult pmsr : resultTruePositive) {
+        accumulateInTotalResultTruePositive(pmsr);
+        accumulateInTypeResultTruePositive(pmsr);
+      }
 
-        for (final PatternMatchSingleResult pmsr : resultTruePositive) {
-          accumulateInTotalResultTruePositive(pmsr);
-          accumulateInTypeResultTruePositive(pmsr);
-        }
-
-        for (final PatternMatchSingleResult pmsr : resultFalsePositive) {
-          accumulateInTotalResultFalsePositive(pmsr);
-          accumulateInTypeResultFalsePositive(pmsr);
-        }
+      for (final PatternMatchSingleResult pmsr : resultFalsePositive) {
+        accumulateInTotalResultFalsePositive(pmsr);
+        accumulateInTypeResultFalsePositive(pmsr);
+      }
 
 //        for (final RelationDesc rd : resultFalseNegative) {
 //          accumulateInTotalResultFalseNegative(rd);
 //          accumulateInTypeResultFalseNegative(rd);
 //        }
-      }
+
+
+//      }
     }
 
 
-    ow.write("\n\n");
-    ow.write("Sumarycznie zagregowane dla typów relacji: \n");
+    ow.write("\n\n\n");
+    //ow.write("Sumarycznie zagregowane dla typów relacji: \n");
 
     resultType.keySet().stream().forEach(type -> {
 
       try {
-        ow.write("\n\n");
-        ow.write("Sumarycznie dla typu: " + type + "\n");
-        ow.write("\t" + resultType.get(type).size() + "\t- znalezionych wyników ogółem\n");
+        resultType.computeIfAbsent(type, k -> new LinkedList<>());
+        resultFalsePositiveType.computeIfAbsent(type, k -> new LinkedList<>());
+        resultTruePositiveType.computeIfAbsent(type, k -> new LinkedList<>());
+        //          resultFalseNegativeType.computeIfAbsent(type, k -> new LinkedList<>());
 
-        if (verifyRelationsMode) {
-          resultType.computeIfAbsent(type, k -> new LinkedList<>());
-//          resultFalseNegativeType.computeIfAbsent(type, k -> new LinkedList<>());
-          resultFalsePositiveType.computeIfAbsent(type, k -> new LinkedList<>());
-          resultTruePositiveType.computeIfAbsent(type, k -> new LinkedList<>());
 
 //          for (final PatternMatchSingleResult pmsr : resultType.get(type)) {
 //            for (int i = 0; i < resultFalseNegativeType.get(type).size(); i++) {
@@ -385,40 +415,24 @@ public class ActionMatchRelationsSet extends Action {
 //            }
 //          }
 
-          ow.write("\t" + resultTruePositiveType.get(type).size() + "\t- poprawne dopasowania\n");
-          ow.write("\t" + resultFalsePositiveType.get(type).size() + "\t- niepoprawne dopasowania\n");
-          //ow.write("\t" + resultFalseNegativeType.get(type).size() + "\t- nieznalezione dopasowania\n");
-          final double precision = (double) resultTruePositiveType.get(type).size() / (double) resultType.get(type).size();
-          ow.write("\t" + df.format(precision) + "\t- precyzja\n");
-          //final double recall = (double) resultTruePositiveType.get(type).size() / (double) (resultTruePositiveType.get(type).size() + resultFalseNegativeType.get(type).size());
-          //ow.write("\t" + df.format(recall) + "\t- kompletność\n");
+        printResultLine(ow,
+            resultType.get(type).size(),
+            resultTruePositiveType.get(type).size(),
+            resultFalsePositiveType.get(type).size(),
+            /*resultFalseNegativeType.get(type).size(),*/ null,
+            "Sumarycznie dla typu " + type
+        );
 
-          if (resultTruePositiveType.get(type).size() > 0) {
-            ow.write("\tPoprawne dopasowania to:\n");
-
-            for (final PatternMatchSingleResult pmsr : resultTruePositiveType.get(type)) {
-              ow.write("\t\t" + pmsr.descriptionLong() + "\n");
-            }
-          }
-
-
-          if (resultFalsePositiveType.get(type).size() > 0) {
-            ow.write("\tNiepoprawne dopasowania to:\n");
-
-            for (final PatternMatchSingleResult pmsr : resultFalsePositiveType.get(type)) {
-              ow.write("\t\t" + pmsr.descriptionLong() + "\n");
-            }
-          }
-
-
-//          if (resultFalseNegativeType.get(type).size() > 0) {
-//            ow.write("\tNieznalezione dopasowania to:\n");
-//
-//            for (final RelationDesc relDesc : resultFalseNegativeType.get(type)) {
-//              ow.write("\t\t" + relDesc.toStringFull() + "\n");
-//            }
-//          }
-        }
+        printSections(ow,
+            false,
+            printSectionTruePositive,
+            printSectionFalsePositive,
+            false,
+            resultType.get(type),
+            resultTruePositiveType.get(type),
+            resultFalsePositiveType.get(type),
+            resultFalseNegativeType.get(type)
+        );
 
       } catch (final Exception e) {
         e.printStackTrace();
@@ -427,49 +441,119 @@ public class ActionMatchRelationsSet extends Action {
 
 
     ow.write("\n\n");
-    ow.write("Sumarycznie dla wszystkich wzorców: \n");
-    ow.write("\t" + resultTotal.size() + "\t- znalezionych wyników ogółem\n");
 
-    if (verifyRelationsMode) {
-
-      for (final PatternMatchSingleResult pmsr : resultTotal) {
-        for (int i = 0; i < resultFalseNegativeTotal.size(); i++) {
-          final RelationDesc relDesc = resultFalseNegativeTotal.get(i);
-          if (pmsr.isTheSameAs(relDesc)) {
-            resultFalseNegativeTotal.remove(i); // actually was hit
-          }
-        }
-      }
-
-      ow.write("\t" + resultTruePositiveTotal.size() + "\t- poprawne dopasowania\n");
-      ow.write("\t" + resultFalsePositiveTotal.size() + "\t- niepoprawne dopasowania\n");
-      ow.write("\t" + resultFalseNegativeTotal.size() + "\t- nieznalezione dopasowania\n");
-      final double precision = (double) resultTruePositiveTotal.size() / (double) resultTotal.size();
-      ow.write("\t" + df.format(precision) + "\t- precyzja\n");
-      final double recall = (double) resultTruePositiveTotal.size() / (double) (resultTruePositiveTotal.size() + resultFalseNegativeTotal.size());
-      ow.write("\t" + df.format(recall) + "\t- kompletność\n");
-
-      if (resultFalsePositiveTotal.size() > 0) {
-        ow.write("\tNiepoprawne dopasowania to:\n");
-
-        for (final PatternMatchSingleResult pmsr : resultFalsePositiveTotal) {
-          ow.write("\t\t" + pmsr.descriptionLong() + "\n");
-        }
-      }
-
-      if (resultFalseNegativeTotal.size() > 0) {
-        ow.write("\tNieznalezione dopasowania to:\n");
-        for (final RelationDesc relDesc : resultFalseNegativeTotal) {
-          ow.write("\t\t" + relDesc.toStringFull() + "\n");
+    for (final PatternMatchSingleResult pmsr : resultTotal) {
+      for (int i = 0; i < resultFalseNegativeTotal.size(); i++) {
+        final RelationDesc relDesc = resultFalseNegativeTotal.get(i);
+        if (pmsr.isTheSameAs(relDesc)) {
+          resultFalseNegativeTotal.remove(i); // actually was hit
         }
       }
     }
+
+    printResultLine(ow,
+        resultTotal.size(),
+        resultTruePositiveTotal.size(),
+        resultFalsePositiveTotal.size(),
+        resultFalseNegativeTotal.size(),
+        "TOTAL"
+    );
+
+    printSections(ow,
+        printSectionFound,
+        printSectionTruePositive,
+        printSectionFalsePositive,
+        printSectionFalseNegative,
+        resultTotal,
+        resultTruePositiveTotal,
+        resultFalsePositiveTotal,
+        resultFalseNegativeTotal
+    );
 
     ow.write("Saved to file:" + outputFilename);
 
     ow.flush();
     ow.close();
 
+  }
+
+
+  private void printResultLine(final BufferedWriter ow,
+                               final Integer found,
+                               final Integer truePositive,
+                               final Integer falsePositive,
+                               final Integer falseNegative,
+                               final String description)
+      throws IOException {
+
+
+    ow.write("\t" + truePositive + ";\t");
+    ow.write("\t" + falsePositive + ";\t");
+    final double precision = (double) truePositive / (double) found;
+    ow.write("\t" + df.format(precision) + ";");
+
+    if (falseNegative != null) {
+      ow.write("\t" + falseNegative + ";\t");
+      final double recall = (double) truePositive / (double) (truePositive + falseNegative);
+      ow.write("\t" + df.format(recall) + ";\t");
+    } else {
+      ow.write("\t;");
+      ow.write("\t;");
+    }
+    ow.write(description + ";");
+    ow.write("\n");
+
+
+  }
+
+  private void printSections(
+      final BufferedWriter ow,
+      final boolean _printSectionFound,
+      final boolean _printSectionTruePositive,
+      final boolean _printSectionFalsePositive,
+      final boolean _printSectionFalseNegative,
+      final List<PatternMatchSingleResult> _resultFound,
+      final List<PatternMatchSingleResult> _resultTruePositive,
+      final List<PatternMatchSingleResult> _resultFalsePositive,
+      final List<RelationDesc> _resultFalseNegative
+  )
+      throws IOException {
+
+    if (_printSectionFound) {
+      if (_resultFound.size() > 0) {
+        ow.write("\tZnalezione dopasowania to:\n");
+        for (final PatternMatchSingleResult pmsr : _resultFound) {
+          ow.write("\t\t" + pmsr.descriptionLong() + "\n");
+        }
+      }
+    }
+
+    if (_printSectionTruePositive) {
+      if (_resultTruePositive.size() > 0) {
+        ow.write("\tPoprawne dopasowania to:\n");
+        for (final PatternMatchSingleResult pmsr : _resultTruePositive) {
+          ow.write("\t\t" + pmsr.descriptionLong() + "\n");
+        }
+      }
+    }
+
+    if (_printSectionFalsePositive) {
+      if (_resultFalsePositive.size() > 0) {
+        ow.write("\tNiepoprawne dopasowania to:\n");
+        for (final PatternMatchSingleResult pmsr : _resultFalsePositive) {
+          ow.write("\t\t" + pmsr.descriptionLong() + "\n");
+        }
+      }
+    }
+
+    if (_printSectionFalseNegative) {
+      if (_resultFalseNegative.size() > 0) {
+        ow.write("\tNieznalezione dopasowania to:\n");
+        for (final RelationDesc relDesc : _resultFalseNegative) {
+          ow.write("\t\t" + relDesc.toStringFull() + "\n");
+        }
+      }
+    }
   }
 
 
@@ -570,7 +654,7 @@ public class ActionMatchRelationsSet extends Action {
 
   public void preprocessParameters() throws Exception {
 
-
+    /*
     try {
       log.info("Wczytywanie Słowosieć 3.2 ...");
       WordnetPl32.load();
@@ -578,6 +662,7 @@ public class ActionMatchRelationsSet extends Action {
     } catch (final Exception e) {
       e.printStackTrace();
     }
+    */
 
     if ((rulesFilename != null) && (!rulesFilename.isEmpty())) {
       System.out.println(" Patterns filename = " + rulesFilename);
@@ -611,7 +696,7 @@ public class ActionMatchRelationsSet extends Action {
         }
       }
     }
-    System.out.println("verify_relations mode  = " + verifyRelationsMode);
+//    System.out.println("verify_relations mode  = " + verifyRelationsMode);
     System.out.println("Number of patterns found  = " + patterns.size());
 
   }
