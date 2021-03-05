@@ -43,10 +43,15 @@ public class DocumentToSerelExpressionConverter {
         //log.debug("Rel = " + rel);
         final SerelExpression serel = extractSerelFromRel(rel);
         //log.debug("Serel =" + serel);
+
+        if (serel == null) {
+          continue;
+        }
         if (reportWriter != null) {
           this.reportSerel(serel);
         }
         result.add(serel);
+
       } catch (final Exception e) {
         e.printStackTrace();
       }
@@ -72,8 +77,15 @@ public class DocumentToSerelExpressionConverter {
 
 
   public SerelExpression extractSerelFromRel(final Relation rel) throws Exception {
-    final Sentence sentence = rel.getAnnotationFrom().getSentence();
-    final ParseTree parseTree = parseTreeGenerator.generate(sentence);
+    final Sentence sentenceFrom = rel.getAnnotationFrom().getSentence();
+    final Sentence sentenceTo = rel.getAnnotationTo().getSentence();
+
+    if (!(sentenceFrom.toString().equals(sentenceTo.toString()))) {
+      System.out.println(" Relation " + rel + " skipped because refers to more then one sentence");
+      return null;
+    }
+
+    final ParseTree parseTree = parseTreeGenerator.generate(sentenceFrom);
     final SerelExpression serel = this.extractSerelFromParseTree(rel, parseTree);
     return serel;
   }
