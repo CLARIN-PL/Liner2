@@ -17,10 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import java.io.*;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 
 @Slf4j
@@ -51,6 +48,7 @@ public class ActionMatchRelationsSet extends Action {
 
 
   private final List<String> patterns = new LinkedList<>();
+  private final Set<String> patternsSet = new LinkedHashSet<>();
 
   private final List<List<PatternMatchSingleResult>> patternsResults = new LinkedList<>();
   private final List<List<PatternMatchSingleResult>> patternsResultsTruePositive = new LinkedList<>();
@@ -689,7 +687,7 @@ public class ActionMatchRelationsSet extends Action {
           }
 
           if (!pattern.trim().startsWith("#") && !(pattern.trim().startsWith("//"))) {
-            patterns.add(pattern);
+            patternsSet.add(pattern);
           } else {
             System.out.println("Commented out pattern: " + pattern);
           }
@@ -697,7 +695,8 @@ public class ActionMatchRelationsSet extends Action {
       }
     }
 //    System.out.println("verify_relations mode  = " + verifyRelationsMode);
-    System.out.println("Number of patterns found  = " + patterns.size());
+    System.out.println("Number of unique patterns found  = " + patternsSet.size());
+    patterns.addAll(patternsSet);
 
   }
 
