@@ -93,5 +93,25 @@ public class PatternMatchSingleResult {
     return false;
   }
 
+  /*
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    final PatternMatchSingleResult that = (PatternMatchSingleResult) o;
+    return sentenceNumber == that.sentenceNumber &&
+        docName.equals(that.docName) &&
+        tree.equals(that.tree);
+  }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(docName, sentenceNumber, tree);
+  }
+
+   */
 }

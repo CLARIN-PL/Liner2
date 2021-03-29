@@ -35,9 +35,6 @@ public class ActionMatchRelationsSet extends Action {
 
   private String reportFilename;
 
-//  @Setter
-//  boolean verifyRelationsMode;
-
   @Setter
   boolean verbose;
 
@@ -46,6 +43,8 @@ public class ActionMatchRelationsSet extends Action {
   boolean printSectionFalsePositive = false;
   boolean printSectionFalseNegative = false;
 
+
+  private boolean firstPass = true;
 
   private final List<String> patterns = new LinkedList<>();
   private final Set<String> patternsSet = new LinkedHashSet<>();
@@ -58,8 +57,11 @@ public class ActionMatchRelationsSet extends Action {
   List<PatternMatchSingleResult> documentResult = new ArrayList<>();
   List<PatternMatchSingleResult> documentResultTruePositive = new ArrayList<>();
   List<PatternMatchSingleResult> documentResultFalsePositive = new ArrayList<>();
-  List<RelationDesc> documentResultFalseNegative = new ArrayList<>();
+  Set<RelationDesc> documentResultFalseNegative = new HashSet<>();
 
+  Map<String, Set<PatternMatchSingleResult>> documentName2documentResultTruePositive = new HashMap<>();
+  Map<String, Set<RelationDesc>> documentName2documentResultFalseNegative = new HashMap<>();
+  Map<String, Map<Integer, List<RelationDesc>>> resultFalseNegativeTotalMap = new HashMap<>();
 
   private List<PatternMatchSingleResult> sentenceResultsTruePositive;
   private List<PatternMatchSingleResult> sentenceResultsFalsePositive;
@@ -110,9 +112,7 @@ public class ActionMatchRelationsSet extends Action {
     outputFilename = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
 
     reportFilename = line.getOptionValue(CommonOptions.OPTION_REPORT_FILE);
-//    if (line.hasOption(CommonOptions.OPTION_VERIFY_RELATIONS)) {
-//      verifyRelationsMode = true;
-//    }
+
     if (line.hasOption(CommonOptions.OPTION_VERBOSE)) {
       verbose = true;
     }
@@ -137,9 +137,13 @@ public class ActionMatchRelationsSet extends Action {
 
     patterns.forEach(pattern -> processOnePattern(pattern));
 
-//    if (verifyRelationsMode) {
-    // preproceessFinalResults();
-//    }
+
+    preproceessFinalResults();
+
+
+//    documentName2documentResultTruePositive.keySet().stream()
+//        .forEach(k -> System.out.println("key=" + k + " size =" + documentName2documentResultTruePositive.get(k).size()));
+
 
     writeResultsToFile();
   }
@@ -152,7 +156,6 @@ public class ActionMatchRelationsSet extends Action {
     final List<PatternMatchSingleResult> thisPatternResults = new LinkedList<>();
     final List<PatternMatchSingleResult> thisPatternResultsTruePositive = new LinkedList<>();
     final List<PatternMatchSingleResult> thisPatternResultsFalsePositive = new LinkedList<>();
-    //final List<RelationDesc> thisPatternResultsFalseNegative = new LinkedList<>();
 
     final PatternMatch patternMatch = PatternMatch.parseRule(pattern);
 
@@ -168,6 +171,12 @@ public class ActionMatchRelationsSet extends Action {
       reader.forEach(comboedDoc -> {
             try {
 
+              if (firstPass) {
+                resultFalseNegativeTotalMap.put(comboedDoc.getName(), new HashMap<>());
+                documentName2documentResultTruePositive.put(comboedDoc.getName(), new HashSet<>());
+              }
+
+
               matchDocTreeAgainstPatternTree(comboedDoc, patternMatch);
 
               documentResult.stream().forEach(r -> r.patternMatch = patternMatch);
@@ -175,9 +184,8 @@ public class ActionMatchRelationsSet extends Action {
               thisPatternResults.addAll(documentResult);
               thisPatternResultsTruePositive.addAll(documentResultTruePositive);
               thisPatternResultsFalsePositive.addAll(documentResultFalsePositive);
-              //thisPatternResultsFalseNegative.addAll(documentResultFalseNegative);
 
-              //documentName2documentResultTruePositive.put(comboedDoc.getName(), documentResultTruePositive);
+              documentName2documentResultTruePositive.get(comboedDoc.getName()).addAll(documentResultTruePositive);
 
             } catch (final Exception e) {
               System.out.println("Problem z dokumentem " + comboedDoc.getName());
@@ -193,18 +201,16 @@ public class ActionMatchRelationsSet extends Action {
     patternsResults.add(thisPatternResults);
     patternsResultsTruePositive.add(thisPatternResultsTruePositive);
     patternsResultsFalsePositive.add(thisPatternResultsFalsePositive);
-    //patternsResultsFalseNegative.add(thisPatternResultsFalseNegative);
 
-
+    this.firstPass = false;
   }
 
-  private void /* List<PatternMatchSingleResult>*/ matchDocTreeAgainstPatternTree(final Document d, final PatternMatch patternMatch) {
+  private void matchDocTreeAgainstPatternTree(final Document d, final PatternMatch patternMatch) {
 
     //final List<PatternMatchSingleResult> documentResult = new ArrayList<>();
     documentResult = new ArrayList<>();
     documentResultTruePositive = new ArrayList<>();
     documentResultFalsePositive = new ArrayList<>();
-    //documentResultFalseNegative = new ArrayList<>();
 
     int sentenceIndex = 0;
     for (final Sentence sentence : d.getParagraphs().get(0).getSentences()) {
@@ -222,7 +228,6 @@ public class ActionMatchRelationsSet extends Action {
 
         documentResult.addAll(sentenceResults);
 
-//        if (verifyRelationsMode) {
         classifyResult(sentenceResults, smv, patternMatch);
 
 //        if ((this.sentenceResultsOK.size() > 0) || (this.sentenceResultsNotHit.size() > 0) || (this.sentenceResultsFalseHit.size() > 0)) {
@@ -233,14 +238,11 @@ public class ActionMatchRelationsSet extends Action {
 
         documentResultTruePositive.addAll(sentenceResultsTruePositive);
         documentResultFalsePositive.addAll(sentenceResultsFalsePositive);
-        //documentResultFalseNegative.addAll(sentenceResultsFalseNegative);
-//        }
       } catch (final Throwable th) {
         th.printStackTrace();
         System.out.println("Problem : " + th);
       }
     }
-    //return documentResult;
   }
 
   private void classifyResult(final List<PatternMatchSingleResult> sentenceResults, final SentenceMiscValues smv, final PatternMatch patternMatch) {
@@ -249,6 +251,7 @@ public class ActionMatchRelationsSet extends Action {
     sentenceResultsFalsePositive = new LinkedList<>();
 
     final List<RelationDesc> allSentenceNamRels = smv.getRelationsMatchingPatternType(patternMatch);
+
     outer:
     for (final PatternMatchSingleResult pmsr : sentenceResults) {
 
@@ -262,60 +265,62 @@ public class ActionMatchRelationsSet extends Action {
       }
       sentenceResultsFalsePositive.add(pmsr);
     }
-    //sentenceResultsFalseNegative = allSentenceNamRels;
   }
 
-/*
-  private final void preproceessFinalResults() {
+
+  private final void preproceessFinalResults() throws Exception {
 
     try (
         final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
         final PrintWriter reportWriter = reportFilename == null ? null : new PrintWriter(new FileWriter(new File(reportFilename)))
     ) {
+
+
       reader.forEach(comboedDoc -> {
+
+
+        try {
+          final Set<PatternMatchSingleResult> docTruePositives = documentName2documentResultTruePositive.get(comboedDoc.getName());
+
+          int sentenceIndex = 0;
+          for (final Sentence sentence : comboedDoc.getParagraphs().get(0).getSentences()) {
+            // dla każdego takieog zdania sprawdź dla każdej relacji jeśli żaden wzorzec
+            // jej nie wykrył to relacja ląduje w FalseNegative'ach
+            sentenceIndex++;
             try {
-              List<PatternMatchSingleResult> docTruePositives = documentName2documentResultTruePositive.get(comboedDoc.getName());
+              final SentenceMiscValues smv = SentenceMiscValues.from(sentence, sentenceIndex);
+              final List<RelationDesc> allSentenceNamRels = smv.getAllNamRels();
+              for (final RelationDesc rd : allSentenceNamRels) {
+                final Optional<PatternMatchSingleResult> matching = docTruePositives.stream().filter(pmsr -> pmsr.isTheSameAs(rd)).findAny();
 
-              int sentenceIndex = 0;
-              for (final Sentence sentence : comboedDoc.getParagraphs().get(0).getSentences()) {
-
-                // dla każdego takieog zdania sprawdź dla każdej relacji jeśli żaden wzorzec
-                // jej nie wykrył to ląduje w FalseNegative'ach
-                sentenceIndex++;
-                try {
-
-                  final SentenceMiscValues smv = SentenceMiscValues.from(sentence, sentenceIndex);
-
-                  final List<RelationDesc> allSentenceNamRels = smv.getAllNamRels();
-
-                  for (RelationDesc rd : allSentenceNamRels) {
-
-
-                  }
-
-
-                  resultFalseNegativeTotal.
-
-
+                if (!matching.isPresent()) {
+                  //System.out.println(" WARN! Doc " + comboedDoc.getName() + " Marking as false negative :" + rd);
+                  documentResultFalseNegative.add(rd);
                 }
               }
-
-
             } catch (final Exception e) {
               System.out.println("Problem z dokumentem " + comboedDoc.getName());
               e.printStackTrace();
             }
           }
-      );
-    } catch (
-        final Exception e) {
+
+          //System.out.println("Ilość false negatiwów w dokumencie:" + comboedDoc.getName() + " wynosi :" + documentResultFalseNegative.size());
+          documentName2documentResultFalseNegative.put(comboedDoc.getName(), documentResultFalseNegative);
+          documentResultFalseNegative = new HashSet<>();
+
+        } catch (final Exception e) {
+          e.printStackTrace();
+        }
+
+
+      });
+
+
+    } catch (final Exception e) {
       e.printStackTrace();
     }
 
-
   }
-
- */
 
 
   private void writeResultsToFile() throws Exception {
@@ -327,25 +332,25 @@ public class ActionMatchRelationsSet extends Action {
     df.setMinimumFractionDigits(2);
 
 
+    // wyniki wyświetlane dla każdego pojedynczego wzorca
     for (int i = 0; i < patternsResults.size(); i++) {
       //ow.write("\n");
       final String pattern = patterns.get(i);
       final List<PatternMatchSingleResult> result = patternsResults.get(i);
-
       final List<PatternMatchSingleResult> resultTruePositive = patternsResultsTruePositive.get(i);
       final List<PatternMatchSingleResult> resultFalsePositive = patternsResultsFalsePositive.get(i);
-      //final List<RelationDesc> resultFalseNegative = patternsResultsFalseNegative.get(i);
 
       for (final PatternMatchSingleResult pmsr : result) {
         accumulateInTotalResult(pmsr);
         accumulateInTypeResult(pmsr);
       }
 
+
       printResultLine(ow,
           result.size(),
           resultTruePositive.size(),
           resultFalsePositive.size(),
-          /*resultFalseNegativeTotal.size(),*/ null,
+          null,  // dla pojedynczego wzor5ca nie liczymy false negatiwów
           pattern
       );
 
@@ -357,20 +362,9 @@ public class ActionMatchRelationsSet extends Action {
           result,
           resultTruePositive,
           resultFalsePositive,
-          resultFalseNegative
+          null
       );
 
-      /*
-      if (printSectionFalsePositive) {
-        if (resultFalsePositive.size() > 0) {
-          ow.write("\tNiepoprawne dopasowania to:\n");
-
-          for (final PatternMatchSingleResult pmsr : resultFalsePositive) {
-            ow.write("\t\t" + pmsr.descriptionLong() + "\n");
-          }
-        }
-      }
-      */
 
       for (final PatternMatchSingleResult pmsr : resultTruePositive) {
         accumulateInTotalResultTruePositive(pmsr);
@@ -382,18 +376,49 @@ public class ActionMatchRelationsSet extends Action {
         accumulateInTypeResultFalsePositive(pmsr);
       }
 
-//        for (final RelationDesc rd : resultFalseNegative) {
-//          accumulateInTotalResultFalseNegative(rd);
-//          accumulateInTypeResultFalseNegative(rd);
-//        }
-
-
-//      }
     }
 
 
+    //START:  preprocessing for typed and  total data
+
+
+    //System.out.println("resultType keySet.size = " + resultType.keySet().size());
+    resultType.keySet().stream().forEach(type -> {
+
+      //System.out.println("Preprocessing type: " + type);
+
+//      resultType.computeIfAbsent(type, k -> new LinkedList<>());
+//      resultFalsePositiveType.computeIfAbsent(type, k -> new LinkedList<>());
+//      resultTruePositiveType.computeIfAbsent(type, k -> new LinkedList<>());
+      resultFalseNegativeType.computeIfAbsent(type, k -> new LinkedList<>());
+    });
+
+
+//      System.out.println("Ilość false negatiwów w dokumencie:" + +documentResultFalseNegative.size());
+//      documentName2documentResultFalseNegative.put(comboedDoc.getName(), documentResultFalseNegative);
+
+    documentName2documentResultFalseNegative.values().stream().forEach(docRFN -> {
+      resultFalseNegativeTotal.addAll(docRFN);
+    });
+
+    documentName2documentResultFalseNegative
+        .values()
+        .stream()
+        .forEach(docRFN -> docRFN
+            .stream()
+            .forEach(rd -> resultFalseNegativeType.get(rd.getType()).add(rd))
+        );
+
+//    //System.out.println("Checking ....");
+//    resultType.keySet().stream().forEach(type -> {
+//      System.out.println(" size rFNT " + type + " = " + resultFalseNegativeType.get(type).size());
+//    });
+
+    //FINISH:  preproceaaing for typed and  total data
+
+
     ow.write("\n\n\n");
-    //ow.write("Sumarycznie zagregowane dla typów relacji: \n");
+    //ow.write("Sumarycznie zagregowane dla " + resultType.keySet().size() + " typów relacji: \n");
 
     resultType.keySet().stream().forEach(type -> {
 
@@ -401,23 +426,14 @@ public class ActionMatchRelationsSet extends Action {
         resultType.computeIfAbsent(type, k -> new LinkedList<>());
         resultFalsePositiveType.computeIfAbsent(type, k -> new LinkedList<>());
         resultTruePositiveType.computeIfAbsent(type, k -> new LinkedList<>());
-        //          resultFalseNegativeType.computeIfAbsent(type, k -> new LinkedList<>());
+        resultFalseNegativeType.computeIfAbsent(type, k -> new LinkedList<>());
 
-
-//          for (final PatternMatchSingleResult pmsr : resultType.get(type)) {
-//            for (int i = 0; i < resultFalseNegativeType.get(type).size(); i++) {
-//              final RelationDesc relDesc = resultFalseNegativeType.get(type).get(i);
-//              if (pmsr.isTheSameAs(relDesc)) {
-//                resultFalseNegativeType.get(type).remove(i); // actually was hit
-//              }
-//            }
-//          }
 
         printResultLine(ow,
             resultType.get(type).size(),
             resultTruePositiveType.get(type).size(),
             resultFalsePositiveType.get(type).size(),
-            /*resultFalseNegativeType.get(type).size(),*/ null,
+            resultFalseNegativeType.get(type).size(),
             "Sumarycznie dla typu " + type
         );
 
@@ -425,7 +441,7 @@ public class ActionMatchRelationsSet extends Action {
             false,
             printSectionTruePositive,
             printSectionFalsePositive,
-            false,
+            printSectionFalseNegative,
             resultType.get(type),
             resultTruePositiveType.get(type),
             resultFalsePositiveType.get(type),
@@ -439,15 +455,6 @@ public class ActionMatchRelationsSet extends Action {
 
 
     ow.write("\n\n");
-
-    for (final PatternMatchSingleResult pmsr : resultTotal) {
-      for (int i = 0; i < resultFalseNegativeTotal.size(); i++) {
-        final RelationDesc relDesc = resultFalseNegativeTotal.get(i);
-        if (pmsr.isTheSameAs(relDesc)) {
-          resultFalseNegativeTotal.remove(i); // actually was hit
-        }
-      }
-    }
 
     printResultLine(ow,
         resultTotal.size(),
@@ -468,7 +475,7 @@ public class ActionMatchRelationsSet extends Action {
         resultFalseNegativeTotal
     );
 
-    ow.write("Saved to file:" + outputFilename);
+    System.out.println("Saved to file:" + outputFilename);
 
     ow.flush();
     ow.close();
@@ -695,9 +702,8 @@ public class ActionMatchRelationsSet extends Action {
       }
     }
 //    System.out.println("verify_relations mode  = " + verifyRelationsMode);
-    System.out.println("Number of unique patterns found  = " + patternsSet.size());
+//    System.out.println("Number of unique patterns found  = " + patternsSet.size());
     patterns.addAll(patternsSet);
-
   }
 
 
