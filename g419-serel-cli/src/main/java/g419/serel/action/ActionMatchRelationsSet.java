@@ -43,6 +43,7 @@ public class ActionMatchRelationsSet extends Action {
   boolean printSectionFalsePositive = false;
   boolean printSectionFalseNegative = false;
 
+  private int counter = 0;
 
   private boolean firstPass = true;
 
@@ -150,7 +151,8 @@ public class ActionMatchRelationsSet extends Action {
 
 
   private void processOnePattern(final String pattern) {
-    System.out.println("Processing pattern: " + pattern);
+    System.out.println("Processing pattern " + counter + ": " + pattern);
+    counter++;
     //printHeapSize();
 
     final List<PatternMatchSingleResult> thisPatternResults = new LinkedList<>();
@@ -212,23 +214,30 @@ public class ActionMatchRelationsSet extends Action {
     documentResultTruePositive = new ArrayList<>();
     documentResultFalsePositive = new ArrayList<>();
 
+    System.out.println("Pattern match =" + patternMatch);
+
     int sentenceIndex = 0;
-    for (final Sentence sentence : d.getParagraphs().get(0).getSentences()) {
-      sentenceIndex++;
-      try {
 
-        final SentenceMiscValues smv = SentenceMiscValues.from(sentence, sentenceIndex);
-        //final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingSerelPattern(sentence);
-        final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingGenericPattern(sentence);
+    //for (final Sentence sentence : d.getParagraphs().get(0).getSentences()) {
 
-        for (final PatternMatchSingleResult patternMatchSingleResult : sentenceResults) {
-          patternMatchSingleResult.sentenceNumber = sentenceIndex;
-          patternMatchSingleResult.docName = d.getName();
-        }
+    final Sentence sentence = d.getParagraphs().get(0).getSentences().get(0);
 
-        documentResult.addAll(sentenceResults);
+    sentenceIndex++;
+    try {
 
-        classifyResult(sentenceResults, smv, patternMatch);
+      final SentenceMiscValues smv = SentenceMiscValues.from(sentence, sentenceIndex);
+      //final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingSerelPattern(sentence);
+      final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingGenericPattern(sentence);
+      System.out.println();
+
+      for (final PatternMatchSingleResult patternMatchSingleResult : sentenceResults) {
+        patternMatchSingleResult.sentenceNumber = sentenceIndex;
+        patternMatchSingleResult.docName = d.getName();
+      }
+
+      documentResult.addAll(sentenceResults);
+
+      classifyResult(sentenceResults, smv, patternMatch);
 
 //        if ((this.sentenceResultsOK.size() > 0) || (this.sentenceResultsNotHit.size() > 0) || (this.sentenceResultsFalseHit.size() > 0)) {
 //          System.out.println("PROK=" + sentenceResultsOK);
@@ -236,13 +245,14 @@ public class ActionMatchRelationsSet extends Action {
 //          System.out.println("PRNH=" + sentenceResultsNotHit);
 //        }
 
-        documentResultTruePositive.addAll(sentenceResultsTruePositive);
-        documentResultFalsePositive.addAll(sentenceResultsFalsePositive);
-      } catch (final Throwable th) {
-        th.printStackTrace();
-        System.out.println("Problem : " + th);
-      }
+      documentResultTruePositive.addAll(sentenceResultsTruePositive);
+      documentResultFalsePositive.addAll(sentenceResultsFalsePositive);
+    } catch (final Throwable th) {
+      th.printStackTrace();
+      System.out.println("Problem : " + th);
     }
+    // } // for
+
   }
 
   private void classifyResult(final List<PatternMatchSingleResult> sentenceResults, final SentenceMiscValues smv, final PatternMatch patternMatch) {

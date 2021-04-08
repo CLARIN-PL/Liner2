@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.TreeSet;
 
 @Builder
 @Data
@@ -19,8 +20,10 @@ public class RelationDesc {
 
   String type;
   int fromTokenIndex;
+  TreeSet fromTokensTree;
   String fromType;
   int toTokenIndex;
+  TreeSet toTokensTree;
   String toType;
 
   @Override
@@ -64,12 +67,17 @@ public class RelationDesc {
 
 
   static public RelationDesc from(final Relation r) {
+
+
     final RelationDesc relationDesc = RelationDesc.builder()
         .type(r.getType())
-        .fromTokenIndex(r.getAnnotationFrom().getTokens().first() + 1)
+        .fromTokenIndex(r.getAnnotationFrom().getHead() + 1) // może być także first from tokens
+        .fromTokensTree(r.getAnnotationFrom().getTokens()) // !!! inna numeracja - nie ma +1
         .fromType(r.getAnnotationFrom().getType())
-        .toTokenIndex(r.getAnnotationTo().getTokens().first() + 1)
+        .toTokenIndex(r.getAnnotationTo().getHead() + 1)  // może być także  first from tokens
+        .toTokensTree(r.getAnnotationTo().getTokens()) // !!! inna numeracja - nie ma +1
         .toType(r.getAnnotationTo().getType()).build();
+
 
     relationDesc.setSentence(r.getAnnotationFrom().getSentence());
 

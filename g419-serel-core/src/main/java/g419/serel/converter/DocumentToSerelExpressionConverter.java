@@ -1,10 +1,7 @@
 package g419.serel.converter;
 
 import com.google.common.collect.Lists;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Relation;
-import g419.corpus.structure.RelationDesc;
-import g419.corpus.structure.Sentence;
+import g419.corpus.structure.*;
 import g419.liner2.core.tools.parser.ParseTree;
 import g419.liner2.core.tools.parser.ParseTreeGenerator;
 import g419.liner2.core.tools.parser.SentenceLink;
@@ -99,8 +96,29 @@ public class DocumentToSerelExpressionConverter {
 
 
   public SerelExpression extractSerelFromParseTree(final Relation rel, final ParseTree parseTree) {
-    final int index1 = rel.getAnnotationFrom().getHead();
-    final int index2 = rel.getAnnotationTo().getHead();
+//    final int index1 = rel.getAnnotationFrom().getHead();
+//    final int index2 = rel.getAnnotationTo().getHead();
+
+    /*
+    zdarza się, że relacja pokazuje na pierwszy token anotacji a nie na head anotacji:
+    14	Miejskiej	miejski	ADJ	adj:sg:loc:f:pos	Case=Loc|Degree=Pos|Gender=Fem|Number=Sing	15	amod:flat	_	{'bois': '[B-nam_fac_goe]', 'nam_rels': '[location:14:nam_fac_goe:18:nam_loc_gpe_city,neighbourhood:14:nam_fac_goe:21:nam_fac_road]'}
+    15	Przychodni	przychodnia	NOUN	subst:sg:loc:f	Case=Loc|Gender=Fem|Number=Sing	2	obl	_	{'bois': '[I-nam_fac_goe]'}
+    16	Zdrowia	zdrowie	NOUN	subst:sg:gen:n:ncol	Case=Gen|Gender=Neut|Number=Sing	15	nmod:flat	_	{'bois': '[I-nam_fac_goe]'}
+    17	w	w	ADP	prep:loc:nwok	AdpType=Prep|Variant=Short	18	case	_	{'bois': '[O]'}
+
+    dlatego przy budowaniu ścieżki midzy kotwicami trzeba użyć indeksów rzeczywistych headów a nie tych które są podane w opisie relacji
+     */
+
+//    final int index1 = rel.getAnnotationFrom().getHeadActual();
+//    final int index2 = rel.getAnnotationTo().getHeadActual();
+//    --- nie ma tych relacji wpisanych w tokenach na tym poziomie
+
+    final int index1 = findActualHead(rel.getAnnotationFrom(), parseTree);
+    System.out.println("Found head index = " + index1);
+    final int index2 = findActualHead(rel.getAnnotationTo(), parseTree);
+    System.out.println("Found head index = " + index2);
+    System.out.println("\n");
+
 
     final Pair<List<SentenceLink>, List<SentenceLink>> path = parseTree.getPathBetween(index1, index2);
 
@@ -117,6 +135,26 @@ public class DocumentToSerelExpressionConverter {
     return se;
 
   }
+
+  private int findActualHead(final Annotation ann, final ParseTree parseTree) {
+
+    System.out.println("tokens =" + ann.getTokens());
+//    final Set set = parseTree.getParentIndexesForIndexesSet(ann.getTokens());
+//    System.out.println("pTokens = " + set);
+
+
+    for (final int i : ann.getTokens()) {
+      System.out.println("Checking i =" + i);
+      final SentenceLink sl = parseTree.getLinksBySourceIndex(i).get();
+      System.out.println("Checking token =" + sl);
+      if (!ann.getTokens().contains(sl.getTargetIndex())) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
 
   public SerelExpression extractSerelFromParseTreeWithRelDesc(final RelationDesc relDesc, final ParseTree parseTree) {
     final int index1 = relDesc.getFromTokenIndex();
@@ -145,7 +183,10 @@ public class DocumentToSerelExpressionConverter {
     //reportWriter.println(se.getSentence());
     //reportWriter.println(se.getPathAsString(true));
     reportWriter.println(se.getPathAsString());
+
+    // GENERATE TREE
     se.getParseTree().printAsTreeWithIndex(reportWriter);
+
     //reportWriter.println("------------------------------------------------------");
 
 

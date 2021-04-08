@@ -462,6 +462,7 @@ public class Sentence extends IdentifiableElement {
     } while (currentToken != null);
 
     if (currentToken == null) {
+      System.out.println(" // error in boi tagging - no start for this one: " + boiName + " CTX:");
       // error in boi tagging - no start for this one ...
     }
 

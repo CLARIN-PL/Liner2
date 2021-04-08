@@ -520,8 +520,26 @@ public class Annotation extends IdentifiableElement {
     return this;
   }
 
-  public boolean isTokenIndexWithin(int index) {
-    return (getBegin()<=index) && (index<=getEnd());
+  public boolean isTokenIndexWithin(final int index) {
+    return (getBegin() <= index) && (index <= getEnd());
   }
+
+  public int getHeadActual() {
+
+    System.out.println("Checking tokens : " + this.tokens);
+
+    for (final int i : this.tokens) {
+      System.out.println("Checking i =" + i);
+      final Token t = sentence.getTokens().get(i);
+      System.out.println("Checking token =" + t);
+      System.out.println("Checking token parentId =  =" + t.getParentTokenId());
+      if (!this.tokens.contains(t.getParentTokenId())) {
+        return i;
+      }
+    }
+    // TODO: sprawdzić czy czasem nie ma wielu głów dla tej anotacji
+    return -1;
+  }
+
 
 }

@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -17,7 +18,7 @@ public abstract class ParseTree {
 
   public List<SentenceLink> getLinks() { return links; }
 
-  abstract public Sentence getSentence() ;
+  abstract public Sentence getSentence();
 
   /**
    * Zwraca listę linków wskazujących na token o wskazanym indeksie.
@@ -26,62 +27,71 @@ public abstract class ParseTree {
    * @return
    */
 
-   public List<SentenceLink> getLinksByTargetIndex(final int index) {
+  public List<SentenceLink> getLinksByTargetIndex(final int index) {
     return getLinks().stream()
         .filter(link -> link.getTargetIndex() == index)
         .collect(Collectors.toList());
   }
 
-   public Optional<SentenceLink> getLinksBySourceIndex(final int index) {
+  public Optional<SentenceLink> getLinksBySourceIndex(final int index) {
     return getLinks().stream()
         .filter(link -> link.getSourceIndex() == index)
         .findFirst();
   }
 
-   public Pair<List<SentenceLink>,List<SentenceLink>>
-  getPathBetween(int index1, int index2) {
-    List<SentenceLink> parents1 = getParentsAscending(index1);
-    List<SentenceLink> parents2 = getParentsAscending(index2);
-    Pair<Integer,Integer> indexes = findIndexesToLowestCommonLink(parents1,parents2);
+  public Set<Integer> getParentIndexesForIndexesSet(final Set<Integer> indexSet) {
+    return
+        getLinks().stream()
+            .filter(link -> indexSet.contains(link.getSourceIndex()))
+            .map(link -> link.getTargetIndex()).collect(Collectors.toSet());
+  }
 
-    if (indexes == null)
+  public Pair<List<SentenceLink>, List<SentenceLink>>
+  getPathBetween(final int index1, final int index2) {
+    final List<SentenceLink> parents1 = getParentsAscending(index1);
+    final List<SentenceLink> parents2 = getParentsAscending(index2);
+    final Pair<Integer, Integer> indexes = findIndexesToLowestCommonLink(parents1, parents2);
+
+    if (indexes == null) {
       return null;
+    }
 
     return Pair.of(
-        parents1.subList(0,indexes.getLeft()+1),
-        parents2.subList(0,indexes.getRight()+1)
+        parents1.subList(0, indexes.getLeft() + 1),
+        parents2.subList(0, indexes.getRight() + 1)
     );
   }
 
-   public List<SentenceLink> getParentsAscending(final int index) {
-    return getParentsAscending(index,new LinkedList<>());
+  public List<SentenceLink> getParentsAscending(final int index) {
+    return getParentsAscending(index, new LinkedList<>());
   }
 
-   List<SentenceLink> getParentsAscending(final int index, List<SentenceLink> accumulated) {
-    Optional<SentenceLink> optOutLink = getLinksBySourceIndex(index);
+  List<SentenceLink> getParentsAscending(final int index, final List<SentenceLink> accumulated) {
+    final Optional<SentenceLink> optOutLink = getLinksBySourceIndex(index);
 
-    if(!optOutLink.isPresent()) {
+    if (!optOutLink.isPresent()) {
       return accumulated;
     }
-    SentenceLink outLink = optOutLink.get();
+    final SentenceLink outLink = optOutLink.get();
     accumulated.add(outLink);
-    return getParentsAscending(outLink.getTargetIndex(),accumulated);
+    return getParentsAscending(outLink.getTargetIndex(), accumulated);
   }
 
   /**
-   * @param list1  - ordered list of all parents for first element, from element to ROOT
-   * @param list2  - ordered list of all parents for second element, from element to ROOT
+   * @param list1 - ordered list of all parents for first element, from element to ROOT
+   * @param list2 - ordered list of all parents for second element, from element to ROOT
    * @return - indexes in above lists to first element that is _exactly_ the same ( source
    * and target and type are the same ) on both lists when travelling from element(s) to ROOT
    */
-   public Pair<Integer,Integer> findIndexesToLowestCommonLink(List<SentenceLink> list1,
-                                                             List<SentenceLink> list2) {
-    for(int i=0;i<list1.size();i++)
-      for(int j=0;j<list2.size();j++)
-      {
-        if(list1.get(i).isTheSameAs(list2.get(j)))
-          return Pair.of(i,j);
+  public Pair<Integer, Integer> findIndexesToLowestCommonLink(final List<SentenceLink> list1,
+                                                              final List<SentenceLink> list2) {
+    for (int i = 0; i < list1.size(); i++) {
+      for (int j = 0; j < list2.size(); j++) {
+        if (list1.get(i).isTheSameAs(list2.get(j))) {
+          return Pair.of(i, j);
+        }
       }
+    }
 
     // it should never come here !
     return null;
@@ -89,8 +99,6 @@ public abstract class ParseTree {
 
   /**
    * Used to display structure of ParseTree on screen
-   *
-   *
    */
   private class TreeNode {
 
@@ -102,9 +110,10 @@ public abstract class ParseTree {
     public TreeNode(final String name) {
       this.name = name;
     }
-    public TreeNode(final String name,int i) {
+
+    public TreeNode(final String name, final int i) {
       this(name);
-      this.index =i;
+      this.index = i;
     }
 
 
@@ -121,21 +130,20 @@ public abstract class ParseTree {
     }
 
 
-
-    public void print(PrintWriter pw) {
+    public void print(final PrintWriter pw) {
       pw.println("ROOT");
-      print(pw,"", true);
+      print(pw, "", true);
       pw.println();
     }
 
-    private void print(final PrintWriter pw,final String prefix, final boolean isTail) {
+    private void print(final PrintWriter pw, final String prefix, final boolean isTail) {
       pw.println(String.format("%s%s──(%s)── %s", prefix, isTail ? "└" : "├", relationWithParent, name));
       for (int i = 0; i < children.size() - 1; i++) {
-        children.get(i).print(pw,prefix + (isTail ? "    " : "│   "), false);
+        children.get(i).print(pw, prefix + (isTail ? "    " : "│   "), false);
       }
       if (children.size() > 0) {
         children.get(children.size() - 1)
-            .print(pw,prefix + (isTail ? "    " : "│   "), true);
+            .print(pw, prefix + (isTail ? "    " : "│   "), true);
       }
     }
   }
@@ -144,12 +152,12 @@ public abstract class ParseTree {
     printAsTreeWithIndex(new PrintWriter(System.out));
   }
 
-  public void printAsTreeWithIndex(PrintWriter pw ) {
+  public void printAsTreeWithIndex(final PrintWriter pw) {
     final List<ParseTree.TreeNode> nodes = new LinkedList<>();
 
-    for (int i =0;i<getSentence().getTokens().size();i++) {
-      Token t = getSentence().getTokens().get(i);
-      TreeNode tn = new TreeNode(String.format("%s                    [%s] [%s]", t.getOrth(), " "," "+i),i);
+    for (int i = 0; i < getSentence().getTokens().size(); i++) {
+      final Token t = getSentence().getTokens().get(i);
+      final TreeNode tn = new TreeNode(String.format("%s                    [%s] [%s]", t.getOrth(), " ", " " + i), i);
       nodes.add(tn);
     }
 
