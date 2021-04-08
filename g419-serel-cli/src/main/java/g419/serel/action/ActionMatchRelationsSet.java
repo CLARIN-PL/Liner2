@@ -295,6 +295,7 @@ public class ActionMatchRelationsSet extends Action {
 
                 if (!matching.isPresent()) {
                   //System.out.println(" WARN! Doc " + comboedDoc.getName() + " Marking as false negative :" + rd);
+                  resultType.computeIfAbsent(rd.getType(), k -> new LinkedList<>());
                   documentResultFalseNegative.add(rd);
                 }
               }

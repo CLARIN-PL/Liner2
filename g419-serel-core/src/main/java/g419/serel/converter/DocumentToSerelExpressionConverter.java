@@ -104,8 +104,8 @@ public class DocumentToSerelExpressionConverter {
 
     final Pair<List<SentenceLink>, List<SentenceLink>> path = parseTree.getPathBetween(index1, index2);
 
-    log.trace("LS1 = " + path.getLeft());
-    log.trace("LS2 = " + path.getRight());
+//    log.trace("LS1 = " + path.getLeft());
+//    log.trace("LS2 = " + path.getRight());
 
     final SerelExpression se;
     if (path != null) {
@@ -145,7 +145,7 @@ public class DocumentToSerelExpressionConverter {
     //reportWriter.println(se.getSentence());
     //reportWriter.println(se.getPathAsString(true));
     reportWriter.println(se.getPathAsString());
-    //se.getParseTree().printAsTreeWithIndex(reportWriter);
+    se.getParseTree().printAsTreeWithIndex(reportWriter);
     //reportWriter.println("------------------------------------------------------");
 
 
