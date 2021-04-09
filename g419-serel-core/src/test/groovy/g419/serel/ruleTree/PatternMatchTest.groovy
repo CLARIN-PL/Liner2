@@ -322,6 +322,8 @@ class PatternMatchTest extends Specification {
             thrown ParseCancellationException
     }
 
+    // TODO - odpadły testy dla serel warto by było dla generic zrobić
+
     /*
     def "getSentenceBranchMatchingUpPatternBranchFromNode zwraca podgałąź tokenów zdania "() {
         when:
