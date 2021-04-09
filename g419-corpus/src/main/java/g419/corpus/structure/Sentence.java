@@ -416,6 +416,23 @@ public class Sentence extends IdentifiableElement {
     return tokens.get(parentTokenId - 1);
   }
 
+  public Token getPreviousToken(final Token token) {
+    final int previousTokenId = token.getNumberId() - 1;
+    if (previousTokenId == 0) {
+      return null;
+    }
+    return tokens.get(previousTokenId - 1);
+  }
+
+  public Token getFollowingToken(final Token token) {
+    final int followingTokenId = token.getNumberId() + 1;
+    if (followingTokenId > tokens.size()) { // tokens are indexed from 0 and ids from 1 so > and not >=
+      return null;
+    }
+    return tokens.get(followingTokenId - 1); // tokens are indexed from 0 and ids from 1
+  }
+
+
   public Token getParentTokenFromTokenIndex(final int tokenIndex) {
     final Token token = tokens.get(tokenIndex);
     return getParentTokenFromToken(token);
@@ -443,6 +460,9 @@ public class Sentence extends IdentifiableElement {
     return tokensToCheck.stream().filter(t -> t.hasBoiInsideTag(name)).collect(Collectors.toList());
   }
 
+/*
+old version - traversing tree not linear sequence. Has some flaws ...  a/tokenToCheck\b - will never find B- of a
+due to differences in marking
 
   public List<Integer> getBoiIndexesForTokenAndName(final Token tokenToCheck, final String boiName) {
     final List<Integer> resultIds = new LinkedList<>();
@@ -462,7 +482,7 @@ public class Sentence extends IdentifiableElement {
     } while (currentToken != null);
 
     if (currentToken == null) {
-      System.out.println(" // error in boi tagging - no start for this one: " + boiName + " CTX:");
+      System.out.println(" Error in boi tagging - no start for this one: " + boiName + " CTX:");
       // error in boi tagging - no start for this one ...
     }
 
@@ -475,6 +495,8 @@ public class Sentence extends IdentifiableElement {
 
     return resultIds;
   }
+
+ */
 
 
   private void fillBoiIndexesDescending(final Token tokenToCheck, final String boiName, final List<Integer> result) {
@@ -516,6 +538,65 @@ public class Sentence extends IdentifiableElement {
         .forEach(node -> node.print(pw));
   }
    */
+
+  //////////////////////////////////////////////////
+  // Constructing whole BOI tokens sequence .... 
+  //////////////////////////////////////////////////
+
+  public List<Integer> getBoiIndexesForTokenAndName(final Token tokenToCheck, final String boiName) {
+    final List<Integer> resultIds = new LinkedList<>();
+
+    if (!tokenToCheck.hasBoi(boiName)) {
+      return resultIds;
+    }
+    resultIds.add(tokenToCheck.getNumberId());
+
+    fillBoiFrontIndexes(tokenToCheck, boiName, resultIds);
+    fillBoiBackIndexes(tokenToCheck, boiName, resultIds);
+
+    resultIds.sort(Comparator.naturalOrder());
+    return resultIds;
+  }
+
+  private void fillBoiFrontIndexes(final Token tokenToCheckFrom, final String boiName, final List<Integer> resultIds) {
+    if (!tokenToCheckFrom.hasBoi(boiName)) {
+      return;
+    }
+    if (tokenToCheckFrom.hasBoiBeginTag(boiName)) {
+      return;
+    }
+
+    Token currentToken = this.getPreviousToken(tokenToCheckFrom);
+    while (currentToken != null) {
+      if (currentToken.hasBoi(boiName)) {
+        resultIds.add(0, currentToken.getNumberId());
+      }
+      if (currentToken.hasBoiBeginTag(boiName)) {
+        break;
+      }
+      currentToken = this.getPreviousToken(currentToken);
+    }
+
+    if (currentToken == null) {
+      System.out.println(" Error in boi tagging - no start for this one: " + boiName + " CTX:");
+    }
+  }
+
+  private void fillBoiBackIndexes(final Token tokenToCheckFrom, final String boiName, final List<Integer> resultIds) {
+    if (!tokenToCheckFrom.hasBoi(boiName)) {
+      return;
+    }
+
+    Token currentToken = this.getFollowingToken(tokenToCheckFrom);
+    while (currentToken != null) {
+      if (currentToken.hasBoi(boiName)) {
+        resultIds.add(0, currentToken.getNumberId());
+      } else {
+        break;
+      }
+      currentToken = this.getFollowingToken(currentToken);
+    }
+  }
 
 
 }
