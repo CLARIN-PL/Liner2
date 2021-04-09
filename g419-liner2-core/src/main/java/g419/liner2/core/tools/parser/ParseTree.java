@@ -8,7 +8,6 @@ import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -38,13 +37,14 @@ public abstract class ParseTree {
         .filter(link -> link.getSourceIndex() == index)
         .findFirst();
   }
-
+/*
   public Set<Integer> getParentIndexesForIndexesSet(final Set<Integer> indexSet) {
     return
         getLinks().stream()
             .filter(link -> indexSet.contains(link.getSourceIndex()))
             .map(link -> link.getTargetIndex()).collect(Collectors.toSet());
   }
+*/
 
   public Pair<List<SentenceLink>, List<SentenceLink>>
   getPathBetween(final int index1, final int index2) {

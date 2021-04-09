@@ -11,6 +11,12 @@ public class PatternMatchSingleResult {
   public int sentenceNumber;
   public PatternMatch patternMatch;
 
+  // idki (nie indeksy !!!) do elementów które składają się na "rozwiązanie" matcha - wszystkie dla tego całego jednego rozwiązania
+  public ArrayList<Integer> idsList;
+
+  PatternMatchExtraInfo patternMatchExtraInfo;
+
+
   public PatternMatchSingleResult() {}
 
   public String getType() {
@@ -19,22 +25,19 @@ public class PatternMatchSingleResult {
 
 
   public PatternMatchSingleResult(final ArrayList<Integer> _idsList, final PatternMatchExtraInfo _pmei) {
-    this.tree = _idsList;
+    this.idsList = _idsList;
     this.patternMatchExtraInfo = _pmei;
   }
 
 
   public PatternMatchSingleResult(final PatternMatchSingleResult pmsr) {
-    this.tree = (ArrayList<Integer>) pmsr.tree.clone();
+    this.idsList = (ArrayList<Integer>) pmsr.idsList.clone();
     this.patternMatchExtraInfo = new PatternMatchExtraInfo(pmsr.patternMatchExtraInfo);
   }
 
 
-  public ArrayList<Integer> tree;
-  PatternMatchExtraInfo patternMatchExtraInfo;
-
   public int size() {
-    return this.tree.size();
+    return this.idsList.size();
   }
 
 
@@ -45,19 +48,19 @@ public class PatternMatchSingleResult {
 //  }
 
   public String description() {
-    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + ",\tindexTree=" + tree + ",\t\trole:[" + patternMatchExtraInfo.description() + "]";
+    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + ",\tidsList=" + idsList + ",\t\trole:[" + patternMatchExtraInfo.description() + "]";
     return result;
   }
 
 
   public String descriptionLong() {
-    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + ",\tindexTree=" + tree + ",\t\trole:[" + patternMatchExtraInfo.description() + "]" +
-        "\t\t\t" + patternMatchExtraInfo.getSentence().toStringDecorated(tree, 1);
+    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + ",\tidsList=" + idsList + ",\t\trole:[" + patternMatchExtraInfo.description() + "]" +
+        "\t\t\t" + patternMatchExtraInfo.getSentence().toStringDecorated(idsList, 1);
     return result;
   }
 
   public void concatenateWith(final PatternMatchSingleResult pmsr) {
-    tree.addAll(pmsr.tree);
+    idsList.addAll(pmsr.idsList);
     patternMatchExtraInfo.getRoleMap().putAll(pmsr.patternMatchExtraInfo.getRoleMap());
   }
 
@@ -69,7 +72,7 @@ public class PatternMatchSingleResult {
     }
 
     if (
-        new HashSet(this.tree).equals(new HashSet(pmsr.tree))
+        new HashSet(this.idsList).equals(new HashSet(pmsr.idsList))
     ) {
       return true;
     }
@@ -83,9 +86,9 @@ public class PatternMatchSingleResult {
             &&
             (this.sentenceNumber == rd.getSentenceIndex())
             &&
-            this.tree.contains(rd.getFromTokenIndex() - 1)
+            this.idsList.contains(rd.getFromTokenIndex() - 1)
             &&
-            this.tree.contains(rd.getToTokenIndex() - 1)
+            this.idsList.contains(rd.getToTokenIndex() - 1)
     ) {
       return true;
     }

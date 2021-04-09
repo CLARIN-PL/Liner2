@@ -1,6 +1,5 @@
 package g419.serel.ruleTree;
 
-import com.google.common.collect.Lists;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.serel.parseRule.ParseRuleLexer;
@@ -73,6 +72,10 @@ public class PatternMatch {
     return nodeMatchList.stream().filter(node -> node.hasAnnotation()).map(n -> n.getNamedEntity()).collect(Collectors.toList());
   }
 
+/*
+wsparcie dla porzucanego  PatternMatch::getSentenceTreesMatchingSerelPattern
+
+
   public ArrayList<Integer>
   getSentenceBranchMatchingUpPatternBranchFromNode(
       final NodeMatch startNodeMatch,
@@ -135,6 +138,10 @@ public class PatternMatch {
     return new ArrayList<>();
   }
 
+
+
+*/
+
 /*
   List<Integer> matchTotalStarToPattern(final List<Token> tokens, final int tokenIndex, final NodeMatch nodeMatch) {
     final List<Integer> result = new ArrayList<>();
@@ -195,7 +202,10 @@ public class PatternMatch {
     }
 
     result = makeDistinct(result);
-    shiftIdsToIndexes(result);
+    //shiftIdsToIndexes(result);
+    // jak się okazuje niepotzebne bo wynikało
+    // z tego że relacja była oznaczana do pierwszego
+    // tokenu z BOI a nie do HEAD
 
     return result;
   }
@@ -203,8 +213,8 @@ public class PatternMatch {
 
   public void shiftIdsToIndexes(final List<PatternMatchSingleResult> input) {
     for (final PatternMatchSingleResult pmsr : input) {
-      for (int i = 0; i < pmsr.tree.size(); i++) {
-        pmsr.tree.set(i, pmsr.tree.get(i) - 1);
+      for (int i = 0; i < pmsr.idsList.size(); i++) {
+        pmsr.idsList.set(i, pmsr.idsList.get(i) - 1);
       }
     }
   }
@@ -217,16 +227,16 @@ public class PatternMatch {
 
     final List<PatternMatchSingleResult> result = new ArrayList<>();
     final PatternMatchSingleResult firstPmsr = input.get(0);
-    firstPmsr.tree.sort(Comparator.naturalOrder());
+    firstPmsr.idsList.sort(Comparator.naturalOrder());
     result.add(firstPmsr);
 
     outer:
     for (int i = 1; i < input.size(); i++) {
       final PatternMatchSingleResult currentPmsr = input.get(i);
-      currentPmsr.tree.sort(Comparator.naturalOrder());
+      currentPmsr.idsList.sort(Comparator.naturalOrder());
 
       for (final PatternMatchSingleResult resultPmsr : result) {
-        if (resultPmsr.tree.equals(currentPmsr.tree)) {
+        if (resultPmsr.idsList.equals(currentPmsr.idsList)) {
           continue outer;
         }
       }
@@ -259,28 +269,36 @@ public class PatternMatch {
       return Collections.emptyList(); // no match
     }
 
+    // here we now know there is a match ...
+
     final List<PatternMatchSingleResult> result = new LinkedList<>();
 
     final PatternMatchSingleResult oneResult;
-    final ArrayList<Integer> _idsList = new ArrayList<>();
-    _idsList.add(token.getNumberId());
+    final ArrayList<Integer> _idsList;
+    if (nodeMatch.isForNamedEntity()) {
+      _idsList = sentence.getBoiIndexesForTokenAndName(token, nodeMatch.getNamedEntity());
+    } else {
+      _idsList = new ArrayList<>();
+      _idsList.add(token.getNumberId());
+    }
+
+
     oneResult = new PatternMatchSingleResult(_idsList, pmei);
 
     if (nodeMatch.isLeaf()) {
       result.add(oneResult);
-      // final match!
+      // final match!It is leaf so we end this branch of recursion here
       return result;
     }
-    // we here know at this level there is a match. But there are further levels ...
+    // we here know at this level there is a match. But there are further levels since this token is not a leaf ...
 
-    final List<Token> childrenToken = sentence.getChildrenTokensFromToken(token);
+    final List<Token> childrenTokens = sentence.getChildrenTokensFromToken(token);
     // if there is more branches in pattern then we have in actual sentence node we know there is no way to match it
-    if (nodeMatch.getEdgeMatchList().size() > childrenToken.size()) {
+    if (nodeMatch.getEdgeMatchList().size() > childrenTokens.size()) {
       return Collections.emptyList();
     }
 
-
-    final List<List<Token>> childrenTokenSubCombinations = Permutations.getAllCombinations(childrenToken, nodeMatch.getEdgeMatchList().size());
+    final List<List<Token>> childrenTokenSubCombinations = Permutations.getAllCombinations(childrenTokens, nodeMatch.getEdgeMatchList().size());
     for (final List<Token> childrenTokenCombination : childrenTokenSubCombinations) {
       // for each subcombinations generate all possible permutations and check each one
 
@@ -291,15 +309,6 @@ public class PatternMatch {
         result.addAll(resultsForOnePermutation);
       }
     }
-
-/*
-    final List<List<Token>> childrenTokenPermutations = Permutations.getAllPermutations(childrenToken);
-    for (final List<Token> childrenTokenPermutation : childrenTokenPermutations) {
-      final List<PatternMatchSingleResult> resultsForOnePermutation = getResultsForOnePermutation(sentence, childrenTokenPermutation, nodeMatch.getEdgeMatchList());
-      result.addAll(resultsForOnePermutation);
-    }
-
-*/
 
     result.forEach(r -> r.concatenateWith(oneResult));
     return result;
@@ -343,6 +352,8 @@ public class PatternMatch {
     }
     return onePermutationResults;
   }
+
+/*
 
 
   public List<PatternMatchSingleResult> getSentenceTreesMatchingSerelPattern(final Sentence sentence) {
@@ -412,6 +423,7 @@ public class PatternMatch {
     }
     return result;
   }
+ */
 
 
 }

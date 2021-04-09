@@ -214,30 +214,23 @@ public class ActionMatchRelationsSet extends Action {
     documentResultTruePositive = new ArrayList<>();
     documentResultFalsePositive = new ArrayList<>();
 
-    System.out.println("Pattern match =" + patternMatch);
-
     int sentenceIndex = 0;
+    for (final Sentence sentence : d.getParagraphs().get(0).getSentences()) {
+      sentenceIndex++;
+      try {
 
-    //for (final Sentence sentence : d.getParagraphs().get(0).getSentences()) {
+        final SentenceMiscValues smv = SentenceMiscValues.from(sentence, sentenceIndex);
+        //final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingSerelPattern(sentence);
+        final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingGenericPattern(sentence);
 
-    final Sentence sentence = d.getParagraphs().get(0).getSentences().get(0);
+        for (final PatternMatchSingleResult patternMatchSingleResult : sentenceResults) {
+          patternMatchSingleResult.sentenceNumber = sentenceIndex;
+          patternMatchSingleResult.docName = d.getName();
+        }
 
-    sentenceIndex++;
-    try {
+        documentResult.addAll(sentenceResults);
 
-      final SentenceMiscValues smv = SentenceMiscValues.from(sentence, sentenceIndex);
-      //final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingSerelPattern(sentence);
-      final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingGenericPattern(sentence);
-      System.out.println();
-
-      for (final PatternMatchSingleResult patternMatchSingleResult : sentenceResults) {
-        patternMatchSingleResult.sentenceNumber = sentenceIndex;
-        patternMatchSingleResult.docName = d.getName();
-      }
-
-      documentResult.addAll(sentenceResults);
-
-      classifyResult(sentenceResults, smv, patternMatch);
+        classifyResult(sentenceResults, smv, patternMatch);
 
 //        if ((this.sentenceResultsOK.size() > 0) || (this.sentenceResultsNotHit.size() > 0) || (this.sentenceResultsFalseHit.size() > 0)) {
 //          System.out.println("PROK=" + sentenceResultsOK);
@@ -245,14 +238,13 @@ public class ActionMatchRelationsSet extends Action {
 //          System.out.println("PRNH=" + sentenceResultsNotHit);
 //        }
 
-      documentResultTruePositive.addAll(sentenceResultsTruePositive);
-      documentResultFalsePositive.addAll(sentenceResultsFalsePositive);
-    } catch (final Throwable th) {
-      th.printStackTrace();
-      System.out.println("Problem : " + th);
-    }
-    // } // for
-
+        documentResultTruePositive.addAll(sentenceResultsTruePositive);
+        documentResultFalsePositive.addAll(sentenceResultsFalsePositive);
+      } catch (final Throwable th) {
+        th.printStackTrace();
+        System.out.println("Problem : " + th);
+      }
+    } // for
   }
 
   private void classifyResult(final List<PatternMatchSingleResult> sentenceResults, final SentenceMiscValues smv, final PatternMatch patternMatch) {
@@ -268,6 +260,18 @@ public class ActionMatchRelationsSet extends Action {
       for (int i = 0; i < allSentenceNamRels.size(); i++) {
         final RelationDesc rd = allSentenceNamRels.get(i);
         if (pmsr.isTheSameAs(rd)) {
+
+          /*
+          Tutaj właśnie leży teraz problem bo znalezione HEADy od NE często nie są pierwsze
+          a w relacjach podawany jest pierwszy token a nie head i trzeba to ogarnąć
+          Dodatkwoo do sprawdzenie ile jest takich, że na zewnątrz wychodzi więcej niż jeden
+          i tez takich że podpięte jest coś dodatkowego nie do HEADa tylko do pobocznych
+              -- GEneralenie ma być tak, że ten token headowy reprezentuje cały NE i tylko z nim jest
+              ointerakcja
+          -to wtedy przy sprawdzanie tych "CASE" trez tylko dla niego się będzie sprawdzało i będzię git !
+           */
+
+
           allSentenceNamRels.remove(i);
           sentenceResultsTruePositive.add(pmsr);
           continue outer;

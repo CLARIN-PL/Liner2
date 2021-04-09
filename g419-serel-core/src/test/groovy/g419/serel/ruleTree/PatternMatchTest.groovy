@@ -322,6 +322,7 @@ class PatternMatchTest extends Specification {
             thrown ParseCancellationException
     }
 
+    /*
     def "getSentenceBranchMatchingUpPatternBranchFromNode zwraca podgałąź tokenów zdania "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("W > południe")
@@ -332,6 +333,7 @@ class PatternMatchTest extends Specification {
             pattern.nodeMatchList.size() == 2;
             result.size() == 2;
     }
+    */
 
     def "getSentenceBranchMatchingUpPatternBranchFromNode zwraca podgałęzie większe niż 2 elementy od prawej do lewej"() {
         when:
@@ -349,7 +351,7 @@ class PatternMatchTest extends Specification {
  * Rozpoznawanie wzorca typu serel
  */
 
-
+/*
     def "getSentenceBranchMatchingUpPatternBranchFromNode nie zwraca podgałęzi tokenów zdania gdy zaczynamy od złego punktu"() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("W > południe")
@@ -427,6 +429,7 @@ class PatternMatchTest extends Specification {
             pattern.nodeMatchList.size() == 4;
             result.size() == 0;
     }
+ */
 
     def "getALeaf cares about which ids to exclude "() {
         when:
@@ -459,6 +462,7 @@ class PatternMatchTest extends Specification {
             pattern.nodeMatchList.size() == 5;
     }
 
+    /*
     def "finding sentence subtrees matching pattern "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty > odbywają")
@@ -557,6 +561,7 @@ class PatternMatchTest extends Specification {
         then:
             result.size() == 0 // because * should denote just one node - and here, to recognize pattern it should be treated as 2 nodes
     }
+    */
 
 
     /*

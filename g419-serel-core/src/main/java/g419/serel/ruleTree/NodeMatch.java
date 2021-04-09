@@ -46,6 +46,8 @@ public class NodeMatch {
     return edgeMatchList.size() == 0;
   }
 
+  public boolean isForNamedEntity() { return ((namedEntity != null) && (!namedEntity.isEmpty())); }
+
   public boolean isMatchAnyTotal() {
     return isMatchAnyText
         && ((xPos == null) || (xPos.isEmpty()))
@@ -89,16 +91,21 @@ public class NodeMatch {
     }
 
     //namedEntity
-    if ((namedEntity != null) && (!namedEntity.isEmpty())) {
+    if (this.isForNamedEntity()) {
 
       final List<String> boiList = token.getBois();
 
       boolean found = false;
       for (final String boi : boiList) {
-        //if (boi.equals("B-" + namedEntity)) {  // "B-"  -> start token of entity
-        if (boi.startsWith("B-" + namedEntity)) {  // "B-"  -> start token of entity
+        if (
+            (boi.startsWith("B-" + namedEntity))  // "B-"  -> start token of entity
+                ||
+                (boi.startsWith("I-" + namedEntity))  // "I-"  -> inside token of entity
+        ) {
           found = true;
 
+
+          //TODO byc moze to przeniesc wyzej i uniezaleznic wpisytwanie tych info od tego czy jest rola czy nie ma
           if ((role != null) && (!role.isEmpty())) {
             extraInfo.putRole(role, namedEntity, token);
           }

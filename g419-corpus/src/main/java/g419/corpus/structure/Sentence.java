@@ -460,58 +460,6 @@ public class Sentence extends IdentifiableElement {
     return tokensToCheck.stream().filter(t -> t.hasBoiInsideTag(name)).collect(Collectors.toList());
   }
 
-/*
-old version - traversing tree not linear sequence. Has some flaws ...  a/tokenToCheck\b - will never find B- of a
-due to differences in marking
-
-  public List<Integer> getBoiIndexesForTokenAndName(final Token tokenToCheck, final String boiName) {
-    final List<Integer> resultIds = new LinkedList<>();
-
-    if (!tokenToCheck.hasBoi(boiName)) {
-      return resultIds;
-    }
-
-    // check upwards - to 'B-' ...
-    Token currentToken = tokenToCheck;
-    do {
-      resultIds.add(0, currentToken.getNumberId());
-      if (currentToken.hasBoiBeginTag(boiName)) {
-        break;
-      }
-      currentToken = this.getParentTokenFromToken(currentToken);
-    } while (currentToken != null);
-
-    if (currentToken == null) {
-      System.out.println(" Error in boi tagging - no start for this one: " + boiName + " CTX:");
-      // error in boi tagging - no start for this one ...
-    }
-
-    // check downwards - to 'O' ...
-    currentToken = tokenToCheck; // reset
-    fillBoiIndexesDescending(currentToken, boiName, resultIds);
-
-    resultIds.sort(Comparator.naturalOrder());
-
-
-    return resultIds;
-  }
-
- */
-
-
-  private void fillBoiIndexesDescending(final Token tokenToCheck, final String boiName, final List<Integer> result) {
-    // check downwards - to 'B-' ...
-    final Token currentToken = tokenToCheck; // reset
-
-    final List<Token> children = this.getChildrenTokensFromToken(currentToken);
-    final List<Token> childrenWithBoi = this.selectTokensWithBoiInsideTag(children, boiName);
-
-    for (final Token t : childrenWithBoi) {
-      result.add(t.getNumberId());
-      fillBoiIndexesDescending(t, boiName, result);
-    }
-  }
-
   /*
   public void printAsTreeWithIndex(final PrintWriter pw) {
     final List<ParseTree.TreeNode> nodes = new LinkedList<>();
@@ -540,11 +488,11 @@ due to differences in marking
    */
 
   //////////////////////////////////////////////////
-  // Constructing whole BOI tokens sequence .... 
+  // START: Constructing whole BOI tokens ids sequence ....
   //////////////////////////////////////////////////
 
-  public List<Integer> getBoiIndexesForTokenAndName(final Token tokenToCheck, final String boiName) {
-    final List<Integer> resultIds = new LinkedList<>();
+  public ArrayList<Integer> getBoiIndexesForTokenAndName(final Token tokenToCheck, final String boiName) {
+    final ArrayList<Integer> resultIds = new ArrayList<>();
 
     if (!tokenToCheck.hasBoi(boiName)) {
       return resultIds;
@@ -597,6 +545,10 @@ due to differences in marking
       currentToken = this.getFollowingToken(currentToken);
     }
   }
+
+  //////////////////////////////////////////////////
+  // FINISH: Constructing whole BOI tokens sequence ....
+  //////////////////////////////////////////////////
 
 
 }

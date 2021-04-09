@@ -114,10 +114,10 @@ public class DocumentToSerelExpressionConverter {
 //    --- nie ma tych relacji wpisanych w tokenach na tym poziomie
 
     final int index1 = findActualHead(rel.getAnnotationFrom(), parseTree);
-    System.out.println("Found head index = " + index1);
     final int index2 = findActualHead(rel.getAnnotationTo(), parseTree);
-    System.out.println("Found head index = " + index2);
-    System.out.println("\n");
+    //System.out.println("Found head index = " + index1);
+    //System.out.println("Found head index = " + index2);
+    //System.out.println("\n");
 
 
     final Pair<List<SentenceLink>, List<SentenceLink>> path = parseTree.getPathBetween(index1, index2);
@@ -137,21 +137,14 @@ public class DocumentToSerelExpressionConverter {
   }
 
   private int findActualHead(final Annotation ann, final ParseTree parseTree) {
-
-    System.out.println("tokens =" + ann.getTokens());
-//    final Set set = parseTree.getParentIndexesForIndexesSet(ann.getTokens());
-//    System.out.println("pTokens = " + set);
-
+//    System.out.println("tokens =" + ann.getTokens());
 
     for (final int i : ann.getTokens()) {
-      System.out.println("Checking i =" + i);
       final SentenceLink sl = parseTree.getLinksBySourceIndex(i).get();
-      System.out.println("Checking token =" + sl);
       if (!ann.getTokens().contains(sl.getTargetIndex())) {
         return i;
       }
     }
-
     return -1;
   }
 
@@ -185,7 +178,7 @@ public class DocumentToSerelExpressionConverter {
     reportWriter.println(se.getPathAsString());
 
     // GENERATE TREE
-    se.getParseTree().printAsTreeWithIndex(reportWriter);
+    //se.getParseTree().printAsTreeWithIndex(reportWriter);
 
     //reportWriter.println("------------------------------------------------------");
 
