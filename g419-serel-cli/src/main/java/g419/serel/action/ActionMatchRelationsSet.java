@@ -261,17 +261,6 @@ public class ActionMatchRelationsSet extends Action {
         final RelationDesc rd = allSentenceNamRels.get(i);
         if (pmsr.isTheSameAs(rd)) {
 
-          /*
-          Tutaj właśnie leży teraz problem bo znalezione HEADy od NE często nie są pierwsze
-          a w relacjach podawany jest pierwszy token a nie head i trzeba to ogarnąć
-          Dodatkwoo do sprawdzenie ile jest takich, że na zewnątrz wychodzi więcej niż jeden
-          i tez takich że podpięte jest coś dodatkowego nie do HEADa tylko do pobocznych
-              -- GEneralenie ma być tak, że ten token headowy reprezentuje cały NE i tylko z nim jest
-              ointerakcja
-          -to wtedy przy sprawdzanie tych "CASE" trez tylko dla niego się będzie sprawdzało i będzię git !
-           */
-
-
           allSentenceNamRels.remove(i);
           sentenceResultsTruePositive.add(pmsr);
           continue outer;
