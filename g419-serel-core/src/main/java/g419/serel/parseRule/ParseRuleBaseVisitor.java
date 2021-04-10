@@ -253,4 +253,13 @@ public class ParseRuleBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
    */
   @Override
   public T visitFunctionName(final ParseRuleParser.FunctionNameContext ctx) { return visitChildren(ctx); }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation returns the result of calling
+   * {@link #visitChildren} on {@code ctx}.</p>
+   */
+  @Override
+  public T visitCaseTail(final ParseRuleParser.CaseTailContext ctx) { return visitChildren(ctx); }
 }

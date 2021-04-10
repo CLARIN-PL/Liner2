@@ -153,10 +153,15 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
             nodeMatch.setRole(ctx.element().namedEntityToRole().toRole().role().getText());
           }
         }
+
+        if (ctx.element().caseTail() != null) {
+          nodeMatch.setCaseTail(ctx.element().caseTail().getText());
+        }
       }
       if (ctx.xPos() != null) {
         nodeMatch.setXPos(ctx.xPos().xPosValue().getText());
       }
+
     }
 
     return nodeMatch;
@@ -579,6 +584,18 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
 
   @Override
   public void enterDepRelValuePart(final DepRelValuePartContext parserRuleContext) {
+    //log.debug(" exiting EveryRule");
+
+  }
+
+  @Override
+  public void exitCaseTail(final CaseTailContext parserRuleContext) {
+    //log.debug(" exiting EveryRule");
+
+  }
+
+  @Override
+  public void enterCaseTail(final CaseTailContext parserRuleContext) {
     //log.debug(" exiting EveryRule");
 
   }

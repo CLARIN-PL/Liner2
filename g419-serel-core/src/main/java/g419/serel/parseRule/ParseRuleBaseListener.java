@@ -448,6 +448,22 @@ public class ParseRuleBaseListener implements ParseRuleListener {
    * <p>The default implementation does nothing.</p>
    */
   @Override
+  public void enterCaseTail(final ParseRuleParser.CaseTailContext ctx) { }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation does nothing.</p>
+   */
+  @Override
+  public void exitCaseTail(final ParseRuleParser.CaseTailContext ctx) { }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation does nothing.</p>
+   */
+  @Override
   public void enterEveryRule(final ParserRuleContext ctx) { }
 
   /**

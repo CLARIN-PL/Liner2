@@ -40,7 +40,7 @@ depRelValuePart : IDENTIFIER;
 node:  xPos? element;
 xPos : '[' xPosValue ']' ;
 xPosValue : id ;
-element : text ('/' namedEntityToRole)? ;
+element : text ( HASH caseTail)? ('/' namedEntityToRole)? ;
 namedEntityToRole: namedEntity toRole? ;
 toRole : ':' role ;
 namedEntity : id;
@@ -48,12 +48,12 @@ role : id ;
 
 text : id;
 
-id : STAR | (LEMMA functions? )? lemmas ;
+id :  STAR | (LEMMA functions? )? lemmas   ;
 
 lemmas : IDENTIFIER ('|' IDENTIFIER )*;
 functions : (functionName ':')+ ;
 functionName: IDENTIFIER;
-
+caseTail : STAR | IDENTIFIER;
 
 
 
@@ -64,6 +64,7 @@ functionName: IDENTIFIER;
 
 STAR : '*' ;
 LEMMA :'^' ;
+HASH : '#';
 IDENTIFIER : [a-zA-Z0-9_ĄąĆćĘęŁłŃńÓóŚśŻżŹź%'.\-\u00A0-\uFFFF]+;
 
 WS : [ \t\r\n]+ -> skip;

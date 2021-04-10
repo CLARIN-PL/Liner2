@@ -384,4 +384,18 @@ public interface ParseRuleListener extends ParseTreeListener {
    * @param ctx the parse tree
    */
   void exitFunctionName(ParseRuleParser.FunctionNameContext ctx);
+
+  /**
+   * Enter a parse tree produced by {@link ParseRuleParser#caseTail}.
+   *
+   * @param ctx the parse tree
+   */
+  void enterCaseTail(ParseRuleParser.CaseTailContext ctx);
+
+  /**
+   * Exit a parse tree produced by {@link ParseRuleParser#caseTail}.
+   *
+   * @param ctx the parse tree
+   */
+  void exitCaseTail(ParseRuleParser.CaseTailContext ctx);
 }

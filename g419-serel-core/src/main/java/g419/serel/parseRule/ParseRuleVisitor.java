@@ -225,4 +225,12 @@ public interface ParseRuleVisitor<T> extends ParseTreeVisitor<T> {
    * @return the visitor result
    */
   T visitFunctionName(ParseRuleParser.FunctionNameContext ctx);
+
+  /**
+   * Visit a parse tree produced by {@link ParseRuleParser#caseTail}.
+   *
+   * @param ctx the parse tree
+   * @return the visitor result
+   */
+  T visitCaseTail(ParseRuleParser.CaseTailContext ctx);
 }

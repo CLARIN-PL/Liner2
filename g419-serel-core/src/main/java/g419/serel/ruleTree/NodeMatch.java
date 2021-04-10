@@ -32,6 +32,8 @@ public class NodeMatch {
   private EdgeMatch parentEdgeMatch;
   private List<EdgeMatch> edgeMatchList = new ArrayList<>();
 
+  private String caseTail;
+
   public NodeMatch() {
   }
 
