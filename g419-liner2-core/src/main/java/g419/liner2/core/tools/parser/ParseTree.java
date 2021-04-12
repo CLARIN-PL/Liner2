@@ -5,6 +5,7 @@ import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import org.apache.commons.lang3.tuple.Pair;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -51,14 +52,15 @@ public abstract class ParseTree {
     final List<SentenceLink> parents1 = getParentsAscending(index1);
     final List<SentenceLink> parents2 = getParentsAscending(index2);
     final Pair<Integer, Integer> indexes = findIndexesToLowestCommonLink(parents1, parents2);
+    //uff, it's good we have link from root to outside ...
 
     if (indexes == null) {
       return null;
     }
 
     return Pair.of(
-        parents1.subList(0, indexes.getLeft() + 1),
-        parents2.subList(0, indexes.getRight() + 1)
+        indexes.getLeft() == 0 ? new ArrayList<>() : parents1.subList(0, indexes.getLeft()),
+        indexes.getRight() == 0 ? new ArrayList<>() : parents2.subList(0, indexes.getRight())
     );
   }
 

@@ -29,6 +29,7 @@ public class ActionCheckComboParseTree extends Action {
   private String comboFilename;
   private String comboFormat;
   private String reportFilename;
+  private String caseMode;
 
 
   DocumentToSerelExpressionConverter converter;
@@ -44,6 +45,7 @@ public class ActionCheckComboParseTree extends Action {
     options.addOption(CommonOptions.getOutputFileFormatOption());
     options.addOption(CommonOptions.getComboFileNameOption());
     options.addOption(CommonOptions.getComboFileFormatOption());
+    options.addOption(CommonOptions.getCaseModeOption());
 
     options.addOption(CommonOptions.getReportFileNameOption());
   }
@@ -59,6 +61,7 @@ public class ActionCheckComboParseTree extends Action {
     }
     comboFilename = line.getOptionValue(CommonOptions.OPTION_COMBO_FILE);
     comboFormat = line.getOptionValue(CommonOptions.OPTION_COMBO_FORMAT);
+    caseMode = line.getOptionValue(CommonOptions.OPTION_CASE_MODE);
 
     reportFilename = line.getOptionValue(CommonOptions.OPTION_REPORT_FILE);
   }

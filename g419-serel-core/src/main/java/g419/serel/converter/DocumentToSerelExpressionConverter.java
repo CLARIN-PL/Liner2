@@ -11,7 +11,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Converts set of annotations and relations between annotations into a set of serel expressions.
@@ -28,6 +27,10 @@ public class DocumentToSerelExpressionConverter {
   }
 
   public List<SerelExpression> convert(final Document document) {
+    return convert(document, "none");
+  }
+
+  public List<SerelExpression> convert(final Document document, final String caseMode) {
 
     if (document.getRelationsSet().size() == 0) {
       //log.debug("Relset is empty");
@@ -56,6 +59,7 @@ public class DocumentToSerelExpressionConverter {
     return result;
   }
 
+  /*
   public List<SerelExpression> convertAlreadyComboedFromRelDesc(final Set<RelationDesc> relationDescList) {
 
     final List<SerelExpression> result = new LinkedList<>();
@@ -71,14 +75,14 @@ public class DocumentToSerelExpressionConverter {
     return result;
 
   }
-
+*/
 
   public SerelExpression extractSerelFromRel(final Relation rel) throws Exception {
     final Sentence sentenceFrom = rel.getAnnotationFrom().getSentence();
     final Sentence sentenceTo = rel.getAnnotationTo().getSentence();
 
     if (!(sentenceFrom.toString().equals(sentenceTo.toString()))) {
-      System.out.println(" Relation " + rel + " skipped because refers to more then one sentence");
+      System.out.println("ERROR: Relation " + rel + " skipped because refers to more then one sentence");
       return null;
     }
 
@@ -87,6 +91,7 @@ public class DocumentToSerelExpressionConverter {
     return serel;
   }
 
+  /*
   public SerelExpression extractSerelFromRelDesc(final RelationDesc relDesc) throws Exception {
     final Sentence sentence = relDesc.getSentence();
     final ParseTree parseTree = parseTreeGenerator.generate(sentence);
@@ -94,30 +99,23 @@ public class DocumentToSerelExpressionConverter {
     return result;
   }
 
+   */
+
 
   public SerelExpression extractSerelFromParseTree(final Relation rel, final ParseTree parseTree) {
 //    final int index1 = rel.getAnnotationFrom().getHead();
 //    final int index2 = rel.getAnnotationTo().getHead();
 
-    /*
-    zdarza się, że relacja pokazuje na pierwszy token anotacji a nie na head anotacji:
-    14	Miejskiej	miejski	ADJ	adj:sg:loc:f:pos	Case=Loc|Degree=Pos|Gender=Fem|Number=Sing	15	amod:flat	_	{'bois': '[B-nam_fac_goe]', 'nam_rels': '[location:14:nam_fac_goe:18:nam_loc_gpe_city,neighbourhood:14:nam_fac_goe:21:nam_fac_road]'}
-    15	Przychodni	przychodnia	NOUN	subst:sg:loc:f	Case=Loc|Gender=Fem|Number=Sing	2	obl	_	{'bois': '[I-nam_fac_goe]'}
-    16	Zdrowia	zdrowie	NOUN	subst:sg:gen:n:ncol	Case=Gen|Gender=Neut|Number=Sing	15	nmod:flat	_	{'bois': '[I-nam_fac_goe]'}
-    17	w	w	ADP	prep:loc:nwok	AdpType=Prep|Variant=Short	18	case	_	{'bois': '[O]'}
-
-    dlatego przy budowaniu ścieżki midzy kotwicami trzeba użyć indeksów rzeczywistych headów a nie tych które są podane w opisie relacji
-     */
-
 //    final int index1 = rel.getAnnotationFrom().getHeadActual();
 //    final int index2 = rel.getAnnotationTo().getHeadActual();
 //    --- nie ma tych relacji wpisanych w tokenach na tym poziomie
 
-    final int index1 = findActualHead(rel.getAnnotationFrom(), parseTree);
-    final int index2 = findActualHead(rel.getAnnotationTo(), parseTree);
-    //System.out.println("Found head index = " + index1);
-    //System.out.println("Found head index = " + index2);
-    //System.out.println("\n");
+    // truly - index not id
+    final int index1 = findActualHeadIndex(rel.getAnnotationFrom(), parseTree);
+    final int index2 = findActualHeadIndex(rel.getAnnotationTo(), parseTree);
+//    System.out.println("Found head index = " + index1);
+//    System.out.println("Found head index = " + index2);
+//    System.out.println("\n");
 
 
     final Pair<List<SentenceLink>, List<SentenceLink>> path = parseTree.getPathBetween(index1, index2);
@@ -127,16 +125,16 @@ public class DocumentToSerelExpressionConverter {
 
     final SerelExpression se;
     if (path != null) {
-      se = new SerelExpression(RelationDesc.from(rel), path.getLeft(), path.getRight(), parseTree);
+      se = new SerelExpression(RelationDesc.from(rel), path.getLeft(), path.getRight(), parseTree, index1, index2);
     } else {
-      se = new SerelExpression(RelationDesc.from(rel), null, null, parseTree);
+      se = new SerelExpression(RelationDesc.from(rel), null, null, parseTree, index1, index2);
     }
 
     return se;
 
   }
 
-  private int findActualHead(final Annotation ann, final ParseTree parseTree) {
+  private int findActualHeadIndex(final Annotation ann, final ParseTree parseTree) {
 //    System.out.println("tokens =" + ann.getTokens());
 
     for (final int i : ann.getTokens()) {
@@ -148,26 +146,40 @@ public class DocumentToSerelExpressionConverter {
     return -1;
   }
 
-
+/*
   public SerelExpression extractSerelFromParseTreeWithRelDesc(final RelationDesc relDesc, final ParseTree parseTree) {
+
+    // TODO - czy to czsem nie jest ID - i dlatego jest potrzebne odejmowanie tek jedynki tu dalej ?
     final int index1 = relDesc.getFromTokenIndex();
     final int index2 = relDesc.getToTokenIndex();
 
     final Pair<List<SentenceLink>, List<SentenceLink>> path = parseTree.getPathBetween(index1 - 1, index2 - 1);
 
 
-    //System.out.println("LS1 = "+path.getLeft());
-    //System.out.println("LS2 = "+path.getRight());
+    System.out.println("LS1 = " + path.getLeft());
+    System.out.println("LS2 = " + path.getRight());
 
     final SerelExpression se;
     if (path != null) {
+
+      System.out.println("NN:LS1 = " + path.getLeft());
+      System.out.println("NN:LS2 = " + path.getRight());
+
+
       se = new SerelExpression(relDesc, path.getLeft(), path.getRight(), parseTree);
     } else {
+
+      System.out.println("NULL:LS1 = " + path.getLeft());
+      System.out.println("NULL:LS2 = " + path.getRight());
+
+
       se = new SerelExpression(relDesc, null, null, parseTree);
     }
 
     return se;
   }
+
+ */
 
 
   private void reportSerel(final SerelExpression se) {

@@ -1,5 +1,6 @@
 package g419.serel.ruleTree;
 
+import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.serel.structure.patternMatch.PatternMatchExtraInfo;
 import lombok.Data;
@@ -71,6 +72,10 @@ public class NodeMatch {
   }
 
   public boolean matches(final Token token, final PatternMatchExtraInfo extraInfo) {
+    return this.matches(token, extraInfo, null);
+  }
+
+  public boolean matches(final Token token, final PatternMatchExtraInfo extraInfo, final Sentence sentence) {
 
     //text
     if (!isMatchAnyText) {
@@ -116,6 +121,25 @@ public class NodeMatch {
       }
 
       if (!found) {
+        return false;
+      }
+    }
+
+
+    // # case
+    if ((this.getCaseTail() != null) && (!this.getCaseTail().equals(""))) {
+
+      final List<Token> childTokens = sentence.getChildrenTokensFromTokenId(token.getNumberId());
+      boolean foundMatchingCase = false;
+      for (final Token t : childTokens) {
+        if ("case" .equals(t.getAttributeValue("deprel"))) {
+          if (caseTail.equals(t.getAttributeValue("lemma"))) {
+            foundMatchingCase = true;
+            break;
+          }
+        }
+      }
+      if (!foundMatchingCase) {
         return false;
       }
     }

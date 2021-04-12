@@ -72,11 +72,20 @@ public class CommonOptions {
   public static final String OPTION_VERIFY_RELATIONS = "vr";
   public static final String OPTION_VERIFY_RELATIONS_LONG = "verify_relations";
 
+  public static final String OPTION_CASE_MODE = "case";
+  public static final String OPTION_CASE_MODE_LONG = "case_mode";
+
 
   public static Option getOutputFileNameOption() {
     return Option.builder(CommonOptions.OPTION_OUTPUT_FILE)
         .longOpt(CommonOptions.OPTION_OUTPUT_FILE_LONG)
         .hasArg().argName("filename").desc("path to an output file").build();
+  }
+
+  public static Option getCaseModeOption() {
+    return Option.builder(CommonOptions.OPTION_CASE_MODE)
+        .longOpt(CommonOptions.OPTION_CASE_MODE_LONG)
+        .hasArg().argName("case").desc("mode telling how to treat 'case' subtokens").build();
   }
 
 

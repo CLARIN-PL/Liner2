@@ -265,7 +265,7 @@ wsparcie dla porzucanego  PatternMatch::getSentenceTreesMatchingSerelPattern
 
     final PatternMatchExtraInfo pmei = new PatternMatchExtraInfo();
     pmei.setSentence(sentence);
-    if (!nodeMatch.matches(token, pmei)) {
+    if (!nodeMatch.matches(token, pmei, sentence)) {
       return Collections.emptyList(); // no match
     }
 
