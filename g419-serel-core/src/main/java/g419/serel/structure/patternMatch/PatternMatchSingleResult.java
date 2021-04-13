@@ -3,6 +3,7 @@ package g419.serel.structure.patternMatch;
 import g419.corpus.structure.RelationDesc;
 import g419.serel.ruleTree.PatternMatch;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 
 public class PatternMatchSingleResult {
@@ -117,4 +118,27 @@ public class PatternMatchSingleResult {
   }
 
    */
+
+  public static class SortByDocument implements Comparator<PatternMatchSingleResult> {
+
+    @Override
+    public int compare(final PatternMatchSingleResult p1, final PatternMatchSingleResult p2) {
+      int result = p1.docName.compareTo(p2.docName);
+      if (result != 0) {
+        return result;
+      }
+      result = p1.sentenceNumber - p2.sentenceNumber;
+      if (result != 0) {
+        return result;
+      }
+      result = p1.getType().compareTo(p2.getType());
+      if (result != 0) {
+        return result;
+      }
+
+      return result;
+    }
+  }
+
+
 }

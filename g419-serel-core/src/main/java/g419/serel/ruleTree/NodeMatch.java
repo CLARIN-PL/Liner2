@@ -132,7 +132,7 @@ public class NodeMatch {
       final List<Token> childTokens = sentence.getChildrenTokensFromTokenId(token.getNumberId());
       boolean foundMatchingCase = false;
       for (final Token t : childTokens) {
-        if ("case" .equals(t.getAttributeValue("deprel"))) {
+        if ("case".equals(t.getAttributeValue("deprel"))) {
           if (caseTail.equals(t.getAttributeValue("lemma"))) {
             foundMatchingCase = true;
             break;

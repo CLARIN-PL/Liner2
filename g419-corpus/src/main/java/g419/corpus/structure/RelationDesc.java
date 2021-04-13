@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 
 @Builder
 @Data
@@ -131,6 +132,35 @@ public class RelationDesc {
             (this.getSentence().getDocument().getName().equals(rd.getSentence().getDocument().getName()))
     );
 
+  }
+
+  public static class SortByDocument implements Comparator<RelationDesc> {
+
+    @Override
+    public int compare(final RelationDesc rd, final RelationDesc rd2) {
+      int result = rd.getSentence().getDocument().getName().compareTo(rd2.getSentence().getDocument().getName());
+      if (result != 0) {
+        return result;
+      }
+      result = rd.sentenceIndex - rd2.sentenceIndex;
+      if (result != 0) {
+        return result;
+      }
+      result = rd.getType().compareTo(rd2.getType());
+      if (result != 0) {
+        return result;
+      }
+      result = rd.getFromTokenIndex() - rd2.getFromTokenIndex();
+      if (result != 0) {
+        return result;
+      }
+      result = rd.getToTokenIndex() - rd2.getToTokenIndex();
+      if (result != 0) {
+        return result;
+      }
+
+      return result;
+    }
   }
 
 

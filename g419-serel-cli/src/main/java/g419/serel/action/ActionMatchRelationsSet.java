@@ -531,6 +531,8 @@ public class ActionMatchRelationsSet extends Action {
     if (_printSectionFound) {
       if (_resultFound.size() > 0) {
         ow.write("\tZnalezione dopasowania to:\n");
+
+        Collections.sort(_resultFound, new PatternMatchSingleResult.SortByDocument());
         for (final PatternMatchSingleResult pmsr : _resultFound) {
           ow.write("\t\t" + pmsr.descriptionLong() + "\n");
         }
@@ -540,6 +542,8 @@ public class ActionMatchRelationsSet extends Action {
     if (_printSectionTruePositive) {
       if (_resultTruePositive.size() > 0) {
         ow.write("\tPoprawne dopasowania to:\n");
+
+        Collections.sort(_resultTruePositive, new PatternMatchSingleResult.SortByDocument());
         for (final PatternMatchSingleResult pmsr : _resultTruePositive) {
           ow.write("\t\t" + pmsr.descriptionLong() + "\n");
         }
@@ -549,6 +553,8 @@ public class ActionMatchRelationsSet extends Action {
     if (_printSectionFalsePositive) {
       if (_resultFalsePositive.size() > 0) {
         ow.write("\tNiepoprawne dopasowania to:\n");
+
+        Collections.sort(_resultFalsePositive, new PatternMatchSingleResult.SortByDocument());
         for (final PatternMatchSingleResult pmsr : _resultFalsePositive) {
           ow.write("\t\t" + pmsr.descriptionLong() + "\n");
         }
@@ -558,6 +564,7 @@ public class ActionMatchRelationsSet extends Action {
     if (_printSectionFalseNegative) {
       if (_resultFalseNegative.size() > 0) {
         ow.write("\tNieznalezione dopasowania to:\n");
+        Collections.sort(_resultFalseNegative, new RelationDesc.SortByDocument());
         for (final RelationDesc relDesc : _resultFalseNegative) {
           ow.write("\t\t" + relDesc.toStringFull() + "\n");
         }
