@@ -1,26 +1,12 @@
 package g419.serel.action;
 
-import g419.corpus.io.reader.AbstractDocumentReader;
-import g419.corpus.io.reader.ReaderFactory;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.Sentence;
-import g419.lib.cli.Action;
-import g419.lib.cli.CommonOptions;
-import g419.serel.ruleTree.PatternMatch;
-import g419.serel.structure.SentenceMiscValues;
-import g419.serel.structure.patternMatch.PatternMatchSingleResult;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.cli.CommandLine;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Slf4j
-public class ActionMatchRelations extends Action {
+public class ActionMatchRelations /* extends Action */ {
 
+  /*
   @Setter
   private String inputFilename;
   @Setter
@@ -34,6 +20,7 @@ public class ActionMatchRelations extends Action {
 
   @Getter
   private List<PatternMatchSingleResult> result;
+
 
 
   public ActionMatchRelations() {
@@ -124,5 +111,6 @@ public class ActionMatchRelations extends Action {
     return result;
   }
 
+   */
 
 }

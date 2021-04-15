@@ -37,7 +37,7 @@ public class PatternMatchExtraInfo {
 
   public String getRoleValue(final String key) {
     final NamedEntityWithToken newt = this.getRole(key);
-    final List<Integer> resultIds = sentence.getBoiIndexesForTokenAndName(newt.token, newt.namedEntity);
+    final List<Integer> resultIds = sentence.getBoiTokensIdsForTokenAndName(newt.token, newt.namedEntity);
     return resultIds.stream().map(id -> sentence.getTokens().get(id - 1).getOrth()).collect(Collectors.joining(" "));
   }
 

@@ -158,6 +158,7 @@ public abstract class ParseTree {
     final List<ParseTree.TreeNode> nodes = new LinkedList<>();
 
     for (int i = 0; i < getSentence().getTokens().size(); i++) {
+
       final Token t = getSentence().getTokens().get(i);
       final TreeNode tn = new TreeNode(String.format("%s                    [%s] [%s]", t.getOrth(), " ", " " + i), i);
       nodes.add(tn);

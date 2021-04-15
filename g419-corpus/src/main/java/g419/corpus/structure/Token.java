@@ -1,6 +1,7 @@
 package g419.corpus.structure;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Reprezentuje token, z których składa się zdanie (Sentence)
@@ -258,6 +259,10 @@ public class Token extends IdentifiableElement {
   public List<String> getBois() {
     final Object result = extAttr.getOrDefault("bois", Collections.EMPTY_LIST);
     return (List<String>) result;
+  }
+
+  public List<String> getBoisBeginsRaw() {
+    return getBois().stream().filter(b -> b.startsWith("B-")).map(b -> b.substring(2)).collect(Collectors.toList());
   }
 
   public Set<String> getBoisAsSet() {

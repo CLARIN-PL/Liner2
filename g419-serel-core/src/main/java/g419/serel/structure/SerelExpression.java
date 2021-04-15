@@ -6,9 +6,7 @@ import g419.corpus.structure.Token;
 import g419.liner2.core.tools.parser.ParseTree;
 import g419.liner2.core.tools.parser.SentenceLink;
 import lombok.Data;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Represents serel expression, which consists of:
@@ -20,8 +18,11 @@ public class SerelExpression {
 
 
   private RelationDesc relationDesc;
-  private List<SentenceLink> linksChainUpToParents1;
-  private List<SentenceLink> linksChainUpToParents2;
+  //  private List<SentenceLink> linksChainUpToParents1;
+  //  private List<SentenceLink> linksChainUpToParents2;
+  private List<Token> tokensChainUp1;
+  private List<Token> tokensChainUp2;
+
   private ParseTree parseTree;
   private int index1;
   private int index2;
@@ -31,16 +32,16 @@ public class SerelExpression {
   }
 
   public SerelExpression(final RelationDesc relDesc,
-                         final List<SentenceLink> p1,
-                         final List<SentenceLink> p2,
-                         final ParseTree pt,
+                         final List<Token> p1,
+                         final List<Token> p2,
+                         //                final ParseTree pt,
                          final int i1,
                          final int i2
   ) {
     this.relationDesc = relDesc;
-    this.linksChainUpToParents1 = p1;
-    this.linksChainUpToParents2 = p2;
-    this.parseTree = pt;
+    this.tokensChainUp1 = p1;
+    this.tokensChainUp2 = p2;
+//    this.parseTree = pt;
     this.index1 = i1;
     this.index2 = i2;
   }
@@ -71,39 +72,62 @@ public class SerelExpression {
     s.append(relationDesc.getToType()).append(";\t\t");
     s.append(relationDesc.getType()).append("::");
 
+    if ((tokensChainUp1.size() < 2) && (tokensChainUp2.size() < 2)) {
+      System.out.println("ERROR !!! Nieprawidłowe ścieżki łączące relacje ");
+    }
+
+//    System.out.println("\n\n");
+
+
     // "left" side
     // left anchor
-    s.append(" * " + getCaseClauseForTokenIndex(index1) + " / " + relationDesc.getFromType() + ":e1");
+    final StringBuilder sLeft = new StringBuilder();
+    sLeft.append(" *" + getCaseClauseForTokenIndex(tokensChainUp1.get(0).getNumberId() - 1) + " / " + relationDesc.getFromType() + ":e1");
 
-    boolean skipLastElement = false;
-    if (linksChainUpToParents2.size() == 0) {
-      skipLastElement = true;
+    if (tokensChainUp1.size() > 1) {
+      final Token t0 = tokensChainUp1.get(0);
+      sLeft.append(getDepRelClauseForTokenToRight(t0));
+
+      for (int i = 1; i <= tokensChainUp1.size() - 1 - 1; i++) {
+        final Token t = tokensChainUp1.get(i);
+        sLeft.append(token2String(t, false) + getDepRelClauseForTokenToRight(t));
+      }
     }
 
-    s.append(linksChainUpToParents1.stream()
-        .limit(Math.max(0, linksChainUpToParents1.size() - (skipLastElement ? 1 : 0)))
-        .map(msl -> "(" + msl.getRelationType() + ") > " + sentenceLinkUp2String(msl, false))
-        .collect(Collectors.joining(" ")));
+//    System.out.println("SLEFT =" + sLeft);
 
-    if (skipLastElement) {
-      final SentenceLink lastSl = linksChainUpToParents1.get(Math.max(0, linksChainUpToParents1.size() - 1));
-      s.append("(" + lastSl.getRelationType() + ") > ");
+    //right Side
+    final StringBuffer sRight = new StringBuffer();
+    if (tokensChainUp2.size() > 1) {
+      for (int i = tokensChainUp2.size() - 1 - 1; i >= 1; i--) {
+        final Token t = tokensChainUp2.get(i);
+        sRight.append(getDepRelClauseForTokenToLeft(t) + token2String(t, false));
+      }
+      final Token t = tokensChainUp2.get(0);
+      sRight.append(getDepRelClauseForTokenToLeft(t));
+    }
+    sRight.append(" *" + getCaseClauseForTokenIndex(tokensChainUp2.get(0).getNumberId() - 1) + " / " + relationDesc.getToType() + ":e2");
+
+//    System.out.println("SRIGHT =" + sRight);
+
+    final StringBuffer sTotal = new StringBuffer();
+
+    if ((tokensChainUp1.size() == 1) || (tokensChainUp2.size() == 1)) {
+      sTotal.append(sLeft);
+      sTotal.append(sRight);
+    } else {
+      final Token tCenter = tokensChainUp1.get(tokensChainUp1.size() - 1);
+      final String sCenter = token2String(tCenter, false);
+
+//      System.out.println("SCENTER = " + sCenter);
+      sTotal.append(sLeft);
+      sTotal.append(sCenter);
+      sTotal.append(sRight);
     }
 
-    if (linksChainUpToParents2.size() > 0) {
-      final List<SentenceLink> reversedList = linksChainUpToParents2.stream().collect(Collectors.toList());
-      Collections.reverse(reversedList);
+    s.append(sTotal);
 
-      final SentenceLink firstSl = reversedList.get(0);
-      s.append(" < (" + firstSl.getRelationType() + ")");
-
-      s.append(reversedList.stream()
-          .skip(1)
-          .map(msl -> sentenceLinkUp2String(msl, false) + " < (" + msl.getRelationType() + ")")
-          .collect(Collectors.joining(" ")));
-    }
-
-    s.append(" *" + getCaseClauseForTokenIndex(index2) + " / " + relationDesc.getToType() + ":e2");
+//    System.out.println("STOTAL = " + sTotal);
 
     final String sentExt = getSentence().toString();
 
@@ -111,22 +135,35 @@ public class SerelExpression {
     return s.toString();
   }
 
-  private String sentenceLinkUp2String(final SentenceLink sl, final boolean withIndexes) {
-
+  private String token2String(final Token t, final boolean withIndexes) {
     return
-        getSentence()
-            .getTokens()
-            .get(sl.getTargetIndex()).getAttributeValue(0)
+        t.getAttributeValue(1)
             +
-            getCaseClauseForTokenIndex(sl.getTargetIndex());
+            getCaseClauseForTokenIndex(t.getNumberId() - 1);  // id -> index
   }
 
   private String getCaseClauseForTokenIndex(final int tokenIndex) {
+    final List<Token> children = getSentence().getChildrenTokensFromTokenIndex(tokenIndex);
+
+    for (final Token token : children) {
+//      System.out.println(" CASE check token" + token);
+      if (token.getAttributeValue("deprel").equals("case")) {
+//        System.out.println(token.getAttributeValue(2));
+        if (token.getAttributeValue(4).startsWith("prep")) {
+          return " # " + token.getAttributeValue(2);
+        }
+      }
+    }
+    return "";
+  }
+
+
+  private String getCaseClauseForTokenIndex_usingParseTree(final int tokenIndex) {
     final List<SentenceLink> peerLinks = this.parseTree.getLinksByTargetIndex(tokenIndex);
     for (final SentenceLink peerLink : peerLinks) {
       if (peerLink.getRelationType().equals("case")) {
         final Token t = getSentence().getTokens().get(peerLink.getSourceIndex());
-        System.out.println(t.getAttributeValue(2));
+//        System.out.println(t.getAttributeValue(2));
         if (t.getAttributeValue(2).startsWith("prep")) {
           return " # " + t.getDisambTag().getBase();
         }
@@ -135,5 +172,20 @@ public class SerelExpression {
     return "";
   }
 
+  private String getDepRelClauseForTokenToRight(final Token t) {
+    final String depRel = t.getAttributeValue("deprel");
+    if ("root".equals(depRel)) {
+      return "";
+    }
+    return " (" + depRel + ") > ";
+  }
+
+  private String getDepRelClauseForTokenToLeft(final Token t) {
+    final String depRel = t.getAttributeValue("deprel");
+    if ("root".equals(depRel)) {
+      return "";
+    }
+    return " < (" + depRel + ") ";
+  }
 
 }

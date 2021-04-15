@@ -260,7 +260,6 @@ public class ActionMatchRelationsSet extends Action {
       for (int i = 0; i < allSentenceNamRels.size(); i++) {
         final RelationDesc rd = allSentenceNamRels.get(i);
         if (pmsr.isTheSameAs(rd)) {
-
           allSentenceNamRels.remove(i);
           sentenceResultsTruePositive.add(pmsr);
           continue outer;

@@ -19,20 +19,24 @@ public class RelationDesc {
   int sentenceIndex;
 
   String type;
-  int fromTokenIndex;
+  int fromTokenId;
   //TreeSet fromTokensTree;
   String fromType;
-  int toTokenIndex;
+  int toTokenId;
   //TreeSet toTokensTree;
   String toType;
+  boolean multiSentence;
 
   @Override
   public String toString() {
     final StringBuffer relString = new StringBuffer(this.getType() + REL_STRING_DESC_SEPARATOR);
-    relString.append((this.getFromTokenIndex()) + REL_STRING_DESC_SEPARATOR);
+    relString.append((this.getFromTokenId()) + REL_STRING_DESC_SEPARATOR);
     relString.append(this.getFromType() + REL_STRING_DESC_SEPARATOR);
-    relString.append((this.getToTokenIndex()) + REL_STRING_DESC_SEPARATOR);
+    relString.append((this.getToTokenId()) + REL_STRING_DESC_SEPARATOR);
     relString.append(this.getToType());
+    if (multiSentence) {
+      relString.append(REL_STRING_DESC_SEPARATOR + "true");
+    }
     //relString.append(REL_STRING_DESC_ENTRY_END);
 
     return relString.toString();
@@ -47,10 +51,14 @@ public class RelationDesc {
     relString.append(this.getType() + REL_STRING_DESC_SEPARATOR);
 
 
-    relString.append((this.getFromTokenIndex()) + REL_STRING_DESC_SEPARATOR);
+    relString.append((this.getFromTokenId()) + REL_STRING_DESC_SEPARATOR);
     relString.append(this.getFromType() + REL_STRING_DESC_SEPARATOR);
-    relString.append((this.getToTokenIndex()) + REL_STRING_DESC_SEPARATOR);
+    relString.append((this.getToTokenId()) + REL_STRING_DESC_SEPARATOR);
     relString.append(this.getToType());
+    if (multiSentence) {
+      relString.append(REL_STRING_DESC_SEPARATOR + "true");
+    }
+
 
     //relString.append("\t\t" + sentence.toString());
     relString.append("\t\t" + this.getSentenceDecorated());
@@ -62,53 +70,50 @@ public class RelationDesc {
 
   public String getSentenceDecorated() {
     return sentence.toStringDecorated(new ArrayList<>
-        (Arrays.asList(this.getFromTokenIndex(), this.getToTokenIndex())));
+        (Arrays.asList(this.getFromTokenId(), this.getToTokenId())));
   }
 
 
   static public RelationDesc from(final Relation r) {
+
+    boolean _multiSentence = false;
+
+    final Sentence sentenceFrom = r.getAnnotationFrom().getSentence();
+    final Sentence sentenceTo = r.getAnnotationTo().getSentence();
+
+    if (!(sentenceFrom.toString().equals(sentenceTo.toString()))) {
+      _multiSentence = true;
+    }
+
     final RelationDesc relationDesc = RelationDesc.builder()
         .type(r.getType())
-        .fromTokenIndex(r.getAnnotationFrom().getTokens().first() + 1)
+        .fromTokenId(r.getAnnotationFrom().getTokens().first() + 1)
         .fromType(r.getAnnotationFrom().getType())
-        .toTokenIndex(r.getAnnotationTo().getTokens().first() + 1)
-        .toType(r.getAnnotationTo().getType()).build();
+        .toTokenId(r.getAnnotationTo().getTokens().first() + 1)
+        .toType(r.getAnnotationTo().getType())
+        .multiSentence(_multiSentence)
+        .build();
 
     relationDesc.setSentence(r.getAnnotationFrom().getSentence());
 
     return relationDesc;
   }
-
-
-  /*
-  static public RelationDesc from(final Relation r) {
-
-
-    final RelationDesc relationDesc = RelationDesc.builder()
-        .type(r.getType())
-        .fromTokenIndex(r.getAnnotationFrom().getHead() + 1) // może być także first from tokens
-        .fromTokensTree(r.getAnnotationFrom().getTokens()) // !!! inna numeracja - nie ma +1
-        .fromType(r.getAnnotationFrom().getType())
-        .toTokenIndex(r.getAnnotationTo().getHead() + 1)  // może być także  first from tokens
-        .toTokensTree(r.getAnnotationTo().getTokens()) // !!! inna numeracja - nie ma +1
-        .toType(r.getAnnotationTo().getType()).build();
-
-
-    relationDesc.setSentence(r.getAnnotationFrom().getSentence());
-
-    return relationDesc;
-  }
-  */
-
 
   static public RelationDesc from(final String s) {
     final String[] parts = s.split(":");
+    boolean _multiSentence = false;
+    if (parts.length == 4) {
+      _multiSentence = Boolean.parseBoolean(parts[6]);
+    }
+
     final RelationDesc relationDesc = RelationDesc.builder()
         .type(parts[0])
-        .fromTokenIndex(Integer.valueOf(parts[1]))
+        .fromTokenId(Integer.valueOf(parts[1]))
         .fromType(parts[2])
-        .toTokenIndex(Integer.valueOf(parts[3]))
-        .toType(parts[4]).build();
+        .toTokenId(Integer.valueOf(parts[3]))
+        .toType(parts[4])
+        .multiSentence(_multiSentence)
+        .build();
 
 
     return relationDesc;
@@ -119,9 +124,9 @@ public class RelationDesc {
     return (
         this.getType().equals(rd.getType())
             &&
-            (this.getFromTokenIndex() == rd.getFromTokenIndex())
+            (this.getFromTokenId() == rd.getFromTokenId())
             &&
-            (this.getToTokenIndex() == rd.getToTokenIndex())
+            (this.getToTokenId() == rd.getToTokenId())
             &&
             (this.getFromType().equals(rd.getFromType()))
             &&
@@ -131,6 +136,7 @@ public class RelationDesc {
             &&
             (this.getSentence().getDocument().getName().equals(rd.getSentence().getDocument().getName()))
     );
+    // TODO check multiSentence scenario
 
   }
 
@@ -150,11 +156,11 @@ public class RelationDesc {
       if (result != 0) {
         return result;
       }
-      result = rd.getFromTokenIndex() - rd2.getFromTokenIndex();
+      result = rd.getFromTokenId() - rd2.getFromTokenId();
       if (result != 0) {
         return result;
       }
-      result = rd.getToTokenIndex() - rd2.getToTokenIndex();
+      result = rd.getToTokenId() - rd2.getToTokenId();
       if (result != 0) {
         return result;
       }

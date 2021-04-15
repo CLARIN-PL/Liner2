@@ -87,9 +87,9 @@ public class PatternMatchSingleResult {
             &&
             (this.sentenceNumber == rd.getSentenceIndex())
             &&
-            this.idsList.contains(rd.getFromTokenIndex())
+            this.idsList.contains(rd.getFromTokenId())
             &&
-            this.idsList.contains(rd.getToTokenIndex())
+            this.idsList.contains(rd.getToTokenId())
     ) {
       return true;
     }

@@ -1,6 +1,8 @@
 package g419.corpus.structure;
 
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -27,6 +29,9 @@ public class Sentence extends IdentifiableElement {
 
   /* Paragraf w którym jest zdanie*/
   Paragraph paragraph;
+
+  /* Indeks zdania w pliku */
+  int sentenceIndex;
 
   private static final Comparator<Annotation> annotationComparator = new Comparator<Annotation>() {
     @Override
@@ -287,6 +292,14 @@ public class Sentence extends IdentifiableElement {
     return tokens;
   }
 
+  public Token getTokenById(final int id) {
+    return getTokens().get(id - 1);
+  }
+
+  public Token getTokenByIndex(final int index) {
+    return getTokens().get(index);
+  }
+
   public void setAttributeIndex(final TokenAttributeIndex attributeIndex) {
     this.attributeIndex = attributeIndex;
     for (final Token t : tokens) {
@@ -460,6 +473,10 @@ public class Sentence extends IdentifiableElement {
     return tokensToCheck.stream().filter(t -> t.hasBoiInsideTag(name)).collect(Collectors.toList());
   }
 
+  public List<RelationDesc> getNamRels() {
+    return getTokens().stream().flatMap(t -> t.getNamRels().stream()).collect(Collectors.toList());
+  }
+
   /*
   public void printAsTreeWithIndex(final PrintWriter pw) {
     final List<ParseTree.TreeNode> nodes = new LinkedList<>();
@@ -491,7 +508,34 @@ public class Sentence extends IdentifiableElement {
   // START: Constructing whole BOI tokens ids sequence ....
   //////////////////////////////////////////////////
 
-  public ArrayList<Integer> getBoiIndexesForTokenAndName(final Token tokenToCheck, final String boiName) {
+  public void checkAndFixBois() {
+    for (final Token token : this.getTokens()) {
+      final List<String> boisBeginsRaw = token.getBoisBeginsRaw();
+      for (final String boi : boisBeginsRaw) {
+        checkAndFixBoi(token, boi);
+      }
+    }
+  }
+
+  public void checkAndFixBoi(final Token token, final String boiRaw) {
+    final List<Integer> boiIds = getBoiTokensIdsForTokenAndName(token, boiRaw);
+//    System.out.println("Bois = " + boiIds);
+    final int headId = findActualHeadId(boiIds);
+//    System.out.println("HEad =" + headId);
+    final Set<Integer> boiIdsAsSet = new HashSet<>(boiIds);
+
+    for (final Token t : this.getTokens()) {
+      if (boiIdsAsSet.contains(t.getNumberId())) { continue; }
+      if (t.getParentTokenId() == headId) { continue; }
+      if (boiIdsAsSet.contains(t.getParentTokenId())) {
+        System.out.println("ERROR !!! Token linked not to head of BOI. TokenID = " + t.getNumberId() + " Doc= " + this.getDocument().getName() + " Boi= " + boiRaw + "  sent = " + this.toString());
+        t.setAttributeValue("head", "" + headId);
+      }
+    }
+  }
+
+
+  public ArrayList<Integer> getBoiTokensIdsForTokenAndName(final Token tokenToCheck, final String boiName) {
     final ArrayList<Integer> resultIds = new ArrayList<>();
 
     if (!tokenToCheck.hasBoi(boiName)) {
@@ -499,14 +543,14 @@ public class Sentence extends IdentifiableElement {
     }
     resultIds.add(tokenToCheck.getNumberId());
 
-    fillBoiFrontIndexes(tokenToCheck, boiName, resultIds);
-    fillBoiBackIndexes(tokenToCheck, boiName, resultIds);
+    fillBoiFrontIds(tokenToCheck, boiName, resultIds);
+    fillBoiBackIds(tokenToCheck, boiName, resultIds);
 
     resultIds.sort(Comparator.naturalOrder());
     return resultIds;
   }
 
-  private void fillBoiFrontIndexes(final Token tokenToCheckFrom, final String boiName, final List<Integer> resultIds) {
+  private void fillBoiFrontIds(final Token tokenToCheckFrom, final String boiName, final List<Integer> resultIds) {
     if (!tokenToCheckFrom.hasBoi(boiName)) {
       return;
     }
@@ -530,7 +574,7 @@ public class Sentence extends IdentifiableElement {
     }
   }
 
-  private void fillBoiBackIndexes(final Token tokenToCheckFrom, final String boiName, final List<Integer> resultIds) {
+  private void fillBoiBackIds(final Token tokenToCheckFrom, final String boiName, final List<Integer> resultIds) {
     if (!tokenToCheckFrom.hasBoi(boiName)) {
       return;
     }
@@ -549,6 +593,98 @@ public class Sentence extends IdentifiableElement {
   //////////////////////////////////////////////////
   // FINISH: Constructing whole BOI tokens sequence ....
   //////////////////////////////////////////////////
+
+  public int findActualHeadId(final Token token, final String name) {
+//    System.out.println("findAHI name = " + name);
+    final List<Integer> list = this.getBoiTokensIdsForTokenAndName(token, name);
+//    System.out.println("bois =" + list);
+    return findActualHeadId(list);
+  }
+
+
+  public int findActualHeadId(final List<Integer> boiTokensIds) {
+    final Set<Integer> possibleHeadIds = new HashSet<>();
+
+    int result = -1;
+
+    for (final int i : boiTokensIds) {
+      final Token t = getTokens().get(i - 1);
+      if (!boiTokensIds.contains(t.getParentTokenId())) {
+
+        // TODO : implement headIDs conflict resolution
+        if (1 == 1) {
+          return i;
+        }
+
+        if (result != -1) {
+          System.out.println("ERROR !!! Boi has more then one head: resOld = " + result + " resNew = " + i + " doc: " + this.getDocument().getName() + " sentId=" + this.toString());
+        }
+        result = i;
+        possibleHeadIds.add(i);
+      }
+    }
+
+    final Set<Integer> boiTokensIdsAsSet = new HashSet<>(boiTokensIds);
+
+
+    return result;
+  }
+
+
+  public Pair<List<Token>, List<Token>> getPathBetweenIds(final int id1, final int id2) {
+//    System.out.println(" getPathBetweenIds " + id1 + " - " + id2);
+    final List<Token> parents1 = getParentsFromId(id1);
+//    System.out.println("p1 =" + parents1);
+    final List<Token> parents2 = getParentsFromId(id2);
+//    System.out.println("p2 =" + parents2);
+
+    final Pair<Integer, Integer> indexes = findIndexesToLowestCommonLink(parents1, parents2);
+//    System.out.println(" Pair = " + indexes);
+
+    if (indexes == null) {
+      return null;
+    }
+
+    return Pair.of(
+        parents1.subList(0, indexes.getLeft() + 1),
+        parents2.subList(0, indexes.getRight() + 1)
+    );
+
+
+  }
+
+
+  /**
+   * @param list1 - ordered list of first element and all its parents ROOT
+   * @param list2 - ordered list of second element and all its parents ROOT
+   * @return - TOKENS in above lists to first element that is the same on both lists when travelling from element(s) to ROOT
+   */
+  public Pair<Integer, Integer> findIndexesToLowestCommonLink(final List<Token> list1,
+                                                              final List<Token> list2) {
+    for (int i = 0; i < list1.size(); i++) {
+      for (int j = 0; j < list2.size(); j++) {
+        if (list1.get(i).getNumberId() == list2.get(j).getNumberId()) {
+          return Pair.of(i, j);
+        }
+      }
+    }
+
+    // it should never come here !
+    return null;
+  }
+
+
+  public List<Token> getParentsFromId(int id) {
+    final List<Token> list = new ArrayList<>();
+
+    do {
+      final Token t = getTokens().get(id - 1);
+      list.add(t);
+      id = t.getParentTokenId();
+    } while (id != 0);
+
+    return list;
+  }
 
 
 }
