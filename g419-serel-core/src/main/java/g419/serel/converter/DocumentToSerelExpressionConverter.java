@@ -1,5 +1,6 @@
 package g419.serel.converter;
 
+import com.google.common.collect.Lists;
 import g419.corpus.structure.*;
 import g419.liner2.core.tools.parser.ParseTree;
 import g419.liner2.core.tools.parser.ParseTreeGenerator;
@@ -25,6 +26,27 @@ public class DocumentToSerelExpressionConverter {
     parseTreeGenerator = ptg;
     reportWriter = report;
   }
+
+  public List<SerelExpression> convertOld(final Document document) {
+
+    if (document.getRelationsSet().size() == 0) {
+      //log.debug("Relset is empty");
+      return Lists.newArrayList();
+    }
+
+    final List<SerelExpression> result = new LinkedList<>();
+    for (final Relation rel : document.getRelations("Semantic relations")) {
+
+      final Sentence sentenceFrom = rel.getAnnotationFrom().getSentence();
+      final Sentence sentenceTo = rel.getAnnotationTo().getSentence();
+
+      if (!(sentenceFrom.toString().equals(sentenceTo.toString()))) {
+        System.out.println(" Doc: " + document.getName() + " Relation " + rel + " skipped because refers to more then one sentence");
+      }
+    }
+    return result;
+  }
+
 
   public List<SerelExpression> convert(final Document document) {
     return convert(document, "none");

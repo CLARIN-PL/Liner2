@@ -91,10 +91,10 @@ public class ActionCheckComboParseTree extends Action {
               final ParseTreeGenerator parseTreeGenerator = new ComboParseTreeGenerator(comboedDoc);
               final DocumentToSerelExpressionConverter converter = new DocumentToSerelExpressionConverter(parseTreeGenerator, reportWriter);
 
-              final List<SerelExpression> converted = converter.convert(doc);
-              final List<ParseTreeMalfunction> malfunctions = parseTreeChecker.checkParseTree(converted);
+              final List<SerelExpression> converted = converter.convertOld(doc);
+              //final List<ParseTreeMalfunction> malfunctions = parseTreeChecker.checkParseTree(converted);
 
-              result.addAll(malfunctions);
+              //result.addAll(malfunctions);
 
               //log.debug("result size =" + result.size());
 

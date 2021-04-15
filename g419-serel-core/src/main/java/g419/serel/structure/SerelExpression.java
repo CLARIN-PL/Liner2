@@ -174,17 +174,11 @@ public class SerelExpression {
 
   private String getDepRelClauseForTokenToRight(final Token t) {
     final String depRel = t.getAttributeValue("deprel");
-    if ("root".equals(depRel)) {
-      return "";
-    }
     return " (" + depRel + ") > ";
   }
 
   private String getDepRelClauseForTokenToLeft(final Token t) {
     final String depRel = t.getAttributeValue("deprel");
-    if ("root".equals(depRel)) {
-      return "";
-    }
     return " < (" + depRel + ") ";
   }
 
