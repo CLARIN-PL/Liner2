@@ -220,6 +220,9 @@ public class ActionMatchRelationsSet extends Action {
       try {
 
         final SentenceMiscValues smv = SentenceMiscValues.from(sentence, sentenceIndex);
+
+        sentence.checkAndFixBois();
+
         //final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingSerelPattern(sentence);
         final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingGenericPattern(sentence);
 

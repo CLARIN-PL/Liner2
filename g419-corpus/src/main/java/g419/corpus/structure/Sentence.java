@@ -429,6 +429,10 @@ public class Sentence extends IdentifiableElement {
     return tokens.get(parentTokenId - 1);
   }
 
+  public Token getRootToken() {
+    return getTokens().stream().filter(t -> t.getParentTokenId() == 0).findFirst().get();
+  }
+
   public Token getPreviousToken(final Token token) {
     final int previousTokenId = token.getNumberId() - 1;
     if (previousTokenId == 0) {
@@ -477,32 +481,6 @@ public class Sentence extends IdentifiableElement {
     return getTokens().stream().flatMap(t -> t.getNamRels().stream()).collect(Collectors.toList());
   }
 
-  /*
-  public void printAsTreeWithIndex(final PrintWriter pw) {
-    final List<ParseTree.TreeNode> nodes = new LinkedList<>();
-
-    for (int i = 0; i < getSentence().getTokens().size(); i++) {
-      final Token t = getSentence().getTokens().get(i);
-      final TreeNode tn = new TreeNode(String.format("%s                    [%s] [%s]", t.getOrth(), " ", " " + i), i);
-      nodes.add(tn);
-    }
-
-    links.stream()
-        .filter(l -> l.sourceIndex > -1 && l.targetIndex > -1)
-        .forEach(l -> {
-          nodes
-              .get(l.targetIndex)
-              .addChild(nodes
-                  .get(l.sourceIndex));
-          nodes.get(l.sourceIndex).setRelationWithParent(l.relationType);
-        });
-
-    IntStream.range(0, nodes.size())
-        .filter(n -> links.get(n).targetIndex == -1)
-        .mapToObj(nodes::get)
-        .forEach(node -> node.print(pw));
-  }
-   */
 
   //////////////////////////////////////////////////
   // START: Constructing whole BOI tokens ids sequence ....
@@ -510,6 +488,7 @@ public class Sentence extends IdentifiableElement {
 
   public void checkAndFixBois() {
     for (final Token token : this.getTokens()) {
+//      System.out.println("Checking token " + token);
       final List<String> boisBeginsRaw = token.getBoisBeginsRaw();
       for (final String boi : boisBeginsRaw) {
         checkAndFixBoi(token, boi);
@@ -519,16 +498,17 @@ public class Sentence extends IdentifiableElement {
 
   public void checkAndFixBoi(final Token token, final String boiRaw) {
     final List<Integer> boiIds = getBoiTokensIdsForTokenAndName(token, boiRaw);
-//    System.out.println("Bois = " + boiIds);
-    final int headId = findActualHeadId(boiIds);
-//    System.out.println("HEad =" + headId);
+//    System.out.println("BoisIds = " + boiIds);
+    final int headId = findActualHeadIdAndFix(boiIds);
+//    System.out.println("ActualHEadId =" + headId);
     final Set<Integer> boiIdsAsSet = new HashSet<>(boiIds);
 
+    // fix all out-of BOI tokens - if pointing to NE but not to head change them to point to determined head
     for (final Token t : this.getTokens()) {
       if (boiIdsAsSet.contains(t.getNumberId())) { continue; }
       if (t.getParentTokenId() == headId) { continue; }
       if (boiIdsAsSet.contains(t.getParentTokenId())) {
-        System.out.println("ERROR !!! Token linked not to head of BOI. TokenID = " + t.getNumberId() + " Doc= " + this.getDocument().getName() + " Boi= " + boiRaw + "  sent = " + this.toString());
+        //System.out.println("ERROR !!! Token linked not to head of BOI. TokenID = " + t.getNumberId() + " Doc= " + this.getDocument().getName() + " Boi= " + boiRaw + "  sent = " + this.toString());
         t.setAttributeValue("head", "" + headId);
       }
     }
@@ -581,7 +561,7 @@ public class Sentence extends IdentifiableElement {
 
     Token currentToken = this.getFollowingToken(tokenToCheckFrom);
     while (currentToken != null) {
-      if (currentToken.hasBoi(boiName)) {
+      if (currentToken.hasBoiInsideTag(boiName)) {    // InsideTag !!!!
         resultIds.add(0, currentToken.getNumberId());
       } else {
         break;
@@ -598,36 +578,65 @@ public class Sentence extends IdentifiableElement {
 //    System.out.println("findAHI name = " + name);
     final List<Integer> list = this.getBoiTokensIdsForTokenAndName(token, name);
 //    System.out.println("bois =" + list);
-    return findActualHeadId(list);
+    return findActualHeadIdAndFix(list);
   }
 
 
-  public int findActualHeadId(final List<Integer> boiTokensIds) {
-    final Set<Integer> possibleHeadIds = new HashSet<>();
+  public int findActualHeadIdAndFix(final List<Integer> boiTokensIds) {
 
-    int result = -1;
+    final Set<Integer> possibleHeadIds = new LinkedHashSet<>();
+    int determinedHeadId = -1;
 
-    for (final int i : boiTokensIds) {
-      final Token t = getTokens().get(i - 1);
+
+    for (final int id : boiTokensIds) {
+      final Token t = getTokenById(id);
+//    System.out.println("Checking HEADID token:" + t);
       if (!boiTokensIds.contains(t.getParentTokenId())) {
-
-        // TODO : implement headIDs conflict resolution
-        if (1 == 1) {
-          return i;
+        if (possibleHeadIds.size() > 0) {
+          System.out.println("ERROR !!! Boi has more then one head: found  " + possibleHeadIds + " and new = " + id + " doc: " + this.getDocument().getName() + " sentId=" + this.toString());
         }
-
-        if (result != -1) {
-          System.out.println("ERROR !!! Boi has more then one head: resOld = " + result + " resNew = " + i + " doc: " + this.getDocument().getName() + " sentId=" + this.toString());
-        }
-        result = i;
-        possibleHeadIds.add(i);
+        possibleHeadIds.add(id);
       }
     }
 
+    // jeśli jest tylko jeden token z linkiem na zewnątrz BOI to wszsytko jest OK
+    // on jest tą głową
+    if (possibleHeadIds.size() == 1) {
+      return possibleHeadIds.iterator().next();
+    }
+
+
     final Set<Integer> boiTokensIdsAsSet = new HashSet<>(boiTokensIds);
 
+    // najpierw prosty przypadek :
+    // jak na razie jeśli któryś "z podejrzanych" jest na samej górze _całego drzewa_ to on jest head
+    for (final int id : possibleHeadIds) {
+      final Token t = getTokenById(id);
+      if (t.getParentTokenId() == 0) {
+        determinedHeadId = id;
+        break; // zakładamy, że jest tylko jeden taki który ma parentId = 0
+      }
+    }
 
-    return result;
+
+    // jeśli dotąd nie można było rozstrzygnąć co jest głową to bierz pierwszy z możliwych
+    if (determinedHeadId == -1) {
+      System.out.println("WARN !!! Could not really determimne Boi head: found posHeadIds  " + possibleHeadIds + " doc: " + this.getDocument().getName() + " sentId=" + this.toString());
+      determinedHeadId = possibleHeadIds.iterator().next();
+    }
+
+
+    // "naprawiany" wszystkie pozostałe tokeny "być-może-head" by wskazywały na znaleziony head
+    // te tokeny które są w ramach NE ok pozostawiamy niezmienione
+    for (final int possibleHeadTokenId : possibleHeadIds) {
+      final Token possibleHeadToken = getTokenById(possibleHeadTokenId);
+      if (possibleHeadToken.getNumberId() != determinedHeadId) {
+        possibleHeadToken.setAttributeValue("head", "" + determinedHeadId);
+      }
+    }
+
+
+    return determinedHeadId;
   }
 
 
@@ -685,6 +694,37 @@ public class Sentence extends IdentifiableElement {
 
     return list;
   }
+
+
+  //////////////////////////////////////////////////
+  // START: Print as tree
+  //////////////////////////////////////////////////
+
+  public void printAsTree() {
+    final Token rootToken = this.getRootToken();
+    System.out.println("Root token =" + rootToken);
+    printTokenSubTree(rootToken, 0);
+  }
+
+  public void printTokenSubTree(final Token token, int level) {
+    printlnToken(token, level);
+
+    final List<Token> children = this.getChildrenTokensFromToken(token);
+    level++;
+    for (final Token child : children) {
+      printTokenSubTree(child, level);
+    }
+  }
+
+  public void printlnToken(final Token token, final int level) {
+    final StringBuilder spaces = new StringBuilder();
+    for (int i = 0; i < level; i++) { spaces.append("   "); }
+    System.out.println(spaces + "(" + token.getAttributeValue("deprel") + ") " + token.getAttributeValue(1) + "\tId=" + token.getNumberId() + " parId=" + token.getParentTokenId());
+  }
+
+  //////////////////////////////////////////////////
+  // FINISH: Print as tree
+  //////////////////////////////////////////////////
 
 
 }

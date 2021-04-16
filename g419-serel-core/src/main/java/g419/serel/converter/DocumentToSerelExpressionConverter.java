@@ -60,8 +60,17 @@ public class DocumentToSerelExpressionConverter {
       final Sentence sentence = document.getSentences().get(sentenceIndex);
       final SentenceMiscValues smv = SentenceMiscValues.from(sentence, sentenceIndex);
 
-      //fixing possible problems with dependent tokens linked not to head of NE
-      //TODO : invoke sentence.checkAndFixBois();
+
+      if (sentence.getNamRels().size() > 0) {
+        // jeśli w ogóle są jakieś relacje z których mamy tworzyć reguły to dopiero wtedy zaczynamy naprawianie
+        //fixing possible problems with dependent tokens linked not to head of NE
+//        System.out.println("BEFORE correction");
+//        sentence.printAsTree();
+        sentence.checkAndFixBois();
+//        System.out.println("AFTER correction");
+//        sentence.printAsTree();
+      }
+
 
       for (final RelationDesc relDesc : sentence.getNamRels()) {
 
