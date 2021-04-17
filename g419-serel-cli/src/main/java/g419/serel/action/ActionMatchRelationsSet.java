@@ -384,24 +384,9 @@ public class ActionMatchRelationsSet extends Action {
 
     }
 
-
-    //START:  preprocessing for typed and  total data
-
-
-    //System.out.println("resultType keySet.size = " + resultType.keySet().size());
     resultType.keySet().stream().forEach(type -> {
-
-      //System.out.println("Preprocessing type: " + type);
-
-//      resultType.computeIfAbsent(type, k -> new LinkedList<>());
-//      resultFalsePositiveType.computeIfAbsent(type, k -> new LinkedList<>());
-//      resultTruePositiveType.computeIfAbsent(type, k -> new LinkedList<>());
       resultFalseNegativeType.computeIfAbsent(type, k -> new LinkedList<>());
     });
-
-
-//      System.out.println("Ilość false negatiwów w dokumencie:" + +documentResultFalseNegative.size());
-//      documentName2documentResultFalseNegative.put(comboedDoc.getName(), documentResultFalseNegative);
 
     documentName2documentResultFalseNegative.values().stream().forEach(docRFN -> {
       resultFalseNegativeTotal.addAll(docRFN);
@@ -420,7 +405,7 @@ public class ActionMatchRelationsSet extends Action {
 //      System.out.println(" size rFNT " + type + " = " + resultFalseNegativeType.get(type).size());
 //    });
 
-    //FINISH:  preproceaaing for typed and  total data
+    //FINISH:  preprocessing for typed and total data
 
 
     ow.write("\n\n\n");
@@ -500,17 +485,26 @@ public class ActionMatchRelationsSet extends Action {
 
     ow.write("\t" + truePositive + ";\t");
     ow.write("\t" + falsePositive + ";\t");
-    final double precision = (double) truePositive / (double) found;
+    final double precision = (double) truePositive / (double) (truePositive + falsePositive);
     ow.write("\t" + df.format(precision) + ";");
 
+    double recall = 0;
     if (falseNegative != null) {
       ow.write("\t" + falseNegative + ";\t");
-      final double recall = (double) truePositive / (double) (truePositive + falseNegative);
+      recall = (double) truePositive / (double) (truePositive + falseNegative);
       ow.write("\t" + df.format(recall) + ";\t");
     } else {
       ow.write("\t;");
       ow.write("\t;");
     }
+
+    if (falseNegative != null) {
+      final double f1 = 2 * (precision * recall) / (precision + recall);
+      ow.write("\t" + df.format(f1) + ";\t ");
+    } else {
+      ow.write("\t;");
+    }
+
     ow.write(description + ";");
     ow.write("\n");
 
