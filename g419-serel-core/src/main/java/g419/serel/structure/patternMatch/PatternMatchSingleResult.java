@@ -5,12 +5,14 @@ import g419.serel.ruleTree.PatternMatch;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Set;
 
 public class PatternMatchSingleResult {
 
   public String docName;
   public int sentenceNumber;
   public PatternMatch patternMatch;
+  public Set<String> namedEntitySet = new HashSet<>();
 
   // idki (nie indeksy !!!) do elementów które składają się na "rozwiązanie" matcha - wszystkie dla tego całego jednego rozwiązania
   public ArrayList<Integer> idsList;
@@ -49,7 +51,7 @@ public class PatternMatchSingleResult {
 //  }
 
   public String description() {
-    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + ",\tidsList=" + idsList + ",\t\trole:[" + patternMatchExtraInfo.description() + "]";
+    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + ",\tidsList=" + idsList + ",\t\trole:[" + patternMatchExtraInfo.description() + "]" /* + " NEs=" + namedEntitySet */;
     return result;
   }
 
@@ -62,7 +64,10 @@ public class PatternMatchSingleResult {
 
   public void concatenateWith(final PatternMatchSingleResult pmsr) {
     idsList.addAll(pmsr.idsList);
+    //namedEntitySet.addAll(pmsr.namedEntitySet);
     patternMatchExtraInfo.getRoleMap().putAll(pmsr.patternMatchExtraInfo.getRoleMap());
+    // TOREVERT
+    // patternMatchExtraInfo.getToken2tagNE().putAll(pmsr.patternMatchExtraInfo.getToken2tagNE());
   }
 
   public boolean isTheSameAs(final PatternMatchSingleResult pmsr) {
@@ -71,6 +76,7 @@ public class PatternMatchSingleResult {
     ) {
       return false;
     }
+
 
     if (
         new HashSet(this.idsList).equals(new HashSet(pmsr.idsList))
@@ -82,13 +88,23 @@ public class PatternMatchSingleResult {
   }
 
   public boolean isTheSameAs(final RelationDesc rd) {
+
+//    if (docName.equals("documents/00102158")) {
+//      System.out.println("RD   = " + rd.toStringFull());
+//      System.out.println("PMSR = " + this.description());
+//    }
+
+    final Set<Integer> anchorsIDs = this.patternMatchExtraInfo.getAnchorIds();
+
     if (
         this.docName.equals(rd.getSentence().getDocument().getName())
             &&
             (this.sentenceNumber == rd.getSentenceIndex())
             &&
+            //anchorsIDs.contains(rd.getFromTokenId())
             this.idsList.contains(rd.getFromTokenId())
             &&
+            //anchorsIDs.contains(rd.getToTokenId())
             this.idsList.contains(rd.getToTokenId())
     ) {
       return true;

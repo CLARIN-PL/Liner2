@@ -81,11 +81,6 @@ public class PatternMatch {
     }
 
     result = makeDistinct(result);
-    //shiftIdsToIndexes(result);
-    // jak się okazuje niepotzebne bo wynikało
-    // z tego że relacja była oznaczana do pierwszego
-    // tokenu z BOI a nie do HEAD
-
     return result;
   }
 
@@ -153,16 +148,32 @@ public class PatternMatch {
     final List<PatternMatchSingleResult> result = new LinkedList<>();
 
     final PatternMatchSingleResult oneResult;
+    final String namedEntityLabel;
     final ArrayList<Integer> _idsList;
     if (nodeMatch.isForNamedEntity()) {
-      _idsList = sentence.getBoiTokensIdsForTokenAndName(token, nodeMatch.getNamedEntity());
+      //_idsList = sentence.getBoiTokensIdsForTokenAndName(token, nodeMatch.getNamedEntity());
+      _idsList = sentence.getBoiTokensIdsForTokenAndName(token, pmei.getTagNEFromToken(token));
     } else {
       _idsList = new ArrayList<>();
       _idsList.add(token.getNumberId());
     }
 
+//    System.out.println("_idsList = " + _idsList + " nmE=" + nodeMatch.isForNamedEntity());
+//    System.out.println("Token =" + token);
 
     oneResult = new PatternMatchSingleResult(_idsList, pmei);
+/*
+    // TOREVERT ???
+    try {
+
+      if (nodeMatch.isForNamedEntity()) {
+        namedEntityLabel = _idsList.get(0) + ":" + nodeMatch.getNamedEntity();
+        oneResult.namedEntitySet.add(namedEntityLabel);
+      }
+    } catch (final Throwable th) {
+      th.printStackTrace();
+    }
+*/
 
     if (nodeMatch.isLeaf()) {
       result.add(oneResult);

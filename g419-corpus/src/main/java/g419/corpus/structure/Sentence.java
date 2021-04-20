@@ -499,7 +499,7 @@ public class Sentence extends IdentifiableElement {
   public void checkAndFixBoi(final Token token, final String boiRaw) {
     final List<Integer> boiIds = getBoiTokensIdsForTokenAndName(token, boiRaw);
 //    System.out.println("BoisIds = " + boiIds);
-    final int headId = findActualHeadIdAndFix(boiIds);
+    final int headId = fixBoiHead(boiIds);
 //    System.out.println("ActualHEadId =" + headId);
     final Set<Integer> boiIdsAsSet = new HashSet<>(boiIds);
 
@@ -527,6 +527,7 @@ public class Sentence extends IdentifiableElement {
     fillBoiBackIds(tokenToCheck, boiName, resultIds);
 
     resultIds.sort(Comparator.naturalOrder());
+//    System.out.println(" returning listIds = " + resultIds);
     return resultIds;
   }
 
@@ -576,13 +577,28 @@ public class Sentence extends IdentifiableElement {
 
   public int findActualHeadId(final Token token, final String name) {
 //    System.out.println("findAHI name = " + name);
-    final List<Integer> list = this.getBoiTokensIdsForTokenAndName(token, name);
+    final List<Integer> boiTokensIds = this.getBoiTokensIdsForTokenAndName(token, name);
 //    System.out.println("bois =" + list);
-    return findActualHeadIdAndFix(list);
+    for (final int id : boiTokensIds) {
+      final Token t = getTokenById(id);
+//    System.out.println("Checking HEADID token:" + t);
+      if (!boiTokensIds.contains(t.getParentTokenId())) {
+        // zakładamy, że już jest wszystko naprawione
+        // i pierwszy który trafimy jest tym co trzeba
+        return t.getNumberId();
+      }
+    }
+
+    return token.getNumberId();
   }
 
 
-  public int findActualHeadIdAndFix(final List<Integer> boiTokensIds) {
+  public int fixBoiHead(final Token token, final String name) {
+    final List<Integer> boiTokensIds = this.getBoiTokensIdsForTokenAndName(token, name);
+    return fixBoiHead(boiTokensIds);
+  }
+
+  public int fixBoiHead(final List<Integer> boiTokensIds) {
 
     final Set<Integer> possibleHeadIds = new LinkedHashSet<>();
     int determinedHeadId = -1;
@@ -625,7 +641,6 @@ public class Sentence extends IdentifiableElement {
       determinedHeadId = possibleHeadIds.iterator().next();
     }
 
-
     // "naprawiany" wszystkie pozostałe tokeny "być-może-head" by wskazywały na znaleziony head
     // te tokeny które są w ramach NE ok pozostawiamy niezmienione
     for (final int possibleHeadTokenId : possibleHeadIds) {
@@ -634,7 +649,6 @@ public class Sentence extends IdentifiableElement {
         possibleHeadToken.setAttributeValue("head", "" + determinedHeadId);
       }
     }
-
 
     return determinedHeadId;
   }

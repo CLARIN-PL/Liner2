@@ -221,15 +221,30 @@ public class ActionMatchRelationsSet extends Action {
 
         final SentenceMiscValues smv = SentenceMiscValues.from(sentence, sentenceIndex);
 
-        sentence.checkAndFixBois();
+        // SWITCH_1
+        //sentence.checkAndFixBois();
 
         //final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingSerelPattern(sentence);
         final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingGenericPattern(sentence);
+
+        if (d.getName().equals("documents/00102158")) {
+//          System.out.println(" Dla zdania " + sentenceIndex + " znaleziono :" + sentenceResults);
+
+          //jkak to że dwa razy do ©óznych labelek ten sam token z ulicą ???
+
+        }
+
 
         for (final PatternMatchSingleResult patternMatchSingleResult : sentenceResults) {
           patternMatchSingleResult.sentenceNumber = sentenceIndex;
           patternMatchSingleResult.docName = d.getName();
         }
+
+//        if (d.getName().equals("documents/00102158")) {
+//          System.out.println(" foundTP = " + sentenceResults.size() + "for sent = " + sentenceIndex);
+//
+//        }
+
 
         documentResult.addAll(sentenceResults);
 
@@ -257,6 +272,7 @@ public class ActionMatchRelationsSet extends Action {
 
     final List<RelationDesc> allSentenceNamRels = smv.getRelationsMatchingPatternType(patternMatch);
 
+//    System.out.println("Classify TruePos i FalsePos");
     outer:
     for (final PatternMatchSingleResult pmsr : sentenceResults) {
 
@@ -287,6 +303,11 @@ public class ActionMatchRelationsSet extends Action {
         try {
           final Set<PatternMatchSingleResult> docTruePositives = documentName2documentResultTruePositive.get(comboedDoc.getName());
 
+//          if (comboedDoc.getName().equals("documents/00102158")) {
+//            System.out.println(" TP = " + docTruePositives.size());
+//          }
+
+
           int sentenceIndex = 0;
           for (final Sentence sentence : comboedDoc.getParagraphs().get(0).getSentences()) {
             // dla każdego takieog zdania sprawdź dla każdej relacji jeśli żaden wzorzec
@@ -296,12 +317,20 @@ public class ActionMatchRelationsSet extends Action {
               final SentenceMiscValues smv = SentenceMiscValues.from(sentence, sentenceIndex);
               final List<RelationDesc> allSentenceNamRels = smv.getAllNamRels();
               for (final RelationDesc rd : allSentenceNamRels) {
+
+//                if (comboedDoc.getName().equals("documents/00102158")) {
+//                  System.out.println("checking RD = " + rd);
+//                }
+
+
                 final Optional<PatternMatchSingleResult> matching = docTruePositives.stream().filter(pmsr -> pmsr.isTheSameAs(rd)).findAny();
 
                 if (!matching.isPresent()) {
-                  //System.out.println(" WARN! Doc " + comboedDoc.getName() + " Marking as false negative :" + rd);
+                  System.out.println(" WARN! Doc " + comboedDoc.getName() + " Marking as false negative :" + rd);
                   resultType.computeIfAbsent(rd.getType(), k -> new LinkedList<>());
                   documentResultFalseNegative.add(rd);
+                } else {
+                  System.out.println("MATCH !!!");
                 }
               }
             } catch (final Exception e) {
@@ -315,6 +344,7 @@ public class ActionMatchRelationsSet extends Action {
           documentResultFalseNegative = new HashSet<>();
 
         } catch (final Exception e) {
+          System.out.println("2 Problem z dokumentem " + comboedDoc.getName());
           e.printStackTrace();
         }
 
@@ -323,6 +353,7 @@ public class ActionMatchRelationsSet extends Action {
 
 
     } catch (final Exception e) {
+      System.out.println("Jakis problemm przy przliczaniu");
       e.printStackTrace();
     }
 
@@ -505,7 +536,12 @@ public class ActionMatchRelationsSet extends Action {
       ow.write("\t;");
     }
 
+
     ow.write(description + ";");
+    if ((truePositive != null) && (falseNegative != null)) {
+      ow.write("total for type: " + (truePositive + falseNegative) + ";");
+    }
+
     ow.write("\n");
 
 

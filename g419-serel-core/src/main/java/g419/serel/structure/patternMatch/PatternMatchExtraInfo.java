@@ -6,6 +6,7 @@ import lombok.Data;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Data
@@ -13,6 +14,7 @@ public class PatternMatchExtraInfo {
 
   Sentence sentence;
   private Map<String, NamedEntityWithToken> roleMap = new HashMap<>();
+  private Map<Token, String> token2tagNE = new HashMap<>();
 
   public PatternMatchExtraInfo() {}
 
@@ -20,6 +22,7 @@ public class PatternMatchExtraInfo {
     this.sentence = pmei.sentence;
     this.roleMap = new HashMap<>();
     this.roleMap.putAll(pmei.getRoleMap());
+    this.token2tagNE.putAll(pmei.token2tagNE);
   }
 
 
@@ -28,6 +31,7 @@ public class PatternMatchExtraInfo {
     newt.namedEntity = _namedEntity;
     newt.token = _token;
     roleMap.put(role, newt);
+    token2tagNE.put(_token, _namedEntity);
   }
 
   public NamedEntityWithToken getRole(final String key) {
@@ -49,6 +53,14 @@ public class PatternMatchExtraInfo {
 
   public String description() {
     return roleMap.entrySet().stream().map(elem -> elem.getKey() + ":" + getRoleValue(elem.getKey())).collect(Collectors.joining(", "));
+  }
+
+  public Set<Integer> getAnchorIds() {
+    return roleMap.values().stream().map(newt -> newt.token.getNumberId()).collect(Collectors.toSet());
+  }
+
+  public String getTagNEFromToken(final Token token) {
+    return token2tagNE.get(token);
   }
 
 }
