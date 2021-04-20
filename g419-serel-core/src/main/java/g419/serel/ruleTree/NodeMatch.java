@@ -109,12 +109,19 @@ public class NodeMatch {
                 ||
                 (boi.startsWith("I-" + namedEntity))  // "I-"  -> inside token of entity
         ) {
+
+// TOREVERT
+//          // oraz jeśli to nie jest BOI które już wcześniej znaleźliśmy i do czegoś przypięliśmy !!!
+//          final String possibleAlreadyFoundTag = extraInfo.getTagNEFromToken(token);
+//          if (possibleAlreadyFoundTag != null) {
+//            continue; // to jest NE i nawet pasuje ale już wcześniej jakiś NodeMatch go zaanektował
+//          }
+
           found = true;
-
-
           //TODO byc moze to przeniesc wyzej i uniezaleznic wpisytwanie tych info od tego czy jest rola czy nie ma
           if ((role != null) && (!role.isEmpty())) {
-            extraInfo.putRole(role, namedEntity, token);
+            //extraInfo.putRole(role, namedEntity, token);
+            extraInfo.putRole(role, boi.substring(2), token); // zapamiętujemy rzeczywisty tag NE a nie ten z wzorca - po to by potem idki dobrze dobierać
           }
 
         }
