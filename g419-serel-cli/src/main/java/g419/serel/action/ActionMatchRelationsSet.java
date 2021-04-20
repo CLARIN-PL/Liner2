@@ -238,6 +238,7 @@ public class ActionMatchRelationsSet extends Action {
         for (final PatternMatchSingleResult patternMatchSingleResult : sentenceResults) {
           patternMatchSingleResult.sentenceNumber = sentenceIndex;
           patternMatchSingleResult.docName = d.getName();
+          // patternMatchSingleResult.patternMatch = patternMatch;
         }
 
 //        if (d.getName().equals("documents/00102158")) {

@@ -12,6 +12,7 @@ public class PatternMatchSingleResult {
   public String docName;
   public int sentenceNumber;
   public PatternMatch patternMatch;
+  public String relationType;
   public Set<String> namedEntitySet = new HashSet<>();
 
   // idki (nie indeksy !!!) do elementów które składają się na "rozwiązanie" matcha - wszystkie dla tego całego jednego rozwiązania
@@ -23,19 +24,23 @@ public class PatternMatchSingleResult {
   public PatternMatchSingleResult() {}
 
   public String getType() {
-    return patternMatch.getRelationType();
+    return relationType;
   }
 
 
-  public PatternMatchSingleResult(final ArrayList<Integer> _idsList, final PatternMatchExtraInfo _pmei) {
+  public PatternMatchSingleResult(final ArrayList<Integer> _idsList,
+                                  final PatternMatchExtraInfo _pmei,
+                                  final String _relType) {
     this.idsList = _idsList;
     this.patternMatchExtraInfo = _pmei;
+    this.relationType = _relType;
   }
 
 
   public PatternMatchSingleResult(final PatternMatchSingleResult pmsr) {
     this.idsList = (ArrayList<Integer>) pmsr.idsList.clone();
     this.patternMatchExtraInfo = new PatternMatchExtraInfo(pmsr.patternMatchExtraInfo);
+    this.relationType = pmsr.relationType;
   }
 
 
@@ -51,13 +56,13 @@ public class PatternMatchSingleResult {
 //  }
 
   public String description() {
-    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + ",\tidsList=" + idsList + ",\t\trole:[" + patternMatchExtraInfo.description() + "]" /* + " NEs=" + namedEntitySet */;
+    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + "\ttype=" + getType() + ",\tidsList=" + idsList + ",\t\trole:[" + patternMatchExtraInfo.description() + "]" /* + " NEs=" + namedEntitySet */;
     return result;
   }
 
 
   public String descriptionLong() {
-    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + ",\tidsList=" + idsList + ",\t\trole:[" + patternMatchExtraInfo.description() + "]" +
+    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + "\ttype=" + getType() + ",\tidsList=" + idsList + ",\t\trole:[" + patternMatchExtraInfo.description() + "]" +
         "\t\t\t" + patternMatchExtraInfo.getSentence().toStringDecorated(idsList, 1);
     return result;
   }
@@ -71,6 +76,10 @@ public class PatternMatchSingleResult {
   }
 
   public boolean isTheSameAs(final PatternMatchSingleResult pmsr) {
+
+    if (!this.getType().equals(pmsr.getType())) {
+      return false;
+    }
 
     if (!this.docName.equals(pmsr.docName) || this.sentenceNumber != pmsr.sentenceNumber
     ) {
@@ -93,6 +102,11 @@ public class PatternMatchSingleResult {
 //      System.out.println("RD   = " + rd.toStringFull());
 //      System.out.println("PMSR = " + this.description());
 //    }
+
+    if (!this.getType().equals(rd.getType())) {
+      return false;
+    }
+
 
     final Set<Integer> anchorsIDs = this.patternMatchExtraInfo.getAnchorIds();
 

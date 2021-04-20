@@ -161,7 +161,7 @@ public class PatternMatch {
 //    System.out.println("_idsList = " + _idsList + " nmE=" + nodeMatch.isForNamedEntity());
 //    System.out.println("Token =" + token);
 
-    oneResult = new PatternMatchSingleResult(_idsList, pmei);
+    oneResult = new PatternMatchSingleResult(_idsList, pmei, this.getRelationType());
 /*
     // TOREVERT ???
     try {
