@@ -10,8 +10,10 @@ import g419.serel.structure.SerelExpression;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Converts set of annotations and relations between annotations into a set of serel expressions.
@@ -21,6 +23,8 @@ public class DocumentToSerelExpressionConverter {
 
   ParseTreeGenerator parseTreeGenerator;
   PrintWriter reportWriter;
+
+  public Map<String, Integer> typesCounter = new HashMap<>();
 
   public DocumentToSerelExpressionConverter(final ParseTreeGenerator ptg, final PrintWriter report) {
     parseTreeGenerator = ptg;
@@ -60,19 +64,26 @@ public class DocumentToSerelExpressionConverter {
       final Sentence sentence = document.getSentences().get(sentenceIndex);
       final SentenceMiscValues smv = SentenceMiscValues.from(sentence, sentenceIndex);
 
-
       if (sentence.getNamRels().size() > 0) {
         // jeśli w ogóle są jakieś relacje z których mamy tworzyć reguły to dopiero wtedy zaczynamy naprawianie
         //fixing possible problems with dependent tokens linked not to head of NE
 //        System.out.println("BEFORE correction");
 //        sentence.printAsTree();
-        sentence.checkAndFixBois();
+
+        // SWITCH_1
+        //sentence.checkAndFixBois();
+
 //        System.out.println("AFTER correction");
 //        sentence.printAsTree();
       }
 
 
       for (final RelationDesc relDesc : sentence.getNamRels()) {
+
+        int typeCounter = typesCounter.computeIfAbsent(relDesc.getType(), k -> 0);
+        typeCounter++;
+        typesCounter.put(relDesc.getType(), typeCounter);
+
 
         if (relDesc.getFromTokenId() == relDesc.getToTokenId()) {
           // np. doc:101820, Tokyo Hobby Show
@@ -266,7 +277,12 @@ public class DocumentToSerelExpressionConverter {
     //reportWriter.println(se.getRelationDesc().getDocument().getName());
     //reportWriter.println(se.getSentence());
     //reportWriter.println(se.getPathAsString(true));
-    reportWriter.println(se.getPathAsString());
+
+    // WHOLE REPORT
+    //reportWriter.println(se.getPathAsString());
+
+    //JUST PATTERNS
+    reportWriter.println(se.getJustPattern());
 
     // GENERATE TREE
     //se.getParseTree().printAsTreeWithIndex(reportWriter);

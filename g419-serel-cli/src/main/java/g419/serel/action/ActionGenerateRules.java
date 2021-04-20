@@ -10,7 +10,6 @@ import g419.serel.converter.DocumentToSerelExpressionConverter;
 import g419.serel.structure.ParseTreeMalfunction;
 import g419.serel.structure.SerelExpression;
 import g419.serel.tools.CheckParserParseTree;
-import g419.serel.tools.ComboParseTreeGenerator;
 import org.apache.commons.cli.CommandLine;
 import java.io.File;
 import java.io.FileWriter;
@@ -79,20 +78,18 @@ public class ActionGenerateRules extends Action {
         final PrintWriter reportWriter = reportFilename == null ? null : new PrintWriter(new FileWriter(new File(reportFilename)))) {
       final List<ParseTreeMalfunction> result = new LinkedList<>();
 
+
+      final DocumentToSerelExpressionConverter converter = new DocumentToSerelExpressionConverter(null, reportWriter);
+
       comboReader.forEach(comboedDoc -> {
             try {
 
               System.out.println("processing comboedDoc =" + comboedDoc.getName());
 
-              final ParseTreeGenerator parseTreeGenerator = new ComboParseTreeGenerator(comboedDoc);
-              final DocumentToSerelExpressionConverter converter = new DocumentToSerelExpressionConverter(parseTreeGenerator, reportWriter);
+              //final ParseTreeGenerator parseTreeGenerator = new ComboParseTreeGenerator(comboedDoc);
+              //final DocumentToSerelExpressionConverter converter = new DocumentToSerelExpressionConverter(parseTreeGenerator, reportWriter);
 
               final List<SerelExpression> converted = converter.convert(comboedDoc);
-
-
-              //final List<ParseTreeMalfunction> malfunctions = parseTreeChecker.checkParseTree(converted);
-              //result.addAll(malfunctions);
-              //log.debug("result size =" + result.size());
 
             } catch (final Exception e) {
               e.printStackTrace();
@@ -101,6 +98,14 @@ public class ActionGenerateRules extends Action {
       );
 
       System.out.println("REsult size = " + result.size());
+
+      converter.typesCounter.keySet().stream().forEach(k -> System.out.println(k + " : " + converter.typesCounter.get(k)));
+      int total = 0;
+
+      for (final String key : converter.typesCounter.keySet()) {
+        total += converter.typesCounter.get(key);
+      }
+      System.out.println("TOTAL: " + total);
 
       writer.println("Code\tdocument\tann_id\tsourceIndex\ttargetIndex\tstartAnnIndex\tendAnnIndex");
       result.stream().forEach(line -> writer.println(line.getMalfunctionCode() + "\t" +
