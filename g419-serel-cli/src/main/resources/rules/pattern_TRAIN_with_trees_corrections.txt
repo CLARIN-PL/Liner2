@@ -1,0 +1,1617 @@
+location:: * / nam_fac_goe:e1 < kompleks < mieście <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 < kompleks < mieście <  * / nam_loc_gpe_district:e2
+composition:: * / nam_loc_gpe_district:e1 > mieście <  * / nam_loc_gpe_city:e2
+alias:: * / nam_pro_model_plane:e1 <  * / nam_pro_brand:e2
+affiliation:: * / nam_liv_person:e1 > inż > zaprojektowanego <  * / nam_org_organization:e2
+creator:: * / nam_liv_person:e1 > inż > zaprojektowanego > samolotu > projekt >  * / nam_pro_model_plane:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_admin3:e1 > Gmina < istniejąca < okręgu <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_admin3:e1 > Gmina < gmina <  * / nam_loc_gpe_country:e2
+alias:: * / nam_loc_gpe_admin1:e1 > okręgu <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin1:e1 > okręgu > istniejąca > Gmina < gmina <  * / nam_loc_gpe_country:e2
+alias:: * / nam_loc_gpe_district:e1 < okręg < ros <  * / nam_loc_gpe_district:e2
+composition:: * / nam_loc_gpe_district:e1 > dzielnica <  * / nam_loc_gpe_city:e2
+alias:: * / nam_loc_gpe_district:e1 <  * / nam_loc_gpe_district:e2
+location:: * / nam_loc_gpe_district:e1 > dzielnica < wchodząca < w < skład <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 < miasteczko <  * / nam_loc_gpe_country:e2
+alias:: * / nam_loc_gpe_city:e1 < luks <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_admin3:e1 > gminie > miasteczko <  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_liv_person:e1 < koszykarz < występujący < barwach <  * / nam_org_group_team:e2
+nationality:: * / nam_liv_person:e1 < reprezentant <  * / nam_loc_gpe_country:e2
+origin:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_city:e2
+origin:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_city:e2
+alias:: * / nam_org_organization:e1 > rycerstwa > rodów < zwanych <  * / nam_org_organization:e2
+affiliation:: * / nam_liv_person:e1 > zwanych > rodów < rycerstwa <  * / nam_org_organization:e2
+affiliation:: * / nam_liv_person:e1 > Borch > zwanych > rodów < rycerstwa <  * / nam_org_organization:e2
+affiliation:: * / nam_liv_person:e1 > Borch > zwanych > rodów < rycerstwa <  * / nam_org_organization:e2
+affiliation:: * / nam_liv_person:e1 > Borch > zwanych > rodów < rycerstwa <  * / nam_org_organization:e2
+affiliation:: * / nam_liv_person:e1 > Borch > zwanych > rodów < rycerstwa <  * / nam_org_organization:e2
+affiliation:: * / nam_liv_person:e1 > Borch > zwanych > rodów < rycerstwa <  * / nam_org_organization:e2
+affiliation:: * / nam_liv_person:e1 > Borch > zwanych > rodów < rycerstwa <  * / nam_org_organization:e2
+affiliation:: * / nam_liv_person:e1 > Borch > zwanych > rodów < rycerstwa <  * / nam_org_organization:e2
+affiliation:: * / nam_liv_person:e1 > Borch > zwanych > rodów < rycerstwa <  * / nam_org_organization:e2
+affiliation:: * / nam_liv_person:e1 > Borch > zwanych > rodów < rycerstwa <  * / nam_org_organization:e2
+affiliation:: * / nam_liv_person:e1 > Borch > zwanych > rodów < rycerstwa <  * / nam_org_organization:e2
+nationality:: * / nam_liv_person:e1 > inni > Borch > zwanych > rodów > pochodzi < należała < osiadły <  * / nam_loc_gpe_country:e2
+nationality:: * / nam_liv_person:e1 > Szadurscy > inni > Borch > zwanych > rodów > pochodzi < należała < osiadły <  * / nam_loc_gpe_country:e2
+nationality:: * / nam_liv_person:e1 > Szadurscy > inni > Borch > zwanych > rodów > pochodzi < należała < osiadły <  * / nam_loc_gpe_country:e2
+nationality:: * / nam_liv_person:e1 > Szadurscy > inni > Borch > zwanych > rodów > pochodzi < należała < osiadły <  * / nam_loc_gpe_country:e2
+nationality:: * / nam_liv_person:e1 > Szadurscy > inni > Borch > zwanych > rodów > pochodzi < należała < osiadły <  * / nam_loc_gpe_country:e2
+nationality:: * / nam_liv_person:e1 > Szadurscy > inni > Borch > zwanych > rodów > pochodzi < należała < osiadły <  * / nam_loc_gpe_country:e2
+alias:: * / nam_loc_gpe_city:e1 > obrońca <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_fac_road:e1 <  * / nam_fac_road:e2
+neighbourhood:: * / nam_fac_goe:e1 < miał < rejonie <  * / nam_fac_square:e2
+creator:: * / nam_liv_animal:e1 > rasę > zbudowana <  * / nam_fac_goe:e2
+origin:: * / nam_liv_animal:e1 <  * / nam_loc_astronomical:e2
+location:: * / nam_fac_goe:e1 > zarazę > spowodowanego >  * / nam_loc_gpe_country:e2
+alias:: * / nam_fac_goe:e1 > zarazę > spowodowanego > Imperium > rozpadu > wymazana < pamięć <  * / nam_fac_goe:e2
+affiliation:: * / nam_liv_character:e1 > poznał < wykorzystał < stworzenia < floty < okrętów < posłużyły < zaatakowania < rozpętania <  * / nam_eve_human:e2
+affiliation:: * / nam_loc_gpe_country:e1 > zaatakowania < rozpętania <  * / nam_eve_human:e2
+location:: * / nam_liv_character:e1 > pojedynek > następuje < mostku <  * / nam_fac_goe:e2
+location:: * / nam_liv_character:e1 > Revanem > pojedynek > następuje < mostku <  * / nam_fac_goe:e2
+origin:: * / nam_liv_person:e1 <  * / nam_loc_gpe_city:e2
+composition:: * / nam_loc_gpe_district:e1 > nazwa < przedmieścia <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_road:e1 > Dojazd <  * / nam_loc_gpe_city:e2
+alias:: * / nam_fac_road:e1 > szosie < zwanej <  * / nam_fac_road:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > km > odległe < wioski <  * / nam_loc_gpe_district:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > Barwicha > km > odległe < wioski <  * / nam_loc_gpe_district:e2
+location:: * / nam_fac_goe:e1 > nazwany > dom > rozbudowywany <  * / nam_loc_gpe_city:e2
+alias:: * / nam_fac_goe:e1 <  * / nam_fac_goe:e2
+location:: * / nam_loc_gpe_subdivision:e1 > osiedlem <  * / nam_loc_gpe_city:e2
+alias:: * / nam_loc_land_island:e1 < fr <  * / nam_loc_land_island:e2
+location:: * / nam_loc_land_island:e1 < wyspa < archipelagu < grupie <  * / nam_loc_land_island:e2
+neighbourhood:: * / nam_loc_land_island:e1 < wyspa < archipelagu < grupie < km < wschód <  * / nam_loc_land_island:e2
+origin:: * / nam_liv_person:e1 > sułtan <  * / nam_loc_gpe_admin1:e2
+neighbourhood:: * / nam_loc_land_island:e1 < sąsiednimy < wyspami < Mary < wysepkami <  * / nam_loc_land_island:e2
+composition:: * / nam_loc_land_island:e1 > tworzy < łańcuch < wysp <  * / nam_loc_land_island:e2
+neighbourhood:: * / nam_loc_land_island:e1 < sąsiednimy < wyspami < Mary <  * / nam_loc_land_island:e2
+neighbourhood:: * / nam_loc_land_island:e1 < sąsiednimy < wyspami <  * / nam_loc_land_island:e2
+neighbourhood:: * / nam_loc_land_island:e1 < wysepkami <  * / nam_loc_land_island:e2
+neighbourhood:: * / nam_loc_land_island:e1 > wyspami > sąsiednimy >  * / nam_loc_land_island:e2
+neighbourhood:: * / nam_loc_land_island:e1 <  * / nam_loc_land_island:e2
+composition:: * / nam_loc_land_island:e1 > wyspami > sąsiednimy > Felicite > tworzy < łańcuch < wysp <  * / nam_loc_land_island:e2
+composition:: * / nam_loc_land_island:e1 > Mary > wyspami > sąsiednimy > Felicite > tworzy < łańcuch < wysp <  * / nam_loc_land_island:e2
+neighbourhood:: * / nam_loc_land_island:e1 >  * / nam_loc_land_island:e2
+neighbourhood:: * / nam_loc_land_island:e1 > Mary < wysepkami <  * / nam_loc_land_island:e2
+neighbourhood:: * / nam_loc_land_island:e1 > Mary > wyspami > sąsiednimy >  * / nam_loc_land_island:e2
+neighbourhood:: * / nam_loc_land_island:e1 > wysepkami >  * / nam_loc_land_island:e2
+neighbourhood:: * / nam_loc_land_island:e1 > wysepkami > Mary > wyspami > sąsiednimy >  * / nam_loc_land_island:e2
+composition:: * / nam_loc_land_island:e1 > wysepkami > Mary > wyspami > sąsiednimy > Felicite > tworzy < łańcuch < wysp <  * / nam_loc_land_island:e2
+neighbourhood:: * / nam_loc_land_island:e1 > wysepkami > Mary <  * / nam_loc_land_island:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 <  * / nam_loc_hydronym_river:e2
+location:: * / nam_loc_gpe_city:e1 < stacja < kraju <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_fac_goe:e1 < stacja <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 <  * / nam_loc_hydronym_river:e2
+location:: * / nam_loc_gpe_city:e1 < stacja < kraju < Badenia <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 < stacja <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 > stacja < kraju < Badenia <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 > stacja < kraju <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin1:e1 <  * / nam_loc_gpe_country:e2
+origin:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_city:e2
+location:: * / nam_eve_human_sport:e1 <  * / nam_loc_gpe_city:e2
+origin:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_city:e2
+nationality:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 > ur <  * / nam_loc_gpe_country:e2
+nationality:: * / nam_liv_person:e1 < dyplomata < ambasador <  * / nam_loc_gpe_country:e2
+origin:: * / nam_liv_person:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_liv_person:e1 < dyplomata < ambasador < PRL <  * / nam_loc_gpe_country:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_org_institution:e1 > kierownikiem > rozpoczął <  * / nam_org_institution:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_org_institution:e1 > attaché > kierownikiem > rozpoczął <  * / nam_org_institution:e2
+alias:: * / nam_loc_gpe_country:e1 > Ambasadzie <  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_liv_person:e1 > absolwentką <  * / nam_org_organization:e2
+affiliation:: * / nam_liv_person:e1 > brata < członka <  * / nam_org_organization:e2
+neighbourhood:: * / nam_fac_bridge:e1 > zespół < mostów < stanowiących < przeprawę < rzeką <  * / nam_loc_hydronym_river:e2
+location:: * / nam_fac_bridge:e1 > zespół < mostów < stanowiących < przeprawę < rzeką <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_fac_bridge:e1 > zespół < mostów < stanowiących < przeprawę < rzeką < rejonie < osiedla <  * / nam_loc_gpe_subdivision:e2
+location:: * / nam_loc_hydronym_river:e1 > rzeką <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_fac_road:e1 > Ulica < Ulica <  * / nam_fac_road:e2
+composition:: * / nam_fac_road:e1 > Ulica < stanowiących < część <  * / nam_fac_road:e2
+composition:: * / nam_fac_road:e1 > Ulica > Ulica < stanowiących < część <  * / nam_fac_road:e2
+alias:: * / nam_fac_bridge:e1 <  * / nam_fac_bridge:e2
+alias:: * / nam_fac_bridge:e1 <  * / nam_fac_bridge:e2
+location:: * / nam_liv_person:e1 < blogu <  * / nam_pro_title:e2
+alias:: * / nam_pro_media_web:e1 <  * / nam_pro_media_web:e2
+origin:: * / nam_liv_person:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_pro_model_car:e1 > jadąc < miejscowości <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 > posąg <  * / nam_loc_gpe_city:e2
+alias:: * / nam_liv_god:e1 > Może < przywróci <  * / nam_liv_god:e2
+alias:: * / nam_pro_title:e1 <  * / nam_pro_title:e2
+alias:: * / nam_pro_title:e1 < Znana <  * / nam_pro_title:e2
+origin:: * / nam_liv_person:e1 < ukr < ur < Zoziwie < obwodzie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_liv_person:e1 < polityk < mer <  * / nam_loc_gpe_city:e2
+origin:: * / nam_liv_person:e1 < ukr < ur <  * / nam_loc_gpe_city:e2
+alias:: * / nam_liv_person:e1 < ukr <  * / nam_liv_person:e2
+alias:: * / nam_liv_person:e1 > ukr >  * / nam_liv_person:e2
+location:: * / nam_loc_gpe_city:e1 < obwodzie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_org_political_party:e1 < działającą <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 < biznesmen < kandydował < posła < listy <  * / nam_org_political_party:e2
+location:: * / nam_liv_person:e1 > został < merem <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 > Syn > posłem < listy <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 > Syn > posłem <  * / nam_org_institution:e2
+location:: * / nam_eve_human:e1 > figura < obozie < założonym <  * / nam_loc_gpe_country:e2
+location:: * / nam_fac_square:e1 <  * / nam_loc_gpe_subdivision:e2
+location:: * / nam_org_institution:e1 > mieści >  * / nam_fac_goe:e2
+neighbourhood:: * / nam_fac_square:e1 < otaczającym <  * / nam_fac_goe:e2
+location:: * / nam_fac_square:e1 <  * / nam_loc_gpe_subdivision:e2
+location:: * / nam_fac_square:e1 <  * / nam_loc_gpe_subdivision:e2
+neighbourhood:: * / nam_fac_road:e1 > ulica < ulica <  * / nam_fac_road:e2
+neighbourhood:: * / nam_fac_road:e1 > ulica < ulica <  * / nam_fac_road:e2
+neighbourhood:: * / nam_fac_road:e1 > ulica < ulica <  * / nam_fac_road:e2
+neighbourhood:: * / nam_fac_road:e1 > ulica < ulica <  * / nam_fac_road:e2
+alias:: * / nam_fac_square:e1 > Nazwa > brzmiała <  * / nam_fac_square:e2
+alias:: * / nam_fac_square:e1 <  * / nam_fac_square:e2
+location:: * / nam_fac_square:e1 > pełnił < rolę < miejsca < handlu <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_square:e1 < większość < miasta <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_fac_square:e1 > Pozycja > spełniała < była < osi < północ < Przedmieście < ulica <  * / nam_fac_road:e2
+neighbourhood:: * / nam_fac_square:e1 > Pozycja > spełniała < była < osi < północ <  * / nam_loc_gpe_subdivision:e2
+neighbourhood:: * / nam_loc_gpe_subdivision:e1 < ulica <  * / nam_fac_road:e2
+alias:: * / nam_loc_gpe_subdivision:e1 <  * / nam_loc_gpe_subdivision:e2
+alias:: * / nam_fac_road:e1 > ulica < ulica <  * / nam_fac_road:e2
+neighbourhood:: * / nam_fac_road:e1 > ulica < prowadząca <  * / nam_fac_goe:e2
+alias:: * / nam_fac_road:e1 > ulica < ulica <  * / nam_fac_road:e2
+alias:: * / nam_fac_goe:e1 > prowadząca <  * / nam_fac_goe:e2
+neighbourhood:: * / nam_loc_gpe_subdivision:e1 < ulica <  * / nam_fac_road:e2
+alias:: * / nam_loc_gpe_subdivision:e1 <  * / nam_loc_gpe_subdivision:e2
+neighbourhood:: * / nam_fac_road:e1 > ulica < prowadzi < miejsca <  * / nam_fac_goe:e2
+alias:: * / nam_fac_road:e1 > ulica <  * / nam_fac_road:e2
+neighbourhood:: * / nam_fac_goe:e1 > ulicy > uruchomiono < linię < łączącą < ulicę <  * / nam_fac_road:e2
+location:: * / nam_fac_goe:e1 > powiększenia > został > browar > znajdował < terenie <  * / nam_fac_square:e2
+location:: * / nam_pro_media_periodic:e1 < magazyn < założony <  * / nam_loc_gpe_country:e2
+alias:: * / nam_pro_media_periodic:e1 <  * / nam_pro_media_periodic:e2
+alias:: * / nam_pro_media_periodic:e1 <  * / nam_pro_media_periodic:e2
+alias:: * / nam_pro_title:e1 <  * / nam_pro_title:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > wsi > Tatarami > bitwę > stoczył < brzegu <  * / nam_loc_hydronym_river:e2
+composition:: * / nam_loc_gpe_district:e1 >  * / nam_loc_gpe_city:e2
+nationality:: * / nam_liv_person:e1 > Przywódca > uznał < przyjmując < tytuł < namiestnika <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc:e1 > dzieli <  * / nam_loc:e2
+composition:: * / nam_loc:e1 > Północnoeuropejski > dzieli <  * / nam_loc:e2
+composition:: * / nam_loc:e1 > Północnoeuropejski > dzieli <  * / nam_loc:e2
+composition:: * / nam_loc_gpe_conurbation:e1 > zwrotem <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_conurbation:e1 > częścią <  * / nam_loc_gpe_country:e2
+alias:: * / nam_loc_gpe_conurbation:e1 > nazwa < języku <  * / nam_loc_gpe_conurbation:e2
+alias:: * / nam_loc_gpe_conurbation:e1 > nazwa < języku <  * / nam_loc_gpe_conurbation:e2
+alias:: * / nam_loc_gpe_conurbation:e1 > języku <  * / nam_loc_gpe_conurbation:e2
+location:: * / nam_loc_gpe_city:e1 < miasto <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 < miasto < Omanie < regionie <  * / nam_loc_gpe_admin1:e2
+alias:: * / nam_loc_gpe_city:e1 > arab >  * / nam_loc_gpe_city:e2
+composition:: * / nam_loc_gpe_admin1:e1 > regionie >  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_liv_person:e1 <  * / nam_org_company:e2
+origin:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 < producent < prezes < firm <  * / nam_org_company:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_organization:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_organization:e2
+alias:: * / nam_org_company:e1 <  * / nam_org_company:e2
+creator:: * / nam_liv_person:e1 > założył < firmę <  * / nam_org_company:e2
+creator:: * / nam_liv_person:e1 > Rinke > założył < firmę <  * / nam_org_company:e2
+location:: * / nam_eve_human:e1 <  * / nam_loc_gpe_city:e2
+composition:: * / nam_fac_system:e1 > System > podsystemem < Systemu <  * / nam_fac_system:e2
+alias:: * / nam_fac_system:e1 > System <  * / nam_fac_system:e2
+alias:: * / nam_liv_person:e1 < Bouteflika < عبد <  * / nam_liv_person:e2
+alias:: * / nam_liv_person:e1 < Bouteflika <  * / nam_liv_person:e2
+alias:: * / nam_liv_person:e1 <  * / nam_liv_person:e2
+nationality:: * / nam_liv_person:e1 < polityk < prezydent <  * / nam_loc_gpe_country:e2
+nationality:: * / nam_liv_person:e1 > Abdelaziz < polityk < prezydent <  * / nam_loc_gpe_country:e2
+nationality:: * / nam_liv_person:e1 > عبد > Bouteflika > Abdelaziz < polityk < prezydent <  * / nam_loc_gpe_country:e2
+origin:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_city:e2
+nationality:: * / nam_liv_person:e1 < piłkarz <  * / nam_adj_country:e2
+affiliation:: * / nam_liv_person:e1 > wychował < klubie <  * / nam_org_group_team:e2
+affiliation:: * / nam_liv_person:e1 > odszedł <  * / nam_org_group_team:e2
+affiliation:: * / nam_org_group_team:e1 < grającego <  * / nam_eve_human_sport:e2
+location:: * / nam_liv_person:e1 > wrócił <  * / nam_loc_gpe_country:e2
+nationality:: * / nam_liv_person:e1 >  * / nam_liv_habitant:e2
+affiliation:: * / nam_loc_gpe_city:e1 > zdobyło <  * / nam_eve_human_sport:e2
+affiliation:: * / nam_liv_person:e1 > został < zawodnikiem <  * / nam_org_group_team:e2
+affiliation:: * / nam_org_group_team:e1 > spadł <  * / nam_eve_human_sport:e2
+affiliation:: * / nam_liv_person:e1 > przeszedł <  * / nam_org_group_team:e2
+affiliation:: * / nam_liv_person:e1 > przeszedł < FC < występującego <  * / nam_eve_human_sport:e2
+nationality:: * / nam_liv_person:e1 > Karierę > rozpoczął < reprezentacji <  * / nam_loc_gpe_country:e2
+origin:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_city:e2
+origin:: * / nam_oth_tech:e1 < metoda < wywodząca <  * / nam_loc_gpe_country:e2
+location:: * / nam_oth_tech:e1 > jednostka > dominuje >  * / nam_loc_land_continent:e2
+location:: * / nam_fac_goe:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_eve_human:e1 > kasata <  * / nam_loc_historical_region:e2
+creator:: * / nam_org_organization:e1 > organizowane > zawody >  * / nam_eve_human_sport:e2
+affiliation:: * / nam_liv_person:e1 < polityk < poseł <  * / nam_org_institution:e2
+nationality:: * / nam_liv_person:e1 < polityk < poseł < Sejm <  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_loc_gpe_country:e2
+location:: * / nam_org_institution:e1 > RP < funkcjonującego < terenie < przeprowadzał < tym < zbombardowane < koszary < mieszczące <  * / nam_loc_gpe_district:e2
+location:: * / nam_org_institution:e1 > RP < funkcjonującego < terenie < przeprowadzał < wrześniu <  * / nam_loc_gpe_city:e2
+composition:: * / nam_loc_gpe_district:e1 > mieszczące > koszary < dzielnica <  * / nam_loc_gpe_city:e2
+creator:: * / nam_liv_person:e1 > cesarza > założony > zakon >  * / nam_org_organization:e2
+creator:: * / nam_liv_person:e1 > papieża > cesarza > założony > zakon >  * / nam_org_organization:e2
+location:: * / nam_fac_goe:e1 > zamku <  * / nam_loc_gpe_country:e2
+neighbourhood:: * / nam_fac_goe:e1 > zamku <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 > zamku <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 < wieś < położona < województwie < gminie <  * / nam_loc_gpe_admin3:e2
+location:: * / nam_loc_gpe_city:e1 < wieś < położona < województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 < wieś < położona < województwie <  * / nam_loc_gpe_admin1:e2
+alias:: * / nam_loc_gpe_city:e1 < niem <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin1:e1 > województwie > położona > wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie > położona > wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie > położona > wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_liv_person:e1 > śmierci <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_org_institution:e2
+location:: * / nam_loc:e1 > przyrody > rezerwat > zaliczają < atrakcji <  * / nam_loc_gpe_city:e2
+location:: * / nam_liv_person:e1 > króla > pobytu > dotyczy > pochodzi < wzmianka <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 > gromadą < pełnił < funkcje < ośrodka < regionu < części < gminy <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_loc_land_mountain:e1 < położone <  * / nam_loc_land_mountain:e2
+composition:: * / nam_loc_land_mountain:e1 < wzniesienie < grzbiecie <  * / nam_loc_land_mountain:e2
+location:: * / nam_loc_land_mountain:e1 < wzniesienie <  * / nam_loc_land_mountain:e2
+neighbourhood:: * / nam_loc_land_mountain:e1 < położone < Stożkiem <  * / nam_loc_land_mountain:e2
+composition:: * / nam_loc_land_mountain:e1 > położone > Stożek < wzniesienie < grzbiecie <  * / nam_loc_land_mountain:e2
+location:: * / nam_loc_land_mountain:e1 > położone > Stożek < wzniesienie <  * / nam_loc_land_mountain:e2
+location:: * / nam_loc_land_mountain:e1 > Stożkiem > położone > Stożek < wzniesienie <  * / nam_loc_land_mountain:e2
+composition:: * / nam_loc_land_mountain:e1 > Stożkiem > położone > Stożek < wzniesienie < grzbiecie <  * / nam_loc_land_mountain:e2
+neighbourhood:: * / nam_loc_land_mountain:e1 > odchodzi < ramię <  * / nam_loc_land_mountain:e2
+location:: * / nam_loc_gpe_subdivision:e1 > osiedla < należącego <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_subdivision:e1 > przysiółka < należącego <  * / nam_loc_gpe_city:e2
+origin:: * / nam_liv_person:e1 < ekonomista < ur <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 < przewodniczący <  * / nam_org_political_party:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_organization:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_organization:e2
+affiliation:: * / nam_org_organization:e1 < związanym <  * / nam_org_political_party:e2
+location:: * / nam_liv_person:e1 < ur < zm <  * / nam_loc_gpe_city:e2
+origin:: * / nam_liv_person:e1 <  * / nam_loc_gpe_city:e2
+origin:: * / nam_pro_brand:e1 > karabin > ZSRR > krajach <  * / nam_loc_gpe_country:e2
+origin:: * / nam_pro_brand:e1 > karabin >  * / nam_loc_gpe_country:e2
+origin:: * / nam_liv_person:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_liv_person:e1 < ur < zm <  * / nam_loc_gpe_city:e2
+origin:: * / nam_liv_person:e1 > poezji > pojawia < tematyka < refleksje < związkami < krajobrazem <  * / nam_pro_title:e2
+creator:: * / nam_liv_person:e1 > poezji > pojawia < tematyka < refleksje < związkami < naturą <  * / nam_pro_title:e2
+creator:: * / nam_liv_person:e1 > poezji > pojawia < tematyka < refleksje <  * / nam_pro_title:e2
+creator:: * / nam_liv_person:e1 > autorem < utworów < Przygody <  * / nam_pro_title:e2
+creator:: * / nam_liv_person:e1 > autorem < utworów <  * / nam_pro_title:e2
+location:: * / nam_liv_person:e1 < przysiółku < Chabna < zm <  * / nam_loc_gpe_city:e2
+origin:: * / nam_liv_person:e1 < przysiółku <  * / nam_loc_gpe_city:e2
+alias:: * / nam_liv_person:e1 >  * / nam_liv_person:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > przysiółku <  * / nam_loc_gpe_city:e2
+alias:: * / nam_loc_gpe_city:e1 > ur > Łazar < przysiółku <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_org_political_party:e2
+affiliation:: * / nam_org_institution:e1 > członek > Jeden < członek <  * / nam_org_political_party:e2
+location:: * / nam_fac_goe:e1 > przebudowy > inicjatorem < zniszczenia < szeregu < zabytków <  * / nam_loc_gpe_city:e2
+alias:: * / nam_fac_goe:e1 > ros >  * / nam_fac_goe:e2
+location:: * / nam_fac_goe:e1 > klasztoru > cerkwi > przebudowy > inicjatorem < zniszczenia < szeregu < zabytków <  * / nam_loc_gpe_city:e2
+origin:: * / nam_liv_person:e1 > pochodzi < stolicy <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_group_team:e1 > drużyny < miasta <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_org_group_team:e1 > zakwalifikowało <  * / nam_eve_human_sport:e2
+affiliation:: * / nam_liv_person:e1 > zagrał > doszła <  * / nam_eve_human_sport:e2
+affiliation:: * / nam_org_group_team:e1 > zdobył <  * / nam_eve_human_sport:e2
+nationality:: * / nam_liv_person:e1 > zadebiutował < reprezentacji <  * / nam_loc_gpe_country:e2
+location:: * / nam_eve_human_sport:e1 < odbywające <  * / nam_loc_gpe_country:e2
+alias:: * / nam_liv_person:e1 > imię > nazywa < synem < Bolesława <  * / nam_liv_person:e2
+creator:: * / nam_liv_person:e1 >  * / nam_pro_title:e2
+location:: * / nam_liv_person:e1 > rządy > objął < oparł < współpracy < pilnował <  * / nam_loc_historical_region:e2
+location:: * / nam_liv_person:e1 > współpracy < pilnował < momentu < objęcia < władzy <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 > przyłączył <  * / nam_loc_gpe_country:e2
+location:: * / nam_liv_person:e1 > syna > zawezwał <  * / nam_loc_gpe_city:e2
+composition:: * / nam_org_institution:e1 > pododdział < piechoty <  * / nam_org_institution:e2
+alias:: * / nam_org_institution:e1 >  * / nam_org_institution:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_loc_gpe_country:e2
+composition:: * / nam_org_institution:e1 > mobilizującą > administracyjną > Jednostką <  * / nam_org_institution:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+alias:: * / nam_eve_human:e1 > ros >  * / nam_eve_human:e2
+alias:: * / nam_eve_human:e1 > ros >  * / nam_eve_human:e2
+alias:: * / nam_eve_human:e1 > Nowaja > ros >  * / nam_eve_human:e2
+composition:: * / nam_loc_gpe_admin2:e1 > Powiat < województwo <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_admin2:e1 > Powiat < powiat <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > Powiat < województwo <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin1:e1 > województwo > Powiat < powiat <  * / nam_loc_gpe_country:e2
+location:: * / nam_liv_person:e1 < działaczka < zm <  * / nam_loc_gpe_city:e2
+origin:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_org_political_party:e2
+alias:: * / nam_org_organization:e1 >  * / nam_org_organization:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_org_political_party:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_org_political_party:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_org_political_party:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 < działaczka <  * / nam_org_institution:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_org_political_party:e2
+location:: * / nam_eve_human:e1 <  * / nam_loc_gpe_city:e2
+creator:: * / nam_eve_human:e1 <  * / nam_org_political_party:e2
+location:: * / nam_eve_human:e1 < odbytym <  * / nam_loc_gpe_city:e2
+creator:: * / nam_liv_person:e1 > mężem > wspólnie > 1965 > książkę > książkę > opublikowała < dzieło <  * / nam_pro_title_book:e2
+creator:: * / nam_liv_person:e1 > książki <  * / nam_pro_title_book:e2
+location:: * / nam_loc_gpe_admin3:e1 > Gmina < istniejąca < okręgu <  * / nam_loc_land_peninsula:e2
+location:: * / nam_loc_gpe_admin3:e1 > Gmina < gmina <  * / nam_loc_gpe_country:e2
+alias:: * / nam_loc_gpe_admin3:e1 > duń > Gmina <  * / nam_loc_gpe_admin3:e2
+alias:: * / nam_loc_gpe_admin1:e1 > okręgu <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin1:e1 > okręgu > istniejąca > Gmina < gmina <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_admin3:e1 > Gmina > utworzona < reformy < podziału <  * / nam_loc_gpe_country:e2
+location:: * / nam_fac_road:e1 < droga < przebiegająca < województwo <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_fac_road:e1 < droga < przebiegająca < województwo < śląskie <  * / nam_loc_gpe_admin1:e2
+alias:: * / nam_fac_road:e1 <  * / nam_fac_road:e2
+location:: * / nam_loc_gpe_city:e1 > łącząc > Omija <  * / nam_loc_gpe_conurbation:e2
+location:: * / nam_loc_gpe_city:e1 > Gliwice > łącząc > Omija <  * / nam_loc_gpe_conurbation:e2
+location:: * / nam_loc_gpe_city:e1 > Mikołowem > Gliwice > łącząc > Omija <  * / nam_loc_gpe_conurbation:e2
+location:: * / nam_loc_gpe_city:e1 > Mikołowem > Gliwice > łącząc > Omija <  * / nam_loc_gpe_conurbation:e2
+location:: * / nam_loc_gpe_city:e1 > Mikołowem > Gliwice > łącząc > Omija <  * / nam_loc_gpe_conurbation:e2
+location:: * / nam_loc_gpe_city:e1 > Mikołowem > Gliwice > łącząc > Omija <  * / nam_loc_gpe_conurbation:e2
+location:: * / nam_fac_road:e1 >  * / nam_loc_gpe_city:e2
+location:: * / nam_org_company:e1 > takie > firmy > położone <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_org_company:e1 > takie > firmy > położone < Tychach <  * / nam_fac_road:e2
+alias:: * / nam_org_company:e1 <  * / nam_org_company:e2
+neighbourhood:: * / nam_org_company:e1 > Kompania > takie > firmy > położone < Tychach <  * / nam_fac_road:e2
+location:: * / nam_org_company:e1 > Kompania > takie > firmy > położone <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_fac_goe:e1 > fabryka > Kompania > takie > firmy > położone < Tychach <  * / nam_fac_road:e2
+location:: * / nam_fac_goe:e1 > fabryka > Kompania > takie > firmy > położone <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_fac_goe:e1 > hipermarketów > centrum > Kompania > takie > firmy > położone < Tychach <  * / nam_fac_road:e2
+location:: * / nam_fac_goe:e1 > hipermarketów > centrum > Kompania > takie > firmy > położone <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 < McDonald's <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 < Mikołowie <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 <  * / nam_loc_gpe_city:e2
+alias:: * / nam_fac_road:e1 > autostrada < autostrada <  * / nam_fac_road:e2
+alias:: * / nam_fac_road:e1 <  * / nam_fac_road:e2
+alias:: * / nam_fac_road:e1 <  * / nam_fac_road:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > granicy <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_fac_road:e1 > obwodnicą < miast <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_fac_road:e1 > obwodnicą < miast < Mikołów <  * / nam_loc_gpe_city:e2
+composition:: * / nam_loc_gpe_district:e1 < leżących < terenie < miasta <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_road:e1 > TIR-ów > ruchem > protestują < Mieszkańcy <  * / nam_loc_gpe_district:e2
+location:: * / nam_fac_road:e1 > odcinka <  * / nam_loc_gpe_district:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > powstała <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > powstała < wieku < brzegiem < rzeki <  * / nam_loc_hydronym_river:e2
+location:: * / nam_loc_gpe_city:e1 < osada < terenie <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > nazwano < zlokalizowana < rzece <  * / nam_loc_hydronym_river:e2
+location:: * / nam_loc_gpe_city:e1 > przyłączona <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 > Podlesiem > przyłączona <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 > miejscowość < stanie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 > miejscowość < położona < Alpach <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 > miejscowość < położona <  * / nam_loc_land_mountain:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > miejscowość < stanie <  * / nam_fac_road:e2
+location:: * / nam_loc_land_mountain:e1 <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_land_mountain:e1 > położona > miejscowość < stanie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin1:e1 > stanie > miejscowość < położona < Alpach <  * / nam_loc_gpe_country:e2
+location:: * / nam_fac_road:e1 > stanie > miejscowość < położona < Alpach <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_land_mountain:e1 > km > Great > stanie > miejscowość < położona < Alpach <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_land_mountain:e1 > km > Great > stanie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 > km > Mount > km > Great > stanie > miejscowość < położona < Alpach <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 < wieś < województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 < terenie <  * / nam_loc_country_region:e2
+location:: * / nam_loc_gpe_city:e1 < wieś < województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_country_region:e1 > terenie > Arłamów < wieś < województwie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_liv_person:e1 < poseł < województwa <  * / nam_loc_gpe_admin1:e2
+affiliation:: * / nam_fac_goe:e1 <  * / nam_org_institution:e2
+location:: * / nam_fac_goe:e1 >  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > ośrodek > obejmował < tereny < Borysławka <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > ośrodek > obejmował < tereny <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > ośrodek > obejmował < tereny < Borysławka <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > ośrodek > obejmował < tereny < Borysławka <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > ośrodek > obejmował < tereny < Borysławka <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > ośrodek > obejmował < tereny < Borysławka <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > ośrodek > obejmował < tereny < Borysławka <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > ośrodek > obejmował < tereny < Borysławka <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > zbudowane <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 > przewodniczący <  * / nam_org_organization:e2
+location:: * / nam_liv_person:e1 > przewodniczący > internowany < wprowadzeniu < stanu <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_company:e1 <  * / nam_loc_gpe_city:e2
+nationality:: * / nam_liv_person:e1 < piłkarz <  * / nam_adj_country:e2
+origin:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 > zaczynał < karierę < miejscowości < nazwie <  * / nam_org_group_team:e2
+affiliation:: * / nam_liv_person:e1 > klubem < Twente < zadebiutował <  * / nam_eve_human_sport:e2
+affiliation:: * / nam_liv_person:e1 > klubem <  * / nam_org_group_team:e2
+affiliation:: * / nam_org_group_team:e1 < zadebiutował <  * / nam_eve_human_sport:e2
+affiliation:: * / nam_liv_person:e1 > rozegrał < bawach <  * / nam_org_group_team:e2
+affiliation:: * / nam_org_group_team:e1 > pokonało < finale <  * / nam_eve_human_sport:e2
+affiliation:: * / nam_org_group_team:e1 > pokonało < finale <  * / nam_eve_human_sport:e2
+affiliation:: * / nam_liv_person:e1 > trenerem <  * / nam_org_group_team:e2
+nationality:: * / nam_liv_person:e1 > mecz > zagrał < reprezentacji <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie < gminie <  * / nam_loc_gpe_admin3:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin1:e1 > województwie > położona > Taraska < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie > położona > Taraska < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie > położona > Taraska < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie <  * / nam_loc_gpe_admin1:e2
+neighbourhood:: * / nam_loc_gpe_district:e1 <  * / nam_loc_gpe_district:e2
+creator:: * / nam_org_organization:e1 > oddziału > kół > jedno > organizowanej > imprezy >  * / nam_eve_human:e2
+location:: * / nam_loc_gpe_city:e1 < województwo <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 < wieś <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie < gminie <  * / nam_loc_gpe_admin3:e2
+composition:: * / nam_loc_gpe_admin1:e1 > województwie > położona > Szóstka < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie > położona > Szóstka < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie > położona > Szóstka < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie < gminie <  * / nam_loc_gpe_admin3:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 < wieś <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+composition:: * / nam_loc_gpe_admin1:e1 > województwie > położona > Zielonki < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie > położona > Zielonki < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie > położona > Zielonki < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 < powiat <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 > wieś < położona < województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 > wieś < położona < województwie < gminie <  * / nam_loc_gpe_admin3:e2
+location:: * / nam_loc_gpe_city:e1 > wieś < położona < województwie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 > wieś <  * / nam_loc_gpe_country:e2
+alias:: * / nam_loc_gpe_city:e1 < niem <  * / nam_loc_gpe_city:e2
+composition:: * / nam_loc_gpe_admin1:e1 > województwie > położona > wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie > położona > wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie > położona > wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+origin:: * / nam_liv_person:e1 > rodziny <  * / nam_loc_gpe_city:e2
+location:: * / nam_liv_person:e1 <  * / nam_loc_gpe_city:e2
+alias:: * / nam_fac_goe:e1 <  * / nam_fac_goe:e2
+alias:: * / nam_fac_goe:e1 <  * / nam_fac_goe:e2
+location:: * / nam_loc_gpe_city:e1 < województwo <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 < wieś <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie < gminie <  * / nam_loc_gpe_admin3:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+composition:: * / nam_loc_gpe_admin1:e1 > województwie > położona > Sulejów < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie > położona > Sulejów < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie > położona > Sulejów < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 > miejscowość < leżąca < dystrykcie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 > miejscowość < podregionie <  * / nam_loc_country_region:e2
+location:: * / nam_loc_gpe_city:e1 > miejscowość < leżąca < dystrykcie < regionie <  * / nam_loc_historical_region:e2
+location:: * / nam_loc_gpe_city:e1 > miejscowość <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin1:e1 > dystrykcie > leżąca > miejscowość <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_historical_region:e1 > regionie > dystrykcie > leżąca > miejscowość <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_historical_region:e1 > regionie > dystrykcie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_country_region:e1 > podregionie > miejscowość <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_country_region:e1 > podregionie > miejscowość < leżąca < dystrykcie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_country_region:e1 > podregionie > miejscowość < leżąca < dystrykcie < regionie <  * / nam_loc_historical_region:e2
+composition:: * / nam_eve_human_holiday:e1 < dzień <  * / nam_eve_human_holiday:e2
+alias:: * / nam_eve_human_holiday:e1 > nazywana >  * / nam_eve_human_holiday:e2
+alias:: * / nam_eve_human_holiday:e1 > Niedzielą > nazywana >  * / nam_eve_human_holiday:e2
+alias:: * / nam_eve_human_holiday:e1 > Niedzielą > nazywana >  * / nam_eve_human_holiday:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_loc_gpe_country:e2
+creator:: * / nam_liv_person:e1 > gen > dyktatora > rozkazem < nazwą <  * / nam_org_institution:e2
+origin:: * / nam_org_institution:e1 < Województwa <  * / nam_loc_gpe_admin1:e2
+origin:: * / nam_org_institution:e1 < Województwa <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_liv_person:e1 > korpusu < Dziekońskiego <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_liv_person:e1 <  * / nam_loc_gpe_admin1:e2
+affiliation:: * / nam_liv_person:e1 > gen > składzie <  * / nam_org_institution:e2
+nationality:: * / nam_liv_person:e1 < siatkarz <  * / nam_adj_country:e2
+origin:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_city:e2
+alias:: * / nam_org_institution:e1 <  * / nam_org_institution:e2
+composition:: * / nam_org_institution:e1 > jednostka < kawalerii <  * / nam_org_institution:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_loc_gpe_country:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_institution:e2
+composition:: * / nam_org_institution:e1 < Pułk <  * / nam_org_institution:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_institution:e2
+location:: * / nam_org_institution:e1 > Dowództwo > przeniesione <  * / nam_fac_goe:e2
+alias:: * / nam_org_institution:e1 > Dowództwo > przeniesione < garnizonu < przemianowana <  * / nam_org_institution:e2
+alias:: * / nam_org_institution:e1 > kwietnia > 1 > przemianowana <  * / nam_org_institution:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_org_institution:e1 < formacja <  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_org_institution:e1 < straż < cesarza <  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_loc_gpe_country:e2
+location:: * / nam_org_institution:e1 < Sankt <  * / nam_fac_road:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_road:e1 >  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_hydronym_river:e1 >  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_hydronym_river:e1 >  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_hydronym_river:e1 >  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_hydronym_river:e1 >  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_org_institution:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_loc_gpe_country:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+origin:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_city:e2
+nationality:: * / nam_liv_person:e1 < wioślarz <  * / nam_adj_country:e2
+nationality:: * / nam_liv_person:e1 < pisarz <  * / nam_adj_country:e2
+origin:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_city:e2
+location:: * / nam_pro_title:e1 <  * / nam_pro_media_periodic:e2
+nationality:: * / nam_liv_person:e1 < piłkarz <  * / nam_adj_country:e2
+origin:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 > Karierę > rozpoczął < klubie <  * / nam_org_group_team:e2
+affiliation:: * / nam_liv_person:e1 > przeszedł <  * / nam_org_group_team:e2
+affiliation:: * / nam_liv_person:e1 > wyjechał <  * / nam_org_group_team:e2
+affiliation:: * / nam_liv_person:e1 > Jugosławii > reprezentacji > zadebiutował < meczu < eliminacji <  * / nam_eve_human_sport:e2
+nationality:: * / nam_liv_person:e1 >  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 > rozpoczęło <  * / nam_loc_gpe_admin1:e2
+affiliation:: * / nam_liv_person:e1 > gen > czele > oficerów < przeznaczonych <  * / nam_org_institution:e2
+affiliation:: * / nam_liv_person:e1 > gen > został < dowódcą <  * / nam_org_institution:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_institution:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_institution:e2
+composition:: * / nam_org_institution:e1 > składzie > sformowana <  * / nam_org_institution:e2
+composition:: * / nam_org_institution:e1 > Batalionu > składzie > sformowana <  * / nam_org_institution:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_institution:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_institution:e2
+composition:: * / nam_org_institution:e1 > Batalionu > składzie > sformowana <  * / nam_org_institution:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_institution:e2
+composition:: * / nam_org_institution:e1 > dywizji > przydzielonego > Batalionu > Batalionu > składzie > sformowana <  * / nam_org_institution:e2
+location:: * / nam_org_institution:e1 > wycofała < Przełęcz <  * / nam_loc:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 < rzeką <  * / nam_loc_hydronym_river:e2
+alias:: * / nam_pro_title:e1 <  * / nam_pro_title:e2
+location:: * / nam_liv_person:e1 > zestawiony <  * / nam_loc_gpe_city:e2
+location:: * / nam_liv_person:e1 > Georga > zestawiony <  * / nam_loc_gpe_city:e2
+location:: * / nam_liv_person:e1 > Georga > zestawiony <  * / nam_loc_gpe_city:e2
+location:: * / nam_liv_person:e1 > zestawione <  * / nam_loc_gpe_city:e2
+location:: * / nam_liv_person:e1 > Georga > zestawione <  * / nam_loc_gpe_city:e2
+location:: * / nam_liv_person:e1 > Georga > zestawione <  * / nam_loc_gpe_city:e2
+creator:: * / nam_org_group_band:e1 > wydany > album >  * / nam_pro_title_album:e2
+nationality:: * / nam_liv_person:e1 > generał <  * / nam_adj_country:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_org_institution:e2
+location:: * / nam_loc_gpe_city:e1 > powstawał <  * / nam_loc_gpe_country:e2
+location:: * / nam_org_company:e1 > firmy > zakładzie >  * / nam_loc_gpe_country:e2
+location:: * / nam_org_company:e1 > firmy > zakładzie > Finlandii > powstawał <  * / nam_loc_gpe_city:e2
+location:: * / nam_pro_brand:e1 > oferowano <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 < wieś <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie < gminie <  * / nam_loc_gpe_admin3:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin1:e1 > województwie > położona > Kisielówka < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie > położona > Kisielówka < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie > położona > Kisielówka < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 < miejscowość <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie < gminie <  * / nam_loc_gpe_admin3:e2
+composition:: * / nam_loc_gpe_admin1:e1 > województwie > położona > Probostwo < miejscowość <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie > położona > Probostwo < miejscowość <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie > położona > Probostwo < miejscowość <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie < gminie <  * / nam_loc_gpe_admin3:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin1:e1 > województwie > położona > Wojnowiczki < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie > położona > Wojnowiczki < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+affiliation:: * / nam_liv_person:e1 > przeniesiony < stanowisko < przewodniczącego <  * / nam_org_institution:e2
+alias:: * / nam_org_institution:e1 <  * / nam_org_institution:e2
+location:: * / nam_liv_person:e1 > rozegrał <  * / nam_fac_goe:e2
+affiliation:: * / nam_org_political_party:e1 < partia <  * / nam_loc_gpe_country:e2
+nationality:: * / nam_liv_person:e1 > była < biathlonistka <  * / nam_adj_country:e2
+origin:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_city:e2
+nationality:: * / nam_liv_person:e1 < ekonomista <  * / nam_adj_country:e2
+origin:: * / nam_liv_person:e1 > ławnika <  * / nam_adj_city:e2
+origin:: * / nam_liv_person:e1 >  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 > odbywał < uczelni < wyższej <  * / nam_loc_gpe_country:e2
+origin:: * / nam_liv_person:e1 > mieszczaninem <  * / nam_adj_city:e2
+origin:: * / nam_liv_person:e1 > rodziny <  * / nam_adj_city:e2
+location:: * / nam_liv_person:e1 > prowadził <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_road:e1 > ulicy > kamienicę > wniosła > dlatego > związane <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 > profesorami <  * / nam_org_organization:e2
+affiliation:: * / nam_liv_person:e1 > Marcinem > profesorami <  * / nam_org_organization:e2
+creator:: * / nam_liv_person:e1 > wydał <  * / nam_pro_title:e2
+location:: * / nam_loc_gpe_city:e1 < powiat <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 < wieś <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 < wieś < położona < województwie < gminie <  * / nam_loc_gpe_admin3:e2
+location:: * / nam_loc_gpe_city:e1 < wieś < położona < województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+alias:: * / nam_loc_gpe_city:e1 < niem <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 < wieś < położona < województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin1:e1 > województwie > położona > wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie > położona > wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie > położona > wieś <  * / nam_loc_gpe_country:e2
+location:: * / nam_liv_person:e1 > został < Sołtysem <  * / nam_loc_gpe_city:e2
+creator:: * / nam_liv_person:e1 > obrazy < Koronacja <  * / nam_pro_title_painting:e2
+creator:: * / nam_liv_person:e1 > obrazy < Koronacja < św <  * / nam_pro_title_painting:e2
+creator:: * / nam_liv_person:e1 > obrazy <  * / nam_pro_title_painting:e2
+creator:: * / nam_liv_person:e1 > wykonawcy > autoportretem > Antoni > m > obrazy <  * / nam_pro_title_painting:e2
+creator:: * / nam_liv_person:e1 > wykonawcy > autoportretem >  * / nam_pro_title_painting:e2
+origin:: * / nam_liv_person:e1 > teolog > urodził <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 < wieś < położona < województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 < wieś < położona < województwie < gminie <  * / nam_loc_gpe_admin3:e2
+location:: * / nam_loc_gpe_city:e1 < wieś <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 < wieś < położona < województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin1:e1 > województwie > położona > wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie > położona > wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie > położona > wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie <  * / nam_loc_gpe_admin1:e2
+creator:: * / nam_liv_person:e1 > stworzonej >  * / nam_pro_software:e2
+creator:: * / nam_org_company:e1 > firmę > Willa > stworzonej >  * / nam_pro_software:e2
+origin:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 < koszykarz < zawodnik <  * / nam_org_group_team:e2
+affiliation:: * / nam_liv_person:e1 > spędził <  * / nam_org_group_team:e2
+location:: * / nam_fac_goe:e1 <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_fac_goe:e1 <  * / nam_fac_road:e2
+location:: * / nam_fac_road:e1 > Pałac <  * / nam_loc_gpe_city:e2
+alias:: * / nam_liv_person_last:e1 > Augusta <  * / nam_liv_person_last:e2
+creator:: * / nam_org_institution:e1 > organizowanym > konkursie <  * / nam_eve_human:e2
+creator:: * / nam_org_organization:e1 > doceniła < nadając <  * / nam_eve_human:e2
+location:: * / nam_org_institution:e1 > jednostką < działającą <  * / nam_loc_gpe_city:e2
+alias:: * / nam_org_institution:e1 <  * / nam_org_institution:e2
+composition:: * / nam_org_institution:e1 > jednostką <  * / nam_org_organization:e2
+location:: * / nam_org_organization:e1 > jednostką < działającą <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_fac_goe:e1 < ul <  * / nam_fac_road:e2
+neighbourhood:: * / nam_fac_goe:e1 < ul <  * / nam_fac_road:e2
+neighbourhood:: * / nam_fac_goe:e1 > Laboratoria < ul <  * / nam_fac_road:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+creator:: * / nam_org_company:e1 > firmę > produkowany > samochód <  * / nam_pro_brand:e2
+location:: * / nam_org_company:e1 > fabryce > Produkowany < sprzedawany <  * / nam_loc_land_continent:e2
+location:: * / nam_org_company:e1 > fabryce <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_land_peak:e1 <  * / nam_loc_land_mountain:e2
+composition:: * / nam_loc_land_peak:e1 < szczyt < części < paśmie <  * / nam_loc_land_mountain:e2
+composition:: * / nam_loc_land_peak:e1 < szczyt < części <  * / nam_loc_land_mountain:e2
+location:: * / nam_loc_land_mountain:e1 > paśmie > części <  * / nam_loc_land_mountain:e2
+composition:: * / nam_loc_gpe_district:e1 >  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 < miejscowość <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 < miejscowość < gminie <  * / nam_loc_gpe_admin3:e2
+location:: * / nam_loc_gpe_city:e1 < miejscowość < Norwegii < regionie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > miejscowość <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin1:e1 > regionie >  * / nam_loc_gpe_country:e2
+alias:: * / nam_liv_person:e1 <  * / nam_liv_person:e2
+creator:: * / nam_liv_person:e1 >  * / nam_pro_title:e2
+nationality:: * / nam_liv_person:e1 < aktor <  * / nam_adj_country:e2
+origin:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_city:e2
+origin:: * / nam_liv_person:e1 <  * / nam_loc_gpe_city:e2
+creator:: * / nam_liv_person:e1 >  * / nam_pro_title_album:e2
+creator:: * / nam_liv_person:e1 > Matador > wykonał < piosenkę <  * / nam_pro_title_song:e2
+creator:: * / nam_liv_person:e1 >  * / nam_pro_title_song:e2
+creator:: * / nam_org_organization:e1 > uchwaloną > konwencją <  * / nam_pro_title_document:e2
+alias:: * / nam_pro_title_document:e1 <  * / nam_pro_title_document:e2
+affiliation:: * / nam_liv_person:e1 > był > Ekspertem <  * / nam_org_institution:e2
+composition:: * / nam_loc_gpe_district:e1 >  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 < wieś <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 < wieś < położona < województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 < wieś < położona < województwie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 < wieś < położona < województwie < gminie <  * / nam_loc_gpe_admin3:e2
+alias:: * / nam_loc_gpe_city:e1 < kaszb <  * / nam_loc_gpe_city:e2
+composition:: * / nam_loc_gpe_admin1:e1 > województwie > położona > wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie > położona > wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie > położona > wieś <  * / nam_loc_gpe_country:e2
+origin:: * / nam_org_nation:e1 < pochodzenia <  * / nam_adj_country:e2
+origin:: * / nam_org_nation:e1 < pochodzenia <  * / nam_adj_country:e2
+origin:: * / nam_org_nation:e1 < urodzili < wychowali < Rosji <  * / nam_loc_gpe_country:e2
+origin:: * / nam_org_nation:e1 <  * / nam_adj_country:e2
+origin:: * / nam_org_nation:e1 < urodzili < wychowali <  * / nam_loc_gpe_country:e2
+origin:: * / nam_org_nation:e1 > Żydów < urodzili < wychowali < Rosji <  * / nam_loc_gpe_country:e2
+origin:: * / nam_org_nation:e1 > Żydów <  * / nam_adj_country:e2
+origin:: * / nam_org_nation:e1 > Żydów < urodzili < wychowali <  * / nam_loc_gpe_country:e2
+origin:: * / nam_org_nation:e1 > Żydów < urodzili < wychowali <  * / nam_loc_gpe_country:e2
+origin:: * / nam_org_nation:e1 > Żydów < urodzili < wychowali < Rosji <  * / nam_loc_gpe_country:e2
+origin:: * / nam_org_nation:e1 > Żydów <  * / nam_adj_country:e2
+origin:: * / nam_org_nation:e1 > Żydów <  * / nam_adj_country:e2
+origin:: * / nam_org_nation:e1 > Żydów < urodzili < wychowali < Rosji <  * / nam_loc_gpe_country:e2
+origin:: * / nam_org_nation:e1 > Żydów < urodzili < wychowali <  * / nam_loc_gpe_country:e2
+origin:: * / nam_org_nation:e1 < pochodzenia <  * / nam_adj_country:e2
+location:: * / nam_loc_gpe_city:e1 > występują <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 > Alasce <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_district:e1 > dzielnicy >  * / nam_loc_gpe_city:e2
+composition:: * / nam_loc_gpe_district:e1 > Bronx > dzielnicy >  * / nam_loc_gpe_city:e2
+location:: * / nam_org_company:e1 < producent < kolumn < siedzibą < mieście <  * / nam_loc_gpe_city:e2
+alias:: * / nam_liv_animal:e1 < arab <  * / nam_liv_animal:e2
+origin:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_city:e2
+location:: * / nam_liv_person:e1 < ur < zm <  * / nam_loc_gpe_city:e2
+nationality:: * / nam_liv_person:e1 < fizyk <  * / nam_adj_country:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_organization:e2
+location:: * / nam_loc_gpe_city:e1 >  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 > Chicago >  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 < powiat <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 < osada <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie < gminie <  * / nam_loc_gpe_admin3:e2
+composition:: * / nam_loc_gpe_admin1:e1 > województwie > położona > Laski < osada <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie > położona > Laski < osada <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie > położona > Laski < osada <  * / nam_loc_gpe_country:e2
+alias:: * / nam_org_company:e1 <  * / nam_org_company:e2
+creator:: * / nam_liv_person:e1 > założone > konsorcjum >  * / nam_org_company:e2
+alias:: * / nam_pro_brand:e1 <  * / nam_pro_brand:e2
+alias:: * / nam_org_company:e1 <  * / nam_org_company:e2
+neighbourhood:: * / nam_fac_goe:e1 > gmach > wzniesiono < ul <  * / nam_fac_road:e2
+neighbourhood:: * / nam_fac_goe:e1 > hotel < ekskluzywny < ul <  * / nam_fac_road:e2
+alias:: * / nam_fac_road:e1 > ulic <  * / nam_fac_road:e2
+location:: * / nam_loc_gpe_subdivision:e1 <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_loc_gpe_subdivision:e1 < osiedle < położone < części < ul < ul <  * / nam_fac_road:e2
+neighbourhood:: * / nam_loc_gpe_subdivision:e1 < osiedle < położone < części < ul <  * / nam_fac_road:e2
+location:: * / nam_loc_gpe_subdivision:e1 < osiedle < położone < części <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_road:e1 > Ulica <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_road:e1 > Ulica < jedna < ulic <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_fac_road:e1 < drogą < Hrubieszowa < ul <  * / nam_fac_road:e2
+location:: * / nam_pro_media_periodic:e1 > wydawał <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_road:e1 <  * / nam_loc_gpe_country:e2
+neighbourhood:: * / nam_fac_road:e1 > przebiega < zachodu < wschód < miejscowości <  * / nam_loc_gpe_city:e2
+alias:: * / nam_fac_road:e1 <  * / nam_fac_road:e2
+alias:: * / nam_fac_road:e1 < Bundesstraße <  * / nam_fac_road:e2
+neighbourhood:: * / nam_fac_road:e1 > przebiega < zachodu < wschód < miejscowości <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_road:e1 > przebiega < teren <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 < miasto < Japonii < wyspie <  * / nam_loc_land_island:e2
+location:: * / nam_loc_gpe_city:e1 < miasto <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_land_island:e1 > wyspie >  * / nam_loc_gpe_country:e2
+location:: * / nam_fac_goe:e1 < kasyno <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 > cechą < wieża < budowla < stanie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_fac_goe:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 > starą > miasta > części > ślubów > udziela > kaplic > szereg > widok <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_road:e1 > Las > starą > miasta > części > ślubów > udziela > kaplic > szereg > widok <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 > Freemont > Las > starą > miasta > części > ślubów > udziela > kaplic > szereg > widok <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 > Luxor > Freemont > Las > starą > miasta > części > ślubów > udziela > kaplic > szereg > widok <  * / nam_loc_gpe_city:e2
+nationality:: * / nam_liv_person:e1 > prawnik <  * / nam_adj_country:e2
+affiliation:: * / nam_liv_person:e1 > prawnik < polityk < związany <  * / nam_org_political_party:e2
+location:: * / nam_loc_gpe_city:e1 <  * / nam_loc_gpe_admin1:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_loc_gpe_country:e2
+origin:: * / nam_liv_person:e1 < chin < ur <  * / nam_loc_gpe_city:e2
+alias:: * / nam_liv_person:e1 < chin < trad <  * / nam_liv_person:e2
+alias:: * / nam_liv_person:e1 < chin < pinyin <  * / nam_liv_person:e2
+alias:: * / nam_liv_person:e1 < chin < chin < upr <  * / nam_liv_person:e2
+nationality:: * / nam_liv_person:e1 < polityk < premier <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 > ur < prowincji <  * / nam_loc_gpe_admin1:e2
+nationality:: * / nam_liv_person:e1 > urodził < prowincji <  * / nam_loc_gpe_country:e2
+origin:: * / nam_liv_person:e1 > urodził < prowincji <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin1:e1 > prowincji <  * / nam_loc_gpe_country:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 < Sherbooke <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 <  * / nam_loc_gpe_country:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+nationality:: * / nam_liv_person:e1 > objął < stanowisko < premiera <  * / nam_loc_gpe_country:e2
+nationality:: * / nam_liv_person:e1 > został < premierem <  * / nam_loc_gpe_country:e2
+location:: * / nam_fac_goe_stop:e1 < stacja <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe_stop:e1 < stacja < kraju <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_fac_goe_stop:e1 < stacja < kraju <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 > stacja < kraju <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 > stacja < kraju <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin1:e1 > kraju <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin3:e1 > Gmina < gmina < istniejąca < latach < 1 < woj <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > Gmina > powstała < terenie <  * / nam_loc_country_region:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiatu > jednostka > weszła < skład < woj <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 > stronie > znalazła > granicą < powiatu <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 > Lipica > stronie > znalazła > granicą < powiatu <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_liv_person:e1 > Koronacja > miała < kaplicy <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 < znajduje < opactwie <  * / nam_loc_gpe_city:e2
+creator:: * / nam_org_group_band:e1 > zespołu > piosenki > cover <  * / nam_pro_title_song:e2
+location:: * / nam_pro_title:e1 > Singiel > wydany <  * / nam_loc_gpe_country:e2
+location:: * / nam_eve_human_sport:e1 > odbyły <  * / nam_loc_gpe_country:e2
+alias:: * / nam_loc_gpe_country:e1 <  * / nam_loc_gpe_country:e2
+alias:: * / nam_loc_gpe_country:e1 <  * / nam_loc_gpe_country:e2
+alias:: * / nam_loc_gpe_country:e1 <  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_org_company:e1 > producent < należący < koncernu <  * / nam_org_company:e2
+alias:: * / nam_org_company:e1 <  * / nam_org_company:e2
+alias:: * / nam_org_company:e1 >  * / nam_org_company:e2
+alias:: * / nam_oth:e1 > modele > trafiły <  * / nam_pro_brand:e2
+alias:: * / nam_oth:e1 > 550 > modele > trafiły < MG <  * / nam_pro_brand:e2
+location:: * / nam_pro_brand:e1 > trafiły < sprzedaży <  * / nam_loc_gpe_country:e2
+alias:: * / nam_pro_brand:e1 > trafiły < modele <  * / nam_oth:e2
+location:: * / nam_pro_brand:e1 > MG > trafiły < sprzedaży <  * / nam_loc_gpe_country:e2
+alias:: * / nam_pro_brand:e1 > MG > trafiły < modele < 550 <  * / nam_oth:e2
+location:: * / nam_liv_person:e1 < ur < zm <  * / nam_loc_gpe_city:e2
+nationality:: * / nam_liv_person:e1 < lekarz <  * / nam_adj_country:e2
+origin:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 >  * / nam_loc_gpe_city:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_organization:e2
+location:: * / nam_fac_goe_stop:e1 < stacja < linii < miejscowości < województwie < powiecie < gminie <  * / nam_loc_gpe_country:e2
+location:: * / nam_fac_goe_stop:e1 < stacja < linii < miejscowości <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe_stop:e1 < stacja < linii < miejscowości < województwie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_fac_goe_stop:e1 < stacja < linii < miejscowości < województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+neighbourhood:: * / nam_fac_goe_stop:e1 < stacja <  * / nam_fac_road:e2
+location:: * / nam_loc_gpe_city:e1 > miejscowości < województwie < powiecie < gminie <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 > miejscowości < województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 > miejscowości < województwie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 > miejscowości < województwie < powiecie < gminie <  * / nam_loc_gpe_admin3:e2
+composition:: * / nam_loc_gpe_admin1:e1 > województwie < powiecie < gminie <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie < gminie <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > powiecie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_pro_title_document:e1 < ustawa <  * / nam_pro_media_periodic:e2
+creator:: * / nam_org_institution:e1 > przyjęta > ustawa >  * / nam_pro_title_document:e2
+location:: * / nam_liv_person:e1 < bokser <  * / nam_loc_gpe_city:e2
+nationality:: * / nam_liv_person:e1 < bokser <  * / nam_adj_country:e2
+origin:: * / nam_liv_person:e1 < osadzie <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 < województwo <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 < pow <  * / nam_loc_gpe_admin2:e2
+composition:: * / nam_loc_gpe_admin2:e1 > pow > Kopanie < województwo <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_eve_human_sport:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_eve_human_sport:e1 <  * / nam_loc_gpe_city:e2
+nationality:: * / nam_liv_person:e1 < operator <  * / nam_adj_country:e2
+origin:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 < operator < nagrodzony <  * / nam_pro_award:e2
+creator:: * / nam_liv_person:e1 > reż >  * / nam_pro_title:e2
+creator:: * / nam_liv_person:e1 > reż >  * / nam_pro_title:e2
+origin:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_city:e2
+nationality:: * / nam_liv_person:e1 < polityk <  * / nam_adj_country:e2
+affiliation:: * / nam_liv_person:e1 < polityk < poseł <  * / nam_org_institution:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+alias:: * / nam_org_political_party:e1 <  * / nam_org_political_party:e2
+affiliation:: * / nam_loc_gpe_country:e1 > akcesie <  * / nam_org_organization:e2
+location:: * / nam_liv_person:e1 > Pomnik <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_park:e1 <  * / nam_adj_city:e2
+alias:: * / nam_liv_person_first:e1 <  * / nam_liv_person_last:e2
+alias:: * / nam_liv_person:e1 <  * / nam_liv_person:e2
+origin:: * / nam_liv_person:e1 < Lew < arcybiskup <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 < Lew < arcybiskup <  * / nam_org_organization:e2
+origin:: * / nam_liv_person:e1 < arcybiskup <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_oth:e1 < wsi <  * / nam_oth:e2
+location:: * / nam_oth:e1 < wsi <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 > wsi <  * / nam_oth:e2
+location:: * / nam_oth:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 <  * / nam_loc_gpe_city:e2
+origin:: * / nam_liv_person:e1 >  * / nam_liv_habitant:e2
+location:: * / nam_liv_person:e1 > zielonogórzanin > wygrał > odbywał <  * / nam_loc_gpe_city:e2
+location:: * / nam_liv_person:e1 < duchowny < arcybiskup <  * / nam_loc_gpe_city:e2
+nationality:: * / nam_liv_person:e1 < duchowny <  * / nam_adj_country:e2
+origin:: * / nam_liv_person:e1 < ur <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 > ur > Paolo <  * / nam_loc_land_island:e2
+location:: * / nam_org_organization:e1 > teologię > Studiował < seminarium < Acireale <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 > prawo > teologię > Studiował < seminarium < Acireale <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_org_institution:e1 > rozpoczął >  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 > miejscowość < prowincji <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 > miejscowość < Włoszech < regionie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 > miejscowość <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin1:e1 > regionie >  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > prowincji > miejscowość < Włoszech < regionie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin2:e1 > prowincji > miejscowość <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 < województwo <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 < wieś <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie < gminie <  * / nam_loc_gpe_admin3:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin1:e1 > województwie > położona > Osówiec < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie > położona > Osówiec < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie > położona > Osówiec < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 < miasto <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 < ośrodek <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin1:e1 > ośrodek > Serowe < miasto <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 < powiat <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 < położona < województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+location:: * / nam_loc_gpe_city:e1 < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin1:e1 > województwie > położona > Borek < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie <  * / nam_loc_gpe_admin1:e2
+composition:: * / nam_loc_gpe_admin2:e1 > powiecie > województwie > położona > Borek < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie > położona > Borek < wieś <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie < powiecie <  * / nam_loc_gpe_admin2:e2
+composition:: * / nam_loc_gpe_admin3:e1 > gminie > województwie <  * / nam_loc_gpe_admin1:e2
+nationality:: * / nam_liv_person:e1 < bilardzista < snookerzysta <  * / nam_adj_country:e2
+location:: * / nam_liv_person:e1 > ukończył <  * / nam_loc_gpe_city:e2
+nationality:: * / nam_liv_person:e1 < aktor <  * / nam_adj_country:e2
+affiliation:: * / nam_liv_person:e1 > ukończył <  * / nam_org_organization:e2
+location:: * / nam_org_organization:e1 > ukończył <  * / nam_loc_gpe_city:e2
+alias:: * / nam_org_company:e1 <  * / nam_org_company:e2
+alias:: * / nam_loc_astronomical:e1 <  * / nam_loc_astronomical:e2
+nationality:: * / nam_liv_person:e1 > astronom <  * / nam_adj_country:e2
+location:: * / nam_fac_road:e1 > ulicy > zbudowana > synagoga > Synagoga <  * / nam_loc_gpe_city:e2
+alias:: * / nam_fac_road:e1 > ulicy < niem <  * / nam_fac_road:e2
+alias:: * / nam_fac_road:e1 > ulicy > znajdująca > świątynia < ulica <  * / nam_fac_road:e2
+alias:: * / nam_pro_title_document:e1 < duń <  * / nam_pro_title_document:e2
+location:: * / nam_loc_historical_region:e1 > regionu <  * / nam_loc_gpe_country:e2
+alias:: * / nam_pro_title_song:e1 >  * / nam_pro_title_song:e2
+nationality:: * / nam_liv_person:e1 < oficer <  * / nam_adj_country:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_organization:e2
+location:: * / nam_org_organization:e1 > Wydziale <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 < MO <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution_full:e1 <  * / nam_loc_gpe_city:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_institution:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > miejscowości <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 > miejscowości < Kaposvaru <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 <  * / nam_loc_gpe_country:e2
+location:: * / nam_org_group_team:e1 < klub <  * / nam_loc_gpe_district:e2
+affiliation:: * / nam_org_group_team:e1 < grający <  * / nam_eve_human_sport:e2
+composition:: * / nam_loc_gpe_district:e1 < dzielnicy <  * / nam_loc_gpe_city:e2
+alias:: * / nam_pro_title:e1 >  * / nam_pro_title:e2
+creator:: * / nam_liv_person:e1 > utworów > jeden <  * / nam_pro_title:e2
+composition:: * / nam_pro_title:e1 >  * / nam_pro_title:e2
+composition:: * / nam_pro_title:e1 > Ameryka >  * / nam_pro_title:e2
+origin:: * / nam_liv_person:e1 < Samuel < uniwersytetu <  * / nam_loc_gpe_city:e2
+origin:: * / nam_liv_person:e1 < uniwersytetu <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 <  * / nam_loc_gpe_admin1:e2
+alias:: * / nam_liv_person:e1 >  * / nam_liv_person_add:e2
+affiliation:: * / nam_liv_person:e1 > papież > przypomina < podobnie < czynił < prefekt <  * / nam_org_institution:e2
+creator:: * / nam_liv_person:e1 > rzece > wywiadzie > nakreślił <  * / nam_pro_title:e2
+alias:: * / nam_liv_person:e1 >  * / nam_liv_person_add:e2
+creator:: * / nam_org_institution:e1 > Uchwalona >  * / nam_pro_title_document:e2
+affiliation:: * / nam_loc_gpe_country:e1 > sprawy <  * / nam_org_organization:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 > poseł <  * / nam_org_political_party:e2
+creator:: * / nam_liv_person:e1 > wskazał < wpisie <  * / nam_pro_title:e2
+location:: * / nam_liv_person:e1 >  * / nam_pro_media_web:e2
+affiliation:: * / nam_oth_tech:e1 > entuzjastów <  * / nam_oth_tech:e2
+creator:: * / nam_liv_person:e1 > autorstwa >  * / nam_oth_tech:e2
+origin:: * / nam_liv_person:e1 > nazwiskiem > mieszkańca <  * / nam_loc_gpe_city:e2
+alias:: * / nam_fac_goe:e1 > nazywające > miejsce >  * / nam_fac_goe:e2
+composition:: * / nam_loc_gpe_country:e1 < kraiku < stanowił < część <  * / nam_loc:e2
+origin:: * / nam_org_nation:e1 > ilość < rodem <  * / nam_loc_gpe_country:e2
+location:: * / nam_org_nation:e1 > ilość > Znaleźli <  * / nam_loc_gpe_country:e2
+location:: * / nam_liv_person:e1 > lekcje > ukończywszy > wzięła <  * / nam_fac_park:e2
+affiliation:: * / nam_liv_person:e1 > Posłowie < Leszek <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 > posła > pana <  * / nam_org_political_party:e2
+location:: * / nam_pro_title_document:e1 < sporządzonej <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 > poseł > Pan <  * / nam_org_political_party:e2
+location:: * / nam_liv_person:e1 > spędził <  * / nam_loc_gpe_city:e2
+location:: * / nam_liv_person:e1 > spędził < stóp <  * / nam_loc_land_mountain:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > spędził < stóp <  * / nam_loc_land_mountain:e2
+location:: * / nam_org_organization:e1 > założył <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 > pracował > mieszkał <  * / nam_loc_gpe_city:e2
+location:: * / nam_liv_person:e1 > postanowił < zamieszkać <  * / nam_loc_gpe_city:e2
+composition:: * / nam_org_institution:e1 < oddziałem <  * / nam_org_organization:e2
+affiliation:: * / nam_liv_person:e1 > poseł > Pan <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 > poseł > Pan <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 > pan > Podsekretarz <  * / nam_org_institution:e2
+affiliation:: * / nam_liv_person:e1 > Podsekretarz <  * / nam_org_institution:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_loc_gpe_country:e2
+creator:: * / nam_liv_person:e1 >  * / nam_pro_title:e2
+creator:: * / nam_liv_person:e1 > Grammar <  * / nam_pro_title:e2
+affiliation:: * / nam_liv_person:e1 > posła > pana > głosu > zabranie <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 > Podsekretarz <  * / nam_org_institution:e2
+affiliation:: * / nam_liv_person:e1 > posłanka > pani <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 > minister > pani > pracuje > Widzimy < jest <  * / nam_fac_goe:e2
+affiliation:: * / nam_liv_person:e1 > poseł > pan <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 > poseł > Pan <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 > Poseł < Klub < Poselski <  * / nam_org_political_party:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 > Omnibus <  * / nam_loc_gpe_city:e2
+creator:: * / nam_liv_person:e1 > napisał > ma <  * / nam_pro_title:e2
+neighbourhood:: * / nam_fac_road:e1 > ulicy > zgłoszono < róg <  * / nam_fac_road:e2
+creator:: * / nam_liv_person:e1 >  * / nam_pro_title:e2
+location:: * / nam_org_organization:e1 > naukowcy <  * / nam_adj_city:e2
+location:: * / nam_pro_software:e1 < wbudowanym <  * / nam_pro_software:e2
+location:: * / nam_pro_software:e1 > wszystkiego < Officem < wbudowanym <  * / nam_pro_software:e2
+creator:: * / nam_org_organization:e1 > wybrała < wydając <  * / nam_oth_license:e2
+composition:: * / nam_pro_media_radio:e1 <  * / nam_org_company:e2
+location:: * / nam_org_institution:e1 > projekcie <  * / nam_loc_gpe_country:e2
+alias:: * / nam_oth_tech:e1 <  * / nam_oth_tech:e2
+alias:: * / nam_oth_tech:e1 >  * / nam_oth_tech:e2
+affiliation:: * / nam_loc_gpe_country:e1 > wypada <  * / nam_org_organization:e2
+affiliation:: * / nam_loc_gpe_country:e1 >  * / nam_org_organization:e2
+affiliation:: * / nam_liv_person:e1 >  * / nam_org_company:e2
+affiliation:: * / nam_loc_gpe_country:e1 > miała > należała <  * / nam_org_organization:e2
+location:: * / nam_org_company:e1 > inwestycje > płynęły > mówią > krajem > miała <  * / nam_loc_gpe_country:e2
+location:: * / nam_org_company:e1 > Microsoft > inwestycje > płynęły > mówią > krajem > miała <  * / nam_loc_gpe_country:e2
+location:: * / nam_org_company:e1 > Microsoft > inwestycje > płynęły > mówią > krajem > miała <  * / nam_loc_gpe_country:e2
+location:: * / nam_org_company:e1 > czasach > Microsoft > inwestycje > płynęły > mówią > krajem > miała <  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_loc_gpe_country:e1 >  * / nam_org_organization:e2
+affiliation:: * / nam_loc_gpe_country:e1 > krajów > konkuruje <  * / nam_org_organization:e2
+affiliation:: * / nam_loc_gpe_country:e1 > Czechy > krajów > konkuruje <  * / nam_org_organization:e2
+affiliation:: * / nam_loc_gpe_country:e1 > Czechy > krajów > konkuruje <  * / nam_org_organization:e2
+affiliation:: * / nam_loc_gpe_country:e1 > Czechy > krajów > konkuruje <  * / nam_org_organization:e2
+affiliation:: * / nam_loc_gpe_country:e1 > Czechy > krajów > konkuruje <  * / nam_org_organization:e2
+affiliation:: * / nam_loc_gpe_country:e1 > Czechy > krajów > konkuruje <  * / nam_org_organization:e2
+affiliation:: * / nam_loc_gpe_country:e1 > Czechy > krajów > konkuruje <  * / nam_org_organization:e2
+affiliation:: * / nam_loc_gpe_country:e1 > Czechy > krajów > konkuruje <  * / nam_org_organization:e2
+alias:: * / nam_loc_gpe_country:e1 > wyszła < okresu <  * / nam_loc_gpe_country:e2
+alias:: * / nam_org_organization:e1 <  * / nam_org_organization:e2
+alias:: * / nam_org_political_party:e1 <  * / nam_org_political_party:e2
+composition:: * / nam_org_company:e1 > wylał < latach < należy <  * / nam_org_company:e2
+location:: * / nam_liv_person:e1 > mówił < łamach <  * / nam_pro_media_periodic:e2
+neighbourhood:: * / nam_org_company:e1 > banku > placówek < ul <  * / nam_fac_road:e2
+affiliation:: * / nam_liv_person:e1 <  * / nam_org_company:e2
+creator:: * / nam_liv_person:e1 <  * / nam_pro_title_article:e2
+location:: * / nam_pro_title_article:e1 > Krzysztof <  * / nam_pro_media_periodic:e2
+alias:: * / nam_liv_person:e1 >  * / nam_liv_person:e2
+alias:: * / nam_liv_person_first:e1 > śmierci > wyłoniła < religia < sobowtóry <  * / nam_liv_person_add:e2
+alias:: * / nam_liv_person_first:e1 > fani > teksty > religia < kościoły < grób <  * / nam_liv_person_add:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 < stanie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_loc_gpe_city:e1 > Twenty < stanie <  * / nam_loc_gpe_admin1:e2
+alias:: * / nam_liv_person:e1 < obrzucany < grą < przezwiskami < takimi <  * / nam_liv_person:e2
+alias:: * / nam_liv_person:e1 < obrzucany < grą < przezwiskami < takimi < Drewnialdinho <  * / nam_liv_person:e2
+alias:: * / nam_liv_person:e1 < obrzucany < grą < przezwiskami < takimi < Drewnialdinho <  * / nam_liv_person:e2
+alias:: * / nam_pro_media_web:e1 > respondentów > ogółu > % >  * / nam_pro_media_web:e2
+alias:: * / nam_pro_media_web:e1 > % > przewaga > zaznacza > odpowiedziało < respondentów < używających <  * / nam_pro_media_web:e2
+affiliation:: * / nam_liv_person:e1 <  * / nam_org_organization:e2
+creator:: * / nam_org_company:e1 > firma > zaplanowała < premierę < nazwie <  * / nam_pro_brand:e2
+creator:: * / nam_org_company:e1 > Firma > wypuściła < wersje <  * / nam_pro_brand:e2
+creator:: * / nam_org_company:e1 > Firma > wypuściła < wersje < oznaczone <  * / nam_pro_brand:e2
+creator:: * / nam_org_company:e1 > Firma > opublikowała < informacje < modelu <  * / nam_pro_brand:e2
+creator:: * / nam_org_company:e1 > firmy > Truck > Short >  * / nam_pro_brand:e2
+creator:: * / nam_org_company:e1 > Firma > wypuściła < model <  * / nam_pro_brand:e2
+creator:: * / nam_org_company:e1 > oferty > wymiany < regulator <  * / nam_pro_brand:e2
+creator:: * / nam_org_company:e1 > firma > zaprezentowała < model < nazwie <  * / nam_pro_brand:e2
+location:: * / nam_liv_person:e1 > zadowala < pokazuje < jest < kino < niezależne <  * / nam_loc_gpe_country:e2
+location:: * / nam_pro_media_web:e1 < FBC <  * / nam_oth_www:e2
+alias:: * / nam_pro_media_web:e1 <  * / nam_pro_media_web:e2
+location:: * / nam_pro_media_web:e1 <  * / nam_oth_www:e2
+location:: * / nam_loc_gpe_city:e1 <  * / nam_loc_gpe_admin1:e2
+creator:: * / nam_org_organization:e1 > organizują < konferencję <  * / nam_eve_human:e2
+creator:: * / nam_org_institution_full:e1 > Creative > organizują < konferencję <  * / nam_eve_human:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_organization:e2
+location:: * / nam_fac_goe:e1 <  * / nam_fac_goe:e2
+neighbourhood:: * / nam_fac_goe:e1 <  * / nam_fac_road:e2
+location:: * / nam_org_organization:e1 > takie > podmioty > skupiająca > organizacja > Copyright < przedstawiciele < przemysłów < kultury <  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_org_organization:e1 > takie > podmioty > skupiająca > organizacja >  * / nam_org_organization:e2
+location:: * / nam_org_organization:e1 > MPAA > takie > podmioty > skupiająca > organizacja > Copyright < przedstawiciele < przemysłów < kultury <  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_org_organization:e1 > MPAA > takie > podmioty > skupiająca > organizacja >  * / nam_org_organization:e2
+affiliation:: * / nam_liv_person:e1 <  * / nam_pro_media_web:e2
+creator:: * / nam_liv_person:e1 > twórca <  * / nam_pro_media_web:e2
+neighbourhood:: * / nam_org_institution:e1 < Ozorkowie < ul <  * / nam_fac_road:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_road:e1 > ul >  * / nam_loc_gpe_city:e2
+location:: * / nam_eve_human_sport:e1 > rozegrano < torze <  * / nam_loc_gpe_city:e2
+origin:: * / nam_liv_person:e1 <  * / nam_loc_gpe_city:e2
+creator:: * / nam_org_company:e1 > stajni > modelem <  * / nam_pro_model_car:e2
+origin:: * / nam_liv_person:e1 <  * / nam_loc_gpe_city:e2
+origin:: * / nam_liv_person:e1 <  * / nam_loc_gpe_city:e2
+origin:: * / nam_liv_person:e1 <  * / nam_loc_gpe_city:e2
+nationality:: * / nam_liv_person:e1 > Mistrz <  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_liv_person:e1 < staruje < eliminacjach <  * / nam_eve_human_sport:e2
+origin:: * / nam_liv_person:e1 < mieszkających <  * / nam_loc_gpe_city:e2
+origin:: * / nam_liv_person:e1 < mieszkających < tymi < mieszkającymi <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_fac_goe:e1 > istniało <  * / nam_loc_gpe_city:e2
+alias:: * / nam_liv_person_first:e1 > Imię > skót <  * / nam_liv_person_first:e2
+location:: * / nam_org_nation:e1 > wojny > bóg < wyspa <  * / nam_loc_land_island:e2
+location:: * / nam_loc_land_island:e1 > wyspa > bóg < wojny < urodzaju < jednego < plemion < terenie <  * / nam_loc_gpe_country:e2
+location:: * / nam_eve_human_holiday:e1 > napełniany > posąg > czterogłowy > rozmiarów > znajdował >  * / nam_loc_gpe_city:e2
+alias:: * / nam_org_nation:e1 < zwanych <  * / nam_org_nation:e2
+alias:: * / nam_loc_gpe_city:e1 > świątyni > znajdował < posąg <  * / nam_loc_gpe_city:e2
+alias:: * / nam_loc_gpe_city:e1 > świątyni > znajdował < posąg < Gardziec <  * / nam_loc_gpe_city:e2
+alias:: * / nam_loc_gpe_city:e1 <  * / nam_loc_gpe_city:e2
+alias:: * / nam_loc_country_region:e1 > Zagłębiu <  * / nam_loc_country_region:e2
+location:: * / nam_loc_hydronym_river:e1 <  * / nam_loc_country_region:e2
+location:: * / nam_loc_hydronym_river:e1 >  * / nam_loc_gpe_country:e2
+neighbourhood:: * / nam_loc_hydronym_river:e1 <  * / nam_loc_hydronym_river:e2
+location:: * / nam_loc_hydronym_river:e1 > Wieprzem <  * / nam_loc_country_region:e2
+location:: * / nam_loc_hydronym_river:e1 > Wieprzem >  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_country_region:e1 > Wieprzem >  * / nam_loc_gpe_country:e2
+location:: * / nam_fac_goe:e1 > największą <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 >  * / nam_loc_land_mountain:e2
+location:: * / nam_loc_gpe_city:e1 >  * / nam_loc_land_mountain:e2
+location:: * / nam_loc_gpe_city:e1 >  * / nam_loc_land_mountain:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > północ > Beskidy < szelfie <  * / nam_loc_hydronym_sea:e2
+creator:: * / nam_liv_person:e1 > podali <  * / nam_pro_title:e2
+creator:: * / nam_liv_person:e1 > C > podali <  * / nam_pro_title:e2
+creator:: * / nam_liv_person:e1 > C > podali <  * / nam_pro_title:e2
+creator:: * / nam_liv_person:e1 > autorstwa >  * / nam_pro_title:e2
+affiliation:: * / nam_liv_person:e1 < zwanych <  * / nam_org_group:e2
+affiliation:: * / nam_liv_person:e1 > Gammy < zwanych <  * / nam_org_group:e2
+creator:: * / nam_liv_person:e1 > Gammy > autorstwa >  * / nam_pro_title:e2
+affiliation:: * / nam_liv_person:e1 > Gammy < zwanych <  * / nam_org_group:e2
+creator:: * / nam_liv_person:e1 > Gammy > autorstwa >  * / nam_pro_title:e2
+affiliation:: * / nam_liv_person:e1 > Gammy < zwanych <  * / nam_org_group:e2
+creator:: * / nam_liv_person:e1 > Gammy > autorstwa >  * / nam_pro_title:e2
+alias:: * / nam_org_group:e1 <  * / nam_org_group:e2
+alias:: * / nam_org_group:e1 < Bandą <  * / nam_org_group:e2
+alias:: * / nam_org_group:e1 <  * / nam_org_group:e2
+composition:: * / nam_org_institution:e1 < Bezpieczeństwa <  * / nam_org_organization:e2
+composition:: * / nam_org_institution:e1 < Bezpieczeństwa <  * / nam_org_organization:e2
+location:: * / nam_org_institution:e1 < wprowadzonego < życie < konferencji < zmian <  * / nam_loc_gpe_city:e2
+location:: * / nam_eve_human:e1 > zmian <  * / nam_loc_gpe_city:e2
+location:: * / nam_eve_human:e1 > COP > zmian <  * / nam_loc_gpe_city:e2
+location:: * / nam_pro_title_document:e1 <  * / nam_pro_media_periodic:e2
+alias:: * / nam_liv_person:e1 >  * / nam_org_institution:e2
+nationality:: * / nam_liv_person:e1 > Prezydent <  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_org_institution:e1 > Szef >  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_org_institution:e1 > Szef > Szef >  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_org_institution:e1 >  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_loc_gpe_country:e1 >  * / nam_pro_title_treaty:e2
+affiliation:: * / nam_loc_gpe_country:e1 > Rzecząpospolitą >  * / nam_pro_title_treaty:e2
+location:: * / nam_org_institution:e1 < Uniwersytetu <  * / nam_loc_gpe_city:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_organization:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_organization:e2
+location:: * / nam_org_institution:e1 < Uniwersytetu <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 < Uniwersytetu <  * / nam_loc_gpe_city:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_organization:e2
+composition:: * / nam_org_institution:e1 > zatrudnieni > pracownicy <  * / nam_org_organization:e2
+composition:: * / nam_org_institution:e1 > studiujący > studenci <  * / nam_org_organization:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_organization:e2
+location:: * / nam_org_institution:e1 < Uniwersytetu <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_organization:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_organization:e2
+location:: * / nam_org_institution:e1 < Uniwersytetu <  * / nam_loc_gpe_city:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_organization:e2
+location:: * / nam_org_institution:e1 < Uniwersytetu <  * / nam_loc_gpe_city:e2
+location:: * / nam_pro_title_document:e1 <  * / nam_pro_media_periodic:e2
+location:: * / nam_pro_title_document:e1 <  * / nam_pro_media_periodic:e2
+affiliation:: * / nam_liv_person:e1 >  * / nam_org_institution:e2
+affiliation:: * / nam_liv_person:e1 > Marek >  * / nam_org_institution:e2
+affiliation:: * / nam_liv_person:e1 > Marek >  * / nam_org_institution:e2
+affiliation:: * / nam_liv_person:e1 > Marek >  * / nam_org_institution:e2
+affiliation:: * / nam_liv_person:e1 > Marek >  * / nam_org_institution:e2
+affiliation:: * / nam_liv_person:e1 > protokolant > Marek >  * / nam_org_institution:e2
+location:: * / nam_pro_title_document:e1 > art <  * / nam_pro_media_periodic:e2
+location:: * / nam_pro_title_document:e1 <  * / nam_pro_media_periodic:e2
+creator:: * / nam_org_institution:e1 >  * / nam_pro_title_document:e2
+location:: * / nam_pro_title_document:e1 > Art <  * / nam_pro_media_periodic:e2
+location:: * / nam_org_company:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+composition:: * / nam_org_institution:e1 >  * / nam_org_institution:e2
+location:: * / nam_org_institution:e1 > Sąd <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_company:e1 > odwołania > sprawy < siedzibą <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_company:e1 > odwołania > naruszenie < siedzibą <  * / nam_loc_gpe_city:e2
+alias:: * / nam_oth_currency:e1 > kwoty <  * / nam_oth_currency:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_company:e1 > odwołania <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_company:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_company:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_pro_title_document:e1 <  * / nam_pro_media_periodic:e2
+location:: * / nam_pro_title_document:e1 <  * / nam_pro_media_periodic:e2
+location:: * / nam_oth_tech:e1 > formacie > magazyn < pliki < pobrania <  * / nam_oth_tech:e2
+origin:: * / nam_liv_person:e1 <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_org_nation:e1 > stał < bohaterem <  * / nam_eve_human_sport:e2
+affiliation:: * / nam_liv_person:e1 > sukcesem <  * / nam_eve_human_sport:e2
+location:: * / nam_liv_person:e1 > prezydent <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 > budynek <  * / nam_loc_land_continent:e2
+affiliation:: * / nam_liv_person:e1 < Dyrektor <  * / nam_org_institution:e2
+location:: * / nam_org_organization:e1 > członkowie > lobbują < przyznaniem <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 > połączeń > mało < odkłada < rząd <  * / nam_loc_gpe_country:e2
+nationality:: * / nam_liv_person:e1 > wrocławianin >  * / nam_org_nation:e2
+origin:: * / nam_liv_person:e1 >  * / nam_liv_habitant:e2
+creator:: * / nam_liv_person:e1 >  * / nam_pro_title:e2
+location:: * / nam_fac_goe:e1 > wizytą < wypił < zauważył < ma < odżywa <  * / nam_loc_country_region:e2
+location:: * / nam_fac_goe:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 > Galeria < pomniki <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 > jest < knajp <  * / nam_loc_gpe_city:e2
+location:: * / nam_pro_title:e1 > premierą > Rozmowa <  * / nam_fac_goe:e2
+creator:: * / nam_liv_person:e1 > autorem < tekstu <  * / nam_pro_title:e2
+alias:: * / nam_pro_title:e1 < tłum <  * / nam_pro_title:e2
+affiliation:: * / nam_liv_person:e1 > okazją < Warsztaty <  * / nam_eve_human:e2
+affiliation:: * / nam_liv_person:e1 > Larrego > okazją < Warsztaty <  * / nam_eve_human:e2
+affiliation:: * / nam_liv_person:e1 > przywróciła < Rada <  * / nam_org_company:e2
+affiliation:: * / nam_liv_person:e1 >  * / nam_org_institution:e2
+affiliation:: * / nam_liv_person:e1 > szefowa <  * / nam_org_institution:e2
+affiliation:: * / nam_liv_person:e1 < jeden < filarów <  * / nam_pro_media_periodic:e2
+creator:: * / nam_liv_person:e1 > prowadzonym > programie >  * / nam_pro_title_tv:e2
+affiliation:: * / nam_liv_person:e1 > prowadzonym > programie <  * / nam_pro_media_tv:e2
+affiliation:: * / nam_liv_person:e1 > ultraprawicowego > prowadzonych > zwolnieniach <  * / nam_pro_media_periodic:e2
+affiliation:: * / nam_liv_person:e1 > szef < związku <  * / nam_org_organization:e2
+affiliation:: * / nam_liv_person:e1 > redaktor <  * / nam_pro_media_periodic:e2
+alias:: * / nam_org_company:e1 <  * / nam_org_company:e2
+affiliation:: * / nam_liv_person:e1 < prezes <  * / nam_org_company:e2
+alias:: * / nam_org_company:e1 > współpracy > wycofaniu > decyzji > Powodem < niewywiązywanie <  * / nam_org_company:e2
+location:: * / nam_liv_person:e1 >  * / nam_pro_media_web:e2
+alias:: * / nam_org_company:e1 > odstąpienia > złotych > wypłata > opłacalna < kontynuowania < współpracy <  * / nam_org_company:e2
+alias:: * / nam_org_group:e1 <  * / nam_org_group:e2
+affiliation:: * / nam_liv_person:e1 > ust > wypływająca > krytyka > stanowi < elementy < ideologii <  * / nam_org_organization:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_company:e1 > Dyrekcji <  * / nam_loc_gpe_city:e2
+creator:: * / nam_org_organization:e1 >  * / nam_pro_media_periodic:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+creator:: * / nam_org_organization:e1 >  * / nam_pro_media_periodic:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+creator:: * / nam_org_organization:e1 >  * / nam_pro_media_periodic:e2
+creator:: * / nam_org_organization:e1 >  * / nam_pro_media_periodic:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_eve_human:e1 > przeprowadził < warsztat <  * / nam_loc_gpe_city:e2
+creator:: * / nam_org_organization:e1 > animator > przeprowadził <  * / nam_eve_human:e2
+affiliation:: * / nam_liv_person:e1 >  * / nam_org_organization:e2
+affiliation:: * / nam_liv_person:e1 > Fundacji > animator > przeprowadził <  * / nam_eve_human:e2
+location:: * / nam_liv_person:e1 > Fundacji > animator > przeprowadził < warsztat <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_pro_media_periodic:e1 > zajął < konkursie <  * / nam_eve_human:e2
+affiliation:: * / nam_liv_person:e1 > animatorka > przekaże < zajęć <  * / nam_org_organization:e2
+creator:: * / nam_liv_person:e1 > postanowił < stworzył < grę <  * / nam_pro_title_boardgame:e2
+location:: * / nam_org_organization:e1 > Ośrodka > programu < Łodzi <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 > Ośrodka > programu <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 < Dyrektora <  * / nam_org_institution:e2
+alias:: * / nam_liv_person:e1 <  * / nam_oth_position:e2
+affiliation:: * / nam_liv_person:e1 > piłkarze <  * / nam_org_group_team:e2
+affiliation:: * / nam_liv_person:e1 > Dawid > piłkarze <  * / nam_org_group_team:e2
+affiliation:: * / nam_liv_person:e1 > Dawid > piłkarze < piłkarze <  * / nam_org_group_team:e2
+affiliation:: * / nam_liv_person:e1 > Dawid > piłkarze < piłkarze <  * / nam_org_group_team:e2
+alias:: * / nam_liv_person:e1 <  * / nam_liv_person:e2
+affiliation:: * / nam_liv_person:e1 > Tomasz > Dawid > piłkarze < piłkarze <  * / nam_org_group_team:e2
+affiliation:: * / nam_liv_person:e1 > piłkarze < piłkarze <  * / nam_org_group_team:e2
+affiliation:: * / nam_liv_person:e1 > Marcin > piłkarze < piłkarze <  * / nam_org_group_team:e2
+location:: * / nam_loc_gpe_city:e1 > Policjanci <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 > Zszywka <  * / nam_loc_gpe_city:e2
+composition:: * / nam_org_organization_sub:e1 > Szczepan <  * / nam_org_organization:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 > LO <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 > Life <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 <  * / nam_loc_gpe_country:e2
+location:: * / nam_pro_media_radio:e1 > radiu <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_nation:e1 <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 <  * / nam_org_institution:e2
+nationality:: * / nam_liv_person:e1 > cybernetyki > pioniera <  * / nam_adj_country:e2
+neighbourhood:: * / nam_fac_goe:e1 < ul <  * / nam_fac_road:e2
+creator:: * / nam_liv_person:e1 < autor < bloga <  * / nam_pro_media_web:e2
+neighbourhood:: * / nam_org_institution:e1 < ul <  * / nam_fac_road:e2
+location:: * / nam_fac_goe:e1 > papieru <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_group_team:e1 <  * / nam_adj_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_org_institution:e1 > przyjmujemy < Ozorkowie < ul <  * / nam_fac_road:e2
+location:: * / nam_org_institution:e1 > przyjmujemy <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_org_institution:e1 < osiedlu < ul <  * / nam_fac_road:e2
+location:: * / nam_liv_person:e1 >  * / nam_liv_habitant:e2
+creator:: * / nam_liv_person:e1 > ozorkowianki > malarstwa <  * / nam_eve_human:e2
+location:: * / nam_fac_goe:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 > stóp > przygotowanym > torze > odbyły < centrum <  * / nam_loc_gpe_city:e2
+composition:: * / nam_pro_brand:e1 > silnik < zamontowany < modelu <  * / nam_pro_model_car:e2
+alias:: * / nam_oth_tech:e1 > konstrukcję <  * / nam_oth_tech:e2
+composition:: * / nam_pro_brand:e1 > Novak > regulator > spalił <  * / nam_pro_model_car:e2
+location:: * / nam_loc_historical_region:e1 <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 <  * / nam_loc_gpe_country:e2
+location:: * / nam_fac_goe:e1 > czterotwarzowy <  * / nam_loc_gpe_city:e2
+composition:: * / nam_loc_land_mountain:e1 > pasma <  * / nam_loc_land_mountain:e2
+composition:: * / nam_loc_land_mountain:e1 > pasma <  * / nam_loc_land_mountain:e2
+composition:: * / nam_loc_land_mountain:e1 > pasma <  * / nam_loc_land_mountain:e2
+composition:: * / nam_loc_land_mountain:e1 > Żywiecki > pasma <  * / nam_loc_land_mountain:e2
+location:: * / nam_loc_country_region:e1 > rejony < najstarsze <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_country_region:e1 > Kotlina > rejony < najstarsze <  * / nam_loc_gpe_country:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_liv_person:e1 > zbudował <  * / nam_loc_gpe_city:e2
+composition:: * / nam_loc_land_peak:e1 > szczytem <  * / nam_loc_land_mountain:e2
+composition:: * / nam_loc_land_peak:e1 > szczytem > Korony > szczytem <  * / nam_loc_land_mountain:e2
+neighbourhood:: * / nam_loc_hydronym_river:e1 > tratwami <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_hydronym_river:e1 > tratwami > spływ > należy < atrakcji <  * / nam_loc_land_mountain:e2
+neighbourhood:: * / nam_loc_hydronym_river:e1 > tratwami < Sromowiec <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 > tratwami > spływ > należy < atrakcji <  * / nam_loc_land_mountain:e2
+location:: * / nam_loc_gpe_city:e1 > Sromowiec > tratwami > spływ > należy < atrakcji <  * / nam_loc_land_mountain:e2
+composition:: * / nam_loc_land_mountain:e1 > pasmem <  * / nam_loc_land_mountain:e2
+neighbourhood:: * / nam_loc:e1 > dzieli <  * / nam_loc_land_mountain:e2
+location:: * / nam_loc_hydronym_lake:e1 > znane > znajduje <  * / nam_loc_land_mountain:e2
+location:: * / nam_loc_hydronym_lake:e1 > Oko > znane > znajduje <  * / nam_loc_land_mountain:e2
+location:: * / nam_loc_hydronym_lake:e1 > Oko > znane > znajduje <  * / nam_loc_land_mountain:e2
+location:: * / nam_loc_hydronym_lake:e1 > Oko > znane > znajduje <  * / nam_loc_land_mountain:e2
+location:: * / nam_loc:e1 > korytarze > stalaktyty > form > występuje > niższe <  * / nam_loc_land_mountain:e2
+location:: * / nam_loc:e1 > Jaskini > korytarze > stalaktyty > form > występuje > niższe <  * / nam_loc_land_mountain:e2
+location:: * / nam_loc:e1 > Jaskini > korytarze > stalaktyty > form > występuje > niższe <  * / nam_loc_land_mountain:e2
+neighbourhood:: * / nam_fac_goe:e1 > komory > ustaleniu < budynku < ul <  * / nam_fac_road:e2
+neighbourhood:: * / nam_fac_goe:e1 > ul <  * / nam_fac_road:e2
+location:: * / nam_fac_road:e1 > ul <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_company:e1 > wniosku > prowadzone <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_org_company:e1 > wniosku > prowadzone < Białystok < ul <  * / nam_fac_road:e2
+location:: * / nam_fac_road:e1 > ul >  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_org_institution:e1 < ul <  * / nam_fac_road:e2
+neighbourhood:: * / nam_org_institution:e1 > Urzędzie < ul <  * / nam_fac_road:e2
+composition:: * / nam_org_institution:e1 >  * / nam_org_institution:e2
+location:: * / nam_org_institution:e1 > Urzędzie <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_road:e1 > ul > Urzędzie <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_org_institution:e1 > siedzibie < parterze < ul <  * / nam_fac_road:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_road:e1 > ul > parterze > siedzibie < Urzędu <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_org_institution:e1 > odwołanie < ul <  * / nam_fac_road:e2
+location:: * / nam_fac_road:e1 > ul > odwołanie < Kolegium <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_fac_road:e1 <  * / nam_fac_road:e2
+neighbourhood:: * / nam_fac_road:e1 <  * / nam_fac_road:e2
+location:: * / nam_fac_road:e1 > ulic > przebudowa > Projektem <  * / nam_loc_gpe_district:e2
+location:: * / nam_fac_road:e1 > Podwale > ulic > przebudowa > Projektem <  * / nam_loc_gpe_district:e2
+composition:: * / nam_fac_road:e1 > ulic > ciąg > narażony > stanowią < fragment <  * / nam_fac_road:e2
+neighbourhood:: * / nam_fac_road:e1 > ulic > ciąg > narażony <  * / nam_fac_road:e2
+composition:: * / nam_fac_road:e1 > narażony > stanowią < fragment <  * / nam_fac_road:e2
+nationality:: * / nam_liv_person:e1 > Kardynała > Stefana < Prymasa <  * / nam_loc_gpe_country:e2
+nationality:: * / nam_liv_person:e1 > kardynał > Stefan > arcybiskup > mąż < prymas <  * / nam_loc_gpe_country:e2
+alias:: * / nam_liv_person_add:e1 > zwany > Ten < nazwał <  * / nam_liv_person_add:e2
+alias:: * / nam_liv_person:e1 > zwany > Ten < nazwał <  * / nam_liv_person:e2
+alias:: * / nam_liv_person:e1 > zwany > Ten > mąż < arcybiskup < Stefan < kardynał <  * / nam_liv_person:e2
+alias:: * / nam_liv_person:e1 > nazwał > Ten > mąż < arcybiskup < Stefan < kardynał <  * / nam_liv_person:e2
+affiliation:: * / nam_liv_person:e1 > księdza < studenta < Kanclerza <  * / nam_org_organization:e2
+location:: * / nam_org_organization:e1 > Kanclerza > studenta > księdza > związki <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 <  * / nam_adj_city:e2
+location:: * / nam_eve_human:e1 > projektu > realizację > zabezpieczenia < budżecie < Gminy <  * / nam_loc_gpe_admin3:e2
+composition:: * / nam_eve_human:e1 > projekt < współfinansowany < środków <  * / nam_eve_human:e2
+location:: * / nam_loc_gpe_admin3:e1 > Gminy > budżecie > Zabezpiecza < środki < realizację < projektu <  * / nam_eve_human:e2
+alias:: * / nam_oth_currency:e1 > 259 >  * / nam_oth_currency:e2
+alias:: * / nam_oth_currency:e1 > dwieście > złotych > kwocie < kwoty <  * / nam_oth_currency:e2
+alias:: * / nam_oth_currency:e1 > 120 > złotych > kwoty > kwocie > środki < roku < roku < kwoty <  * / nam_oth_currency:e2
+location:: * / nam_loc_gpe_city:e1 > Miasto > położone < części < będącej < częścią <  * / nam_loc_country_region:e2
+location:: * / nam_loc_gpe_city:e1 > Miasto > położone < części < województwa <  * / nam_loc_country_region:e2
+location:: * / nam_loc_gpe_city:e1 > Miasto > położone <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_gpe_admin1:e1 > województwa > części > położone <  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_country_region:e1 > województwa > części > położone <  * / nam_loc_gpe_country:e2
+composition:: * / nam_loc_country_region:e1 > województwa > części < będącej < częścią <  * / nam_loc_country_region:e2
+location:: * / nam_loc_country_region:e1 > częścią > będącej > części > położone <  * / nam_loc_gpe_country:e2
+neighbourhood:: * / nam_fac_road:e1 <  * / nam_oth:e2
+neighbourhood:: * / nam_fac_road:e1 <  * / nam_oth:e2
+neighbourhood:: * / nam_fac_road:e1 <  * / nam_oth:e2
+neighbourhood:: * / nam_oth:e1 > droga <  * / nam_oth:e2
+neighbourhood:: * / nam_oth:e1 > droga <  * / nam_oth:e2
+neighbourhood:: * / nam_oth:e1 > droga <  * / nam_oth:e2
+location:: * / nam_loc_gpe_city:e1 > miasta > Warunki > typowe <  * / nam_loc_country_region:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_institution:e2
+location:: * / nam_org_institution:e1 > ostrzeżenia <  * / nam_loc_gpe_city:e2
+composition:: * / nam_org_institution:e1 <  * / nam_org_institution:e2
+location:: * / nam_org_institution:e1 > BIURA > ostrzeżenia <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 > ostrzeżenia > podstawie > przewiduje < obszarze < miasta < województwa <  * / nam_loc_gpe_admin1:e2
+alias:: * / nam_org_organization:e1 > decyzją < decyzją < Komisji <  * / nam_org_organization:e2
+creator:: * / nam_org_organization:e1 >  * / nam_pro_title_document:e2
+creator:: * / nam_org_organization:e1 > WE >  * / nam_pro_title_document:e2
+alias:: * / nam_org_organization:e1 > Rozporządzenie < zmienione < rozporządzeniem < Komisji <  * / nam_org_organization:e2
+location:: * / nam_pro_title_document:e1 <  * / nam_pro_media_periodic:e2
+creator:: * / nam_org_institution:e1 >  * / nam_pro_title_document:e2
+alias:: * / nam_liv_person:e1 >  * / nam_org_institution:e2
+alias:: * / nam_liv_person:e1 > kieruje >  * / nam_org_institution:e2
+location:: * / nam_pro_title_document:e1 <  * / nam_pro_media_periodic:e2
+creator:: * / nam_org_institution:e1 >  * / nam_pro_title_document:e2
+affiliation:: * / nam_loc_gpe_country:e1 > Rządem >  * / nam_pro_title_treaty:e2
+affiliation:: * / nam_loc_gpe_country:e1 > Rządem > Rządem >  * / nam_pro_title_treaty:e2
+location:: * / nam_loc_gpe_country:e1 > jedności > ustanowienie > zmiany <  * / nam_loc_land_continent:e2
+location:: * / nam_loc_gpe_country:e1 > przemiany > zmiany <  * / nam_loc_land_continent:e2
+affiliation:: * / nam_loc_gpe_country:e1 > Rzecząpospolitą >  * / nam_pro_title_treaty:e2
+affiliation:: * / nam_loc_gpe_country:e1 > Rzecząpospolitą >  * / nam_pro_title_treaty:e2
+affiliation:: * / nam_org_institution:e1 >  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_org_institution:e1 >  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_loc_gpe_country:e1 > przystąpienia <  * / nam_org_organization:e2
+location:: * / nam_pro_title_document:e1 > art > niezgodny <  * / nam_pro_media_periodic:e2
+location:: * / nam_pro_title_document:e1 <  * / nam_pro_media_periodic:e2
+origin:: * / nam_liv_person:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_eve_human:e1 > opisuje <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 <  * / nam_org_organization:e2
+affiliation:: * / nam_liv_person:e1 > wypowiedź <  * / nam_org_institution:e2
+creator:: * / nam_org_organization:e1 > zezwolił < prowadzenie <  * / nam_eve_human_sport:e2
+creator:: * / nam_org_group_band:e1 > fanem < kupił < płytę <  * / nam_pro_title_album:e2
+creator:: * / nam_org_group_band:e1 > zespół > zainspirował < nagrania <  * / nam_pro_title_song:e2
+creator:: * / nam_liv_person:e1 > wyśpiewała >  * / nam_pro_title_song:e2
+creator:: * / nam_org_group_band:e1 > wykonaniu > instrument > pomysł > sprawdził < smutna <  * / nam_pro_title_song:e2
+creator:: * / nam_org_group_band:e1 > wspomnieniu > sprostała < słuchał <  * / nam_pro_title_album:e2
+affiliation:: * / nam_liv_person:e1 > panem < jednym < organizatorów <  * / nam_eve_human:e2
+affiliation:: * / nam_liv_person:e1 > panem < wykładowcą <  * / nam_org_institution:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 > Szkoła <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_eve_human:e1 <  * / nam_loc_gpe_country:e2
+location:: * / nam_eve_human:e1 > finał > odbył <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 >  * / nam_eve_human:e2
+location:: * / nam_fac_goe:e1 <  * / nam_fac_goe:e2
+affiliation:: * / nam_liv_person:e1 > dyr > p >  * / nam_org_institution:e2
+creator:: * / nam_liv_person:e1 < Robert <  * / nam_pro_title_article:e2
+creator:: * / nam_liv_person:e1 <  * / nam_pro_title_article:e2
+location:: * / nam_org_organization:e1 > Edukacji > Wydziale <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 > polityki > kultury > centrum <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+creator:: * / nam_liv_person:e1 <  * / nam_eve_human:e2
+alias:: * / nam_eve_human:e1 > tytułem > zredagował < Johnem <  * / nam_eve_human:e2
+alias:: * / nam_org_organization:e1 > performansowi > poświęcony <  * / nam_org_organization:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 < CEO < firmy <  * / nam_org_company:e2
+creator:: * / nam_liv_person:e1 <  * / nam_pro_title_article:e2
+affiliation:: * / nam_liv_person:e1 > poprowadzę <  * / nam_eve_human:e2
+location:: * / nam_eve_human:e1 <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 <  * / nam_pro_media_web:e2
+affiliation:: * / nam_liv_person:e1 <  * / nam_org_company:e2
+affiliation:: * / nam_liv_person:e1 <  * / nam_org_company:e2
+affiliation:: * / nam_liv_person:e1 <  * / nam_org_company:e2
+affiliation:: * / nam_liv_person:e1 <  * / nam_org_company:e2
+affiliation:: * / nam_liv_person:e1 > Rafał < Dominik <  * / nam_pro_media_web:e2
+affiliation:: * / nam_liv_person:e1 > Rafał < Dominik <  * / nam_pro_media_web:e2
+affiliation:: * / nam_liv_person:e1 <  * / nam_org_company:e2
+location:: * / nam_eve_human_cultural:e1 > festiwalu <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 <  * / nam_loc_gpe_admin1:e2
+affiliation:: * / nam_liv_person:e1 < recenzent < gazety <  * / nam_pro_media_periodic:e2
+neighbourhood:: * / nam_org_institution:e1 > czytelni < ul <  * / nam_fac_road:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 < pracownik <  * / nam_org_institution:e2
+origin:: * / nam_liv_person:e1 <  * / nam_liv_habitant:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_eve_human:e1 > wystawy > otwarcie > odbędzie <  * / nam_fac_goe:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 > brygadier < komendant <  * / nam_org_organization:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+alias:: * / nam_oth_position:e1 <  * / nam_liv_person:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+alias:: * / nam_oth_position:e1 <  * / nam_liv_person:e2
+location:: * / nam_eve_human:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_company:e1 <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_org_company:e1 < Poznań < ul <  * / nam_fac_road:e2
+location:: * / nam_eve_human_sport:e1 > dostrzeżemy < zawodników < reprezentowania <  * / nam_loc_gpe_country:e2
+creator:: * / nam_liv_person:e1 > Model > rozpoczął <  * / nam_pro_model_car:e2
+location:: * / nam_eve_human_sport:e1 > nazwie > imprez > cykl > rozpoczęły < zawody < Rozegrane <  * / nam_loc_gpe_city:e2
+creator:: * / nam_org_company:e1 > firmy > patronatem > nazwie <  * / nam_eve_human_sport:e2
+affiliation:: * / nam_liv_person:e1 < reprezentujący <  * / nam_org_organization:e2
+affiliation:: * / nam_liv_person:e1 > Drugi <  * / nam_org_organization:e2
+nationality:: * / nam_liv_person:e1 <  * / nam_loc_gpe_country:e2
+nationality:: * / nam_liv_person:e1 > goście <  * / nam_loc_gpe_country:e2
+nationality:: * / nam_liv_person:e1 > Martin > goście <  * / nam_loc_gpe_country:e2
+nationality:: * / nam_liv_person:e1 > Martin > goście <  * / nam_loc_gpe_country:e2
+location:: * / nam_org_institution:e1 < Bad <  * / nam_loc_gpe_country:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 <  * / nam_loc_gpe_country:e2
+composition:: * / nam_org_institution:e1 >  * / nam_org_institution:e2
+location:: * / nam_org_institution:e1 < Fundacji <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 <  * / nam_org_institution:e2
+location:: * / nam_org_institution:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_institution:e1 < Uniwersytet < Stanford <  * / nam_loc_gpe_country:e2
+location:: * / nam_org_institution:e1 < Uniwersytet <  * / nam_loc_gpe_city:e2
+location:: * / nam_pro_title_document:e1 <  * / nam_pro_media_periodic:e2
+location:: * / nam_pro_title_document:e1 <  * / nam_pro_media_periodic:e2
+location:: * / nam_pro_title_document:e1 <  * / nam_pro_media_periodic:e2
+location:: * / nam_pro_title_document:e1 <  * / nam_pro_media_periodic:e2
+origin:: * / nam_liv_person:e1 < bogacza <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 > Wyszli <  * / nam_fac_square:e2
+origin:: * / nam_liv_person:e1 > znała >  * / nam_loc:e2
+creator:: * / nam_liv_person:e1 <  * / nam_pro_title:e2
+nationality:: * / nam_liv_person:e1 > powiedział < dniu < obejmowania < funkcji <  * / nam_loc_gpe_country:e2
+origin:: * / nam_liv_person:e1 <  * / nam_loc_gpe_city:e2
+origin:: * / nam_liv_person:e1 > św > nazwano > powiedziała <  * / nam_loc_gpe_city:e2
+origin:: * / nam_liv_person:e1 <  * / nam_loc_gpe_city:e2
+nationality:: * / nam_liv_person:e1 > Św > żył <  * / nam_loc_gpe_country:e2
+nationality:: * / nam_liv_person:e1 > Król <  * / nam_adj_country:e2
+location:: * / nam_org_organization:e1 <  * / nam_loc_gpe_city:e2
+creator:: * / nam_liv_person:e1 >  * / nam_pro_title_book:e2
+origin:: * / nam_liv_person:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 <  * / nam_loc_gpe_city:e2
+neighbourhood:: * / nam_fac_goe:e1 < ul <  * / nam_fac_road:e2
+location:: * / nam_org_organization:e1 > powstającej <  * / nam_fac_goe:e2
+affiliation:: * / nam_liv_person_first:e1 > mgr > absolwentka <  * / nam_org_organization:e2
+location:: * / nam_fac_road:e1 > zbiegu > rogu > znajduje < był <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_road:e1 > Wiśniowej > zbiegu > rogu > znajduje < był <  * / nam_loc_gpe_city:e2
+alias:: * / nam_pro_title:e1 <  * / nam_pro_title:e2
+alias:: * / nam_liv_person:e1 >  * / nam_liv_person:e2
+origin:: * / nam_liv_person:e1 > urodziła <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_org_institution:e1 < stolicy <  * / nam_loc_gpe_country:e2
+location:: * / nam_fac_goe:e1 > Jednym < można < opuścić <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 > Klientelę > stanowią < kierowcy < powracające < moteli < licznych <  * / nam_loc_gpe_city:e2
+creator:: * / nam_liv_person:e1 <  * / nam_pro_title:e2
+location:: * / nam_fac_goe:e1 > kopalniami > zwane > znajdują < północy < wschodzie <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 > Chivor > kopalniami > zwane > znajdują < północy < wschodzie <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 > plac > miejsce > Znam <  * / nam_loc_gpe_city:e2
+composition:: * / nam_loc_gpe_district:e1 < obejmują <  * / nam_loc_gpe_city:e2
+location:: * / nam_liv_person:e1 < wrócił < pobytu < stanie <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_liv_person:e1 < wrócił < pobytu <  * / nam_loc_gpe_city:e2
+location:: * / nam_loc_gpe_city:e1 > pobytu < stanie <  * / nam_loc_gpe_admin1:e2
+affiliation:: * / nam_org_institution:e1 > uchwaloną > ustawę < skierowana < sądu <  * / nam_loc_gpe_country:e2
+location:: * / nam_liv_person:e1 > Aparaturę > odłączono < zgodnie < wyrokiem < sądu <  * / nam_loc_gpe_admin1:e2
+nationality:: * / nam_liv_person:e1 > podłączona >  * / nam_loc_gpe_country:e2
+location:: * / nam_loc_gpe_city:e1 <  * / nam_loc_gpe_country:e2
+location:: * / nam_liv_person:e1 > 2005-03-31 < zmarła <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_liv_person:e1 > wnosił <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_liv_person:e1 > mąż > Michael > wnosił <  * / nam_loc_gpe_admin1:e2
+location:: * / nam_org_institution:e1 > zgody < podłączenie < Terri < podpisanej < prezydenta <  * / nam_loc_gpe_country:e2
+composition:: * / nam_org_institution:e1 > przedstawiła <  * / nam_org_organization:e2
+location:: * / nam_loc_country_region:e1 > prześladowania <  * / nam_loc_gpe_country:e2
+nationality:: * / nam_liv_person:e1 > Prezydent <  * / nam_loc_gpe_country:e2
+location:: * / nam_liv_person:e1 > przekazana <  * / nam_loc_gpe_city:e2
+nationality:: * / nam_liv_person:e1 > Prezydent > przysiągł < wyda < obywatela <  * / nam_adj_country:e2
+affiliation:: * / nam_liv_person:e1 <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 > użytkownik <  * / nam_pro_media_web:e2
+location:: * / nam_org_organization:e1 > organizacja <  * / nam_adj_country:e2
+affiliation:: * / nam_liv_person:e1 < prezes <  * / nam_org_organization:e2
+location:: * / nam_org_company:e1 > przedstawiciela < dystrybutora < gry <  * / nam_loc_gpe_country:e2
+location:: * / nam_org_company:e1 <  * / nam_adj_country:e2
+location:: * / nam_org_company:e1 <  * / nam_adj_country:e2
+affiliation:: * / nam_liv_person:e1 > przedstawiciel <  * / nam_org_company:e2
+location:: * / nam_liv_person:e1 > premier > ogłosi <  * / nam_loc_gpe_city:e2
+nationality:: * / nam_liv_person:e1 > premier <  * / nam_adj_country:e2
+nationality:: * / nam_liv_person:e1 < rzecznik < misji <  * / nam_adj_country:e2
+affiliation:: * / nam_liv_person:e1 > biura > dyrektorka > radna <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 > dyrektorka > radna <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 > dyrektorka > radna > była > Gazeta > opublikowała < przyznaje < dostała < pracę <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 > przewodniczącego > usługi > dostała < pracę <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 > posła > przewodniczącego > usługi > dostała < pracę <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 > pani > Relacje > potwierdzają < pracownice <  * / nam_org_political_party:e2
+location:: * / nam_pro_title_article:e1 > artykułu < ukazał <  * / nam_pro_media_periodic:e2
+location:: * / nam_liv_person:e1 > opowiedziała <  * / nam_pro_media_periodic:e2
+location:: * / nam_liv_person:e1 > opowiedziała < mieli < zabrać <  * / nam_loc_gpe_city:e2
+location:: * / nam_liv_person:e1 > poseł > mieli < zabrać <  * / nam_loc_gpe_city:e2
+location:: * / nam_liv_person:e1 > przewodniczący > poseł > mieli < zabrać <  * / nam_loc_gpe_city:e2
+location:: * / nam_liv_person:e1 > zaprzeczył < programie <  * / nam_pro_title_tv:e2
+location:: * / nam_liv_person:e1 > wicepremiera > zwróci < prokuratura <  * / nam_adj_city:e2
+alias:: * / nam_liv_person:e1 >  * / nam_oth_position:e2
+affiliation:: * / nam_loc_gpe_country:e1 > odpowiada > traktatem < umożliwia < wzrost < wpływ < podejmowanie <  * / nam_org_organization:e2
+affiliation:: * / nam_loc_gpe_country:e1 < powinny < przewodnictwo <  * / nam_org_organization:e2
+affiliation:: * / nam_loc_gpe_country:e1 > przewodniczą <  * / nam_org_organization:e2
+affiliation:: * / nam_liv_person:e1 < prezesa <  * / nam_org_institution:e2
+affiliation:: * / nam_liv_person:e1 < szef <  * / nam_org_institution:e2
+affiliation:: * / nam_liv_person:e1 > poseł <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 > poseł <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 <  * / nam_org_political_party:e2
+alias:: * / nam_liv_person:e1 >  * / nam_oth_position:e2
+location:: * / nam_loc_historical_region:e1 > uważa < uznaje < terytorium <  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_liv_person:e1 > szef <  * / nam_org_institution:e2
+affiliation:: * / nam_liv_person:e1 > poprowadzi <  * / nam_pro_title_tv:e2
+affiliation:: * / nam_liv_person:e1 > poprowadzi < noc <  * / nam_pro_media_tv:e2
+creator:: * / nam_pro_media_tv:e1 >  * / nam_pro_title_tv:e2
+affiliation:: * / nam_liv_person:e1 > negocjacje > prowadzi <  * / nam_org_company:e2
+affiliation:: * / nam_liv_person:e1 > negocjacje < prowadzenia < show <  * / nam_pro_title_tv:e2
+affiliation:: * / nam_liv_person:e1 > zastąpił > chce <  * / nam_org_company:e2
+creator:: * / nam_pro_media_tv:e1 > emitowany < Program <  * / nam_pro_title_tv:e2
+affiliation:: * / nam_liv_person:e1 >  * / nam_org_company:e2
+affiliation:: * / nam_liv_person:e1 > poprowadzi <  * / nam_pro_media_tv:e2
+affiliation:: * / nam_liv_person:e1 > poprowadzi <  * / nam_pro_title_tv:e2
+creator:: * / nam_pro_media_tv:e1 > poprowadzi <  * / nam_pro_title_tv:e2
+affiliation:: * / nam_liv_person:e1 > poprowadzi <  * / nam_pro_title_tv:e2
+affiliation:: * / nam_liv_person:e1 > poprowadzi <  * / nam_pro_media_tv:e2
+affiliation:: * / nam_liv_person:e1 > został < prowadzącym < show <  * / nam_pro_title_tv:e2
+affiliation:: * / nam_liv_person:e1 > prowadził > odcinka > oglądalnością > pokierowała <  * / nam_pro_media_tv:e2
+alias:: * / nam_org_company:e1 > kontraktu > warunki > naruszył < wziął < udział < Tańcu < zgody <  * / nam_org_company:e2
+creator:: * / nam_pro_media_tv:e1 > emitowanym >  * / nam_pro_title_tv:e2
+affiliation:: * / nam_liv_person:e1 > poprowadzi <  * / nam_pro_title_tv:e2
+affiliation:: * / nam_liv_person:e1 > poprowadzi <  * / nam_pro_media_tv:e2
+affiliation:: * / nam_liv_person:e1 >  * / nam_org_company:e2
+location:: * / nam_org_group:e1 <  * / nam_adj_country:e2
+composition:: * / nam_org_institution:e1 > pozwanie > zdecydowała <  * / nam_org_institution:e2
+affiliation:: * / nam_org_group_team:e1 <  * / nam_eve_human_sport:e2
+affiliation:: * / nam_org_group_team:e1 > zagra < fazie <  * / nam_eve_human_sport:e2
+affiliation:: * / nam_org_group_team:e1 <  * / nam_eve_human_sport:e2
+affiliation:: * / nam_liv_person:e1 <  * / nam_org_political_party:e2
+location:: * / nam_liv_person:e1 > jedzie <  * / nam_loc_gpe_country:e2
+location:: * / nam_liv_person:e1 > Szef > uda <  * / nam_loc_gpe_country:e2
+nationality:: * / nam_liv_person:e1 > Szef < dyplomacji <  * / nam_adj_country:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_adj_country:e2
+nationality:: * / nam_liv_person:e1 > szefem < MSZ <  * / nam_adj_country:e2
+neighbourhood:: * / nam_loc_gpe_city:e1 > miejscowości <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_org_institution:e1 > komunikacie > czytamy < ma < sprawy < związane < bezpieczeństwem < zabezpieczeniem < tranzytu < surowców <  * / nam_loc_gpe_country:e2
+affiliation:: * / nam_org_institution:e1 <  * / nam_adj_country:e2
+location:: * / nam_liv_person:e1 > Wizyta <  * / nam_loc_gpe_country:e2
+nationality:: * / nam_liv_person:e1 > zaproszenie > odbędzie < wizyta < ministra <  * / nam_loc_gpe_country:e2
+location:: * / nam_liv_person:e1 > tłumaczył < zarzutów < kierowanych < konferencji <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 > przewodniczący < klubu <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 > sekretarz <  * / nam_org_institution:e2
+affiliation:: * / nam_liv_person:e1 < szef <  * / nam_org_organization:e2
+creator:: * / nam_org_company:e1 > tygodniu > przeprowadzonego > sondażu > wynika <  * / nam_pro_title_tv:e2
+affiliation:: * / nam_liv_person:e1 > rywalem < wyścigu < fotel < prezesa <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 > rywalem < wyścigu < fotel < prezesa <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 > minister > wystartowała > pomysł > pojawił <  * / nam_org_political_party:e2
+affiliation:: * / nam_liv_person:e1 > prezes <  * / nam_org_political_party:e2
+location:: * / nam_fac_goe:e1 <  * / nam_loc_gpe_city:e2
+affiliation:: * / nam_liv_person:e1 < Szymona < wykonanych <  * / nam_eve_human:e2
+affiliation:: * / nam_liv_person:e1 > Marii < Szymona < wykonanych <  * / nam_eve_human:e2
+affiliation:: * / nam_liv_person:e1 > Marii < Szymona < wykonanych <  * / nam_eve_human:e2
+affiliation:: * / nam_liv_person:e1 < wykonanych <  * / nam_eve_human:e2
+affiliation:: * / nam_liv_person:e1 >  * / nam_org_organization:e2
+alias:: * / nam_liv_person:e1 > Sanghę <  * / nam_oth_position:e2
+creator:: * / nam_liv_person:e1 > Sanghę < Mistrza <  * / nam_org_organization:e2
+location:: * / nam_fac_goe:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_fac_goe:e1 <  * / nam_loc_gpe_city:e2
+location:: * / nam_liv_person:e1 < koordynator < ds < sponsoringu <  * / nam_loc_gpe_city:e2
+location:: * / nam_org_organization:e1 > finału <  * / nam_loc_gpe_city:e2
