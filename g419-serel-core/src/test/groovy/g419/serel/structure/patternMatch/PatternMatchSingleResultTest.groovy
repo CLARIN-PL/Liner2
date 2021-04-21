@@ -12,11 +12,13 @@ class PatternMatchSingleResultTest extends Specification {
             PatternMatchSingleResult p1 = new PatternMatchSingleResult();
             p1.docName = "doc1"
             p1.sentenceNumber = 1;
+            p1.relationType = "location"
             p1.idsList = List.of(1, 2, 3)
 
 
             PatternMatchSingleResult p2 = new PatternMatchSingleResult();
             p2.docName = "doc1"
+            p2.relationType = "location"
             p2.sentenceNumber = 1;
             p2.idsList = List.of(3, 2, 1)
         expect:
@@ -27,12 +29,14 @@ class PatternMatchSingleResultTest extends Specification {
         given:
             PatternMatchSingleResult p1 = new PatternMatchSingleResult();
             p1.docName = "doc1"
+            p1.relationType = "location"
             p1.sentenceNumber = 1;
             p1.idsList = List.of(1, 2)
 
 
             PatternMatchSingleResult p2 = new PatternMatchSingleResult();
             p2.docName = "doc1"
+            p2.relationType = "location"
             p2.sentenceNumber = 1;
             p2.idsList = List.of(3, 2, 1)
         expect:

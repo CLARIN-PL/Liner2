@@ -609,7 +609,7 @@ public class Sentence extends IdentifiableElement {
 //    System.out.println("Checking HEADID token:" + t);
       if (!boiTokensIds.contains(t.getParentTokenId())) {
         if (possibleHeadIds.size() > 0) {
-          System.out.println("ERROR !!! Boi has more then one head: found  " + possibleHeadIds + " and new = " + id + " doc: " + this.getDocument().getName() + " sentId=" + this.toString());
+          System.out.println("WARN !!! Boi has more then one head: found  " + possibleHeadIds + " and new = " + id + " doc: " + this.getDocument().getName() + " sentId=" + this.toString());
         }
         possibleHeadIds.add(id);
       }

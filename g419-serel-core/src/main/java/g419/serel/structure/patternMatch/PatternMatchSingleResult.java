@@ -23,7 +23,7 @@ public class PatternMatchSingleResult {
 
   public PatternMatchSingleResult() {}
 
-  public String getType() {
+  public String getRelationType() {
     return relationType;
   }
 
@@ -56,13 +56,13 @@ public class PatternMatchSingleResult {
 //  }
 
   public String description() {
-    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + "\ttype=" + getType() + ",\tidsList=" + idsList + ",\t\trole:[" + patternMatchExtraInfo.description() + "]" /* + " NEs=" + namedEntitySet */;
+    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + "\ttype=" + getRelationType() + ",\tidsList=" + idsList + ",\t\trole:[" + patternMatchExtraInfo.description() + "]" /* + " NEs=" + namedEntitySet */;
     return result;
   }
 
 
   public String descriptionLong() {
-    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + "\ttype=" + getType() + ",\tidsList=" + idsList + ",\t\trole:[" + patternMatchExtraInfo.description() + "]" +
+    final String result = "docName= " + docName + ",\t\tsentnId=" + sentenceNumber + "\ttype=" + getRelationType() + ",\tidsList=" + idsList + ",\t\trole:[" + patternMatchExtraInfo.description() + "]" +
         "\t\t\t" + patternMatchExtraInfo.getSentence().toStringDecorated(idsList, 1);
     return result;
   }
@@ -71,13 +71,12 @@ public class PatternMatchSingleResult {
     idsList.addAll(pmsr.idsList);
     //namedEntitySet.addAll(pmsr.namedEntitySet);
     patternMatchExtraInfo.getRoleMap().putAll(pmsr.patternMatchExtraInfo.getRoleMap());
-    // TOREVERT
-    // patternMatchExtraInfo.getToken2tagNE().putAll(pmsr.patternMatchExtraInfo.getToken2tagNE());
+    patternMatchExtraInfo.getToken2tagNE().putAll(pmsr.patternMatchExtraInfo.getToken2tagNE());
   }
 
   public boolean isTheSameAs(final PatternMatchSingleResult pmsr) {
 
-    if (!this.getType().equals(pmsr.getType())) {
+    if (!this.getRelationType().equals(pmsr.getRelationType())) {
       return false;
     }
 
@@ -103,7 +102,7 @@ public class PatternMatchSingleResult {
 //      System.out.println("PMSR = " + this.description());
 //    }
 
-    if (!this.getType().equals(rd.getType())) {
+    if (!this.getRelationType().equals(rd.getType())) {
       return false;
     }
 
@@ -115,11 +114,11 @@ public class PatternMatchSingleResult {
             &&
             (this.sentenceNumber == rd.getSentenceIndex())
             &&
-            //anchorsIDs.contains(rd.getFromTokenId())
-            this.idsList.contains(rd.getFromTokenId())
+            anchorsIDs.contains(rd.getFromTokenId())
+            //this.idsList.contains(rd.getFromTokenId())
             &&
-            //anchorsIDs.contains(rd.getToTokenId())
-            this.idsList.contains(rd.getToTokenId())
+            anchorsIDs.contains(rd.getToTokenId())
+      //this.idsList.contains(rd.getToTokenId())
     ) {
       return true;
     }
@@ -161,7 +160,7 @@ public class PatternMatchSingleResult {
       if (result != 0) {
         return result;
       }
-      result = p1.getType().compareTo(p2.getType());
+      result = p1.getRelationType().compareTo(p2.getRelationType());
       if (result != 0) {
         return result;
       }

@@ -221,8 +221,12 @@ public class ActionMatchRelationsSet extends Action {
 
         final SentenceMiscValues smv = SentenceMiscValues.from(sentence, sentenceIndex);
 
+//        System.out.println("BEFORE correction");
+//        sentence.printAsTree();
         // SWITCH_1
-        //sentence.checkAndFixBois();
+        sentence.checkAndFixBois();
+//        System.out.println("AFTER correction");
+//        sentence.printAsTree();
 
         //final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingSerelPattern(sentence);
         final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingGenericPattern(sentence);
@@ -273,7 +277,6 @@ public class ActionMatchRelationsSet extends Action {
 
     final List<RelationDesc> allSentenceNamRels = smv.getRelationsMatchingPatternType(patternMatch);
 
-//    System.out.println("Classify TruePos i FalsePos");
     outer:
     for (final PatternMatchSingleResult pmsr : sentenceResults) {
 
@@ -327,11 +330,11 @@ public class ActionMatchRelationsSet extends Action {
                 final Optional<PatternMatchSingleResult> matching = docTruePositives.stream().filter(pmsr -> pmsr.isTheSameAs(rd)).findAny();
 
                 if (!matching.isPresent()) {
-                  System.out.println(" WARN! Doc " + comboedDoc.getName() + " Marking as false negative :" + rd);
+//                  System.out.println(" WARN! Doc " + comboedDoc.getName() + " Marking as false negative :" + rd);
                   resultType.computeIfAbsent(rd.getType(), k -> new LinkedList<>());
                   documentResultFalseNegative.add(rd);
                 } else {
-                  System.out.println("MATCH !!!");
+//                  System.out.println("MATCH !!!");
                 }
               }
             } catch (final Exception e) {
@@ -354,7 +357,7 @@ public class ActionMatchRelationsSet extends Action {
 
 
     } catch (final Exception e) {
-      System.out.println("Jakis problemm przy przliczaniu");
+      System.out.println("Jakis problemm przy przeliczaniu");
       e.printStackTrace();
     }
 
@@ -613,8 +616,8 @@ public class ActionMatchRelationsSet extends Action {
   }
 
   private void accumulateInTypeResult(final PatternMatchSingleResult pmsr) {
-    if (!isAlreadyPresentInList(pmsr, resultType.computeIfAbsent(pmsr.getType(), k -> new LinkedList<>()))) {
-      resultType.get(pmsr.getType()).add(pmsr);
+    if (!isAlreadyPresentInList(pmsr, resultType.computeIfAbsent(pmsr.getRelationType(), k -> new LinkedList<>()))) {
+      resultType.get(pmsr.getRelationType()).add(pmsr);
     }
   }
 
@@ -626,8 +629,8 @@ public class ActionMatchRelationsSet extends Action {
   }
 
   private void accumulateInTypeResultTruePositive(final PatternMatchSingleResult pmsr) {
-    if (!isAlreadyPresentInList(pmsr, resultTruePositiveType.computeIfAbsent(pmsr.getType(), k -> new LinkedList<>()))) {
-      resultTruePositiveType.get(pmsr.getType()).add(pmsr);
+    if (!isAlreadyPresentInList(pmsr, resultTruePositiveType.computeIfAbsent(pmsr.getRelationType(), k -> new LinkedList<>()))) {
+      resultTruePositiveType.get(pmsr.getRelationType()).add(pmsr);
     }
   }
 
@@ -638,8 +641,8 @@ public class ActionMatchRelationsSet extends Action {
   }
 
   private void accumulateInTypeResultFalsePositive(final PatternMatchSingleResult pmsr) {
-    if (!isAlreadyPresentInList(pmsr, resultFalsePositiveType.computeIfAbsent(pmsr.getType(), k -> new LinkedList<>()))) {
-      resultFalsePositiveType.get(pmsr.getType()).add(pmsr);
+    if (!isAlreadyPresentInList(pmsr, resultFalsePositiveType.computeIfAbsent(pmsr.getRelationType(), k -> new LinkedList<>()))) {
+      resultFalsePositiveType.get(pmsr.getRelationType()).add(pmsr);
     }
   }
 

@@ -55,8 +55,9 @@ public class PatternMatchExtraInfo {
     return roleMap.entrySet().stream().map(elem -> elem.getKey() + ":" + getRoleValue(elem.getKey())).collect(Collectors.joining(", "));
   }
 
+
   public Set<Integer> getAnchorIds() {
-    return roleMap.values().stream().map(newt -> newt.token.getNumberId()).collect(Collectors.toSet());
+    return roleMap.values().stream().flatMap(newt -> sentence.getBoiTokensIdsForTokenAndName(newt.token, newt.namedEntity).stream()).collect(Collectors.toSet());
   }
 
   public String getTagNEFromToken(final Token token) {

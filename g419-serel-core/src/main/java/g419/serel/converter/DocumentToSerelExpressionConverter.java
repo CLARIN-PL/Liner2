@@ -67,12 +67,11 @@ public class DocumentToSerelExpressionConverter {
       if (sentence.getNamRels().size() > 0) {
         // jeśli w ogóle są jakieś relacje z których mamy tworzyć reguły to dopiero wtedy zaczynamy naprawianie
         //fixing possible problems with dependent tokens linked not to head of NE
+
 //        System.out.println("BEFORE correction");
 //        sentence.printAsTree();
-
         // SWITCH_1
-        //sentence.checkAndFixBois();
-
+        sentence.checkAndFixBois();
 //        System.out.println("AFTER correction");
 //        sentence.printAsTree();
       }

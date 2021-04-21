@@ -151,7 +151,6 @@ public class PatternMatch {
     final String namedEntityLabel;
     final ArrayList<Integer> _idsList;
     if (nodeMatch.isForNamedEntity()) {
-      //_idsList = sentence.getBoiTokensIdsForTokenAndName(token, nodeMatch.getNamedEntity());
       _idsList = sentence.getBoiTokensIdsForTokenAndName(token, pmei.getTagNEFromToken(token));
     } else {
       _idsList = new ArrayList<>();
