@@ -609,6 +609,7 @@ class PatternMatchTest extends Specification {
  * Rozpoznawanie wzorca generycznego
  */
 
+    /*
     def "getSentenceTreeMatchingGenericPattern with just star"() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("location :: *")
@@ -637,6 +638,7 @@ class PatternMatchTest extends Specification {
             pattern.nodeMatchList.size() == 2;
             result.size() == 1;
     }
+    */
 
 
     def "getSentenceTreeMatchingGenericPattern with three-levels pattern"() {
@@ -670,6 +672,7 @@ class PatternMatchTest extends Specification {
             result.size() == 1;
     }
 
+    /*
     def "getSentenceTreeMatchingGenericPattern - double occurence "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("location :: się > ^odbywać")
@@ -679,6 +682,8 @@ class PatternMatchTest extends Specification {
             pattern.nodeMatchList.size() == 2;
             result.size() == 2;
     }
+
+     */
 
 
     def "finding sentence subtrees matching generic pattern using * char on direct joint with two branches "() {
