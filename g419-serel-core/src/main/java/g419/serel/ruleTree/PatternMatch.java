@@ -80,6 +80,9 @@ public class PatternMatch {
       result.addAll(resultForOneToken);
     }
 
+    result.stream().forEach(pmsr -> pmsr.docName = sentence.getDocument().getName());
+    result.stream().forEach(pmsr -> pmsr.sentenceNumber = sentence.sentenceNumber);
+
     result = makeDistinct(result);
     return result;
   }
@@ -107,13 +110,12 @@ public class PatternMatch {
     outer:
     for (int i = 1; i < input.size(); i++) {
       final PatternMatchSingleResult currentPmsr = input.get(i);
-      currentPmsr.idsList.sort(Comparator.naturalOrder());
-
       for (final PatternMatchSingleResult resultPmsr : result) {
-        if (resultPmsr.idsList.equals(currentPmsr.idsList)) {
+        if (currentPmsr.isTheSameAs(resultPmsr)) {
           continue outer;
         }
       }
+
       result.add(currentPmsr);
     }
 

@@ -74,6 +74,7 @@ public class PatternMatchSingleResult {
     patternMatchExtraInfo.getToken2tagNE().putAll(pmsr.patternMatchExtraInfo.getToken2tagNE());
   }
 
+
   public boolean isTheSameAs(final PatternMatchSingleResult pmsr) {
 
     if (!this.getRelationType().equals(pmsr.getRelationType())) {
@@ -85,13 +86,32 @@ public class PatternMatchSingleResult {
       return false;
     }
 
-
     if (
-        new HashSet(this.idsList).equals(new HashSet(pmsr.idsList))
+        !(new HashSet(this.idsList).equals(new HashSet(pmsr.idsList)))
     ) {
+      return false;
+    }
+
+/*
+    if (!(patternMatchExtraInfo.getRole("e1").namedEntity.equals(patternMatchExtraInfo.getRole("e2").namedEntity))) {
       return true;
     }
 
+    System.out.println(" COMPARING TWO PMSRS");
+    System.out.println(" this = " + this.description());
+    System.out.println(" pmsr = " + pmsr.description());
+
+ */
+
+    if (
+        this.patternMatchExtraInfo.getRoleE1Ids().equals(pmsr.patternMatchExtraInfo.getRoleE1Ids())
+            &&
+            this.patternMatchExtraInfo.getRoleE2Ids().equals(pmsr.patternMatchExtraInfo.getRoleE2Ids())
+    ) {
+//      System.out.println("  TRUE");
+      return true;
+    }
+//    System.out.println("  FALSE");
     return false;
   }
 
@@ -106,20 +126,25 @@ public class PatternMatchSingleResult {
       return false;
     }
 
+    final Set<Integer> fromIds = this.patternMatchExtraInfo.getRoleE1Ids();
+//    System.out.println("From ids = " + fromIds);
+//    System.out.println(" cond =" + fromIds.contains(rd.getFromTokenId()));
 
-    final Set<Integer> anchorsIDs = this.patternMatchExtraInfo.getAnchorIds();
+    final Set<Integer> targetIds = this.patternMatchExtraInfo.getRoleE2Ids();
+//    System.out.println("target ids = " + targetIds);
+//    System.out.println(" cond =" + targetIds.contains(rd.getToTokenId()));
+
 
     if (
         this.docName.equals(rd.getSentence().getDocument().getName())
             &&
             (this.sentenceNumber == rd.getSentenceIndex())
             &&
-            anchorsIDs.contains(rd.getFromTokenId())
-            //this.idsList.contains(rd.getFromTokenId())
+            fromIds.contains(rd.getFromTokenId())
             &&
-            anchorsIDs.contains(rd.getToTokenId())
-      //this.idsList.contains(rd.getToTokenId())
+            targetIds.contains(rd.getToTokenId())
     ) {
+//      System.out.println("Returning true !!!");
       return true;
     }
 

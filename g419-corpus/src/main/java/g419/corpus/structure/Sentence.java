@@ -31,7 +31,7 @@ public class Sentence extends IdentifiableElement {
   Paragraph paragraph;
 
   /* Indeks zdania w pliku */
-  int sentenceIndex;
+  public int sentenceNumber;
 
   private static final Comparator<Annotation> annotationComparator = new Comparator<Annotation>() {
     @Override
@@ -609,7 +609,7 @@ public class Sentence extends IdentifiableElement {
 //    System.out.println("Checking HEADID token:" + t);
       if (!boiTokensIds.contains(t.getParentTokenId())) {
         if (possibleHeadIds.size() > 0) {
-          System.out.println("WARN !!! Boi has more then one head: found  " + possibleHeadIds + " and new = " + id + " doc: " + this.getDocument().getName() + " sentId=" + this.toString());
+          //System.out.println("WARN !!! Boi has more then one head: found  " + possibleHeadIds + " and new = " + id + " doc: " + this.getDocument().getName() + " sentId=" + this.toString());
         }
         possibleHeadIds.add(id);
       }
@@ -637,7 +637,7 @@ public class Sentence extends IdentifiableElement {
 
     // jeśli dotąd nie można było rozstrzygnąć co jest głową to bierz pierwszy z możliwych
     if (determinedHeadId == -1) {
-      System.out.println("WARN !!! Could not really determimne Boi head: found posHeadIds  " + possibleHeadIds + " doc: " + this.getDocument().getName() + " sentId=" + this.toString());
+      //System.out.println("WARN !!! Could not really determimne Boi head: found posHeadIds  " + possibleHeadIds + " doc: " + this.getDocument().getName() + " sentId=" + this.toString());
       determinedHeadId = possibleHeadIds.iterator().next();
     }
 

@@ -214,12 +214,12 @@ public class ActionMatchRelationsSet extends Action {
     documentResultTruePositive = new ArrayList<>();
     documentResultFalsePositive = new ArrayList<>();
 
-    int sentenceIndex = 0;
+    int sentenceNumber = 0;
     for (final Sentence sentence : d.getParagraphs().get(0).getSentences()) {
-      sentenceIndex++;
+      sentenceNumber++;
       try {
 
-        final SentenceMiscValues smv = SentenceMiscValues.from(sentence, sentenceIndex);
+        final SentenceMiscValues smv = SentenceMiscValues.from(sentence, sentenceNumber);
 
 //        System.out.println("BEFORE correction");
 //        sentence.printAsTree();
@@ -228,25 +228,28 @@ public class ActionMatchRelationsSet extends Action {
 //        System.out.println("AFTER correction");
 //        sentence.printAsTree();
 
+        sentence.sentenceNumber = sentenceNumber;
+
         //final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingSerelPattern(sentence);
         final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingGenericPattern(sentence);
 
         if (d.getName().equals("documents/00102158")) {
-//          System.out.println(" Dla zdania " + sentenceIndex + " znaleziono :" + sentenceResults);
+//          System.out.println(" Dla zdania " + sentenceNumber + " znaleziono :" + sentenceResults);
 
           //jkak to że dwa razy do ©óznych labelek ten sam token z ulicą ???
 
         }
 
-
+        /*
         for (final PatternMatchSingleResult patternMatchSingleResult : sentenceResults) {
-          patternMatchSingleResult.sentenceNumber = sentenceIndex;
+          patternMatchSingleResult.sentenceNumber = sentenceNumber;
           patternMatchSingleResult.docName = d.getName();
           // patternMatchSingleResult.patternMatch = patternMatch;
         }
+        */
 
 //        if (d.getName().equals("documents/00102158")) {
-//          System.out.println(" foundTP = " + sentenceResults.size() + "for sent = " + sentenceIndex);
+//          System.out.println(" foundTP = " + sentenceResults.size() + "for sent = " + sentenceNumber);
 //
 //        }
 
@@ -330,11 +333,12 @@ public class ActionMatchRelationsSet extends Action {
                 final Optional<PatternMatchSingleResult> matching = docTruePositives.stream().filter(pmsr -> pmsr.isTheSameAs(rd)).findAny();
 
                 if (!matching.isPresent()) {
+//                  System.out.println("NO MATCH !!!");
 //                  System.out.println(" WARN! Doc " + comboedDoc.getName() + " Marking as false negative :" + rd);
                   resultType.computeIfAbsent(rd.getType(), k -> new LinkedList<>());
                   documentResultFalseNegative.add(rd);
                 } else {
-//                  System.out.println("MATCH !!!");
+//                  System.out.println("MATCH !!!" + matching.get().description());
                 }
               }
             } catch (final Exception e) {

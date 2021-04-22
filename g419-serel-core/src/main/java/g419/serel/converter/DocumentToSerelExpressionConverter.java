@@ -278,10 +278,10 @@ public class DocumentToSerelExpressionConverter {
     //reportWriter.println(se.getPathAsString(true));
 
     // WHOLE REPORT
-    //reportWriter.println(se.getPathAsString());
+    reportWriter.println(se.getPathAsString());
 
     //JUST PATTERNS
-    reportWriter.println(se.getJustPattern());
+    //reportWriter.println(se.getJustPattern());
 
     // GENERATE TREE
     //se.getParseTree().printAsTreeWithIndex(reportWriter);

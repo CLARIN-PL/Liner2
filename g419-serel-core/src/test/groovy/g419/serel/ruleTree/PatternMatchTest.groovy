@@ -1,5 +1,6 @@
 package g419.serel.ruleTree
 
+import g419.corpus.structure.Document
 import g419.corpus.structure.Sentence
 import g419.corpus.structure.Token
 import g419.corpus.structure.TokenAttributeIndex
@@ -71,6 +72,13 @@ class PatternMatchTest extends Specification {
 
         tokens2 = fillsentence(sentenceValues2, tai)
         sentence2.setTokens(tokens2)
+
+        sentence2.sentenceNumber = 1;
+        sentence.sentenceNumber = 1;
+
+        Document d = new Document("testDoc", null);
+        sentence2.setDocument(d);
+        sentence.setDocument(d);
 
 
     }
@@ -603,8 +611,7 @@ class PatternMatchTest extends Specification {
 
     def "getSentenceTreeMatchingGenericPattern with just star"() {
         when:
-            PatternMatch pattern = PatternMatch.parseRule("*")
-            //NodeMatch startNodeMatch = pattern.rootNodeMatch
+            PatternMatch pattern = PatternMatch.parseRule("location :: *")
             def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
         then:
             pattern.nodeMatchList.size() == 1;
@@ -613,7 +620,7 @@ class PatternMatchTest extends Specification {
 
     def "getSentenceTreeMatchingGenericPattern with just text for lemma"() {
         when:
-            PatternMatch pattern = PatternMatch.parseRule("^odbywać")
+            PatternMatch pattern = PatternMatch.parseRule("location::^odbywać")
             //NodeMatch startNodeMatch = pattern.rootNodeMatch
             def result = pattern.getSentenceTreesMatchingGenericPattern(sentence2)
         then:
@@ -623,7 +630,7 @@ class PatternMatchTest extends Specification {
 
     def "getSentenceTreeMatchingGenericPattern with two-levels pattern"() {
         when:
-            PatternMatch pattern = PatternMatch.parseRule("W > południe")
+            PatternMatch pattern = PatternMatch.parseRule("location :: W > południe")
             //NodeMatch startNodeMatch = pattern.rootNodeMatch
             def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
         then:
@@ -634,7 +641,7 @@ class PatternMatchTest extends Specification {
 
     def "getSentenceTreeMatchingGenericPattern with three-levels pattern"() {
         when:
-            PatternMatch pattern = PatternMatch.parseRule("W > południe > odbywają")
+            PatternMatch pattern = PatternMatch.parseRule("location :: W > południe > odbywają")
             //NodeMatch startNodeMatch = pattern.rootNodeMatch
             def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
         then:
@@ -644,7 +651,7 @@ class PatternMatchTest extends Specification {
 
     def "getSentenceTreeMatchingGenericPattern with pattern v.1.5"() {
         when:
-            PatternMatch pattern = PatternMatch.parseRule("koncerty < jazzowe")
+            PatternMatch pattern = PatternMatch.parseRule("location :: koncerty < jazzowe")
             //NodeMatch startNodeMatch = pattern.rootNodeMatch
             def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
         then:
@@ -655,7 +662,7 @@ class PatternMatchTest extends Specification {
 
     def "getSentenceTreeMatchingGenericPattern with pattern v.2"() {
         when:
-            PatternMatch pattern = PatternMatch.parseRule("się > odbywają")
+            PatternMatch pattern = PatternMatch.parseRule("location :: się > odbywają")
             //NodeMatch startNodeMatch = pattern.rootNodeMatch
             def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
         then:
@@ -665,7 +672,7 @@ class PatternMatchTest extends Specification {
 
     def "getSentenceTreeMatchingGenericPattern - double occurence "() {
         when:
-            PatternMatch pattern = PatternMatch.parseRule("się > ^odbywać")
+            PatternMatch pattern = PatternMatch.parseRule("location :: się > ^odbywać")
             //NodeMatch startNodeMatch = pattern.rootNodeMatch
             def result = pattern.getSentenceTreesMatchingGenericPattern(sentence2)
         then:
@@ -676,7 +683,7 @@ class PatternMatchTest extends Specification {
 
     def "finding sentence subtrees matching generic pattern using * char on direct joint with two branches "() {
         when:
-            PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty > *  < południe < W ")
+            PatternMatch pattern = PatternMatch.parseRule("location :: jazzowe > koncerty > *  < południe < W ")
             def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
         then:
             result.size() == 1
@@ -685,7 +692,7 @@ class PatternMatchTest extends Specification {
 
     def "finding sentence subtrees matching generic pattern with three nodes matching the actual sentence tree "() {
         when:
-            PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty > *  < południe < W ")
+            PatternMatch pattern = PatternMatch.parseRule("location :: jazzowe > koncerty > *  < południe < W ")
 
             EdgeMatch em = new EdgeMatch();
             em.matchAnyDepRel = true;
@@ -704,7 +711,7 @@ class PatternMatchTest extends Specification {
 
     def "finding sentence subtrees matching generic pattern with three nodes not matching the actual sentence tree "() {
         when:
-            PatternMatch pattern = PatternMatch.parseRule("jazzowe > koncerty > *  < południe < W ")
+            PatternMatch pattern = PatternMatch.parseRule("location:: jazzowe > koncerty > *  < południe < W ")
 
             EdgeMatch em = new EdgeMatch();
             em.matchAnyDepRel = true;

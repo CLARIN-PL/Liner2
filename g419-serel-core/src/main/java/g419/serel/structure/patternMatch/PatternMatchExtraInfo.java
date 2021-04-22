@@ -3,10 +3,7 @@ package g419.serel.structure.patternMatch;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import lombok.Data;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Data
@@ -59,6 +56,15 @@ public class PatternMatchExtraInfo {
   public Set<Integer> getAnchorIds() {
     return roleMap.values().stream().flatMap(newt -> sentence.getBoiTokensIdsForTokenAndName(newt.token, newt.namedEntity).stream()).collect(Collectors.toSet());
   }
+
+  public Set<Integer> getRoleE1Ids() {
+    return new HashSet<>(sentence.getBoiTokensIdsForTokenAndName(roleMap.get("e1").token, roleMap.get("e1").namedEntity));
+  }
+
+  public Set<Integer> getRoleE2Ids() {
+    return new HashSet<>(sentence.getBoiTokensIdsForTokenAndName(roleMap.get("e2").token, roleMap.get("e2").namedEntity));
+  }
+
 
   public String getTagNEFromToken(final Token token) {
     return token2tagNE.get(token);
