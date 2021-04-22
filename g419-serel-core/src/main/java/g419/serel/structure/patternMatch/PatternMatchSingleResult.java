@@ -92,16 +92,34 @@ public class PatternMatchSingleResult {
       return false;
     }
 
-/*
-    if (!(patternMatchExtraInfo.getRole("e1").namedEntity.equals(patternMatchExtraInfo.getRole("e2").namedEntity))) {
-      return true;
-    }
 
-    System.out.println(" COMPARING TWO PMSRS");
-    System.out.println(" this = " + this.description());
-    System.out.println(" pmsr = " + pmsr.description());
+//    */
+//    if (
+//        !(new HashSet(this.idsList).equals(new HashSet(pmsr.idsList)))
+//    ) {
+//      return false;
+//    }
+//    */
+//
+//
+//    if (!(this.patternMatchExtraInfo.getRole("e1").namedEntity.equals(pmsr.patternMatchExtraInfo.getRole("e1").namedEntity))) {
+//      return false;
+//    }
+//
+//    if (!(this.patternMatchExtraInfo.getRole("e2").namedEntity.equals(pmsr.patternMatchExtraInfo.getRole("e2").namedEntity))) {
+//      return false;
+//    }
+//
+///*
+//    if (!(patternMatchExtraInfo.getRole("e1").namedEntity.equals(patternMatchExtraInfo.getRole("e2").namedEntity))) {
+//      return true;
+//    }
+//*/
+//
+////    System.out.println(" COMPARING TWO PMSRS");
+////    System.out.println(" this = " + this.description());
+////    System.out.println(" pmsr = " + pmsr.description());
 
- */
 
     if (
         this.patternMatchExtraInfo.getRoleE1Ids().equals(pmsr.patternMatchExtraInfo.getRoleE1Ids())
@@ -125,6 +143,15 @@ public class PatternMatchSingleResult {
     if (!this.getRelationType().equals(rd.getType())) {
       return false;
     }
+
+    if (!this.patternMatchExtraInfo.getRole("e1").namedEntity.equals(rd.getFromType())) {
+      return false;
+    }
+
+    if (!this.patternMatchExtraInfo.getRole("e2").namedEntity.equals(rd.getToType())) {
+      return false;
+    }
+
 
     final Set<Integer> fromIds = this.patternMatchExtraInfo.getRoleE1Ids();
 //    System.out.println("From ids = " + fromIds);
