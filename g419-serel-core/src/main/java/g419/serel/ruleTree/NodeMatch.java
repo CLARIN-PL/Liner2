@@ -104,11 +104,19 @@ public class NodeMatch {
 
       boolean found = false;
       for (final String boi : boiList) {
+
         if (
-            (boi.startsWith("B-" + namedEntity))  // "B-"  -> start token of entity
+            (boi.equals("B-" + namedEntity))  // "B-"  -> start token of entity
                 ||
-                (boi.startsWith("I-" + namedEntity))  // "I-"  -> inside token of entity
+                (boi.equals("I-" + namedEntity))  // "I-"  -> inside token of entity
         ) {
+
+          // z ta wersją są problemy gdy "chwyci" nie tą nazwę co trzeba ale też pasującą ...
+//        if (
+//            (boi.startsWith("B-" + namedEntity))  // "B-"  -> start token of entity
+//                ||
+//                (boi.startsWith("I-" + namedEntity))  // "I-"  -> inside token of entity
+//        ) {
 
 // TOREVERT
 //          // oraz jeśli to nie jest BOI które już wcześniej znaleźliśmy i do czegoś przypięliśmy !!!
