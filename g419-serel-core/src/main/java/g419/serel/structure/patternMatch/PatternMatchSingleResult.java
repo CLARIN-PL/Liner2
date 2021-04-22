@@ -86,6 +86,15 @@ public class PatternMatchSingleResult {
       return false;
     }
 
+    if (!(this.patternMatchExtraInfo.getRole("e1").namedEntity.equals(pmsr.patternMatchExtraInfo.getRole("e1").namedEntity))) {
+      return false;
+    }
+
+    if (!(this.patternMatchExtraInfo.getRole("e2").namedEntity.equals(pmsr.patternMatchExtraInfo.getRole("e2").namedEntity))) {
+      return false;
+    }
+
+
     if (
         !(new HashSet(this.idsList).equals(new HashSet(pmsr.idsList)))
     ) {
@@ -102,13 +111,6 @@ public class PatternMatchSingleResult {
 //    */
 //
 //
-//    if (!(this.patternMatchExtraInfo.getRole("e1").namedEntity.equals(pmsr.patternMatchExtraInfo.getRole("e1").namedEntity))) {
-//      return false;
-//    }
-//
-//    if (!(this.patternMatchExtraInfo.getRole("e2").namedEntity.equals(pmsr.patternMatchExtraInfo.getRole("e2").namedEntity))) {
-//      return false;
-//    }
 //
 ///*
 //    if (!(patternMatchExtraInfo.getRole("e1").namedEntity.equals(patternMatchExtraInfo.getRole("e2").namedEntity))) {
