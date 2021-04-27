@@ -222,11 +222,11 @@ public class ActionMatchRelationsSet extends Action {
         final SentenceMiscValues smv = SentenceMiscValues.from(sentence, sentenceNumber);
 
 //        System.out.println("BEFORE correction");
-//        sentence.printAsTree();
+//        sentence.printAsTree(new PrintWriter(System.out));
         // SWITCH_1
         sentence.checkAndFixBois();
 //        System.out.println("AFTER correction");
-//        sentence.printAsTree();
+//        sentence.printAsTree(new PrintWriter(System.out));
 
         sentence.sentenceNumber = sentenceNumber;
 

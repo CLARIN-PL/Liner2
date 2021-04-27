@@ -1,10 +1,13 @@
 package g419.serel.structure;
 
+
 import g419.corpus.structure.RelationDesc;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
 import g419.liner2.core.tools.parser.ParseTree;
 import lombok.Data;
+import org.apache.commons.lang3.tuple.Pair;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,6 +62,54 @@ public class SerelExpression {
 
     s.append(";\t\t\t" + sentExt.substring(0, Math.min(300, sentExt.length())));
     return s.toString();
+  }
+
+
+  public Pair<List<Token>, Token> getJustPatternInTokens() {
+
+    if ((tokensChainUp1.size() < 2) && (tokensChainUp2.size() < 2)) {
+      System.out.println("ERROR !!! Nieprawidłowe ścieżki łączące relacje ");
+    }
+
+    final Token changeDepRelDirection;
+
+    // left
+    final ArrayList<Token> left = new ArrayList<>();
+    left.add(tokensChainUp1.get(0));
+
+    if (tokensChainUp1.size() > 1) {
+      for (int i = 1; i <= tokensChainUp1.size() - 1 - 1; i++) {
+        final Token t = tokensChainUp1.get(i);
+        left.add(t);
+      }
+    }
+
+    //right
+    final ArrayList<Token> right = new ArrayList<>();
+    if (tokensChainUp2.size() > 1) {
+      for (int i = tokensChainUp2.size() - 1 - 1; i >= 1; i--) {
+        final Token t = tokensChainUp2.get(i);
+        right.add(t);
+      }
+    }
+    right.add(tokensChainUp2.get(0));
+//  System.out.println("RIGHT =" + right);
+
+    final ArrayList<Token> total = new ArrayList<>();
+    if ((tokensChainUp1.size() == 1) || (tokensChainUp2.size() == 1)) {
+      total.addAll(left);
+      total.addAll(right);
+      changeDepRelDirection = left.get(left.size() - 1);
+    } else {
+      final Token tCenter = tokensChainUp1.get(tokensChainUp1.size() - 1);
+//    System.out.println("SCENTER = " + tCenter);
+      total.addAll(left);
+      total.add(tCenter);
+      changeDepRelDirection = tCenter;
+      total.addAll(right);
+    }
+
+    return Pair.of(total, changeDepRelDirection);
   }
 
 
@@ -117,16 +168,31 @@ public class SerelExpression {
   }
 
   private String token2String(final Token t, final boolean withIndexes) {
+
+
+    if (t.getBoisNonEmpty().size() > 0) {
+      // to jest jakiś NE
+      return
+          " * "
+              +
+              getCaseClauseForTokenIndex(t.getNumberId() - 1)  // id -> index
+              + " / " +
+              t.getBoisNonEmpty().get(0).substring(2);
+    }
+    
+
+    // to nie jest żaden NE
     return
         t.getAttributeValue(1)
             +
             getCaseClauseForTokenIndex(t.getNumberId() - 1);  // id -> index
+
   }
 
   private String getCaseClauseForTokenIndex(final int tokenIndex) {
 
     //SWITCH_2
-/*
+
     final List<Token> children = getSentence().getChildrenTokensFromTokenIndex(tokenIndex);
 
     for (final Token token : children) {
@@ -138,20 +204,17 @@ public class SerelExpression {
         }
       }
     }
-*/
+
     return "";
   }
 
   private String getDepRelClauseForToken(final Token t) {
-
     //SWITCH_3
-  /*
+
     final String depRel = t.getAttributeValue("deprel");
     return " (" + depRel + ") ";
-   */
 
-
-    return "";
+    //return "";
   }
 
 }

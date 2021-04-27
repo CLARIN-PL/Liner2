@@ -174,6 +174,7 @@ public class DocumentToSerelExpressionConverter {
     final Token tokenFrom = sentence.getTokenById(relDesc.getFromTokenId());
     final int boiFromHeadId = sentence.findActualHeadId(tokenFrom, relDesc.getFromType());
 
+
     final Token tokenTo = sentence.getTokenById(relDesc.getToTokenId());
     final int boiToHeadId = sentence.findActualHeadId(tokenTo, relDesc.getToType());
 
@@ -284,7 +285,8 @@ public class DocumentToSerelExpressionConverter {
     //reportWriter.println(se.getJustPattern());
 
     // GENERATE TREE
-    //se.getParseTree().printAsTreeWithIndex(reportWriter);
+    se.getSentence().printAsTree(reportWriter);
+
 
     //reportWriter.println("------------------------------------------------------");
 

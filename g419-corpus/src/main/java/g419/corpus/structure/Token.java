@@ -261,6 +261,18 @@ public class Token extends IdentifiableElement {
     return (List<String>) result;
   }
 
+  public List<String> getBoisNonEmpty() {
+    final List<String> tmpResult = getBois();
+    if (tmpResult.size() > 1) {
+      return tmpResult;
+    }
+    if (!tmpResult.get(0).equals("O")) {
+      return tmpResult;
+    }
+
+    return Collections.EMPTY_LIST;
+  }
+
   public List<String> getBoisBeginsRaw() {
     return getBois().stream().filter(b -> b.startsWith("B-")).map(b -> b.substring(2)).collect(Collectors.toList());
   }

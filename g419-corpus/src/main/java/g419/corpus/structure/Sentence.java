@@ -3,6 +3,7 @@ package g419.corpus.structure;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import java.io.PrintWriter;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -714,26 +715,26 @@ public class Sentence extends IdentifiableElement {
   // START: Print as tree
   //////////////////////////////////////////////////
 
-  public void printAsTree() {
+  public void printAsTree(final PrintWriter pw) {
     final Token rootToken = this.getRootToken();
     System.out.println("Root token =" + rootToken);
-    printTokenSubTree(rootToken, 0);
+    printTokenSubTree(pw, rootToken, 0);
   }
 
-  public void printTokenSubTree(final Token token, int level) {
-    printlnToken(token, level);
+  public void printTokenSubTree(final PrintWriter pw, final Token token, int level) {
+    printlnToken(pw, token, level);
 
     final List<Token> children = this.getChildrenTokensFromToken(token);
     level++;
     for (final Token child : children) {
-      printTokenSubTree(child, level);
+      printTokenSubTree(pw, child, level);
     }
   }
 
-  public void printlnToken(final Token token, final int level) {
+  public void printlnToken(final PrintWriter pw, final Token token, final int level) {
     final StringBuilder spaces = new StringBuilder();
     for (int i = 0; i < level; i++) { spaces.append("   "); }
-    System.out.println(spaces + "(" + token.getAttributeValue("deprel") + ") " + token.getAttributeValue(1) + "\tId=" + token.getNumberId() + " parId=" + token.getParentTokenId());
+    pw.println(spaces + "(" + token.getAttributeValue("deprel") + ") " + token.getAttributeValue(1) + "\tId=" + token.getNumberId() + " parId=" + token.getParentTokenId());
   }
 
   //////////////////////////////////////////////////
