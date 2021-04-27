@@ -1,21 +1,16 @@
 package g419.serel.tools;
 
-import g419.corpus.structure.Annotation;
-import g419.liner2.core.tools.parser.SentenceLink;
 import g419.serel.structure.ParseTreeMalfunction;
 import g419.serel.structure.SerelExpression;
-
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class CheckParserParseTree {
 
-  public  List<ParseTreeMalfunction> checkParseTree(final List<SerelExpression> serelExpressions  ) {
+  public List<ParseTreeMalfunction> checkParseTree(final List<SerelExpression> serelExpressions) {
     final List<ParseTreeMalfunction> result = new LinkedList<>();
 
-    for(final SerelExpression se : serelExpressions ) {
+    for (final SerelExpression se : serelExpressions) {
     /*
       Annotation aFrom = se.getRelation().getAnnotationFrom();
       result.addAll(isAnnotationHeadPointingOut(se, aFrom));
@@ -35,13 +30,14 @@ public class CheckParserParseTree {
   "location: nam_org_organization -> wielki -> finał -> z -> problem <- w <- Wrocław <- nam_loc_gpe_city" :
   bierzemy node i sprawdzamy czy link z "głowy" wychodzi ma zewnątrz
   */
+  /*
   private List<ParseTreeMalfunction> isAnnotationHeadPointingOut(final SerelExpression se, final Annotation a) {
 
     final List<ParseTreeMalfunction> result = new LinkedList<>();
 
     final int headForOut = a.getHead();
     final Optional<SentenceLink> linkForOut = se.getParseTree().getLinksBySourceIndex(headForOut);
-    if(linkForOut.isPresent()) {
+    if (linkForOut.isPresent()) {
       final int targetOutIndex = linkForOut.get().getTargetIndex();
       if (a.isTokenIndexWithin(targetOutIndex)) {
 
@@ -60,6 +56,8 @@ public class CheckParserParseTree {
     return result;
   }
 
+   */
+
 
   /*
    2. sprawdzenie czy są przypadki, gdzie w relacji była nazwa wielowyrazowa
@@ -67,6 +65,7 @@ public class CheckParserParseTree {
    bierzemy node, jeśli nazwa jest wielowyrazowa to sprawdzamy czy nie jest czasem
    tak, że więcej niż jeden wyraz wskazuje na zewnątrz "poza" nazwą
   */
+  /*
   private List<ParseTreeMalfunction> isHavingMoreElementsPointingOut(final SerelExpression se, final Annotation ann) {
     final List<ParseTreeMalfunction> result = new LinkedList<>();
 
@@ -96,8 +95,7 @@ public class CheckParserParseTree {
     return result;
   }
 
-
-
+   */
 
 
 }

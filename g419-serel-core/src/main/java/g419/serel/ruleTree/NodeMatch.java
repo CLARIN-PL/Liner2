@@ -90,11 +90,18 @@ public class NodeMatch {
       }
     }
 
-    //xPos
+    //xPos a właściwie teraz UPOS
     if ((xPos != null) && (!xPos.isEmpty())) {
+      if (!token.getAttributeValue("upos").equals(xPos)) {
+        return false;
+      }
+
+
+      /*
       if (!token.getAttributeValue("xpos").startsWith(xPos)) {
         return false;
       }
+      */
     }
 
     //namedEntity

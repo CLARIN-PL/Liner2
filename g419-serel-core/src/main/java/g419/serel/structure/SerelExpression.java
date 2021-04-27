@@ -4,7 +4,6 @@ package g419.serel.structure;
 import g419.corpus.structure.RelationDesc;
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
-import g419.liner2.core.tools.parser.ParseTree;
 import lombok.Data;
 import org.apache.commons.lang3.tuple.Pair;
 import java.util.ArrayList;
@@ -23,7 +22,6 @@ public class SerelExpression {
   private List<Token> tokensChainUp1;
   private List<Token> tokensChainUp2;
 
-  private ParseTree parseTree;
   private int index1;
   private int index2;
 
@@ -112,6 +110,20 @@ public class SerelExpression {
     return Pair.of(total, changeDepRelDirection);
   }
 
+  /*
+  public List<String> generatePatternFromTokens(final Pair<List<Token>, Token> tokensInfo) {
+    final List<Token> tokens = tokensInfo.getLeft();
+
+    final List<StringBuilder> results = new ArrayList<>();
+
+    final Token first = tokens.get(0);
+    final Token last = tokens.get(tokens.size() - 1);
+
+
+  }
+
+   */
+
 
   public StringBuilder getJustPattern() {
     if ((tokensChainUp1.size() < 2) && (tokensChainUp2.size() < 2)) {
@@ -179,11 +191,13 @@ public class SerelExpression {
               + " / " +
               t.getBoisNonEmpty().get(0).substring(2);
     }
-    
+
 
     // to nie jest żaden NE
     return
-        t.getAttributeValue(1)
+        " [" + t.getAttributeValue(3) + "] " +
+
+            t.getAttributeValue(1)
             +
             getCaseClauseForTokenIndex(t.getNumberId() - 1);  // id -> index
 

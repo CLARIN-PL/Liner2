@@ -182,9 +182,9 @@ public class DocumentToSerelExpressionConverter {
 
     final SerelExpression se;
     if (path != null) {
-      se = new SerelExpression(relDesc, path.getLeft(), path.getRight() /* , parseTree*/, boiFromHeadId - 1, boiToHeadId - 1);
+      se = new SerelExpression(relDesc, path.getLeft(), path.getRight(), boiFromHeadId - 1, boiToHeadId - 1);
     } else {
-      se = new SerelExpression(relDesc, null, null /* , parseTree*/, boiFromHeadId - 1, boiToHeadId - 1);
+      se = new SerelExpression(relDesc, null, null, boiFromHeadId - 1, boiToHeadId - 1);
     }
     return se;
   }
@@ -279,13 +279,13 @@ public class DocumentToSerelExpressionConverter {
     //reportWriter.println(se.getPathAsString(true));
 
     // WHOLE REPORT
-    reportWriter.println(se.getPathAsString());
+    //reportWriter.println(se.getPathAsString());
 
     //JUST PATTERNS
-    //reportWriter.println(se.getJustPattern());
+    reportWriter.println(se.getJustPattern());
 
     // GENERATE TREE
-    se.getSentence().printAsTree(reportWriter);
+    //se.getSentence().printAsTree(reportWriter);
 
 
     //reportWriter.println("------------------------------------------------------");
