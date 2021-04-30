@@ -16,12 +16,14 @@ class NodeMatchTest extends Specification {
         tai.addAttribute("orth")
         tai.addAttribute("lemma")
         tai.addAttribute("xpos")
+        tai.addAttribute("upos")
         tai.addAttribute("misc")
 
         token = new Token(tai);
 
         token.setAttributeValue("orth", "stolicą");
         token.setAttributeValue("lemma", "stolica")
+        token.setAttributeValue("upos", "VERB")
         token.setAttributeValue("xpos", "noun")
 
         List<String> bois = List.of("B-nam_fac_goe", "B-nam_loc_gpe_city")
@@ -67,7 +69,7 @@ class NodeMatchTest extends Specification {
         when:
             NodeMatch nm = new NodeMatch();
             nm.matchAnyText = true
-            nm.xPos = "noun"
+            nm.xPos = "VERB"
 
         then:
             nm.matches(token) == true
@@ -77,7 +79,7 @@ class NodeMatchTest extends Specification {
         when:
             NodeMatch nm = new NodeMatch();
             nm.matchAnyText = true
-            nm.xPos = "noun"
+            nm.xPos = "VERB"
             nm.namedEntity = "nam_fac_goe"
 
         then:

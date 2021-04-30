@@ -192,8 +192,15 @@ public class SerelExpression {
               t.getBoisNonEmpty().get(0).substring(2);
     }
 
-
     // to nie jest żaden NE
+
+    if (t.getAttributeValue(3).equals("VERB")) {
+      return " [" + t.getAttributeValue(3) + "] " +
+          "^" + t.getAttributeValue(2) +
+          getCaseClauseForTokenIndex(t.getNumberId() - 1);  // id -> index
+    }
+
+
     return
         " [" + t.getAttributeValue(3) + "] " +
 
