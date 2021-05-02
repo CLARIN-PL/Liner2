@@ -3,9 +3,9 @@ package g419.corpus.structure;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 
 @Builder
 @Data
@@ -69,7 +69,7 @@ public class RelationDesc {
   }
 
   public String getSentenceDecorated() {
-    return sentence.toStringDecorated(new ArrayList<>
+    return sentence.toStringDecorated(new LinkedHashSet<>
         (Arrays.asList(this.getFromTokenId(), this.getToTokenId())));
   }
 

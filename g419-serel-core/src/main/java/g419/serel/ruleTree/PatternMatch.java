@@ -106,7 +106,7 @@ public class PatternMatch {
     // preparing first, refernce PMEI to have somthing to compare to
     final List<PatternMatchSingleResult> result = new ArrayList<>();
     final PatternMatchSingleResult firstPmsr = input.get(0);
-    firstPmsr.idsList.sort(Comparator.naturalOrder());
+    //firstPmsr.idsList.sort(Comparator.naturalOrder());
     result.add(firstPmsr);
 
     outer:
@@ -153,11 +153,12 @@ public class PatternMatch {
 
     final PatternMatchSingleResult oneResult;
     final String namedEntityLabel;
-    final ArrayList<Integer> _idsList;
+    //TOREVERT
+    final LinkedHashSet<Integer> _idsList;
     if (nodeMatch.isForNamedEntity()) {
       _idsList = sentence.getBoiTokensIdsForTokenAndName(token, pmei.getTagNEFromToken(token));
     } else {
-      _idsList = new ArrayList<>();
+      _idsList = new LinkedHashSet<>();
       _idsList.add(token.getNumberId());
     }
 

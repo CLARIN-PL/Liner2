@@ -2,9 +2,8 @@ package g419.serel.structure.patternMatch;
 
 import g419.corpus.structure.RelationDesc;
 import g419.serel.ruleTree.PatternMatch;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class PatternMatchSingleResult {
@@ -13,10 +12,11 @@ public class PatternMatchSingleResult {
   public int sentenceNumber;
   public PatternMatch patternMatch;
   public String relationType;
-  public Set<String> namedEntitySet = new HashSet<>();
+  public Set<String> namedEntitySet = new LinkedHashSet<>();
 
   // idki (nie indeksy !!!) do elementów które składają się na "rozwiązanie" matcha - wszystkie dla tego całego jednego rozwiązania
-  public ArrayList<Integer> idsList;
+  //public ArrayList<Integer> idsList;
+  public LinkedHashSet<Integer> idsList;
 
   PatternMatchExtraInfo patternMatchExtraInfo;
 
@@ -28,7 +28,7 @@ public class PatternMatchSingleResult {
   }
 
 
-  public PatternMatchSingleResult(final ArrayList<Integer> _idsList,
+  public PatternMatchSingleResult(final LinkedHashSet<Integer> _idsList,
                                   final PatternMatchExtraInfo _pmei,
                                   final String _relType) {
     this.idsList = _idsList;
@@ -38,7 +38,7 @@ public class PatternMatchSingleResult {
 
 
   public PatternMatchSingleResult(final PatternMatchSingleResult pmsr) {
-    this.idsList = (ArrayList<Integer>) pmsr.idsList.clone();
+    this.idsList = (LinkedHashSet<Integer>) pmsr.idsList.clone();
     this.patternMatchExtraInfo = new PatternMatchExtraInfo(pmsr.patternMatchExtraInfo);
     this.relationType = pmsr.relationType;
   }
@@ -67,11 +67,15 @@ public class PatternMatchSingleResult {
     return result;
   }
 
-  public void concatenateWith(final PatternMatchSingleResult pmsr) {
+  public boolean concatenateWith(final PatternMatchSingleResult pmsr) {
+
+
     idsList.addAll(pmsr.idsList);
     //namedEntitySet.addAll(pmsr.namedEntitySet);
     patternMatchExtraInfo.getRoleMap().putAll(pmsr.patternMatchExtraInfo.getRoleMap());
     patternMatchExtraInfo.getToken2tagNE().putAll(pmsr.patternMatchExtraInfo.getToken2tagNE());
+
+    return false;
   }
 
 
@@ -94,9 +98,8 @@ public class PatternMatchSingleResult {
       return false;
     }
 
-
     if (
-        !(new HashSet(this.idsList).equals(new HashSet(pmsr.idsList)))
+        !(this.idsList.equals(pmsr.idsList))
     ) {
       return false;
     }

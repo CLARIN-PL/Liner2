@@ -351,12 +351,12 @@ public class Sentence extends IdentifiableElement {
   }
 
 
-  public String toStringDecorated(final ArrayList<Integer> indexes) {
+  public String toStringDecorated(final LinkedHashSet<Integer> indexes) {
     return toStringDecorated(indexes, 0);
   }
 
 
-  public String toStringDecorated(final ArrayList<Integer> indexes, final int correction) {
+  public String toStringDecorated(final LinkedHashSet<Integer> indexes, final int correction) {
 
     final StringBuilder sb = new StringBuilder();
     for (final Token t : tokens) {
@@ -498,7 +498,7 @@ public class Sentence extends IdentifiableElement {
   }
 
   public void checkAndFixBoi(final Token token, final String boiRaw) {
-    final List<Integer> boiIds = getBoiTokensIdsForTokenAndName(token, boiRaw);
+    final Set<Integer> boiIds = getBoiTokensIdsForTokenAndName(token, boiRaw);
 //    System.out.println("BoisIds = " + boiIds);
     final int headId = fixBoiHead(boiIds);
 //    System.out.println("ActualHEadId =" + headId);
@@ -516,8 +516,8 @@ public class Sentence extends IdentifiableElement {
   }
 
 
-  public ArrayList<Integer> getBoiTokensIdsForTokenAndName(final Token tokenToCheck, final String boiName) {
-    final ArrayList<Integer> resultIds = new ArrayList<>();
+  public LinkedHashSet<Integer> getBoiTokensIdsForTokenAndName(final Token tokenToCheck, final String boiName) {
+    final LinkedHashSet<Integer> resultIds = new LinkedHashSet<>();
 
     if (!tokenToCheck.hasBoi(boiName)) {
       return resultIds;
@@ -527,12 +527,13 @@ public class Sentence extends IdentifiableElement {
     fillBoiFrontIds(tokenToCheck, boiName, resultIds);
     fillBoiBackIds(tokenToCheck, boiName, resultIds);
 
-    resultIds.sort(Comparator.naturalOrder());
+    //TOREVERT
+    //resultIds.sort(Comparator.naturalOrder());
 //    System.out.println(" returning listIds = " + resultIds);
     return resultIds;
   }
 
-  private void fillBoiFrontIds(final Token tokenToCheckFrom, final String boiName, final List<Integer> resultIds) {
+  private void fillBoiFrontIds(final Token tokenToCheckFrom, final String boiName, final Set<Integer> resultIds) {
     if (!tokenToCheckFrom.hasBoi(boiName)) {
       return;
     }
@@ -543,7 +544,9 @@ public class Sentence extends IdentifiableElement {
     Token currentToken = this.getPreviousToken(tokenToCheckFrom);
     while (currentToken != null) {
       if (currentToken.hasBoi(boiName)) {
-        resultIds.add(0, currentToken.getNumberId());
+        //TOREVERT
+        //resultIds.add(0, currentToken.getNumberId());
+        resultIds.add(currentToken.getNumberId());
       }
       if (currentToken.hasBoiBeginTag(boiName)) {
         break;
@@ -556,7 +559,7 @@ public class Sentence extends IdentifiableElement {
     }
   }
 
-  private void fillBoiBackIds(final Token tokenToCheckFrom, final String boiName, final List<Integer> resultIds) {
+  private void fillBoiBackIds(final Token tokenToCheckFrom, final String boiName, final Set<Integer> resultIds) {
     if (!tokenToCheckFrom.hasBoi(boiName)) {
       return;
     }
@@ -564,7 +567,9 @@ public class Sentence extends IdentifiableElement {
     Token currentToken = this.getFollowingToken(tokenToCheckFrom);
     while (currentToken != null) {
       if (currentToken.hasBoiInsideTag(boiName)) {    // InsideTag !!!!
-        resultIds.add(0, currentToken.getNumberId());
+        //TOREVERT
+        // resultIds.add(0, currentToken.getNumberId());
+        resultIds.add(currentToken.getNumberId());
       } else {
         break;
       }
@@ -578,7 +583,7 @@ public class Sentence extends IdentifiableElement {
 
   public int findActualHeadId(final Token token, final String name) {
 //    System.out.println("findAHI name = " + name);
-    final List<Integer> boiTokensIds = this.getBoiTokensIdsForTokenAndName(token, name);
+    final Set<Integer> boiTokensIds = this.getBoiTokensIdsForTokenAndName(token, name);
 //    System.out.println("bois =" + list);
     for (final int id : boiTokensIds) {
       final Token t = getTokenById(id);
@@ -595,11 +600,11 @@ public class Sentence extends IdentifiableElement {
 
 
   public int fixBoiHead(final Token token, final String name) {
-    final List<Integer> boiTokensIds = this.getBoiTokensIdsForTokenAndName(token, name);
+    final Set<Integer> boiTokensIds = this.getBoiTokensIdsForTokenAndName(token, name);
     return fixBoiHead(boiTokensIds);
   }
 
-  public int fixBoiHead(final List<Integer> boiTokensIds) {
+  public int fixBoiHead(final Set<Integer> boiTokensIds) {
 
     final Set<Integer> possibleHeadIds = new LinkedHashSet<>();
     int determinedHeadId = -1;
