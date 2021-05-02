@@ -177,12 +177,12 @@ class PatternMatchTest extends Specification {
             thrown ParseCancellationException
     }
 
-    def "ParseRule should recognize and accept xPos part"() {
+    def "ParseRule should recognize and accept uPos part"() {
         given:
             PatternMatch result = PatternMatch.parseRule("[subst] miasto ")
         expect:
             result.rootNodeMatch.texts.contains("miasto")
-            result.rootNodeMatch.getXPos().equals("subst")
+            result.rootNodeMatch.getUPos().equals("subst")
             result.rootNodeMatch.id == 1;
             result.nodeMatchList.size() == 1;
 
@@ -199,13 +199,13 @@ class PatternMatchTest extends Specification {
             result.nodeMatchList.size() == 1;
     }
 
-    def "ParseRule should recognize xPos with namedEntity name with role"() {
+    def "ParseRule should recognize uPos with namedEntity name with role"() {
         given:
             PatternMatch result = PatternMatch.parseRule(" [subst] ^stolica / nam_geo_loc:source ")
         expect:
             result.rootNodeMatch.isMatchLemma() == true
             result.rootNodeMatch.texts.contains("stolica")
-            result.rootNodeMatch.getXPos().equals("subst")
+            result.rootNodeMatch.getUPos().equals("subst")
             result.rootNodeMatch.namedEntity.equals("nam_geo_loc")
             result.rootNodeMatch.role.equals("source")
             result.rootNodeMatch.id == 1;

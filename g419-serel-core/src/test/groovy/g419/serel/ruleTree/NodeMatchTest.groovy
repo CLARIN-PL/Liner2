@@ -23,7 +23,7 @@ class NodeMatchTest extends Specification {
 
         token.setAttributeValue("orth", "stolicą");
         token.setAttributeValue("lemma", "stolica")
-        token.setAttributeValue("upos", "VERB")
+        token.setAttributeValue("upos", "VERB"); // trochę nie pasują razem ale do testów starczy
         token.setAttributeValue("xpos", "noun")
 
         List<String> bois = List.of("B-nam_fac_goe", "B-nam_loc_gpe_city")
@@ -65,11 +65,11 @@ class NodeMatchTest extends Specification {
             nm.matches(token) == true
     }
 
-    def "matches recognizes xpos"() {
+    def "matches recognizes upos"() {
         when:
             NodeMatch nm = new NodeMatch();
             nm.matchAnyText = true
-            nm.xPos = "VERB"
+            nm.uPos = "VERB"
 
         then:
             nm.matches(token) == true
@@ -79,7 +79,7 @@ class NodeMatchTest extends Specification {
         when:
             NodeMatch nm = new NodeMatch();
             nm.matchAnyText = true
-            nm.xPos = "VERB"
+            nm.uPos = "VERB"
             nm.namedEntity = "nam_fac_goe"
 
         then:
