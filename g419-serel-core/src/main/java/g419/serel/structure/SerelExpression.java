@@ -136,7 +136,9 @@ public class SerelExpression {
     // left anchor
     final StringBuilder sLeft = new StringBuilder();
     sLeft.append(relationDesc.getType()).append("::");
+    sLeft.append(" [[" + tokensChainUp1.get(0).getAttributeValue(4) + "]] ");
     sLeft.append(" *" + getCaseClauseForTokenIndex(tokensChainUp1.get(0).getNumberId() - 1) + " / " + relationDesc.getFromType() + ":e1");
+
 
     if (tokensChainUp1.size() > 1) {
       final Token t0 = tokensChainUp1.get(0);
@@ -159,6 +161,7 @@ public class SerelExpression {
       final Token t = tokensChainUp2.get(0);
       sRight.append(" < " + getDepRelClauseForToken(t));
     }
+    sRight.append(" [[" + tokensChainUp2.get(0).getAttributeValue(4) + "]] ");
     sRight.append(" *" + getCaseClauseForTokenIndex(tokensChainUp2.get(0).getNumberId() - 1) + " / " + relationDesc.getToType() + ":e2");
 //  System.out.println("SRIGHT =" + sRight);
 
@@ -194,8 +197,10 @@ public class SerelExpression {
 
     // to nie jest żaden NE
 
+    // jeśli czasownik to wstawiamy lemat
     if (t.getAttributeValue(3).equals("VERB")) {
       return " [" + t.getAttributeValue(3) + "] " +
+          " [[" + t.getAttributeValue(4) + "]] " +
           "^" + t.getAttributeValue(2) +
           getCaseClauseForTokenIndex(t.getNumberId() - 1);  // id -> index
     }
@@ -203,6 +208,7 @@ public class SerelExpression {
 
     return
         " [" + t.getAttributeValue(3) + "] " +
+            " [[" + t.getAttributeValue(4) + "]] " +
 
             t.getAttributeValue(1)
             +

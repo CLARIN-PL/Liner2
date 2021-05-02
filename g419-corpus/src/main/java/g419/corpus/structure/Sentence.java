@@ -719,6 +719,7 @@ public class Sentence extends IdentifiableElement {
     final Token rootToken = this.getRootToken();
     System.out.println("Root token =" + rootToken);
     printTokenSubTree(pw, rootToken, 0);
+    pw.flush();
   }
 
   public void printTokenSubTree(final PrintWriter pw, final Token token, int level) {

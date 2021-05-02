@@ -37,9 +37,12 @@ depRel : '(' depRelValue ')';
 depRelValue : depRelValuePart ( ':' depRelValuePart)*;
 depRelValuePart : IDENTIFIER;
 
-node:  xPos? element;
-xPos : '[' xPosValue ']' ;
-xPosValue : id ;
+node:  uPos? xPos? element;
+uPos : '[' uPosValue ']' ;
+uPosValue : id ;
+xPos : '[[' xPosValue ']]' ;
+xPosValue : xPosValuePart ( ':' xPosValuePart)*;
+xPosValuePart : IDENTIFIER;
 element : text ( HASH caseTail)? ('/' namedEntityToRole)? ;
 namedEntityToRole: namedEntity toRole? ;
 toRole : ':' role ;

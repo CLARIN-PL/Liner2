@@ -153,6 +153,24 @@ public class ParseRuleBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
    * {@link #visitChildren} on {@code ctx}.</p>
    */
   @Override
+  public T visitUPos(final ParseRuleParser.UPosContext ctx) { return visitChildren(ctx); }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation returns the result of calling
+   * {@link #visitChildren} on {@code ctx}.</p>
+   */
+  @Override
+  public T visitUPosValue(final ParseRuleParser.UPosValueContext ctx) { return visitChildren(ctx); }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation returns the result of calling
+   * {@link #visitChildren} on {@code ctx}.</p>
+   */
+  @Override
   public T visitXPos(final ParseRuleParser.XPosContext ctx) { return visitChildren(ctx); }
 
   /**
@@ -163,6 +181,15 @@ public class ParseRuleBaseVisitor<T> extends AbstractParseTreeVisitor<T> impleme
    */
   @Override
   public T visitXPosValue(final ParseRuleParser.XPosValueContext ctx) { return visitChildren(ctx); }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation returns the result of calling
+   * {@link #visitChildren} on {@code ctx}.</p>
+   */
+  @Override
+  public T visitXPosValuePart(final ParseRuleParser.XPosValuePartContext ctx) { return visitChildren(ctx); }
 
   /**
    * {@inheritDoc}

@@ -158,9 +158,13 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
           nodeMatch.setCaseTail(ctx.element().caseTail().getText());
         }
       }
+      if (ctx.uPos() != null) {
+        nodeMatch.setUPos(ctx.uPos().uPosValue().getText());
+      }
       if (ctx.xPos() != null) {
         nodeMatch.setXPos(ctx.xPos().xPosValue().getText());
       }
+
 
     }
 
@@ -463,8 +467,29 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
   @Override
   public void exitXPos(final ParseRuleParser.XPosContext ctx) {
     log.debug(" exiting XPos");
-
   }
+
+
+  @Override
+  public void enterUPosValue(final ParseRuleParser.UPosValueContext ctx) {
+    log.debug(" entering UPosValue");
+  }
+
+  @Override
+  public void exitUPosValue(final ParseRuleParser.UPosValueContext ctx) {
+    log.debug(" exiting UPosValue");
+  }
+
+  @Override
+  public void enterUPos(final ParseRuleParser.UPosContext ctx) {
+    log.debug(" entering UPos");
+  }
+
+  @Override
+  public void exitUPos(final ParseRuleParser.UPosContext ctx) {
+    log.debug(" exiting UPos");
+  }
+
 
   @Override
   public void enterNode(final ParseRuleParser.NodeContext ctx) {
@@ -583,10 +608,23 @@ public class ParseRuleListenerImpl implements ParseRuleListener {
   }
 
   @Override
+  public void enterXPosValuePart(final XPosValuePartContext parserRuleContext) {
+    //log.debug(" exiting EveryRule");
+
+  }
+
+  @Override
+  public void exitXPosValuePart(final XPosValuePartContext parserRuleContext) {
+    //log.debug(" exiting EveryRule");
+
+  }
+
+  @Override
   public void enterDepRelValuePart(final DepRelValuePartContext parserRuleContext) {
     //log.debug(" exiting EveryRule");
 
   }
+
 
   @Override
   public void exitCaseTail(final CaseTailContext parserRuleContext) {

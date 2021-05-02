@@ -131,6 +131,22 @@ public interface ParseRuleVisitor<T> extends ParseTreeVisitor<T> {
   T visitNode(ParseRuleParser.NodeContext ctx);
 
   /**
+   * Visit a parse tree produced by {@link ParseRuleParser#uPos}.
+   *
+   * @param ctx the parse tree
+   * @return the visitor result
+   */
+  T visitUPos(ParseRuleParser.UPosContext ctx);
+
+  /**
+   * Visit a parse tree produced by {@link ParseRuleParser#uPosValue}.
+   *
+   * @param ctx the parse tree
+   * @return the visitor result
+   */
+  T visitUPosValue(ParseRuleParser.UPosValueContext ctx);
+
+  /**
    * Visit a parse tree produced by {@link ParseRuleParser#xPos}.
    *
    * @param ctx the parse tree
@@ -145,6 +161,14 @@ public interface ParseRuleVisitor<T> extends ParseTreeVisitor<T> {
    * @return the visitor result
    */
   T visitXPosValue(ParseRuleParser.XPosValueContext ctx);
+
+  /**
+   * Visit a parse tree produced by {@link ParseRuleParser#xPosValuePart}.
+   *
+   * @param ctx the parse tree
+   * @return the visitor result
+   */
+  T visitXPosValuePart(ParseRuleParser.XPosValuePartContext ctx);
 
   /**
    * Visit a parse tree produced by {@link ParseRuleParser#element}.

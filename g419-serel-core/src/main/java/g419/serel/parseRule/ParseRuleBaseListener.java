@@ -256,6 +256,38 @@ public class ParseRuleBaseListener implements ParseRuleListener {
    * <p>The default implementation does nothing.</p>
    */
   @Override
+  public void enterUPos(final ParseRuleParser.UPosContext ctx) { }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation does nothing.</p>
+   */
+  @Override
+  public void exitUPos(final ParseRuleParser.UPosContext ctx) { }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation does nothing.</p>
+   */
+  @Override
+  public void enterUPosValue(final ParseRuleParser.UPosValueContext ctx) { }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation does nothing.</p>
+   */
+  @Override
+  public void exitUPosValue(final ParseRuleParser.UPosValueContext ctx) { }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation does nothing.</p>
+   */
+  @Override
   public void enterXPos(final ParseRuleParser.XPosContext ctx) { }
 
   /**
@@ -281,6 +313,22 @@ public class ParseRuleBaseListener implements ParseRuleListener {
    */
   @Override
   public void exitXPosValue(final ParseRuleParser.XPosValueContext ctx) { }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation does nothing.</p>
+   */
+  @Override
+  public void enterXPosValuePart(final ParseRuleParser.XPosValuePartContext ctx) { }
+
+  /**
+   * {@inheritDoc}
+   *
+   * <p>The default implementation does nothing.</p>
+   */
+  @Override
+  public void exitXPosValuePart(final ParseRuleParser.XPosValuePartContext ctx) { }
 
   /**
    * {@inheritDoc}

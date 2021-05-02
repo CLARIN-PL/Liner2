@@ -218,6 +218,34 @@ public interface ParseRuleListener extends ParseTreeListener {
   void exitNode(ParseRuleParser.NodeContext ctx);
 
   /**
+   * Enter a parse tree produced by {@link ParseRuleParser#uPos}.
+   *
+   * @param ctx the parse tree
+   */
+  void enterUPos(ParseRuleParser.UPosContext ctx);
+
+  /**
+   * Exit a parse tree produced by {@link ParseRuleParser#uPos}.
+   *
+   * @param ctx the parse tree
+   */
+  void exitUPos(ParseRuleParser.UPosContext ctx);
+
+  /**
+   * Enter a parse tree produced by {@link ParseRuleParser#uPosValue}.
+   *
+   * @param ctx the parse tree
+   */
+  void enterUPosValue(ParseRuleParser.UPosValueContext ctx);
+
+  /**
+   * Exit a parse tree produced by {@link ParseRuleParser#uPosValue}.
+   *
+   * @param ctx the parse tree
+   */
+  void exitUPosValue(ParseRuleParser.UPosValueContext ctx);
+
+  /**
    * Enter a parse tree produced by {@link ParseRuleParser#xPos}.
    *
    * @param ctx the parse tree
@@ -244,6 +272,20 @@ public interface ParseRuleListener extends ParseTreeListener {
    * @param ctx the parse tree
    */
   void exitXPosValue(ParseRuleParser.XPosValueContext ctx);
+
+  /**
+   * Enter a parse tree produced by {@link ParseRuleParser#xPosValuePart}.
+   *
+   * @param ctx the parse tree
+   */
+  void enterXPosValuePart(ParseRuleParser.XPosValuePartContext ctx);
+
+  /**
+   * Exit a parse tree produced by {@link ParseRuleParser#xPosValuePart}.
+   *
+   * @param ctx the parse tree
+   */
+  void exitXPosValuePart(ParseRuleParser.XPosValuePartContext ctx);
 
   /**
    * Enter a parse tree produced by {@link ParseRuleParser#element}.

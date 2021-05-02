@@ -23,7 +23,9 @@ public class NodeMatch {
   //private String text;
   private Set<String> texts = new HashSet<>();
 
+  private String uPos;
   private String xPos;
+
 
   private String namedEntity;
   private String role;
@@ -90,19 +92,23 @@ public class NodeMatch {
       }
     }
 
-    //xPos a właściwie teraz UPOS
-    if ((xPos != null) && (!xPos.isEmpty())) {
-      if (!token.getAttributeValue("upos").equals(xPos)) {
+    if ((uPos != null) && (!uPos.isEmpty())) {
+      if (!token.getAttributeValue("upos").equals(uPos)) {
         return false;
       }
-
-
-      /*
-      if (!token.getAttributeValue("xpos").startsWith(xPos)) {
-        return false;
-      }
-      */
     }
+
+
+    if ((xPos != null) && (!xPos.isEmpty())) {
+      if (!token.getAttributeValue("xpos").equals(xPos)) {
+        return false;
+      }
+    }
+
+//
+//    if (!token.getAttributeValue("xpos").startsWith(xPos)) {
+//      return false;
+//    }
 
     //namedEntity
     if (this.isForNamedEntity()) {

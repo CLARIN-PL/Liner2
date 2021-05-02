@@ -87,7 +87,7 @@ public class PatternMatch {
     return result;
   }
 
-
+  /*
   public void shiftIdsToIndexes(final List<PatternMatchSingleResult> input) {
     for (final PatternMatchSingleResult pmsr : input) {
       for (int i = 0; i < pmsr.idsList.size(); i++) {
@@ -95,6 +95,7 @@ public class PatternMatch {
       }
     }
   }
+  */
 
   public List<PatternMatchSingleResult> makeDistinct(final List<PatternMatchSingleResult> input) {
 
@@ -102,6 +103,7 @@ public class PatternMatch {
       return input;
     }
 
+    // preparing first, refernce PMEI to have somthing to compare to
     final List<PatternMatchSingleResult> result = new ArrayList<>();
     final PatternMatchSingleResult firstPmsr = input.get(0);
     firstPmsr.idsList.sort(Comparator.naturalOrder());
