@@ -83,12 +83,17 @@ public class DocumentToSerelExpressionConverter {
         typeCounter++;
         typesCounter.put(relDesc.getType(), typeCounter);
 
-
-        if (relDesc.getFromTokenId() == relDesc.getToTokenId()) {
-          // np. doc:101820, Tokyo Hobby Show
+        if (relDesc.isNested()) {
           System.out.println("ERROR !!! Relacje zagnieżdzone nie są wspieranie. Doc =" + document.getName() + " rel=" + relDesc);
           continue;
         }
+
+//        powinno być ujęte w tym wyżej
+//        if (relDesc.getFromTokenId() == relDesc.getToTokenId()) {
+//          // np. doc:101820, Tokyo Hobby Show
+//          System.out.println("ERROR !!! Relacje zagnieżdzone nie są wspieranie. Doc =" + document.getName() + " rel=" + relDesc);
+//          continue;
+//        }
 
 
         try {

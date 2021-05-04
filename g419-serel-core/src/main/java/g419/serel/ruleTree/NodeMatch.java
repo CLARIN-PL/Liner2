@@ -132,6 +132,8 @@ public class NodeMatch {
 //        ) {
 
 // TOREVERT
+//          // w aktualnej wersji tu jest za wczesnie na to sprawdzanie bo łączenie wszystkieog odbywa się dopiero
+//          // "po" przejściu pasujących ścieżek
 //          // oraz jeśli to nie jest BOI które już wcześniej znaleźliśmy i do czegoś przypięliśmy !!!
 //          final String possibleAlreadyFoundTag = extraInfo.getTagNEFromToken(token);
 //          if (possibleAlreadyFoundTag != null) {

@@ -3,9 +3,7 @@ package g419.corpus.structure;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedHashSet;
+import java.util.*;
 
 @Builder
 @Data
@@ -167,6 +165,29 @@ public class RelationDesc {
 
       return result;
     }
+  }
+
+
+  // for stream processing
+  public boolean isNotNested() {
+    return !isNested();
+  }
+
+  public boolean isNested() {
+
+    final Set<Integer> sourceAnnotationIds = sentence.getBoiTokensIdsForTokenAndName(
+        sentence.getTokenById(this.getFromTokenId()),
+        this.getFromType());
+    final Set<Integer> targetAnnotationIds = sentence.getBoiTokensIdsForTokenAndName(
+        sentence.getTokenById(this.getToTokenId()),
+        this.getToType());
+
+
+    final Optional<Integer> commonElement = sourceAnnotationIds.stream().filter(targetAnnotationIds::contains).findAny();
+    if (commonElement.isPresent()) {
+      return true;
+    }
+    return false;
   }
 
 

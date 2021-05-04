@@ -4,6 +4,7 @@ import g419.corpus.structure.RelationDesc;
 import g419.serel.ruleTree.PatternMatch;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class PatternMatchSingleResult {
@@ -67,15 +68,22 @@ public class PatternMatchSingleResult {
     return result;
   }
 
-  public boolean concatenateWith(final PatternMatchSingleResult pmsr) {
+  public boolean haveNotCommonId(final PatternMatchSingleResult pmsr) {
 
+    final Optional<Integer> commonElement = this.idsList.stream().filter(pmsr.idsList::contains).findAny();
+    if (commonElement.isPresent()) {
+      return false;
+    }
+    return true;
+  }
+
+
+  public void concatenateWith(final PatternMatchSingleResult pmsr) {
 
     idsList.addAll(pmsr.idsList);
     //namedEntitySet.addAll(pmsr.namedEntitySet);
     patternMatchExtraInfo.getRoleMap().putAll(pmsr.patternMatchExtraInfo.getRoleMap());
     patternMatchExtraInfo.getToken2tagNE().putAll(pmsr.patternMatchExtraInfo.getToken2tagNE());
-
-    return false;
   }
 
 

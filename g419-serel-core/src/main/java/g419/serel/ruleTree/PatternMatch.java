@@ -147,13 +147,12 @@ public class PatternMatch {
       return Collections.emptyList(); // no match
     }
 
-    // here we now know there is a match ...
+    // here we now know token match the pattern node ...
 
-    final List<PatternMatchSingleResult> result = new LinkedList<>();
+    final List<PatternMatchSingleResult> thisAndDownLevelsResult = new LinkedList<>();
 
-    final PatternMatchSingleResult oneResult;
-    final String namedEntityLabel;
-    //TOREVERT
+    final PatternMatchSingleResult thisLevelResult;
+
     final LinkedHashSet<Integer> _idsList;
     if (nodeMatch.isForNamedEntity()) {
       _idsList = sentence.getBoiTokensIdsForTokenAndName(token, pmei.getTagNEFromToken(token));
@@ -161,28 +160,15 @@ public class PatternMatch {
       _idsList = new LinkedHashSet<>();
       _idsList.add(token.getNumberId());
     }
-
 //    System.out.println("_idsList = " + _idsList + " nmE=" + nodeMatch.isForNamedEntity());
 //    System.out.println("Token =" + token);
-
-    oneResult = new PatternMatchSingleResult(_idsList, pmei, this.getRelationType());
-/*
-    // TOREVERT ???
-    try {
-
-      if (nodeMatch.isForNamedEntity()) {
-        namedEntityLabel = _idsList.get(0) + ":" + nodeMatch.getNamedEntity();
-        oneResult.namedEntitySet.add(namedEntityLabel);
-      }
-    } catch (final Throwable th) {
-      th.printStackTrace();
-    }
-*/
+    // a może już w trakcie tworzenia tego obiektu wiemy ze nie jest kompatybilny z reszta wyniku...
+    thisLevelResult = new PatternMatchSingleResult(_idsList, pmei, this.getRelationType());
 
     if (nodeMatch.isLeaf()) {
-      result.add(oneResult);
+      thisAndDownLevelsResult.add(thisLevelResult);
       // final match!It is leaf so we end this branch of recursion here
-      return result;
+      return thisAndDownLevelsResult;
     }
     // we here know at this level there is a match. But there are further levels since this token is not a leaf ...
 
@@ -199,12 +185,23 @@ public class PatternMatch {
       for (final List<Token> childrenTokenPermutation : childrenTokenPermutations) {
 
         final List<PatternMatchSingleResult> resultsForOnePermutation = getResultsForOnePermutation(sentence, childrenTokenPermutation, nodeMatch.getEdgeMatchList());
-        result.addAll(resultsForOnePermutation);
+        thisAndDownLevelsResult.addAll(resultsForOnePermutation);
       }
     }
 
-    result.forEach(r -> r.concatenateWith(oneResult));
-    return result;
+    // jęsli żaden z "niższych" nie pasuje to ten zbiór do iteracji jest pusty i nawet jak aktualny pasuje
+    // to nie ma się z czym skonkatenować i pusty wynik jest propagowany wyżej
+
+    // filtrujemy te które nie mają nic nakładającego się z tym który chcemy dołączyć
+    final List<PatternMatchSingleResult> validResults =
+        thisAndDownLevelsResult
+            .stream()
+            .filter(r -> r.haveNotCommonId(thisLevelResult))
+            .collect(Collectors.toList());
+
+    validResults.forEach(r -> r.concatenateWith(thisLevelResult));
+
+    return validResults;
   }
 
   private final List<PatternMatchSingleResult>

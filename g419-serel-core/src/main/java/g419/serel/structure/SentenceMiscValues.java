@@ -144,7 +144,6 @@ public class SentenceMiscValues {
   public List<RelationDesc> getRelationsMatchingPatternType(final PatternMatch patternMatch) {
 
     final List<RelationDesc> matchingRels = new LinkedList<>();
-    //final List<String> leavesAnnotationType = patternMatch.getAllAnnotations();
     final List<RelationDesc> allRels = getAllNamRels();
 
     for (final RelationDesc relDesc : allRels) {
@@ -162,7 +161,10 @@ public class SentenceMiscValues {
     for (final Map map : this.getMiscValuesList()) {
       if (map.containsKey("nam_rels")) {
         final List<RelationDesc> rs = (List<RelationDesc>) map.get("nam_rels");
-        rels.addAll(rs);
+
+        // odsiewamy te, które są zagnieżdżone
+        rs.stream().forEach(rs_instance -> rs_instance.setSentence(this.sentence));
+        rels.addAll(rs.stream().filter(RelationDesc::isNotNested).collect(Collectors.toList()));
       }
     }
     return rels;
