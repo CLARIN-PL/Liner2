@@ -86,7 +86,7 @@ public class NodeMatch {
           return false;
         }
       } else {
-        if (!texts.contains(token.getAttributeValue("lemma"))) {
+        if (!texts.contains(token.getAttributeValue("lemma").replaceAll(" ", "_"))) {
           return false;
         }
       }

@@ -136,7 +136,7 @@ public class SerelExpression {
     // left anchor
     final StringBuilder sLeft = new StringBuilder();
     sLeft.append(relationDesc.getType()).append("::");
-    sLeft.append(" [[" + tokensChainUp1.get(0).getAttributeValue(4) + "]] ");
+    //sLeft.append(" [[" + tokensChainUp1.get(0).getAttributeValue(4) + "]] ");
     sLeft.append(" *" + getCaseClauseForTokenIndex(tokensChainUp1.get(0).getNumberId() - 1) + " / " + relationDesc.getFromType() + ":e1");
 
 
@@ -161,9 +161,8 @@ public class SerelExpression {
       final Token t = tokensChainUp2.get(0);
       sRight.append(" < " + getDepRelClauseForToken(t));
     }
-    sRight.append(" [[" + tokensChainUp2.get(0).getAttributeValue(4) + "]] ");
+    //sRight.append(" [[" + tokensChainUp2.get(0).getAttributeValue(4) + "]] ");
     sRight.append(" *" + getCaseClauseForTokenIndex(tokensChainUp2.get(0).getNumberId() - 1) + " / " + relationDesc.getToType() + ":e2");
-//  System.out.println("SRIGHT =" + sRight);
 
     final StringBuilder sTotal = new StringBuilder();
     if ((tokensChainUp1.size() == 1) || (tokensChainUp2.size() == 1)) {
@@ -172,7 +171,6 @@ public class SerelExpression {
     } else {
       final Token tCenter = tokensChainUp1.get(tokensChainUp1.size() - 1);
       final String sCenter = token2String(tCenter, false);
-//    System.out.println("SCENTER = " + sCenter);
       sTotal.append(sLeft);
       sTotal.append(sCenter);
       sTotal.append(sRight);
@@ -197,6 +195,21 @@ public class SerelExpression {
 
     // to nie jest żaden NE
 
+
+    // zawsze wstawiamy lemat
+    return
+        " [" + t.getAttributeValue(3) + "] " +
+            /*" [[" + t.getAttributeValue(4) + "]] " +*/
+
+            "^" + t.getAttributeValue(2).replaceAll(" ", "_")
+            +
+            getCaseClauseForTokenIndex(t.getNumberId() - 1);  // id -> index
+
+
+
+
+
+    /*
     // jeśli czasownik to wstawiamy lemat
     if (t.getAttributeValue(3).equals("VERB")) {
       return " [" + t.getAttributeValue(3) + "] " +
@@ -213,6 +226,7 @@ public class SerelExpression {
             t.getAttributeValue(1)
             +
             getCaseClauseForTokenIndex(t.getNumberId() - 1);  // id -> index
+     */
 
   }
 
