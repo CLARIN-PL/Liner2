@@ -585,6 +585,16 @@ public class Sentence extends IdentifiableElement {
 //    System.out.println("findAHI name = " + name);
     final Set<Integer> boiTokensIds = this.getBoiTokensIdsForTokenAndName(token, name);
 //    System.out.println("bois =" + list);
+    final int actualHeadId = findActualHeadIdForSetOfIds(boiTokensIds);
+
+    if (actualHeadId != -1) {
+      return actualHeadId;
+    }
+
+    return token.getNumberId();
+  }
+
+  public int findActualHeadIdForSetOfIds(final Set<Integer> boiTokensIds) {
     for (final int id : boiTokensIds) {
       final Token t = getTokenById(id);
 //    System.out.println("Checking HEADID token:" + t);
@@ -594,8 +604,8 @@ public class Sentence extends IdentifiableElement {
         return t.getNumberId();
       }
     }
-
-    return token.getNumberId();
+    // should not come here
+    return -1;
   }
 
 

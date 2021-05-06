@@ -88,14 +88,6 @@ public class DocumentToSerelExpressionConverter {
           continue;
         }
 
-//        powinno być ujęte w tym wyżej
-//        if (relDesc.getFromTokenId() == relDesc.getToTokenId()) {
-//          // np. doc:101820, Tokyo Hobby Show
-//          System.out.println("ERROR !!! Relacje zagnieżdzone nie są wspieranie. Doc =" + document.getName() + " rel=" + relDesc);
-//          continue;
-//        }
-
-
         try {
 //          System.out.println("Rel = " + relDesc);
           final SerelExpression serel = extractSerelFromRelDesc(relDesc);

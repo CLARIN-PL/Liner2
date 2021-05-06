@@ -19,7 +19,7 @@ public class PatternMatchSingleResult {
   //public ArrayList<Integer> idsList;
   public LinkedHashSet<Integer> idsList;
 
-  PatternMatchExtraInfo patternMatchExtraInfo;
+  public PatternMatchExtraInfo patternMatchExtraInfo;
 
 
   public PatternMatchSingleResult() {}

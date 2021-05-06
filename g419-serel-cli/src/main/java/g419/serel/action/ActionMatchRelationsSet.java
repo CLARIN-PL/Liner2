@@ -209,7 +209,6 @@ public class ActionMatchRelationsSet extends Action {
 
   private void matchDocTreeAgainstPatternTree(final Document d, final PatternMatch patternMatch) {
 
-    //final List<PatternMatchSingleResult> documentResult = new ArrayList<>();
     documentResult = new ArrayList<>();
     documentResultTruePositive = new ArrayList<>();
     documentResultFalsePositive = new ArrayList<>();
@@ -223,22 +222,12 @@ public class ActionMatchRelationsSet extends Action {
 
 //        System.out.println("BEFORE correction");
 //        sentence.printAsTree(new PrintWriter(System.out));
-        // SWITCH_1
         sentence.checkAndFixBois();
 //        System.out.println("AFTER correction");
 //        sentence.printAsTree(new PrintWriter(System.out));
 
         sentence.sentenceNumber = sentenceNumber;
-
-        //final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingSerelPattern(sentence);
         final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingGenericPattern(sentence);
-
-        if (d.getName().equals("documents/00102158")) {
-//          System.out.println(" Dla zdania " + sentenceNumber + " znaleziono :" + sentenceResults);
-
-          //jkak to że dwa razy do ©óznych labelek ten sam token z ulicą ???
-
-        }
 
         /*
         for (final PatternMatchSingleResult patternMatchSingleResult : sentenceResults) {
@@ -247,12 +236,6 @@ public class ActionMatchRelationsSet extends Action {
           // patternMatchSingleResult.patternMatch = patternMatch;
         }
         */
-
-//        if (d.getName().equals("documents/00102158")) {
-//          System.out.println(" foundTP = " + sentenceResults.size() + "for sent = " + sentenceNumber);
-//
-//        }
-
 
         documentResult.addAll(sentenceResults);
 

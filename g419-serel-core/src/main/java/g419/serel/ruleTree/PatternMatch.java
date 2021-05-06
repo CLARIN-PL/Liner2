@@ -77,6 +77,7 @@ public class PatternMatch {
 
     for (final Token token : sentence.getTokens()) {
       final List<PatternMatchSingleResult> resultForOneToken = getSentenceTreesMatchingGenericPatternFromToken(sentence, token);
+      // może tu : validateAgainstNegativeSamples ?
       result.addAll(resultForOneToken);
     }
 
@@ -84,18 +85,89 @@ public class PatternMatch {
     result.stream().forEach(pmsr -> pmsr.sentenceNumber = sentence.sentenceNumber);
 
     result = makeDistinct(result);
+
+    result = validateAgainstNegativeSamples(result, sentence);
+
+
     return result;
   }
 
-  /*
-  public void shiftIdsToIndexes(final List<PatternMatchSingleResult> input) {
-    for (final PatternMatchSingleResult pmsr : input) {
-      for (int i = 0; i < pmsr.idsList.size(); i++) {
-        pmsr.idsList.set(i, pmsr.idsList.get(i) - 1);
+
+  private List<PatternMatchSingleResult> validateAgainstNegativeSamples(final List<PatternMatchSingleResult> sentenceResults, final Sentence sentence) {
+
+    final List<PatternMatchSingleResult> result = new ArrayList<>();
+
+    //List<PatternMatch> negativePatterns = mapPattern2NegativePatterns.get()
+
+    outer:
+    for (final PatternMatchSingleResult pmsr : sentenceResults) {
+
+      if (pmsr.relationType.equals("alias")) {
+
+        // jeśli pierwsza rola jest w klauzuli parataxis:insert to wynik odpada
+
+        final Set<Integer> roleE1Ids = pmsr.patternMatchExtraInfo.getRoleE1Ids();
+        final int headE1Id = sentence.findActualHeadIdForSetOfIds(roleE1Ids);
+
+        Token headParent = sentence.getParentTokenFromTokenId(headE1Id);
+        if (headParent != null) {
+          if (headParent.getAttributeValue("deprel").equals("parataxis:insert")) {
+
+            System.out.println("PMSR REJECTED v.1 " + pmsr + " SENT: " + sentence);
+            continue;
+          }
+
+
+          // jesli nawiasy są i są naokoło pierwszej roli to wynik odpada
+          {
+            final List<Token> headsChildren = sentence.getChildrenTokensFromToken(headParent);
+
+            boolean openP = false, closeP = false;
+            for (final Token t : headsChildren) {
+              if (t.getAttributeValue(1).equals("(")) {
+                openP = true;
+              }
+              if (t.getAttributeValue(1).equals(")")) {
+                closeP = true;
+              }
+            }
+            if (openP && closeP) {
+              System.out.println("PMSR REJECTED v.2 " + pmsr + " SENT: " + sentence);
+              continue;
+            }
+          }
+        }
+        // jeśli druga rola jest podłączona za pomocą (conj) i na jej poziomie jest 2 lub więcej innych takich
+        // elementów - ten sam xpos i deprel - to to jest lista  = wynik odpada
+
+        final Set<Integer> roleE2Ids = pmsr.patternMatchExtraInfo.getRoleE2Ids();
+        final int headE2Id = sentence.findActualHeadIdForSetOfIds(roleE2Ids);
+        headParent = sentence.getParentTokenFromTokenId(headE2Id);
+        if (headParent != null) {
+          final List<Token> headsChildren = sentence.getChildrenTokensFromToken(headParent);
+
+          int conjCounter = 0;
+          for (final Token t : headsChildren) {
+            if (t.getAttributeValue("deprel").equals("conj")) {
+              conjCounter++;
+              if (conjCounter >= 3) {
+                System.out.println("PMSR REJECTED v.3 " + pmsr + " SENT: " + sentence);
+                continue outer;
+              }
+            }
+          }
+
+
+        }
       }
+
+
+      result.add(pmsr);
     }
+
+
+    return result;
   }
-  */
 
   public List<PatternMatchSingleResult> makeDistinct(final List<PatternMatchSingleResult> input) {
 
@@ -125,7 +197,8 @@ public class PatternMatch {
   }
 
 
-  public List<PatternMatchSingleResult> getSentenceTreesMatchingGenericPatternFromToken(final Sentence sentence, final Token token) {
+  public List<PatternMatchSingleResult> getSentenceTreesMatchingGenericPatternFromToken(final Sentence sentence,
+                                                                                        final Token token) {
     final List<PatternMatchSingleResult> result = getSentenceTreesMatchingGenericPatternFromTokenAndEdge(sentence, token, null, rootNodeMatch);
     return result;
   }
