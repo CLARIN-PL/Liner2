@@ -735,7 +735,7 @@ class PatternMatchTest extends Specification {
 
     def "finding sentence subtrees with pattern with subbranches "() {
         when:
-            PatternMatch pattern = PatternMatch.parseRule("Tam > ^odbywać  > *  < koncerty < jazzowe ")
+            PatternMatch pattern = PatternMatch.parseRule("location::Tam > ^odbywać  > *  < koncerty < jazzowe ")
 
             EdgeMatch em = new EdgeMatch();
             em.matchAnyDepRel = true;
@@ -753,7 +753,7 @@ class PatternMatchTest extends Specification {
 
     def "finding sentence subtrees with pattern with subbranches but wrong text "() {
         when:
-            PatternMatch pattern = PatternMatch.parseRule("Tam > ^odbywać  > *  < koncerty < jazzowe ")
+            PatternMatch pattern = PatternMatch.parseRule("location:: Tam > ^odbywać  > *  < koncerty < jazzowe ")
 
             EdgeMatch em = new EdgeMatch();
             em.matchAnyDepRel = true;
@@ -772,7 +772,7 @@ class PatternMatchTest extends Specification {
 
     def "finding sentence subtrees matching generic pattern using many * char "() {
         when:
-            PatternMatch pattern = PatternMatch.parseRule("jazzowe > * > * < * < W ")
+            PatternMatch pattern = PatternMatch.parseRule("location :: jazzowe > * > * < * < W ")
             def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
         then:
             result.size() == 1
@@ -782,7 +782,7 @@ class PatternMatchTest extends Specification {
 
     def "finding sentence subtrees matching generic pattern using * char on indirect joint with two branches "() {
         when:
-            PatternMatch pattern = PatternMatch.parseRule("jazzowe >  *  < południe < W ")
+            PatternMatch pattern = PatternMatch.parseRule("location :: jazzowe >  *  < południe < W ")
             def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
         then:
             result.size() == 0 // because * should denote just one node - and here, to recognize pattern it should be treated as 2 nodes
