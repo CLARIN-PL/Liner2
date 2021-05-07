@@ -69,11 +69,11 @@ public class DocumentToSerelExpressionConverter {
         //fixing possible problems with dependent tokens linked not to head of NE
 
 //        System.out.println("BEFORE correction");
-//        sentence.printAsTree();
+//        sentence.printAsTree(new PrintWriter(System.out));
         // SWITCH_1
         sentence.checkAndFixBois();
 //        System.out.println("AFTER correction");
-//        sentence.printAsTree();
+//        sentence.printAsTree(new PrintWriter(System.out));
       }
 
 

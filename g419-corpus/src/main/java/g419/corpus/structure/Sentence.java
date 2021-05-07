@@ -650,11 +650,44 @@ public class Sentence extends IdentifiableElement {
       }
     }
 
+    /*
+    if (determinedHeadId == -1) {
+
+      // eliminujemy "zależne liniowo" tokeny ze względu na BOI
+      for (final int id : possibleHeadIds) {
+        final Token t = getTokenById(id);
+
+        Token parent = this.getParentTokenFromToken(t);
+
+        while (parent != null) {
+          if (possibleHeadIds.contains(parent.getNumberId())) {
+            possibleHeadIds.remove(t);
+            continue;
+          }
+          parent = this.getParentTokenFromToken(parent);
+        }
+      }
+    }
+  */
 
     // jeśli dotąd nie można było rozstrzygnąć co jest głową to bierz pierwszy z możliwych
     if (determinedHeadId == -1) {
       //System.out.println("WARN !!! Could not really determimne Boi head: found posHeadIds  " + possibleHeadIds + " doc: " + this.getDocument().getName() + " sentId=" + this.toString());
       determinedHeadId = possibleHeadIds.iterator().next();
+
+
+      {  // ewntualne korekty wskazań od nowej głowy
+        final Token newHead = getTokenById(determinedHeadId);
+        Token parent = this.getParentTokenFromToken(newHead);
+        while (parent != null) {
+          if (possibleHeadIds.contains(parent.getNumberId())) {
+            newHead.setAttributeValue("head", "" + parent.getParentTokenId());
+          }
+          parent = this.getParentTokenFromToken(parent);
+        }
+      }
+
+
     }
 
     // "naprawiany" wszystkie pozostałe tokeny "być-może-head" by wskazywały na znaleziony head

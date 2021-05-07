@@ -86,9 +86,6 @@ public class ActionGenerateRules extends Action {
 
               System.out.println("processing comboedDoc =" + comboedDoc.getName());
 
-              //final ParseTreeGenerator parseTreeGenerator = new ComboParseTreeGenerator(comboedDoc);
-              //final DocumentToSerelExpressionConverter converter = new DocumentToSerelExpressionConverter(parseTreeGenerator, reportWriter);
-
               final List<SerelExpression> converted = converter.convert(comboedDoc);
 
             } catch (final Exception e) {
