@@ -216,18 +216,39 @@ public class PatternMatch {
 
     final PatternMatchExtraInfo pmei = new PatternMatchExtraInfo();
     pmei.setSentence(sentence);
-    if (!nodeMatch.matches(token, pmei, sentence)) {
+
+
+    final List<String> potentialFittingBOIs = new ArrayList<>();
+    if (!nodeMatch.matches(token, potentialFittingBOIs, sentence)) {
       return Collections.emptyList(); // no match
     }
 
     // here we now know token match the pattern node ...
 
-    final List<PatternMatchSingleResult> thisAndDownLevelsResult = new LinkedList<>();
 
     final PatternMatchSingleResult thisLevelResult;
 
     final LinkedHashSet<Integer> _idsList;
     if (nodeMatch.isForNamedEntity()) {
+
+
+// TOREVERT
+//          // w aktualnej wersji tu jest za wczesnie na to sprawdzanie bo łączenie wszystkieog odbywa się dopiero
+//          // "po" przejściu pasujących ścieżek
+//          // oraz jeśli to nie jest BOI które już wcześniej znaleźliśmy i do czegoś przypięliśmy !!!
+//          final String possibleAlreadyFoundTag = extraInfo.getTagNEFromToken(token);
+//          if (possibleAlreadyFoundTag != null) {
+//            continue; // to jest NE i nawet pasuje ale już wcześniej jakiś NodeMatch go zaanektował
+//          }
+
+
+      //TODO byc moze to uniezaleznic wpisytwanie tych info od tego czy jest rola czy nie ma
+      if ((nodeMatch.getRole() != null) && (!nodeMatch.getRole().isEmpty())) {
+        //extraInfo.putRole(role, namedEntity, token);
+        pmei.putRole(nodeMatch.getRole(), potentialFittingBOIs.get(0), token); // zapamiętujemy rzeczywisty tag NE a nie ten z wzorca - po to by potem idki dobrze dobierać
+      }
+
+
       _idsList = sentence.getBoiTokensIdsForTokenAndName(token, pmei.getTagNEFromToken(token));
     } else {
       _idsList = new LinkedHashSet<>();
@@ -238,6 +259,8 @@ public class PatternMatch {
     // a może już w trakcie tworzenia tego obiektu wiemy ze nie jest kompatybilny z reszta wyniku...
     thisLevelResult = new PatternMatchSingleResult(_idsList, pmei, this.getRelationType());
 
+
+    final List<PatternMatchSingleResult> thisAndDownLevelsResult = new LinkedList<>();
     if (nodeMatch.isLeaf()) {
       thisAndDownLevelsResult.add(thisLevelResult);
       // final match!It is leaf so we end this branch of recursion here

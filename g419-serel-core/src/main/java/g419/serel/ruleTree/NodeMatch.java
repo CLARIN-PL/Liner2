@@ -2,7 +2,6 @@ package g419.serel.ruleTree;
 
 import g419.corpus.structure.Sentence;
 import g419.corpus.structure.Token;
-import g419.serel.structure.patternMatch.PatternMatchExtraInfo;
 import lombok.Data;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -68,7 +67,7 @@ public class NodeMatch {
         && ((parentEdgeMatch == null) || parentEdgeMatch.isMatchAnyDepRel());
   }
 
-
+  /*
   public boolean matches(final Token token) {
     return this.matches(token, null);
   }
@@ -76,8 +75,10 @@ public class NodeMatch {
   public boolean matches(final Token token, final PatternMatchExtraInfo extraInfo) {
     return this.matches(token, extraInfo, null);
   }
+  */
 
-  public boolean matches(final Token token, final PatternMatchExtraInfo extraInfo, final Sentence sentence) {
+
+  public boolean matches(final Token token, final List<String> potentialFittingBOIs, /*final PatternMatchExtraInfo extraInfo,*/ final Sentence sentence) {
 
     //text
     if (!isMatchAnyText) {
@@ -131,22 +132,8 @@ public class NodeMatch {
 //                (boi.startsWith("I-" + namedEntity))  // "I-"  -> inside token of entity
 //        ) {
 
-// TOREVERT
-//          // w aktualnej wersji tu jest za wczesnie na to sprawdzanie bo łączenie wszystkieog odbywa się dopiero
-//          // "po" przejściu pasujących ścieżek
-//          // oraz jeśli to nie jest BOI które już wcześniej znaleźliśmy i do czegoś przypięliśmy !!!
-//          final String possibleAlreadyFoundTag = extraInfo.getTagNEFromToken(token);
-//          if (possibleAlreadyFoundTag != null) {
-//            continue; // to jest NE i nawet pasuje ale już wcześniej jakiś NodeMatch go zaanektował
-//          }
-
           found = true;
-          //TODO byc moze to przeniesc wyzej i uniezaleznic wpisytwanie tych info od tego czy jest rola czy nie ma
-          if ((role != null) && (!role.isEmpty())) {
-            //extraInfo.putRole(role, namedEntity, token);
-            extraInfo.putRole(role, boi.substring(2), token); // zapamiętujemy rzeczywisty tag NE a nie ten z wzorca - po to by potem idki dobrze dobierać
-          }
-
+          potentialFittingBOIs.add(boi.substring(2));
         }
       }
 
