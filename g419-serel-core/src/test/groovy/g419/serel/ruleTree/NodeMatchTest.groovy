@@ -45,7 +45,7 @@ class NodeMatchTest extends Specification {
             NodeMatch nm = new NodeMatch();
             nm.texts.add("stolicą")
         then:
-            nm.matches(token) == true
+            nm.matches(token, null, null) == true
     }
 
     def "matches recognizes lemma"() {
@@ -54,7 +54,7 @@ class NodeMatchTest extends Specification {
             nm.matchLemma = true;
             nm.texts.add("stolica")
         then:
-            nm.matches(token) == true
+            nm.matches(token, null, null) == true
     }
 
     def "matches recognizes match any text"() {
@@ -62,7 +62,7 @@ class NodeMatchTest extends Specification {
             NodeMatch nm = new NodeMatch();
             nm.matchAnyText = true;
         then:
-            nm.matches(token) == true
+            nm.matches(token, null, null) == true
     }
 
     def "matches recognizes upos"() {
@@ -72,7 +72,7 @@ class NodeMatchTest extends Specification {
             nm.uPos = "VERB"
 
         then:
-            nm.matches(token) == true
+            nm.matches(token, null, null) == true
     }
 
     def "matches recognizes nam_rels: namedEntity"() {
@@ -83,7 +83,7 @@ class NodeMatchTest extends Specification {
             nm.namedEntity = "nam_fac_goe"
 
         then:
-            nm.matches(token) == true
+            nm.matches(token, new ArrayList<String>(), null) == true
     }
 
     def "matches recognizes boi"() {
@@ -93,7 +93,7 @@ class NodeMatchTest extends Specification {
             nm.namedEntity = "nam_loc_gpe_city"
 
         then:
-            nm.matches(token) == true
+            nm.matches(token, new ArrayList<String>(), null) == true
     }
 
     def "matches recognizes multiple boi"() {
@@ -107,8 +107,8 @@ class NodeMatchTest extends Specification {
             nm2.namedEntity = "nam_fac_goe"
 
         then:
-            nm.matches(token) == true
-            nm2.matches(token) == true
+            nm.matches(token, new ArrayList<String>(), null) == true
+            nm2.matches(token, new ArrayList<String>(), null) == true
     }
 
 

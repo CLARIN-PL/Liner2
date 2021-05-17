@@ -67,17 +67,6 @@ public class NodeMatch {
         && ((parentEdgeMatch == null) || parentEdgeMatch.isMatchAnyDepRel());
   }
 
-  /*
-  public boolean matches(final Token token) {
-    return this.matches(token, null);
-  }
-
-  public boolean matches(final Token token, final PatternMatchExtraInfo extraInfo) {
-    return this.matches(token, extraInfo, null);
-  }
-  */
-
-
   public boolean matches(final Token token, final List<String> potentialFittingBOIs, /*final PatternMatchExtraInfo extraInfo,*/ final Sentence sentence) {
 
     //text
@@ -118,24 +107,36 @@ public class NodeMatch {
 
       boolean found = false;
       for (final String boi : boiList) {
-
         if (
             (boi.equals("B-" + namedEntity))  // "B-"  -> start token of entity
                 ||
                 (boi.equals("I-" + namedEntity))  // "I-"  -> inside token of entity
         ) {
+          found = true;
+          potentialFittingBOIs.add(0, boi.substring(2));
+          continue;
+        }
 
-          // z ta wersją są problemy gdy "chwyci" nie tą nazwę co trzeba ale też pasującą ...
-//        if (
-//            (boi.startsWith("B-" + namedEntity))  // "B-"  -> start token of entity
-//                ||
-//                (boi.startsWith("I-" + namedEntity))  // "I-"  -> inside token of entity
-//        ) {
 
+        if (
+            (boi.startsWith("B-" + namedEntity))  // "B-"  -> start token of entity
+                ||
+                (boi.startsWith("I-" + namedEntity))  // "I-"  -> inside token of entity
+        ) {
+
+          if (boi.endsWith("_full")) {
+            continue;
+          }
+          if (namedEntity.equals("nam_liv_person")) {
+            continue;
+          }
           found = true;
           potentialFittingBOIs.add(boi.substring(2));
         }
+
+
       }
+
 
       if (!found) {
         return false;
@@ -144,7 +145,8 @@ public class NodeMatch {
 
 
     // # case
-    if ((this.getCaseTail() != null) && (!this.getCaseTail().equals(""))) {
+    if ((this.getCaseTail() != null)
+        && (!this.getCaseTail().equals(""))) {
 
       final List<Token> childTokens = sentence.getChildrenTokensFromTokenId(token.getNumberId());
       boolean foundMatchingCase = false;

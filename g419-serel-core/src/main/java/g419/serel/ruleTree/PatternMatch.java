@@ -214,23 +214,21 @@ public class PatternMatch {
       }
     }
 
-    final PatternMatchExtraInfo pmei = new PatternMatchExtraInfo();
-    pmei.setSentence(sentence);
-
 
     final List<String> potentialFittingBOIs = new ArrayList<>();
     if (!nodeMatch.matches(token, potentialFittingBOIs, sentence)) {
       return Collections.emptyList(); // no match
     }
-
     // here we now know token match the pattern node ...
+    // and in potentialFittingBois are all BOI that match restrictions of current NodeMatch
 
 
-    final PatternMatchSingleResult thisLevelResult;
+    // nawet tylko na tym pozionie lista bo rozpoznawanie NE może dać wiele wariantów
+    final List<PatternMatchSingleResult> thisLevelResults = new ArrayList<>();
 
-    final LinkedHashSet<Integer> _idsList;
+
     if (nodeMatch.isForNamedEntity()) {
-
+      //System.out.println("PotBOIS=" + potentialFittingBOIs);
 
 // TOREVERT
 //          // w aktualnej wersji tu jest za wczesnie na to sprawdzanie bo łączenie wszystkieog odbywa się dopiero
@@ -240,34 +238,44 @@ public class PatternMatch {
 //          if (possibleAlreadyFoundTag != null) {
 //            continue; // to jest NE i nawet pasuje ale już wcześniej jakiś NodeMatch go zaanektował
 //          }
+      for (final String boi : potentialFittingBOIs) {
+        final PatternMatchExtraInfo pmei = new PatternMatchExtraInfo();
+        pmei.setSentence(sentence);
 
-
-      //TODO byc moze to uniezaleznic wpisytwanie tych info od tego czy jest rola czy nie ma
-      if ((nodeMatch.getRole() != null) && (!nodeMatch.getRole().isEmpty())) {
-        //extraInfo.putRole(role, namedEntity, token);
-        pmei.putRole(nodeMatch.getRole(), potentialFittingBOIs.get(0), token); // zapamiętujemy rzeczywisty tag NE a nie ten z wzorca - po to by potem idki dobrze dobierać
+        //TODO byc moze to uniezaleznic wpisywanie tych info od tego czy jest rola czy nie ma
+        if ((nodeMatch.getRole() != null) && (!nodeMatch.getRole().isEmpty())) {
+          pmei.putRole(nodeMatch.getRole(), boi, token); // zapamiętujemy rzeczywisty tag NE a nie ten z wzorca - po to by potem idki dobrze dobierać
+        }
+        final LinkedHashSet<Integer> _idsList = sentence.getBoiTokensIdsForTokenAndName(token, pmei.getTagNEFromToken(token));
+        //    System.out.println("_idsList = " + _idsList + " nmE=" + nodeMatch.isForNamedEntity());
+        //    System.out.println("Token =" + token);
+        // a może już w trakcie tworzenia tego obiektu wiemy ze nie jest kompatybilny z reszta wyniku...
+        final PatternMatchSingleResult thisLevelResult = new PatternMatchSingleResult(_idsList, pmei, this.getRelationType());
+        thisLevelResults.add(thisLevelResult);
       }
 
-
-      _idsList = sentence.getBoiTokensIdsForTokenAndName(token, pmei.getTagNEFromToken(token));
     } else {
-      _idsList = new LinkedHashSet<>();
+
+      final PatternMatchExtraInfo pmei = new PatternMatchExtraInfo();
+      pmei.setSentence(sentence);
+
+      final LinkedHashSet<Integer> _idsList = new LinkedHashSet<>();
       _idsList.add(token.getNumberId());
-    }
+
 //    System.out.println("_idsList = " + _idsList + " nmE=" + nodeMatch.isForNamedEntity());
 //    System.out.println("Token =" + token);
-    // a może już w trakcie tworzenia tego obiektu wiemy ze nie jest kompatybilny z reszta wyniku...
-    thisLevelResult = new PatternMatchSingleResult(_idsList, pmei, this.getRelationType());
+      // a może już w trakcie tworzenia tego obiektu wiemy ze nie jest kompatybilny z reszta wyniku...
+      thisLevelResults.add(new PatternMatchSingleResult(_idsList, pmei, this.getRelationType()));
+    }
 
-
-    final List<PatternMatchSingleResult> thisAndDownLevelsResult = new LinkedList<>();
     if (nodeMatch.isLeaf()) {
-      thisAndDownLevelsResult.add(thisLevelResult);
       // final match!It is leaf so we end this branch of recursion here
-      return thisAndDownLevelsResult;
+      return thisLevelResults;
     }
     // we here know at this level there is a match. But there are further levels since this token is not a leaf ...
 
+
+    final List<PatternMatchSingleResult> downLevelsResult = new LinkedList<>();
     final List<Token> childrenTokens = sentence.getChildrenTokensFromToken(token);
     // if there is more branches in pattern then we have in actual sentence node we know there is no way to match it
     if (nodeMatch.getEdgeMatchList().size() > childrenTokens.size()) {
@@ -281,7 +289,7 @@ public class PatternMatch {
       for (final List<Token> childrenTokenPermutation : childrenTokenPermutations) {
 
         final List<PatternMatchSingleResult> resultsForOnePermutation = getResultsForOnePermutation(sentence, childrenTokenPermutation, nodeMatch.getEdgeMatchList());
-        thisAndDownLevelsResult.addAll(resultsForOnePermutation);
+        downLevelsResult.addAll(resultsForOnePermutation);
       }
     }
 
@@ -289,15 +297,24 @@ public class PatternMatch {
     // to nie ma się z czym skonkatenować i pusty wynik jest propagowany wyżej
 
     // filtrujemy te które nie mają nic nakładającego się z tym który chcemy dołączyć
-    final List<PatternMatchSingleResult> validResults =
-        thisAndDownLevelsResult
-            .stream()
-            .filter(r -> r.haveNotCommonId(thisLevelResult))
-            .collect(Collectors.toList());
 
-    validResults.forEach(r -> r.concatenateWith(thisLevelResult));
 
-    return validResults;
+    final List<PatternMatchSingleResult> totalResults = new ArrayList<>();
+
+    for (final PatternMatchSingleResult thisLevelResult : thisLevelResults) {
+
+      final List<PatternMatchSingleResult> validResults =
+          downLevelsResult
+              .stream()
+              .filter(r -> r.haveNotCommonId(thisLevelResult))
+              .map(PatternMatchSingleResult::new)
+              .collect(Collectors.toList());
+
+      validResults.forEach(r -> r.concatenateWith(thisLevelResult));
+      totalResults.addAll(validResults);
+    }
+
+    return totalResults;
   }
 
   private final List<PatternMatchSingleResult>

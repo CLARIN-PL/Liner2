@@ -13,12 +13,10 @@ public class PatternMatchSingleResult {
   public int sentenceNumber;
   public PatternMatch patternMatch;
   public String relationType;
-  public Set<String> namedEntitySet = new LinkedHashSet<>();
 
   // idki (nie indeksy !!!) do elementów które składają się na "rozwiązanie" matcha - wszystkie dla tego całego jednego rozwiązania
   //public ArrayList<Integer> idsList;
   public LinkedHashSet<Integer> idsList;
-
   public PatternMatchExtraInfo patternMatchExtraInfo;
 
 
@@ -42,6 +40,9 @@ public class PatternMatchSingleResult {
     this.idsList = (LinkedHashSet<Integer>) pmsr.idsList.clone();
     this.patternMatchExtraInfo = new PatternMatchExtraInfo(pmsr.patternMatchExtraInfo);
     this.relationType = pmsr.relationType;
+    this.docName = pmsr.docName;
+    this.sentenceNumber = pmsr.sentenceNumber;
+    this.patternMatch = pmsr.patternMatch;
   }
 
 
