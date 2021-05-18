@@ -7,7 +7,6 @@ import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.core.tools.parser.ParseTreeGenerator;
 import g419.serel.converter.DocumentToSerelExpressionConverter;
-import g419.serel.structure.ParseTreeMalfunction;
 import g419.serel.structure.SerelExpression;
 import g419.serel.tools.CheckParserParseTree;
 import org.apache.commons.cli.CommandLine;
@@ -15,7 +14,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.LinkedList;
 import java.util.List;
 
 public class ActionGenerateRules extends Action {
@@ -27,7 +25,14 @@ public class ActionGenerateRules extends Action {
   private String comboFilename;
   private String comboFormat;
   private String reportFilename;
-  private String caseMode;
+
+  private boolean uposMode;
+  private boolean xposMode;
+  private boolean deprelMode;
+  private boolean caseMode;
+
+  private boolean extMode = false;
+  private boolean treeMode = false;
 
 
   DocumentToSerelExpressionConverter converter;
@@ -43,7 +48,15 @@ public class ActionGenerateRules extends Action {
     options.addOption(CommonOptions.getOutputFileFormatOption());
     options.addOption(CommonOptions.getComboFileNameOption());
     options.addOption(CommonOptions.getComboFileFormatOption());
+
+
+    options.addOption(CommonOptions.getUPosModeOption());
+    options.addOption(CommonOptions.getXPosModeOption());
+    options.addOption(CommonOptions.getDeprelModeOption());
     options.addOption(CommonOptions.getCaseModeOption());
+
+    options.addOption(CommonOptions.getExtModeOption());
+    options.addOption(CommonOptions.getTreeModeOption());
 
     options.addOption(CommonOptions.getReportFileNameOption());
   }
@@ -59,7 +72,27 @@ public class ActionGenerateRules extends Action {
     }
     comboFilename = line.getOptionValue(CommonOptions.OPTION_COMBO_FILE);
     comboFormat = line.getOptionValue(CommonOptions.OPTION_COMBO_FORMAT);
-    caseMode = line.getOptionValue(CommonOptions.OPTION_CASE_MODE);
+
+    if (line.hasOption(CommonOptions.OPTION_UPOS_MODE)) {
+      uposMode = true;
+    }
+    if (line.hasOption(CommonOptions.OPTION_XPOS_MODE)) {
+      xposMode = true;
+    }
+    if (line.hasOption(CommonOptions.OPTION_DEPREL_MODE)) {
+      deprelMode = true;
+    }
+    if (line.hasOption(CommonOptions.OPTION_CASE_MODE)) {
+      caseMode = true;
+    }
+
+
+    if (line.hasOption(CommonOptions.OPTION_EXT_PATTERN_MODE)) {
+      extMode = true;
+    }
+    if (line.hasOption(CommonOptions.OPTION_TREE_MODE)) {
+      treeMode = true;
+    }
 
     reportFilename = line.getOptionValue(CommonOptions.OPTION_REPORT_FILE);
   }
@@ -76,7 +109,6 @@ public class ActionGenerateRules extends Action {
         final AbstractDocumentReader comboReader = ReaderFactory.get().getStreamReader(comboFilename, comboFormat);
         final PrintWriter writer = new PrintWriter(os);
         final PrintWriter reportWriter = reportFilename == null ? null : new PrintWriter(new FileWriter(new File(reportFilename)))) {
-      final List<ParseTreeMalfunction> result = new LinkedList<>();
 
 
       final DocumentToSerelExpressionConverter converter = new DocumentToSerelExpressionConverter(null, reportWriter);
@@ -88,13 +120,14 @@ public class ActionGenerateRules extends Action {
 
               final List<SerelExpression> converted = converter.convert(comboedDoc);
 
+              for (final SerelExpression serel : converted) {
+                this.reportSerel(serel, reportWriter);
+              }
             } catch (final Exception e) {
               e.printStackTrace();
             }
           }
       );
-
-      System.out.println("REsult size = " + result.size());
 
       converter.typesCounter.keySet().stream().forEach(k -> System.out.println(k + " : " + converter.typesCounter.get(k)));
       int total = 0;
@@ -104,17 +137,25 @@ public class ActionGenerateRules extends Action {
       }
       System.out.println("TOTAL: " + total);
 
-      writer.println("Code\tdocument\tann_id\tsourceIndex\ttargetIndex\tstartAnnIndex\tendAnnIndex");
-      result.stream().forEach(line -> writer.println(line.getMalfunctionCode() + "\t" +
-          line.getDocumentPath() + "\t" +
-          line.getAnnotationId() + "\t" +
-          line.getSourceIndex() + "\t" +
-          line.getTargetIndex() + "\t" +
-          line.getAnnStartRange() + "\t" +
-          line.getAnnEndRange()
-      ));
     } catch (final Exception e) {
       throw e;
+    }
+  }
+
+  private void reportSerel(final SerelExpression se, final PrintWriter reportWriter) {
+
+    if (extMode) {
+      // WHOLE REPORT
+      reportWriter.println(se.getPathAsString(uposMode, xposMode, deprelMode, caseMode));
+    } else {
+      //JUST PATTERNS
+      reportWriter.println(se.getJustPattern(uposMode, xposMode, deprelMode, caseMode));
+    }
+
+    if (treeMode) {
+      // GENERATE TREE
+      se.getSentence().printAsTree(reportWriter);
+      reportWriter.println("------------------------------------------------------");
     }
   }
 

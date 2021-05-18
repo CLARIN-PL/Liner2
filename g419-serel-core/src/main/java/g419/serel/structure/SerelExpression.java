@@ -25,6 +25,11 @@ public class SerelExpression {
   private int index1;
   private int index2;
 
+  boolean uposMode;
+  boolean xposMode;
+  boolean deprelMode;
+  boolean caseMode;
+
 
   public SerelExpression() {
   }
@@ -47,14 +52,18 @@ public class SerelExpression {
   }
 
 
-  public String getPathAsString() {
+  public String getPathAsString(final boolean uposMode,
+                                final boolean xposMode,
+                                final boolean deprelMode,
+                                final boolean caseMode) {
+
     final StringBuilder s = new StringBuilder();
     s.append(getSentence().getDocument().getName() + ";\t\t");
     s.append(relationDesc.getType()).append(";\t\t");
     s.append(relationDesc.getFromType()).append(";\t\t");
     s.append(relationDesc.getToType()).append(";\t\t");
 
-    s.append(getJustPattern());
+    s.append(getJustPattern(uposMode, xposMode, deprelMode, caseMode));
 
     final String sentExt = getSentence().toString();
 
@@ -125,20 +134,26 @@ public class SerelExpression {
    */
 
 
-  public StringBuilder getJustPattern() {
+  public StringBuilder getJustPattern(final boolean uposMode,
+                                      final boolean xposMode,
+                                      final boolean deprelMode,
+                                      final boolean caseMode) {
+
+
     if ((tokensChainUp1.size() < 2) && (tokensChainUp2.size() < 2)) {
       System.out.println("ERROR !!! Nieprawidłowe ścieżki łączące relacje ");
     }
 
-//    System.out.println("\n\n");
+    this.uposMode = uposMode;
+    this.xposMode = xposMode;
+    this.deprelMode = deprelMode;
+    this.caseMode = caseMode;
 
     // "left" side
-    // left anchor
     final StringBuilder sLeft = new StringBuilder();
     sLeft.append(relationDesc.getType()).append("::");
-    //sLeft.append(" [[" + tokensChainUp1.get(0).getAttributeValue(4) + "]] ");
+    sLeft.append(getXPosClause(tokensChainUp1.get(0)));
     sLeft.append(" *" + getCaseClauseForTokenIndex(tokensChainUp1.get(0).getNumberId() - 1) + " / " + relationDesc.getFromType() + ":e1");
-
 
     if (tokensChainUp1.size() > 1) {
       final Token t0 = tokensChainUp1.get(0);
@@ -149,7 +164,6 @@ public class SerelExpression {
         sLeft.append(token2String(t, false) + getDepRelClauseForToken(t) + " > ");
       }
     }
-//  System.out.println("SLEFT =" + sLeft);
 
     //right Side
     final StringBuffer sRight = new StringBuffer();
@@ -161,9 +175,12 @@ public class SerelExpression {
       final Token t = tokensChainUp2.get(0);
       sRight.append(" < " + getDepRelClauseForToken(t));
     }
-    //sRight.append(" [[" + tokensChainUp2.get(0).getAttributeValue(4) + "]] ");
+
+    sRight.append(getXPosClause(tokensChainUp2.get(0)));
     sRight.append(" *" + getCaseClauseForTokenIndex(tokensChainUp2.get(0).getNumberId() - 1) + " / " + relationDesc.getToType() + ":e2");
 
+
+    // łączenie wszystkich kawałków ...
     final StringBuilder sTotal = new StringBuilder();
     if ((tokensChainUp1.size() == 1) || (tokensChainUp2.size() == 1)) {
       sTotal.append(sLeft);
@@ -193,69 +210,56 @@ public class SerelExpression {
               t.getBoisNonEmpty().get(0).substring(2);
     }
 
-    // to nie jest żaden NE
-
-
-    // zawsze wstawiamy lemat
+    // to nie jest NE
     return
-        " [" + t.getAttributeValue(3) + "] " +
-            /*" [[" + t.getAttributeValue(4) + "]] " +*/
-
-            "^" + t.getAttributeValue(2).replaceAll(" ", "_")
-            +
+        getUPosClause(t) +
+            getXPosClause(t) +
+            " ^" + t.getAttributeValue(2).replaceAll(" ", "_") +
             getCaseClauseForTokenIndex(t.getNumberId() - 1);  // id -> index
+  }
 
+  private String getUPosClause(final Token t) {
 
-
-
-
-    /*
-    // jeśli czasownik to wstawiamy lemat
-    if (t.getAttributeValue(3).equals("VERB")) {
-      return " [" + t.getAttributeValue(3) + "] " +
-          " [[" + t.getAttributeValue(4) + "]] " +
-          "^" + t.getAttributeValue(2) +
-          getCaseClauseForTokenIndex(t.getNumberId() - 1);  // id -> index
+    if (!uposMode) {
+      return "";
     }
 
+    return " [" + t.getAttributeValue(3) + "] ";
+  }
 
-    return
-        " [" + t.getAttributeValue(3) + "] " +
-            " [[" + t.getAttributeValue(4) + "]] " +
+  private String getXPosClause(final Token t) {
 
-            t.getAttributeValue(1)
-            +
-            getCaseClauseForTokenIndex(t.getNumberId() - 1);  // id -> index
-     */
-
+    if (!xposMode) {
+      return "";
+    }
+    return " [[" + t.getAttributeValue(4) + "]] ";
   }
 
   private String getCaseClauseForTokenIndex(final int tokenIndex) {
 
-    //SWITCH_2
-
+    if (!caseMode) {
+      return "";
+    }
     final List<Token> children = getSentence().getChildrenTokensFromTokenIndex(tokenIndex);
 
     for (final Token token : children) {
-//      System.out.println(" CASE check token" + token);
       if (token.getAttributeValue("deprel").equals("case")) {
-//        System.out.println(token.getAttributeValue(2));
         if (token.getAttributeValue(4).startsWith("prep")) {
           return " # " + token.getAttributeValue(2);
         }
       }
     }
-
     return "";
   }
 
   private String getDepRelClauseForToken(final Token t) {
-    //SWITCH_3
+
+    if (!deprelMode) {
+      return "";
+    }
 
     final String depRel = t.getAttributeValue("deprel");
     return " (" + depRel + ") ";
-
-    //return "";
   }
 
 }

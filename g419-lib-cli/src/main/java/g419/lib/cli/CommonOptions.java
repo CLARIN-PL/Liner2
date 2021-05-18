@@ -72,20 +72,68 @@ public class CommonOptions {
   public static final String OPTION_VERIFY_RELATIONS = "vr";
   public static final String OPTION_VERIFY_RELATIONS_LONG = "verify_relations";
 
+
   public static final String OPTION_CASE_MODE = "case";
   public static final String OPTION_CASE_MODE_LONG = "case_mode";
+
+  public static final String OPTION_DEPREL_MODE = "deprel";
+  public static final String OPTION_DEPREL_MODE_LONG = "deprel_mode";
+
+  public static final String OPTION_UPOS_MODE = "upos";
+  public static final String OPTION_UPOS_MODE_LONG = "upos_mode";
+
+  public static final String OPTION_XPOS_MODE = "xpos";
+  public static final String OPTION_XPOS_MODE_LONG = "xpos_mode";
+
+  public static final String OPTION_EXT_PATTERN_MODE = "ext";
+  public static final String OPTION_EXT_PATTERN_MODE_LONG = "ext_mode";
+
+  public static final String OPTION_TREE_MODE = "tree";
+  public static final String OPTION_TREE_MODE_LONG = "tree_mode";
+
+
+  public static Option getExtModeOption() {
+    return Option.builder(CommonOptions.OPTION_EXT_PATTERN_MODE)
+        .longOpt(CommonOptions.OPTION_EXT_PATTERN_MODE_LONG)
+        .desc("generate additional info about each patter").build();
+  }
+
+  public static Option getTreeModeOption() {
+    return Option.builder(CommonOptions.OPTION_TREE_MODE)
+        .longOpt(CommonOptions.OPTION_TREE_MODE_LONG)
+        .desc("generate sentence tree for each pattern").build();
+  }
+
+
+  public static Option getCaseModeOption() {
+    return Option.builder(CommonOptions.OPTION_CASE_MODE)
+        .longOpt(CommonOptions.OPTION_CASE_MODE_LONG)
+        .desc("mode telling how to treat 'case' subtokens").build();
+  }
+
+  public static Option getDeprelModeOption() {
+    return Option.builder(CommonOptions.OPTION_DEPREL_MODE)
+        .longOpt(CommonOptions.OPTION_DEPREL_MODE_LONG)
+        .desc("generate 'deprel' dependencies").build();
+  }
+
+  public static Option getUPosModeOption() {
+    return Option.builder(CommonOptions.OPTION_UPOS_MODE)
+        .longOpt(CommonOptions.OPTION_UPOS_MODE_LONG)
+        .desc("generate 'upos' dependencies").build();
+  }
+
+  public static Option getXPosModeOption() {
+    return Option.builder(CommonOptions.OPTION_XPOS_MODE)
+        .longOpt(CommonOptions.OPTION_XPOS_MODE_LONG)
+        .desc("generate 'xpos' dependencies").build();
+  }
 
 
   public static Option getOutputFileNameOption() {
     return Option.builder(CommonOptions.OPTION_OUTPUT_FILE)
         .longOpt(CommonOptions.OPTION_OUTPUT_FILE_LONG)
         .hasArg().argName("filename").desc("path to an output file").build();
-  }
-
-  public static Option getCaseModeOption() {
-    return Option.builder(CommonOptions.OPTION_CASE_MODE)
-        .longOpt(CommonOptions.OPTION_CASE_MODE_LONG)
-        .hasArg().argName("case").desc("mode telling how to treat 'case' subtokens").build();
   }
 
 

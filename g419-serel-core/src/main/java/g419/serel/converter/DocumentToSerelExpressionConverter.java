@@ -53,10 +53,6 @@ public class DocumentToSerelExpressionConverter {
 
 
   public List<SerelExpression> convert(final Document document) {
-    return convert(document, "none");
-  }
-
-  public List<SerelExpression> convert(final Document document, final String caseMode) {
 
     final List<SerelExpression> result = new LinkedList<>();
 
@@ -89,15 +85,10 @@ public class DocumentToSerelExpressionConverter {
         }
 
         try {
-//          System.out.println("Rel = " + relDesc);
           final SerelExpression serel = extractSerelFromRelDesc(relDesc);
-//          System.out.println("Serel =" + serel);
 
           if (serel == null) {
             continue;
-          }
-          if (reportWriter != null) {
-            this.reportSerel(serel);
           }
           result.add(serel);
 
@@ -105,30 +96,10 @@ public class DocumentToSerelExpressionConverter {
           e.printStackTrace();
         }
       }
-
     }
-
 
     return result;
   }
-
-  /*
-  public List<SerelExpression> convertAlreadyComboedFromRelDesc(final Set<RelationDesc> relationDescList) {
-
-    final List<SerelExpression> result = new LinkedList<>();
-    for (final RelationDesc relDesc : relationDescList) {
-      try {
-        log.trace("Rel = " + relDesc);
-        final SerelExpression se = extractSerelFromRelDesc(relDesc);
-        result.add(se);
-      } catch (final Exception e) {
-        e.printStackTrace();
-      }
-    }
-    return result;
-
-  }
-*/
 
   public SerelExpression extractSerelFromRelDesc(final RelationDesc relDesc) throws Exception {
     if (relDesc.isMultiSentence()) {
@@ -138,32 +109,6 @@ public class DocumentToSerelExpressionConverter {
     final SerelExpression serel = this.extractSerelFromParseTreeAndRelDesc(relDesc /*, parseTree*/);
     return serel;
   }
-
-/*
-  public SerelExpression extractSerelFromRel(final Relation rel) throws Exception {
-    final Sentence sentenceFrom = rel.getAnnotationFrom().getSentence();
-    final Sentence sentenceTo = rel.getAnnotationTo().getSentence();
-
-    if (!(sentenceFrom.toString().equals(sentenceTo.toString()))) {
-      System.out.println("ERROR: Relation " + rel + " skipped because refers to more then one sentence");
-      return null;
-    }
-
-    final ParseTree parseTree = parseTreeGenerator.generate(sentenceFrom);
-
-    final SerelExpression serel = this.extractSerelFromParseTree(rel, parseTree);
-    return serel;
-  }
-*/
-  /*
-  public SerelExpression extractSerelFromRelDesc(final RelationDesc relDesc) throws Exception {
-    final Sentence sentence = relDesc.getSentence();
-    final ParseTree parseTree = parseTreeGenerator.generate(sentence);
-    final SerelExpression result = this.extractSerelFromParseTreeWithRelDesc(relDesc, parseTree);
-    return result;
-  }
-
-   */
 
   public SerelExpression extractSerelFromParseTreeAndRelDesc(final RelationDesc relDesc /*, final ParseTree parseTree*/) {
     final Sentence sentence = relDesc.getSentence();
@@ -186,41 +131,6 @@ public class DocumentToSerelExpressionConverter {
     return se;
   }
 
-/*
-  public SerelExpression extractSerelFromParseTree(final Relation rel, final ParseTree parseTree) {
-//    final int index1 = rel.getAnnotationFrom().getHead();
-//    final int index2 = rel.getAnnotationTo().getHead();
-
-//    final int index1 = rel.getAnnotationFrom().getHeadActual();
-//    final int index2 = rel.getAnnotationTo().getHeadActual();
-//    --- nie ma tych relacji wpisanych w tokenach na tym poziomie
-
-    // truly - index not id
-    final int index1 = findActualHeadIndex(rel.getAnnotationFrom(), parseTree);
-    final int index2 = findActualHeadIndex(rel.getAnnotationTo(), parseTree);
-//    System.out.println("Found head index = " + index1);
-//    System.out.println("Found head index = " + index2);
-//    System.out.println("\n");
-
-
-    final Pair<List<SentenceLink>, List<SentenceLink>> path = parseTree.getPathBetween(index1, index2);
-
-//    log.trace("LS1 = " + path.getLeft());
-//    log.trace("LS2 = " + path.getRight());
-
-    final SerelExpression se;
-    if (path != null) {
-      se = new SerelExpression(RelationDesc.from(rel), path.getLeft(), path.getRight(), parseTree, index1, index2);
-    } else {
-      se = new SerelExpression(RelationDesc.from(rel), null, null, parseTree, index1, index2);
-    }
-
-    return se;
-
-  }
- */
-
-
   private int findActualHeadIndex(final Annotation ann, final ParseTree parseTree) {
 //    System.out.println("tokens =" + ann.getTokens());
 
@@ -231,63 +141,6 @@ public class DocumentToSerelExpressionConverter {
       }
     }
     return -1;
-  }
-
-/*
-  public SerelExpression extractSerelFromParseTreeWithRelDesc(final RelationDesc relDesc, final ParseTree parseTree) {
-
-    // TODO - czy to czsem nie jest ID - i dlatego jest potrzebne odejmowanie tek jedynki tu dalej ?
-    final int index1 = relDesc.getFromTokenIndex();
-    final int index2 = relDesc.getToTokenIndex();
-
-    final Pair<List<SentenceLink>, List<SentenceLink>> path = parseTree.getPathBetween(index1 - 1, index2 - 1);
-
-
-    System.out.println("LS1 = " + path.getLeft());
-    System.out.println("LS2 = " + path.getRight());
-
-    final SerelExpression se;
-    if (path != null) {
-
-      System.out.println("NN:LS1 = " + path.getLeft());
-      System.out.println("NN:LS2 = " + path.getRight());
-
-
-      se = new SerelExpression(relDesc, path.getLeft(), path.getRight(), parseTree);
-    } else {
-
-      System.out.println("NULL:LS1 = " + path.getLeft());
-      System.out.println("NULL:LS2 = " + path.getRight());
-
-
-      se = new SerelExpression(relDesc, null, null, parseTree);
-    }
-
-    return se;
-  }
-
- */
-
-
-  private void reportSerel(final SerelExpression se) {
-
-    //reportWriter.println(se.getRelationDesc().getDocument().getName());
-    //reportWriter.println(se.getSentence());
-    //reportWriter.println(se.getPathAsString(true));
-
-    // WHOLE REPORT
-    //reportWriter.println(se.getPathAsString());
-
-    //JUST PATTERNS
-    reportWriter.println(se.getJustPattern());
-
-    // GENERATE TREE
-    //se.getSentence().printAsTree(reportWriter);
-
-
-    //reportWriter.println("------------------------------------------------------");
-
-
   }
 
 

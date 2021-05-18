@@ -19,7 +19,7 @@ public class SerelExpressionFormatterPlain implements ISerelExpressionFormatter 
   public List<String> format(final Document document, final List<SerelExpression> serelExpressions) {
     final List<String> lines = Lists.newArrayList();
     for (final SerelExpression se : serelExpressions) {
-      lines.add(se.getPathAsString());
+      lines.add(se.getPathAsString(false, false, true, false));
     }
     return lines;
   }

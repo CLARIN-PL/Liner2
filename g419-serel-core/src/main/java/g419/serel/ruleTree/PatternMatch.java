@@ -199,12 +199,18 @@ public class PatternMatch {
 
   public List<PatternMatchSingleResult> getSentenceTreesMatchingGenericPatternFromToken(final Sentence sentence,
                                                                                         final Token token) {
-    final List<PatternMatchSingleResult> result = getSentenceTreesMatchingGenericPatternFromTokenAndEdge(sentence, token, null, rootNodeMatch);
+
+    final List<PatternMatchSingleResult> output = new ArrayList<>();
+//    final PatternMatchSingleResult pmsr = new PatternMatchSingleResult();
+//    output.add(pmsr);
+
+    final List<PatternMatchSingleResult> result = getSentenceTreesMatchingGenericPatternFromTokenAndEdge(output, sentence, token, null, rootNodeMatch);
     return result;
   }
 
   public List<PatternMatchSingleResult>
-  getSentenceTreesMatchingGenericPatternFromTokenAndEdge(final Sentence sentence,
+  getSentenceTreesMatchingGenericPatternFromTokenAndEdge(final List<PatternMatchSingleResult> output,
+                                                         final Sentence sentence,
                                                          final Token token,
                                                          final EdgeMatch edgeMatch,
                                                          final NodeMatch nodeMatch) {
@@ -268,11 +274,35 @@ public class PatternMatch {
       thisLevelResults.add(new PatternMatchSingleResult(_idsList, pmei, this.getRelationType()));
     }
 
+
+    final List<PatternMatchSingleResult> resultsToThisLevel = new ArrayList<>();
+    /*
+    for (final PatternMatchSingleResult thisLevelResult : thisLevelResults) {
+
+      final List<PatternMatchSingleResult> validResults =
+          output
+              .stream()
+              .filter(r -> r.haveNotCommonId(thisLevelResult))
+              .map(PatternMatchSingleResult::new)
+              .collect(Collectors.toList());
+
+      validResults.forEach(r -> r.concatenateWith(thisLevelResult));
+      resultsToThisLevel.addAll(validResults);
+    }
+
+    if (resultsToThisLevel.size() == 0) {
+      return Collections.emptyList();
+    }
+    */
+
     if (nodeMatch.isLeaf()) {
       // final match!It is leaf so we end this branch of recursion here
       return thisLevelResults;
     }
     // we here know at this level there is a match. But there are further levels since this token is not a leaf ...
+
+    // before we go any further let's check if already at current level there are contradictions between
+    // thisLevel results and previous levels results
 
 
     final List<PatternMatchSingleResult> downLevelsResult = new LinkedList<>();
@@ -288,7 +318,7 @@ public class PatternMatch {
       final List<List<Token>> childrenTokenPermutations = Permutations.getAllPermutations(childrenTokenCombination);
       for (final List<Token> childrenTokenPermutation : childrenTokenPermutations) {
 
-        final List<PatternMatchSingleResult> resultsForOnePermutation = getResultsForOnePermutation(sentence, childrenTokenPermutation, nodeMatch.getEdgeMatchList());
+        final List<PatternMatchSingleResult> resultsForOnePermutation = getResultsForOnePermutation(resultsToThisLevel, sentence, childrenTokenPermutation, nodeMatch.getEdgeMatchList());
         downLevelsResult.addAll(resultsForOnePermutation);
       }
     }
@@ -318,7 +348,8 @@ public class PatternMatch {
   }
 
   private final List<PatternMatchSingleResult>
-  getResultsForOnePermutation(final Sentence sentence,
+  getResultsForOnePermutation(final List<PatternMatchSingleResult> output,
+                              final Sentence sentence,
                               final List<Token> childrenTokenPermutation,
                               final List<EdgeMatch> patternEdges) {
     List<PatternMatchSingleResult> onePermutationResults = new ArrayList<>();
@@ -329,7 +360,7 @@ public class PatternMatch {
       final Token nextToken = childrenTokenPermutation.get(i);
 
       final List<PatternMatchSingleResult> resultsForOnePatternEdge =
-          getSentenceTreesMatchingGenericPatternFromTokenAndEdge(sentence, nextToken, nextEdgeMatch, nextEdgeMatch.getNodeMatch());
+          getSentenceTreesMatchingGenericPatternFromTokenAndEdge(output, sentence, nextToken, nextEdgeMatch, nextEdgeMatch.getNodeMatch());
 
       // each edge must match!
       if (resultsForOnePatternEdge.isEmpty()) {
@@ -344,9 +375,15 @@ public class PatternMatch {
 
         for (final PatternMatchSingleResult oldPmsr : onePermutationResults) {
           for (final PatternMatchSingleResult pmsr : resultsForOnePatternEdge) {
-            final PatternMatchSingleResult newPmsr = new PatternMatchSingleResult(oldPmsr);
-            newPmsr.concatenateWith(pmsr);
-            newOnePermutationResults.add(newPmsr);
+            // jeśli się nie nakładają idki
+            if (oldPmsr.haveNotCommonId(pmsr)) {
+
+              final PatternMatchSingleResult newPmsr = new PatternMatchSingleResult(oldPmsr);
+              newPmsr.concatenateWith(pmsr);
+              newOnePermutationResults.add(newPmsr);
+            } else {
+              System.out.println("NEW_ELIMINATION triggered");
+            }
           }
         }
 
