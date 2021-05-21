@@ -38,6 +38,10 @@ public class ActionMatchRelationsSet extends Action {
   @Setter
   boolean verbose;
 
+
+  boolean useEliminateStage = false;
+
+
   boolean printSectionFound = false;
   boolean printSectionTruePositive = false;
   boolean printSectionFalsePositive = false;
@@ -103,6 +107,7 @@ public class ActionMatchRelationsSet extends Action {
     options.addOption(CommonOptions.getReportFileNameOption());
     options.addOption(CommonOptions.getPrintSectionsOption());
     options.addOption(CommonOptions.getVerifyRelationsOption());
+    options.addOption(CommonOptions.getEliminateStageModeOption());
   }
 
   @Override
@@ -111,11 +116,14 @@ public class ActionMatchRelationsSet extends Action {
     inputFormat = line.getOptionValue(CommonOptions.OPTION_INPUT_FORMAT);
     rulesFilename = line.getOptionValue(CommonOptions.OPTION_RULE_FILENAME);
     outputFilename = line.getOptionValue(CommonOptions.OPTION_OUTPUT_FILE);
-
     reportFilename = line.getOptionValue(CommonOptions.OPTION_REPORT_FILE);
 
     if (line.hasOption(CommonOptions.OPTION_VERBOSE)) {
       verbose = true;
+    }
+
+    if (line.hasOption(CommonOptions.OPTION_ELIMINATE_STAGE)) {
+      useEliminateStage = true;
     }
 
     String printSectionsMask = line.getOptionValue(CommonOptions.OPTION_PRINT_SECTION);
@@ -178,7 +186,6 @@ public class ActionMatchRelationsSet extends Action {
                 documentName2documentResultTruePositive.put(comboedDoc.getName(), new HashSet<>());
               }
 
-
               matchDocTreeAgainstPatternTree(comboedDoc, patternMatch);
 
               documentResult.stream().forEach(r -> r.patternMatch = patternMatch);
@@ -227,7 +234,8 @@ public class ActionMatchRelationsSet extends Action {
 //        sentence.printAsTree(new PrintWriter(System.out));
 
         sentence.sentenceNumber = sentenceNumber;
-        final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingGenericPattern(sentence);
+        final List<PatternMatchSingleResult> sentenceResults =
+            patternMatch.getSentenceTreesMatchingGenericPattern(sentence, useEliminateStage);
 
         /*
         for (final PatternMatchSingleResult patternMatchSingleResult : sentenceResults) {
@@ -307,11 +315,6 @@ public class ActionMatchRelationsSet extends Action {
               final SentenceMiscValues smv = SentenceMiscValues.from(sentence, sentenceIndex);
               final List<RelationDesc> allSentenceNamRels = smv.getAllNamRels();
               for (final RelationDesc rd : allSentenceNamRels) {
-
-//                if (comboedDoc.getName().equals("documents/00102158")) {
-//                  System.out.println("checking RD = " + rd);
-//                }
-
 
                 final Optional<PatternMatchSingleResult> matching = docTruePositives.stream().filter(pmsr -> pmsr.isTheSameAs(rd)).findAny();
 

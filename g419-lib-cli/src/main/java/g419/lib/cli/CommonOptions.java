@@ -91,6 +91,15 @@ public class CommonOptions {
   public static final String OPTION_TREE_MODE = "tree";
   public static final String OPTION_TREE_MODE_LONG = "tree_mode";
 
+  public static final String OPTION_ELIMINATE_STAGE = "elim";
+  public static final String OPTION_ELIMINATE_STAGE_LONG = "eliminate";
+
+  public static Option getEliminateStageModeOption() {
+    return Option.builder(CommonOptions.OPTION_ELIMINATE_STAGE)
+        .longOpt(CommonOptions.OPTION_ELIMINATE_STAGE_LONG)
+        .desc("eliminate samples similar to negative ones").build();
+  }
+
 
   public static Option getExtModeOption() {
     return Option.builder(CommonOptions.OPTION_EXT_PATTERN_MODE)

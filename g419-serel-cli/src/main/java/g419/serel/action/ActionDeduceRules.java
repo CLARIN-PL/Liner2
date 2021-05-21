@@ -250,7 +250,8 @@ public class ActionDeduceRules extends Action {
         sentence.sentenceNumber = sentenceNumber;
 
         //final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingSerelPattern(sentence);
-        final List<PatternMatchSingleResult> sentenceResults = patternMatch.getSentenceTreesMatchingGenericPattern(sentence);
+        final List<PatternMatchSingleResult> sentenceResults =
+            patternMatch.getSentenceTreesMatchingGenericPattern(sentence, false);
 
         if (d.getName().equals("documents/00102158")) {
 //          System.out.println(" Dla zdania " + sentenceNumber + " znaleziono :" + sentenceResults);

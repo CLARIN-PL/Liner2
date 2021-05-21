@@ -72,7 +72,7 @@ public class PatternMatch {
     return nodeMatchList.stream().filter(node -> node.hasAnnotation()).map(n -> n.getNamedEntity()).collect(Collectors.toList());
   }
 
-  public List<PatternMatchSingleResult> getSentenceTreesMatchingGenericPattern(final Sentence sentence) {
+  public List<PatternMatchSingleResult> getSentenceTreesMatchingGenericPattern(final Sentence sentence, final boolean useEliminateStage) {
     List<PatternMatchSingleResult> result = new ArrayList<>();
 
     for (final Token token : sentence.getTokens()) {
@@ -86,8 +86,10 @@ public class PatternMatch {
 
     result = makeDistinct(result);
 
-    result = validateAgainstNegativeSamples(result, sentence);
-
+    if (useEliminateStage) {
+      //System.out.println("Eliminating stage ...");
+      result = validateAgainstNegativeSamples(result, sentence);
+    }
 
     return result;
   }
