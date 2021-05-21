@@ -645,7 +645,7 @@ class PatternMatchTest extends Specification {
         when:
             PatternMatch pattern = PatternMatch.parseRule("location :: W > południe > odbywają")
             //NodeMatch startNodeMatch = pattern.rootNodeMatch
-            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence, false)
         then:
             pattern.nodeMatchList.size() == 3;
             result.size() == 1;
@@ -655,7 +655,7 @@ class PatternMatchTest extends Specification {
         when:
             PatternMatch pattern = PatternMatch.parseRule("location :: koncerty < jazzowe")
             //NodeMatch startNodeMatch = pattern.rootNodeMatch
-            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence, false)
         then:
             pattern.nodeMatchList.size() == 2;
             result.size() == 1;
@@ -666,7 +666,7 @@ class PatternMatchTest extends Specification {
         when:
             PatternMatch pattern = PatternMatch.parseRule("location :: się > odbywają")
             //NodeMatch startNodeMatch = pattern.rootNodeMatch
-            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence, false)
         then:
             pattern.nodeMatchList.size() == 2;
             result.size() == 1;
@@ -677,7 +677,7 @@ class PatternMatchTest extends Specification {
         when:
             PatternMatch pattern = PatternMatch.parseRule("location :: się > ^odbywać")
             //NodeMatch startNodeMatch = pattern.rootNodeMatch
-            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence2)
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence2,false)
         then:
             pattern.nodeMatchList.size() == 2;
             result.size() == 2;
@@ -689,7 +689,7 @@ class PatternMatchTest extends Specification {
     def "finding sentence subtrees matching generic pattern using * char on direct joint with two branches "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("location :: jazzowe > koncerty > *  < południe < W ")
-            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence, false)
         then:
             result.size() == 1
 
@@ -708,7 +708,7 @@ class PatternMatchTest extends Specification {
             pattern.rootNodeMatch.getEdgeMatchList().add(em);
             em.setParentNodeMatch(pattern.rootNodeMatch)
 
-            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence, false)
         then:
             result.size() == 1
     }
@@ -727,7 +727,7 @@ class PatternMatchTest extends Specification {
             pattern.rootNodeMatch.getEdgeMatchList().add(em);
             em.setParentNodeMatch(pattern.rootNodeMatch)
 
-            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence, false)
         then:
             result.size() == 0
     }
@@ -746,7 +746,7 @@ class PatternMatchTest extends Specification {
             pattern.getNodeMatchList().get(0).getEdgeMatchList().add(em);
             em.setParentNodeMatch(pattern.getNodeMatchList().get(0))
 
-            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence2)
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence2, false)
         then:
             result.size() == 1
     }
@@ -764,7 +764,7 @@ class PatternMatchTest extends Specification {
             pattern.getNodeMatchList().get(0).getEdgeMatchList().add(em);
             em.setParentNodeMatch(pattern.getNodeMatchList().get(0))
 
-            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence2)
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence2, false)
         then:
             result.size() == 0
     }
@@ -773,7 +773,7 @@ class PatternMatchTest extends Specification {
     def "finding sentence subtrees matching generic pattern using many * char "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("location :: jazzowe > * > * < * < W ")
-            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence, false)
         then:
             result.size() == 1
 
@@ -783,7 +783,7 @@ class PatternMatchTest extends Specification {
     def "finding sentence subtrees matching generic pattern using * char on indirect joint with two branches "() {
         when:
             PatternMatch pattern = PatternMatch.parseRule("location :: jazzowe >  *  < południe < W ")
-            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence)
+            def result = pattern.getSentenceTreesMatchingGenericPattern(sentence, false)
         then:
             result.size() == 0 // because * should denote just one node - and here, to recognize pattern it should be treated as 2 nodes
     }
