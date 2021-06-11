@@ -261,6 +261,10 @@ public class Token extends IdentifiableElement {
     return (List<String>) result;
   }
 
+  private String boisToString() {
+    return "'bois': '[" + getBois().stream().collect(Collectors.joining(",")) + "]'";
+  }
+
   public List<String> getBoisNonEmpty() {
     final List<String> tmpResult = getBois();
     if (tmpResult.size() > 1) {
@@ -297,9 +301,17 @@ public class Token extends IdentifiableElement {
   }
 
   public List<RelationDesc> getNamRels() {
-    final Object result = extAttr.getOrDefault("nam_rels", Collections.EMPTY_LIST);
+    final Object result = extAttr.getOrDefault("nam_rels", new LinkedList<>());
     return (List<RelationDesc>) result;
   }
+
+  private String namRelsToString() {
+    if ((getNamRels() != null) && (getNamRels().size() > 0)) {
+      return "'nam_rels': '[" + getNamRels().stream().map(nr -> nr.toString()).collect(Collectors.joining(",")) + "]'";
+    }
+    return "";
+  }
+
 
   public int getParentTokenId() {
     return Integer.valueOf(this.getAttributeValue("head"));
@@ -310,5 +322,17 @@ public class Token extends IdentifiableElement {
     return Integer.valueOf(this.getAttributeValue("id"));
   }
 
+  public String extrAttrToString() {
+    String bois = this.boisToString();
+    String namRels = this.namRelsToString();
+
+    if ((getNamRels() != null) && (namRels.length() > 0)) {
+      return "{" + bois + ", " + namRels + "}";
+    }
+
+    return "{" + bois + "}";
+
+
+  }
 
 }

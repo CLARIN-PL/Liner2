@@ -236,4 +236,19 @@ public class PatternMatchSingleResult {
   }
 
 
+  public RelationDesc getAsRelationDesc() {
+
+    final RelationDesc relationDesc = RelationDesc.builder()
+        .type(getRelationType())
+        .fromTokenId(patternMatchExtraInfo.getRoleE1MinId())
+        .fromType(patternMatchExtraInfo.getNEForRole("e1"))
+        .toTokenId(patternMatchExtraInfo.getRoleE2MinId())
+        .toType(patternMatchExtraInfo.getNEForRole("e2"))
+        .multiSentence(false)
+        .build();
+
+    return relationDesc;
+  }
+
+
 }

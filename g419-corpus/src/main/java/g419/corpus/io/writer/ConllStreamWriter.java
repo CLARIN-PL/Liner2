@@ -1,7 +1,6 @@
 package g419.corpus.io.writer;
 
 import g419.corpus.structure.*;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -49,11 +48,11 @@ public class ConllStreamWriter extends AbstractDocumentWriter {
     String ctag = "";
     String cpos = null;
     String head = "_";
-    if(ai.getIndex("head") != -1) {
-      ai.getAttributeValue(t, "head");
+    if (ai.getIndex("head") != -1) {
+      head = ai.getAttributeValue(t, "head");
     }
     String deprel = "_";
-    if(ai.getIndex("deprel") != -1) {
+    if (ai.getIndex("deprel") != -1) {
       deprel = ai.getAttributeValue(t, "deprel");
     }
 
@@ -70,45 +69,76 @@ public class ConllStreamWriter extends AbstractDocumentWriter {
     }
     */
     String misc = "_";
-    if(ai.getIndex("misc")!=-1) {
+    if (ai.getIndex("misc") != -1) {
       misc = ai.getAttributeValue(t, "misc");
     }
 
 
-    Tag disambTag = t.getTags().get(0);
-    for (Tag iterTag : t.getTags()) {
-      if (iterTag.getDisamb()) {
-        disambTag = iterTag;
-      }
+    String lemma = "_";
+    if (ai.getIndex("lemma") != -1) {
+      lemma = ai.getAttributeValue(t, "lemma");
     }
+
+    String upos = "_";
+    if (ai.getIndex("upos") != -1) {
+      upos = ai.getAttributeValue(t, "upos");
+    }
+
+    String xpos = "_";
+    if (ai.getIndex("xpos") != -1) {
+      xpos = ai.getAttributeValue(t, "xpos");
+    }
+
+    String feats = "_";
+    if (ai.getIndex("feats") != -1) {
+      feats = ai.getAttributeValue(t, "feats");
+    }
+
+
+    pos = upos;
+    posext = xpos;
+    base = lemma;
+    ctag = feats;
+
+
+    if ((t.getTags() != null) && (t.getTags().size() != 0)) {
+      Tag disambTag = t.getTags().get(0);
+      for (Tag iterTag : t.getTags()) {
+        if (iterTag.getDisamb()) {
+          disambTag = iterTag;
+        }
+      }
 
 
 //		for(Tag tag : t.getTags()){
 //			if(tag.getDisamb() || t.getTags().size() == 1){
-    Tag tag = disambTag;
-    int firstSep = Math.max(0, tag.getCtag().indexOf(":"));
-    if (firstSep > 0) {
-      cpos = tag.getCtag().substring(0, firstSep);
-    }
-    ctag = tag.getCtag().substring(tag.getCtag().indexOf(":") + 1).replace(":", "|");
-    if (ctag.equals(pos) || ctag.equals(posext)) {
-      ctag = "_";
-    }
-    if (pos == null && posext == null) {
-      if (cpos != null) {
-        pos = cpos;
-        posext = cpos;
-      } else {
-        pos = ctag;
-        posext = ctag;
+      Tag tag = disambTag;
+      int firstSep = Math.max(0, tag.getCtag().indexOf(":"));
+      if (firstSep > 0) {
+        cpos = tag.getCtag().substring(0, firstSep);
+      }
+      ctag = tag.getCtag().substring(tag.getCtag().indexOf(":") + 1).replace(":", "|");
+      if (ctag.equals(pos) || ctag.equals(posext)) {
         ctag = "_";
       }
+      if (pos == null && posext == null) {
+        if (cpos != null) {
+          pos = cpos;
+          posext = cpos;
+        } else {
+          pos = ctag;
+          posext = ctag;
+          ctag = "_";
+        }
+      }
     }
+
+
 //			}
 //		}
     //TODO: ctag dla interp conj, etc.
     //TODO: iż -> dlaczego nie ma pos?
-    return String.format("%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t_\t%s\n", tokenIndex, orth, base, pos, posext, ctag, head,deprel,  misc);
+    return String.format("%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t_\t%s\n", tokenIndex, orth, base, pos, posext, ctag, head, deprel, misc);
   }
 
   ;

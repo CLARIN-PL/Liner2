@@ -6,6 +6,8 @@ import lombok.Data;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.min;
+
 @Data
 public class PatternMatchExtraInfo {
 
@@ -36,6 +38,12 @@ public class PatternMatchExtraInfo {
   }
 
 
+  public String getNEForRole(final String key) {
+    final NamedEntityWithToken newt = this.getRole(key);
+    return newt.namedEntity;
+  }
+
+
   public String getRoleValue(final String key) {
     final NamedEntityWithToken newt = this.getRole(key);
     final LinkedHashSet<Integer> resultIds = sentence.getBoiTokensIdsForTokenAndName(newt.token, newt.namedEntity);
@@ -61,13 +69,22 @@ public class PatternMatchExtraInfo {
     return new HashSet<>(sentence.getBoiTokensIdsForTokenAndName(roleMap.get("e1").token, roleMap.get("e1").namedEntity));
   }
 
+  public Integer getRoleE1MinId() {
+    return min(getRoleE1Ids());
+  }
+
   public Set<Integer> getRoleE2Ids() {
     return new HashSet<>(sentence.getBoiTokensIdsForTokenAndName(roleMap.get("e2").token, roleMap.get("e2").namedEntity));
+  }
+
+  public Integer getRoleE2MinId() {
+    return min(getRoleE2Ids());
   }
 
 
   public String getTagNEFromToken(final Token token) {
     return token2tagNE.get(token);
   }
+
 
 }
