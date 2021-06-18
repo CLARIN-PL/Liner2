@@ -5,7 +5,6 @@ import g419.corpus.structure.*;
 import g419.liner2.core.tools.parser.ParseTree;
 import g419.liner2.core.tools.parser.ParseTreeGenerator;
 import g419.liner2.core.tools.parser.SentenceLink;
-import g419.serel.structure.SentenceMiscValues;
 import g419.serel.structure.SerelExpression;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;

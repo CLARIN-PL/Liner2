@@ -4,14 +4,10 @@ import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
-import g419.corpus.structure.Document;
-import g419.corpus.structure.RelationDesc;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
+import g419.corpus.structure.*;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.serel.ruleTree.PatternMatch;
-import g419.serel.structure.SentenceMiscValues;
 import g419.serel.structure.patternMatch.PatternMatchSingleResult;
 import lombok.Getter;
 import lombok.Setter;
@@ -216,7 +212,7 @@ public class ActionEncodeRelationsInConnlu extends Action {
 
         documentResult.addAll(sentenceResults);
 
-        classifyResult(sentenceResults, smv, patternMatch);
+        //classifyResult(sentenceResults, smv, patternMatch);
 
 //        if ((this.sentenceResultsOK.size() > 0) || (this.sentenceResultsNotHit.size() > 0) || (this.sentenceResultsFalseHit.size() > 0)) {
 //          System.out.println("PROK=" + sentenceResultsOK);
@@ -233,6 +229,7 @@ public class ActionEncodeRelationsInConnlu extends Action {
     } // for
   }
 
+/*
   private void classifyResult(final List<PatternMatchSingleResult> sentenceResults, final SentenceMiscValues smv, final PatternMatch patternMatch) {
 
     sentenceResultsTruePositive = new LinkedList<>();
@@ -254,7 +251,7 @@ public class ActionEncodeRelationsInConnlu extends Action {
       sentenceResultsFalsePositive.add(pmsr);
     }
   }
-
+  */
 
   public void preprocessParameters() throws Exception {
 

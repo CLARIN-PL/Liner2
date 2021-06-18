@@ -6,10 +6,10 @@ import g419.corpus.io.writer.WriterFactory;
 import g419.corpus.structure.Document;
 import g419.corpus.structure.RelationDesc;
 import g419.corpus.structure.Sentence;
+import g419.corpus.structure.SentenceMiscValues;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.serel.ruleTree.PatternMatch;
-import g419.serel.structure.SentenceMiscValues;
 import g419.serel.structure.patternMatch.PatternMatchSingleResult;
 import lombok.Getter;
 import lombok.Setter;
@@ -269,7 +269,16 @@ public class ActionMatchRelationsSet extends Action {
     sentenceResultsTruePositive = new LinkedList<>();
     sentenceResultsFalsePositive = new LinkedList<>();
 
-    final List<RelationDesc> allSentenceNamRels = smv.getRelationsMatchingPatternType(patternMatch);
+    final List<RelationDesc> matchingRels = new LinkedList<>();
+    final List<RelationDesc> allRels = smv.getAllNamRels();
+
+    for (final RelationDesc relDesc : allRels) {
+      if (relDesc.getType().equals(patternMatch.getRelationType())) {
+        matchingRels.add(relDesc);
+      }
+    }
+
+    final List<RelationDesc> allSentenceNamRels = matchingRels;
 
     outer:
     for (final PatternMatchSingleResult pmsr : sentenceResults) {

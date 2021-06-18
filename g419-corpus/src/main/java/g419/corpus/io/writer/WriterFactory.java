@@ -1,12 +1,12 @@
 package g419.corpus.io.writer;
 
 import g419.corpus.io.UnknownFormatException;
+import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.zip.GZIPOutputStream;
-import org.apache.commons.io.FilenameUtils;
 
 /**
  * Factory for creating a writer from its' description.
@@ -80,6 +80,8 @@ public class WriterFactory {
         return new IobStreamWriter(outWrapped);
       case "conll":
         return new ConllStreamWriter(outWrapped);
+      case "tacred":
+        return new TacredStreamWriter(outWrapped);
       case "zero_verb":
         return new ZeroVerbWriter(outWrapped);
       case "iob-tab":

@@ -1,9 +1,7 @@
-package g419.serel.structure;
+package g419.corpus.structure;
 
-import g419.corpus.structure.RelationDesc;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-import g419.serel.ruleTree.PatternMatch;
+//import g419.serel.ruleTree.PatternMatch;
+
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import java.util.*;
@@ -12,7 +10,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @Data
 public class SentenceMiscValues {
-
 
   Sentence sentence;
   int sentenceIndex;
@@ -30,6 +27,7 @@ public class SentenceMiscValues {
     smv.setSentence(s);
     smv.setSentenceIndex(_sentenceIndex);
     smv.readMiscValues(s);
+    s.getNamRels().forEach(namRels -> namRels.setSentence(s));
     return smv;
   }
 
@@ -112,48 +110,6 @@ public class SentenceMiscValues {
     });
     return results;
   }
-
-  public List<RelationDesc> getRelationsMatchingPatternTypeAndAnnotations(final PatternMatch patternMatch) {
-
-    final List<RelationDesc> matchingRels = new LinkedList<>();
-    final List<String> leavesAnnotationType = patternMatch.getAllAnnotations();
-    final List<RelationDesc> allRels = getAllNamRels();
-
-    for (final RelationDesc relDesc : allRels) {
-      if (relDesc.getType().equals(patternMatch.getRelationType())) {
-
-        // TODO : here - when relation will be more than binary - one needs to handle it additionally (all combinations)
-        final String fromAnnotationType = relDesc.getFromType();
-        final String toAnnotationType = relDesc.getToType();
-
-        if (
-            (fromAnnotationType.equals(leavesAnnotationType.get(0)) && toAnnotationType.equals(leavesAnnotationType.get(1)))
-                ||
-                (toAnnotationType.equals(leavesAnnotationType.get(0)) && fromAnnotationType.equals(leavesAnnotationType.get(1)))
-        ) {
-//          System.out.println("adding relDesc = " + relDesc);
-          matchingRels.add(relDesc);
-        }
-      }
-    }
-
-    return matchingRels;
-  }
-
-
-  public List<RelationDesc> getRelationsMatchingPatternType(final PatternMatch patternMatch) {
-
-    final List<RelationDesc> matchingRels = new LinkedList<>();
-    final List<RelationDesc> allRels = getAllNamRels();
-
-    for (final RelationDesc relDesc : allRels) {
-      if (relDesc.getType().equals(patternMatch.getRelationType())) {
-        matchingRels.add(relDesc);
-      }
-    }
-    return matchingRels;
-  }
-
 
   public List<RelationDesc> getAllNamRels() {
     final List<RelationDesc> rels = new LinkedList<>();

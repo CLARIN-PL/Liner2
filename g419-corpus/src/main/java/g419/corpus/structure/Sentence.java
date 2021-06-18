@@ -8,6 +8,9 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.max;
+import static java.util.Collections.min;
+
 
 /**
  * Reprezentuje zdanie jako sekwencję tokenów i zbiór anotacji.
@@ -516,6 +519,15 @@ public class Sentence extends IdentifiableElement {
   }
 
 
+  public Integer getMinBoiTokenIdForTokenAndName(final Token tokenToCheck, String boiName) {
+    return min(getBoiTokensIdsForTokenAndName(tokenToCheck, boiName));
+  }
+
+  public Integer getMaxBoiTokenIdForTokenAndName(final Token tokenToCheck, String boiName) {
+    return max(getBoiTokensIdsForTokenAndName(tokenToCheck, boiName));
+  }
+
+
   public LinkedHashSet<Integer> getBoiTokensIdsForTokenAndName(final Token tokenToCheck, final String boiName) {
     final LinkedHashSet<Integer> resultIds = new LinkedHashSet<>();
 
@@ -789,6 +801,28 @@ public class Sentence extends IdentifiableElement {
   //////////////////////////////////////////////////
   // FINISH: Print as tree
   //////////////////////////////////////////////////
+
+
+  //////////////////////////////////////////////////
+  // START: a.k. TACRED related
+  //////////////////////////////////////////////////
+
+  public List<Boi> getAllMainRawBois() {
+    return getTokens().stream().map(t -> new Boi(t.getNumberId(), t.getMainBoiRaw())).collect(Collectors.toList());
+  }
+
+  public List<Boi> getAllMainRawBoisBegin() {
+    List<Boi> result = new ArrayList<>();
+
+    for (Token t : getTokens()) {
+      Optional<String> mainBoiRawBeginOpt = t.getMainBoiRawBegin();
+      if (mainBoiRawBeginOpt.isPresent()) {
+        result.add(new Boi(t.getNumberId(), mainBoiRawBeginOpt.get()));
+      }
+    }
+
+    return result;
+  }
 
 
 }

@@ -281,6 +281,32 @@ public class Token extends IdentifiableElement {
     return getBois().stream().filter(b -> b.startsWith("B-")).map(b -> b.substring(2)).collect(Collectors.toList());
   }
 
+  public Optional<String> getMainBoiRawBegin() {
+    return getBois().stream().filter(b -> b.startsWith("B-")).min((s1, s2) -> s1.length() - s2.length())
+        .map(b -> b.substring(2));
+  }
+
+
+  public String getMainBoi() {
+    String shortest = getBois().get(0);
+    for (int i = 1; i < getBois().size(); i++) {
+      if (getBois().get(i).length() < shortest.length()) {
+        shortest = getBois().get(i);
+      }
+    }
+    return shortest;
+  }
+
+
+  public String getMainBoiRaw() {
+    String boi = this.getMainBoi();
+
+    if (boi.equals("O"))
+      return boi;
+    return boi.substring(2);
+  }
+
+
   public Set<String> getBoisAsSet() {
     return new HashSet<>(getBois());
   }
