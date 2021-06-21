@@ -104,10 +104,6 @@ public class ActionEncodeRelationsInConnlu extends Action {
       printSectionsMask = "0000";
     }
 
-    printSectionFound = (printSectionsMask.charAt(0) == '1');
-    printSectionTruePositive = (printSectionsMask.charAt(1) == '1');
-    printSectionFalsePositive = (printSectionsMask.charAt(2) == '1');
-    printSectionFalseNegative = (printSectionsMask.charAt(3) == '1');
   }
 
 
@@ -202,56 +198,14 @@ public class ActionEncodeRelationsInConnlu extends Action {
         final List<PatternMatchSingleResult> sentenceResults =
             patternMatch.getSentenceTreesMatchingGenericPattern(sentence, useEliminateStage);
 
-        /*
-        for (final PatternMatchSingleResult patternMatchSingleResult : sentenceResults) {
-          patternMatchSingleResult.sentenceNumber = sentenceNumber;
-          patternMatchSingleResult.docName = d.getName();
-          // patternMatchSingleResult.patternMatch = patternMatch;
-        }
-        */
-
         documentResult.addAll(sentenceResults);
 
-        //classifyResult(sentenceResults, smv, patternMatch);
-
-//        if ((this.sentenceResultsOK.size() > 0) || (this.sentenceResultsNotHit.size() > 0) || (this.sentenceResultsFalseHit.size() > 0)) {
-//          System.out.println("PROK=" + sentenceResultsOK);
-//          System.out.println("PRFH=" + sentenceResultsFalseHit);
-//          System.out.println("PRNH=" + sentenceResultsNotHit);
-//        }
-
-        documentResultTruePositive.addAll(sentenceResultsTruePositive);
-        documentResultFalsePositive.addAll(sentenceResultsFalsePositive);
       } catch (final Throwable th) {
         th.printStackTrace();
-        System.out.println("Problem : " + th);
+        System.out.println("Problemasdf : " + th);
       }
     } // for
   }
-
-/*
-  private void classifyResult(final List<PatternMatchSingleResult> sentenceResults, final SentenceMiscValues smv, final PatternMatch patternMatch) {
-
-    sentenceResultsTruePositive = new LinkedList<>();
-    sentenceResultsFalsePositive = new LinkedList<>();
-
-    final List<RelationDesc> allSentenceNamRels = smv.getRelationsMatchingPatternType(patternMatch);
-
-    outer:
-    for (final PatternMatchSingleResult pmsr : sentenceResults) {
-
-      for (int i = 0; i < allSentenceNamRels.size(); i++) {
-        final RelationDesc rd = allSentenceNamRels.get(i);
-        if (pmsr.isTheSameAs(rd)) {
-          allSentenceNamRels.remove(i);
-          sentenceResultsTruePositive.add(pmsr);
-          continue outer;
-        }
-      }
-      sentenceResultsFalsePositive.add(pmsr);
-    }
-  }
-  */
 
   public void preprocessParameters() throws Exception {
 
@@ -316,13 +270,13 @@ public class ActionEncodeRelationsInConnlu extends Action {
   private void writeNewVersionsOfConllu() {
 
 
-    String output_file = "/home/michalolek/NLPWR/corpora/KPWr/targetConll/targetIndex.list";
-    String output_format = "batch:conll";
+    //String output_file = "/home/michalolek/NLPWR/corpora/KPWr/targetConll/targetIndex.list";
+    String outputFormat = "batch:conll";
 
 
     try (
         final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
-        final AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(output_file, output_format);
+        final AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(outputFilename, outputFormat);
         final PrintWriter reportWriter = reportFilename == null ? null : new PrintWriter(new FileWriter(new File(reportFilename)))
     ) {
 
