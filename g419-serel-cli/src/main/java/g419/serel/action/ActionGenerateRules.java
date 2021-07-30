@@ -106,7 +106,8 @@ public class ActionGenerateRules extends Action {
     parseTreeChecker = new CheckParserParseTree();
 
     try (
-        final AbstractDocumentReader comboReader = ReaderFactory.get().getStreamReader(comboFilename, comboFormat);
+        final AbstractDocumentReader comboReader = ReaderFactory.get().getStreamReader(inputFilename, inputFormat);
+        //final AbstractDocumentReader comboReader = ReaderFactory.get().getStreamReader(comboFilename, comboFormat);
         final PrintWriter writer = new PrintWriter(os);
         final PrintWriter reportWriter = reportFilename == null ? null : new PrintWriter(new FileWriter(new File(reportFilename)))) {
 
