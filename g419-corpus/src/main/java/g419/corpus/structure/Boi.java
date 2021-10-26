@@ -31,5 +31,20 @@ public class Boi {
     return true;
   }
 
+  // gdy zmniejszamy zbiór danych do podzbioru
+  // tutaj do podzbioru zawierającego tylko : nam_liv i nam_org
+  public boolean isOKForProjected() {
+    if (
+        (this.label.startsWith("nam_liv"))
+            ||
+            (this.label.startsWith("nam_org"))
+    ) {
+      return true;
+    }
+
+    return false;
+
+  }
+
 
 }

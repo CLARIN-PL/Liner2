@@ -82,6 +82,13 @@ public class WriterFactory {
         return new ConllStreamWriter(outWrapped);
       case "tacred":
         return new TacredStreamWriter(outWrapped);
+      case "semeval2010task8":
+        return new Semeval2010Task8StreamWriter(outWrapped);
+      case "webnlg":
+        return new WebNLGProcessedStreamWriter(outWrapped);
+      case "scierc":
+        return new SciERCStreamWriter(outWrapped);
+
       case "zero_verb":
         return new ZeroVerbWriter(outWrapped);
       case "iob-tab":

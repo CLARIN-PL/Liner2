@@ -61,6 +61,9 @@ public class TacredStreamWriter extends AbstractDocumentWriter {
           Boi boiTo = bois.get(j);
 
           if (!isRelated(boiFrom, boiTo, namRels)) {
+
+            // używane tylko gdy zmniejszamy zbiór
+            //  if (boiFrom.isOKForProjected()) {
             RelationDesc rd = RelationDesc.builder()
                 .fromTokenId(boiFrom.startId)
                 .fromType(boiFrom.label)
@@ -72,9 +75,14 @@ public class TacredStreamWriter extends AbstractDocumentWriter {
 
             unrelated.add(rd);
 
-            if (unrelated.size() >= related.size() * 4) {
-              break outer;
+            if (related.size() > 0) {
+              if (unrelated.size() >= related.size() * 3) {
+                break outer;
+              }
             }
+
+            //}
+
           }
         }
       }
@@ -142,7 +150,7 @@ public class TacredStreamWriter extends AbstractDocumentWriter {
       }
     }
 
-    System.out.println(" returning length:" + sb.toString().length() + "'");
+    //System.out.println(" returning length: '" + sb.toString().length() + "'");
     return sb;
 
 
@@ -173,15 +181,15 @@ public class TacredStreamWriter extends AbstractDocumentWriter {
     sb.append("\"token\": [ \n");
     sb.append(getTokensForTacred(s));
     sb.append("\n], \n");
-    sb.append("\"subj_start\": " + relDesc.getFromTokenId() + ",\n");
+    sb.append("\"subj_start\": " + (relDesc.getFromTokenId() - 1) + ",\n");
 
     int subj_end = relDesc.getSentence()
         .getMaxBoiTokenIdForTokenAndName(
             relDesc.getSentence().getTokens().get(relDesc.getFromTokenId() - 1),
             relDesc.getFromType());
 
-    sb.append("\"subj_end\": " + subj_end + ",\n");
-    sb.append("\"obj_start\": " + relDesc.getToTokenId() + ",\n");
+    sb.append("\"subj_end\": " + (subj_end - 1) + ",\n");
+    sb.append("\"obj_start\": " + (relDesc.getToTokenId() - 1) + ",\n");
 
     int obj_end = relDesc.getSentence()
         .getMaxBoiTokenIdForTokenAndName(
@@ -189,7 +197,7 @@ public class TacredStreamWriter extends AbstractDocumentWriter {
             relDesc.getToType());
 
 
-    sb.append("\"obj_end\": " + obj_end + ",\n");
+    sb.append("\"obj_end\": " + (obj_end - 1) + ",\n");
     sb.append("\"subj_type\": \"" + relDesc.getFromType() + "\",\n");
     sb.append("\"obj_type\": \"" + relDesc.getToType() + "\",\n");
     sb.append("\"stanford_pos\": [ \n");
@@ -212,9 +220,12 @@ public class TacredStreamWriter extends AbstractDocumentWriter {
   }
 
   private String getTokensForTacred(Sentence s) {
-    return s.getTokens().stream().map(t -> "\"" + t.getAttributeValue(1) + "\"").collect(Collectors.joining(", \n"));
+    return s.getTokens().stream().map(t -> "\"" + escape(t.getAttributeValue(1)) + "\"").collect(Collectors.joining(", \n"));
   }
 
+  private String escape(String s) {
+    return s.replaceAll("\"", "\\\\\"");
+  }
 
   private String getPosForTacred(Sentence s) {
     return s.getTokens().stream().map(t -> "\"" + t.getAttributeValue(3) + "\"").collect(Collectors.joining(", \n"));

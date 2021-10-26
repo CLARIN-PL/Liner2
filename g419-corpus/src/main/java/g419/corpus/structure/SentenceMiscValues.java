@@ -53,7 +53,32 @@ public class SentenceMiscValues {
   }
 
 
+  // nowa wersja dogadująca się z nową wersją COMBO
   private Map<String, Object> getMapFromMiscColumn(final String misc) {
+    final Map result = new HashMap<String, Object>();
+
+    String[] miscParts = misc.split("\\|");
+
+    String key = null;
+    for (String str : miscParts) {
+      key = getTextValue2(str);
+      switch (key) {
+        case "bois":
+          result.put(key, getBoisValue(str.substring(key.length() + 1)));
+          break;
+        case "nam_rels":
+          if (str.substring(key.length() + 1).length() > 2) {  // są puste artefakty [] powstające z relacji między róznymi zdaniami
+            result.put(key, getNamRelsValue(str.substring(key.length() + 1)));
+          }
+          break;
+      }
+    }
+
+    return result;
+  }
+
+
+  private Map<String, Object> getMapFromMiscColumnOld(final String misc) {
     final Map result = new HashMap<String, Object>();
 
     //log.debug("misc = " + misc);
@@ -87,6 +112,13 @@ public class SentenceMiscValues {
     return result;
   }
 
+  // nowa wersja dogadująca się z nową wersją COMBO
+  private String getTextValue2(final String s) {
+    final int index = s.indexOf('=');
+    return s.substring(0, index);
+  }
+
+
   private String getTextValue(final int i, final String s) {
     final int index = s.indexOf('\'', i);
     return s.substring(i, index);
@@ -100,7 +132,7 @@ public class SentenceMiscValues {
 
   private List<RelationDesc> getNamRelsValue(String s) {
     s = s.substring(1, s.length() - 1);
-    //log.debug("getNamRelsVAlue: " + s);
+    log.debug("getNamRelsVAlue: " + s);
     final String[] splits = s.split(",");
 
     final List<RelationDesc> results = Arrays.stream(splits).map(RelationDesc::from).collect(Collectors.toList());
