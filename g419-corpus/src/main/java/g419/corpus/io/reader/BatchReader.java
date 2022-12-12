@@ -80,7 +80,7 @@ public class BatchReader extends AbstractDocumentReader {
         path = new File(root, name).getAbsolutePath();
       }
       try {
-        //getLogger().info("Reading {} from {}: {}", fileIndex, files.size(), path);
+        getLogger().info("Reading {} from {}: {}", fileIndex, files.size(), path);
         final AbstractDocumentReader reader = ReaderFactory.get().getStreamReader(path, format);
         final Document document = reader.nextDocument();
         document.setName(getDocumnetBaseName(name, format));
@@ -90,7 +90,7 @@ public class BatchReader extends AbstractDocumentReader {
         getLogger().error("Failed to read file {}", path);
       }
     }
-    throw new NoSuchElementException();
+    return null;
   }
 
   private String getDocumnetBaseName(final String filename, final String format) {

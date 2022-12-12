@@ -8,6 +8,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,10 +49,32 @@ public class LValRuleContainer {
     return ruleContainer;
   }
 
+  public static LValRuleContainer load(InputStream stream) {
+    JsonReader jsonReader = new JsonReader(new InputStreamReader(stream));
+    GsonBuilder builder = new GsonBuilder();
+    LValRuleContainer ruleContainer = builder.create().fromJson(jsonReader, LValRuleContainer.class);
+    ruleContainer.prepareRules();
+    return ruleContainer;
+  }
+
 
   public String getLVal(Annotation annotation) {
     String annBase = annotation.getBaseText(false);
     String annType = annotation.getType();
+    return this.getLVal(annBase, annType, annotation);
+  }
+
+  /**
+   * Perform timex normalization without testing lemmas and tags
+   * @param annBase
+   * @param annType
+   * @return
+   */
+  public String getLVal(String annBase, String annType) {
+    return this.getLVal(annBase, annType, null);
+  }
+
+  public String getLVal(String annBase, String annType, Annotation annotation_optional) {
     List<LValRule> rulesUsed = new LinkedList<>();
     //ostateczne wartości year, month, day, hour
     Map<String, String> globalValues = new HashMap<>();
@@ -60,7 +84,7 @@ public class LValRuleContainer {
       }
       //czy reguła na ciągu base'ów jest spełniona
       Matcher match = rule.pattern.matcher(annBase);
-      if (match.find() && rule.checkLemmaTags(annotation)) {
+      if (match.find() && (annotation_optional == null || rule.checkLemmaTags(annotation_optional))) {
         //zapisz użytą regułę
         rulesUsed.add(rule);
         Map<String, String> matchDict = new HashMap<>();
