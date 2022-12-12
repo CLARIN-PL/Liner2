@@ -1,0 +1,862 @@
+{
+  "keys": {
+    "numberM_written": [
+      "zero",
+      "jeden",
+      "półtora",
+      "pół",
+      "dwadzieścia",
+      "dwa",
+      "trzydzieści",
+      "trzy",
+      "czterdzieści",
+      "cztery",
+      "pięćdziesiąt",
+      "pięć",
+      "sześćdziesiąt",
+      "sześć",
+      "siedemdziesiąt",
+      "siedem",
+      "osiemdziesiąt",
+      "osiem",
+      "dziewięćdziesiąt",
+      "dziewięć",
+      "dziesięć",
+      "jedenaście",
+      "dwanaście",
+      "trzynaście",
+      "czternaście",
+      "piętnaście",
+      "szesnaście",
+      "siedemnaście",
+      "osiemnaście",
+      "dziewiętnaście",
+      "sto",
+      "setny"
+
+    ],
+    "number2M_written": [
+      "półtora",
+      "pół",
+      "jedno",
+      "dwu",
+      "trzy",
+      "cztero",
+      "pięcio",
+      "sześcio",
+      "siedmio",
+      "ośmio",
+      "dziewięcio",
+      "dziesięcio",
+      "jedenasto",
+      "dwunasto",
+      "trzynasto",
+      "czternasto",
+      "piętnasto",
+      "szesnasto",
+      "siedemnasto",
+      "osiemnasto",
+      "dziewiętnasto",
+      "dwudziesto",
+      "trzydziesto"
+    ],
+    "acceptableM_prefix":[
+      "niespełna",
+      "ponad",
+      "dany",
+      "niecały",
+      "około",
+      "cały",
+      "ten",
+      "bliski",
+      "ostatni",
+      "miniony"
+    ],
+    "tensM_written": [
+      "dwadzieścia",
+      "trzydzieści",
+      "czterdzieści",
+      "pięćdziesiąt",
+      "sześćdziesiąt",
+      "siedemdziesiąt",
+      "osiemdziesiąt",
+      "dziewięćdziesiąt"
+    ]
+  },
+  "maps": {
+    "number_written": {
+      "zero": "0",
+      "pół" : "0.5",
+      "jeden": "1",
+      "półtora" : "1.5",
+      "dwa": "2",
+      "trzy": "3",
+      "cztery": "4",
+      "pięć": "5",
+      "sześć": "6",
+      "siedem": "7",
+      "osiem": "8",
+      "dziewięć": "9",
+      "dziesięć": "10",
+      "jedenaście" : "11",
+      "dwanaście": "12",
+      "trzynaście": "13",
+      "czternaście": "14",
+      "piętnaście": "15",
+      "szesnaście": "16",
+      "siedemnaście": "17",
+      "osiemnaście": "18",
+      "dziewiętnaście": "19",
+      "dwadzieścia": "20",
+      "trzydzieści": "30",
+      "czterdzieści": "40",
+      "pięćdziesiąt": "50",
+      "sześćdziesiąt": "60",
+      "siedemdziesiąt": "70",
+      "osiemdziesiąt": "80",
+      "dziewięćdziesiąt": "90",
+      "sto": "100",
+      "setny": "100"
+    },
+
+    "tens_written":{
+      "dwadzieścia": "2",
+      "trzydzieści": "3",
+      "czterdzieści": "4",
+      "pięćdziesiąt": "5",
+      "sześćdziesiąt": "6",
+      "siedemdziesiąt": "7",
+      "osiemdziesiąt": "8",
+      "dziewięćdziesiąt": "9"
+    },
+    "number2_written": {
+      "pół" : "0.5",
+      "półtora" : "1.5",
+      "jedno": "1",
+      "dwu" : "2",
+      "trzy" : "3",
+      "cztero": "4",
+      "pięcio": "5",
+      "sześcio": "6",
+      "siedmio": "7",
+      "ośmio": "8",
+      "dziewięcio": "9",
+      "dziesięcio": "10",
+      "jedenasto": "11",
+      "dwunasto": "12",
+      "trzynasto": "13",
+      "czternasto": "14",
+      "piętnasto": "15",
+      "szesnasto": "16",
+      "siedemnasto": "17",
+      "osiemnasto": "18",
+      "dziewiętnasto": "19",
+      "dwudziesto": "20",
+      "trzydziesto": "30"
+
+    }
+
+  },
+  "rules": [
+    {
+      "desc": "^(tysiąclecie)$",
+      "keys": ["acceptableM_prefix"],
+      "groups": [],
+      "match": "^(($acceptableM_prefix) )?(tysiąclecie)$",
+      "lemmaTags" : {
+        "tysiąclecie": "sg"
+      },
+      "map": {},
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "millenium": "1"
+      }
+    },
+    {
+      "desc": "^(wiek)$",
+      "keys": ["acceptableM_prefix"],
+      "groups": [],
+      "match": "^(($acceptableM_prefix) )?(wiek)$",
+      "lemmaTags" : {
+        "wiek": "sg"
+      },
+      "map": {},
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "century": "1"
+      }
+    },
+    {
+      "desc": "^(rok|roczny)$",
+      "keys": ["acceptableM_prefix"],
+      "groups": [],
+      "match": "^(($acceptableM_prefix) )?(rok|roczny|rocznie)$",
+      "lemmaTags" : {
+        "rok": "sg"
+      },
+      "map": {},
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "year": "1"
+      }
+    },
+    {
+      "desc": "^miesiąc$",
+      "keys": ["acceptableM_prefix"],
+      "groups": [],
+      "match": "^(($acceptableM_prefix) )?(miesiąc|miesięczny)$",
+      "lemmaTags" : {
+        "miesiąc": "sg",
+        "miesięczny": "sg"
+      },
+      "map": {},
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "month": "1"
+      }
+    },
+    {
+      "desc": "^miesiąc$",
+      "keys": ["acceptableM_prefix"],
+      "groups": [],
+      "match": "^(miesiąc)( ($acceptableM_prefix))?$",
+      "lemmaTags" : {
+        "miesiąc": "sg",
+        "miesięczny": "sg"
+      },
+      "map": {},
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "month": "1"
+      }
+    },
+    {
+      "desc": "^tydzień$",
+      "keys": ["acceptableM_prefix"],
+      "groups": [],
+      "match": "^(($acceptableM_prefix) )?(tydzień|tygodniowy)$",
+      "lemmaTags" : {
+        "tydzień": "sg",
+        "tygodniowy": "sg"
+      },
+      "map": {},
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "week": "1"
+      }
+    },
+    {
+      "desc": "^dzień$",
+      "keys": ["acceptableM_prefix"],
+      "groups": [],
+      "match": "^(($acceptableM_prefix) )?(dzień|jednodniowy|całodzienny|dobowy|doba)$",
+      "lemmaTags" : {
+        "dzień": "sg",
+        "jednodniowy": "sg",
+        "całodzienny": "sg",
+        "dobowy": "sg",
+        "doba": "sg"
+      },
+      "map": {},
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "day": "1"
+      }
+    },
+    {
+      "desc": "^wieczór$",
+      "keys": ["acceptableM_prefix"],
+      "groups": [],
+      "match": "wieczór",
+      "lemmaTags" : {
+        "wieczór": "sg"
+      },
+      "map": {},
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "evening": "1"
+      }
+    },
+    {
+      "desc": "^godzina$",
+      "keys": ["acceptableM_prefix"],
+      "groups": [],
+      "match": "^(($acceptableM_prefix) )?(godzina|godzinny|godzinka)$",
+      "lemmaTags" : {
+        "godzina": "sg",
+        "godzinny": "sg",
+        "godzinka": "sg"
+      },
+      "map": {},
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "hour": "1",
+        "time": "T"
+      }
+    },
+    {
+      "desc": "^minuta$",
+      "keys": ["acceptableM_prefix"],
+      "groups": [],
+      "match": "^(($acceptableM_prefix) )?(minuta|minutowy)$",
+      "lemmaTags" : {
+        "minuta": "sg",
+        "minutowy": "sg"
+      },
+      "map": {},
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "minute": "1",
+        "time": "T"
+      }
+    },
+    {
+      "desc": "^sekunda$",
+      "keys": ["acceptableM_prefix"],
+      "groups": [],
+      "match": "^(($acceptableM_prefix) )?(sekunda|sekundowy)$",
+      "lemmaTags" : {
+        "sekunda": "sg",
+        "sekundowy": "sg"
+      },
+      "map": {},
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "second": "1",
+        "time": "T"
+      }
+    },
+    {
+      "desc": "dwa wiek",
+      "keys": ["numberM_written"],
+      "groups": ["century"],
+      "match": "(?<century>$numberM_written) wiek",
+      "map": {
+        "century": "number_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "century": "$century"
+      }
+    },
+    {
+      "desc": "dwadzieścia pięć wiek",
+      "keys": ["tensM_written", "numberM_written"],
+      "groups": ["number1", "number2"],
+      "match": "(?<number1>$tensM_written) (?<number2>$numberM_written) wiek",
+      "map": {
+        "number1": "tens_written",
+        "number2": "number_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "century": "$number1$number2"
+      }
+    },
+    {
+      "desc": "dwa rok",
+      "keys": ["numberM_written"],
+      "groups": ["year"],
+      "match": "(?<year>$numberM_written) rok",
+      "map": {
+        "year": "number_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "year": "$year"
+      }
+    },
+    {
+      "desc": "rok dwa",
+      "keys": ["numberM_written"],
+      "groups": ["year"],
+      "match": "rok (?<year>$numberM_written)",
+      "map": {
+        "year": "number_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "year": "$year"
+      }
+    },
+    {
+      "desc": "dwadzieścia pięć rok",
+      "keys": ["tensM_written", "numberM_written"],
+      "groups": ["number1", "number2"],
+      "match": "(?<number1>$tensM_written) (?<number2>$numberM_written) rok",
+      "map": {
+        "number1": "tens_written",
+        "number2": "number_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "year": "$number1$number2"
+      }
+    },
+    {
+      "desc": "dwa miesiąc",
+      "keys": ["numberM_written"],
+      "groups": ["month"],
+      "match": "(?<month>$numberM_written) miesiąc",
+      "map": {
+        "month": "number_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "month": "$month"
+      }
+    },
+    {
+      "desc": "dwadzieścia pięć miesiąc",
+      "keys": ["tensM_written", "numberM_written"],
+      "groups": ["number1", "number2"],
+      "match": "(?<number1>$tensM_written) (?<number2>$numberM_written) miesiąc",
+      "map": {
+        "number1": "tens_written",
+        "number2": "number_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "month": "$number1$number2"
+      }
+    },
+    {
+      "desc": "dwa tydzień",
+      "keys": ["numberM_written"],
+      "groups": ["week"],
+      "match": "(?<week>$numberM_written) tydzień",
+      "map": {
+        "week": "number_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "week": "$week"
+      }
+    },
+    {
+      "desc": "dwadzieścia pięć tydzień",
+      "keys": ["tensM_written", "numberM_written"],
+      "groups": ["number1", "number2"],
+      "match": "(?<number1>$tensM_written) (?<number2>$numberM_written) tydzień",
+      "map": {
+        "number1": "tens_written",
+        "number2": "number_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "week": "$number1$number2"
+      }
+    },
+    {
+      "desc": "dwa dzień",
+      "keys": ["numberM_written"],
+      "groups": ["day"],
+      "match": "(?<day>$numberM_written) (dzień|doba)",
+      "map": {
+        "day": "number_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "day": "$day"
+      }
+    },
+    {
+      "desc": "dwadzieścia pięć dzień",
+      "keys": ["tensM_written", "numberM_written"],
+      "groups": ["number1", "number2"],
+      "match": "(?<number1>$tensM_written) (?<number2>$numberM_written) dzień",
+      "map": {
+        "number1": "tens_written",
+        "number2": "number_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "day": "$number1$number2"
+      }
+    },
+    {
+      "desc": "dwa godzina",
+      "keys": ["numberM_written"],
+      "groups": ["hour"],
+      "match": "(?<hour>$numberM_written)( |.*)(godzina|godzinka)",
+      "map": {
+        "hour": "number_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "hour": "$hour",
+        "time": "T"
+      }
+    },
+    {
+      "desc": "dwadzieścia pięć godzina",
+      "keys": ["tensM_written", "numberM_written"],
+      "groups": ["number1", "number2"],
+      "match": "(?<number1>$tensM_written) (?<number2>$numberM_written) godzina",
+      "map": {
+        "number1": "tens_written",
+        "number2": "number_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "month": "$number1$number2",
+        "time": "T"
+      }
+    },
+    {
+      "desc": "dwa minuta",
+      "keys": ["numberM_written"],
+      "groups": ["minute"],
+      "match": "(?<minute>$numberM_written) minuta",
+      "map": {
+        "minute": "number_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "minute": "$minute",
+        "time": "T"
+      }
+    },
+    {
+      "desc": "dwadzieścia pięć minuta",
+      "keys": ["tensM_written", "numberM_written"],
+      "groups": ["minute1", "minute2"],
+      "match": "(?<minute1>$tensM_written) (?<minute2>$numberM_written) minuta",
+      "map": {
+        "minute1": "tens_written",
+        "minute2": "number_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "minute": "$minute1$minute2",
+        "time": "T"
+      }
+    },
+    {
+      "desc": "dwa sekunda",
+      "keys": ["numberM_written"],
+      "groups": ["second"],
+      "match": "(?<second>$numberM_written) sekunda",
+      "map": {
+        "second": "number_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "second": "$second",
+        "time": "T"
+      }
+    },
+    {
+      "desc": "dwudziestowieczny",
+      "keys": ["number2M_written"],
+      "groups": ["century"],
+      "match": "(?<century>$number2M_written)(wieczny)",
+      "map": {
+        "century": "number2_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "century": "$century"
+      }
+    },
+    {
+      "desc": "dwudziestoletni",
+      "keys": ["number2M_written"],
+      "groups": ["year"],
+      "match": "(?<year>$number2M_written)(letni|roczny|roczne)",
+      "map": {
+        "year": "number2_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "year": "$year"
+      }
+    },
+    {
+      "desc": "dwudziestomiesięczny",
+      "keys": ["number2M_written"],
+      "groups": ["month"],
+      "match": "(?<month>$number2M_written)miesięczny",
+      "map": {
+        "month": "number2_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "month": "$month"
+      }
+    },
+    {
+      "desc": "dwudziestotygodniowy",
+      "keys": ["number2M_written"],
+      "groups": ["week"],
+      "match": "(?<week>$number2M_written)tygodniowy",
+      "map": {
+        "week": "number2_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "week": "$week"
+      }
+    },
+    {
+      "desc": "dwudziestodniowy",
+      "keys": ["number2M_written"],
+      "groups": ["day"],
+      "match": "(?<day>$number2M_written)dniowy",
+      "map": {
+        "day": "number2_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "day": "$day"
+      }
+    },
+    {
+      "desc": "dwudziestogodzinny",
+      "keys": ["number2M_written"],
+      "groups": ["hour"],
+      "match": "(?<hour>$number2M_written)godzinny",
+      "map": {
+        "hour": "number2_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "hour": "$hour",
+        "time": "T"
+      }
+    },
+    {
+      "desc": "dwudziestominutowy",
+      "keys": ["number2M_written"],
+      "groups": ["minute"],
+      "match": "(?<minute>$number2M_written)minutowy",
+      "map": {
+        "minute": "number2_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "minute": "$minute",
+        "time": "T"
+      }
+    },
+    {
+      "desc": "dwudziestosekundowy",
+      "keys": ["number2M_written"],
+      "groups": ["second"],
+      "match": "(?<second>$number2M_written)sekundowy",
+      "map": {
+        "second": "number2_written"
+      },
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "second": "$second",
+        "time": "T"
+      }
+    },
+    {
+      "desc": "11 (wiek|- wieczny)",
+      "keys": [],
+      "groups": ["century"],
+      "match": "(?<century>%d+)( | - )(wiek|wieczny)",
+      "map": {},
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "century": "$century"
+      }
+    },
+    {
+      "desc": "11 (rok|- letni)",
+      "keys": [],
+      "groups": ["year"],
+      "match": "(?<year>%d+)( | - | %. )(rok|letni|lato)",
+      "map": {},
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "year": "$year"
+      }
+    },
+    {
+      "desc": "11 000 (rok|- letni)",
+      "keys": [],
+      "groups": ["year1", "year2"],
+      "match": "(?<year1>%d+) (?<year2>%d+)( | - )(rok|letni|lato)",
+      "map": {},
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "year": "$year1$year2"
+      }
+    },
+    {
+      "desc": "11 miesiąc",
+      "keys": [],
+      "groups": ["month"],
+      "match": "(?<month>%d+)( | - )(miesiąc|miesięczny)",
+      "map": {},
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "month": "$month"
+      }
+    },
+    {
+      "desc": "11 tydzień",
+      "keys": [],
+      "groups": ["week"],
+      "match": "(?<week>%d+)( | - )(tydzień|tygodniowy)",
+      "map": {},
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "week": "$week"
+      }
+    },
+    {
+      "desc": "11 dzień",
+      "keys": [],
+      "groups": ["day"],
+      "match": "(?<day>%d+)( | - )(dzień|dniowy|doba)",
+      "map": {},
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "day": "$day"
+      }
+    },
+    {
+      "desc": "11 (godzina|godzinny)",
+      "keys": [],
+      "groups": ["hour"],
+      "match": "(?<hour>%d+)( | - )?(godzina|godzinny|h)",
+      "map": {},
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "hour": "$hour",
+        "time": "T"
+      }
+    },
+    {
+      "desc": "11 000 (godzina|godzinny|h)",
+      "keys": [],
+      "groups": ["hour1", "hour2"],
+      "match": "(?<hour1>%d+) (?<hour2>%d+)( | - )(godzina|godzinny|h)",
+      "map": {},
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "hour": "$hour1$hour2",
+        "time": "T"
+      }
+    },
+    {
+      "desc": "11 minuta",
+      "keys": [],
+      "groups": ["minute"],
+      "match": "(?<minute>%d+)( | - )?(minuta|minutowy|min)",
+      "map": {},
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "minute": "$minute",
+        "time": "T"
+      }
+    },
+    {
+      "desc": "11 sekunda",
+      "keys": [],
+      "groups": ["second"],
+      "match": "(?<second>%d+)( | - )(sekunda|sekundowy)",
+      "map": {},
+      "limit": [
+        "t3_duration"
+      ],
+      "value": {
+        "second": "$second",
+        "time": "T"
+      }
+    }
+
+  ]
+}

@@ -96,4 +96,9 @@ public class RelationSet implements Iterable<Relation> {
   public Iterator<Relation> iterator() {
     return relations.iterator();
   }
+
+
+  public int size() { return  relations.size(); }
+
+
 }

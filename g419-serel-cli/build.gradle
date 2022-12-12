@@ -1,0 +1,34 @@
+description = "g419-serel-cli"
+
+apply plugin: 'application'
+
+def main = "g419.serel.Main"
+
+mainClassName = main
+
+run {
+    if (project.hasProperty("appArgs")) {
+        args appArgs.split("\\p{Z}")
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+                "Main-Class": main
+        )
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+dependencies {
+    compile 'com.google.guava:guava:24.0-jre'
+    compile 'commons-cli:commons-cli:1.2'
+    compile 'commons-io:commons-io:2.4'
+    compile project(":g419-corpus")
+    compile project(":g419-serel-core")
+    compile project(":g419-lib-cli")
+}

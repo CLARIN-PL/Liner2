@@ -1,22 +1,19 @@
 package g419.liner2.core.tools.parser;
 
 import com.google.common.collect.Lists;
-import g419.corpus.structure.Annotation;
-import g419.corpus.structure.Sentence;
-import g419.corpus.structure.Token;
-import g419.corpus.structure.TokenAttributeIndex;
+import g419.corpus.structure.*;
+import lombok.Data;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.io.PrintWriter;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class MaltSentence {
-  List<MaltSentenceLink> links = Lists.newArrayList();
+@Data
+public class MaltSentence extends ParseTree {
+  //List<SentenceLink> links = Lists.newArrayList();
   private final Map<String, String> posMapping;
   private String[] maltData;
   private final Set<Annotation> annotations;
@@ -35,7 +32,7 @@ public class MaltSentence {
     maltData = output;
     links = IntStream.range(0, output.length)
         .mapToObj(i -> new ImmutablePair<>(i, output[i].split("\t")))
-        .map(p -> new MaltSentenceLink(p.getKey(), Integer.valueOf(p.getRight()[8]) - 1, p.getRight()[9]))
+        .map(p -> new SentenceLink(p.getKey(), Integer.valueOf(p.getRight()[8]) - 1, p.getRight()[9]))
         .collect(Collectors.toList());
   }
 
@@ -47,21 +44,10 @@ public class MaltSentence {
     return this.sentence;
   }
 
-  public MaltSentenceLink getLink(final int index) {
+  public SentenceLink getLink(final int index) {
     return index >= this.links.size() ? null : this.links.get(index);
   }
 
-  /**
-   * Zwraca listę linków wskazujących na token o wskazanym indeksie.
-   *
-   * @param index
-   * @return
-   */
-  public List<MaltSentenceLink> getLinksByTargetIndex(final int index) {
-    return links.stream()
-        .filter(link -> link.getTargetIndex() == index)
-        .collect(Collectors.toList());
-  }
 
   public Set<Annotation> getAnnotations() {
     return annotations;
@@ -115,25 +101,31 @@ public class MaltSentence {
       return children;
     }
 
-    public void print() {
-      System.out.println("ROOT");
-      print("", true);
-      System.out.println();
+
+
+    public void print(PrintWriter pw) {
+      pw.println("ROOT");
+      print(pw,"", true);
+      pw.println();
     }
 
-    private void print(final String prefix, final boolean isTail) {
-      System.out.println(String.format("%s%s──(%s)── %s", prefix, isTail ? "└" : "├", relationWithParent, name));
+    private void print(final PrintWriter pw,final String prefix, final boolean isTail) {
+      pw.println(String.format("%s%s──(%s)── %s", prefix, isTail ? "└" : "├", relationWithParent, name));
       for (int i = 0; i < children.size() - 1; i++) {
-        children.get(i).print(prefix + (isTail ? "    " : "│   "), false);
+        children.get(i).print(pw,prefix + (isTail ? "    " : "│   "), false);
       }
       if (children.size() > 0) {
         children.get(children.size() - 1)
-            .print(prefix + (isTail ? "    " : "│   "), true);
+            .print(pw,prefix + (isTail ? "    " : "│   "), true);
       }
     }
   }
 
   public void printAsTree() {
+    printAsTree(new PrintWriter(System.out));
+  }
+
+  public void printAsTree(PrintWriter pw) {
     final List<TreeNode> nodes = sentence.getTokens().stream()
         .map(t -> String.format("%s                    [%s]", t.getOrth(), t.getDisambTag().toString()))
         .map(TreeNode::new)
@@ -147,7 +139,12 @@ public class MaltSentence {
     IntStream.range(0, nodes.size())
         .filter(n -> links.get(n).targetIndex == -1)
         .mapToObj(nodes::get)
-        .forEach(TreeNode::print);
+        .forEach(node -> node.print(pw));
   }
+
+
+
+
+
 
 }

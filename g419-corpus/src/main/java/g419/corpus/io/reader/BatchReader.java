@@ -90,7 +90,7 @@ public class BatchReader extends AbstractDocumentReader {
         getLogger().error("Failed to read file {}", path);
       }
     }
-    throw new NoSuchElementException();
+    return null;
   }
 
   private String getDocumnetBaseName(final String filename, final String format) {

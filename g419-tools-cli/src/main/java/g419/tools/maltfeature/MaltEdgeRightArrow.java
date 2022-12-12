@@ -1,7 +1,7 @@
 package g419.tools.maltfeature;
 
 import g419.liner2.core.tools.parser.MaltSentence;
-import g419.liner2.core.tools.parser.MaltSentenceLink;
+import g419.liner2.core.tools.parser.SentenceLink;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +18,7 @@ public class MaltEdgeRightArrow extends MaltPatternEdge {
   @Override
   public Set<Integer> findNodes(final MaltSentence sentence, final int tokenIndex) {
     final Set<Integer> nodes = new HashSet<>();
-    final MaltSentenceLink link = sentence.getLink(tokenIndex);
+    final SentenceLink link = sentence.getLink(tokenIndex);
     if (link != null
         && link.getRelationType().equals(relation)
         && link.getTargetIndex() >= 0) {

@@ -1,7 +1,4 @@
-package g419.spatial.structure;
-
-import g419.corpus.structure.Token;
-import g419.corpus.structure.TokenAttributeIndex;
+package g419.corpus.structure;
 
 import java.util.HashSet;
 import java.util.Set;

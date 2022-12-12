@@ -4,10 +4,12 @@ import g419.corpus.io.reader.AbstractDocumentReader;
 import g419.corpus.io.reader.ReaderFactory;
 import g419.corpus.io.writer.AbstractDocumentWriter;
 import g419.corpus.io.writer.WriterFactory;
-import g419.corpus.structure.Document;
+import g419.corpus.structure.*;
 import g419.lib.cli.Action;
 import g419.lib.cli.CommonOptions;
 import g419.liner2.core.LinerOptions;
+import g419.liner2.core.converter.AnnotationCclRelToConlluBoiConverter;
+import g419.liner2.core.converter.AnnotationCclRelToConlluRelConverter;
 import g419.liner2.core.converter.Converter;
 import g419.liner2.core.converter.factory.ConverterFactory;
 import g419.liner2.core.features.TokenFeatureGenerator;
@@ -15,8 +17,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.*;
 
 public class ActionConvert extends Action {
 
@@ -78,11 +79,14 @@ public class ActionConvert extends Action {
       converter = ConverterFactory.createPipe(convertersDesciptions);
     }
 
+//    System.out.println("Converter = " + converter);
+//    System.out.println("Generator = " + gen);
+
     final AbstractDocumentWriter writer = WriterFactory.get().getStreamWriter(output_file, output_format);
     while (reader.hasNext()) {
       final Document ps = reader.next();
 
-      Logger.getLogger(getClass()).info("Processing " + ps.getName() + " ...");
+      //Logger.getLogger(getClass()).info("Processing " + ps.getName() + " ...");
       if (gen != null) {
         if (gen != null) {
           Logger.getLogger(getClass()).info(" - generating features ...");
@@ -95,20 +99,26 @@ public class ActionConvert extends Action {
         converter.apply(ps);
       }
 
-      Logger.getLogger(getClass()).info(" - writing ...");
+
+      Converter cclrel2connluBoiConverter = new AnnotationCclRelToConlluBoiConverter();
+      cclrel2connluBoiConverter.apply(ps);
+
+
+      Converter cclrel2connluRelConverter = new AnnotationCclRelToConlluRelConverter();
+      cclrel2connluRelConverter.apply(ps);
+
+
+//      Logger.getLogger(getClass()).info(" - writing ...");
       writer.writeDocument(ps);
     }
 
-    reader.close();
-    writer.close();
-  }
+      reader.close();
+      writer.close();
+    }
 
-  @Override
-  public void printOptions() {
-    super.printOptions();
-    System.out.println();
-    ConverterFactory.printAvailableConverters();
 
-  }
+
 
 }
+
+

@@ -11,7 +11,7 @@ import g419.liner2.core.chunker.IobberChunker;
 import g419.liner2.core.features.tokens.ClassFeature;
 import g419.liner2.core.tools.parser.MaltParser;
 import g419.liner2.core.tools.parser.MaltSentence;
-import g419.liner2.core.tools.parser.MaltSentenceLink;
+import g419.liner2.core.tools.parser.SentenceLink;
 import g419.spatial.filter.*;
 import g419.spatial.structure.SpatialExpression;
 import g419.spatial.structure.SpatialRelationSchema;
@@ -941,14 +941,14 @@ public class ActionDiscoverSchema extends Action {
       String typeLM = "";
       String typeTR = "";
       if (ClassFeature.BROAD_CLASSES.get("verb").contains(token.getDisambTag().getPos())) {
-        final List<MaltSentenceLink> links = maltSentence.getLinksByTargetIndex(i);
-        for (final MaltSentenceLink link : links) {
+        final List<SentenceLink> links = maltSentence.getLinksByTargetIndex(i);
+        for (final SentenceLink link : links) {
           final Token tokenChild = sentence.getTokens().get(link.getSourceIndex());
           if (link.getRelationType().equals("subj")) {
             if (tokenChild.getDisambTag().getBase().equals("i")
                 || tokenChild.getDisambTag().getBase().equals("oraz")) {
               typeTR = "_TRconj";
-              for (final MaltSentenceLink trLink : maltSentence.getLinksByTargetIndex(link.getSourceIndex())) {
+              for (final SentenceLink trLink : maltSentence.getLinksByTargetIndex(link.getSourceIndex())) {
                 landmarks.add(trLink.getSourceIndex());
               }
             } else if (objectPos.contains(tokenChild.getDisambTag().getPos())) {
@@ -956,11 +956,11 @@ public class ActionDiscoverSchema extends Action {
             }
           } else if (tokenChild.getDisambTag().getPos().equals("prep")) {
             indicator = link.getSourceIndex();
-            for (final MaltSentenceLink prepLink : maltSentence.getLinksByTargetIndex(link.getSourceIndex())) {
+            for (final SentenceLink prepLink : maltSentence.getLinksByTargetIndex(link.getSourceIndex())) {
               final Token lm = sentence.getTokens().get(prepLink.getSourceIndex());
               if (lm.getOrth().equals(",")) {
                 typeLM = "_LMconj";
-                for (final MaltSentenceLink prepLinkComma : maltSentence.getLinksByTargetIndex(prepLink.getSourceIndex())) {
+                for (final SentenceLink prepLinkComma : maltSentence.getLinksByTargetIndex(prepLink.getSourceIndex())) {
                   landmarks.add(prepLinkComma.getSourceIndex());
                 }
               } else if (objectPos.contains(lm.getDisambTag().getPos())) {

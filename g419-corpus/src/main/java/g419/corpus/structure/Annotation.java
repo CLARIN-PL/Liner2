@@ -519,4 +519,9 @@ public class Annotation extends IdentifiableElement {
     setId(id);
     return this;
   }
+
+  public boolean isTokenIndexWithin(int index) {
+    return (getBegin()<=index) && (index<=getEnd());
+  }
+
 }

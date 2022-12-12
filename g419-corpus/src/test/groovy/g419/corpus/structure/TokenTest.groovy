@@ -57,10 +57,11 @@ class TokenTest extends  Specification {
 
         when:
         token.removeAttribute(attrIndex.getIndex("orth"))
-        token.getAttributeValue(attrIndex.getIndex("orth"))
+        String result = token.getAttributeValue(attrIndex.getIndex("orth"))
 
         then:
-        thrown IndexOutOfBoundsException
+        result ==""
+        //thrown IndexOutOfBoundsException
     }
 
     def "Should return attribute value"() {

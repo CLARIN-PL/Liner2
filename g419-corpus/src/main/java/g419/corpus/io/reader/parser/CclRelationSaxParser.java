@@ -99,6 +99,7 @@ public class CclRelationSaxParser extends DefaultHandler {
           document.getAnnotation(currentFromAnnotationSent, currentFromAnnotationChan, currentFromAnnotationId);
       final Annotation annotationTo =
           document.getAnnotation(currentToAnnotationSent, currentToAnnotationChan, currentToAnnotationId);
+
       if (annotationFrom != null && annotationTo != null) {
         relations.addRelation(
             new Relation(annotationFrom, annotationTo, currentRelationType, currentRelationSet, document));

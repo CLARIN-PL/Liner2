@@ -42,7 +42,7 @@ COPY liner2-daemon /liner2/
 COPY ./docker/liner2/liner2-daemon-run.sh /liner2/
 COPY log4j.properties /liner2/
 
-RUN /liner2/gradlew :g419-liner2-daemon:jar
+RUN /liner2/gradlew :g419-liner2-daemon:jar --no-daemon
 
 WORKDIR /liner2/g419-external-dependencies
 RUN tar -xvf CRF++-0.57.tar.gz
@@ -120,3 +120,10 @@ WORKDIR /liner2
 
 RUN wget -O liner26_model_ner_nkjp.zip https://clarin-pl.eu/dspace/bitstream/handle/11321/598/liner26_model_ner_nkjp.zip
 RUN unzip liner26_model_ner_nkjp.zip
+COPY ./pipe_ner /liner2/
+
+RUN wget -O timex_model_full.tar.gz https://clarin-pl.eu/dspace/bitstream/handle/11321/697/timex_model_full.tar.gz
+RUN tar xvzf timex_model_full.tar.gz
+COPY ./model.bin /liner2/timex_model_full/4class_timex3_cfg/model.bin
+COPY ./pipe_timex /liner2/
+COPY ./pipe_timex_ccl /liner2/

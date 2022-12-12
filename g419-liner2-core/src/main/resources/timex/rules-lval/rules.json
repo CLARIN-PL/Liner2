@@ -1,0 +1,2684 @@
+{
+  "keys": {
+    "dayM_written": [
+      "poniedziałek",
+      "poniedziałkowy",
+      "pon .",
+      "wtorek",
+      "wtorkowy",
+      "środa",
+      "środowy",
+      "czwartek",
+      "czwartkowy",
+      "piątek",
+      "pod tytułem .",
+      "piątkowy",
+      "piątkowo",
+      "sobota",
+      "sobotni",
+      "sobote",
+      "niedziela",
+      "niedzielny"
+    ],
+    "todayM_written": [
+      "dzis",
+      "dziś",
+      "dziś dzień",
+      "ten dzień",
+      "dzisiejszy",
+      "dzisiaj",
+      "dzień dzisiejszy",
+      "dzień ten",
+      "dzień to",
+      "ten sam dzień"
+    ],
+    "thisM_written": [
+      "ten"
+    ],
+    "thisM_year": [
+      "tegoroczny",
+      "ten rok",
+      "ten sam rok",
+      "ten właśnie rok"
+    ],
+    "tomorrowM_written": [
+      "jutro",
+      "następny dzień",
+      "nazajutrz",
+      "dzień następny",
+      "jutrzejszy",
+      "pierwsza doba"
+    ],
+    "yesterdayM_written": [
+      "wczoraj",
+      "wczorajszy",
+      "poprzedni dzień",
+      "dzień poprzedni",
+      "przeddzień",
+      "wcora"
+    ],
+    "yesterday2M_written": [
+      "przedwczoraj"
+    ],
+    "beforeM_written": [
+      "poprzedni",
+      "zeszły",
+      "ubiegły"
+    ],
+    "nextM_written": [
+      "przyszły",
+      "następny",
+      "bliski"
+    ],
+    "monthM_written": [
+      "styczeń",
+      "styczniowy",
+      "luty",
+      "lutowy",
+      "marzec",
+      "marcowy",
+      "Marco",
+      "kwiecień",
+      "kwietniowy",
+      "majowy",
+      "maj",
+      "Maj",
+      "czerwiec",
+      "czerwcowy",
+      "lipiec",
+      "lipcowy",
+      "sierpień",
+      "sierpniowy",
+      "wrzesień",
+      "Wrzesień",
+      "wrześniowy",
+      "październikowy",
+      "październik",
+      "listopadowy",
+      "litopada",
+      "listopad",
+      "grudzień",
+      "grudniowy"
+    ],
+    "orderM_written": [
+      "dziesiąty",
+      "jedenasty",
+      "jedenasta",
+      "dwunasty",
+      "trzynasty",
+      "czternasty",
+      "piętnasty",
+      "szesnasty",
+      "siedemnasty",
+      "osiemnasty",
+      "ośmnasty",
+      "dziewiętnasty",
+      "dwudziesty pierwszy",
+      "dwudziesty drugi",
+      "dwudziesty trzeci",
+      "dwudziesty czwarty",
+      "dwudziesty piąty",
+      "dwudziesty szósty",
+      "dwudziesty siódmy",
+      "dwudziesty ósmy",
+      "dwudziesty dziewiąty",
+      "trzydziesty",
+      "trzydziesty pierwszy",
+      "pierwszy",
+      "drugi",
+      "trzeci",
+      "czwarty",
+      "piąty",
+      "szósty",
+      "siódmy",
+      "ósmy",
+      "dziewiąty",
+      "dwudziesty"
+    ],
+    "order2M_written": [
+      "dwudziesty",
+      "trzydziesty",
+      "czterdziesty",
+      "pięćdziesiąty",
+      "sześćdziesiąty",
+      "siedemdziesiąty",
+      "osiemdziesiąty",
+      "dziewięćdziesiąty",
+      "pierwszy",
+      "drugi",
+      "trzeci",
+      "czwarty",
+      "piąty",
+      "szósty",
+      "siódmy",
+      "ósmy",
+      "dziewiąty",
+      "dziesiąty"
+    ],
+    "tensM_written": [
+      "dwadzieścia",
+      "trzydzieści",
+      "czterdzieści",
+      "pięćdziesiąt"
+    ],
+    "teensM_written": [
+      "dziesięć",
+      "jedenaście",
+      "dwanaście",
+      "trzynaście",
+      "czternaście",
+      "piętnaście",
+      "szesnaście",
+      "siedemnaście",
+      "osiemnaście",
+      "dziewiętnaście"
+    ],
+    "digitM_written": [
+      "zero",
+      "jeden",
+      "dwa",
+      "trzy",
+      "cztery",
+      "pięć",
+      "sześć",
+      "siedem",
+      "osiem",
+      "dziewięć"
+    ],
+    "timeM_written": [
+      "wieczór",
+      "wieczor",
+      "po północ",
+      "o północ",
+      "północ",
+      "rano",
+      "w godzina ranny",
+      "ranny",
+      "poranek",
+      "ranek",
+      "świt",
+      "noc",
+      "popołudnie",
+      "południe",
+      "przedpołudniowy",
+      "popołudniowy",
+      "południowy"
+    ],
+    "lastM_written": [
+      "ostatni"
+    ],
+    "halfM_written": [
+      "połowa",
+      "poł ."
+    ],
+    "quarterM_written": [
+      "kwartał",
+      "ćw .",
+      "ćwierć"
+    ],
+    "romanM_written": [
+      "ksiądz .",
+      "ksiądz",
+      "xiv",
+      "XIV",
+      "xviii",
+      "XVIII",
+      "xvii",
+      "XVII",
+      "xvi",
+      "XVI",
+      "xv",
+      "XV",
+      "xix",
+      "XIX",
+      "xxi",
+      "XXI",
+      "xx",
+      "XX",
+      "xiii",
+      "XIII",
+      "xii",
+      "XII",
+      "xi",
+      "XI",
+      "ix",
+      "IX",
+      "viii",
+      "VIII",
+      "vii",
+      "VII",
+      "vi",
+      "VI",
+      "iv",
+      "IV",
+      "v",
+      "V",
+      "iii",
+      "III",
+      "ii",
+      "II",
+      "i",
+      "I"
+    ],
+    "seasonM_written": [
+      "wiosna",
+      "wiosenny",
+      "lato",
+      "letni",
+      "jesień",
+      "jesienny",
+      "zima",
+      "zimowy"
+    ],
+    "centuryM_trigger": [
+      "wiek",
+      "w ."
+    ],
+    "bcM_often": [
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9"
+    ],
+    "century2M_written": [
+      "jedenasto",
+      "dwunasto",
+      "trzynasto",
+      "czternasto",
+      "piętnasto",
+      "szesnasto",
+      "siedemnasto",
+      "osiemnasto",
+      "dziewiętnasto",
+      "dwudziesto"
+    ]
+  },
+  "maps": {
+    "day_written": {
+      "poniedziałek": "1",
+      "poniedziałkowy": "1",
+      "pon .": "1",
+      "wtorek": "2",
+      "wtorkowy": "2",
+      "środa": "3",
+      "środowy": "3",
+      "czwartek": "4",
+      "czwartkowy": "4",
+      "piątek": "5",
+      "pod tytułem .": "5",
+      "piątkowy": "5",
+      "piątkowo": "5",
+      "sobota": "6",
+      "sobotni": "6",
+      "sobote": "6",
+      "niedziela": "7",
+      "niedzielny": "7"
+    },
+    "month_written": {
+      "styczeń": "1",
+      "styczniowy": "1",
+      "luty": "2",
+      "lutowy": "2",
+      "marzec": "3",
+      "marcowy": "3",
+      "Marco": "3",
+      "kwiecień": "4",
+      "kwietniowy": "4",
+      "maj": "5",
+      "Maj": "5",
+      "majowy": "5",
+      "czerwiec": "6",
+      "czerwcowy": "6",
+      "lipiec": "7",
+      "lipcowy": "7",
+      "sierpień": "8",
+      "sierpniowy": "8",
+      "wrzesień": "9",
+      "Wrzesień": "9",
+      "wrześniowy": "9",
+      "październik": "10",
+      "październikowy": "10",
+      "listopad": "11",
+      "listopadowy": "11",
+      "litopada": "11",
+      "grudzień": "12",
+      "grudniowy": "12"
+    },
+    "order_written": {
+      "pierwszy": "1",
+      "drugi": "2",
+      "trzeci": "3",
+      "czwarty": "4",
+      "piąty": "5",
+      "szósty": "6",
+      "siódmy": "7",
+      "ósmy": "8",
+      "dziewiąty": "9",
+      "dziesiąty": "10",
+      "jedenasty": "11",
+      "jedenasta": "11",
+      "dwunasty": "12",
+      "trzynasty": "13",
+      "czternasty": "14",
+      "piętnasty": "15",
+      "szesnasty": "16",
+      "siedemnasty": "17",
+      "osiemnasty": "18",
+      "ośmnasty": "18",
+      "dziewiętnasty": "19",
+      "dwudziesty": "20",
+      "dwudziesty pierwszy": "21",
+      "dwudziesty drugi": "22",
+      "dwudziesty trzeci": "23",
+      "dwudziesty czwarty": "24",
+      "dwudziesty piąty": "25",
+      "dwudziesty szósty": "26",
+      "dwudziesty siódmy": "27",
+      "dwudziesty ósmy": "28",
+      "dwudziesty dziewiąty": "29",
+      "trzydziesty": "30",
+      "trzydziesty pierwszy": "31"
+    },
+    "order_century_written": {
+      "pierwszy": "00",
+      "drugi": "01",
+      "trzeci": "02",
+      "czwarty": "03",
+      "piąty": "04",
+      "szósty": "05",
+      "siódmy": "06",
+      "ósmy": "07",
+      "dziewiąty": "08",
+      "dziesiąty": "09",
+      "jedenasty": "10",
+      "jedenasta": "10",
+      "dwunasty": "11",
+      "trzynasty": "12",
+      "czternasty": "13",
+      "piętnasty": "14",
+      "szesnasty": "15",
+      "siedemnasty": "16",
+      "osiemnasty": "17",
+      "ośmnasty": "17",
+      "dziewiętnasty": "18",
+      "dwudziesty": "19",
+      "dwudziesty pierwszy": "20",
+      "dwudziesty drugi": "21",
+      "dwudziesty trzeci": "22",
+      "dwudziesty czwarty": "23",
+      "dwudziesty piąty": "24",
+      "dwudziesty szósty": "25",
+      "dwudziesty siódmy": "26",
+      "dwudziesty ósmy": "27",
+      "dwudziesty dziewiąty": "28",
+      "trzydziesty": "29",
+      "trzydziesty pierwszy": "30"
+    },
+    "order2_written": {
+      "dwudziesty": "2",
+      "trzydziesty": "3",
+      "czterdziesty": "4",
+      "pięćdziesiąty": "5",
+      "sześćdziesiąty": "6",
+      "siedemdziesiąty": "7",
+      "osiemdziesiąty": "8",
+      "dziewięćdziesiąty": "9",
+      "pierwszy": "1",
+      "drugi": "2",
+      "trzeci": "3",
+      "czwarty": "4",
+      "piąty": "5",
+      "szósty": "6",
+      "siódmy": "7",
+      "ósmy": "8",
+      "dziewiąty": "9",
+      "dziesiąty": "10"
+    },
+    "tens_written": {
+      "dwadzieścia": "2",
+      "trzydzieści": "3",
+      "czterdzieści": "4",
+      "pięćdziesiąt": "5"
+    },
+    "teens_written": {
+      "dziesięć": "10",
+      "jedenaście": "11",
+      "dwanaście": "12",
+      "trzynaście": "13",
+      "czternaście": "14",
+      "piętnaście": "15",
+      "szesnaście": "16",
+      "siedemnaście": "17",
+      "osiemnaście": "18",
+      "dziewiętnaście": "19"
+    },
+    "digit_written": {
+      "zero": "0",
+      "jeden": "1",
+      "dwa": "2",
+      "trzy": "3",
+      "cztery": "4",
+      "pięć": "5",
+      "sześć": "6",
+      "siedem": "7",
+      "osiem": "8",
+      "dziewięć": "9",
+      "dziesięć": "10"
+    },
+    "time_written": {
+      "wieczór": "EV",
+      "wieczor": "EV",
+      "po północ": "NI",
+      "o północ": "24:00",
+      "północ": "24:00",
+      "rano": "MO",
+      "w godzina ranny": "MO",
+      "ranny": "MO",
+      "poranek": "MO",
+      "ranek": "MO",
+      "świt": "MO",
+      "noc": "NI",
+      "popołudnie": "AF",
+      "popołudniowy": "AF",
+      "południe": "MI",
+      "przedpołudniowy": "MI",
+      "południowy": "MI"
+    },
+    "season": {
+      "wiosna": "SP",
+      "wiosenny": "SP",
+      "lato": "SU",
+      "letni": "SU",
+      "jesień": "FA",
+      "jesienny": "FA",
+      "zima": "WI",
+      "zimowy": "WI"
+    },
+    "roman_written": {
+      "i": "1",
+      "ii": "2",
+      "iii": "3",
+      "iv": "4",
+      "v": "5",
+      "vi": "6",
+      "vii": "7",
+      "viii": "8",
+      "ix": "9",
+      "x": "10",
+      "xi": "11",
+      "xii": "12",
+      "xiii": "13",
+      "xiv": "14",
+      "xv": "15",
+      "xvi": "16",
+      "xvii": "17",
+      "xviii": "18",
+      "xix": "19",
+      "xx": "20",
+      "xxi": "21",
+      "ksiądz .": "10",
+      "ksiądz": "10",
+      "I": "1",
+      "II": "2",
+      "III": "3",
+      "IV": "4",
+      "V": "5",
+      "VI": "6",
+      "VII": "7",
+      "VIII": "8",
+      "IX": "9",
+      "X": "10",
+      "XI": "11",
+      "XII": "12",
+      "XIII": "13",
+      "XIV": "14",
+      "XV": "15",
+      "XVI": "16",
+      "XVII": "17",
+      "XVIII": "18",
+      "XIX": "19",
+      "XX": "20",
+      "XXI": "21"
+    },
+    "century_written": {
+      "i": "01",
+      "ii": "01",
+      "iii": "02",
+      "iv": "03",
+      "v": "04",
+      "vi": "05",
+      "vii": "06",
+      "viii": "07",
+      "ix": "08",
+      "x": "09",
+      "xi": "10",
+      "xii": "11",
+      "xiii": "12",
+      "xiv": "13",
+      "xv": "14",
+      "xvi": "15",
+      "xvii": "16",
+      "xviii": "17",
+      "xix": "18",
+      "xx": "19",
+      "xxi": "20",
+      "ksiądz .": "09",
+      "ksiądz": "09",
+      "I": "01",
+      "II": "01",
+      "III": "02",
+      "IV": "03",
+      "V": "04",
+      "VI": "05",
+      "VII": "06",
+      "VIII": "07",
+      "IX": "08",
+      "X": "09",
+      "XI": "10",
+      "XII": "11",
+      "XIII": "12",
+      "XIV": "13",
+      "XV": "14",
+      "XVI": "15",
+      "XVII": "16",
+      "XVIII": "17",
+      "XIX": "18",
+      "XX": "19",
+      "XXI": "20"
+    },
+    "century2_written": {
+      "jedenasto": "10",
+      "dwunasto": "11",
+      "trzynasto": "12",
+      "czternasto": "13",
+      "piętnasto": "14",
+      "szesnasto": "15",
+      "siedemnasto": "16",
+      "osiemnasto": "17",
+      "dziewiętnasto": "18",
+      "dwudziesto": "19"
+    }
+  },
+  "rules": [
+    {
+      "desc": "dzień",
+      "keys": [],
+      "groups": [],
+      "match": "(^dzień$| dzień$)",
+      "map": {},
+      "value": {
+        "year": "xxxx",
+        "month": "xx",
+        "day": "xx"
+      }
+    },
+    {
+      "desc": "miesiąc",
+      "keys": [],
+      "groups": [],
+      "match": "(^(ostatni )?miesiąc$)",
+      "map": {},
+      "value": {
+        "year": "xxxx",
+        "month": "xx"
+      }
+    },
+    {
+      "desc": "weekend",
+      "keys": [],
+      "groups": [],
+      "match": "(^(długi )?weekend$)",
+      "map": {},
+      "value": {
+        "year": "xxxx",
+        "month": "Wxx",
+        "day": "WE"
+      }
+    },
+    {
+      "desc": "^ostatni weekend$",
+      "keys": [
+        "beforeM_written"
+      ],
+      "groups": [],
+      "match": "^($beforeM_written|ostatni) weekend$",
+      "map": {},
+      "value": {
+        "year": "-0000",
+        "month": "W01",
+        "day": "WE"
+      }
+    },
+    {
+      "desc": "^pierwszy tydzień$",
+      "keys": [
+        "orderM_written"
+      ],
+      "groups": [],
+      "match": "^($orderM_written) tydzień$",
+      "map": {},
+      "value": {
+        "year": "xxxx",
+        "month": "Wxx"
+      }
+    },
+    {
+      "desc": "^zeszły tydzień$",
+      "keys": [
+        "beforeM_written"
+      ],
+      "groups": [],
+      "match": "^(($beforeM_written|ostatni) tydzień)|(ubiegłotygodniowy)$",
+      "map": {},
+      "value": {
+        "year": "-0000",
+        "month": "W01"
+      }
+    },
+    {
+      "desc": "rok",
+      "keys": [],
+      "groups": [],
+      "match": "(^rok$| rok$)",
+      "map": {},
+      "value": {
+        "year": "xxxx"
+      }
+    },
+    {
+      "desc": "poprzedni rok",
+      "keys": [
+        "beforeM_written"
+      ],
+      "groups": [],
+      "match": "($beforeM_written) rok",
+      "map": {},
+      "value": {
+        "year": "-0001"
+      }
+    },
+    {
+      "desc": "rok ubiegły",
+      "keys": [
+        "beforeM_written"
+      ],
+      "groups": [],
+      "match": "(rok ($beforeM_written))|(^zeszłoroczny$)",
+      "map": {},
+      "value": {
+        "year": "-0001"
+      }
+    },
+    {
+      "desc": "ten tydzień",
+      "keys": [
+        "thisM_written"
+      ],
+      "groups": [],
+      "match": "($thisM_written) tydzień",
+      "map": {},
+      "value": {
+        "year": "+0000",
+        "month": "W00"
+      }
+    },
+    {
+      "desc": "ten rok",
+      "keys": [
+        "thisM_year"
+      ],
+      "groups": [],
+      "match": "^($thisM_year)$",
+      "map": {},
+      "value": {
+        "year": "+0000"
+      }
+    },
+    {
+      "desc": "ten miesiąc",
+      "keys": [
+        "thisM_written"
+      ],
+      "groups": [],
+      "match": "^($thisM_written) miesiąc$",
+      "map": {},
+      "value": {
+        "year": "+0000",
+        "month": "00"
+      }
+    },
+    {
+      "desc": "ten godzina",
+      "keys": [
+        "thisM_written"
+      ],
+      "groups": [],
+      "match": "^($thisM_written) godzina$",
+      "map": {},
+      "value": {
+        "year": "+0000",
+        "month": "00",
+        "day": "00",
+        "hour": "+00"
+      }
+    },
+    {
+      "desc": "^godzina$",
+      "keys": [],
+      "groups": [],
+      "match": "^((inny|określony) )?godzina$",
+      "map": {},
+      "value": {
+        "year": "xxxx",
+        "month": "xx",
+        "day": "xx",
+        "hour": "xx"
+      }
+    },
+    {
+      "desc": "następny tydzień",
+      "keys": [
+        "nextM_written"
+      ],
+      "groups": [],
+      "match": "($nextM_written) tydzień",
+      "map": {},
+      "value": {
+        "year": "+0000",
+        "month": "W01"
+      }
+    },
+    {
+      "desc": "ii połowa",
+      "keys": [
+        "romanM_written",
+        "halfM_written"
+      ],
+      "groups": [
+        "part"
+      ],
+      "match": "(?<part>$romanM_written) ($halfM_written)",
+      "map": {
+        "part": "roman_written"
+      },
+      "value": {
+        "part": "H$part",
+        "year": "xxxx"
+      }
+    },
+    {
+      "desc": "pierwszy połowa",
+      "keys": [
+        "orderM_written",
+        "halfM_written"
+      ],
+      "groups": [
+        "part"
+      ],
+      "match": "(?<part>$orderM_written) ($halfM_written)",
+      "map": {
+        "part": "order_written"
+      },
+      "value": {
+        "part": "H$part",
+        "year": "xxxx"
+      }
+    },
+    {
+      "desc": "pierwszy kwartał",
+      "keys": [
+        "orderM_written",
+        "quarterM_written"
+      ],
+      "groups": [
+        "part"
+      ],
+      "match": "(?<part>$orderM_written) ($quarterM_written)",
+      "map": {
+        "part": "order_written"
+      },
+      "value": {
+        "part": "Q$part",
+        "year": "xxxx"
+      }
+    },
+    {
+      "desc": "1 . ćwierć",
+      "keys": [
+        "quarterM_written"
+      ],
+      "groups": [
+        "part"
+      ],
+      "match": "(?<part>%d) %. ($quarterM_written)",
+      "map": {},
+      "value": {
+        "part": "Q$part"
+      }
+    },
+    {
+      "desc": "2 ćw .",
+      "keys": [
+        "quarterM_written"
+      ],
+      "groups": [
+        "part"
+      ],
+      "match": "(?<part>%d) ($quarterM_written)",
+      "map": {},
+      "value": {
+        "part": "Q$part"
+      }
+    },
+    {
+      "desc": "xiv wiek",
+      "keys": [
+        "romanM_written"
+      ],
+      "groups": [
+        "year"
+      ],
+      "match": "(?<year>$romanM_written) wiek",
+      "map": {
+        "year": "century_written"
+      },
+      "value": {
+        "year": "$year"
+      }
+    },
+    {
+      "desc": "rok osiemdziesiąty xx wiek",
+      "keys": [
+        "digitM_written",
+        "romanM_written"
+      ],
+      "groups": [
+        "digit",
+        "year"
+      ],
+      "match": "rok (?<digit>$digitM_written)dziesiąty (?<year>$romanM_written) wiek",
+      "map": {
+        "year": "century_written",
+        "digit": "digit_written"
+      },
+      "value": {
+        "year": "$year$digit"
+      }
+    },
+    {
+      "desc": "rok 80 .",
+      "keys": [],
+      "groups": [
+        "digit"
+      ],
+      "match": "rok (?<digit>%d)0 %.",
+      "map": {},
+      "value": {
+        "year": "xx$digit"
+      }
+    },
+    {
+      "desc": "rok 90 . xx w .",
+      "keys": [
+        "romanM_written",
+        "centuryM_trigger"
+      ],
+      "groups": [
+        "digit",
+        "century"
+      ],
+      "match": "rok (?<digit>%d)0 %. (?<century>$romanM_written) ($centuryM_trigger)",
+      "map": {
+        "century": "century_written"
+      },
+      "value": {
+        "year": "$century$digit"
+      }
+    },
+    {
+      "desc": "rok 90 - ten xx wiek",
+      "keys": [
+        "romanM_written"
+      ],
+      "groups": [
+        "digit",
+        "year"
+      ],
+      "match": "rok (?<digit>%d)0 - ten (?<year>$romanM_written) wiek",
+      "map": {
+        "year": "century_written"
+      },
+      "value": {
+        "year": "$year$digit"
+      }
+    },
+    {
+      "desc": "20 . xx wiek",
+      "keys": [
+        "romanM_written"
+      ],
+      "groups": [
+        "year2",
+        "year1"
+      ],
+      "match": "(?<year2>%d)0 %. (?<year1>$romanM_written) wiek",
+      "map": {
+        "year1": "century_written"
+      },
+      "value": {
+        "year": "$year1$year2"
+      }
+    },
+    {
+      "desc": "przyszły rok",
+      "keys": [
+        "nextM_written"
+      ],
+      "groups": [],
+      "match": "($nextM_written) rok",
+      "map": {},
+      "value": {
+        "year": "+0001"
+      }
+    },
+    {
+      "desc": "rok następny",
+      "keys": [
+        "nextM_written"
+      ],
+      "groups": [],
+      "match": "rok ($nextM_written)",
+      "map": {},
+      "value": {
+        "year": "+0001"
+      }
+    },
+    {
+      "desc": "przyszły miesiąc",
+      "keys": [
+        "nextM_written"
+      ],
+      "groups": [],
+      "match": "($nextM_written) miesiąc",
+      "map": {},
+      "value": {
+        "year": "+0000",
+        "month": "01"
+      }
+    },
+    {
+      "desc": "pierwszy dzień drugi miesiąc",
+      "keys": [
+        "orderM_written"
+      ],
+      "groups": [
+        "day"
+      ],
+      "match": "(?<day>$orderM_written) dzień ($orderM_written) miesiąc",
+      "map": {
+        "day": "order_written"
+      },
+      "value": {
+        "year": "xxxx",
+        "month": "xx",
+        "day": "$day"
+      }
+    },
+    {
+      "desc": "5 dzień następny miesiąc",
+      "keys": [
+        "nextM_written"
+      ],
+      "groups": [
+        "day"
+      ],
+      "match": "(?<day>%d%d?) dzień ($nextM_written) miesiąc",
+      "map": {},
+      "value": {
+        "year": "xxxx",
+        "month": "xx",
+        "day": "$day"
+      }
+    },
+    {
+      "desc": "dziś",
+      "keys": [
+        "todayM_written"
+      ],
+      "groups": [],
+      "match": "($todayM_written)",
+      "map": {},
+      "value": {
+        "year": "+0000",
+        "month": "00",
+        "day": "00"
+      }
+    },
+    {
+      "desc": "jutro",
+      "keys": [
+        "tomorrowM_written"
+      ],
+      "groups": [],
+      "match": "^($tomorrowM_written)$",
+      "map": {},
+      "value": {
+        "year": "+0000",
+        "month": "00",
+        "day": "01"
+      }
+    },
+    {
+      "desc": "jutro",
+      "keys": [
+        "tomorrowM_written"
+      ],
+      "groups": [],
+      "match": "^($tomorrowM_written)$",
+      "map": {},
+      "value": {
+        "year": "+0000",
+        "month": "00",
+        "day": "01"
+      }
+    },
+    {
+      "desc": "jutro w godzina ranny",
+      "keys": [
+        "tomorrowM_written",
+        "timeM_written"
+      ],
+      "groups": [
+        "hour"
+      ],
+      "match": "($tomorrowM_written) (?<hour>$timeM_written)",
+      "map": {
+        "hour": "time_written"
+      },
+      "value": {
+        "year": "+0000",
+        "month": "00",
+        "day": "01",
+        "hour": "$hour",
+        "separator": "$hour"
+      }
+    },
+    {
+      "desc": "wczoraj",
+      "keys": [
+        "yesterdayM_written"
+      ],
+      "groups": [],
+      "match": "^($yesterdayM_written)$",
+      "map": {},
+      "value": {
+        "year": "-0000",
+        "month": "00",
+        "day": "01"
+      }
+    },
+    {
+      "desc": "wczoraj o północ",
+      "keys": [
+        "yesterdayM_written"
+      ],
+      "groups": [
+        "hour"
+      ],
+      "match": "($yesterdayM_written) (?<hour>$timeM_written)",
+      "map": {
+        "hour": "time_written"
+      },
+      "value": {
+        "year": "-0000",
+        "month": "00",
+        "day": "01",
+        "hour": "$hour",
+        "separator": "$hour"
+      }
+    },
+    {
+      "desc": "przedwczoraj",
+      "keys": [
+        "yesterday2M_written"
+      ],
+      "groups": [],
+      "match": "($yesterday2M_written)",
+      "map": {},
+      "value": {
+        "year": "-0000",
+        "month": "00",
+        "day": "02"
+      }
+    },
+    {
+      "desc": "poniedziałek",
+      "keys": [
+        "dayM_written"
+      ],
+      "groups": [
+        "day"
+      ],
+      "match": "(?<day>$dayM_written)",
+      "map": {
+        "day": "day_written"
+      },
+      "value": {
+        "day": "$day",
+        "month": "Wxx",
+        "year": "xxxx"
+      }
+    },
+    {
+      "desc": "poniedziałek ( 6.IV )",
+      "keys": [
+        "dayM_written",
+        "romanM_written"
+      ],
+      "groups": [
+        "day",
+        "month"
+      ],
+      "match": "($dayM_written) %( (?<day>%d%d?).(?<month>$romanM_written) %)",
+      "map": {
+        "month": "roman_written"
+      },
+      "value": {
+        "day": "$day",
+        "month": "$month",
+        "year": "xxxx"
+      }
+    },
+    {
+      "desc": "czwartek , 7 - on październik",
+      "keys": [
+        "dayM_written",
+        "monthM_written"
+      ],
+      "groups": [
+        "day",
+        "month"
+      ],
+      "match": "($dayM_written) , (?<day>%d%d?) - on (?<month>$monthM_written)",
+      "map": {
+        "month": "month_written"
+      },
+      "value": {
+        "day": "$day",
+        "month": "$month",
+        "year": "xxxx"
+      }
+    },
+    {
+      "desc": "czwartek 20 . 05",
+      "keys": [
+        "dayM_written"
+      ],
+      "groups": [
+        "day",
+        "month"
+      ],
+      "match": "($dayM_written) (?<day>%d%d?) %. (?<month>%d%d?)",
+      "map": {},
+      "value": {
+        "day": "$day",
+        "month": "$month",
+        "year": "xxxx"
+      }
+    },
+    {
+      "desc": "styczeń",
+      "keys": [
+        "monthM_written"
+      ],
+      "groups": [
+        "month"
+      ],
+      "match": "(?<month>$monthM_written)",
+      "map": {
+        "month": "month_written"
+      },
+      "value": {
+        "month": "$month"
+      }
+    },
+    {
+      "desc": "zima",
+      "keys": [
+        "seasonM_written"
+      ],
+      "groups": [
+        "month"
+      ],
+      "match": "(?<month>$seasonM_written)",
+      "map": {
+        "month": "season"
+      },
+      "value": {
+        "month": "$month"
+      }
+    },
+    {
+      "desc": "1 styczeń",
+      "keys": [
+        "monthM_written"
+      ],
+      "groups": [
+        "day",
+        "month"
+      ],
+      "match": "(?<day>%d%d?) (?<month>$monthM_written)",
+      "map": {
+        "month": "month_written"
+      },
+      "value": {
+        "day": "$day",
+        "month": "$month"
+      }
+    },
+    {
+      "desc": "5 maj , 10 . 00",
+      "keys": [
+        "monthM_written"
+      ],
+      "groups": [
+        "day",
+        "month",
+        "hour",
+        "minute"
+      ],
+      "match": "(?<day>%d%d?) (?<month>$monthM_written) , (?<hour>%d%d?) %. (?<minute>%d%d)",
+      "map": {
+        "month": "month_written"
+      },
+      "value": {
+        "day": "$day",
+        "month": "$month",
+        "hour": "$hour",
+        "minute": "$minute"
+      }
+    },
+    {
+      "desc": "22 . grudzień",
+      "keys": [
+        "monthM_written"
+      ],
+      "groups": [
+        "day",
+        "month"
+      ],
+      "match": "(?<day>%d%d?) . (?<month>$monthM_written)",
+      "map": {
+        "month": "month_written"
+      },
+      "value": {
+        "day": "$day",
+        "month": "$month"
+      }
+    },
+    {
+      "desc": "maj przyszły rok",
+      "keys": [
+        "monthM_written",
+        "nextM_written"
+      ],
+      "groups": [
+        "month"
+      ],
+      "match": "(?<month>$monthM_written) ($nextM_written) rok",
+      "map": {
+        "month": "month_written"
+      },
+      "value": {
+        "month": "$month",
+        "year": "xxxx"
+      }
+    },
+    {
+      "desc": "30 marzec przyszły rok",
+      "keys": [
+        "monthM_written",
+        "nextM_written"
+      ],
+      "groups": [
+        "day",
+        "month"
+      ],
+      "match": "(?<day>%d%d?) (?<month>$monthM_written) ($nextM_written) rok",
+      "map": {
+        "month": "month_written"
+      },
+      "value": {
+        "day": "$day",
+        "month": "$month",
+        "year": "xxxx"
+      }
+    },
+    {
+      "desc": "993 rok",
+      "keys": [],
+      "groups": [
+        "year"
+      ],
+      "match": "^(około )?(?<year>%d%d%d) (rok|rocznik %.)$",
+      "map": {},
+      "value": {
+        "year": "0$year"
+      }
+    },
+    {
+      "desc": "2007",
+      "keys": [],
+      "groups": [
+        "year"
+      ],
+      "match": "(?<year>%d%d%d%d)",
+      "map": {},
+      "value": {
+        "year": "$year"
+      }
+    },
+    {
+      "desc": "983",
+      "keys": [],
+      "groups": [
+        "year"
+      ],
+      "match": "^(?<year>%d%d%d)$",
+      "map": {},
+      "limit": [
+        "t3_date"
+      ],
+      "value": {
+        "year": "0$year"
+      }
+    },
+    {
+      "desc": "4000",
+      "keys": [
+        "bcM_often"
+      ],
+      "groups": [
+        "year"
+      ],
+      "match": "(?<year>($bcM_often)%d%d%d)",
+      "map": {},
+      "value": {
+        "year": "BC$year"
+      }
+    },
+    {
+      "desc": "450 rocznik . pan . nad . e .",
+      "keys": [],
+      "groups": [
+        "year"
+      ],
+      "match": "(?<year>%d%d%d) rocznik %. pan %. nad %. e %.",
+      "map": {},
+      "value": {
+        "year": "BC0$year"
+      }
+    },
+    {
+      "desc": "ostatni piątek",
+      "keys": [
+        "lastM_written",
+        "dayM_written"
+      ],
+      "groups": [
+        "day"
+      ],
+      "match": "($lastM_written) (?<day>$dayM_written)",
+      "map": {
+        "day": "day_written"
+      },
+      "value": {
+        "year": "null",
+        "month": "null",
+        "day": "<D$day"
+      }
+    },
+    {
+      "desc": "ostatni środa sierpień",
+      "keys": [
+        "lastM_written",
+        "dayM_written",
+        "monthM_written"
+      ],
+      "groups": [
+        "day",
+        "month"
+      ],
+      "match": "($lastM_written) (?<day>$dayM_written) (?<month>$monthM_written)",
+      "map": {
+        "day": "day_written",
+        "month": "month_written"
+      },
+      "value": {
+        "year": "null",
+        "month": "$month",
+        "day": "$1D$day"
+      }
+    },
+    {
+      "desc": "pierwszy niedziela",
+      "keys": [
+        "orderM_written",
+        "dayM_written"
+      ],
+      "groups": [
+        "order",
+        "day"
+      ],
+      "match": "(?<order>$orderM_written) (?<day>$dayM_written)",
+      "map": {
+        "day": "day_written",
+        "order": "order_written"
+      },
+      "value": {
+        "year": "null",
+        "month": "null",
+        "day": "$orderD$day"
+      }
+    },
+    {
+      "desc": "2007-05-29",
+      "keys": [],
+      "groups": [
+        "year",
+        "month",
+        "day"
+      ],
+      "match": "(?<year>%d%d%d%d)-(?<month>%d%d)-(?<day>%d%d)",
+      "map": {},
+      "value": {
+        "year": "$year",
+        "month": "$month",
+        "day": "$day"
+      }
+    },
+    {
+      "desc": "31 XII",
+      "keys": [
+        "romanM_written"
+      ],
+      "groups": [
+        "day",
+        "month"
+      ],
+      "match": "(?<day>%d%d?) (?<month>$romanM_written)",
+      "map": {
+        "month": "roman_written"
+      },
+      "value": {
+        "month": "$month",
+        "day": "$day",
+        "year": "xxxx"
+      }
+    },
+    {
+      "desc": "3 viii 1915",
+      "keys": [
+        "romanM_written"
+      ],
+      "groups": [
+        "day",
+        "month",
+        "year"
+      ],
+      "match": "(?<day>%d%d?) (?<month>$romanM_written) (?<year>%d%d%d%d)",
+      "map": {
+        "month": "roman_written"
+      },
+      "value": {
+        "year": "$year",
+        "month": "$month",
+        "day": "$day"
+      }
+    },
+    {
+      "desc": "2 . 11 . 2010",
+      "keys": [],
+      "groups": [
+        "day",
+        "month",
+        "year"
+      ],
+      "match": "(?<day>%d%d?) . (?<month>%d%d?) . (?<year>%d%d%d%d)",
+      "map": {},
+      "value": {
+        "year": "$year",
+        "month": "$month",
+        "day": "$day"
+      }
+    },
+    {
+      "desc": "2 . 11 . 05",
+      "keys": [],
+      "groups": [
+        "day",
+        "month",
+        "year"
+      ],
+      "match": "(?<day>%d%d?) . (?<month>%d%d?) . 0(?<year>%d)",
+      "map": {},
+      "value": {
+        "year": "200$year",
+        "month": "$month",
+        "day": "$day"
+      }
+    },
+    {
+      "desc": "rano",
+      "keys": [
+        "timeM_written"
+      ],
+      "groups": [
+        "hour"
+      ],
+      "match": "(?<hour>$timeM_written)",
+      "map": {
+        "hour": "time_written"
+      },
+      "value": {
+        "hour": "$hour",
+        "separator": "$hour"
+      }
+    },
+    {
+      "desc": "dziewiąty rano",
+      "keys": [
+        "orderM_written",
+        "timeM_written"
+      ],
+      "groups": [
+        "hour",
+        "separator"
+      ],
+      "match": "(?<hour>$orderM_written) (?<separator>$timeM_written)",
+      "map": {
+        "hour": "order_written",
+        "separator": "time_written"
+      },
+      "value": {
+        "hour": "$hour",
+        "separator": "$separator",
+        "minute": "00"
+      }
+    },
+    {
+      "desc": "9 . rano",
+      "keys": [
+        "timeM_written"
+      ],
+      "groups": [
+        "hour",
+        "separator"
+      ],
+      "match": "(?<hour>%d%d?) . (?<separator>$timeM_written)",
+      "map": {
+        "separator": "time_written"
+      },
+      "value": {
+        "hour": "$hour",
+        "separator": "$separator",
+        "minute": "00"
+      }
+    },
+    {
+      "desc": "godzina 19",
+      "keys": [],
+      "groups": [
+        "hour"
+      ],
+      "match": "godzina( | . )(?<hour>%d%d?)",
+      "map": {},
+      "value": {
+        "hour": "$hour",
+        "minute": "00"
+      }
+    },
+    {
+      "desc": "godzina 19 . 42",
+      "keys": [],
+      "groups": [
+        "hour",
+        "minute"
+      ],
+      "match": "godzina (?<hour>%d%d?) : (?<minute>%d%d?)",
+      "map": {},
+      "value": {
+        "hour": "$hour",
+        "minute": "$minute"
+      }
+    },
+    {
+      "desc": "godzina . 16 . 00",
+      "keys": [],
+      "groups": [
+        "hour",
+        "minute"
+      ],
+      "match": "godzina %. (?<hour>%d%d?) %. (?<minute>%d%d?)",
+      "map": {},
+      "value": {
+        "hour": "$hour",
+        "minute": "$minute"
+      }
+    },
+    {
+      "desc": "godzina 16 . 00",
+      "keys": [],
+      "groups": [
+        "hour",
+        "minute"
+      ],
+      "match": "godzina (?<hour>%d%d?) %. (?<minute>%d%d?)",
+      "map": {},
+      "value": {
+        "hour": "$hour",
+        "minute": "$minute"
+      }
+    },
+    {
+      "desc": "następny piątek",
+      "keys": [
+        "nextM_written",
+        "dayM_written"
+      ],
+      "groups": [
+        "day"
+      ],
+      "match": "($nextM_written) (?<day>$dayM_written)",
+      "map": {
+        "day": "day_written"
+      },
+      "value": {
+        "year": "null",
+        "month": "null",
+        "day": ">D$day"
+      }
+    },
+    {
+      "desc": "dziś o ósmy",
+      "keys": [
+        "todayM_written",
+        "orderM_written"
+      ],
+      "groups": [
+        "hour"
+      ],
+      "match": "($todayM_written) o (?<hour>$orderM_written)",
+      "map": {
+        "hour": "order_written"
+      },
+      "value": {
+        "hour": "$hour",
+        "minute": "00"
+      }
+    },
+    {
+      "desc": "pierwszy listopad",
+      "keys": [
+        "orderM_written",
+        "monthM_written"
+      ],
+      "groups": [
+        "day",
+        "month"
+      ],
+      "match": "(?<day>$orderM_written) (?<month>$monthM_written)",
+      "map": {
+        "day": "order_written",
+        "month": "month_written"
+      },
+      "value": {
+        "day": "$day",
+        "month": "$month"
+      }
+    },
+    {
+      "desc": "piąty grudzień dwudziesty trzeci rok",
+      "keys": [
+        "orderM_written",
+        "monthM_written",
+        "order2M_written"
+      ],
+      "groups": [
+        "day",
+        "month",
+        "year1",
+        "year2"
+      ],
+      "match": "(?<day>$orderM_written) (?<month>$monthM_written) (?<year1>$order2M_written) (?<year2>$order2M_written)",
+      "map": {
+        "day": "order_written",
+        "month": "month_written",
+        "year1": "order2_written",
+        "year2": "order2_written"
+      },
+      "value": {
+        "day": "$day",
+        "month": "$month",
+        "year": "xx$year1$year2"
+      }
+    },
+    {
+      "desc": "listopad ubiegły rok",
+      "keys": [
+        "monthM_written",
+        "beforeM_written"
+      ],
+      "groups": [
+        "month"
+      ],
+      "match": "(?<month>$monthM_written) ($beforeM_written) rok",
+      "map": {
+        "month": "month_written"
+      },
+      "value": {
+        "month": "$month",
+        "year": "xxxx"
+      }
+    },
+    {
+      "desc": "dzisiejszy niedziela",
+      "keys": [
+        "todayM_written",
+        "dayM_written"
+      ],
+      "groups": [],
+      "match": "($todayM_written) ($dayM_written)",
+      "map": {},
+      "value": {
+        "year": "+0000",
+        "month": "00",
+        "day": "00"
+      }
+    },
+    {
+      "desc": "dwudziesty drugi zero trzy",
+      "keys": [
+        "orderM_written",
+        "digitM_written"
+      ],
+      "groups": [
+        "hour",
+        "minute1",
+        "minute2"
+      ],
+      "match": "(?<hour>$orderM_written) (?<minute1>$digitM_written) (?<minute2>$digitM_written)",
+      "map": {
+        "hour": "order_written",
+        "minute1": "digit_written",
+        "minute2": "digit_written"
+      },
+      "value": {
+        "hour": "$hour",
+        "minute": "$minute1$minute2"
+      }
+    },
+    {
+      "desc": "ten noc",
+      "keys": [
+        "timeM_written"
+      ],
+      "groups": [
+        "hour"
+      ],
+      "match": "ten (?<hour>$timeM_written)",
+      "map": {
+        "hour": "time_written"
+      },
+      "value": {
+        "year": "+0000",
+        "month": "00",
+        "day": "00",
+        "hour": "$hour",
+        "separator": "$hour"
+      }
+    },
+    {
+      "desc": "ten wiosna",
+      "keys": [
+        "seasonM_written"
+      ],
+      "groups": [
+        "month"
+      ],
+      "match": "ten (?<month>$seasonM_written)",
+      "map": {
+        "month": "season"
+      },
+      "value": {
+        "year": "+0000",
+        "month": "$month"
+      }
+    },
+    {
+      "desc": "poprzedni wieczór",
+      "keys": [
+        "beforeM_written",
+        "timeM_written"
+      ],
+      "groups": [
+        "hour"
+      ],
+      "match": "($beforeM_written) (?<hour>$timeM_written)",
+      "map": {
+        "hour": "time_written"
+      },
+      "value": {
+        "year": "-0000",
+        "month": "00",
+        "day": "01",
+        "hour": "$hour",
+        "separator": "$hour"
+      }
+    },
+    {
+      "desc": "dziewiąty w poniedziałek",
+      "keys": [
+        "orderM_written",
+        "dayM_written"
+      ],
+      "groups": [
+        "hour",
+        "day"
+      ],
+      "match": "(?<hour>$orderM_written) w (?<day>$dayM_written)",
+      "map": {
+        "day": "day_written",
+        "hour": "order_written"
+      },
+      "value": {
+        "day": "$day",
+        "month": "Wxx",
+        "year": "xxxx",
+        "hour": "$hour",
+        "minute": "00"
+      }
+    },
+    {
+      "desc": "niedziela o 11",
+      "keys": [
+        "dayM_written"
+      ],
+      "groups": [
+        "day",
+        "hour"
+      ],
+      "match": "(?<day>$dayM_written) o (?<hour>%d%d?)",
+      "map": {
+        "day": "day_written"
+      },
+      "value": {
+        "day": "$day",
+        "month": "Wxx",
+        "year": "xxxx",
+        "hour": "$hour",
+        "minute": "00"
+      }
+    },
+    {
+      "desc": "wielkanoc",
+      "keys": [],
+      "groups": [],
+      "match": "wielkanoc",
+      "map": {},
+      "value": {
+        "hour": "null"
+      }
+    },
+    {
+      "desc": "36( . | )sekunda",
+      "keys": [],
+      "groups": [
+        "second"
+      ],
+      "match": "(?<second>%d+)( %. | )sekunda",
+      "map": {},
+      "value": {
+        "year": "+0000",
+        "month": "00",
+        "day": "00",
+        "hour": "+00",
+        "minute": "00",
+        "second": "$second"
+      }
+    },
+    {
+      "desc": "3( . | )minuta",
+      "keys": [],
+      "groups": [
+        "minute"
+      ],
+      "match": "^(?<minute>%d+)( %. | )minuta$",
+      "map": {},
+      "value": {
+        "year": "+0000",
+        "month": "00",
+        "day": "00",
+        "hour": "+00",
+        "minute": "$minute"
+      }
+    },
+    {
+      "desc": "3 .",
+      "keys": [],
+      "groups": [
+        "minute"
+      ],
+      "match": "^(?<minute>%d+)( %.| %')$",
+      "map": {},
+      "limit": [
+        "t3_time"
+      ],
+      "value": {
+        "year": "+0000",
+        "month": "00",
+        "day": "00",
+        "hour": "+00",
+        "minute": "$minute"
+      }
+    },
+    {
+      "desc": "^pięćdziesiąt$",
+      "keys": [
+        "tensM_written"
+      ],
+      "groups": [
+        "minute"
+      ],
+      "match": "^(?<minute>$tensM_written)$",
+      "map": {
+        "minute": "tens_written"
+      },
+      "limit": [
+        "t3_time"
+      ],
+      "value": {
+        "minute": "$minute0"
+      }
+    },
+    {
+      "desc": "^pięćdziesiąt jeden$",
+      "keys": [
+        "tensM_written",
+        "digitM_written"
+      ],
+      "groups": [
+        "minute1",
+        "minute2"
+      ],
+      "match": "^(?<minute1>$tensM_written) (?<minute2>$digitM_written)$",
+      "map": {
+        "minute1": "tens_written",
+        "minute2": "digit_written"
+      },
+      "limit": [
+        "t3_time"
+      ],
+      "value": {
+        "minute": "$minute1$minute2"
+      }
+    },
+    {
+      "desc": "12 . 00",
+      "keys": [],
+      "groups": [
+        "hour",
+        "minute"
+      ],
+      "match": "^(około (%. )?)?(?<hour>%d%d?)( %. | %: )(?<minute>%d%d?)$",
+      "map": {},
+      "limit": [
+        "t3_time"
+      ],
+      "value": {
+        "hour": "$hour",
+        "minute": "$minute"
+      }
+    },
+    {
+      "desc": "^(godzina )?jedenasta( ($tomorrowM_written))?$",
+      "keys": [
+        "tomorrowM_written",
+        "orderM_written"
+      ],
+      "groups": [
+        "hour"
+      ],
+      "match": "^(godzina |około.*)?(?<hour>$orderM_written)( ($tomorrowM_written))?$",
+      "map": {
+        "hour": "order_written"
+      },
+      "limit": [
+        "t3_time"
+      ],
+      "value": {
+        "hour": "$hour",
+        "minute": "00"
+      }
+    },
+    {
+      "desc": "^jedenasty dwanaście$",
+      "keys": [
+        "orderM_written",
+        "teensM_written"
+      ],
+      "groups": [
+        "hour",
+        "minute"
+      ],
+      "match": "^(?<hour>$orderM_written) (?<minute>$teensM_written)$",
+      "map": {
+        "hour": "order_written",
+        "minute": "teens_written"
+      },
+      "limit": [
+        "t3_time"
+      ],
+      "value": {
+        "hour": "$hour",
+        "minute": "$minute"
+      }
+    },
+    {
+      "desc": "^jedenasty dwadzieścia",
+      "keys": [
+        "orderM_written",
+        "tensM_written"
+      ],
+      "groups": [
+        "hour",
+        "minute"
+      ],
+      "match": "^(?<hour>$orderM_written) (?<minute>$tensM_written)$",
+      "map": {
+        "hour": "order_written",
+        "minute": "tens_written"
+      },
+      "limit": [
+        "t3_time"
+      ],
+      "value": {
+        "hour": "$hour",
+        "minute": "$minute0"
+      }
+    },
+    {
+      "desc": "^dwudziesty trzeci cztery",
+      "keys": [
+        "orderM_written",
+        "digitM_written"
+      ],
+      "groups": [
+        "hour",
+        "minute"
+      ],
+      "match": "^(?<hour>$orderM_written) (?<minute>$digitM_written)$",
+      "map": {
+        "hour": "order_written",
+        "minute": "digit_written"
+      },
+      "limit": [
+        "t3_time"
+      ],
+      "value": {
+        "hour": "$hour",
+        "minute": "0$minute"
+      }
+    },
+    {
+      "desc": "^trzynasty dwadzieścia osiem",
+      "keys": [
+        "orderM_written",
+        "tensM_written",
+        "digitM_written"
+      ],
+      "groups": [
+        "hour",
+        "minute1",
+        "minute2"
+      ],
+      "match": "^(godzina )?(?<hour>$orderM_written) (?<minute1>$tensM_written) (?<minute2>$digitM_written)$",
+      "map": {
+        "hour": "order_written",
+        "minute1": "tens_written",
+        "minute2": "digit_written"
+      },
+      "limit": [
+        "t3_time"
+      ],
+      "value": {
+        "hour": "$hour",
+        "minute": "$minute1$minute2"
+      }
+    },
+    {
+      "desc": "^dziesiąty trzydzieści siedem",
+      "keys": [
+        "orderM_written",
+        "tensM_written",
+        "digitM_written"
+      ],
+      "groups": [
+        "hour",
+        "minute1",
+        "minute2"
+      ],
+      "match": "^(?<hour>$orderM_written) (?<minute1>$tensM_written) (?<minute2>$digitM_written)$",
+      "map": {
+        "hour": "order_written",
+        "minute1": "tens_written",
+        "minute2": "digit_written"
+      },
+      "limit": [
+        "t3_time"
+      ],
+      "value": {
+        "hour": "$hour",
+        "minute": "$minute1$minute2"
+      }
+    },
+    {
+      "desc": "^15$",
+      "keys": [],
+      "groups": [
+        "day"
+      ],
+      "match": "^(?<day>[1-9])$",
+      "map": {},
+      "limit": [
+        "t3_date"
+      ],
+      "value": {
+        "year": "xxxx",
+        "month": "xx",
+        "day": "0$day"
+      }
+    },
+    {
+      "desc": "^15$",
+      "keys": [],
+      "groups": [
+        "day"
+      ],
+      "match": "^(?<day>([12][0-9]|[3][01]))$",
+      "map": {},
+      "limit": [
+        "t3_date"
+      ],
+      "value": {
+        "year": "xxxx",
+        "month": "xx",
+        "day": "$day"
+      }
+    },
+    {
+      "desc": "^06$",
+      "keys": [],
+      "groups": [
+        "year"
+      ],
+      "match": "^(?<year>0[1-9])$",
+      "map": {},
+      "limit": [
+        "t3_date"
+      ],
+      "value": {
+        "year": "20$year"
+      }
+    },
+    {
+      "desc": "^xii$",
+      "keys": [
+        "romanM_written"
+      ],
+      "groups": [
+        "year"
+      ],
+      "match": "^(koniec |początek |wiek )?(w.)?(?<year>$romanM_written)( - wieczny)?$",
+      "map": {
+        "year": "century_written"
+      },
+      "limit": [
+        "t3_date"
+      ],
+      "value": {
+        "year": "$year"
+      }
+    },
+    {
+      "desc": "^20 .",
+      "keys": [],
+      "groups": [
+        "year"
+      ],
+      "match": "^(początek )?(rok )?(?<year>%d)0( %.| - ten( ubiegły wiek)?|%.tych)$",
+      "map": {},
+      "limit": [
+        "t3_date"
+      ],
+      "value": {
+        "year": "xx$year"
+      }
+    },
+    {
+      "desc": "ostatni minuta",
+      "keys": [
+        "lastM_written"
+      ],
+      "groups": [],
+      "match": "^($lastM_written) minuta$",
+      "map": {},
+      "limit": [
+        "t3_time"
+      ],
+      "value": {
+        "year": "xxxx",
+        "month": "xx",
+        "day": "xx",
+        "hour": "xx",
+        "minute": "xx"
+      }
+    },
+    {
+      "desc": "zero",
+      "keys": [],
+      "groups": [],
+      "match": "^zero$",
+      "map": {},
+      "limit": [
+        "t3_time"
+      ],
+      "value": {
+        "year": "xxxx",
+        "month": "xx",
+        "day": "xx",
+        "hour": "xx",
+        "minute": "00"
+      }
+    },
+    {
+      "desc": "12",
+      "keys": [],
+      "groups": [
+        "hour"
+      ],
+      "match": "^(?<hour>%d%d?)$",
+      "map": {},
+      "limit": [
+        "t3_time"
+      ],
+      "value": {
+        "year": "xxxx",
+        "month": "xx",
+        "day": "xx",
+        "hour": "$hour",
+        "minute": "00"
+      }
+    },
+    {
+      "desc": "^dziewiętnasty$",
+      "keys": [
+        "orderM_written"
+      ],
+      "groups": [
+        "day"
+      ],
+      "match": "^(?<day>$orderM_written)$",
+      "map": {
+        "day": "order_written"
+      },
+      "limit": [
+        "t3_date"
+      ],
+      "value": {
+        "year": "xxxx",
+        "month": "xx",
+        "day": "$day"
+      }
+    },
+    {
+      "desc": "730",
+      "keys": [],
+      "groups": [
+        "hour",
+        "minute"
+      ],
+      "match": "^(?<hour>%d)(?<minute>%d%d)$",
+      "map": {},
+      "limit": [
+        "t3_time"
+      ],
+      "value": {
+        "year": "xxxx",
+        "month": "xx",
+        "day": "xx",
+        "hour": "$hour",
+        "minute": "$minute"
+      }
+    },
+    {
+      "desc": "7:30",
+      "keys": [],
+      "groups": [
+        "hour",
+        "minute"
+      ],
+      "match": "^(?<hour>%d%d?)[:](?<minute>%d%d?)$",
+      "map": {},
+      "limit": [
+        "t3_time"
+      ],
+      "value": {
+        "year": "xxxx",
+        "month": "xx",
+        "day": "xx",
+        "hour": "$hour",
+        "minute": "$minute"
+      }
+    },
+    {
+      "desc": "ostatni dzień triduum paschalny",
+      "keys": [
+        "lastM_written"
+      ],
+      "groups": [],
+      "match": "($lastM_written) dzień (triduum paschalny)",
+      "map": {},
+      "value": {
+        "year": "xxxx",
+        "month": "xx",
+        "day": "xx"
+      }
+    },
+    {
+      "desc": "boży narodzenie",
+      "keys": [],
+      "groups": [],
+      "match": "boży narodzenie",
+      "map": {},
+      "value": {
+        "month": "12",
+        "day": "25"
+      }
+    },
+    {
+      "desc": "11 . 09",
+      "keys": [],
+      "groups": [
+        "day",
+        "month"
+      ],
+      "match": "^(?<day>%d%d?) %. (?<month>%d%d?)$",
+      "limit": [
+        "t3_date"
+      ],
+      "map": {},
+      "value": {
+        "month": "$month",
+        "day": "$day"
+      }
+    },
+    {
+      "desc": "^94$",
+      "keys": [],
+      "groups": [
+        "year"
+      ],
+      "match": "^(?<year>[4-9][1-9])$",
+      "map": {},
+      "limit": [
+        "t3_date"
+      ],
+      "value": {
+        "year": "xx$year"
+      }
+    },
+    {
+      "desc": "^35$",
+      "keys": [],
+      "groups": [
+        "year"
+      ],
+      "match": "^(?<year>3[2-9])$",
+      "map": {},
+      "limit": [
+        "t3_date"
+      ],
+      "value": {
+        "year": "xx$year"
+      }
+    },
+    {
+      "desc": "^rok 90$",
+      "keys": [],
+      "groups": [
+        "year"
+      ],
+      "match": "^(wczesny )?(rok )?(?<year>[4-9])0(ych)?$",
+      "map": {},
+      "limit": [
+        "t3_date"
+      ],
+      "value": {
+        "year": "xx$year"
+      }
+    },
+    {
+      "desc": "rok osiemdziesiąty$",
+      "keys": [
+        "order2M_written"
+      ],
+      "groups": [
+        "year"
+      ],
+      "match": "rok (?<year>$order2M_written)$",
+      "map": {
+        "year": "order2_written"
+      },
+      "limit": [
+        "t3_date"
+      ],
+      "value": {
+        "year": "xx$year"
+      }
+    },
+    {
+      "desc": "rok osiemdziesiąty dwudziesty wiek$",
+      "keys": [
+        "order2M_written",
+        "orderM_written"
+      ],
+      "groups": [
+        "year2",
+        "year1"
+      ],
+      "match": "rok (?<year2>$order2M_written) (?<year1>$orderM_written) wiek$",
+      "map": {
+        "year1": "order_century_written",
+        "year2": "order2_written"
+      },
+      "limit": [
+        "t3_date"
+      ],
+      "value": {
+        "year": "$year1$year2"
+      }
+    },
+    {
+      "desc": "^22min$",
+      "keys": [],
+      "groups": [
+        "minute"
+      ],
+      "match": "^(około )?(?<minute>%d%d?)(min| Min| minuta)$",
+      "map": {},
+      "limit": [
+        "t3_time"
+      ],
+      "value": {
+        "year": "+0000",
+        "month": "00",
+        "day": "00",
+        "hour": "+00",
+        "minute": "$minute"
+      }
+    },
+    {
+      "desc": "^dwudziesty wiek$",
+      "keys": [
+        "orderM_written"
+      ],
+      "groups": [
+        "year"
+      ],
+      "match": "^(koniec )?(?<year>$orderM_written) wiek$",
+      "map": {
+        "year": "order_century_written"
+      },
+      "limit": [
+        "t3_date"
+      ],
+      "value": {
+        "year": "$year"
+      }
+    },
+    {
+      "desc": "^pierwszy doba$",
+      "keys": [
+        "orderM_written"
+      ],
+      "groups": [
+        "day"
+      ],
+      "match": "^(?<day>$orderM_written) doba$",
+      "map": {
+        "day": "order_written"
+      },
+      "limit": [
+        "t3_date"
+      ],
+      "value": {
+        "year": "+0000",
+        "month": "00",
+        "day": "$day"
+      }
+    },
+    {
+      "desc": "^pojutrze$",
+      "keys": [],
+      "groups": [],
+      "match": "^pojutrze$",
+      "map": {},
+      "limit": [
+        "t3_date"
+      ],
+      "value": {
+        "year": "+0000",
+        "month": "00",
+        "day": "02"
+      }
+    },
+    {
+      "desc": "^ten weekend$",
+      "keys": [],
+      "groups": [],
+      "match": "^ten weekend$",
+      "map": {},
+      "limit": [
+        "t3_date"
+      ],
+      "value": {
+        "year": "+0000",
+        "month": "W00",
+        "day": "WE"
+      }
+    },
+    {
+      "desc": "^bliski weekend$",
+      "keys": [],
+      "groups": [],
+      "match": "^bliski weekend$",
+      "map": {},
+      "limit": [
+        "t3_date"
+      ],
+      "value": {
+        "year": "+0000",
+        "month": "W01",
+        "day": "WE"
+      }
+    },
+    {
+      "desc": "^miniony wiek$",
+      "keys": [],
+      "groups": [],
+      "match": "^miniony wiek$",
+      "map": {},
+      "limit": [
+        "t3_date"
+      ],
+      "value": {
+        "year": "-01"
+      }
+    },
+    {
+      "desc": "^początek drugi tysiąclecie nasz era$",
+      "keys": [],
+      "groups": [],
+      "match": "^początek drugi tysiąclecie nasz era$",
+      "map": {},
+      "limit": [
+        "t3_date"
+      ],
+      "value": {
+        "year": "1"
+      }
+    },
+    {
+      "desc": "^dziewiętnastowieczny$",
+      "keys": [
+        "century2M_written"
+      ],
+      "groups": [
+        "year"
+      ],
+      "match": "^(?<year>$century2M_written)wieczny$",
+      "map": {
+        "year": "century2_written"
+      },
+      "limit": [
+        "t3_date"
+      ],
+      "value": {
+        "year": "$year"
+      }
+    },
+    {
+      "desc": "^siódmy rocznica",
+      "keys": [
+        "orderM_written"
+      ],
+      "groups": [
+        "year"
+      ],
+      "match": "^(?<year>$orderM_written) rocznica$",
+      "map": {
+        "year": "order_written"
+      },
+      "limit": [
+        "t3_date"
+      ],
+      "value": {
+        "year": "+000$year"
+      }
+    }
+  ]
+}

@@ -49,11 +49,33 @@ public class CommonOptions {
   public static final String OPTION_ANNOTATION_PATTERN_LONG = "annotation-type-pattern";
   public static final String OPTION_ANNOTATION_PATTERN_DESC = "pattern of annotation type";
 
+  public static final String OPTION_REPORT_FILE = "r";
+  public static final String OPTION_REPORT_FILE_LONG = "report";
+
+  public static final String OPTION_COMBO_FILE = "p";
+  public static final String OPTION_COMBO_FILE_LONG = "parsed_combo";
+
+  public static final String OPTION_COMBO_FORMAT = "q";
+  public static final String OPTION_COMBO_FORMAT_LONG = "parsed_combo_format";
+
+  public static final String OPTION_RULE = "u";
+  public static final String OPTION_RULE_LONG = "rule";
+
+  public static final String OPTION_RULE_FILENAME = "uf";
+  public static final String OPTION_RULE_FILENAME_LONG = "rule_filename";
+
   public static Option getOutputFileNameOption() {
     return Option.builder(CommonOptions.OPTION_OUTPUT_FILE)
         .longOpt(CommonOptions.OPTION_OUTPUT_FILE_LONG)
         .hasArg().argName("filename").desc("path to an output file").build();
   }
+
+  public static Option getReportFileNameOption() {
+    return Option.builder(CommonOptions.OPTION_REPORT_FILE)
+        .longOpt(CommonOptions.OPTION_REPORT_FILE_LONG)
+        .hasArg().argName("filename").desc("path to a report file").build();
+  }
+
 
   public static Option getOutputFileFormatOption() {
     return Option.builder(CommonOptions.OPTION_OUTPUT_FORMAT)
@@ -65,6 +87,33 @@ public class CommonOptions {
     return Option.builder(CommonOptions.OPTION_INPUT_FILE)
         .longOpt(CommonOptions.OPTION_INPUT_FILE_LONG)
         .hasArg().argName("filename").desc("path to a file to read").build();
+  }
+
+  public static Option getComboFileNameOption() {
+    return Option.builder(CommonOptions.OPTION_COMBO_FILE)
+        .longOpt(CommonOptions.OPTION_COMBO_FILE_LONG)
+        .hasArg().argName("filename").desc("path to a conllu file made with COMBO parser to read").build();
+  }
+
+  public static Option getRuleOption() {
+    return Option.builder(CommonOptions.OPTION_RULE)
+            .longOpt(CommonOptions.OPTION_RULE_LONG)
+            .hasArg().argName("filename").desc("rule saying what relations to look for").build();
+  }
+
+  public static Option getRuleFilenameOption() {
+    return Option.builder(CommonOptions.OPTION_RULE_FILENAME)
+            .longOpt(CommonOptions.OPTION_RULE_FILENAME_LONG)
+            .hasArg().argName("filename").desc("path to a file with rule saying what relations to look for").build();
+  }
+
+
+
+
+  public static Option getComboFileFormatOption() {
+    return Option.builder(CommonOptions.OPTION_COMBO_FORMAT)
+        .longOpt(CommonOptions.OPTION_COMBO_FORMAT_LONG)
+        .hasArg().argName("format").desc("input format [conllu, batch:conllu]").build();
   }
 
   public static Option getInputFileNamesOption() {
@@ -140,8 +189,12 @@ public class CommonOptions {
   }
 
   public static Option getMaltparserModelFileOption() {
+    return getMaltparserModelFileOption(false);
+  }
+
+  public static Option getMaltparserModelFileOption(boolean required) {
     return Option.builder(OPTION_MALT).longOpt(OPTION_MALT_LONG).hasArg().argName(OPTION_MALT_ARG)
-        .desc(OPTION_MALT_DESC).build();
+        .desc(OPTION_MALT_DESC).required(required).build();
   }
 
   public static Option getAnnotationTypePatterns() {

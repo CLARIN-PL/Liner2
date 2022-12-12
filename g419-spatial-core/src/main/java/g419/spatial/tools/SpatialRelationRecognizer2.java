@@ -7,7 +7,7 @@ import g419.corpus.schema.tagset.MappingNkjpToConllPos;
 import g419.corpus.structure.*;
 import g419.liner2.core.features.tokens.ClassFeature;
 import g419.liner2.core.tools.parser.MaltSentence;
-import g419.liner2.core.tools.parser.MaltSentenceLink;
+import g419.liner2.core.tools.parser.SentenceLink;
 import g419.spatial.filter.*;
 import g419.spatial.pattern.*;
 import g419.spatial.structure.SpatialExpression;
@@ -345,7 +345,7 @@ public class SpatialRelationRecognizer2 extends ISpatialRelationRecognizer {
           .forEach(token -> {
             final int indicator = tokens.indexOf(token);
             final List<Integer> landmarks = maltSentence.getLinksByTargetIndex(indicator).stream()
-                .map(MaltSentenceLink::getSourceIndex)
+                .map(SentenceLink::getSourceIndex)
                 .map(nodeIndex -> getElementConjunction(maltSentence, nodeIndex))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
@@ -366,7 +366,7 @@ public class SpatialRelationRecognizer2 extends ISpatialRelationRecognizer {
     }
     final List<Integer> trajectors = Lists.newArrayList();
     final List<Pair<Integer, List<Integer>>> indicatorLandmark = Lists.newArrayList();
-    for (final MaltSentenceLink link : maltSentence.getLinksByTargetIndex(pos)) {
+    for (final SentenceLink link : maltSentence.getLinksByTargetIndex(pos)) {
       final Token tokenChild = tokens.get(link.getSourceIndex());
       if (trPos.equals(link.getRelationType())) {
         trajectors.addAll(getElementConjunction(maltSentence, link.getSourceIndex()));
@@ -388,7 +388,7 @@ public class SpatialRelationRecognizer2 extends ISpatialRelationRecognizer {
     final Token token = maltSentence.getSentence().getTokens().get(nodeIndex);
     if (orthConj.contains(token.getOrth().toLowerCase())) {
       return maltSentence.getLinksByTargetIndex(nodeIndex).stream()
-          .map(MaltSentenceLink::getSourceIndex)
+          .map(SentenceLink::getSourceIndex)
           .map(index -> getObjectOnPath(maltSentence, index))
           .flatMap(Collection::stream)
           .collect(Collectors.toList());
