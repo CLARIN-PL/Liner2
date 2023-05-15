@@ -1,4 +1,4 @@
-Liner2.6
+Liner2.7
 ========
 
 [![Build Status](https://travis-ci.org/CLARIN-PL/Liner2.svg)](https://travis-ci.org/CLARIN-PL/Liner2) [![Coverage Status](https://coveralls.io/repos/github/CLARIN-PL/Liner2/badge.svg?branch=feature%2Fspatial-dynamic)](https://coveralls.io/github/CLARIN-PL/Liner2?branch=feature%2Fspatial-dynamic) [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Contributors
 ------------
 * **Michał Marcińczuk** (2010–present), 
-* **Jan Kocoń** (2014–present), 
+* Jan Kocoń (2014–2019), 
 * Michał Gawor (2019),
 * Adam Kaczmarek (2014–2015),
 * Michał Krautforst (2013-2015), 
