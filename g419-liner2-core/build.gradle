@@ -1,22 +1,26 @@
 description = "g419-liner2-core"
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.17
+targetCompatibility = 1.17
 
 dependencies {
-    compile project(":g419-external-dependencies")
-    compile project(":g419-corpus")
-    compile project(":g419-lib-cli")
-    compile project(":g419-toolbox")
-    compile files('../lib/PolemJava.jar')
-    compile 'commons-io:commons-io:2.4'
-    compile 'org.ini4j:ini4j:0.5.2'
-    compile 'nz.ac.waikato.cms.weka:weka-stable:3.6.11'
-    compile 'org.maltparser:maltparser:1.8.1'
-    compile "joda-time:joda-time:2.8.1"
-    compile 'com.googlecode.json-simple:json-simple:1.1.1'
-    runtime 'org.slf4j:slf4j-log4j12:1.7.2'
-    compile files('../lib/PolemJava.jar')
-    compile files('../lib/fasttext.jar')
-    compile 'log4j:log4j:1.2.17'
+    implementation project(":g419-external-dependencies")
+    implementation project(":g419-corpus")
+    implementation project(":g419-lib-cli")
+    implementation project(":g419-toolbox")
+    implementation files('../lib/PolemJava.jar')
+    implementation 'commons-io:commons-io:2.4'
+    implementation 'org.ini4j:ini4j:0.5.2'
+    implementation 'nz.ac.waikato.cms.weka:weka-stable:3.6.11'
+    implementation 'org.maltparser:maltparser:1.8.1'
+    implementation "joda-time:joda-time:2.8.1"
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+    runtimeOnly 'org.slf4j:slf4j-log4j12:1.7.2'
+    implementation files('../lib/PolemJava.jar')
+    implementation files('../lib/fasttext.jar')
+    implementation 'log4j:log4j:1.2.17'
+    implementation 'org.apache.commons:commons-lang3:3.5'
+    implementation files("../lib/princetonAdapter.jar")
+    implementation "com.google.guava:guava:31.1-jre"
+    implementation "com.google.code.gson:gson:2.8.2"
 }

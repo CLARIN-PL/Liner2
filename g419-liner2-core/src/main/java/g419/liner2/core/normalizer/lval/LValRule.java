@@ -20,8 +20,6 @@ public class LValRule {
   public Map<String, String> map;
   public ArrayList<String> limit;
   public Map<String, String> value;
-  public Pattern pattern;
-  public Pattern patternOrth;
 
   public boolean checkLemmaTags(Annotation annotation) {
     if (lemmaTags != null) {

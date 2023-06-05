@@ -19,11 +19,11 @@ jar {
 }
 
 dependencies {
-    compile 'commons-cli:commons-cli:1.2'
+    implementation 'commons-cli:commons-cli:1.2'
     //compile 'org.maltparser:maltparser:1.8.1' // should be compatible with 1.7.1
-    compile 'org.maltparser:maltparser:1.9.2'
-    compile 'org.seleniumhq.selenium:selenium-java:3.0.1'
-    compile project(":g419-corpus")
-    compile project(":g419-external-dependencies")
-    compile files("../lib/princetonAdapter.jar")
+    implementation 'org.maltparser:maltparser:1.9.2'
+    implementation 'org.seleniumhq.selenium:selenium-java:3.0.1'
+    implementation project(":g419-corpus")
+    implementation project(":g419-external-dependencies")
+    implementation files("../lib/princetonAdapter.jar")
 }

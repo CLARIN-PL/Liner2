@@ -23,15 +23,15 @@ jar {
 }
 
 dependencies {
-    compile 'commons-cli:commons-cli:1.2'
-    compile 'commons-io:commons-io:2.4'
-    compile 'org.ini4j:ini4j:0.5.2'
-    compile 'org.json:json:20141113'
-    compile 'mysql:mysql-connector-java:5.1.10'
-    compile 'com.rabbitmq:amqp-client:5.5.0'
-    compile project(":g419-corpus")
-    compile project(":g419-liner2-core")
-    compile project(":g419-lib-cli")
+    implementation 'commons-cli:commons-cli:1.2'
+    implementation 'commons-io:commons-io:2.4'
+    implementation 'org.ini4j:ini4j:0.5.2'
+    implementation 'org.json:json:20141113'
+    implementation 'mysql:mysql-connector-java:5.1.10'
+    implementation 'com.rabbitmq:amqp-client:5.5.0'
+    implementation project(":g419-corpus")
+    implementation project(":g419-liner2-core")
+    implementation project(":g419-lib-cli")
 }
 
 

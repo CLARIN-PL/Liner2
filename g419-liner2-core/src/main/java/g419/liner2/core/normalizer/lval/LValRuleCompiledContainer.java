@@ -1,64 +1,29 @@
 package g419.liner2.core.normalizer.lval;
 
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
+import com.google.common.collect.Lists;
 import g419.corpus.structure.Annotation;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by kotu on 12.01.17.
  */
-public class LValRuleContainer {
+public class LValRuleCompiledContainer {
   public Map<String, List<String>> keys;
   public Map<String, Map<String, String>> maps;
-  public List<LValRule> rules;
+  public List<LValRuleCompiled> rules;
 
-  public LValRuleCompiledContainer prepareRules() {
-    LValRuleCompiledContainer compiled = new LValRuleCompiledContainer(keys, maps);
-    for (LValRule rule : rules) {
-      String match = new String(rule.match);
-      for (Map.Entry<String, List<String>> keyEntry : keys.entrySet()) {
-        match = match.replaceAll("\\$" + keyEntry.getKey(), StringUtils.join(keyEntry.getValue(), "|")).replaceAll("%", "\\\\");
-      }
-      LValRuleCompiled ruleCompiled = new LValRuleCompiled(rule, Pattern.compile(match));
-      compiled.rules.add(ruleCompiled);
-    }
-    return compiled;
+  public LValRuleCompiledContainer(Map<String, List<String>> keys, Map<String, Map<String, String>> maps){
+    this.keys = keys;
+    this.maps = maps;
+    this.rules = Lists.newLinkedList();
   }
-
-  public static LValRuleCompiledContainer load(String path) {
-    FileReader fileReader = null;
-    try {
-      fileReader = new FileReader(path);
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-    JsonReader jsonReader = new JsonReader(fileReader);
-    GsonBuilder builder = new GsonBuilder();
-    LValRuleContainer ruleContainer = builder.create().fromJson(jsonReader, LValRuleContainer.class);
-    return ruleContainer.prepareRules();
-  }
-
-  public static LValRuleCompiledContainer load(InputStream stream) {
-    JsonReader jsonReader = new JsonReader(new InputStreamReader(stream));
-    GsonBuilder builder = new GsonBuilder();
-    LValRuleContainer ruleContainer = builder.create().fromJson(jsonReader, LValRuleContainer.class);
-    return ruleContainer.prepareRules();
-  }
-
 
   public String getLVal(Annotation annotation) {
     String annBase = annotation.getBaseText(false);
@@ -77,16 +42,15 @@ public class LValRuleContainer {
   }
 
   public String getLVal(String annBase, String annType, Annotation annotation_optional) {
-    List<LValRule> rulesUsed = new LinkedList<>();
+    List<LValRuleCompiled> rulesUsed = new LinkedList<>();
     //ostateczne wartości year, month, day, hour
     Map<String, String> globalValues = new HashMap<>();
-    for (LValRule rule : rules) {
+    for (LValRuleCompiled rule : rules) {
       if (rule.limit != null && !rule.limit.contains(annType)) {
         continue;
       }
       //czy reguła na ciągu base'ów jest spełniona
-      // Matcher match = rule.pattern.matcher(annBase);
-      Matcher match = null;
+      Matcher match = rule.pattern.matcher(annBase);
       if (match.find() && (annotation_optional == null || rule.checkLemmaTags(annotation_optional))) {
         //zapisz użytą regułę
         rulesUsed.add(rule);

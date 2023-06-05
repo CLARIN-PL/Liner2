@@ -18,7 +18,7 @@ apply plugin: 'wrapper'
 
 allprojects {
     apply plugin: 'java'
-    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
     apply plugin: 'idea'
     apply plugin: 'eclipse'
     apply plugin: 'groovy'
@@ -30,37 +30,37 @@ allprojects {
     }
 
     group = "pl.pwr.nlp"
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-    version = '2.7'
+    sourceCompatibility = 1.17
+    targetCompatibility = 1.17
+    version = '3.0rc1'
 
     repositories {
         mavenCentral()
     }
 
     dependencies {
-        compile(
+        implementation(
                 'org.slf4j:slf4j-api:1.7.2',
                 'io.vavr:vavr:0.9.0',
                 'io.projectreactor:reactor-core:3.1.5.RELEASE',
         )
         compileOnly(
-                'org.projectlombok:lombok:1.18.8'
+                'org.projectlombok:lombok:1.18.22'
         )
-        annotationProcessor 'org.projectlombok:lombok:1.18.8'
-        runtime(
+        annotationProcessor 'org.projectlombok:lombok:1.18.22'
+        runtimeOnly(
                 'org.slf4j:slf4j-log4j12:1.7.2',
                 'com.google.code.gson:gson:2.7',
                 'commons-lang:commons-lang:2.6',
                 'org.apache.commons:commons-csv:1.4'
         )
-        testCompile(
+        testImplementation(
                 'junit:junit:4.12',
                 'org.codehaus.groovy:groovy-all:2.4.17',
                 'org.spockframework:spock-core:1.2-groovy-2.4'
         )
         annotationProcessor(
-                'org.projectlombok:lombok:1.18.6'
+                'org.projectlombok:lombok:1.18.22'
         )
     }
 
@@ -111,19 +111,19 @@ artifacts {
 
 subprojects {
     dependencies {
-        testCompile 'junit:junit:4.11'
+        testImplementation 'junit:junit:4.11'
     }
 
-    jacocoTestReport {
-        additionalSourceDirs = files(sourceSets.main.allSource.srcDirs)
-        sourceDirectories = files(sourceSets.main.allSource.srcDirs)
-        classDirectories = files(sourceSets.main.output)
-        reports {
-            html.enabled = true
-            xml.enabled = true
-            csv.enabled = false
-        }
-    }
+//    jacocoTestReport {
+//        additionalSourceDirs = files(sourceSets.main.allSource.srcDirs)
+//        sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+//        classDirectories = files(sourceSets.main.output)
+//        reports {
+//            html.enabled = true
+//            xml.enabled = true
+//            csv.enabled = false
+//        }
+//    }
 }
 
 task libZip(type: Zip, dependsOn: build) {
@@ -163,40 +163,40 @@ task appZip(type: Zip, dependsOn: build) {
     }
 }
 
-task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
-    dependsOn = subprojects.test
-    additionalSourceDirs = files(subprojects.sourceSets.main.allSource.srcDirs)
-    sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
-    classDirectories = files(subprojects.sourceSets.main.output)
-    executionData = files(subprojects.jacocoTestReport.executionData)
-    reports {
-        html.enabled = true
-        csv.enabled = false
-        xml {
-            enabled = true
-            destination = file("build/reports/jacoco/test/jacocoTestReport.xml")
-        }
-    }
-    onlyIf = {
-        true
-    }
-    doFirst {
-        executionData = files(executionData.findAll {
-            it.exists()
-        })
-    }
-}
+//task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
+//    dependsOn = subprojects.test
+//    additionalSourceDirs = files(subprojects.sourceSets.main.allSource.srcDirs)
+//    sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
+//    classDirectories = files(subprojects.sourceSets.main.output)
+//    executionData = files(subprojects.jacocoTestReport.executionData)
+//    reports {
+//        html.enabled = true
+//        csv.enabled = false
+//        xml {
+//            enabled = true
+//            destination = file("build/reports/jacoco/test/jacocoTestReport.xml")
+//        }
+//    }
+//    onlyIf = {
+//        true
+//    }
+//    doFirst {
+//        executionData = files(executionData.findAll {
+//            it.exists()
+//        })
+//    }
+//}
 
 coveralls {
     sourceDirs = subprojects.sourceSets.main.allSource.srcDirs.flatten()
     jacocoReportPath = "build/reports/jacoco/test/jacocoTestReport.xml"
 }
 
-tasks.coveralls {
-    dependsOn jacocoRootReport
-    onlyIf { System.env.'CI' }
-}
-
-tasks.test {
-    dependsOn jacocoRootReport
-}
+//tasks.coveralls {
+//    dependsOn jacocoRootReport
+//    onlyIf { System.env.'CI' }
+//}
+//
+//tasks.test {
+//    dependsOn jacocoRootReport
+//}

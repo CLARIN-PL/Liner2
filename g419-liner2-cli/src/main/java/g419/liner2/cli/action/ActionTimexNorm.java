@@ -3,20 +3,14 @@ package g419.liner2.cli.action;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonObject;
 import g419.lib.cli.Action;
-import g419.lib.cli.ParameterException;
+import g419.liner2.core.normalizer.lval.LValRuleCompiledContainer;
 import g419.liner2.core.normalizer.lval.LValRuleContainer;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Map;
-import java.util.Scanner;
 
 /**
  * Normalize a raw temporal expressions
@@ -29,7 +23,7 @@ public class ActionTimexNorm extends Action {
 
   private String type = null;
 
-  private Map<String, LValRuleContainer> normalizers = Maps.newHashMap();
+  private Map<String, LValRuleCompiledContainer> normalizers = Maps.newHashMap();
 
   private static final String PARAM_LEMMAS = "b";
   private static final String PARAM_CATEGORY = "t";
@@ -38,9 +32,9 @@ public class ActionTimexNorm extends Action {
     super("timex-norm");
     this.setDescription("normalize a raw temporal expressions");
 
-    LValRuleContainer normDate =
+    LValRuleCompiledContainer normDate =
             LValRuleContainer.load(getClass().getClassLoader().getResourceAsStream("timex/rules-lval/rules.json"));
-    LValRuleContainer normDuration =
+    LValRuleCompiledContainer normDuration =
             LValRuleContainer.load(getClass().getClassLoader().getResourceAsStream("timex/rules-lval/rules-duration.json"));
 
     normalizers.put("t3_date", normDate);
@@ -61,10 +55,7 @@ public class ActionTimexNorm extends Action {
   }
 
   @Override
-  public void parseOptions(final CommandLine line) throws Exception {
-//    bases = line.getOptionValue(PARAM_LEMMAS);
-//    type = line.getOptionValue(PARAM_CATEGORY);
-  }
+  public void parseOptions(final CommandLine line) throws Exception {}
 
   /**
    * Module entry function.

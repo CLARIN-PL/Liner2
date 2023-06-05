@@ -1,15 +1,16 @@
 package g419.liner2.core.normalizer;
 
 import g419.corpus.structure.Annotation;
+import g419.liner2.core.normalizer.lval.LValRuleCompiledContainer;
 import g419.liner2.core.normalizer.lval.LValRuleContainer;
 
 import java.util.List;
 import java.util.regex.Pattern;
 
 public class LValNormalizingChunker extends NormalizingChunker {
-  protected LValRuleContainer ruleContainer;
+  protected LValRuleCompiledContainer ruleContainer;
 
-  public LValNormalizingChunker(List<Pattern> normalizedChunkTypes, LValRuleContainer ruleContainer) {
+  public LValNormalizingChunker(List<Pattern> normalizedChunkTypes, LValRuleCompiledContainer ruleContainer) {
     super(normalizedChunkTypes);
     this.ruleContainer = ruleContainer;
   }
